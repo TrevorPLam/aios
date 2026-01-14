@@ -12,6 +12,7 @@ import {
   DEFAULT_SETTINGS,
   TIER_LIMITS,
   List,
+  Alert,
 } from "@/models/types";
 
 const KEYS = {
@@ -26,6 +27,7 @@ const KEYS = {
   AI_LIMITS: "@aios/ai_limits",
   INITIALIZED: "@aios/initialized",
   LISTS: "@aios/lists",
+  ALERTS: "@aios/alerts",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -250,6 +252,37 @@ export const db = {
         list.lastOpenedAt = new Date().toISOString();
         await setData(KEYS.LISTS, all);
       }
+    },
+  },
+
+  alerts: {
+    async getAll(): Promise<Alert[]> {
+      return getData(KEYS.ALERTS, []);
+    },
+    async getAllSorted(): Promise<Alert[]> {
+      const all = await this.getAll();
+      return all.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+      );
+    },
+    async get(id: string): Promise<Alert | null> {
+      const all = await this.getAll();
+      return all.find((a) => a.id === id) || null;
+    },
+    async save(alert: Alert): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((a) => a.id === alert.id);
+      if (index >= 0) {
+        all[index] = alert;
+      } else {
+        all.push(alert);
+      }
+      await setData(KEYS.ALERTS, all);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((a) => a.id !== id);
+      await setData(KEYS.ALERTS, filtered);
     },
   },
 

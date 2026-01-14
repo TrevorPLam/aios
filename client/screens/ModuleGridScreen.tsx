@@ -78,6 +78,13 @@ const MODULES: ModuleItem[] = [
     description: "Checklists",
   },
   {
+    id: "alerts",
+    name: "Alerts",
+    icon: "bell",
+    route: "Alerts",
+    description: "Alarms & Reminders",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: "settings",

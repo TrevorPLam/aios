@@ -9,6 +9,7 @@ import {
   TaskPriority,
   ModuleType,
   List,
+  Alert,
 } from "@/models/types";
 
 function generateId(): string {
@@ -140,6 +141,35 @@ const RECOMMENDATION_TEMPLATES: {
         summary: "Your task completion rate increased 23% this week",
         why: "Comparing this week to your 4-week average. Key factor: shorter tasks created more frequently.",
         confidence: "high",
+        priority: "low",
+      },
+    ],
+  },
+  {
+    module: "alerts",
+    type: "alert_suggestion",
+    templates: [
+      {
+        title: "Set reminder for task deadline",
+        summary:
+          "Create a reminder 1 hour before 'Complete API integration' is due",
+        why: "Task has high priority and due date in 3 days. Setting advance reminders increases on-time completion by 35%.",
+        confidence: "high",
+        priority: "medium",
+      },
+      {
+        title: "Morning standup alert",
+        summary: "Set daily reminder for team standup at 9:00 AM",
+        why: "Calendar shows recurring 'Team Standup' event. Proactive reminders help with punctuality.",
+        confidence: "high",
+        priority: "medium",
+      },
+      {
+        title: "Email follow-up reminder",
+        summary:
+          "Reminder to follow up on partnership proposal in 2 days",
+        why: "Email thread 'Partnership Proposal' has no response in 6 days. Follow-up reminders improve response rates.",
+        confidence: "medium",
         priority: "low",
       },
     ],
@@ -474,6 +504,54 @@ export function generateSeedLists(): List[] {
       createdAt: daysFromNow(-3),
       lastOpenedAt: hoursFromNow(-24),
       updatedAt: hoursFromNow(-24),
+    },
+  ];
+}
+
+export function generateSeedAlerts(): Alert[] {
+  const tomorrow8am = new Date();
+  tomorrow8am.setDate(tomorrow8am.getDate() + 1);
+  tomorrow8am.setHours(8, 0, 0, 0);
+
+  const today5pm = new Date();
+  today5pm.setHours(17, 0, 0, 0);
+
+  const today9am = new Date();
+  today9am.setHours(9, 0, 0, 0);
+
+  return [
+    {
+      id: generateId(),
+      title: "Wake up",
+      description: "Time to start the day!",
+      time: tomorrow8am.toISOString(),
+      type: "alarm",
+      isEnabled: true,
+      recurrenceRule: "daily",
+      createdAt: daysFromNow(-7),
+      updatedAt: daysFromNow(-7),
+    },
+    {
+      id: generateId(),
+      title: "Team standup",
+      description: "Daily sync with the team",
+      time: today9am.toISOString(),
+      type: "reminder",
+      isEnabled: true,
+      recurrenceRule: "daily",
+      createdAt: daysFromNow(-5),
+      updatedAt: daysFromNow(-5),
+    },
+    {
+      id: generateId(),
+      title: "End of work day",
+      description: "Time to wrap up and review tasks",
+      time: today5pm.toISOString(),
+      type: "reminder",
+      isEnabled: true,
+      recurrenceRule: "daily",
+      createdAt: daysFromNow(-3),
+      updatedAt: daysFromNow(-3),
     },
   ];
 }
