@@ -85,6 +85,13 @@ const MODULES: ModuleItem[] = [
     description: "Alarms & Reminders",
   },
   {
+    id: "photos",
+    name: "Photos",
+    icon: "image",
+    route: "Photos",
+    description: "Photo gallery",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: "settings",

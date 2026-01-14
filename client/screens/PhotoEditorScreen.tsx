@@ -139,7 +139,8 @@ export default function PhotoEditorScreen() {
 
       // Save the edited image to a new file
       const fileName = `edited_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
-      const localDir = `${FileSystem.documentDirectory}photos/`;
+      const documentDir = (FileSystem as any).documentDirectory as string;
+      const localDir = `${documentDir}photos/`;
       const localPath = `${localDir}${fileName}`;
 
       // Ensure directory exists
@@ -344,12 +345,19 @@ export default function PhotoEditorScreen() {
         {/* AI Auto Fix Button */}
         <View style={styles.aiSection}>
           <Button
-            title={isProcessingAI ? "Processing..." : "AI Auto Fix"}
             onPress={handleAIAutoFix}
             disabled={isProcessingAI}
-            icon={isProcessingAI ? undefined : "zap"}
             style={styles.aiButton}
-          />
+          >
+            <View style={styles.aiButtonContent}>
+              {!isProcessingAI && (
+                <Feather name="zap" size={18} color={theme.buttonText} />
+              )}
+              <ThemedText type="body" style={{ color: theme.buttonText }}>
+                {isProcessingAI ? "Processing..." : "AI Auto Fix"}
+              </ThemedText>
+            </View>
+          </Button>
           <ThemedText type="caption" secondary style={styles.aiHint}>
             Let AI automatically enhance your photo
           </ThemedText>
@@ -452,6 +460,12 @@ const styles = StyleSheet.create({
   aiButton: {
     width: "100%",
     marginBottom: Spacing.sm,
+  },
+  aiButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
   },
   aiHint: {
     textAlign: "center",

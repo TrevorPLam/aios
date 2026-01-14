@@ -221,7 +221,7 @@ export default function PhotoDetailScreen() {
             </ThemedText>
             <View style={styles.backupStatus}>
               <Feather
-                name={photo.isBackedUp ? "cloud-check" : "cloud-off"}
+                name={photo.isBackedUp ? "check-circle" : "cloud-off"}
                 size={16}
                 color={photo.isBackedUp ? theme.success : theme.textMuted}
               />

@@ -10,6 +10,7 @@ import {
   generateSeedEvents,
   generateSeedLists,
   generateSeedAlerts,
+  generateSeedPhotos,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -30,6 +31,9 @@ import ListsScreen from "@/screens/ListsScreen";
 import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
+import PhotosScreen from "@/screens/PhotosScreen";
+import PhotoDetailScreen from "@/screens/PhotoDetailScreen";
+import PhotoEditorScreen from "@/screens/PhotoEditorScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -50,6 +54,9 @@ export type AppStackParamList = {
   ListEditor: { listId?: string };
   Alerts: undefined;
   AlertDetail: { alertId?: string };
+  Photos: undefined;
+  PhotoDetail: { photoId: string };
+  PhotoEditor: { photoId: string };
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -93,6 +100,11 @@ export default function AppNavigator() {
         const alerts = generateSeedAlerts();
         for (const alert of alerts) {
           await db.alerts.save(alert);
+        }
+
+        const photos = generateSeedPhotos();
+        for (const photo of photos) {
+          await db.photos.save(photo);
         }
 
         await db.settings.get();
@@ -210,6 +222,21 @@ export default function AppNavigator() {
         name="AlertDetail"
         component={AlertDetailScreen}
         options={{ headerTitle: "Alert" }}
+      />
+      <Stack.Screen
+        name="Photos"
+        component={PhotosScreen}
+        options={{ headerTitle: "Photos" }}
+      />
+      <Stack.Screen
+        name="PhotoDetail"
+        component={PhotoDetailScreen}
+        options={{ headerTitle: "Photo" }}
+      />
+      <Stack.Screen
+        name="PhotoEditor"
+        component={PhotoEditorScreen}
+        options={{ headerTitle: "Edit Photo" }}
       />
     </Stack.Navigator>
   );

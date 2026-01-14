@@ -110,9 +110,8 @@ export default function PhotosScreen() {
       headerLeft: () => <HeaderLeftNav />,
       headerRight: () => (
         <HeaderRightWithAction
-          icon="plus"
-          onPress={handleAddPhoto}
-          label="Add Photo"
+          actionIcon="plus"
+          onActionPress={handleAddPhoto}
         />
       ),
     });
@@ -145,7 +144,8 @@ export default function PhotosScreen() {
       
       // Save to local storage (avoid duplication by using unique names)
       const fileName = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
-      const localDir = `${FileSystem.documentDirectory}photos/`;
+      const documentDir = (FileSystem as any).documentDirectory as string;
+      const localDir = `${documentDir}photos/`;
       
       // Ensure directory exists
       const dirInfo = await FileSystem.getInfoAsync(localDir);
