@@ -265,20 +265,51 @@ export const db = {
     },
   },
 
+  /**
+   * Alerts Module
+   *
+   * Manages alarm and reminder storage operations.
+   * Provides CRUD operations and sorting functionality.
+   */
   alerts: {
+    /**
+     * Get all alerts from storage
+     *
+     * @returns {Promise<Alert[]>} Array of all alerts
+     */
     async getAll(): Promise<Alert[]> {
       return getData(KEYS.ALERTS, []);
     },
+
+    /**
+     * Get all alerts sorted by time in ascending order
+     *
+     * @returns {Promise<Alert[]>} Array of alerts sorted by time (earliest first)
+     */
     async getAllSorted(): Promise<Alert[]> {
       const all = await this.getAll();
       return all.sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       );
     },
+
+    /**
+     * Get a specific alert by ID
+     *
+     * @param {string} id - The alert ID
+     * @returns {Promise<Alert | null>} The alert if found, null otherwise
+     */
     async get(id: string): Promise<Alert | null> {
       const all = await this.getAll();
       return all.find((a) => a.id === id) || null;
     },
+
+    /**
+     * Save an alert (create new or update existing)
+     *
+     * @param {Alert} alert - The alert to save
+     * @returns {Promise<void>}
+     */
     async save(alert: Alert): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((a) => a.id === alert.id);
@@ -289,6 +320,13 @@ export const db = {
       }
       await setData(KEYS.ALERTS, all);
     },
+
+    /**
+     * Delete an alert by ID
+     *
+     * @param {string} id - The alert ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((a) => a.id !== id);
@@ -328,10 +366,7 @@ export const db = {
       const filtered = all.filter((m) => m.id !== id);
       await setData(KEYS.MESSAGES, filtered);
     },
-    async markAsRead(
-      conversationId: string,
-      userId: string,
-    ): Promise<void> {
+    async markAsRead(conversationId: string, userId: string): Promise<void> {
       const all = await this.getAll();
       const now = new Date().toISOString();
       all.forEach((m) => {
@@ -342,7 +377,10 @@ export const db = {
       });
       await setData(KEYS.MESSAGES, all);
     },
-    async getUnreadCount(conversationId: string, userId: string): Promise<number> {
+    async getUnreadCount(
+      conversationId: string,
+      userId: string,
+    ): Promise<number> {
       const all = await this.getAll();
       return all.filter(
         (m) =>
@@ -395,7 +433,7 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((c) => c.id !== id);
       await setData(KEYS.CONVERSATIONS, filtered);
-      
+
       // Also delete all messages in this conversation
       const messages = await db.messages.getAll();
       const filteredMessages = messages.filter((m) => m.conversationId !== id);
@@ -451,13 +489,10 @@ export const db = {
       const all = await this.getAll();
       const fourteenDaysAgo = new Date();
       fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-      
+
       return all.filter((c) => {
         const lastActivity = c.lastMessageAt || c.createdAt;
-        return (
-          !c.isArchived &&
-          new Date(lastActivity) < fourteenDaysAgo
-        );
+        return !c.isArchived && new Date(lastActivity) < fourteenDaysAgo;
       });
     },
   },

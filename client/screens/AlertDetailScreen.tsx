@@ -1,3 +1,19 @@
+/**
+ * AlertDetailScreen Module
+ *
+ * Screen for creating and editing alerts (alarms and reminders).
+ * Features:
+ * - Create new alerts or edit existing ones
+ * - Configure alert type (alarm or reminder)
+ * - Set time and recurrence rules
+ * - Toggle enabled/disabled state
+ * - Delete existing alerts
+ * - Form validation for required fields
+ * - Haptic feedback for user actions
+ *
+ * @module AlertDetailScreen
+ */
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -26,11 +42,13 @@ import { Alert, AlertType, RecurrenceRule } from "@/models/types";
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type AlertDetailRouteProp = RouteProp<AppStackParamList, "AlertDetail">;
 
+/** Available alert types with display labels */
 const ALERT_TYPES: { value: AlertType; label: string }[] = [
   { value: "alarm", label: "Alarm" },
   { value: "reminder", label: "Reminder" },
 ];
 
+/** Available recurrence options with display labels */
 const RECURRENCE_OPTIONS: { value: RecurrenceRule; label: string }[] = [
   { value: "none", label: "Never" },
   { value: "daily", label: "Daily" },
@@ -38,10 +56,23 @@ const RECURRENCE_OPTIONS: { value: RecurrenceRule; label: string }[] = [
   { value: "monthly", label: "Monthly" },
 ];
 
+/**
+ * Generate a unique ID for a new alert
+ *
+ * @returns {string} Unique alert ID with timestamp and random suffix
+ */
 function generateId(): string {
   return `alert_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
+/**
+ * AlertDetailScreen Component
+ *
+ * Form screen for creating or editing an alert.
+ * Loads existing alert data if alertId is provided in route params.
+ *
+ * @returns {JSX.Element} The alert detail screen component
+ */
 export default function AlertDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -57,30 +88,36 @@ export default function AlertDetailScreen() {
   const [recurrence, setRecurrence] = useState<RecurrenceRule>("none");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Load existing alert data or set defaults for new alert
   useEffect(() => {
+    const loadAlert = async () => {
+      if (!alertId) return;
+      const alert = await db.alerts.get(alertId);
+      if (alert) {
+        setTitle(alert.title);
+        setDescription(alert.description);
+        setTime(alert.time);
+        setType(alert.type);
+        setIsEnabled(alert.isEnabled);
+        setRecurrence(alert.recurrenceRule);
+      }
+    };
+
     if (alertId) {
       loadAlert();
     } else {
-      // Set default time to current time
+      // Set default time to current time for new alerts
       const now = new Date();
       setTime(now.toISOString());
     }
   }, [alertId]);
 
-  const loadAlert = async () => {
-    if (!alertId) return;
-    const alert = await db.alerts.get(alertId);
-    if (alert) {
-      setTitle(alert.title);
-      setDescription(alert.description);
-      setTime(alert.time);
-      setType(alert.type);
-      setIsEnabled(alert.isEnabled);
-      setRecurrence(alert.recurrenceRule);
-    }
-  };
-
+  /**
+   * Save alert to database
+   * Validates required fields before saving
+   */
   const handleSave = async () => {
+    // Validate required fields
     if (!title.trim()) {
       RNAlert.alert("Error", "Please enter a title");
       return;
@@ -124,6 +161,9 @@ export default function AlertDetailScreen() {
     }
   };
 
+  /**
+   * Delete alert with confirmation dialog
+   */
   const handleDelete = () => {
     RNAlert.alert(
       "Delete Alert",
@@ -149,6 +189,12 @@ export default function AlertDetailScreen() {
     );
   };
 
+  /**
+   * Format ISO time string for display
+   *
+   * @param {string} isoString - ISO 8601 time string
+   * @returns {string} Formatted time (e.g., "08:00 AM")
+   */
   const formatTimeForDisplay = (isoString: string) => {
     if (!isoString) return "";
     const date = new Date(isoString);
@@ -159,9 +205,13 @@ export default function AlertDetailScreen() {
     });
   };
 
+  /**
+   * Handle time picker interaction
+   *
+   * TODO: Replace with a proper time picker component (e.g., @react-native-community/datetimepicker)
+   * Current implementation sets a sample time 1 hour from now
+   */
   const handleTimeChange = () => {
-    // TODO: Replace with a proper time picker component (e.g., @react-native-community/datetimepicker)
-    // For now, this sets a sample time 1 hour from now
     const now = new Date();
     now.setHours(now.getHours() + 1);
     now.setMinutes(0);

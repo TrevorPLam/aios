@@ -145,8 +145,31 @@ export interface List {
   updatedAt: string;
 }
 
+/**
+ * Alert Type
+ * 
+ * Defines the type of alert/notification
+ * - alarm: Sound-based alert (typically for wake-up times)
+ * - reminder: Notification-based reminder (for tasks/events)
+ */
 export type AlertType = "alarm" | "reminder";
 
+/**
+ * Alert Interface
+ * 
+ * Represents an alarm or reminder in the system.
+ * Supports one-time and recurring alerts with enable/disable functionality.
+ * 
+ * @property {string} id - Unique identifier for the alert
+ * @property {string} title - Alert title/name
+ * @property {string} description - Optional description or notes
+ * @property {string} time - ISO 8601 timestamp when alert should trigger
+ * @property {AlertType} type - Type of alert (alarm or reminder)
+ * @property {boolean} isEnabled - Whether the alert is currently active
+ * @property {RecurrenceRule} recurrenceRule - How often the alert repeats
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ */
 export interface Alert {
   id: string;
   title: string;

@@ -1,3 +1,18 @@
+/**
+ * AlertsScreen Module
+ *
+ * Displays a list of alarms and reminders with a real-time digital clock.
+ * Features:
+ * - Real-time digital clock display with date
+ * - Sortable list of alarms and reminders
+ * - Visual toggle state for enabled/disabled alerts
+ * - Quick access to create new alerts via FAB button
+ * - AI assistance integration for smart alert suggestions
+ * - Haptic feedback for user interactions
+ *
+ * @module AlertsScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, FlatList, Pressable, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,15 +36,25 @@ import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+/**
+ * DigitalClock Component
+ *
+ * Displays a real-time digital clock with seconds and full date.
+ * Updates every second to show current time.
+ *
+ * @returns {JSX.Element} The digital clock component
+ */
 function DigitalClock() {
   const { theme } = useTheme();
   const [time, setTime] = useState(new Date());
 
+  // Update clock every second
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(new Date());
     }, 1000);
 
+    // Cleanup interval on unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -62,6 +87,23 @@ function DigitalClock() {
   );
 }
 
+/**
+ * AlertCard Component
+ *
+ * Displays an individual alert/reminder card with visual indicators.
+ * Features:
+ * - Icon indicating alert type (bell for alarm, message for reminder)
+ * - Title and optional description
+ * - Time display with recurrence indicator
+ * - Toggle switch showing enabled/disabled state
+ * - Staggered animation on list entry
+ * - Dimmed appearance when disabled
+ *
+ * @param {Alert} alert - The alert data to display
+ * @param {Function} onPress - Callback when card is pressed
+ * @param {number} index - Index in list (for animation delay)
+ * @returns {JSX.Element} The alert card component
+ */
 function AlertCard({
   alert,
   onPress,
@@ -175,6 +217,14 @@ function AlertCard({
   );
 }
 
+/**
+ * AlertsScreen Component
+ *
+ * Main screen for the Alerts module displaying alarms and reminders.
+ * Provides functionality to view, create, and manage alerts with AI assistance.
+ *
+ * @returns {JSX.Element} The alerts screen component
+ */
 export default function AlertsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -182,17 +232,22 @@ export default function AlertsScreen() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
 
+  /**
+   * Load alerts from database sorted by time
+   */
   const loadAlerts = useCallback(async () => {
     const data = await db.alerts.getAllSorted();
     setAlerts(data);
   }, []);
 
+  // Reload alerts when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       loadAlerts();
     }, [loadAlerts]),
   );
 
+  // Configure navigation header
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
@@ -200,6 +255,9 @@ export default function AlertsScreen() {
     });
   }, [navigation]);
 
+  /**
+   * Navigate to alert creation screen
+   */
   const handleCreateAlert = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -207,6 +265,11 @@ export default function AlertsScreen() {
     navigation.navigate("AlertDetail", {});
   };
 
+  /**
+   * Navigate to alert detail screen for editing
+   *
+   * @param {string} alertId - ID of the alert to edit
+   */
   const handleAlertPress = (alertId: string) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -214,6 +277,9 @@ export default function AlertsScreen() {
     navigation.navigate("AlertDetail", { alertId });
   };
 
+  /**
+   * Open AI assistance sheet for smart alert suggestions
+   */
   const handleAIAssist = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

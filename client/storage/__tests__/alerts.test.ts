@@ -1,8 +1,18 @@
+/**
+ * Alerts Database Storage Tests
+ * 
+ * Tests the database storage layer for the Alerts module.
+ * Validates CRUD operations, sorting, and state management.
+ * 
+ * @module alerts.test
+ */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
 import { Alert } from "@/models/types";
 
 describe("Database Alerts Storage", () => {
+  // Clear storage before and after each test to ensure isolation
   beforeEach(async () => {
     await AsyncStorage.clear();
   });
@@ -11,6 +21,7 @@ describe("Database Alerts Storage", () => {
     await AsyncStorage.clear();
   });
 
+  /** Sample alert data for testing */
   const mockAlert: Alert = {
     id: "alert_1",
     title: "Wake up",
