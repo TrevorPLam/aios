@@ -119,9 +119,76 @@ export const settings = pgTable("settings", {
   enabledModules: jsonb("enabled_modules")
     .$type<string[]>()
     .notNull()
-    .default(["command", "notebook", "planner", "calendar", "email"]),
+    .default(["command", "notebook", "planner", "calendar", "email", "messages"]),
   aiLimitTier: integer("ai_limit_tier").notNull().default(1),
   darkMode: boolean("dark_mode").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const conversations = pgTable("conversations", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  type: text("type").notNull(),
+  name: text("name").notNull(),
+  participants: jsonb("participants").$type<
+    Array<{
+      userId: string;
+      userName: string;
+      avatarUrl?: string;
+      isOnline: boolean;
+      lastSeenAt: string;
+      joinedAt: string;
+    }>
+  >()
+    .notNull()
+    .default([]),
+  lastMessageId: varchar("last_message_id"),
+  lastMessageAt: timestamp("last_message_at"),
+  lastMessagePreview: text("last_message_preview").notNull().default(""),
+  unreadCount: integer("unread_count").notNull().default(0),
+  isTyping: jsonb("is_typing").$type<string[]>().notNull().default([]),
+  isPinned: boolean("is_pinned").notNull().default(false),
+  isMuted: boolean("is_muted").notNull().default(false),
+  isArchived: boolean("is_archived").notNull().default(false),
+  archivedAt: timestamp("archived_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const messages = pgTable("messages", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  conversationId: varchar("conversation_id").notNull(),
+  senderId: varchar("sender_id").notNull(),
+  senderName: text("sender_name").notNull(),
+  content: text("content").notNull(),
+  type: text("type").notNull(),
+  attachments: jsonb("attachments")
+    .$type<
+      Array<{
+        id: string;
+        type: string;
+        url: string;
+        fileName?: string;
+        fileSize?: number;
+        mimeType?: string;
+        thumbnailUrl?: string;
+        duration?: number;
+        width?: number;
+        height?: number;
+      }>
+    >()
+    .notNull()
+    .default([]),
+  replyToId: varchar("reply_to_id"),
+  isEdited: boolean("is_edited").notNull().default(false),
+  isRead: boolean("is_read").notNull().default(false),
+  deliveredAt: timestamp("delivered_at"),
+  readAt: timestamp("read_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -190,6 +257,23 @@ export const insertSettingsSchema = createInsertSchema(settings).omit({
 
 export const updateSettingsSchema = insertSettingsSchema.partial();
 
+export const insertConversationSchema = createInsertSchema(conversations).omit({
+  id: true,
+  userId: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateConversationSchema = insertConversationSchema.partial();
+
+export const insertMessageSchema = createInsertSchema(messages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateMessageSchema = insertMessageSchema.partial();
+
 // Type exports
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -199,3 +283,5 @@ export type Task = typeof tasks.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type Event = typeof events.$inferSelect;
 export type Settings = typeof settings.$inferSelect;
+export type Conversation = typeof conversations.$inferSelect;
+export type Message = typeof messages.$inferSelect;

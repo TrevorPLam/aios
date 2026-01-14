@@ -7,6 +7,9 @@ export type ModuleType =
   | "lists"
   | "alerts"
   | "photos";
+  | "messages";
+  | "contacts"
+  | "translator";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -187,6 +190,102 @@ export type PhotoEditOperation =
   | { type: "ai_auto_fix" };
 
 export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
+export type MessageType = "text" | "image" | "video" | "audio" | "file" | "gif";
+
+export type ConversationType = "direct" | "group";
+
+export interface MessageAttachment {
+  id: string;
+  type: MessageType;
+  url: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  thumbnailUrl?: string;
+  duration?: number; // For audio/video in seconds
+  width?: number;
+  height?: number;
+}
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  type: MessageType;
+  attachments: MessageAttachment[];
+  replyToId: string | null;
+  isEdited: boolean;
+  isRead: boolean;
+  deliveredAt: string | null;
+  readAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Conversation {
+  id: string;
+  type: ConversationType;
+  name: string; // For group chats, otherwise derived from participants
+  participants: ConversationParticipant[];
+  lastMessageId: string | null;
+  lastMessageAt: string | null;
+  lastMessagePreview: string;
+  unreadCount: number;
+  isTyping: string[]; // Array of user IDs currently typing
+  isPinned: boolean;
+  isMuted: boolean;
+  isArchived: boolean;
+  archivedAt: string | null;
+export interface Contact {
+  id: string;
+  name: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumbers: string[];
+  emails: string[];
+  birthday?: string;
+  company?: string;
+  jobTitle?: string;
+  imageUri?: string;
+  isRegistered: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConversationParticipant {
+  userId: string;
+  userName: string;
+  avatarUrl?: string;
+  isOnline: boolean;
+  lastSeenAt: string;
+  joinedAt: string;
+}
+
+export interface VideoCallSession {
+  id: string;
+  conversationId: string;
+  participants: VideoCallParticipant[];
+  startedAt: string;
+  endedAt: string | null;
+  isActive: boolean;
+}
+
+export interface VideoCallParticipant {
+  userId: string;
+  userName: string;
+  isVideoEnabled: boolean;
+  isAudioEnabled: boolean;
+  joinedAt: string;
+  leftAt: string | null;
+export type ContactSharingField = "email" | "birthday" | "business";
+
+export interface ContactSharingPreferences {
+  shareEmail: boolean;
+  shareBirthday: boolean;
+  shareBusinessInfo: boolean;
+}
 
 export interface Settings {
   aiName: string;
@@ -194,6 +293,7 @@ export interface Settings {
   aiLimitTier: AILimitTier;
   darkMode: boolean;
   photoGridSize: PhotoGridSize;
+  contactSharingPreferences: ContactSharingPreferences;
 }
 
 export interface HistoryLogEntry {
@@ -225,6 +325,17 @@ export const DEFAULT_SETTINGS: Settings = {
   aiLimitTier: 1,
   darkMode: true,
   photoGridSize: 4,
+    "messages",
+    "contacts",
+    "translator",
+  ],
+  aiLimitTier: 1,
+  darkMode: true,
+  contactSharingPreferences: {
+    shareEmail: true,
+    shareBirthday: true,
+    shareBusinessInfo: true,
+  },
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {

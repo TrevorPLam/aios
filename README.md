@@ -1,6 +1,6 @@
 # AIOS - AI Command Center Mobile App
 
-A mobile-first iOS/Android application built with React Native and Expo, featuring a futuristic "HUD/control panel" aesthetic. AIOS serves as an AI-powered productivity hub with five core modules designed to help users manage their tasks, notes, calendar, and email through intelligent recommendations.
+A mobile-first iOS/Android application built with React Native and Expo, featuring a futuristic "HUD/control panel" aesthetic. AIOS serves as an AI-powered productivity hub with core modules designed to help users manage their tasks, notes, calendar, email, and internal messaging through intelligent recommendations.
 
 ## 🚀 Features
 
@@ -11,6 +11,11 @@ A mobile-first iOS/Android application built with React Native and Expo, featuri
 3. **Planner** - Task and project management with priorities and dependencies
 4. **Calendar** - Event scheduling with recurrence support
 5. **Email** - Email thread viewer (UI mockup)
+6. **Messages** - P2P messaging with group chat, media sharing, and AI assistance
+7. **Lists** - Checklist management
+8. **Alerts** - Alarms and reminders
+6. **Contacts** - Native iOS contacts import with sharing preferences
+7. **Translator** - Real-time language translation with speech-to-text and text-to-speech
 
 ### Key Highlights
 
@@ -20,6 +25,9 @@ A mobile-first iOS/Android application built with React Native and Expo, featuri
 - 💾 **Local-first storage** using AsyncStorage
 - 🤖 **AI-powered recommendations** (scaffold for integration)
 - 🔄 **Real-time updates** ready (WebSocket configured)
+- 💬 **P2P Messaging** with group chat, typing indicators, and media sharing
+- 🤖 **AI Message Assistance** - Draft messages, suggest responses, create tasks from chats
+- 📦 **Auto-archive** conversations older than 14 days
 
 ## 📋 Prerequisites
 
@@ -219,6 +227,11 @@ The app uses AsyncStorage for local persistence with the following models:
 - **Tasks** - Todo items with priorities and dependencies
 - **Projects** - Task groupings
 - **Calendar Events** - Scheduled events with recurrence
+- **Conversations** - P2P messaging threads (direct and group)
+- **Messages** - Chat messages with attachments and replies
+- **Lists** - Checklists
+- **Alerts** - Alarms and reminders
+- **Contacts** - Native contacts with sharing preferences
 - **Settings** - User preferences and configuration
 - **History Log** - Activity tracking
 - **AI Limits** - Usage tracking with refresh cadence
@@ -239,6 +252,8 @@ The server now includes a complete REST API with authentication and CRUD endpoin
 - **Tasks:** `/api/tasks/*` (GET, POST, PUT, DELETE)
 - **Projects:** `/api/projects/*` (GET, POST, PUT, DELETE)
 - **Events:** `/api/events/*` (GET, POST, PUT, DELETE)
+- **Conversations:** `/api/conversations/*` (GET, POST, PUT, DELETE)
+- **Messages:** `/api/conversations/:id/messages/*` (GET, POST, PUT, DELETE)
 - **Settings:** `/api/settings/*` (GET, PUT)
 
 ### Features
@@ -248,6 +263,78 @@ The server now includes a complete REST API with authentication and CRUD endpoin
 - In-memory storage (ready for PostgreSQL migration)
 
 See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentation.
+
+## 💬 P2P Messaging Module
+
+The messaging module provides internal app communication with advanced features:
+
+### Core Features
+- **Direct & Group Chat** - One-on-one or multi-participant conversations
+- **Real-time Typing Indicators** - See when others are composing messages
+- **Message Attachments** - Share photos, videos, audio clips, files, and GIFs
+- **Read Receipts** - Track message delivery and read status
+- **Message Threading** - Reply to specific messages
+- **Auto-Archive** - Automatically archive conversations inactive for 14+ days
+- **Pin & Mute** - Manage conversation priorities
+
+### AI-Powered Features
+The messaging module includes AI assistance capabilities:
+- **Draft Messages** - AI helps compose messages
+- **Suggest Responses** - Smart reply recommendations for incoming messages
+- **Create Tasks** - Convert conversation items into actionable tasks
+- **Schedule Events** - Add calendar events based on message content
+- **Smart Archiving** - AI suggests archiving old conversations
+- **Relationship Reminders** - AI may remind you to connect with contacts
+
+### Data Models
+- **Conversation** - Thread metadata with participants, status, and activity
+- **Message** - Individual messages with content, attachments, and metadata
+- **ConversationParticipant** - User info with online status and activity
+
+### API Endpoints
+```
+GET    /api/conversations              # List user's conversations
+POST   /api/conversations              # Create new conversation
+GET    /api/conversations/:id          # Get conversation details
+PUT    /api/conversations/:id          # Update conversation
+DELETE /api/conversations/:id          # Delete conversation
+
+GET    /api/conversations/:id/messages # Get messages in conversation
+POST   /api/conversations/:id/messages # Send new message
+PUT    /api/messages/:id               # Edit message
+DELETE /api/messages/:id               # Delete message
+```
+
+### Future Enhancements
+- 📹 Video chat with audio/video toggle
+- 🌐 WebSocket for real-time message delivery
+- 📤 Media upload/download endpoints
+- 🖼️ Media viewer screens
+## 🌐 Translator Module
+
+The Translator module provides real-time language translation with voice input/output capabilities:
+
+### Features
+- **Text Translation**: Translate between 12+ languages in real-time
+- **Speech-to-Text**: Tap the microphone to speak in your source language
+- **Text-to-Speech**: Tap the speaker icon to hear the translation
+- **Language Swap**: Quickly swap source and target languages
+- **Auto-Translation**: Translations appear automatically as you type (with debouncing)
+- **Headphone Detection**: Optimized audio output when headphones are connected
+
+### Supported Languages
+English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese, Arabic, Hindi
+
+### Translation API
+The module uses LibreTranslate (open-source) for translations. To use a different service:
+1. Update the `/api/translate` endpoint in `server/routes.ts`
+2. Configure your API key (Google Translate, DeepL, etc.)
+3. Adjust the request/response format as needed
+
+### Voice Features
+- **Speech-to-Text**: Requires microphone permissions (placeholder implementation ready for full integration)
+- **Text-to-Speech**: Uses expo-speech for natural voice output
+- **Audio Setup**: Configures audio mode for optimal playback
 
 ## 🤖 AI Integration (Scaffold)
 
@@ -273,10 +360,15 @@ To integrate AI:
 - ✅ Request validation and error handling
 - ✅ Test coverage (Jest + React Native Testing Library configured)
 - ✅ In-memory storage (ready for database migration)
+- ✅ P2P Messaging module with group chat and media support
+- ✅ AI messaging assistance (draft, suggest, create tasks/events)
+- ✅ Translator module with real-time translation and TTS/STT
 - ❌ Database integration (PostgreSQL configured but not connected yet)
 - ❌ AI recommendation generation (endpoints ready, logic needed)
+- ❌ Video chat capability
+- ❌ WebSocket for real-time messaging
 - ❌ Multi-device sync
-- ❌ AI Assist actions (grammar check, summarization, etc.)
+- ❌ AI Assist actions implementation (grammar check, summarization, etc.)
 
 See [MISSING_FEATURES.md](./MISSING_FEATURES.md) for a complete analysis.
 

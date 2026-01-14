@@ -11,6 +11,8 @@ import {
   generateSeedLists,
   generateSeedAlerts,
   generateSeedPhotos,
+  generateSeedConversations,
+  generateSeedMessages,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -24,7 +26,12 @@ import CalendarScreen from "@/screens/CalendarScreen";
 import EventDetailScreen from "@/screens/EventDetailScreen";
 import EmailScreen from "@/screens/EmailScreen";
 import ThreadDetailScreen from "@/screens/ThreadDetailScreen";
-import SettingsScreen from "@/screens/SettingsScreen";
+import SettingsMenuScreen from "@/screens/SettingsMenuScreen";
+import GeneralSettingsScreen from "@/screens/GeneralSettingsScreen";
+import AIPreferencesScreen from "@/screens/AIPreferencesScreen";
+import PersonalizationScreen from "@/screens/PersonalizationScreen";
+import IntegrationsScreen from "@/screens/IntegrationsScreen";
+import SystemScreen from "@/screens/SystemScreen";
 import HistoryScreen from "@/screens/HistoryScreen";
 import RecommendationDetailScreen from "@/screens/RecommendationDetailScreen";
 import ListsScreen from "@/screens/ListsScreen";
@@ -34,6 +41,11 @@ import AlertDetailScreen from "@/screens/AlertDetailScreen";
 import PhotosScreen from "@/screens/PhotosScreen";
 import PhotoDetailScreen from "@/screens/PhotoDetailScreen";
 import PhotoEditorScreen from "@/screens/PhotoEditorScreen";
+import MessagesScreen from "@/screens/MessagesScreen";
+import ConversationDetailScreen from "@/screens/ConversationDetailScreen";
+import ContactsScreen from "@/screens/ContactsScreen";
+import ContactDetailScreen from "@/screens/ContactDetailScreen";
+import TranslatorScreen from "@/screens/TranslatorScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -48,6 +60,11 @@ export type AppStackParamList = {
   Email: undefined;
   ThreadDetail: { threadId: string };
   Settings: undefined;
+  GeneralSettings: undefined;
+  AIPreferences: undefined;
+  Personalization: undefined;
+  Integrations: undefined;
+  System: undefined;
   History: undefined;
   RecommendationDetail: { recommendationId: string };
   Lists: undefined;
@@ -57,6 +74,11 @@ export type AppStackParamList = {
   Photos: undefined;
   PhotoDetail: { photoId: string };
   PhotoEditor: { photoId: string };
+  Messages: undefined;
+  ConversationDetail: { conversationId?: string };
+  Contacts: undefined;
+  ContactDetail: { contactId: string };
+  Translator: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -105,6 +127,14 @@ export default function AppNavigator() {
         const photos = generateSeedPhotos();
         for (const photo of photos) {
           await db.photos.save(photo);
+        const conversations = generateSeedConversations();
+        for (const conversation of conversations) {
+          await db.conversations.save(conversation);
+        }
+
+        const messages = generateSeedMessages();
+        for (const message of messages) {
+          await db.messages.save(message);
         }
 
         await db.settings.get();
@@ -190,8 +220,33 @@ export default function AppNavigator() {
       />
       <Stack.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsMenuScreen}
         options={{ headerTitle: "Settings" }}
+      />
+      <Stack.Screen
+        name="GeneralSettings"
+        component={GeneralSettingsScreen}
+        options={{ headerTitle: "General" }}
+      />
+      <Stack.Screen
+        name="AIPreferences"
+        component={AIPreferencesScreen}
+        options={{ headerTitle: "AI Preferences" }}
+      />
+      <Stack.Screen
+        name="Personalization"
+        component={PersonalizationScreen}
+        options={{ headerTitle: "Personalization" }}
+      />
+      <Stack.Screen
+        name="Integrations"
+        component={IntegrationsScreen}
+        options={{ headerTitle: "Integrations" }}
+      />
+      <Stack.Screen
+        name="System"
+        component={SystemScreen}
+        options={{ headerTitle: "System" }}
       />
       <Stack.Screen
         name="History"
@@ -237,6 +292,27 @@ export default function AppNavigator() {
         name="PhotoEditor"
         component={PhotoEditorScreen}
         options={{ headerTitle: "Edit Photo" }}
+        name="Messages"
+        component={MessagesScreen}
+        options={{ headerTitle: "Messages" }}
+      />
+      <Stack.Screen
+        name="ConversationDetail"
+        component={ConversationDetailScreen}
+        options={{ headerTitle: "Chat" }}
+        name="Contacts"
+        component={ContactsScreen}
+        options={{ headerTitle: "Contacts" }}
+      />
+      <Stack.Screen
+        name="ContactDetail"
+        component={ContactDetailScreen}
+        options={{ headerTitle: "Contact" }}
+      />
+      <Stack.Screen
+        name="Translator"
+        component={TranslatorScreen}
+        options={{ headerTitle: "Translator" }}
       />
     </Stack.Navigator>
   );

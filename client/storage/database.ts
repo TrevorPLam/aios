@@ -14,6 +14,9 @@ import {
   List,
   Alert,
   Photo,
+  Message,
+  Conversation,
+  Contact,
 } from "@/models/types";
 
 const KEYS = {
@@ -30,6 +33,9 @@ const KEYS = {
   LISTS: "@aios/lists",
   ALERTS: "@aios/alerts",
   PHOTOS: "@aios/photos",
+  MESSAGES: "@aios/messages",
+  CONVERSATIONS: "@aios/conversations",
+  CONTACTS: "@aios/contacts",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -285,6 +291,217 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((a) => a.id !== id);
       await setData(KEYS.ALERTS, filtered);
+    },
+  },
+
+  messages: {
+    async getAll(): Promise<Message[]> {
+      return getData(KEYS.MESSAGES, []);
+    },
+    async get(id: string): Promise<Message | null> {
+      const all = await this.getAll();
+      return all.find((m) => m.id === id) || null;
+    },
+    async getByConversation(conversationId: string): Promise<Message[]> {
+      const all = await this.getAll();
+      return all
+        .filter((m) => m.conversationId === conversationId)
+        .sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
+    },
+    async save(message: Message): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((m) => m.id === message.id);
+      if (index >= 0) {
+        all[index] = message;
+      } else {
+        all.push(message);
+      }
+      await setData(KEYS.MESSAGES, all);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((m) => m.id !== id);
+      await setData(KEYS.MESSAGES, filtered);
+    },
+    async markAsRead(
+      conversationId: string,
+      userId: string,
+    ): Promise<void> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      all.forEach((m) => {
+        if (m.conversationId === conversationId && m.senderId !== userId) {
+          m.isRead = true;
+          m.readAt = now;
+        }
+      });
+      await setData(KEYS.MESSAGES, all);
+    },
+    async getUnreadCount(conversationId: string, userId: string): Promise<number> {
+      const all = await this.getAll();
+      return all.filter(
+        (m) =>
+          m.conversationId === conversationId &&
+          m.senderId !== userId &&
+          !m.isRead,
+      ).length;
+    },
+  },
+
+  conversations: {
+    async getAll(): Promise<Conversation[]> {
+      return getData(KEYS.CONVERSATIONS, []);
+    },
+    async getAllActive(): Promise<Conversation[]> {
+      const all = await this.getAll();
+      return all
+        .filter((c) => !c.isArchived)
+        .sort(
+          (a, b) =>
+            new Date(b.lastMessageAt || b.createdAt).getTime() -
+            new Date(a.lastMessageAt || a.createdAt).getTime(),
+        );
+    },
+    async getAllArchived(): Promise<Conversation[]> {
+      const all = await this.getAll();
+      return all
+        .filter((c) => c.isArchived)
+        .sort(
+          (a, b) =>
+            new Date(b.archivedAt || b.updatedAt).getTime() -
+            new Date(a.archivedAt || a.updatedAt).getTime(),
+        );
+    },
+    async get(id: string): Promise<Conversation | null> {
+      const all = await this.getAll();
+      return all.find((c) => c.id === id) || null;
+    },
+    async save(conversation: Conversation): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((c) => c.id === conversation.id);
+      if (index >= 0) {
+        all[index] = conversation;
+      } else {
+        all.push(conversation);
+      }
+      await setData(KEYS.CONVERSATIONS, all);
+  contacts: {
+    async getAll(): Promise<Contact[]> {
+      return getData(KEYS.CONTACTS, []);
+    },
+    async getAllSorted(): Promise<Contact[]> {
+      const all = await this.getAll();
+      return all.sort((a, b) => a.name.localeCompare(b.name));
+    },
+    async get(id: string): Promise<Contact | null> {
+      const all = await this.getAll();
+      return all.find((c) => c.id === id) || null;
+    },
+    async save(contact: Contact): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((c) => c.id === contact.id);
+      if (index >= 0) {
+        all[index] = contact;
+      } else {
+        all.push(contact);
+      }
+      await setData(KEYS.CONTACTS, all);
+    },
+    async saveAll(contacts: Contact[]): Promise<void> {
+      await setData(KEYS.CONTACTS, contacts);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((c) => c.id !== id);
+      await setData(KEYS.CONVERSATIONS, filtered);
+      
+      // Also delete all messages in this conversation
+      const messages = await db.messages.getAll();
+      const filteredMessages = messages.filter((m) => m.conversationId !== id);
+      await setData(KEYS.MESSAGES, filteredMessages);
+    },
+    async updateTyping(
+      id: string,
+      userId: string,
+      isTyping: boolean,
+    ): Promise<void> {
+      const all = await this.getAll();
+      const conversation = all.find((c) => c.id === id);
+      if (conversation) {
+        if (isTyping) {
+          if (!conversation.isTyping.includes(userId)) {
+            conversation.isTyping.push(userId);
+          }
+        } else {
+          conversation.isTyping = conversation.isTyping.filter(
+            (uid) => uid !== userId,
+          );
+        }
+        await setData(KEYS.CONVERSATIONS, all);
+      }
+    },
+    async archive(id: string): Promise<void> {
+      const all = await this.getAll();
+      const conversation = all.find((c) => c.id === id);
+      if (conversation) {
+        conversation.isArchived = true;
+        conversation.archivedAt = new Date().toISOString();
+        await setData(KEYS.CONVERSATIONS, all);
+      }
+    },
+    async unarchive(id: string): Promise<void> {
+      const all = await this.getAll();
+      const conversation = all.find((c) => c.id === id);
+      if (conversation) {
+        conversation.isArchived = false;
+        conversation.archivedAt = null;
+        await setData(KEYS.CONVERSATIONS, all);
+      }
+    },
+    async updateUnreadCount(id: string, count: number): Promise<void> {
+      const all = await this.getAll();
+      const conversation = all.find((c) => c.id === id);
+      if (conversation) {
+        conversation.unreadCount = count;
+        await setData(KEYS.CONVERSATIONS, all);
+      }
+    },
+    async getArchivableConversations(): Promise<Conversation[]> {
+      const all = await this.getAll();
+      const fourteenDaysAgo = new Date();
+      fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+      
+      return all.filter((c) => {
+        const lastActivity = c.lastMessageAt || c.createdAt;
+        return (
+          !c.isArchived &&
+          new Date(lastActivity) < fourteenDaysAgo
+        );
+      });
+      await setData(KEYS.CONTACTS, filtered);
+    },
+    async syncFromNative(nativeContacts: Contact[]): Promise<void> {
+      const existing = await this.getAll();
+      const existingMap = new Map(existing.map((c) => [c.id, c]));
+
+      const updated = nativeContacts.map((nc) => {
+        const existingContact = existingMap.get(nc.id);
+        // Merge native contact data with existing custom fields
+        return {
+          ...nc,
+          // Preserve app-specific fields from existing contact
+          isRegistered: existingContact?.isRegistered || nc.isRegistered,
+          // Keep original creation date if exists
+          createdAt: existingContact?.createdAt || nc.createdAt,
+          // Update the modified timestamp
+          updatedAt: new Date().toISOString(),
+        };
+      });
+
+      await this.saveAll(updated);
     },
   },
 
