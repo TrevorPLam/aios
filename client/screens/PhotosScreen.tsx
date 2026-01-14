@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
   },
   gridControls: {
     position: "absolute",
-    left: Spacing.lg,
+    right: Spacing.lg,
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
