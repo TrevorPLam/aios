@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -24,6 +25,13 @@ interface SettingsMenuItem {
   name: string;
   icon: keyof typeof Feather.glyphMap;
   route: keyof AppStackParamList;
+  description: string;
+}
+
+interface ModuleSettingsItem {
+  id: string;
+  name: string;
+  icon: keyof typeof Feather.glyphMap;
   description: string;
 }
 
@@ -65,6 +73,75 @@ const SETTINGS_MENU: SettingsMenuItem[] = [
   },
 ];
 
+const MODULE_SETTINGS: ModuleSettingsItem[] = [
+  {
+    id: "command",
+    name: "Command Center",
+    icon: "cpu",
+    description: "Settings coming soon",
+  },
+  {
+    id: "notebook",
+    name: "Notebook",
+    icon: "book-open",
+    description: "Settings coming soon",
+  },
+  {
+    id: "planner",
+    name: "Planner",
+    icon: "check-square",
+    description: "Settings coming soon",
+  },
+  {
+    id: "calendar",
+    name: "Calendar",
+    icon: "calendar",
+    description: "Settings coming soon",
+  },
+  {
+    id: "email",
+    name: "Email",
+    icon: "mail",
+    description: "Settings coming soon",
+  },
+  {
+    id: "messages",
+    name: "Messages",
+    icon: "message-square",
+    description: "Settings coming soon",
+  },
+  {
+    id: "lists",
+    name: "Lists",
+    icon: "list",
+    description: "Settings coming soon",
+  },
+  {
+    id: "alerts",
+    name: "Alerts",
+    icon: "bell",
+    description: "Settings coming soon",
+  },
+  {
+    id: "photos",
+    name: "Photos",
+    icon: "image",
+    description: "Settings coming soon",
+  },
+  {
+    id: "contacts",
+    name: "Contacts",
+    icon: "users",
+    description: "Settings coming soon",
+  },
+  {
+    id: "translator",
+    name: "Translator",
+    icon: "globe",
+    description: "Settings coming soon",
+  },
+];
+
 export default function SettingsMenuScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -73,6 +150,10 @@ export default function SettingsMenuScreen() {
 
   const handleMenuPress = (route: keyof AppStackParamList) => {
     navigation.navigate(route);
+  };
+
+  const handleModuleSettingsPress = (name: string) => {
+    Alert.alert(`${name} Settings`, "Settings for this module are coming soon.");
   };
 
   return (
@@ -122,6 +203,46 @@ export default function SettingsMenuScreen() {
             </Pressable>
           ))}
         </View>
+        <View style={styles.sectionHeader}>
+          <ThemedText type="caption" muted>
+            Module Settings
+          </ThemedText>
+        </View>
+        <View
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
+        >
+          {MODULE_SETTINGS.map((item, index) => (
+            <Pressable
+              key={item.id}
+              onPress={() => handleModuleSettingsPress(item.name)}
+              style={[
+                styles.menuRow,
+                index < MODULE_SETTINGS.length - 1 && {
+                  borderBottomWidth: 1,
+                  borderBottomColor: theme.border,
+                },
+              ]}
+            >
+              <View style={styles.menuInfo}>
+                <View
+                  style={[
+                    styles.iconContainer,
+                    { backgroundColor: theme.accentDim },
+                  ]}
+                >
+                  <Feather name={item.icon} size={20} color={theme.accent} />
+                </View>
+                <View style={styles.textContainer}>
+                  <ThemedText type="body">{item.name}</ThemedText>
+                  <ThemedText type="small" muted>
+                    {item.description}
+                  </ThemedText>
+                </View>
+              </View>
+              <Feather name="chevron-right" size={20} color={theme.textMuted} />
+            </Pressable>
+          ))}
+        </View>
       </ScrollView>
     </ThemedView>
   );
@@ -133,6 +254,11 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
+  },
+  sectionHeader: {
+    marginTop: Spacing.lg,
+    marginBottom: Spacing.sm,
+    paddingHorizontal: Spacing.xs,
   },
   section: {
     borderRadius: BorderRadius.md,
