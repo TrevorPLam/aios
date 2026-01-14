@@ -84,12 +84,13 @@ function RecommendationCard({
 }) {
   const { theme } = useTheme();
   const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
 
   const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-10, 10])
     .onUpdate((e) => {
+      // Only allow horizontal swiping (not vertical)
       translateX.value = e.translationX;
-      translateY.value = e.translationY * 0.3;
     })
     .onEnd((e) => {
       if (Math.abs(e.translationX) > SWIPE_THRESHOLD) {
@@ -102,7 +103,6 @@ function RecommendationCard({
         );
       } else {
         translateX.value = withSpring(0);
-        translateY.value = withSpring(0);
       }
     });
 
@@ -123,7 +123,6 @@ function RecommendationCard({
     return {
       transform: [
         { translateX: translateX.value },
-        { translateY: translateY.value },
         { rotate: `${rotate}deg` },
       ],
     };
@@ -328,9 +327,7 @@ export default function CommandCenterScreen() {
         {recommendations.length > 0 ? (
           <FlatList
             data={recommendations}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View style={styles.cardContainer}>
@@ -344,9 +341,6 @@ export default function CommandCenterScreen() {
             )}
             ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
             contentContainerStyle={styles.listContent}
-            snapToInterval={CARD_WIDTH + CARD_SPACING}
-            snapToAlignment="start"
-            decelerationRate="fast"
           />
         ) : (
           <Animated.View
@@ -433,14 +427,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: CARD_SPACING,
+    paddingHorizontal: Spacing["2xl"],
+    paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    width: CARD_SPACING,
+    height: Spacing.lg,
   },
   cardContainer: {
     width: CARD_WIDTH,
-    justifyContent: "center",
+    alignSelf: "center",
     minHeight: 300,
   },
   card: {
