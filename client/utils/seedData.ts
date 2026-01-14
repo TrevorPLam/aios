@@ -633,6 +633,10 @@ export function generateSeedPhotos(): Photo[] {
       updatedAt: daysFromNow(-1),
       isBackedUp: false,
       tags: ["urban", "street"],
+    },
+  ];
+}
+
 export function generateSeedConversations(): Conversation[] {
   const currentUserId = "current_user";
 

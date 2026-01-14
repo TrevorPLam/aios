@@ -6,8 +6,8 @@ export type ModuleType =
   | "email"
   | "lists"
   | "alerts"
-  | "photos";
-  | "messages";
+  | "photos"
+  | "messages"
   | "contacts"
   | "translator";
 
@@ -238,6 +238,10 @@ export interface Conversation {
   isMuted: boolean;
   isArchived: boolean;
   archivedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Contact {
   id: string;
   name: string;
@@ -279,6 +283,8 @@ export interface VideoCallParticipant {
   isAudioEnabled: boolean;
   joinedAt: string;
   leftAt: string | null;
+}
+
 export type ContactSharingField = "email" | "birthday" | "business";
 
 export interface ContactSharingPreferences {
@@ -321,16 +327,13 @@ export const DEFAULT_SETTINGS: Settings = {
     "lists",
     "alerts",
     "photos",
-  ],
-  aiLimitTier: 1,
-  darkMode: true,
-  photoGridSize: 4,
     "messages",
     "contacts",
     "translator",
-  ],
+  ] as ModuleType[],
   aiLimitTier: 1,
   darkMode: true,
+  photoGridSize: 4,
   contactSharingPreferences: {
     shareEmail: true,
     shareBirthday: true,

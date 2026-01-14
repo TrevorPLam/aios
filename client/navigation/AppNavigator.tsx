@@ -127,6 +127,8 @@ export default function AppNavigator() {
         const photos = generateSeedPhotos();
         for (const photo of photos) {
           await db.photos.save(photo);
+        }
+
         const conversations = generateSeedConversations();
         for (const conversation of conversations) {
           await db.conversations.save(conversation);
