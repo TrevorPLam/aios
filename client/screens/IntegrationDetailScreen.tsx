@@ -26,8 +26,7 @@ import {
   Switch,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useRoute, RouteProp } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
@@ -38,10 +37,9 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Integration, SyncFrequency } from "@/models/types";
+import { Integration } from "@/models/types";
 import { formatRelativeDate } from "@/utils/helpers";
 
-type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type IntegrationDetailRouteProp = RouteProp<
   AppStackParamList,
   "IntegrationDetail"
@@ -50,7 +48,6 @@ type IntegrationDetailRouteProp = RouteProp<
 export default function IntegrationDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<NavigationProp>();
   const route = useRoute<IntegrationDetailRouteProp>();
   const { integrationId } = route.params;
 
@@ -245,10 +242,7 @@ export default function IntegrationDetailScreen() {
           ]}
         >
           <View
-            style={[
-              styles.iconContainer,
-              { backgroundColor: theme.accentDim },
-            ]}
+            style={[styles.iconContainer, { backgroundColor: theme.accentDim }]}
           >
             <Feather
               name={integration.iconName as any}
@@ -357,10 +351,7 @@ export default function IntegrationDetailScreen() {
         {/* Configuration Section */}
         <Animated.View
           entering={FadeInDown.delay(100).springify()}
-          style={[
-            styles.section,
-            { backgroundColor: theme.backgroundDefault },
-          ]}
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
         >
           <ThemedText type="h3" style={styles.sectionTitle}>
             Configuration
@@ -461,10 +452,7 @@ export default function IntegrationDetailScreen() {
         {/* Statistics Section */}
         <Animated.View
           entering={FadeInDown.delay(150).springify()}
-          style={[
-            styles.section,
-            { backgroundColor: theme.backgroundDefault },
-          ]}
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
         >
           <ThemedText type="h3" style={styles.sectionTitle}>
             Statistics

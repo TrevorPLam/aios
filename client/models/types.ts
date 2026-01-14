@@ -35,10 +35,10 @@ export type AILimitTier = 0 | 1 | 2 | 3;
 
 /**
  * Recommendation Interface
- * 
+ *
  * Represents an AI-generated suggestion/recommendation.
  * Recommendations are time-bound, have confidence levels, and track evidence.
- * 
+ *
  * @property {string} id - Unique identifier for the recommendation
  * @property {ModuleType} module - Which module this recommendation is for
  * @property {string} title - Short recommendation title
@@ -73,10 +73,10 @@ export interface Recommendation {
 
 /**
  * Recommendation Decision Interface
- * 
+ *
  * Records user's decision on a recommendation (accepted or declined).
  * Used for tracking AI effectiveness and user preferences.
- * 
+ *
  * @property {string} id - Unique identifier for the decision
  * @property {string} recommendationId - ID of the related recommendation
  * @property {DecisionType} decision - User's decision (accepted or declined)
@@ -126,10 +126,10 @@ export interface Project {
 
 /**
  * Calendar Event Interface
- * 
+ *
  * Represents a calendar event with support for recurrence and exceptions.
  * Events can be all-day or have specific start/end times.
- * 
+ *
  * @property {string} id - Unique identifier for the event
  * @property {string} title - Event title/name
  * @property {string} description - Optional event description
@@ -200,7 +200,7 @@ export interface List {
 
 /**
  * Alert Type
- * 
+ *
  * Defines the type of alert/notification
  * - alarm: Sound-based alert (typically for wake-up times)
  * - reminder: Notification-based reminder (for tasks/events)
@@ -209,10 +209,10 @@ export type AlertType = "alarm" | "reminder";
 
 /**
  * Alert Interface
- * 
+ *
  * Represents an alarm or reminder in the system.
  * Supports one-time and recurring alerts with enable/disable functionality.
- * 
+ *
  * @property {string} id - Unique identifier for the alert
  * @property {string} title - Alert title/name
  * @property {string} description - Optional description or notes
@@ -270,8 +270,19 @@ export type PhotoEditOperation =
 
 export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
 export type MessageType = "text" | "image" | "video" | "audio" | "file" | "gif";
-export type ColorTheme = "cyan" | "purple" | "green" | "orange" | "pink" | "blue";
-export type AIPersonality = "default" | "enthusiastic" | "coach" | "witty" | "militant";
+export type ColorTheme =
+  | "cyan"
+  | "purple"
+  | "green"
+  | "orange"
+  | "pink"
+  | "blue";
+export type AIPersonality =
+  | "default"
+  | "enthusiastic"
+  | "coach"
+  | "witty"
+  | "militant";
 
 export type ConversationType = "direct" | "group";
 
@@ -325,10 +336,10 @@ export interface Conversation {
 
 /**
  * Contact Interface
- * 
+ *
  * Represents a contact from the device with app-specific enhancements.
  * Includes sharing preferences for controlling what data is shared in-app.
- * 
+ *
  * @property {string} id - Unique identifier (from device or generated)
  * @property {string} name - Contact's full name
  * @property {string} [firstName] - Optional first name
@@ -390,9 +401,9 @@ export type ContactSharingField = "email" | "birthday" | "business";
 
 /**
  * Contact Sharing Preferences Interface
- * 
+ *
  * Granular control over what contact information is shared within the app.
- * 
+ *
  * @property {boolean} shareEmail - Share email address
  * @property {boolean} shareBirthday - Share birthday information
  * @property {boolean} shareBusinessInfo - Share business/work information (company, jobTitle)
@@ -405,10 +416,10 @@ export interface ContactSharingPreferences {
 
 /**
  * Budget Line Item Interface
- * 
+ *
  * Represents a single line item within a budget category.
  * Tracks both budgeted and actual amounts for comparison.
- * 
+ *
  * @property {string} id - Unique identifier for the line item
  * @property {string} name - Line item name/description (e.g., "Rent", "Groceries")
  * @property {number} budgeted - Budgeted/planned amount
@@ -423,10 +434,10 @@ export interface BudgetLineItem {
 
 /**
  * Budget Category Interface
- * 
+ *
  * Represents a category containing multiple budget line items.
  * Categories can be expanded or collapsed in the UI.
- * 
+ *
  * @property {string} id - Unique identifier for the category
  * @property {string} name - Category name (e.g., "Housing", "Transportation")
  * @property {BudgetLineItem[]} lineItems - Array of line items in this category
@@ -441,10 +452,10 @@ export interface BudgetCategory {
 
 /**
  * Budget Interface
- * 
+ *
  * Represents a monthly budget with multiple categories and line items.
  * Used for tracking planned vs actual spending across various categories.
- * 
+ *
  * @property {string} id - Unique identifier for the budget
  * @property {string} name - Budget name/title
  * @property {string} month - Month in YYYY-MM format (e.g., "2026-01")
@@ -463,7 +474,7 @@ export interface Budget {
 
 /**
  * Integration Category Type
- * 
+ *
  * Represents the category/type of third-party service integration.
  */
 export type IntegrationCategory =
@@ -478,23 +489,32 @@ export type IntegrationCategory =
 
 /**
  * Integration Connection Status
- * 
+ *
  * Tracks the current connection state of an integration.
  */
-export type IntegrationStatus = "connected" | "disconnected" | "error" | "syncing";
+export type IntegrationStatus =
+  | "connected"
+  | "disconnected"
+  | "error"
+  | "syncing";
 
 /**
  * Integration Sync Frequency
- * 
+ *
  * Determines how often the integration should sync data.
  */
-export type SyncFrequency = "realtime" | "hourly" | "daily" | "weekly" | "manual";
+export type SyncFrequency =
+  | "realtime"
+  | "hourly"
+  | "daily"
+  | "weekly"
+  | "manual";
 
 /**
  * Integration Statistics Interface
- * 
+ *
  * Tracks usage statistics for an integration.
- * 
+ *
  * @property {number} totalSyncs - Total number of sync operations performed
  * @property {number} dataItemsSynced - Total number of data items synchronized
  * @property {number} lastSyncDurationMs - Duration of the last sync in milliseconds
@@ -509,9 +529,9 @@ export interface IntegrationStats {
 
 /**
  * Integration Configuration Interface
- * 
+ *
  * Stores configuration options for an integration.
- * 
+ *
  * @property {SyncFrequency} syncFrequency - How often to sync data
  * @property {boolean} syncEnabled - Whether automatic syncing is enabled
  * @property {boolean} notificationsEnabled - Whether to show sync notifications
@@ -528,10 +548,10 @@ export interface IntegrationConfig {
 
 /**
  * Integration Interface
- * 
+ *
  * Represents a third-party service integration.
  * Integrations connect external services like Google Calendar, Dropbox, etc.
- * 
+ *
  * @property {string} id - Unique identifier for the integration
  * @property {string} name - Integration name (e.g., "Google Calendar")
  * @property {string} serviceName - Service provider name (e.g., "Google")

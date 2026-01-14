@@ -15,7 +15,7 @@
  * @module IntegrationsScreen
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -53,7 +53,10 @@ const CATEGORY_LABELS: Record<IntegrationCategory, string> = {
   finance: "Finance",
 };
 
-const CATEGORY_ICONS: Record<IntegrationCategory, keyof typeof Feather.glyphMap> = {
+const CATEGORY_ICONS: Record<
+  IntegrationCategory,
+  keyof typeof Feather.glyphMap
+> = {
   calendar: "calendar",
   email: "mail",
   cloud_storage: "cloud",
@@ -247,9 +250,7 @@ export default function IntegrationsScreen() {
     {} as Record<IntegrationCategory, Integration[]>,
   );
 
-  const categories = Object.keys(
-    groupedIntegrations,
-  ) as IntegrationCategory[];
+  const categories = Object.keys(groupedIntegrations) as IntegrationCategory[];
 
   // Calculate statistics
   const connectedCount = integrations.filter(
@@ -380,51 +381,51 @@ export default function IntegrationsScreen() {
               </ThemedText>
             </Pressable>
 
-            {(
-              Object.keys(CATEGORY_LABELS) as IntegrationCategory[]
-            ).map((category) => (
-              <Pressable
-                key={category}
-                onPress={() => {
-                  if (Platform.OS !== "web") {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  }
-                  setSelectedCategory(category);
-                }}
-                style={({ pressed }) => [
-                  styles.categoryChip,
-                  {
-                    backgroundColor:
-                      selectedCategory === category
-                        ? theme.accent
-                        : theme.backgroundDefault,
-                    opacity: pressed ? 0.8 : 1,
-                  },
-                ]}
-              >
-                <Feather
-                  name={CATEGORY_ICONS[category]}
-                  size={16}
-                  color={
-                    selectedCategory === category
-                      ? theme.buttonText
-                      : theme.text
-                  }
-                />
-                <ThemedText
-                  type="small"
-                  style={{
-                    color:
+            {(Object.keys(CATEGORY_LABELS) as IntegrationCategory[]).map(
+              (category) => (
+                <Pressable
+                  key={category}
+                  onPress={() => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    setSelectedCategory(category);
+                  }}
+                  style={({ pressed }) => [
+                    styles.categoryChip,
+                    {
+                      backgroundColor:
+                        selectedCategory === category
+                          ? theme.accent
+                          : theme.backgroundDefault,
+                      opacity: pressed ? 0.8 : 1,
+                    },
+                  ]}
+                >
+                  <Feather
+                    name={CATEGORY_ICONS[category]}
+                    size={16}
+                    color={
                       selectedCategory === category
                         ? theme.buttonText
-                        : theme.text,
-                    fontWeight: "600",
-                  }}
-                >
-                  {CATEGORY_LABELS[category]}
-                </ThemedText>
-              </Pressable>
-            ))}
+                        : theme.text
+                    }
+                  />
+                  <ThemedText
+                    type="small"
+                    style={{
+                      color:
+                        selectedCategory === category
+                          ? theme.buttonText
+                          : theme.text,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {CATEGORY_LABELS[category]}
+                  </ThemedText>
+                </Pressable>
+              ),
+            )}
           </ScrollView>
         </Animated.View>
 
@@ -440,9 +441,7 @@ export default function IntegrationsScreen() {
               <Feather name="package" size={40} color={theme.accent} />
             </View>
             <ThemedText type="h3" style={styles.emptyTitle}>
-              {searchQuery
-                ? "No integrations found"
-                : "No integrations yet"}
+              {searchQuery ? "No integrations found" : "No integrations yet"}
             </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyDescription}>
               {searchQuery
