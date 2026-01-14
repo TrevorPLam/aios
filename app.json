@@ -21,10 +21,6 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.aios.app"
     },
-    "web": {
-      "output": "single",
-      "favicon": "./assets/images/icon.png"
-    },
     "plugins": [
       [
         "expo-splash-screen",
