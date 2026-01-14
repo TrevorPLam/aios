@@ -34,7 +34,7 @@ export default function EmailSettingsScreen() {
     loadSettings();
   }, [loadSettings]);
 
-  const toggleModule = useCallback(
+  const toggleEnabled = useCallback(
     async () => {
       if (!settings) return;
 
@@ -88,7 +88,7 @@ export default function EmailSettingsScreen() {
             </View>
             <Switch
               value={isEnabled}
-              onValueChange={toggleModule}
+              onValueChange={toggleEnabled}
               trackColor={{
                 false: theme.backgroundSecondary,
                 true: theme.accentDim,
