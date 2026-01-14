@@ -122,6 +122,9 @@ export const settings = pgTable("settings", {
     .default(["command", "notebook", "planner", "calendar", "email", "messages"]),
   aiLimitTier: integer("ai_limit_tier").notNull().default(1),
   darkMode: boolean("dark_mode").notNull().default(true),
+  colorTheme: text("color_theme").notNull().default("cyan"),
+  aiPersonality: text("ai_personality").notNull().default("default"),
+  aiCustomPrompt: text("ai_custom_prompt").notNull().default("You are AIOS, the perfect personal assistant. You are intelligent, helpful, proactive, and always focused on making your user's life easier. You anticipate needs, provide thoughtful recommendations, and handle tasks efficiently. You communicate clearly and professionally while maintaining a warm, supportive tone. Your goal is to empower your user to be more productive and organized."),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  Switch,
   Pressable,
   Platform,
 } from "react-native";
@@ -16,23 +15,24 @@ import * as Haptics from "expo-haptics";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
-import { Spacing, BorderRadius } from "@/constants/theme";
+import { Spacing, BorderRadius, ColorThemes } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Settings, ModuleType } from "@/models/types";
+import { Settings, ColorTheme } from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
-const MODULES: {
-  id: ModuleType;
+const COLOR_THEMES: {
+  id: ColorTheme;
   name: string;
-  icon: keyof typeof Feather.glyphMap;
+  color: string;
 }[] = [
-  { id: "notebook", name: "Notebook", icon: "book-open" },
-  { id: "planner", name: "Planner", icon: "check-square" },
-  { id: "calendar", name: "Calendar", icon: "calendar" },
-  { id: "email", name: "Email", icon: "mail" },
-  { id: "contacts", name: "Contacts", icon: "users" },
+  { id: "cyan", name: "Cyan", color: ColorThemes.cyan.accent },
+  { id: "purple", name: "Purple", color: ColorThemes.purple.accent },
+  { id: "green", name: "Green", color: ColorThemes.green.accent },
+  { id: "orange", name: "Orange", color: ColorThemes.orange.accent },
+  { id: "pink", name: "Pink", color: ColorThemes.pink.accent },
+  { id: "blue", name: "Blue", color: ColorThemes.blue.accent },
 ];
 
 export default function GeneralSettingsScreen() {
@@ -53,22 +53,26 @@ export default function GeneralSettingsScreen() {
     loadSettings();
   }, [loadSettings]);
 
-  const toggleModule = useCallback(
-    async (moduleId: ModuleType) => {
+  const selectColorTheme = useCallback(
+    async (themeId: ColorTheme) => {
       if (!settings) return;
 
       if (Platform.OS !== "web") {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
 
-      const enabledModules = settings.enabledModules.includes(moduleId)
-        ? settings.enabledModules.filter((m) => m !== moduleId)
-        : [...settings.enabledModules, moduleId];
-
-      const updated = await db.settings.update({ enabledModules });
+      const updated = await db.settings.update({ colorTheme: themeId });
       setSettings(updated);
+      
+      // Force a re-render by reloading the screen
+      setTimeout(() => {
+        navigation.goBack();
+        setTimeout(() => {
+          navigation.navigate("GeneralSettings");
+        }, 100);
+      }, 100);
     },
-    [settings],
+    [settings, navigation],
   );
 
   if (!settings) {
@@ -92,74 +96,41 @@ export default function GeneralSettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ThemedText type="caption" secondary style={styles.sectionTitle}>
-          ENABLED MODULES
+          COLOR THEME
         </ThemedText>
         <View
           style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
         >
-          {MODULES.map((module, index) => (
-            <View
-              key={module.id}
+          {COLOR_THEMES.map((colorTheme, index) => (
+            <Pressable
+              key={colorTheme.id}
+              onPress={() => selectColorTheme(colorTheme.id)}
               style={[
-                styles.settingRow,
-                index < MODULES.length - 1 && {
+                styles.themeRow,
+                index < COLOR_THEMES.length - 1 && {
                   borderBottomWidth: 1,
                   borderBottomColor: theme.border,
                 },
               ]}
             >
-              <View style={styles.settingInfo}>
-                <Feather
-                  name={module.icon}
-                  size={20}
-                  color={theme.textSecondary}
+              <View style={styles.themeInfo}>
+                <View
+                  style={[
+                    styles.colorCircle,
+                    { backgroundColor: colorTheme.color },
+                  ]}
                 />
-                <ThemedText type="body">{module.name}</ThemedText>
+                <ThemedText type="body">{colorTheme.name}</ThemedText>
               </View>
-              <Switch
-                value={settings.enabledModules.includes(module.id)}
-                onValueChange={() => toggleModule(module.id)}
-                trackColor={{
-                  false: theme.backgroundSecondary,
-                  true: theme.accentDim,
-                }}
-                thumbColor={
-                  settings.enabledModules.includes(module.id)
-                    ? theme.accent
-                    : theme.textSecondary
-                }
-              />
-            </View>
+              {settings.colorTheme === colorTheme.id && (
+                <Feather name="check" size={20} color={theme.accent} />
+              )}
+            </Pressable>
           ))}
         </View>
 
-        <ThemedText type="caption" secondary style={styles.sectionTitle}>
-          APPEARANCE
-        </ThemedText>
-        <View
-          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
-        >
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Feather name="moon" size={20} color={theme.textSecondary} />
-              <ThemedText type="body">Dark Mode</ThemedText>
-            </View>
-            <Switch
-              value={settings.darkMode}
-              disabled={true}
-              trackColor={{
-                false: theme.backgroundSecondary,
-                true: theme.accentDim,
-              }}
-              thumbColor={
-                settings.darkMode ? theme.accent : theme.textSecondary
-              }
-            />
-          </View>
-        </View>
-
         <ThemedText type="caption" muted style={styles.note}>
-          Theme settings are coming soon
+          Choose your app's accent color theme
         </ThemedText>
       </ScrollView>
     </ThemedView>
@@ -182,16 +153,21 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     overflow: "hidden",
   },
-  settingRow: {
+  themeRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     padding: Spacing.md,
   },
-  settingInfo: {
+  themeInfo: {
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
+  },
+  colorCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
   },
   note: {
     marginTop: Spacing.md,

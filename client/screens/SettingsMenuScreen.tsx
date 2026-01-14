@@ -32,6 +32,7 @@ interface ModuleSettingsItem {
   name: string;
   icon: keyof typeof Feather.glyphMap;
   description: string;
+  route?: keyof AppStackParamList;
 }
 
 const SETTINGS_MENU: SettingsMenuItem[] = [
@@ -83,25 +84,29 @@ const MODULE_SETTINGS: ModuleSettingsItem[] = [
     id: "notebook",
     name: "Notebook",
     icon: "book-open",
-    description: "Settings coming soon",
+    description: "Configure notebook settings",
+    route: "NotebookSettings",
   },
   {
     id: "planner",
     name: "Planner",
     icon: "check-square",
-    description: "Settings coming soon",
+    description: "Configure planner settings",
+    route: "PlannerSettings",
   },
   {
     id: "calendar",
     name: "Calendar",
     icon: "calendar",
-    description: "Settings coming soon",
+    description: "Configure calendar settings",
+    route: "CalendarSettings",
   },
   {
     id: "email",
     name: "Email",
     icon: "mail",
-    description: "Settings coming soon",
+    description: "Configure email settings",
+    route: "EmailSettings",
   },
   {
     id: "messages",
@@ -131,7 +136,8 @@ const MODULE_SETTINGS: ModuleSettingsItem[] = [
     id: "contacts",
     name: "Contacts",
     icon: "users",
-    description: "Settings coming soon",
+    description: "Configure contacts settings",
+    route: "ContactsSettings",
   },
   {
     id: "translator",
@@ -150,8 +156,12 @@ export default function SettingsMenuScreen() {
     navigation.navigate(route);
   };
 
-  const handleModuleSettingsPress = (name: string) => {
-    Alert.alert(`${name} Settings`, "Settings for this module are coming soon.");
+  const handleModuleSettingsPress = (item: ModuleSettingsItem) => {
+    if (item.route) {
+      navigation.navigate(item.route);
+    } else {
+      Alert.alert(`${item.name} Settings`, "Settings for this module are coming soon.");
+    }
   };
 
   return (
@@ -212,7 +222,7 @@ export default function SettingsMenuScreen() {
           {MODULE_SETTINGS.map((item, index) => (
             <Pressable
               key={item.id}
-              onPress={() => handleModuleSettingsPress(item.name)}
+              onPress={() => handleModuleSettingsPress(item)}
               style={[
                 styles.menuRow,
                 index < MODULE_SETTINGS.length - 1 && {
