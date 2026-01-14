@@ -294,7 +294,10 @@ export default function TranslatorScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + Spacing.xl + 60 },
+          {
+            paddingTop: headerHeight + Spacing.md,
+            paddingBottom: insets.bottom + Spacing["5xl"],
+          },
         ]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -488,7 +491,14 @@ export default function TranslatorScreen() {
         </View>
       </ScrollView>
 
-      <BottomNav onAiPress={() => setShowAISheet(true)} />
+      <View
+        style={[
+          styles.bottomNavContainer,
+          { bottom: insets.bottom + Spacing.lg },
+        ]}
+      >
+        <BottomNav onAiPress={() => setShowAISheet(true)} />
+      </View>
 
       {showAISheet && (
         <AIAssistSheet
@@ -506,7 +516,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.lg,
   },
   section: {
     marginBottom: Spacing.md,
@@ -600,5 +609,11 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     borderWidth: 1,
     marginTop: Spacing.lg,
+  },
+  bottomNavContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 });

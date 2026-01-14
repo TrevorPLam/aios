@@ -26,6 +26,7 @@ import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Photo, PhotoGridSize } from "@/models/types";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import { BottomNav } from "@/components/BottomNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -82,6 +83,7 @@ function PhotoCard({ photo, onPress, index, gridSize }: PhotoCardProps) {
 export default function PhotosScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
 
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -240,7 +242,10 @@ export default function PhotosScreen() {
             key={gridSize}
             contentContainerStyle={[
               styles.listContent,
-              { paddingBottom: insets.bottom + Spacing.xl },
+              {
+                paddingTop: headerHeight + Spacing.md,
+                paddingBottom: insets.bottom + Spacing["5xl"],
+              },
             ]}
             columnWrapperStyle={styles.columnWrapper}
             showsVerticalScrollIndicator={false}
@@ -252,7 +257,7 @@ export default function PhotosScreen() {
               styles.gridControls,
               {
                 backgroundColor: theme.backgroundDefault,
-                bottom: insets.bottom + Spacing.md,
+                bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
               },
             ]}
           >
@@ -294,13 +299,22 @@ export default function PhotosScreen() {
               styles.fab,
               {
                 backgroundColor: theme.accent,
-                bottom: insets.bottom + Spacing.xl + Spacing["3xl"],
+                bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
                 right: Spacing.lg,
               },
             ]}
           >
             <Feather name="plus" size={24} color={theme.buttonText} />
           </Pressable>
+
+          <View
+            style={[
+              styles.bottomNavContainer,
+              { bottom: insets.bottom + Spacing.lg },
+            ]}
+          >
+            <BottomNav onAiPress={() => {}} />
+          </View>
         </>
       )}
     </ThemedView>
@@ -313,7 +327,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.md,
   },
   columnWrapper: {
     gap: Spacing.sm,
@@ -351,7 +364,7 @@ const styles = StyleSheet.create({
   },
   gridControls: {
     position: "absolute",
-    right: Spacing.lg,
+    left: Spacing.lg,
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
@@ -383,5 +396,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,
+  },
+  bottomNavContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 });
