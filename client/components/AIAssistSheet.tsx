@@ -142,6 +142,26 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       description: "Draft follow-up email",
     },
   ],
+  lists: [
+    {
+      id: "generate",
+      icon: "list",
+      title: "Generate List",
+      description: "Create list from text",
+    },
+    {
+      id: "organize",
+      icon: "shuffle",
+      title: "Organize Items",
+      description: "Reorder by priority",
+    },
+    {
+      id: "expand",
+      icon: "plus-circle",
+      title: "Expand Items",
+      description: "Add related items",
+    },
+  ],
 };
 
 interface AIAssistSheetProps {

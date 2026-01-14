@@ -178,7 +178,7 @@ export default function ListEditorScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.section}>
-          <ThemedText type="label" style={styles.label}>
+          <ThemedText type="small" style={styles.label}>
             List Title *
           </ThemedText>
           <TextInput
@@ -198,7 +198,7 @@ export default function ListEditorScreen() {
         </View>
 
         <View style={styles.section}>
-          <ThemedText type="label" style={styles.label}>
+          <ThemedText type="small" style={styles.label}>
             Items
           </ThemedText>
 
@@ -226,7 +226,11 @@ export default function ListEditorScreen() {
                   ]}
                 >
                   {item.isChecked && (
-                    <Feather name="check" size={16} color={theme.background} />
+                    <Feather
+                      name="check"
+                      size={16}
+                      color={theme.backgroundRoot}
+                    />
                   )}
                 </View>
               </Pressable>
