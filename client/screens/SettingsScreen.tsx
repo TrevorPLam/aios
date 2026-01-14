@@ -42,8 +42,10 @@ export default function SettingsScreen() {
 
   const loadSettings = useCallback(async () => {
     const data = await db.settings.get();
-    setSettings(data);
-    setAiName(data.aiName);
+    if (data) {
+      setSettings(data);
+      setAiName(data.aiName || 'AIOS');
+    }
   }, []);
 
   useEffect(() => {

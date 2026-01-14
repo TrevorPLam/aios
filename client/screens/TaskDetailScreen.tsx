@@ -74,22 +74,43 @@ export default function TaskDetailScreen() {
       return;
     }
     
+    const existingTask = isNew ? null : await db.tasks.get(taskId);
+    const previousProjectId = existingTask?.projectId || null;
+    
     const task: Task = {
       id: taskId,
       title: title.trim(),
       userNotes,
-      aiNotes,
+      aiNotes: aiNotes || [],
       priority,
-      dueDate: null,
+      dueDate: existingTask?.dueDate || null,
       status,
       recurrenceRule: recurrence,
       projectId: selectedProjectId,
-      dependencyIds: [],
-      createdAt: isNew ? new Date().toISOString() : (await db.tasks.get(taskId))?.createdAt || new Date().toISOString(),
+      dependencyIds: existingTask?.dependencyIds || [],
+      createdAt: isNew ? new Date().toISOString() : existingTask?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
     
     await db.tasks.save(task);
+    
+    if (previousProjectId !== selectedProjectId) {
+      if (previousProjectId) {
+        const prevProject = await db.projects.get(previousProjectId);
+        if (prevProject) {
+          prevProject.taskIds = prevProject.taskIds.filter((id) => id !== taskId);
+          await db.projects.save(prevProject);
+        }
+      }
+      if (selectedProjectId) {
+        const newProject = await db.projects.get(selectedProjectId);
+        if (newProject && !newProject.taskIds.includes(taskId)) {
+          newProject.taskIds.push(taskId);
+          await db.projects.save(newProject);
+        }
+      }
+    }
+    
     if (Platform.OS !== 'web') {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }

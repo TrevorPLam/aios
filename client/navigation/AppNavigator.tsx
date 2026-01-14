@@ -69,6 +69,15 @@ export default function AppNavigator() {
           await db.events.save(event);
         }
         
+        await db.settings.get();
+        await db.aiLimits.get();
+        
+        await db.history.add({
+          message: 'AIOS initialized with sample data',
+          type: 'system',
+          metadata: {},
+        });
+        
         await db.setInitialized();
       }
       setIsReady(true);

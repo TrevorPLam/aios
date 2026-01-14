@@ -202,6 +202,9 @@ export default function CommandCenterScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     await db.recommendations.updateStatus(rec.id, 'accepted');
+    if (rec.countsAgainstLimit) {
+      await db.aiLimits.incrementUsed();
+    }
     await db.decisions.save({
       id: `decision_${Date.now()}`,
       recommendationId: rec.id,
@@ -221,6 +224,9 @@ export default function CommandCenterScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     }
     await db.recommendations.updateStatus(rec.id, 'declined');
+    if (rec.countsAgainstLimit) {
+      await db.aiLimits.incrementUsed();
+    }
     await db.decisions.save({
       id: `decision_${Date.now()}`,
       recommendationId: rec.id,
