@@ -324,9 +324,14 @@ export const db = {
 
       const updated = nativeContacts.map((nc) => {
         const existingContact = existingMap.get(nc.id);
+        // Merge native contact data with existing custom fields
         return {
           ...nc,
-          isRegistered: existingContact?.isRegistered || false,
+          // Preserve app-specific fields from existing contact
+          isRegistered: existingContact?.isRegistered || nc.isRegistered,
+          // Keep original creation date if exists
+          createdAt: existingContact?.createdAt || nc.createdAt,
+          // Update the modified timestamp
           updatedAt: new Date().toISOString(),
         };
       });

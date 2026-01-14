@@ -137,8 +137,9 @@ export default function ContactsScreen() {
           name,
           firstName: c.firstName,
           lastName: c.lastName,
-          phoneNumbers: c.phoneNumbers?.map((p) => p.number || "") || [],
-          emails: c.emails?.map((e) => e.email || "") || [],
+          phoneNumbers:
+            c.phoneNumbers?.map((p) => p.number).filter(Boolean) || [],
+          emails: c.emails?.map((e) => e.email).filter(Boolean) || [],
           birthday:
             c.birthday &&
             c.birthday.year !== undefined &&
