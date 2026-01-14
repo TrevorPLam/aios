@@ -305,12 +305,7 @@ export default function PhotosScreen() {
             <Feather name="plus" size={24} color={theme.buttonText} />
           </Pressable>
 
-          <View
-            style={[
-              styles.bottomNavContainer,
-              { bottom: insets.bottom + Spacing.lg },
-            ]}
-          >
+          <View style={styles.bottomNavContainer}>
             <BottomNav onAiPress={() => {}} />
           </View>
         </>
@@ -397,6 +392,7 @@ const styles = StyleSheet.create({
   },
   bottomNavContainer: {
     position: "absolute",
+    bottom: 0,
     left: 0,
     right: 0,
     alignItems: "center",

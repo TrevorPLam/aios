@@ -3,6 +3,7 @@ import { View, StyleSheet, Pressable } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
@@ -31,6 +32,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
 
   // Find current module index if we are in one, otherwise default to -1
   const currentIndex = MODULES.findIndex((m) => m.route === route.name);
@@ -53,11 +55,24 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.backgroundBlack }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.backgroundBlack,
+          paddingBottom: insets.bottom + Spacing.xs,
+        },
+      ]}
     >
       <Pressable
         onPress={() => navigation.navigate(prev.route as any)}
-        style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.navButton,
+          {
+            backgroundColor: theme.backgroundSecondary,
+            borderColor: theme.border,
+          },
+          pressed && styles.pressed,
+        ]}
       >
         <View style={styles.navContent}>
           <ThemedText type="caption" muted style={styles.arrow}>
@@ -74,7 +89,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
         onPress={onAiPress}
         style={({ pressed }) => [
           styles.aiButton,
-          { backgroundColor: theme.accent },
+          { backgroundColor: theme.accent, borderColor: theme.accentGlow },
           pressed && { opacity: 0.8 },
         ]}
       >
@@ -87,7 +102,14 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
 
       <Pressable
         onPress={() => navigation.navigate(next.route as any)}
-        style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.navButton,
+          {
+            backgroundColor: theme.backgroundSecondary,
+            borderColor: theme.border,
+          },
+          pressed && styles.pressed,
+        ]}
       >
         <View style={styles.navContent}>
           <Feather name={next.icon} size={24} color={theme.textSecondary} />
@@ -107,14 +129,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: Spacing["3xl"],
-    paddingVertical: Spacing.md,
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.xs,
   },
   navButton: {
-    width: 64,
+    minWidth: 80,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
   },
   navContent: {
     flexDirection: "row",
@@ -135,6 +161,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.full,
+    borderWidth: 1,
     ...Shadows.glow,
   },
   pressed: {
