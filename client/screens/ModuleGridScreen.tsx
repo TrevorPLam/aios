@@ -23,6 +23,9 @@ import { ModuleType, Settings } from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+// Delay to allow modal close animation to complete before navigation
+const MODAL_CLOSE_DELAY_MS = 100;
+
 interface ModuleItem {
   id: ModuleType | "settings";
   name: string;
@@ -95,7 +98,7 @@ export default function ModuleGridScreen() {
     // Use setTimeout to ensure modal closes before navigation
     setTimeout(() => {
       navigation.navigate(module.route as any);
-    }, 100);
+    }, MODAL_CLOSE_DELAY_MS);
   };
 
   const isModuleEnabled = (id: ModuleType | "settings"): boolean => {
