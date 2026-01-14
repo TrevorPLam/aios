@@ -9,7 +9,7 @@ interface UseScreenOptionsParams {
 }
 
 export function useScreenOptions({
-  transparent = true,
+  transparent = false,
 }: UseScreenOptionsParams = {}): NativeStackNavigationOptions {
   const { theme } = useTheme();
 
@@ -19,10 +19,7 @@ export function useScreenOptions({
     headerBlurEffect: "dark",
     headerTintColor: theme.text,
     headerStyle: {
-      backgroundColor: Platform.select({
-        ios: transparent ? undefined : theme.backgroundRoot,
-        android: theme.backgroundRoot,
-      }),
+      backgroundColor: "#000000",
     },
     headerTitleStyle: {
       color: theme.text,

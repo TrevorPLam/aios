@@ -25,6 +25,7 @@ import { MOCK_EMAIL_THREADS } from "@/utils/seedData";
 import { formatRelativeDate, truncateText } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
+import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -114,20 +115,16 @@ export default function EmailScreen() {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerLeft: () => <HeaderLeftNav />,
       headerRight: () => (
-        <Pressable
-          onPress={() => {
+        <HeaderRightWithAction
+          actionIcon="search"
+          onActionPress={() => {
             if (Platform.OS !== "web") {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
           }}
-          style={({ pressed }) => [
-            styles.headerButton,
-            pressed && { opacity: 0.7 },
-          ]}
-        >
-          <Feather name="search" size={24} color={theme.textSecondary} />
-        </Pressable>
+        />
       ),
     });
   }, [navigation, theme]);

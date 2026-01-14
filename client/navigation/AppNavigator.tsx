@@ -10,6 +10,7 @@ import {
   generateSeedEvents,
   generateSeedLists,
 } from "@/utils/seedData";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
 import ModuleGridScreen from "@/screens/ModuleGridScreen";

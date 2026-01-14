@@ -408,6 +408,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
     paddingBottom: Spacing.md,
+    backgroundColor: "#000000",
   },
   headerButton: {
     width: 44,
@@ -427,7 +428,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    height: Spacing.sm,
+    height: Spacing.xs,
   },
   cardContainer: {
     width: CARD_WIDTH,
