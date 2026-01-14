@@ -18,6 +18,7 @@ import {
   Conversation,
   Contact,
   Budget,
+  Integration,
 } from "@/models/types";
 
 const KEYS = {
@@ -38,6 +39,7 @@ const KEYS = {
   CONVERSATIONS: "@aios/conversations",
   CONTACTS: "@aios/contacts",
   BUDGETS: "@aios/budgets",
+  INTEGRATIONS: "@aios/integrations",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -60,24 +62,24 @@ async function setData<T>(key: string, value: T): Promise<void> {
 export const db = {
   /**
    * Recommendations Module
-   * 
+   *
    * Manages AI recommendation storage and filtering.
    * Recommendations are time-sensitive suggestions with confidence levels.
    */
   recommendations: {
     /**
      * Get all recommendations from storage
-     * 
+     *
      * @returns {Promise<Recommendation[]>} Array of all recommendations
      */
     async getAll(): Promise<Recommendation[]> {
       return getData(KEYS.RECOMMENDATIONS, []);
     },
-    
+
     /**
      * Get only active, non-expired recommendations
      * Filters by status "active" and expiresAt > current time
-     * 
+     *
      * @returns {Promise<Recommendation[]>} Array of active recommendations
      */
     async getActive(): Promise<Recommendation[]> {
@@ -85,10 +87,10 @@ export const db = {
       const now = new Date().toISOString();
       return all.filter((r) => r.status === "active" && r.expiresAt > now);
     },
-    
+
     /**
      * Save a recommendation (create new or update existing)
-     * 
+     *
      * @param {Recommendation} rec - The recommendation to save
      * @returns {Promise<void>}
      */
@@ -102,21 +104,21 @@ export const db = {
       }
       await setData(KEYS.RECOMMENDATIONS, all);
     },
-    
+
     /**
      * Replace all recommendations at once
      * Useful for batch updates from AI service
-     * 
+     *
      * @param {Recommendation[]} recs - Array of recommendations to save
      * @returns {Promise<void>}
      */
     async saveAll(recs: Recommendation[]): Promise<void> {
       await setData(KEYS.RECOMMENDATIONS, recs);
     },
-    
+
     /**
      * Update recommendation status (active, accepted, declined, expired)
-     * 
+     *
      * @param {string} id - The recommendation ID
      * @param {Recommendation["status"]} status - New status value
      * @returns {Promise<void>}
@@ -234,23 +236,23 @@ export const db = {
 
   /**
    * Events Module
-   * 
+   *
    * Manages calendar event storage operations.
    * Supports event creation, editing, deletion, and date-based filtering.
    */
   events: {
     /**
      * Get all events from storage
-     * 
+     *
      * @returns {Promise<CalendarEvent[]>} Array of all calendar events
      */
     async getAll(): Promise<CalendarEvent[]> {
       return getData(KEYS.EVENTS, []);
     },
-    
+
     /**
      * Get a specific event by ID
-     * 
+     *
      * @param {string} id - The event ID
      * @returns {Promise<CalendarEvent | null>} The event if found, null otherwise
      */
@@ -258,11 +260,11 @@ export const db = {
       const all = await this.getAll();
       return all.find((e) => e.id === id) || null;
     },
-    
+
     /**
      * Get all events for a specific date
      * Compares only the date portion (YYYY-MM-DD) of event startAt timestamps
-     * 
+     *
      * @param {string} date - ISO 8601 date string to filter by
      * @returns {Promise<CalendarEvent[]>} Array of events on the specified date
      */
@@ -274,10 +276,10 @@ export const db = {
         return eventDate === targetDate;
       });
     },
-    
+
     /**
      * Save an event (create new or update existing)
-     * 
+     *
      * @param {CalendarEvent} event - The event to save
      * @returns {Promise<void>}
      */
@@ -291,10 +293,10 @@ export const db = {
       }
       await setData(KEYS.EVENTS, all);
     },
-    
+
     /**
      * Delete an event by ID
-     * 
+     *
      * @param {string} id - The event ID to delete
      * @returns {Promise<void>}
      */
@@ -579,7 +581,7 @@ export const db = {
   },
   /**
    * Contacts Module
-   * 
+   *
    * Manages contact storage with sharing preferences.
    * Contacts can be imported from device and have configurable sharing settings.
    */
@@ -588,19 +590,19 @@ export const db = {
     async getAll(): Promise<Contact[]> {
       return getData(KEYS.CONTACTS, []);
     },
-    
+
     /** Get all contacts sorted alphabetically by name */
     async getAllSorted(): Promise<Contact[]> {
       const all = await this.getAll();
       return all.sort((a, b) => a.name.localeCompare(b.name));
     },
-    
+
     /** Get a specific contact by ID */
     async get(id: string): Promise<Contact | null> {
       const all = await this.getAll();
       return all.find((c) => c.id === id) || null;
     },
-    
+
     /** Save a contact (create new or update existing) */
     async save(contact: Contact): Promise<void> {
       const all = await this.getAll();
@@ -612,12 +614,12 @@ export const db = {
       }
       await setData(KEYS.CONTACTS, all);
     },
-    
+
     /** Save multiple contacts at once (for bulk import) */
     async saveAll(contacts: Contact[]): Promise<void> {
       await setData(KEYS.CONTACTS, contacts);
     },
-    
+
     /** Delete a contact by ID */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
@@ -773,23 +775,23 @@ export const db = {
 
   /**
    * Budgets Module
-   * 
+   *
    * Manages monthly budget storage operations.
    * Budgets contain categories with line items tracking budgeted vs actual amounts.
    */
   budgets: {
     /**
      * Get all budgets from storage
-     * 
+     *
      * @returns {Promise<Budget[]>} Array of all budgets
      */
     async getAll(): Promise<Budget[]> {
       return getData(KEYS.BUDGETS, []);
     },
-    
+
     /**
      * Get a specific budget by ID
-     * 
+     *
      * @param {string} id - The budget ID
      * @returns {Promise<Budget | null>} The budget if found, null otherwise
      */
@@ -797,10 +799,10 @@ export const db = {
       const all = await this.getAll();
       return all.find((b) => b.id === id) || null;
     },
-    
+
     /**
      * Get the budget for the current month (YYYY-MM format)
-     * 
+     *
      * @returns {Promise<Budget | null>} The current month's budget if found, null otherwise
      */
     async getCurrent(): Promise<Budget | null> {
@@ -809,10 +811,10 @@ export const db = {
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
       return all.find((b) => b.month === currentMonth) || null;
     },
-    
+
     /**
      * Save a budget (create new or update existing)
-     * 
+     *
      * @param {Budget} budget - The budget to save
      * @returns {Promise<void>}
      */
@@ -826,10 +828,10 @@ export const db = {
       }
       await setData(KEYS.BUDGETS, all);
     },
-    
+
     /**
      * Delete a budget by ID
-     * 
+     *
      * @param {string} id - The budget ID to delete
      * @returns {Promise<void>}
      */
@@ -837,6 +839,144 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((b) => b.id !== id);
       await setData(KEYS.BUDGETS, filtered);
+    },
+  },
+
+  /**
+   * Integrations Storage
+   *
+   * CRUD operations for third-party service integrations.
+   */
+  integrations: {
+    /**
+     * Get all integrations
+     *
+     * @returns {Promise<Integration[]>} Array of all integrations
+     */
+    async getAll(): Promise<Integration[]> {
+      return getData<Integration[]>(KEYS.INTEGRATIONS, []);
+    },
+
+    /**
+     * Get all integrations sorted by category and name
+     *
+     * @returns {Promise<Integration[]>} Sorted array of integrations
+     */
+    async getAllSorted(): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.sort((a, b) => {
+        // Sort by category first, then by name
+        if (a.category !== b.category) {
+          return a.category.localeCompare(b.category);
+        }
+        return a.name.localeCompare(b.name);
+      });
+    },
+
+    /**
+     * Get integrations by category
+     *
+     * @param {string} category - Integration category to filter by
+     * @returns {Promise<Integration[]>} Array of integrations in the category
+     */
+    async getByCategory(category: string): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.filter((integration) => integration.category === category);
+    },
+
+    /**
+     * Get integrations by status
+     *
+     * @param {string} status - Connection status to filter by
+     * @returns {Promise<Integration[]>} Array of integrations with the status
+     */
+    async getByStatus(status: string): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.filter((integration) => integration.status === status);
+    },
+
+    /**
+     * Get an integration by ID
+     *
+     * @param {string} id - Integration ID
+     * @returns {Promise<Integration | null>} Integration or null if not found
+     */
+    async getById(id: string): Promise<Integration | null> {
+      const all = await this.getAll();
+      return all.find((integration) => integration.id === id) ?? null;
+    },
+
+    /**
+     * Save or update an integration
+     *
+     * @param {Integration} integration - Integration to save
+     */
+    async save(integration: Integration): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((i) => i.id === integration.id);
+
+      if (index >= 0) {
+        all[index] = integration;
+      } else {
+        all.push(integration);
+      }
+
+      await setData(KEYS.INTEGRATIONS, all);
+    },
+
+    /**
+     * Delete an integration by ID
+     *
+     * @param {string} id - Integration ID
+     */
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((integration) => integration.id !== id);
+      await setData(KEYS.INTEGRATIONS, filtered);
+    },
+
+    /**
+     * Update integration status
+     *
+     * @param {string} id - Integration ID
+     * @param {string} status - New status
+     */
+    async updateStatus(id: string, status: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.status = status as any;
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
+    },
+
+    /**
+     * Update integration last sync time
+     *
+     * @param {string} id - Integration ID
+     */
+    async updateLastSync(id: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.lastSyncAt = new Date().toISOString();
+        integration.stats.totalSyncs += 1;
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
+    },
+
+    /**
+     * Toggle integration enabled state
+     *
+     * @param {string} id - Integration ID
+     */
+    async toggleEnabled(id: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.isEnabled = !integration.isEnabled;
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
     },
   },
 
