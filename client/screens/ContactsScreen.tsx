@@ -1,3 +1,19 @@
+/**
+ * ContactsScreen Module
+ *
+ * Native contacts integration with sharing preferences management.
+ * Features:
+ * - Import from device contacts
+ * - Alphabetical contact list with avatars
+ * - Quick message action button
+ * - Sharing preferences per contact
+ * - Search and filter capabilities
+ * - AI assistance for contact management
+ * - Haptic feedback for interactions
+ *
+ * @module ContactsScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -29,6 +45,17 @@ import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+/**
+ * ContactCard Component
+ *
+ * Displays a single contact with avatar, name, and quick actions.
+ *
+ * @param {Contact} contact - The contact data to display
+ * @param {Function} onPress - Callback when card is pressed
+ * @param {Function} onMessagePress - Callback for quick message action
+ * @param {number} index - Index in list (for animation delay)
+ * @returns {JSX.Element} The contact card component
+ */
 function ContactCard({
   contact,
   onPress,

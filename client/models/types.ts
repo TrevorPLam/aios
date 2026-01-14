@@ -323,6 +323,26 @@ export interface Conversation {
   updatedAt: string;
 }
 
+/**
+ * Contact Interface
+ * 
+ * Represents a contact from the device with app-specific enhancements.
+ * Includes sharing preferences for controlling what data is shared in-app.
+ * 
+ * @property {string} id - Unique identifier (from device or generated)
+ * @property {string} name - Contact's full name
+ * @property {string} [firstName] - Optional first name
+ * @property {string} [lastName] - Optional last name
+ * @property {string[]} phoneNumbers - Array of phone numbers
+ * @property {string[]} emails - Array of email addresses
+ * @property {string} [birthday] - Optional birthday (ISO 8601 date)
+ * @property {string} [company] - Optional company/organization name
+ * @property {string} [jobTitle] - Optional job title
+ * @property {string} [imageUri] - Optional profile image URI
+ * @property {boolean} isRegistered - Whether contact is registered in the app
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ */
 export interface Contact {
   id: string;
   name: string;
@@ -368,6 +388,15 @@ export interface VideoCallParticipant {
 
 export type ContactSharingField = "email" | "birthday" | "business";
 
+/**
+ * Contact Sharing Preferences Interface
+ * 
+ * Granular control over what contact information is shared within the app.
+ * 
+ * @property {boolean} shareEmail - Share email address
+ * @property {boolean} shareBirthday - Share birthday information
+ * @property {boolean} shareBusinessInfo - Share business/work information (company, jobTitle)
+ */
 export interface ContactSharingPreferences {
   shareEmail: boolean;
   shareBirthday: boolean;

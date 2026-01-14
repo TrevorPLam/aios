@@ -577,18 +577,31 @@ export const db = {
       });
     },
   },
+  /**
+   * Contacts Module
+   * 
+   * Manages contact storage with sharing preferences.
+   * Contacts can be imported from device and have configurable sharing settings.
+   */
   contacts: {
+    /** Get all contacts from storage */
     async getAll(): Promise<Contact[]> {
       return getData(KEYS.CONTACTS, []);
     },
+    
+    /** Get all contacts sorted alphabetically by name */
     async getAllSorted(): Promise<Contact[]> {
       const all = await this.getAll();
       return all.sort((a, b) => a.name.localeCompare(b.name));
     },
+    
+    /** Get a specific contact by ID */
     async get(id: string): Promise<Contact | null> {
       const all = await this.getAll();
       return all.find((c) => c.id === id) || null;
     },
+    
+    /** Save a contact (create new or update existing) */
     async save(contact: Contact): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((c) => c.id === contact.id);
@@ -599,9 +612,13 @@ export const db = {
       }
       await setData(KEYS.CONTACTS, all);
     },
+    
+    /** Save multiple contacts at once (for bulk import) */
     async saveAll(contacts: Contact[]): Promise<void> {
       await setData(KEYS.CONTACTS, contacts);
     },
+    
+    /** Delete a contact by ID */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((c) => c.id !== id);
