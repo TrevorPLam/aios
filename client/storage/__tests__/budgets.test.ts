@@ -94,7 +94,13 @@ describe("Database Budget Storage", () => {
     });
 
     it("should return null if no current month budget exists", async () => {
-      await db.budgets.save(mockBudget); // Past month
+      // Use a definitely past month
+      const pastBudget: Budget = {
+        ...mockBudget,
+        month: "2020-01", // Far in the past
+      };
+      
+      await db.budgets.save(pastBudget);
       const current = await db.budgets.getCurrent();
 
       expect(current).toBeNull();
