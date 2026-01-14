@@ -358,11 +358,22 @@ export const db = {
   alerts: {
     /**
      * Get all alerts from storage
+     * Automatically migrates old alerts to include new fields with defaults
      *
      * @returns {Promise<Alert[]>} Array of all alerts
      */
     async getAll(): Promise<Alert[]> {
-      return getData(KEYS.ALERTS, []);
+      const alerts = await getData<Alert[]>(KEYS.ALERTS, []);
+      // Migrate old alerts to include new fields with defaults
+      const migratedAlerts = alerts.map((alert) => ({
+        ...alert,
+        sound: alert.sound || "default",
+        vibration: alert.vibration || "default",
+        gradualVolume: alert.gradualVolume ?? false,
+        snoozeDuration: alert.snoozeDuration || 10,
+        tags: alert.tags || [],
+      }));
+      return migratedAlerts;
     },
 
     /**

@@ -326,8 +326,8 @@ export default function AlertDetailScreen() {
               styles.input,
               {
                 backgroundColor: theme.backgroundDefault,
-                color: theme.textPrimary,
-                borderColor: theme.borderColor,
+                color: theme.text,
+                borderColor: theme.border,
               },
             ]}
             value={title}
@@ -347,8 +347,8 @@ export default function AlertDetailScreen() {
               styles.textArea,
               {
                 backgroundColor: theme.backgroundDefault,
-                color: theme.textPrimary,
-                borderColor: theme.borderColor,
+                color: theme.text,
+                borderColor: theme.border,
               },
             ]}
             value={description}
@@ -370,7 +370,7 @@ export default function AlertDetailScreen() {
               styles.picker,
               {
                 backgroundColor: theme.backgroundDefault,
-                borderColor: theme.borderColor,
+                borderColor: theme.border,
               },
             ]}
           >
@@ -403,7 +403,7 @@ export default function AlertDetailScreen() {
                         ? theme.accentDim
                         : theme.backgroundDefault,
                     borderColor:
-                      type === option.value ? theme.accent : theme.borderColor,
+                      type === option.value ? theme.accent : theme.border,
                   },
                 ]}
               >
@@ -411,7 +411,7 @@ export default function AlertDetailScreen() {
                   type="body"
                   style={{
                     color:
-                      type === option.value ? theme.accent : theme.textPrimary,
+                      type === option.value ? theme.accent : theme.text,
                   }}
                 >
                   {option.label}
@@ -445,7 +445,7 @@ export default function AlertDetailScreen() {
                     borderColor:
                       recurrence === option.value
                         ? theme.accent
-                        : theme.borderColor,
+                        : theme.border,
                   },
                 ]}
               >
@@ -455,7 +455,7 @@ export default function AlertDetailScreen() {
                     color:
                       recurrence === option.value
                         ? theme.accent
-                        : theme.textPrimary,
+                        : theme.text,
                   }}
                 >
                   {option.label}
@@ -477,7 +477,7 @@ export default function AlertDetailScreen() {
               styles.toggleRow,
               {
                 backgroundColor: theme.backgroundDefault,
-                borderColor: theme.borderColor,
+                borderColor: theme.border,
               },
             ]}
           >
@@ -527,7 +527,7 @@ export default function AlertDetailScreen() {
                     borderColor:
                       sound === option.value
                         ? theme.accent
-                        : theme.borderColor,
+                        : theme.border,
                   },
                 ]}
               >
@@ -537,7 +537,7 @@ export default function AlertDetailScreen() {
                     color:
                       sound === option.value
                         ? theme.accent
-                        : theme.textPrimary,
+                        : theme.text,
                   }}
                 >
                   {option.label}
@@ -571,7 +571,7 @@ export default function AlertDetailScreen() {
                     borderColor:
                       vibration === option.value
                         ? theme.accent
-                        : theme.borderColor,
+                        : theme.border,
                   },
                 ]}
               >
@@ -581,7 +581,7 @@ export default function AlertDetailScreen() {
                     color:
                       vibration === option.value
                         ? theme.accent
-                        : theme.textPrimary,
+                        : theme.text,
                   }}
                 >
                   {option.label}
@@ -604,7 +604,7 @@ export default function AlertDetailScreen() {
                 styles.toggleRow,
                 {
                   backgroundColor: theme.backgroundDefault,
-                  borderColor: theme.borderColor,
+                  borderColor: theme.border,
                 },
               ]}
             >
@@ -660,7 +660,7 @@ export default function AlertDetailScreen() {
                     borderColor:
                       snoozeDuration === option.value
                         ? theme.accent
-                        : theme.borderColor,
+                        : theme.border,
                   },
                 ]}
               >
@@ -670,7 +670,7 @@ export default function AlertDetailScreen() {
                     color:
                       snoozeDuration === option.value
                         ? theme.accent
-                        : theme.textPrimary,
+                        : theme.text,
                   }}
                 >
                   {option.label}
@@ -710,8 +710,8 @@ export default function AlertDetailScreen() {
                 styles.tagInput,
                 {
                   backgroundColor: theme.backgroundDefault,
-                  color: theme.textPrimary,
-                  borderColor: theme.borderColor,
+                  color: theme.text,
+                  borderColor: theme.border,
                 },
               ]}
               value={tagInput}
