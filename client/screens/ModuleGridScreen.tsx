@@ -97,6 +97,8 @@ const MODULES: ModuleItem[] = [
     icon: "image",
     route: "Photos",
     description: "Photo gallery",
+  },
+  {
     id: "contacts",
     name: "Contacts",
     icon: "users",
@@ -109,6 +111,13 @@ const MODULES: ModuleItem[] = [
     icon: "globe",
     route: "Translator",
     description: "Language translation",
+  },
+  {
+    id: "budget",
+    name: "Budget",
+    icon: "pie-chart",
+    route: "Budget",
+    description: "Personal budgeting",
   },
   {
     id: "settings",

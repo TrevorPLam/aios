@@ -14,11 +14,11 @@ import {
   Message,
   Conversation,
   ConversationParticipant,
+  Budget,
+  BudgetCategory,
+  BudgetLineItem,
 } from "@/models/types";
-
-function generateId(): string {
-  return `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-}
+import { generateId } from "@/utils/helpers";
 
 function hoursFromNow(hours: number): string {
   const date = new Date();
@@ -956,4 +956,129 @@ export function generateSeedMessages(): Message[] {
       updatedAt: daysFromNow(-16),
     },
   ];
+}
+
+export function generateSeedBudget(): Budget {
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  const categories: BudgetCategory[] = [
+    {
+      id: generateId(),
+      name: "Income",
+      isExpanded: true,
+      lineItems: [
+        { id: generateId(), name: "Salary", budgeted: 5000, actual: 5000 },
+        { id: generateId(), name: "Side Hustle", budgeted: 500, actual: 350 },
+        { id: generateId(), name: "Investments", budgeted: 200, actual: 180 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Housing",
+      isExpanded: true,
+      lineItems: [
+        { id: generateId(), name: "Rent/Mortgage", budgeted: 1500, actual: 1500 },
+        { id: generateId(), name: "Property Insurance", budgeted: 100, actual: 100 },
+        { id: generateId(), name: "HOA Fees", budgeted: 50, actual: 50 },
+        { id: generateId(), name: "Maintenance", budgeted: 100, actual: 75 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Transportation",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Car Payment", budgeted: 400, actual: 400 },
+        { id: generateId(), name: "Gas", budgeted: 150, actual: 165 },
+        { id: generateId(), name: "Auto Insurance", budgeted: 120, actual: 120 },
+        { id: generateId(), name: "Maintenance & Repairs", budgeted: 50, actual: 0 },
+        { id: generateId(), name: "Public Transit", budgeted: 50, actual: 40 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Food",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Groceries", budgeted: 400, actual: 420 },
+        { id: generateId(), name: "Dining Out", budgeted: 200, actual: 250 },
+        { id: generateId(), name: "Coffee Shops", budgeted: 50, actual: 60 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Utilities",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Electricity", budgeted: 100, actual: 95 },
+        { id: generateId(), name: "Water", budgeted: 40, actual: 42 },
+        { id: generateId(), name: "Internet", budgeted: 60, actual: 60 },
+        { id: generateId(), name: "Phone", budgeted: 80, actual: 80 },
+        { id: generateId(), name: "Streaming Services", budgeted: 40, actual: 40 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Healthcare",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Health Insurance", budgeted: 300, actual: 300 },
+        { id: generateId(), name: "Prescriptions", budgeted: 50, actual: 45 },
+        { id: generateId(), name: "Dental", budgeted: 30, actual: 0 },
+        { id: generateId(), name: "Vision", budgeted: 20, actual: 0 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Savings & Investments",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Emergency Fund", budgeted: 500, actual: 500 },
+        { id: generateId(), name: "Retirement (401k)", budgeted: 400, actual: 400 },
+        { id: generateId(), name: "Investment Account", budgeted: 200, actual: 200 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Personal",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Clothing", budgeted: 100, actual: 85 },
+        { id: generateId(), name: "Gym Membership", budgeted: 50, actual: 50 },
+        { id: generateId(), name: "Entertainment", budgeted: 100, actual: 120 },
+        { id: generateId(), name: "Hobbies", budgeted: 75, actual: 90 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Debt Payments",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Credit Card", budgeted: 200, actual: 200 },
+        { id: generateId(), name: "Student Loans", budgeted: 250, actual: 250 },
+        { id: generateId(), name: "Personal Loan", budgeted: 100, actual: 100 },
+      ],
+    },
+    {
+      id: generateId(),
+      name: "Miscellaneous",
+      isExpanded: false,
+      lineItems: [
+        { id: generateId(), name: "Gifts", budgeted: 50, actual: 75 },
+        { id: generateId(), name: "Pet Care", budgeted: 80, actual: 70 },
+        { id: generateId(), name: "Subscriptions", budgeted: 30, actual: 30 },
+        { id: generateId(), name: "Other", budgeted: 50, actual: 25 },
+      ],
+    },
+  ];
+
+  return {
+    id: generateId(),
+    name: `Budget - ${currentMonth}`,
+    month: currentMonth,
+    categories,
+    createdAt: now.toISOString(),
+    updatedAt: now.toISOString(),
+  };
 }

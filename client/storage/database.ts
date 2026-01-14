@@ -17,6 +17,7 @@ import {
   Message,
   Conversation,
   Contact,
+  Budget,
 } from "@/models/types";
 
 const KEYS = {
@@ -36,6 +37,7 @@ const KEYS = {
   MESSAGES: "@aios/messages",
   CONVERSATIONS: "@aios/conversations",
   CONTACTS: "@aios/contacts",
+  BUDGETS: "@aios/budgets",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -633,6 +635,37 @@ export const db = {
     async getByTag(tag: string): Promise<Photo[]> {
       const all = await this.getAll();
       return all.filter((p) => p.tags.includes(tag));
+    },
+  },
+
+  budgets: {
+    async getAll(): Promise<Budget[]> {
+      return getData(KEYS.BUDGETS, []);
+    },
+    async get(id: string): Promise<Budget | null> {
+      const all = await this.getAll();
+      return all.find((b) => b.id === id) || null;
+    },
+    async getCurrent(): Promise<Budget | null> {
+      const all = await this.getAll();
+      const now = new Date();
+      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+      return all.find((b) => b.month === currentMonth) || null;
+    },
+    async save(budget: Budget): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((b) => b.id === budget.id);
+      if (index >= 0) {
+        all[index] = budget;
+      } else {
+        all.push(budget);
+      }
+      await setData(KEYS.BUDGETS, all);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((b) => b.id !== id);
+      await setData(KEYS.BUDGETS, filtered);
     },
   },
 
