@@ -58,7 +58,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       >
         <View style={styles.navContent}>
           <ThemedText type="caption" muted style={styles.arrow}>
-            &lt;
+            ‹
           </ThemedText>
           <Feather name={prev.icon} size={24} color={theme.textSecondary} />
         </View>
@@ -89,7 +89,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
         <View style={styles.navContent}>
           <Feather name={next.icon} size={24} color={theme.textSecondary} />
           <ThemedText type="caption" muted style={styles.arrow}>
-            &gt;
+            ›
           </ThemedText>
         </View>
         <ThemedText type="caption" muted style={styles.label}>
