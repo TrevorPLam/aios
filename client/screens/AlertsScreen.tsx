@@ -14,7 +14,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, FlatList, Pressable, Platform } from "react-native";
+import { View, StyleSheet, FlatList, Pressable, Platform, Alert as RNAlert, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -98,20 +98,31 @@ function DigitalClock() {
  * - Toggle switch showing enabled/disabled state
  * - Staggered animation on list entry
  * - Dimmed appearance when disabled
+ * - Selection indicator in bulk mode
+ * - Tags display
  *
  * @param {Alert} alert - The alert data to display
  * @param {Function} onPress - Callback when card is pressed
+ * @param {Function} onLongPress - Callback when card is long pressed
  * @param {number} index - Index in list (for animation delay)
+ * @param {boolean} isSelected - Whether the alert is selected in bulk mode
+ * @param {boolean} bulkSelectMode - Whether bulk selection mode is active
  * @returns {JSX.Element} The alert card component
  */
 function AlertCard({
   alert,
   onPress,
+  onLongPress,
   index,
+  isSelected,
+  bulkSelectMode,
 }: {
   alert: Alert;
   onPress: () => void;
+  onLongPress: () => void;
   index: number;
+  isSelected: boolean;
+  bulkSelectMode: boolean;
 }) {
   const { theme } = useTheme();
   const alertTime = formatTime(alert.time);
@@ -120,13 +131,30 @@ function AlertCard({
     <Animated.View entering={FadeInDown.delay(index * 30).springify()}>
       <Pressable
         onPress={onPress}
+        onLongPress={onLongPress}
         style={({ pressed }) => [
           styles.alertCard,
           { backgroundColor: theme.backgroundDefault },
           !alert.isEnabled && styles.disabledCard,
+          isSelected && { borderColor: theme.accent, borderWidth: 2 },
           pressed && { opacity: 0.8 },
         ]}
       >
+        {bulkSelectMode && (
+          <View
+            style={[
+              styles.selectionIndicator,
+              {
+                backgroundColor: isSelected
+                  ? theme.accent
+                  : theme.backgroundSecondary,
+                borderColor: theme.accent,
+              },
+            ]}
+          >
+            {isSelected && <Feather name="check" size={16} color={theme.buttonText} />}
+          </View>
+        )}
         <View
           style={[
             styles.alertIcon,
@@ -191,6 +219,28 @@ function AlertCard({
               </>
             )}
           </View>
+          {alert.tags && alert.tags.length > 0 && (
+            <View style={styles.tagsRow}>
+              {alert.tags.slice(0, 3).map((tag) => (
+                <View
+                  key={tag}
+                  style={[
+                    styles.tagBadge,
+                    { backgroundColor: theme.accentDim, borderColor: theme.accent },
+                  ]}
+                >
+                  <ThemedText type="small" style={{ color: theme.accent, fontSize: 10 }}>
+                    {tag}
+                  </ThemedText>
+                </View>
+              ))}
+              {alert.tags.length > 3 && (
+                <ThemedText type="small" muted>
+                  +{alert.tags.length - 3}
+                </ThemedText>
+              )}
+            </View>
+          )}
         </View>
         <View style={styles.alertToggle}>
           <View
@@ -231,29 +281,65 @@ export default function AlertsScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [bulkSelectMode, setBulkSelectMode] = useState(false);
+  const [selectedAlerts, setSelectedAlerts] = useState<Set<string>>(new Set());
 
   /**
    * Load alerts from database sorted by time
    */
   const loadAlerts = useCallback(async () => {
-    const data = await db.alerts.getAllSorted();
+    let data: Alert[];
+    if (selectedTag) {
+      data = await db.alerts.getByTag(selectedTag);
+      data.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+    } else {
+      data = await db.alerts.getAllSorted();
+    }
     setAlerts(data);
+  }, [selectedTag]);
+
+  /**
+   * Load all unique tags from alerts
+   */
+  const loadTags = useCallback(async () => {
+    const tags = await db.alerts.getAllTags();
+    setAllTags(tags);
   }, []);
 
   // Reload alerts when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       loadAlerts();
-    }, [loadAlerts]),
+      loadTags();
+    }, [loadAlerts, loadTags]),
   );
 
   // Configure navigation header
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => (
+        <View style={{ flexDirection: "row", gap: Spacing.sm }}>
+          {bulkSelectMode && (
+            <Pressable
+              onPress={() => {
+                setBulkSelectMode(false);
+                setSelectedAlerts(new Set());
+              }}
+              style={({ pressed }) => [
+                { padding: Spacing.xs, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Feather name="x" size={24} color={theme.text} />
+            </Pressable>
+          )}
+          <HeaderRightNav />
+        </View>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, theme, bulkSelectMode]);
 
   /**
    * Navigate to alert creation screen
@@ -266,15 +352,101 @@ export default function AlertsScreen() {
   };
 
   /**
-   * Navigate to alert detail screen for editing
+   * Navigate to alert detail screen for editing or toggle selection in bulk mode
    *
-   * @param {string} alertId - ID of the alert to edit
+   * @param {string} alertId - ID of the alert to edit or select
    */
   const handleAlertPress = (alertId: string) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    navigation.navigate("AlertDetail", { alertId });
+    
+    if (bulkSelectMode) {
+      // Toggle selection in bulk mode
+      const newSelection = new Set(selectedAlerts);
+      if (newSelection.has(alertId)) {
+        newSelection.delete(alertId);
+      } else {
+        newSelection.add(alertId);
+      }
+      setSelectedAlerts(newSelection);
+    } else {
+      // Navigate to detail screen normally
+      navigation.navigate("AlertDetail", { alertId });
+    }
+  };
+
+  /**
+   * Long press handler to enter bulk select mode
+   */
+  const handleAlertLongPress = (alertId: string) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+    setBulkSelectMode(true);
+    setSelectedAlerts(new Set([alertId]));
+  };
+
+  /**
+   * Enable all selected alerts
+   */
+  const handleEnableSelected = async () => {
+    if (selectedAlerts.size === 0) return;
+    await db.alerts.toggleMultiple(Array.from(selectedAlerts), true);
+    await loadAlerts();
+    if (Platform.OS !== "web") {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+  };
+
+  /**
+   * Disable all selected alerts
+   */
+  const handleDisableSelected = async () => {
+    if (selectedAlerts.size === 0) return;
+    await db.alerts.toggleMultiple(Array.from(selectedAlerts), false);
+    await loadAlerts();
+    if (Platform.OS !== "web") {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+  };
+
+  /**
+   * Delete all selected alerts
+   */
+  const handleDeleteSelected = () => {
+    if (selectedAlerts.size === 0) return;
+    
+    RNAlert.alert(
+      "Delete Alerts",
+      `Are you sure you want to delete ${selectedAlerts.size} alert(s)?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await db.alerts.deleteMultiple(Array.from(selectedAlerts));
+            setBulkSelectMode(false);
+            setSelectedAlerts(new Set());
+            await loadAlerts();
+            if (Platform.OS !== "web") {
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  /**
+   * Filter alerts by tag
+   */
+  const handleFilterByTag = (tag: string | null) => {
+    setSelectedTag(tag);
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
   };
 
   /**
@@ -295,8 +467,85 @@ export default function AlertsScreen() {
         ListHeaderComponent={
           <>
             <DigitalClock />
+            
+            {/* Tag Filter */}
+            {allTags.length > 0 && (
+              <View style={styles.filterSection}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.tagFilterContainer}
+                >
+                  <Pressable
+                    onPress={() => handleFilterByTag(null)}
+                    style={[
+                      styles.tagFilter,
+                      {
+                        backgroundColor: !selectedTag
+                          ? theme.accent
+                          : theme.backgroundSecondary,
+                        borderColor: !selectedTag ? theme.accent : theme.border,
+                      },
+                    ]}
+                  >
+                    <ThemedText
+                      type="small"
+                      style={{
+                        color: !selectedTag ? theme.buttonText : theme.textMuted,
+                      }}
+                    >
+                      All
+                    </ThemedText>
+                  </Pressable>
+                  {allTags.map((tag) => (
+                    <Pressable
+                      key={tag}
+                      onPress={() => handleFilterByTag(tag)}
+                      style={[
+                        styles.tagFilter,
+                        {
+                          backgroundColor:
+                            selectedTag === tag
+                              ? theme.accent
+                              : theme.backgroundSecondary,
+                          borderColor:
+                            selectedTag === tag ? theme.accent : theme.border,
+                        },
+                      ]}
+                    >
+                      <ThemedText
+                        type="small"
+                        style={{
+                          color:
+                            selectedTag === tag
+                              ? theme.buttonText
+                              : theme.textMuted,
+                        }}
+                      >
+                        {tag}
+                      </ThemedText>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+            
+            {/* Section Header with Bulk Selection Toggle */}
             <View style={styles.sectionHeader}>
-              <ThemedText type="h3">Alarms & Reminders</ThemedText>
+              <ThemedText type="h3">
+                Alarms & Reminders
+                {selectedTag && ` • ${selectedTag}`}
+              </ThemedText>
+              {!bulkSelectMode && alerts.length > 0 && (
+                <Pressable
+                  onPress={() => setBulkSelectMode(true)}
+                  style={({ pressed }) => [
+                    { padding: Spacing.xs, opacity: pressed ? 0.7 : 1 },
+                  ]}
+                >
+                  <Feather name="check-square" size={20} color={theme.accent} />
+                </Pressable>
+              )}
             </View>
           </>
         }
@@ -304,7 +553,10 @@ export default function AlertsScreen() {
           <AlertCard
             alert={item}
             onPress={() => handleAlertPress(item.id)}
+            onLongPress={() => handleAlertLongPress(item.id)}
             index={index}
+            isSelected={selectedAlerts.has(item.id)}
+            bulkSelectMode={bulkSelectMode}
           />
         )}
         contentContainerStyle={[
@@ -318,14 +570,73 @@ export default function AlertsScreen() {
           <View style={styles.emptyContainer}>
             <Feather name="bell-off" size={48} color={theme.textMuted} />
             <ThemedText type="body" muted style={styles.emptyText}>
-              No alarms or reminders yet
+              {selectedTag
+                ? `No alerts with tag "${selectedTag}"`
+                : "No alarms or reminders yet"}
             </ThemedText>
             <ThemedText type="small" muted style={styles.emptySubtext}>
-              Tap + to create one or use AI Assist for suggestions
+              {selectedTag
+                ? "Try selecting a different tag"
+                : "Tap + to create one or use AI Assist for suggestions"}
             </ThemedText>
           </View>
         }
       />
+
+      {/* Bulk Operations Bar */}
+      {bulkSelectMode && selectedAlerts.size > 0 && (
+        <View
+          style={[
+            styles.bulkOperationsBar,
+            {
+              backgroundColor: theme.backgroundDefault,
+              bottom: insets.bottom + Spacing["5xl"],
+            },
+          ]}
+        >
+          <ThemedText type="body" style={{ color: theme.accent }}>
+            {selectedAlerts.size} selected
+          </ThemedText>
+          <View style={styles.bulkActions}>
+            <Pressable
+              onPress={handleEnableSelected}
+              style={({ pressed }) => [
+                styles.bulkActionButton,
+                { backgroundColor: theme.success, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Feather name="check-circle" size={20} color={theme.buttonText} />
+              <ThemedText type="small" style={{ color: theme.buttonText }}>
+                Enable
+              </ThemedText>
+            </Pressable>
+            <Pressable
+              onPress={handleDisableSelected}
+              style={({ pressed }) => [
+                styles.bulkActionButton,
+                { backgroundColor: theme.warning, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Feather name="x-circle" size={20} color={theme.buttonText} />
+              <ThemedText type="small" style={{ color: theme.buttonText }}>
+                Disable
+              </ThemedText>
+            </Pressable>
+            <Pressable
+              onPress={handleDeleteSelected}
+              style={({ pressed }) => [
+                styles.bulkActionButton,
+                { backgroundColor: theme.error, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Feather name="trash-2" size={20} color={theme.buttonText} />
+              <ThemedText type="small" style={{ color: theme.buttonText }}>
+                Delete
+              </ThemedText>
+            </Pressable>
+          </View>
+        </View>
+      )}
 
       <Pressable
         onPress={handleCreateAlert}
@@ -382,11 +693,76 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     marginBottom: Spacing.md,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  filterSection: {
+    marginBottom: Spacing.md,
+  },
+  tagFilterContainer: {
+    paddingHorizontal: Spacing.lg,
+    gap: Spacing.sm,
+  },
+  tagFilter: {
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
   },
   alertCard: {
     flexDirection: "row",
     padding: Spacing.lg,
     borderRadius: BorderRadius.lg,
+    marginBottom: Spacing.md,
+    alignItems: "center",
+    ...Shadows.card,
+  },
+  selectionIndicator: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: Spacing.md,
+  },
+  tagsRow: {
+    flexDirection: "row",
+    gap: Spacing.xs,
+    marginTop: Spacing.xs,
+    alignItems: "center",
+  },
+  tagBadge: {
+    paddingVertical: 2,
+    paddingHorizontal: Spacing.xs,
+    borderRadius: BorderRadius.xs,
+    borderWidth: 1,
+  },
+  bulkOperationsBar: {
+    position: "absolute",
+    left: Spacing.lg,
+    right: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ...Shadows.fab,
+  },
+  bulkActions: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+  },
+  bulkActionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.md,
+  },
     marginBottom: Spacing.md,
     alignItems: "center",
     ...Shadows.card,
