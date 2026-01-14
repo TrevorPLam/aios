@@ -21,7 +21,7 @@ import { Image } from "expo-image";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
-import { Spacing, BorderRadius } from "@/constants/theme";
+import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Photo, PhotoGridSize } from "@/models/types";
