@@ -144,7 +144,13 @@ export default function PhotosScreen() {
 
       // Save to local storage (avoid duplication by using unique names)
       const fileName = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
-      const documentDir = (FileSystem as any).documentDirectory as string;
+      const documentDir = FileSystem.documentDirectory;
+      
+      if (!documentDir) {
+        alert("Unable to access file system");
+        return;
+      }
+      
       const localDir = `${documentDir}photos/`;
 
       // Ensure directory exists
