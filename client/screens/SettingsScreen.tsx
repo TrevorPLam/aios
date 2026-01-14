@@ -21,7 +21,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Settings, ModuleType, AILimitTier, TIER_LIMITS } from "@/models/types";
+import { Settings, ModuleType } from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -34,13 +34,6 @@ const MODULES: {
   { id: "planner", name: "Planner", icon: "check-square" },
   { id: "calendar", name: "Calendar", icon: "calendar" },
   { id: "email", name: "Email", icon: "mail" },
-];
-
-const TIERS: { tier: AILimitTier; name: string; limit: number }[] = [
-  { tier: 0, name: "Minimal", limit: TIER_LIMITS[0] },
-  { tier: 1, name: "Standard", limit: TIER_LIMITS[1] },
-  { tier: 2, name: "Enhanced", limit: TIER_LIMITS[2] },
-  { tier: 3, name: "Maximum", limit: TIER_LIMITS[3] },
 ];
 
 export default function SettingsScreen() {
@@ -92,21 +85,6 @@ export default function SettingsScreen() {
     [settings],
   );
 
-  const setTier = useCallback(
-    async (tier: AILimitTier) => {
-      if (!settings) return;
-
-      if (Platform.OS !== "web") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      }
-
-      const updated = await db.settings.update({ aiLimitTier: tier });
-      setSettings(updated);
-      await db.aiLimits.reset();
-    },
-    [settings],
-  );
-
   if (!settings) {
     return (
       <ThemedView style={styles.container}>
@@ -152,54 +130,6 @@ export default function SettingsScreen() {
               placeholderTextColor={theme.textMuted}
             />
           </View>
-        </View>
-
-        <ThemedText type="caption" secondary style={styles.sectionTitle}>
-          AI LIMIT TIER
-        </ThemedText>
-        <View
-          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
-        >
-          {TIERS.map((t, index) => (
-            <Pressable
-              key={t.tier}
-              onPress={() => setTier(t.tier)}
-              style={[
-                styles.tierRow,
-                index < TIERS.length - 1 && {
-                  borderBottomWidth: 1,
-                  borderBottomColor: theme.border,
-                },
-              ]}
-            >
-              <View style={styles.tierInfo}>
-                <ThemedText type="body">{t.name}</ThemedText>
-                <ThemedText type="small" muted>
-                  {t.limit} cards per 6 hours
-                </ThemedText>
-              </View>
-              <View
-                style={[
-                  styles.radioOuter,
-                  {
-                    borderColor:
-                      settings.aiLimitTier === t.tier
-                        ? theme.accent
-                        : theme.textMuted,
-                  },
-                ]}
-              >
-                {settings.aiLimitTier === t.tier && (
-                  <View
-                    style={[
-                      styles.radioInner,
-                      { backgroundColor: theme.accent },
-                    ]}
-                  />
-                )}
-              </View>
-            </Pressable>
-          ))}
         </View>
 
         <ThemedText type="caption" secondary style={styles.sectionTitle}>
@@ -316,28 +246,6 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.sm,
     minWidth: 120,
     textAlign: "right",
-  },
-  tierRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: Spacing.md,
-  },
-  tierInfo: {
-    gap: 2,
-  },
-  radioOuter: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
   },
   linkRow: {
     flexDirection: "row",
