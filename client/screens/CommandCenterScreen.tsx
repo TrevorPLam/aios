@@ -106,10 +106,9 @@ function RecommendationCard({
       }
     });
 
-  const tapGesture = Gesture.Tap()
-    .onEnd(() => {
-      runOnJS(onPress)();
-    });
+  const tapGesture = Gesture.Tap().onEnd(() => {
+    runOnJS(onPress)();
+  });
 
   const gesture = Gesture.Exclusive(panGesture, tapGesture);
 
@@ -121,10 +120,7 @@ function RecommendationCard({
     );
 
     return {
-      transform: [
-        { translateX: translateX.value },
-        { rotate: `${rotate}deg` },
-      ],
+      transform: [{ translateX: translateX.value }, { rotate: `${rotate}deg` }],
     };
   });
 
