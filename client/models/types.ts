@@ -461,6 +461,111 @@ export interface Budget {
   updatedAt: string;
 }
 
+/**
+ * Integration Category Type
+ * 
+ * Represents the category/type of third-party service integration.
+ */
+export type IntegrationCategory =
+  | "calendar"
+  | "email"
+  | "cloud_storage"
+  | "task_management"
+  | "communication"
+  | "ai_services"
+  | "productivity"
+  | "finance";
+
+/**
+ * Integration Connection Status
+ * 
+ * Tracks the current connection state of an integration.
+ */
+export type IntegrationStatus = "connected" | "disconnected" | "error" | "syncing";
+
+/**
+ * Integration Sync Frequency
+ * 
+ * Determines how often the integration should sync data.
+ */
+export type SyncFrequency = "realtime" | "hourly" | "daily" | "weekly" | "manual";
+
+/**
+ * Integration Statistics Interface
+ * 
+ * Tracks usage statistics for an integration.
+ * 
+ * @property {number} totalSyncs - Total number of sync operations performed
+ * @property {number} dataItemsSynced - Total number of data items synchronized
+ * @property {number} lastSyncDurationMs - Duration of the last sync in milliseconds
+ * @property {number} errorCount - Number of sync errors encountered
+ */
+export interface IntegrationStats {
+  totalSyncs: number;
+  dataItemsSynced: number;
+  lastSyncDurationMs: number;
+  errorCount: number;
+}
+
+/**
+ * Integration Configuration Interface
+ * 
+ * Stores configuration options for an integration.
+ * 
+ * @property {SyncFrequency} syncFrequency - How often to sync data
+ * @property {boolean} syncEnabled - Whether automatic syncing is enabled
+ * @property {boolean} notificationsEnabled - Whether to show sync notifications
+ * @property {boolean} twoWaySync - Whether to sync data bidirectionally
+ * @property {string[]} syncedDataTypes - Types of data being synced (e.g., ["events", "contacts"])
+ */
+export interface IntegrationConfig {
+  syncFrequency: SyncFrequency;
+  syncEnabled: boolean;
+  notificationsEnabled: boolean;
+  twoWaySync: boolean;
+  syncedDataTypes: string[];
+}
+
+/**
+ * Integration Interface
+ * 
+ * Represents a third-party service integration.
+ * Integrations connect external services like Google Calendar, Dropbox, etc.
+ * 
+ * @property {string} id - Unique identifier for the integration
+ * @property {string} name - Integration name (e.g., "Google Calendar")
+ * @property {string} serviceName - Service provider name (e.g., "Google")
+ * @property {IntegrationCategory} category - Category of the integration
+ * @property {string} description - Brief description of what the integration does
+ * @property {string} iconName - Feather icon name for the integration
+ * @property {IntegrationStatus} status - Current connection status
+ * @property {boolean} isEnabled - Whether the integration is active
+ * @property {string | null} lastSyncAt - ISO 8601 timestamp of last successful sync
+ * @property {string | null} connectedAt - ISO 8601 timestamp when integration was connected
+ * @property {IntegrationConfig} config - Configuration options for the integration
+ * @property {IntegrationStats} stats - Usage statistics
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ * @property {Record<string, any>} metadata - Additional integration-specific data
+ */
+export interface Integration {
+  id: string;
+  name: string;
+  serviceName: string;
+  category: IntegrationCategory;
+  description: string;
+  iconName: string;
+  status: IntegrationStatus;
+  isEnabled: boolean;
+  lastSyncAt: string | null;
+  connectedAt: string | null;
+  config: IntegrationConfig;
+  stats: IntegrationStats;
+  createdAt: string;
+  updatedAt: string;
+  metadata: Record<string, any>;
+}
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];

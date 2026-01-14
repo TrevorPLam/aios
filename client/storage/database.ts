@@ -18,6 +18,7 @@ import {
   Conversation,
   Contact,
   Budget,
+  Integration,
 } from "@/models/types";
 
 const KEYS = {
@@ -38,6 +39,7 @@ const KEYS = {
   CONVERSATIONS: "@aios/conversations",
   CONTACTS: "@aios/contacts",
   BUDGETS: "@aios/budgets",
+  INTEGRATIONS: "@aios/integrations",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -837,6 +839,144 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((b) => b.id !== id);
       await setData(KEYS.BUDGETS, filtered);
+    },
+  },
+
+  /**
+   * Integrations Storage
+   * 
+   * CRUD operations for third-party service integrations.
+   */
+  integrations: {
+    /**
+     * Get all integrations
+     *
+     * @returns {Promise<Integration[]>} Array of all integrations
+     */
+    async getAll(): Promise<Integration[]> {
+      return getData<Integration[]>(KEYS.INTEGRATIONS, []);
+    },
+
+    /**
+     * Get all integrations sorted by category and name
+     *
+     * @returns {Promise<Integration[]>} Sorted array of integrations
+     */
+    async getAllSorted(): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.sort((a, b) => {
+        // Sort by category first, then by name
+        if (a.category !== b.category) {
+          return a.category.localeCompare(b.category);
+        }
+        return a.name.localeCompare(b.name);
+      });
+    },
+
+    /**
+     * Get integrations by category
+     *
+     * @param {string} category - Integration category to filter by
+     * @returns {Promise<Integration[]>} Array of integrations in the category
+     */
+    async getByCategory(category: string): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.filter((integration) => integration.category === category);
+    },
+
+    /**
+     * Get integrations by status
+     *
+     * @param {string} status - Connection status to filter by
+     * @returns {Promise<Integration[]>} Array of integrations with the status
+     */
+    async getByStatus(status: string): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.filter((integration) => integration.status === status);
+    },
+
+    /**
+     * Get an integration by ID
+     *
+     * @param {string} id - Integration ID
+     * @returns {Promise<Integration | null>} Integration or null if not found
+     */
+    async getById(id: string): Promise<Integration | null> {
+      const all = await this.getAll();
+      return all.find((integration) => integration.id === id) ?? null;
+    },
+
+    /**
+     * Save or update an integration
+     *
+     * @param {Integration} integration - Integration to save
+     */
+    async save(integration: Integration): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((i) => i.id === integration.id);
+
+      if (index >= 0) {
+        all[index] = integration;
+      } else {
+        all.push(integration);
+      }
+
+      await setData(KEYS.INTEGRATIONS, all);
+    },
+
+    /**
+     * Delete an integration by ID
+     *
+     * @param {string} id - Integration ID
+     */
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((integration) => integration.id !== id);
+      await setData(KEYS.INTEGRATIONS, filtered);
+    },
+
+    /**
+     * Update integration status
+     *
+     * @param {string} id - Integration ID
+     * @param {string} status - New status
+     */
+    async updateStatus(id: string, status: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.status = status as any;
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
+    },
+
+    /**
+     * Update integration last sync time
+     *
+     * @param {string} id - Integration ID
+     */
+    async updateLastSync(id: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.lastSyncAt = new Date().toISOString();
+        integration.stats.totalSyncs += 1;
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
+    },
+
+    /**
+     * Toggle integration enabled state
+     *
+     * @param {string} id - Integration ID
+     */
+    async toggleEnabled(id: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.isEnabled = !integration.isEnabled;
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
     },
   },
 

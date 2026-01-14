@@ -15,6 +15,7 @@ import {
   generateSeedMessages,
   generateSeedBudget,
   generateSeedContacts,
+  generateSampleIntegrations,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -33,6 +34,7 @@ import GeneralSettingsScreen from "@/screens/GeneralSettingsScreen";
 import AIPreferencesScreen from "@/screens/AIPreferencesScreen";
 import PersonalizationScreen from "@/screens/PersonalizationScreen";
 import IntegrationsScreen from "@/screens/IntegrationsScreen";
+import IntegrationDetailScreen from "@/screens/IntegrationDetailScreen";
 import SystemScreen from "@/screens/SystemScreen";
 import HistoryScreen from "@/screens/HistoryScreen";
 import RecommendationDetailScreen from "@/screens/RecommendationDetailScreen";
@@ -72,6 +74,7 @@ export type AppStackParamList = {
   AIPreferences: undefined;
   Personalization: undefined;
   Integrations: undefined;
+  IntegrationDetail: { integrationId: string };
   System: undefined;
   History: undefined;
   RecommendationDetail: { recommendationId: string };
@@ -158,6 +161,11 @@ export default function AppNavigator() {
 
         const budget = generateSeedBudget();
         await db.budgets.save(budget);
+
+        const integrations = generateSampleIntegrations();
+        for (const integration of integrations) {
+          await db.integrations.save(integration);
+        }
 
         await db.settings.get();
         await db.aiLimits.get();
@@ -264,6 +272,11 @@ export default function AppNavigator() {
         name="Integrations"
         component={IntegrationsScreen}
         options={{ headerTitle: "Integrations" }}
+      />
+      <Stack.Screen
+        name="IntegrationDetail"
+        component={IntegrationDetailScreen}
+        options={{ headerTitle: "Integration Details" }}
       />
       <Stack.Screen
         name="System"
