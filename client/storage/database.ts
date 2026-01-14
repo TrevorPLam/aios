@@ -58,15 +58,40 @@ async function setData<T>(key: string, value: T): Promise<void> {
 }
 
 export const db = {
+  /**
+   * Recommendations Module
+   * 
+   * Manages AI recommendation storage and filtering.
+   * Recommendations are time-sensitive suggestions with confidence levels.
+   */
   recommendations: {
+    /**
+     * Get all recommendations from storage
+     * 
+     * @returns {Promise<Recommendation[]>} Array of all recommendations
+     */
     async getAll(): Promise<Recommendation[]> {
       return getData(KEYS.RECOMMENDATIONS, []);
     },
+    
+    /**
+     * Get only active, non-expired recommendations
+     * Filters by status "active" and expiresAt > current time
+     * 
+     * @returns {Promise<Recommendation[]>} Array of active recommendations
+     */
     async getActive(): Promise<Recommendation[]> {
       const all = await this.getAll();
       const now = new Date().toISOString();
       return all.filter((r) => r.status === "active" && r.expiresAt > now);
     },
+    
+    /**
+     * Save a recommendation (create new or update existing)
+     * 
+     * @param {Recommendation} rec - The recommendation to save
+     * @returns {Promise<void>}
+     */
     async save(rec: Recommendation): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((r) => r.id === rec.id);
@@ -77,9 +102,25 @@ export const db = {
       }
       await setData(KEYS.RECOMMENDATIONS, all);
     },
+    
+    /**
+     * Replace all recommendations at once
+     * Useful for batch updates from AI service
+     * 
+     * @param {Recommendation[]} recs - Array of recommendations to save
+     * @returns {Promise<void>}
+     */
     async saveAll(recs: Recommendation[]): Promise<void> {
       await setData(KEYS.RECOMMENDATIONS, recs);
     },
+    
+    /**
+     * Update recommendation status (active, accepted, declined, expired)
+     * 
+     * @param {string} id - The recommendation ID
+     * @param {Recommendation["status"]} status - New status value
+     * @returns {Promise<void>}
+     */
     async updateStatus(
       id: string,
       status: Recommendation["status"],

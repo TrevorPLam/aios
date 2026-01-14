@@ -33,6 +33,27 @@ export type RecurrenceRule = "none" | "daily" | "weekly" | "monthly" | "custom";
 
 export type AILimitTier = 0 | 1 | 2 | 3;
 
+/**
+ * Recommendation Interface
+ * 
+ * Represents an AI-generated suggestion/recommendation.
+ * Recommendations are time-bound, have confidence levels, and track evidence.
+ * 
+ * @property {string} id - Unique identifier for the recommendation
+ * @property {ModuleType} module - Which module this recommendation is for
+ * @property {string} title - Short recommendation title
+ * @property {string} summary - Detailed description of the recommendation
+ * @property {string} type - Type/category of recommendation
+ * @property {RecommendationStatus} status - Current status (active, accepted, declined, expired)
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} expiresAt - ISO 8601 timestamp when recommendation expires
+ * @property {ConfidenceLevel} confidence - AI confidence level (low, medium, high)
+ * @property {TaskPriority} priority - Priority level for the recommendation
+ * @property {string} dedupeKey - Key to prevent duplicate recommendations
+ * @property {boolean} countsAgainstLimit - Whether this counts against AI usage limits
+ * @property {string} why - Explanation of why AI made this recommendation
+ * @property {string[]} evidenceTimestamps - Array of ISO timestamps showing evidence
+ */
 export interface Recommendation {
   id: string;
   module: ModuleType;
@@ -50,6 +71,17 @@ export interface Recommendation {
   evidenceTimestamps: string[];
 }
 
+/**
+ * Recommendation Decision Interface
+ * 
+ * Records user's decision on a recommendation (accepted or declined).
+ * Used for tracking AI effectiveness and user preferences.
+ * 
+ * @property {string} id - Unique identifier for the decision
+ * @property {string} recommendationId - ID of the related recommendation
+ * @property {DecisionType} decision - User's decision (accepted or declined)
+ * @property {string} decidedAt - ISO 8601 timestamp when decision was made
+ */
 export interface RecommendationDecision {
   id: string;
   recommendationId: string;
