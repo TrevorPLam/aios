@@ -92,6 +92,13 @@ const MODULES: ModuleItem[] = [
     description: "Manage contacts",
   },
   {
+    id: "translator",
+    name: "Translator",
+    icon: "globe",
+    route: "Translator",
+    description: "Language translation",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: "settings",

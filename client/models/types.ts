@@ -6,7 +6,8 @@ export type ModuleType =
   | "email"
   | "lists"
   | "alerts"
-  | "contacts";
+  | "contacts"
+  | "translator";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -210,6 +211,7 @@ export const DEFAULT_SETTINGS: Settings = {
     "lists",
     "alerts",
     "contacts",
+    "translator",
   ],
   aiLimitTier: 1,
   darkMode: true,
