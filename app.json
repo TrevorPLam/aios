@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.aios.app"
+      "bundleIdentifier": "com.aios.app",
+      "infoPlist": {
+        "NSContactsUsageDescription": "This app needs access to your contacts to import and manage them."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -34,7 +37,13 @@
           }
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow AIOS to access your contacts."
+        }
+      ]
     ],
     "experiments": {
       "reactCompiler": true

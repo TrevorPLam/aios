@@ -34,6 +34,7 @@ const MODULES: {
   { id: "planner", name: "Planner", icon: "check-square" },
   { id: "calendar", name: "Calendar", icon: "calendar" },
   { id: "email", name: "Email", icon: "mail" },
+  { id: "contacts", name: "Contacts", icon: "users" },
 ];
 
 export default function SettingsScreen() {
@@ -80,6 +81,25 @@ export default function SettingsScreen() {
         : [...settings.enabledModules, moduleId];
 
       const updated = await db.settings.update({ enabledModules });
+      setSettings(updated);
+    },
+    [settings],
+  );
+
+  const toggleSharingPreference = useCallback(
+    async (field: "shareEmail" | "shareBirthday" | "shareBusinessInfo") => {
+      if (!settings) return;
+
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+
+      const contactSharingPreferences = {
+        ...settings.contactSharingPreferences,
+        [field]: !settings.contactSharingPreferences[field],
+      };
+
+      const updated = await db.settings.update({ contactSharingPreferences });
       setSettings(updated);
     },
     [settings],
@@ -172,6 +192,83 @@ export default function SettingsScreen() {
               />
             </View>
           ))}
+        </View>
+
+        <ThemedText type="caption" secondary style={styles.sectionTitle}>
+          CONTACT SHARING
+        </ThemedText>
+        <View
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
+        >
+          <View
+            style={[
+              styles.settingRow,
+              { borderBottomWidth: 1, borderBottomColor: theme.border },
+            ]}
+          >
+            <View style={styles.settingInfo}>
+              <Feather name="mail" size={20} color={theme.textSecondary} />
+              <ThemedText type="body">Share Email</ThemedText>
+            </View>
+            <Switch
+              value={settings.contactSharingPreferences.shareEmail}
+              onValueChange={() => toggleSharingPreference("shareEmail")}
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.contactSharingPreferences.shareEmail
+                  ? theme.accent
+                  : theme.textSecondary
+              }
+            />
+          </View>
+          <View
+            style={[
+              styles.settingRow,
+              { borderBottomWidth: 1, borderBottomColor: theme.border },
+            ]}
+          >
+            <View style={styles.settingInfo}>
+              <Feather name="gift" size={20} color={theme.textSecondary} />
+              <ThemedText type="body">Share Birthday</ThemedText>
+            </View>
+            <Switch
+              value={settings.contactSharingPreferences.shareBirthday}
+              onValueChange={() => toggleSharingPreference("shareBirthday")}
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.contactSharingPreferences.shareBirthday
+                  ? theme.accent
+                  : theme.textSecondary
+              }
+            />
+          </View>
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Feather name="briefcase" size={20} color={theme.textSecondary} />
+              <ThemedText type="body">Share Business Info</ThemedText>
+            </View>
+            <Switch
+              value={settings.contactSharingPreferences.shareBusinessInfo}
+              onValueChange={() =>
+                toggleSharingPreference("shareBusinessInfo")
+              }
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.contactSharingPreferences.shareBusinessInfo
+                  ? theme.accent
+                  : theme.textSecondary
+              }
+            />
+          </View>
         </View>
 
         <ThemedText type="caption" secondary style={styles.sectionTitle}>

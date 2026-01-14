@@ -5,7 +5,8 @@ export type ModuleType =
   | "calendar"
   | "email"
   | "lists"
-  | "alerts";
+  | "alerts"
+  | "contacts";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -152,11 +153,36 @@ export interface Alert {
   updatedAt: string;
 }
 
+export interface Contact {
+  id: string;
+  name: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumbers: string[];
+  emails: string[];
+  birthday?: string;
+  company?: string;
+  jobTitle?: string;
+  imageUri?: string;
+  isRegistered: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ContactSharingField = "email" | "birthday" | "business";
+
+export interface ContactSharingPreferences {
+  shareEmail: boolean;
+  shareBirthday: boolean;
+  shareBusinessInfo: boolean;
+}
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];
   aiLimitTier: AILimitTier;
   darkMode: boolean;
+  contactSharingPreferences: ContactSharingPreferences;
 }
 
 export interface HistoryLogEntry {
@@ -183,9 +209,15 @@ export const DEFAULT_SETTINGS: Settings = {
     "email",
     "lists",
     "alerts",
+    "contacts",
   ],
   aiLimitTier: 1,
   darkMode: true,
+  contactSharingPreferences: {
+    shareEmail: true,
+    shareBirthday: true,
+    shareBusinessInfo: true,
+  },
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {
