@@ -22,7 +22,6 @@ export function useScreenOptions({
       backgroundColor: Platform.select({
         ios: transparent ? undefined : theme.backgroundRoot,
         android: theme.backgroundRoot,
-        web: theme.backgroundRoot,
       }),
     },
     headerTitleStyle: {
