@@ -4,7 +4,8 @@ export type ModuleType =
   | "planner"
   | "calendar"
   | "email"
-  | "lists";
+  | "lists"
+  | "alerts";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -137,6 +138,20 @@ export interface List {
   updatedAt: string;
 }
 
+export type AlertType = "alarm" | "reminder";
+
+export interface Alert {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  type: AlertType;
+  isEnabled: boolean;
+  recurrenceRule: RecurrenceRule;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];
@@ -167,6 +182,7 @@ export const DEFAULT_SETTINGS: Settings = {
     "calendar",
     "email",
     "lists",
+    "alerts",
   ],
   aiLimitTier: 1,
   darkMode: true,
