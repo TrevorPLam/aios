@@ -229,7 +229,7 @@ export default function HistoryScreen() {
     // Load statistics
     const stats = await db.history.getStatistics();
     setStatistics(stats);
-  }, [searchQuery, typeFilter, dateFilter]);
+  }, []);
 
   const applyFilters = useCallback(
     (
@@ -252,7 +252,9 @@ export default function HistoryScreen() {
 
         switch (date) {
           case "today":
-            startDate = new Date(now.setHours(0, 0, 0, 0));
+            const todayStart = new Date(now);
+            todayStart.setHours(0, 0, 0, 0);
+            startDate = todayStart;
             break;
           case "week":
             startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -969,7 +971,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
-    ...Shadows.sm,
+    ...Shadows.card,
   },
   searchInput: {
     flex: 1,
@@ -1005,7 +1007,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.lg,
-    ...Shadows.sm,
+    ...Shadows.card,
   },
   selectionHeader: {
     padding: Spacing.md,
@@ -1024,7 +1026,7 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     gap: Spacing.md,
-    ...Shadows.sm,
+    ...Shadows.card,
   },
   checkboxContainer: {
     marginRight: Spacing.xs,
@@ -1090,7 +1092,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: BorderRadius.xl,
     borderTopRightRadius: BorderRadius.xl,
     maxHeight: "80%",
-    ...Shadows.modal,
+    ...Shadows.glow,
   },
   modalHeader: {
     flexDirection: "row",
