@@ -30,6 +30,8 @@ import ListsScreen from "@/screens/ListsScreen";
 import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
+import ContactsScreen from "@/screens/ContactsScreen";
+import ContactDetailScreen from "@/screens/ContactDetailScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -50,6 +52,8 @@ export type AppStackParamList = {
   ListEditor: { listId?: string };
   Alerts: undefined;
   AlertDetail: { alertId?: string };
+  Contacts: undefined;
+  ContactDetail: { contactId: string };
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -210,6 +214,16 @@ export default function AppNavigator() {
         name="AlertDetail"
         component={AlertDetailScreen}
         options={{ headerTitle: "Alert" }}
+      />
+      <Stack.Screen
+        name="Contacts"
+        component={ContactsScreen}
+        options={{ headerTitle: "Contacts" }}
+      />
+      <Stack.Screen
+        name="ContactDetail"
+        component={ContactDetailScreen}
+        options={{ headerTitle: "Contact" }}
       />
     </Stack.Navigator>
   );

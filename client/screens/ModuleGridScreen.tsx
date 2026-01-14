@@ -85,6 +85,13 @@ const MODULES: ModuleItem[] = [
     description: "Alarms & Reminders",
   },
   {
+    id: "contacts",
+    name: "Contacts",
+    icon: "users",
+    route: "Contacts",
+    description: "Manage contacts",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: "settings",

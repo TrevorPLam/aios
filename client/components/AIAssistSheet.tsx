@@ -162,6 +162,34 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       description: "Add related items",
     },
   ],
+  alerts: [
+    {
+      id: "suggest",
+      icon: "bell",
+      title: "Suggest Alerts",
+      description: "Create helpful reminders",
+    },
+    {
+      id: "optimize",
+      icon: "clock",
+      title: "Optimize Times",
+      description: "Adjust alert times",
+    },
+  ],
+  contacts: [
+    {
+      id: "organize",
+      icon: "users",
+      title: "Organize Contacts",
+      description: "Group and categorize",
+    },
+    {
+      id: "suggest",
+      icon: "user-plus",
+      title: "Suggest Connections",
+      description: "Find people to add",
+    },
+  ],
 };
 
 interface AIAssistSheetProps {

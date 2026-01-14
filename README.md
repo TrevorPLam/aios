@@ -11,6 +11,7 @@ A mobile-first iOS/Android application built with React Native and Expo, featuri
 3. **Planner** - Task and project management with priorities and dependencies
 4. **Calendar** - Event scheduling with recurrence support
 5. **Email** - Email thread viewer (UI mockup)
+6. **Contacts** - Native iOS contacts import with sharing preferences
 
 ### Key Highlights
 
@@ -219,6 +220,7 @@ The app uses AsyncStorage for local persistence with the following models:
 - **Tasks** - Todo items with priorities and dependencies
 - **Projects** - Task groupings
 - **Calendar Events** - Scheduled events with recurrence
+- **Contacts** - Native contacts with sharing preferences
 - **Settings** - User preferences and configuration
 - **History Log** - Activity tracking
 - **AI Limits** - Usage tracking with refresh cadence
