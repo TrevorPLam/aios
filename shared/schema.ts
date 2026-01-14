@@ -141,11 +141,13 @@ export const insertRecommendationSchema = createInsertSchema(
   recommendations,
 ).omit({
   id: true,
+  userId: true,
   createdAt: true,
 });
 
 export const insertNoteSchema = createInsertSchema(notes).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -154,6 +156,7 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 export const insertTaskSchema = createInsertSchema(tasks).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -162,6 +165,7 @@ export const updateTaskSchema = insertTaskSchema.partial();
 
 export const insertProjectSchema = createInsertSchema(projects).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -170,6 +174,7 @@ export const updateProjectSchema = insertProjectSchema.partial();
 
 export const insertEventSchema = createInsertSchema(events).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -178,6 +183,7 @@ export const updateEventSchema = insertEventSchema.partial();
 
 export const insertSettingsSchema = createInsertSchema(settings).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 });
