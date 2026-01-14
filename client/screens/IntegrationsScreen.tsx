@@ -1,9 +1,20 @@
+/**
+ * IntegrationsScreen Module
+ *
+ * Third-party service integration management (placeholder).
+ * Features:
+ * - Coming soon placeholder UI
+ * - Prepared for future integrations:
+ *   - Calendar sync (Google, Outlook, iCloud)
+ *   - Email providers
+ *   - Cloud storage
+ *   - Task management services
+ *
+ * @module IntegrationsScreen
+ */
+
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 

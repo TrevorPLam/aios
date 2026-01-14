@@ -1,10 +1,22 @@
+/**
+ * SystemScreen Module
+ *
+ * System diagnostics and utilities.
+ * Features:
+ * - App version information
+ * - Database status and size
+ * - Storage usage statistics
+ * - Clear cache functionality
+ * - Reset app data (with confirmation)
+ * - Export/import data (placeholder)
+ * - Debug information
+ * - Error logs access
+ *
+ * @module SystemScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

@@ -1,11 +1,23 @@
+/**
+ * SettingsMenuScreen Module
+ *
+ * Main settings and configuration hub.
+ * Features:
+ * - Module enable/disable toggles
+ * - AI personality customization
+ * - Color theme selection
+ * - Display preferences (photo grid size, etc.)
+ * - Contact sharing defaults
+ * - AI usage limits by tier
+ * - Navigation to module-specific settings
+ * - Dark mode toggle
+ * - App information and version
+ *
+ * @module SettingsMenuScreen
+ */
+
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -160,7 +172,10 @@ export default function SettingsMenuScreen() {
     if (item.route) {
       navigation.navigate(item.route);
     } else {
-      Alert.alert(`${item.name} Settings`, "Settings for this module are coming soon.");
+      Alert.alert(
+        `${item.name} Settings`,
+        "Settings for this module are coming soon.",
+      );
     }
   };
 

@@ -1,3 +1,21 @@
+/**
+ * PlannerScreen Module
+ *
+ * Task and project management with priorities and dependencies.
+ * Features:
+ * - Task list with completion tracking
+ * - Priority levels (high, medium, low)
+ * - Project grouping
+ * - Task dependencies
+ * - Due date tracking
+ * - Today/upcoming/overdue views
+ * - Subtask support
+ * - AI assistance for task suggestions
+ * - Haptic feedback for interactions
+ *
+ * @module PlannerScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,

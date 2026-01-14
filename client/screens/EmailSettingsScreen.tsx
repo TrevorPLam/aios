@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Switch,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Switch, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -34,24 +28,21 @@ export default function EmailSettingsScreen() {
     loadSettings();
   }, [loadSettings]);
 
-  const toggleEnabled = useCallback(
-    async () => {
-      if (!settings) return;
+  const toggleEnabled = useCallback(async () => {
+    if (!settings) return;
 
-      if (Platform.OS !== "web") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      }
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
 
-      const isEnabled = settings.enabledModules.includes("email");
-      const enabledModules = isEnabled
-        ? settings.enabledModules.filter((m) => m !== "email")
-        : [...settings.enabledModules, "email"];
+    const isEnabled = settings.enabledModules.includes("email");
+    const enabledModules = isEnabled
+      ? settings.enabledModules.filter((m) => m !== "email")
+      : [...settings.enabledModules, "email"];
 
-      const updated = await db.settings.update({ enabledModules });
-      setSettings(updated);
-    },
-    [settings],
-  );
+    const updated = await db.settings.update({ enabledModules });
+    setSettings(updated);
+  }, [settings]);
 
   if (!settings) {
     return (

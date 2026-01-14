@@ -1,3 +1,19 @@
+/**
+ * EmailScreen Module
+ *
+ * Email thread viewer with inbox-style interface (UI mockup).
+ * Features:
+ * - Thread list with sender, subject, and preview
+ * - Read/unread status indicators
+ * - Star/favorite functionality
+ * - Relative date formatting
+ * - Empty state for zero emails
+ * - AI assistance integration
+ * - Note: Currently uses mock data for demonstration
+ *
+ * @module EmailScreen
+ */
+
 import React, { useState } from "react";
 import {
   View,

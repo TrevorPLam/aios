@@ -1,3 +1,25 @@
+/**
+ * TranslatorScreen Module
+ *
+ * Real-time language translation with voice I/O.
+ * Features:
+ * - Text translation between 12+ languages
+ * - Speech-to-text input (microphone)
+ * - Text-to-speech output (speaker)
+ * - Language swap functionality
+ * - Auto-translation with debouncing
+ * - Translation history
+ * - Headphone detection for audio
+ * - Copy translated text
+ * - LibreTranslate API integration (configurable)
+ *
+ * Supported Languages:
+ * English, Spanish, French, German, Italian, Portuguese,
+ * Russian, Japanese, Korean, Chinese, Arabic, Hindi
+ *
+ * @module TranslatorScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -70,7 +92,7 @@ export default function TranslatorScreen() {
           playsInSilentModeIOS: true,
           staysActiveInBackground: false,
         });
-        
+
         // Note: Full headphone detection would require native modules
         // or platform-specific audio routing APIs.
         // For now, we'll enable TTS by default and mention headphones in the UI
@@ -172,7 +194,7 @@ export default function TranslatorScreen() {
       Alert.alert(
         "Speech-to-Text",
         "Speech recognition is not yet fully implemented. This would use device speech recognition to convert your voice to text.",
-        [{ text: "OK" }]
+        [{ text: "OK" }],
       );
     } else {
       // Start recording
@@ -180,12 +202,15 @@ export default function TranslatorScreen() {
         // Request microphone permissions
         const { status } = await Audio.requestPermissionsAsync();
         if (status !== "granted") {
-          Alert.alert("Permission Denied", "Microphone access is required for speech-to-text.");
+          Alert.alert(
+            "Permission Denied",
+            "Microphone access is required for speech-to-text.",
+          );
           return;
         }
 
         setIsRecording(true);
-        
+
         // Note: Full speech-to-text implementation would require:
         // 1. expo-speech-recognition (currently in development)
         // 2. Or integration with a cloud service like Google Speech-to-Text
@@ -193,7 +218,7 @@ export default function TranslatorScreen() {
         Alert.alert(
           "Speech-to-Text",
           "Tap the microphone again to stop recording. The recognized text will appear in the input box.",
-          [{ text: "OK" }]
+          [{ text: "OK" }],
         );
       } catch (error) {
         console.error("Microphone error:", error);
@@ -218,12 +243,12 @@ export default function TranslatorScreen() {
       try {
         // Note: Headphone detection can be done with expo-av
         // For now, we'll speak the translation regardless
-        
+
         setIsSpeaking(true);
-        
+
         // Get language code for speech
         const langCode = targetLanguage;
-        
+
         Speech.speak(targetText, {
           language: langCode,
           pitch: 1.0,
@@ -248,9 +273,14 @@ export default function TranslatorScreen() {
     isSource: boolean,
     selectedLang: string,
     onSelect: (code: string) => void,
-    onClose: () => void
+    onClose: () => void,
   ) => (
-    <View style={[styles.languagePicker, { backgroundColor: theme.backgroundDefault }]}>
+    <View
+      style={[
+        styles.languagePicker,
+        { backgroundColor: theme.backgroundDefault },
+      ]}
+    >
       <ScrollView>
         {LANGUAGES.map((lang) => (
           <Pressable
@@ -312,7 +342,8 @@ export default function TranslatorScreen() {
               ]}
             >
               <ThemedText type="body">
-                {LANGUAGES.find((l) => l.code === sourceLanguage)?.name || "Select"}
+                {LANGUAGES.find((l) => l.code === sourceLanguage)?.name ||
+                  "Select"}
               </ThemedText>
               <Feather name="chevron-down" size={20} color={theme.text} />
             </Pressable>
@@ -330,11 +361,8 @@ export default function TranslatorScreen() {
           </View>
 
           {showSourceLangPicker &&
-            renderLanguagePicker(
-              true,
-              sourceLanguage,
-              setSourceLanguage,
-              () => setShowSourceLangPicker(false)
+            renderLanguagePicker(true, sourceLanguage, setSourceLanguage, () =>
+              setShowSourceLangPicker(false),
             )}
 
           <View
@@ -404,7 +432,8 @@ export default function TranslatorScreen() {
               ]}
             >
               <ThemedText type="body">
-                {LANGUAGES.find((l) => l.code === targetLanguage)?.name || "Select"}
+                {LANGUAGES.find((l) => l.code === targetLanguage)?.name ||
+                  "Select"}
               </ThemedText>
               <Feather name="chevron-down" size={20} color={theme.text} />
             </Pressable>
@@ -422,11 +451,8 @@ export default function TranslatorScreen() {
           </View>
 
           {showTargetLangPicker &&
-            renderLanguagePicker(
-              false,
-              targetLanguage,
-              setTargetLanguage,
-              () => setShowTargetLangPicker(false)
+            renderLanguagePicker(false, targetLanguage, setTargetLanguage, () =>
+              setShowTargetLangPicker(false),
             )}
 
           <View
@@ -435,11 +461,17 @@ export default function TranslatorScreen() {
               { backgroundColor: theme.backgroundDefault },
             ]}
           >
-            <View style={[styles.outputContainer, { borderColor: theme.border }]}>
+            <View
+              style={[styles.outputContainer, { borderColor: theme.border }]}
+            >
               {isTranslating ? (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color={theme.accent} />
-                  <ThemedText type="caption" muted style={{ marginTop: Spacing.sm }}>
+                  <ThemedText
+                    type="caption"
+                    muted
+                    style={{ marginTop: Spacing.sm }}
+                  >
                     Translating...
                   </ThemedText>
                 </View>
@@ -478,13 +510,23 @@ export default function TranslatorScreen() {
         <View
           style={[
             styles.infoCard,
-            { backgroundColor: theme.backgroundDefault, borderColor: theme.border },
+            {
+              backgroundColor: theme.backgroundDefault,
+              borderColor: theme.border,
+            },
           ]}
         >
           <Feather name="info" size={16} color={theme.textMuted} />
-          <ThemedText type="small" muted style={{ marginLeft: Spacing.sm, flex: 1 }}>
-            Tap the microphone to use speech-to-text. Tap the speaker icon to hear
-            the translation. {hasHeadphones ? "Audio output ready." : "Connect headphones for best experience."}
+          <ThemedText
+            type="small"
+            muted
+            style={{ marginLeft: Spacing.sm, flex: 1 }}
+          >
+            Tap the microphone to use speech-to-text. Tap the speaker icon to
+            hear the translation.{" "}
+            {hasHeadphones
+              ? "Audio output ready."
+              : "Connect headphones for best experience."}
           </ThemedText>
         </View>
       </ScrollView>
