@@ -25,6 +25,7 @@ import { AppStackParamList } from '@/navigation/AppNavigator';
 import { db } from '@/storage/database';
 import { Recommendation, AILimits } from '@/models/types';
 import { formatTimeRemaining, getConfidenceColor } from '@/utils/helpers';
+import { BottomNav } from '@/components/BottomNav';
 import AIAssistSheet from '@/components/AIAssistSheet';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -319,28 +320,7 @@ export default function CommandCenterScreen() {
           </View>
         </View>
 
-        <View style={styles.bottomNav}>
-          <Pressable
-            onPress={() => navigation.navigate('Notebook')}
-            style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
-          >
-            <Feather name="book-open" size={24} color={theme.textSecondary} />
-          </Pressable>
-          
-          <Pressable
-            onPress={() => setShowAISheet(true)}
-            style={({ pressed }) => [styles.aiButton, { backgroundColor: theme.accent }, pressed && { opacity: 0.8 }]}
-          >
-            <Feather name="cpu" size={28} color={theme.backgroundRoot} />
-          </Pressable>
-          
-          <Pressable
-            onPress={() => navigation.navigate('Planner')}
-            style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
-          >
-            <Feather name="check-square" size={24} color={theme.textSecondary} />
-          </Pressable>
-        </View>
+        <BottomNav onAiPress={() => setShowAISheet(true)} />
       </View>
 
       <AIAssistSheet
@@ -470,7 +450,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: Spacing.md,
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   limitBadge: {
     flexDirection: 'row',
@@ -481,24 +461,12 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.full,
   },
   bottomNav: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing['3xl'],
-  },
-  navButton: {
-    width: 52,
-    height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: BorderRadius.full,
+    display: 'none',
   },
   aiButton: {
-    width: 64,
-    height: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: BorderRadius.full,
-    ...Shadows.glow,
+    display: 'none',
+  },
+  navButton: {
+    display: 'none',
   },
 });

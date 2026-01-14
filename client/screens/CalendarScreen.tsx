@@ -16,6 +16,7 @@ import { AppStackParamList } from '@/navigation/AppNavigator';
 import { db } from '@/storage/database';
 import { CalendarEvent } from '@/models/types';
 import { formatTime, isSameDay, getWeekDates } from '@/utils/helpers';
+import { BottomNav } from '@/components/BottomNav';
 import AIAssistSheet from '@/components/AIAssistSheet';
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
@@ -212,12 +213,9 @@ export default function CalendarScreen() {
         }
       />
 
-      <Pressable
-        onPress={() => setShowAISheet(true)}
-        style={[styles.fab, { backgroundColor: theme.accent, bottom: insets.bottom + Spacing.xl }]}
-      >
-        <Feather name="cpu" size={24} color={theme.backgroundRoot} />
-      </Pressable>
+      <View style={[styles.bottomNavContainer, { bottom: insets.bottom + Spacing.lg }]}>
+        <BottomNav onAiPress={() => setShowAISheet(true)} />
+      </View>
 
       <AIAssistSheet
         visible={showAISheet}
@@ -310,13 +308,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   fab: {
+    display: 'none',
+  },
+  bottomNavContainer: {
     position: 'absolute',
-    right: Spacing.lg,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    justifyContent: 'center',
-    ...Shadows.glow,
   },
 });

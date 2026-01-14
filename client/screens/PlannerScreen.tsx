@@ -16,6 +16,7 @@ import { AppStackParamList } from '@/navigation/AppNavigator';
 import { db } from '@/storage/database';
 import { Task, Project } from '@/models/types';
 import { formatDate, getPriorityColor } from '@/utils/helpers';
+import { BottomNav } from '@/components/BottomNav';
 import AIAssistSheet from '@/components/AIAssistSheet';
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
@@ -253,6 +254,10 @@ export default function PlannerScreen() {
         <Feather name="cpu" size={24} color={theme.backgroundRoot} />
       </Pressable>
 
+      <View style={[styles.bottomNavContainer, { bottom: insets.bottom + Spacing.lg }]}>
+        <BottomNav onAiPress={() => setShowAISheet(true)} />
+      </View>
+
       <AIAssistSheet
         visible={showAISheet}
         onClose={() => setShowAISheet(false)}
@@ -349,13 +354,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   fab: {
+    display: 'none',
+  },
+  bottomNavContainer: {
     position: 'absolute',
-    right: Spacing.lg,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    justifyContent: 'center',
-    ...Shadows.glow,
   },
 });
