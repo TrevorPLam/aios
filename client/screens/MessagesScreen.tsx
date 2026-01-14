@@ -169,7 +169,8 @@ export default function MessagesScreen() {
       headerLeft: () => <HeaderLeftNav />,
       headerRight: () => (
         <HeaderRightWithAction
-          onPress={() => {
+          actionIcon="plus"
+          onActionPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             navigation.navigate("ConversationDetail", {});
           }}
@@ -253,7 +254,7 @@ export default function MessagesScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      <BottomNav // No currentModule prop needed onAiPress={handleAIAssist} />
+      <BottomNav onAiPress={handleAIAssist} />
 
       <AIAssistSheet
         visible={showAISheet}
