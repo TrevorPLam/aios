@@ -673,20 +673,51 @@ export const db = {
     },
   },
 
+  /**
+   * Budgets Module
+   * 
+   * Manages monthly budget storage operations.
+   * Budgets contain categories with line items tracking budgeted vs actual amounts.
+   */
   budgets: {
+    /**
+     * Get all budgets from storage
+     * 
+     * @returns {Promise<Budget[]>} Array of all budgets
+     */
     async getAll(): Promise<Budget[]> {
       return getData(KEYS.BUDGETS, []);
     },
+    
+    /**
+     * Get a specific budget by ID
+     * 
+     * @param {string} id - The budget ID
+     * @returns {Promise<Budget | null>} The budget if found, null otherwise
+     */
     async get(id: string): Promise<Budget | null> {
       const all = await this.getAll();
       return all.find((b) => b.id === id) || null;
     },
+    
+    /**
+     * Get the budget for the current month (YYYY-MM format)
+     * 
+     * @returns {Promise<Budget | null>} The current month's budget if found, null otherwise
+     */
     async getCurrent(): Promise<Budget | null> {
       const all = await this.getAll();
       const now = new Date();
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
       return all.find((b) => b.month === currentMonth) || null;
     },
+    
+    /**
+     * Save a budget (create new or update existing)
+     * 
+     * @param {Budget} budget - The budget to save
+     * @returns {Promise<void>}
+     */
     async save(budget: Budget): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((b) => b.id === budget.id);
@@ -697,6 +728,13 @@ export const db = {
       }
       await setData(KEYS.BUDGETS, all);
     },
+    
+    /**
+     * Delete a budget by ID
+     * 
+     * @param {string} id - The budget ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((b) => b.id !== id);

@@ -321,6 +321,17 @@ export interface ContactSharingPreferences {
   shareBusinessInfo: boolean;
 }
 
+/**
+ * Budget Line Item Interface
+ * 
+ * Represents a single line item within a budget category.
+ * Tracks both budgeted and actual amounts for comparison.
+ * 
+ * @property {string} id - Unique identifier for the line item
+ * @property {string} name - Line item name/description (e.g., "Rent", "Groceries")
+ * @property {number} budgeted - Budgeted/planned amount
+ * @property {number} actual - Actual spent amount
+ */
 export interface BudgetLineItem {
   id: string;
   name: string;
@@ -328,6 +339,17 @@ export interface BudgetLineItem {
   actual: number;
 }
 
+/**
+ * Budget Category Interface
+ * 
+ * Represents a category containing multiple budget line items.
+ * Categories can be expanded or collapsed in the UI.
+ * 
+ * @property {string} id - Unique identifier for the category
+ * @property {string} name - Category name (e.g., "Housing", "Transportation")
+ * @property {BudgetLineItem[]} lineItems - Array of line items in this category
+ * @property {boolean} isExpanded - Whether the category is expanded in the UI
+ */
 export interface BudgetCategory {
   id: string;
   name: string;
@@ -335,6 +357,19 @@ export interface BudgetCategory {
   isExpanded: boolean;
 }
 
+/**
+ * Budget Interface
+ * 
+ * Represents a monthly budget with multiple categories and line items.
+ * Used for tracking planned vs actual spending across various categories.
+ * 
+ * @property {string} id - Unique identifier for the budget
+ * @property {string} name - Budget name/title
+ * @property {string} month - Month in YYYY-MM format (e.g., "2026-01")
+ * @property {BudgetCategory[]} categories - Array of budget categories
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ */
 export interface Budget {
   id: string;
   name: string;
