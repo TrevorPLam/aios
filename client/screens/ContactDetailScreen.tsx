@@ -9,8 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useRoute, RouteProp } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -23,14 +22,12 @@ import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Contact } from "@/models/types";
 
-type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type ContactDetailRouteProp = RouteProp<AppStackParamList, "ContactDetail">;
 
 export default function ContactDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
-  const navigation = useNavigation<NavigationProp>();
   const route = useRoute<ContactDetailRouteProp>();
 
   const [contact, setContact] = useState<Contact | null>(null);

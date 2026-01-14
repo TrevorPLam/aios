@@ -105,14 +105,14 @@ export default function ContactsScreen() {
   const importContacts = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       const { status } = await Contacts.requestPermissionsAsync();
-      
+
       if (status !== "granted") {
         Alert.alert(
           "Permission Required",
           "Please allow access to contacts to import them.",
-          [{ text: "OK" }]
+          [{ text: "OK" }],
         );
         setIsLoading(false);
         return;
@@ -153,23 +153,19 @@ export default function ContactsScreen() {
 
       await db.contacts.syncFromNative(contactsList);
       await loadContacts();
-      
+
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-      
-      Alert.alert(
-        "Success",
-        `Imported ${contactsList.length} contacts`,
-        [{ text: "OK" }]
-      );
+
+      Alert.alert("Success", `Imported ${contactsList.length} contacts`, [
+        { text: "OK" },
+      ]);
     } catch (error) {
       console.error("Error importing contacts:", error);
-      Alert.alert(
-        "Error",
-        "Failed to import contacts. Please try again.",
-        [{ text: "OK" }]
-      );
+      Alert.alert("Error", "Failed to import contacts. Please try again.", [
+        { text: "OK" },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -201,17 +197,13 @@ export default function ContactsScreen() {
     });
   }, [navigation, theme, importContacts]);
 
-  const renderContact = ({
-    item,
-    index,
-  }: {
-    item: Contact;
-    index: number;
-  }) => (
+  const renderContact = ({ item, index }: { item: Contact; index: number }) => (
     <ContactCard
       contact={item}
       index={index}
-      onPress={() => navigation.navigate("ContactDetail", { contactId: item.id })}
+      onPress={() =>
+        navigation.navigate("ContactDetail", { contactId: item.id })
+      }
     />
   );
 

@@ -321,7 +321,7 @@ export const db = {
     async syncFromNative(nativeContacts: Contact[]): Promise<void> {
       const existing = await this.getAll();
       const existingMap = new Map(existing.map((c) => [c.id, c]));
-      
+
       const updated = nativeContacts.map((nc) => {
         const existingContact = existingMap.get(nc.id);
         return {
@@ -330,7 +330,7 @@ export const db = {
           updatedAt: new Date().toISOString(),
         };
       });
-      
+
       await this.saveAll(updated);
     },
   },

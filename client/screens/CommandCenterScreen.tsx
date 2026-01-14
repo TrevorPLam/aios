@@ -296,7 +296,10 @@ export default function CommandCenterScreen() {
       <View
         style={[
           styles.header,
-          { paddingTop: insets.top + Spacing.sm, backgroundColor: theme.backgroundBlack },
+          {
+            paddingTop: insets.top + Spacing.sm,
+            backgroundColor: theme.backgroundBlack,
+          },
         ]}
       >
         <Pressable

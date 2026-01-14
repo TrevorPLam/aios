@@ -255,9 +255,7 @@ export default function SettingsScreen() {
             </View>
             <Switch
               value={settings.contactSharingPreferences.shareBusinessInfo}
-              onValueChange={() =>
-                toggleSharingPreference("shareBusinessInfo")
-              }
+              onValueChange={() => toggleSharingPreference("shareBusinessInfo")}
               trackColor={{
                 false: theme.backgroundSecondary,
                 true: theme.accentDim,
