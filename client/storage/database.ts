@@ -894,6 +894,75 @@ export const db = {
       all.push(newEntry);
       await setData(KEYS.HISTORY, all);
     },
+    async getById(id: string): Promise<HistoryLogEntry | null> {
+      const entries = await getData<HistoryLogEntry[]>(KEYS.HISTORY, []);
+      return entries.find((entry) => entry.id === id) || null;
+    },
+    async getByType(
+      type: HistoryLogEntry["type"],
+    ): Promise<HistoryLogEntry[]> {
+      const entries = await this.getAll();
+      return entries.filter((entry) => entry.type === type);
+    },
+    async getByDateRange(
+      startDate: Date,
+      endDate: Date,
+    ): Promise<HistoryLogEntry[]> {
+      const entries = await this.getAll();
+      return entries.filter((entry) => {
+        const entryDate = new Date(entry.timestamp);
+        return entryDate >= startDate && entryDate <= endDate;
+      });
+    },
+    async search(query: string): Promise<HistoryLogEntry[]> {
+      const entries = await this.getAll();
+      const lowerQuery = query.toLowerCase();
+      return entries.filter(
+        (entry) =>
+          entry.message.toLowerCase().includes(lowerQuery) ||
+          entry.type.toLowerCase().includes(lowerQuery),
+      );
+    },
+    async deleteById(id: string): Promise<void> {
+      const entries = await getData<HistoryLogEntry[]>(KEYS.HISTORY, []);
+      const filtered = entries.filter((entry) => entry.id !== id);
+      await setData(KEYS.HISTORY, filtered);
+    },
+    async deleteMultiple(ids: string[]): Promise<void> {
+      const entries = await getData<HistoryLogEntry[]>(KEYS.HISTORY, []);
+      const filtered = entries.filter((entry) => !ids.includes(entry.id));
+      await setData(KEYS.HISTORY, filtered);
+    },
+    async getStatistics(): Promise<{
+      totalEntries: number;
+      entriesByType: Record<HistoryLogEntry["type"], number>;
+      oldestEntry: string | null;
+      newestEntry: string | null;
+    }> {
+      const entries = await this.getAll();
+      const entriesByType: Record<HistoryLogEntry["type"], number> = {
+        recommendation: 0,
+        archived: 0,
+        banked: 0,
+        deprecated: 0,
+        system: 0,
+      };
+
+      entries.forEach((entry) => {
+        entriesByType[entry.type] = (entriesByType[entry.type] || 0) + 1;
+      });
+
+      return {
+        totalEntries: entries.length,
+        entriesByType,
+        oldestEntry: entries.length > 0 ? entries[entries.length - 1].timestamp : null,
+        newestEntry: entries.length > 0 ? entries[0].timestamp : null,
+      };
+    },
+    async exportToJSON(): Promise<string> {
+      const entries = await this.getAll();
+      return JSON.stringify(entries, null, 2);
+    },
     async clear(): Promise<void> {
       await setData(KEYS.HISTORY, []);
     },
