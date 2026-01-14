@@ -1,23 +1,11 @@
 import { Colors, ColorThemes } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useState, useEffect } from "react";
-import { db } from "@/storage/database";
-import type { ColorTheme } from "@/models/types";
+import { useThemeContext } from "@/context/ThemeContext";
 
 export function useTheme() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const [colorTheme, setColorTheme] = useState<ColorTheme>("cyan");
-  
-  useEffect(() => {
-    async function loadTheme() {
-      const settings = await db.settings.get();
-      if (settings?.colorTheme) {
-        setColorTheme(settings.colorTheme);
-      }
-    }
-    loadTheme();
-  }, []);
+  const { colorTheme } = useThemeContext();
   
   const baseTheme = Colors[colorScheme ?? "light"];
   const themeColors = ColorThemes[colorTheme];

@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { DEFAULT_AI_CUSTOM_PROMPT } from "./constants";
 
 export const users = pgTable("users", {
   id: varchar("id")
@@ -124,7 +125,7 @@ export const settings = pgTable("settings", {
   darkMode: boolean("dark_mode").notNull().default(true),
   colorTheme: text("color_theme").notNull().default("cyan"),
   aiPersonality: text("ai_personality").notNull().default("default"),
-  aiCustomPrompt: text("ai_custom_prompt").notNull().default("You are AIOS, the perfect personal assistant. You are intelligent, helpful, proactive, and always focused on making your user's life easier. You anticipate needs, provide thoughtful recommendations, and handle tasks efficiently. You communicate clearly and professionally while maintaining a warm, supportive tone. Your goal is to empower your user to be more productive and organized."),
+  aiCustomPrompt: text("ai_custom_prompt").notNull().default(DEFAULT_AI_CUSTOM_PROMPT),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

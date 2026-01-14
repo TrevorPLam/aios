@@ -1,3 +1,5 @@
+import { DEFAULT_AI_CUSTOM_PROMPT } from "@/constants/aiDefaults";
+
 export type ModuleType =
   | "command"
   | "notebook"
@@ -371,7 +373,7 @@ export const DEFAULT_SETTINGS: Settings = {
   },
   colorTheme: "cyan",
   aiPersonality: "default",
-  aiCustomPrompt: "You are AIOS, the perfect personal assistant. You are intelligent, helpful, proactive, and always focused on making your user's life easier. You anticipate needs, provide thoughtful recommendations, and handle tasks efficiently. You communicate clearly and professionally while maintaining a warm, supportive tone. Your goal is to empower your user to be more productive and organized.",
+  aiCustomPrompt: DEFAULT_AI_CUSTOM_PROMPT,
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {

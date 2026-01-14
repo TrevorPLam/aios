@@ -7,20 +7,16 @@ import {
   Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
+import { useThemeContext } from "@/context/ThemeContext";
 import { Spacing, BorderRadius, ColorThemes } from "@/constants/theme";
-import { AppStackParamList } from "@/navigation/AppNavigator";
-import { db } from "@/storage/database";
 import { Settings, ColorTheme } from "@/models/types";
-
-type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
+import { db } from "@/storage/database";
 
 const COLOR_THEMES: {
   id: ColorTheme;
@@ -37,8 +33,8 @@ const COLOR_THEMES: {
 
 export default function GeneralSettingsScreen() {
   const { theme } = useTheme();
+  const { setColorTheme } = useThemeContext();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<NavigationProp>();
 
   const [settings, setSettings] = useState<Settings | null>(null);
 
@@ -61,18 +57,10 @@ export default function GeneralSettingsScreen() {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
 
-      const updated = await db.settings.update({ colorTheme: themeId });
-      setSettings(updated);
-      
-      // Force a re-render by reloading the screen
-      setTimeout(() => {
-        navigation.goBack();
-        setTimeout(() => {
-          navigation.navigate("GeneralSettings");
-        }, 100);
-      }, 100);
+      await setColorTheme(themeId);
+      setSettings({ ...settings, colorTheme: themeId });
     },
-    [settings, navigation],
+    [settings, setColorTheme],
   );
 
   if (!settings) {
