@@ -14,6 +14,7 @@ import {
   generateSeedConversations,
   generateSeedMessages,
   generateSeedBudget,
+  generateSeedContacts,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -141,6 +142,9 @@ export default function AppNavigator() {
         for (const message of messages) {
           await db.messages.save(message);
         }
+
+        const contacts = generateSeedContacts();
+        await db.contacts.saveAll(contacts);
 
         const budget = generateSeedBudget();
         await db.budgets.save(budget);

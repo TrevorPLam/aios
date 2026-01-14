@@ -32,10 +32,12 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 function ContactCard({
   contact,
   onPress,
+  onMessagePress,
   index,
 }: {
   contact: Contact;
   onPress: () => void;
+  onMessagePress: () => void;
   index: number;
 }) {
   const { theme } = useTheme();
@@ -75,11 +77,29 @@ function ContactCard({
               </ThemedText>
             )}
           </View>
-          {!contact.isRegistered && (
-            <View style={styles.plusIconContainer}>
-              <Feather name="plus-circle" size={24} color={theme.accent} />
-            </View>
-          )}
+          <View style={styles.contactActions}>
+            <Pressable
+              onPress={(event) => {
+                event.stopPropagation?.();
+                onMessagePress();
+              }}
+              style={({ pressed }) => [
+                styles.messageButton,
+                { backgroundColor: theme.accentDim },
+                pressed && { opacity: 0.8 },
+              ]}
+            >
+              <Feather name="message-circle" size={16} color={theme.accent} />
+              <ThemedText type="small" style={{ color: theme.accent }}>
+                Message
+              </ThemedText>
+            </Pressable>
+            {!contact.isRegistered && (
+              <View style={styles.plusIconContainer}>
+                <Feather name="plus-circle" size={22} color={theme.accent} />
+              </View>
+            )}
+          </View>
         </View>
       </Pressable>
     </Animated.View>
@@ -194,6 +214,65 @@ export default function ContactsScreen() {
     <ContactCard
       contact={item}
       index={index}
+      onMessagePress={async () => {
+        if (Platform.OS !== "web") {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }
+
+        const conversations = await db.conversations.getAll();
+        const existingConversation = conversations.find(
+          (conversation) =>
+            conversation.type === "direct" &&
+            conversation.participants.some((p) => p.userId === item.id),
+        );
+
+        if (existingConversation) {
+          navigation.navigate("ConversationDetail", {
+            conversationId: existingConversation.id,
+          });
+          return;
+        }
+
+        const now = new Date().toISOString();
+        const newConversation = {
+          id: `conv_${item.id}`,
+          type: "direct" as const,
+          name: item.name,
+          participants: [
+            {
+              userId: "current_user",
+              userName: "You",
+              isOnline: true,
+              lastSeenAt: now,
+              joinedAt: now,
+            },
+            {
+              userId: item.id,
+              userName: item.name,
+              avatarUrl: item.imageUri,
+              isOnline: item.isRegistered,
+              lastSeenAt: now,
+              joinedAt: now,
+            },
+          ],
+          lastMessageId: null,
+          lastMessageAt: null,
+          lastMessagePreview: "",
+          unreadCount: 0,
+          isTyping: [],
+          isPinned: false,
+          isMuted: false,
+          isArchived: false,
+          archivedAt: null,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        await db.conversations.save(newConversation);
+        navigation.navigate("ConversationDetail", {
+          conversationId: newConversation.id,
+        });
+      }}
       onPress={() =>
         navigation.navigate("ContactDetail", { contactId: item.id })
       }
@@ -301,8 +380,21 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: Spacing.md,
   },
+  contactActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  messageButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.lg,
+  },
   plusIconContainer: {
-    marginLeft: Spacing.sm,
+    alignItems: "center",
   },
   emptyState: {
     alignItems: "center",
