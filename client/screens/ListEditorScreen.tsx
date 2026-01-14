@@ -21,6 +21,7 @@ import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { List, ListItem } from "@/models/types";
+import { generateId } from "@/utils/helpers";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type ListEditorRouteProp = RouteProp<AppStackParamList, "ListEditor">;
@@ -73,7 +74,7 @@ export default function ListEditorScreen() {
     }
 
     const newItem: ListItem = {
-      id: `item_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      id: generateId(),
       text: newItemText.trim(),
       isChecked: false,
     };
@@ -98,9 +99,7 @@ export default function ListEditorScreen() {
 
       const now = new Date().toISOString();
       const listData: List = {
-        id:
-          list?.id ||
-          `list_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+        id: list?.id || generateId(),
         title: title.trim(),
         items,
         createdAt: list?.createdAt || now,
