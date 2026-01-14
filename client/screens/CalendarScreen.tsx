@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Pressable,
   Image,
   Platform,
+  TextInput,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -43,6 +44,12 @@ const MONTHS = [
   "November",
   "December",
 ];
+const VIEW_MODES = [
+  { id: "day", label: "Day" },
+  { id: "week", label: "Week" },
+  { id: "month", label: "Month" },
+  { id: "agenda", label: "Agenda" },
+] as const;
 
 function EventCard({
   event,
@@ -110,28 +117,19 @@ export default function CalendarScreen() {
   const navigation = useNavigation<NavigationProp>();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
-  const [viewMode, setViewMode] = useState<"day" | "week">("day");
+  const [viewMode, setViewMode] = useState<
+    "day" | "week" | "month" | "agenda"
+  >("day");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const weekDates = getWeekDates(selectedDate);
 
   const loadEvents = useCallback(async () => {
     const data = await db.events.getAll();
     setAllEvents(data);
-
-    const dayEvents = data
-      .filter((e) => {
-        const eventDate = new Date(e.startAt);
-        return isSameDay(eventDate, selectedDate);
-      })
-      .sort(
-        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
-      );
-
-    setEvents(dayEvents);
-  }, [selectedDate]);
+  }, []);
 
   useEffect(() => {
     loadEvents();
@@ -158,15 +156,65 @@ export default function CalendarScreen() {
     });
   };
 
-  const navigateWeek = (direction: number) => {
+  const navigatePeriod = (direction: number) => {
     const newDate = new Date(selectedDate);
-    newDate.setDate(newDate.getDate() + direction * 7);
+    if (viewMode === "month") {
+      newDate.setMonth(newDate.getMonth() + direction);
+    } else if (viewMode === "week") {
+      newDate.setDate(newDate.getDate() + direction * 7);
+    } else {
+      newDate.setDate(newDate.getDate() + direction);
+    }
     setSelectedDate(newDate);
   };
 
   const hasEventsOnDate = (date: Date): boolean => {
     return allEvents.some((e) => isSameDay(new Date(e.startAt), date));
   };
+
+  const viewEvents = useMemo(() => {
+    let filteredEvents = [...allEvents];
+
+    if (viewMode === "day") {
+      filteredEvents = filteredEvents.filter((event) =>
+        isSameDay(new Date(event.startAt), selectedDate),
+      );
+    } else if (viewMode === "week") {
+      const weekStart = weekDates[0];
+      const weekEnd = weekDates[weekDates.length - 1];
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventDate = new Date(event.startAt);
+        return eventDate >= weekStart && eventDate <= weekEnd;
+      });
+    } else if (viewMode === "month") {
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventDate = new Date(event.startAt);
+        return (
+          eventDate.getMonth() === selectedDate.getMonth() &&
+          eventDate.getFullYear() === selectedDate.getFullYear()
+        );
+      });
+    }
+
+    return filteredEvents.sort(
+      (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
+    );
+  }, [allEvents, selectedDate, viewMode, weekDates]);
+
+  const filteredEvents = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return viewEvents;
+    }
+
+    return viewEvents.filter((event) => {
+      return (
+        event.title.toLowerCase().includes(query) ||
+        event.location?.toLowerCase().includes(query) ||
+        event.description?.toLowerCase().includes(query)
+      );
+    });
+  }, [searchQuery, viewEvents]);
 
   const renderEvent = ({
     item,
@@ -182,11 +230,21 @@ export default function CalendarScreen() {
     />
   );
 
+  const viewLabels = {
+    day: "Day",
+    week: "Week",
+    month: "Month",
+    agenda: "Agenda",
+  };
+
   return (
     <ThemedView style={styles.container}>
       <View style={[styles.calendarHeader, { marginTop: 0 }]}>
         <View style={styles.monthRow}>
-          <Pressable onPress={() => navigateWeek(-1)} style={styles.navButton}>
+          <Pressable
+            onPress={() => navigatePeriod(-1)}
+            style={styles.navButton}
+          >
             <Feather
               name="chevron-left"
               size={24}
@@ -196,7 +254,10 @@ export default function CalendarScreen() {
           <ThemedText type="h2">
             {MONTHS[selectedDate.getMonth()]} {selectedDate.getFullYear()}
           </ThemedText>
-          <Pressable onPress={() => navigateWeek(1)} style={styles.navButton}>
+          <Pressable
+            onPress={() => navigatePeriod(1)}
+            style={styles.navButton}
+          >
             <Feather
               name="chevron-right"
               size={24}
@@ -205,59 +266,111 @@ export default function CalendarScreen() {
           </Pressable>
         </View>
 
-        <View style={styles.weekRow}>
-          {weekDates.map((date, index) => {
-            const isSelected = isSameDay(date, selectedDate);
-            const isToday = isSameDay(date, new Date());
-            const hasEvents = hasEventsOnDate(date);
-
+        <View style={styles.viewToggleRow}>
+          {VIEW_MODES.map((mode) => {
+            const isActive = viewMode === mode.id;
             return (
               <Pressable
-                key={index}
-                onPress={() => setSelectedDate(date)}
+                key={mode.id}
+                onPress={() => setViewMode(mode.id)}
                 style={[
-                  styles.dayButton,
-                  isSelected && { backgroundColor: theme.accent },
+                  styles.viewToggleButton,
+                  {
+                    backgroundColor: isActive
+                      ? theme.accent
+                      : theme.backgroundSecondary,
+                    borderColor: isActive ? theme.accent : theme.border,
+                  },
                 ]}
               >
                 <ThemedText
                   type="small"
                   style={{
-                    color: isSelected ? theme.backgroundRoot : theme.textMuted,
+                    color: isActive ? theme.backgroundRoot : theme.textSecondary,
                   }}
                 >
-                  {DAYS[date.getDay()]}
+                  {mode.label}
                 </ThemedText>
-                <ThemedText
-                  type="h3"
-                  style={{
-                    color: isSelected
-                      ? theme.backgroundRoot
-                      : isToday
-                        ? theme.accent
-                        : theme.text,
-                  }}
-                >
-                  {date.getDate()}
-                </ThemedText>
-                {hasEvents && !isSelected && (
-                  <View
-                    style={[styles.eventDot, { backgroundColor: theme.accent }]}
-                  />
-                )}
               </Pressable>
             );
           })}
         </View>
+
+        {(viewMode === "day" || viewMode === "week") && (
+          <View style={styles.weekRow}>
+            {weekDates.map((date, index) => {
+              const isSelected = isSameDay(date, selectedDate);
+              const isToday = isSameDay(date, new Date());
+              const hasEvents = hasEventsOnDate(date);
+
+              return (
+                <Pressable
+                  key={index}
+                  onPress={() => setSelectedDate(date)}
+                  style={[
+                    styles.dayButton,
+                    isSelected && { backgroundColor: theme.accent },
+                  ]}
+                >
+                  <ThemedText
+                    type="small"
+                    style={{
+                      color: isSelected ? theme.backgroundRoot : theme.textMuted,
+                    }}
+                  >
+                    {DAYS[date.getDay()]}
+                  </ThemedText>
+                  <ThemedText
+                    type="h3"
+                    style={{
+                      color: isSelected
+                        ? theme.backgroundRoot
+                        : isToday
+                          ? theme.accent
+                          : theme.text,
+                    }}
+                  >
+                    {date.getDate()}
+                  </ThemedText>
+                  {hasEvents && !isSelected && (
+                    <View
+                      style={[
+                        styles.eventDot,
+                        { backgroundColor: theme.accent },
+                      ]}
+                    />
+                  )}
+                </Pressable>
+              );
+            })}
+          </View>
+        )}
+
+        {(viewMode === "month" || viewMode === "agenda") && (
+          <View style={styles.viewSummary}>
+            <ThemedText type="small" muted>
+              {viewMode === "month"
+                ? `${viewEvents.length} events this month`
+                : `${viewEvents.length} events in agenda`}
+            </ThemedText>
+          </View>
+        )}
       </View>
 
       <FlatList
-        data={events}
+        data={filteredEvents}
         renderItem={renderEvent}
         keyExtractor={(item) => item.id}
         contentContainerStyle={[
           styles.listContent,
-          { paddingBottom: insets.bottom + Spacing["5xl"] },
+          {
+            paddingBottom:
+              insets.bottom +
+              Spacing["5xl"] +
+              Spacing["2xl"] +
+              Spacing.inputHeight +
+              Spacing.lg,
+          },
         ]}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
@@ -271,7 +384,7 @@ export default function CalendarScreen() {
               No Events
             </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
-              Nothing scheduled for this day
+              Nothing scheduled for this {viewLabels[viewMode].toLowerCase()}
             </ThemedText>
           </View>
         }
@@ -283,13 +396,46 @@ export default function CalendarScreen() {
           styles.fab,
           {
             backgroundColor: theme.accent,
-            bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
+            bottom:
+              insets.bottom +
+              Spacing["5xl"] +
+              Spacing["2xl"] +
+              Spacing.inputHeight +
+              Spacing.lg,
             right: Spacing.lg,
           },
         ]}
       >
         <Feather name="plus" size={24} color={theme.buttonText} />
       </Pressable>
+
+      <View
+        style={[
+          styles.searchContainer,
+          {
+            backgroundColor: theme.backgroundSecondary,
+            borderColor: theme.border,
+            bottom: insets.bottom + Spacing["5xl"] + Spacing["2xl"],
+          },
+        ]}
+      >
+        <Feather name="search" size={16} color={theme.textMuted} />
+        <TextInput
+          placeholder="Search events"
+          placeholderTextColor={theme.textMuted}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={[styles.searchInput, { color: theme.text }]}
+        />
+        {searchQuery.length > 0 && (
+          <Pressable
+            onPress={() => setSearchQuery("")}
+            style={styles.searchClear}
+          >
+            <Feather name="x" size={16} color={theme.textMuted} />
+          </Pressable>
+        )}
+      </View>
 
       <View style={styles.bottomNavContainer}>
         <BottomNav onAiPress={() => setShowAISheet(true)} />
@@ -327,6 +473,22 @@ const styles = StyleSheet.create({
   weekRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  viewToggleRow: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+    marginBottom: Spacing.md,
+  },
+  viewToggleButton: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.full,
+    borderWidth: 1,
+  },
+  viewSummary: {
+    alignItems: "flex-start",
+    marginBottom: Spacing.sm,
   },
   dayButton: {
     alignItems: "center",
@@ -393,6 +555,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,
+  },
+  searchContainer: {
+    position: "absolute",
+    left: Spacing.lg,
+    right: Spacing.lg,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: Spacing.md,
+    height: Spacing.inputHeight,
+    borderRadius: BorderRadius.full,
+    borderWidth: 1,
+    gap: Spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+  },
+  searchClear: {
+    padding: Spacing.xs,
   },
   bottomNavContainer: {
     position: "absolute",
