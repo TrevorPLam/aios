@@ -8,6 +8,7 @@ import {
   generateSeedTasks,
   generateSeedProjects,
   generateSeedEvents,
+  generateSeedLists,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -77,6 +78,11 @@ export default function AppNavigator() {
         const events = generateSeedEvents();
         for (const event of events) {
           await db.events.save(event);
+        }
+
+        const lists = generateSeedLists();
+        for (const list of lists) {
+          await db.lists.save(list);
         }
 
         await db.settings.get();
