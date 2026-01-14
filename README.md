@@ -208,16 +208,31 @@ The app uses AsyncStorage for local persistence with the following models:
 - **History Log** - Activity tracking
 - **AI Limits** - Usage tracking with refresh cadence
 
-## 🔌 API Integration (Scaffold)
+## 🔌 API Integration
 
-The server is configured for REST API endpoints at `/api/*` but currently has no implemented routes. The infrastructure is ready for:
+The server now includes a complete REST API with authentication and CRUD endpoints for all modules:
 
-- User authentication
-- Data synchronization
-- AI recommendation generation
-- Real-time updates via WebSocket
+### Authentication
+- JWT-based authentication with bcrypt password hashing
+- User registration and login
+- Protected routes with Bearer token authentication
 
-See `server/routes.ts` to add your API endpoints.
+### Available Endpoints
+- **Authentication:** `/api/auth/*` (register, login, logout, me)
+- **Recommendations:** `/api/recommendations/*` (GET, POST, PUT, DELETE)
+- **Notes:** `/api/notes/*` (GET, POST, PUT, DELETE)
+- **Tasks:** `/api/tasks/*` (GET, POST, PUT, DELETE)
+- **Projects:** `/api/projects/*` (GET, POST, PUT, DELETE)
+- **Events:** `/api/events/*` (GET, POST, PUT, DELETE)
+- **Settings:** `/api/settings/*` (GET, PUT)
+
+### Features
+- Request validation using Zod schemas
+- Error handling middleware
+- User-specific data isolation
+- In-memory storage (ready for PostgreSQL migration)
+
+See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentation.
 
 ## 🤖 AI Integration (Scaffold)
 
@@ -231,20 +246,22 @@ The app is designed to support AI-powered recommendations with:
 To integrate AI:
 1. Add your AI service (OpenAI, Anthropic, etc.) in `server/`
 2. Implement recommendation generation logic
-3. Connect via API endpoints
+3. Connect via existing API endpoints (`/api/recommendations`)
 4. Update `client/utils/seedData.ts` with real data
 
 ## 🎯 Current Status
 
-**This is a UI scaffold with local data storage.** The following are **not yet implemented**:
+**The app now includes a complete backend API with authentication!** Recent improvements:
 
-- ❌ Backend API endpoints
-- ❌ Database integration (PostgreSQL configured but not connected)
-- ❌ AI recommendation generation
-- ❌ User authentication
+- ✅ Backend API endpoints with JWT authentication
+- ✅ CRUD operations for all data models
+- ✅ Request validation and error handling
+- ✅ Test coverage (Jest + React Native Testing Library configured)
+- ✅ In-memory storage (ready for database migration)
+- ❌ Database integration (PostgreSQL configured but not connected yet)
+- ❌ AI recommendation generation (endpoints ready, logic needed)
 - ❌ Multi-device sync
 - ❌ AI Assist actions (grammar check, summarization, etc.)
-- ✅ Test coverage (Jest + React Native Testing Library configured)
 
 See [MISSING_FEATURES.md](./MISSING_FEATURES.md) for a complete analysis.
 

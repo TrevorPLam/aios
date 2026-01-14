@@ -1,6 +1,7 @@
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
+import { errorHandler } from "./middleware/errorHandler";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -205,20 +206,8 @@ function configureExpoAndLanding(app: express.Application) {
 }
 
 function setupErrorHandler(app: express.Application) {
-  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    const error = err as {
-      status?: number;
-      statusCode?: number;
-      message?: string;
-    };
-
-    const status = error.status || error.statusCode || 500;
-    const message = error.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-
-    throw err;
-  });
+  // Use the custom error handler from middleware
+  app.use(errorHandler);
 }
 
 (async () => {

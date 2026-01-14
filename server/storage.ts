@@ -1,22 +1,118 @@
-import { type User, type InsertUser } from "@shared/schema";
+import type {
+  User,
+  InsertUser,
+  Recommendation,
+  Note,
+  Task,
+  Project,
+  Event,
+  Settings,
+} from "@shared/schema";
 import { randomUUID } from "crypto";
 
-// modify the interface with any CRUD methods
-// you might need
-
+// Storage interface with all CRUD methods
 export interface IStorage {
+  // User methods
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+
+  // Recommendation methods
+  getRecommendations(userId: string): Promise<Recommendation[]>;
+  getRecommendation(
+    id: string,
+    userId: string,
+  ): Promise<Recommendation | undefined>;
+  createRecommendation(
+    recommendation: Omit<Recommendation, "id" | "createdAt">,
+  ): Promise<Recommendation>;
+  updateRecommendation(
+    id: string,
+    userId: string,
+    updates: Partial<Recommendation>,
+  ): Promise<Recommendation | undefined>;
+  deleteRecommendation(id: string, userId: string): Promise<boolean>;
+
+  // Note methods
+  getNotes(userId: string): Promise<Note[]>;
+  getNote(id: string, userId: string): Promise<Note | undefined>;
+  createNote(note: Omit<Note, "id" | "createdAt" | "updatedAt">): Promise<Note>;
+  updateNote(
+    id: string,
+    userId: string,
+    updates: Partial<Note>,
+  ): Promise<Note | undefined>;
+  deleteNote(id: string, userId: string): Promise<boolean>;
+
+  // Task methods
+  getTasks(userId: string): Promise<Task[]>;
+  getTask(id: string, userId: string): Promise<Task | undefined>;
+  createTask(task: Omit<Task, "id" | "createdAt" | "updatedAt">): Promise<Task>;
+  updateTask(
+    id: string,
+    userId: string,
+    updates: Partial<Task>,
+  ): Promise<Task | undefined>;
+  deleteTask(id: string, userId: string): Promise<boolean>;
+
+  // Project methods
+  getProjects(userId: string): Promise<Project[]>;
+  getProject(id: string, userId: string): Promise<Project | undefined>;
+  createProject(
+    project: Omit<Project, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Project>;
+  updateProject(
+    id: string,
+    userId: string,
+    updates: Partial<Project>,
+  ): Promise<Project | undefined>;
+  deleteProject(id: string, userId: string): Promise<boolean>;
+
+  // Event methods
+  getEvents(userId: string): Promise<Event[]>;
+  getEvent(id: string, userId: string): Promise<Event | undefined>;
+  createEvent(
+    event: Omit<Event, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Event>;
+  updateEvent(
+    id: string,
+    userId: string,
+    updates: Partial<Event>,
+  ): Promise<Event | undefined>;
+  deleteEvent(id: string, userId: string): Promise<boolean>;
+
+  // Settings methods
+  getSettings(userId: string): Promise<Settings | undefined>;
+  createSettings(
+    settings: Omit<Settings, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Settings>;
+  updateSettings(
+    userId: string,
+    updates: Partial<Settings>,
+  ): Promise<Settings | undefined>;
 }
 
+// In-memory storage implementation
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
+  private recommendations: Map<string, Recommendation>;
+  private notes: Map<string, Note>;
+  private tasks: Map<string, Task>;
+  private projects: Map<string, Project>;
+  private events: Map<string, Event>;
+  private settings: Map<string, Settings>;
 
   constructor() {
     this.users = new Map();
+    this.recommendations = new Map();
+    this.notes = new Map();
+    this.tasks = new Map();
+    this.projects = new Map();
+    this.events = new Map();
+    this.settings = new Map();
   }
 
+  // User methods
   async getUser(id: string): Promise<User | undefined> {
     return this.users.get(id);
   }
@@ -29,9 +125,278 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const user: User = {
+      ...insertUser,
+      id,
+      createdAt: new Date(),
+    };
     this.users.set(id, user);
     return user;
+  }
+
+  // Recommendation methods
+  async getRecommendations(userId: string): Promise<Recommendation[]> {
+    return Array.from(this.recommendations.values()).filter(
+      (rec) => rec.userId === userId,
+    );
+  }
+
+  async getRecommendation(
+    id: string,
+    userId: string,
+  ): Promise<Recommendation | undefined> {
+    const rec = this.recommendations.get(id);
+    return rec?.userId === userId ? rec : undefined;
+  }
+
+  async createRecommendation(
+    recommendation: Omit<Recommendation, "id" | "createdAt">,
+  ): Promise<Recommendation> {
+    const id = randomUUID();
+    const newRec: Recommendation = {
+      ...recommendation,
+      id,
+      createdAt: new Date(),
+    };
+    this.recommendations.set(id, newRec);
+    return newRec;
+  }
+
+  async updateRecommendation(
+    id: string,
+    userId: string,
+    updates: Partial<Recommendation>,
+  ): Promise<Recommendation | undefined> {
+    const rec = this.recommendations.get(id);
+    if (!rec || rec.userId !== userId) return undefined;
+
+    const updated = { ...rec, ...updates };
+    this.recommendations.set(id, updated);
+    return updated;
+  }
+
+  async deleteRecommendation(id: string, userId: string): Promise<boolean> {
+    const rec = this.recommendations.get(id);
+    if (!rec || rec.userId !== userId) return false;
+    return this.recommendations.delete(id);
+  }
+
+  // Note methods
+  async getNotes(userId: string): Promise<Note[]> {
+    return Array.from(this.notes.values()).filter(
+      (note) => note.userId === userId,
+    );
+  }
+
+  async getNote(id: string, userId: string): Promise<Note | undefined> {
+    const note = this.notes.get(id);
+    return note?.userId === userId ? note : undefined;
+  }
+
+  async createNote(
+    note: Omit<Note, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Note> {
+    const id = randomUUID();
+    const now = new Date();
+    const newNote: Note = {
+      ...note,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.notes.set(id, newNote);
+    return newNote;
+  }
+
+  async updateNote(
+    id: string,
+    userId: string,
+    updates: Partial<Note>,
+  ): Promise<Note | undefined> {
+    const note = this.notes.get(id);
+    if (!note || note.userId !== userId) return undefined;
+
+    const updated = { ...note, ...updates, updatedAt: new Date() };
+    this.notes.set(id, updated);
+    return updated;
+  }
+
+  async deleteNote(id: string, userId: string): Promise<boolean> {
+    const note = this.notes.get(id);
+    if (!note || note.userId !== userId) return false;
+    return this.notes.delete(id);
+  }
+
+  // Task methods
+  async getTasks(userId: string): Promise<Task[]> {
+    return Array.from(this.tasks.values()).filter(
+      (task) => task.userId === userId,
+    );
+  }
+
+  async getTask(id: string, userId: string): Promise<Task | undefined> {
+    const task = this.tasks.get(id);
+    return task?.userId === userId ? task : undefined;
+  }
+
+  async createTask(
+    task: Omit<Task, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Task> {
+    const id = randomUUID();
+    const now = new Date();
+    const newTask: Task = {
+      ...task,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.tasks.set(id, newTask);
+    return newTask;
+  }
+
+  async updateTask(
+    id: string,
+    userId: string,
+    updates: Partial<Task>,
+  ): Promise<Task | undefined> {
+    const task = this.tasks.get(id);
+    if (!task || task.userId !== userId) return undefined;
+
+    const updated = { ...task, ...updates, updatedAt: new Date() };
+    this.tasks.set(id, updated);
+    return updated;
+  }
+
+  async deleteTask(id: string, userId: string): Promise<boolean> {
+    const task = this.tasks.get(id);
+    if (!task || task.userId !== userId) return false;
+    return this.tasks.delete(id);
+  }
+
+  // Project methods
+  async getProjects(userId: string): Promise<Project[]> {
+    return Array.from(this.projects.values()).filter(
+      (project) => project.userId === userId,
+    );
+  }
+
+  async getProject(id: string, userId: string): Promise<Project | undefined> {
+    const project = this.projects.get(id);
+    return project?.userId === userId ? project : undefined;
+  }
+
+  async createProject(
+    project: Omit<Project, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Project> {
+    const id = randomUUID();
+    const now = new Date();
+    const newProject: Project = {
+      ...project,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.projects.set(id, newProject);
+    return newProject;
+  }
+
+  async updateProject(
+    id: string,
+    userId: string,
+    updates: Partial<Project>,
+  ): Promise<Project | undefined> {
+    const project = this.projects.get(id);
+    if (!project || project.userId !== userId) return undefined;
+
+    const updated = { ...project, ...updates, updatedAt: new Date() };
+    this.projects.set(id, updated);
+    return updated;
+  }
+
+  async deleteProject(id: string, userId: string): Promise<boolean> {
+    const project = this.projects.get(id);
+    if (!project || project.userId !== userId) return false;
+    return this.projects.delete(id);
+  }
+
+  // Event methods
+  async getEvents(userId: string): Promise<Event[]> {
+    return Array.from(this.events.values()).filter(
+      (event) => event.userId === userId,
+    );
+  }
+
+  async getEvent(id: string, userId: string): Promise<Event | undefined> {
+    const event = this.events.get(id);
+    return event?.userId === userId ? event : undefined;
+  }
+
+  async createEvent(
+    event: Omit<Event, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Event> {
+    const id = randomUUID();
+    const now = new Date();
+    const newEvent: Event = {
+      ...event,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.events.set(id, newEvent);
+    return newEvent;
+  }
+
+  async updateEvent(
+    id: string,
+    userId: string,
+    updates: Partial<Event>,
+  ): Promise<Event | undefined> {
+    const event = this.events.get(id);
+    if (!event || event.userId !== userId) return undefined;
+
+    const updated = { ...event, ...updates, updatedAt: new Date() };
+    this.events.set(id, updated);
+    return updated;
+  }
+
+  async deleteEvent(id: string, userId: string): Promise<boolean> {
+    const event = this.events.get(id);
+    if (!event || event.userId !== userId) return false;
+    return this.events.delete(id);
+  }
+
+  // Settings methods
+  async getSettings(userId: string): Promise<Settings | undefined> {
+    return Array.from(this.settings.values()).find(
+      (settings) => settings.userId === userId,
+    );
+  }
+
+  async createSettings(
+    settings: Omit<Settings, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Settings> {
+    const id = randomUUID();
+    const now = new Date();
+    const newSettings: Settings = {
+      ...settings,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.settings.set(id, newSettings);
+    return newSettings;
+  }
+
+  async updateSettings(
+    userId: string,
+    updates: Partial<Settings>,
+  ): Promise<Settings | undefined> {
+    const existing = await this.getSettings(userId);
+    if (!existing) return undefined;
+
+    const updated = { ...existing, ...updates, updatedAt: new Date() };
+    this.settings.set(existing.id, updated);
+    return updated;
   }
 }
 
