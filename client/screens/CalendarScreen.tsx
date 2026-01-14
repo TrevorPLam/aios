@@ -159,8 +159,6 @@ export default function CalendarScreen() {
       date: selectedDate.toISOString(),
     });
   };
-    });
-  }, [navigation, theme, selectedDate]);
 
   const navigateWeek = (direction: number) => {
     const newDate = new Date(selectedDate);
