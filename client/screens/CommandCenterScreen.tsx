@@ -106,10 +106,9 @@ function RecommendationCard({
       }
     });
 
-  const tapGesture = Gesture.Tap()
-    .onEnd(() => {
-      runOnJS(onPress)();
-    });
+  const tapGesture = Gesture.Tap().onEnd(() => {
+    runOnJS(onPress)();
+  });
 
   const gesture = Gesture.Exclusive(panGesture, tapGesture);
 
@@ -121,10 +120,7 @@ function RecommendationCard({
     );
 
     return {
-      transform: [
-        { translateX: translateX.value },
-        { rotate: `${rotate}deg` },
-      ],
+      transform: [{ translateX: translateX.value }, { rotate: `${rotate}deg` }],
     };
   });
 
@@ -431,7 +427,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    height: Spacing.lg,
+    height: Spacing.sm,
   },
   cardContainer: {
     width: CARD_WIDTH,
@@ -444,6 +440,11 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     overflow: "hidden",
     ...Shadows.card,
+    shadowColor: "#FFFFFF",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 6,
   },
   cardGlow: {
     position: "absolute",
