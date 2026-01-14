@@ -293,7 +293,12 @@ export default function CommandCenterScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + Spacing.sm }]}>
+      <View
+        style={[
+          styles.header,
+          { paddingTop: insets.top + Spacing.sm, backgroundColor: theme.backgroundBlack },
+        ]}
+      >
         <Pressable
           onPress={() => navigation.navigate("ModuleGrid")}
           style={({ pressed }) => [
@@ -408,7 +413,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
     paddingBottom: Spacing.md,
-    backgroundColor: "#000000",
   },
   headerButton: {
     width: 44,

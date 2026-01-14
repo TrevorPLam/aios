@@ -51,7 +51,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const next = getNextModule();
 
   return (
-    <View style={[styles.container, { backgroundColor: "#000000" }]}>
+    <View style={[styles.container, { backgroundColor: theme.backgroundBlack }]}>
       <Pressable
         onPress={() => navigation.navigate(prev.route as any)}
         style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}

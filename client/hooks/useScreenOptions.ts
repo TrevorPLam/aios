@@ -8,6 +8,7 @@ interface UseScreenOptionsParams {
   transparent?: boolean;
 }
 
+// Default to non-transparent (black background) for consistency with the new design
 export function useScreenOptions({
   transparent = false,
 }: UseScreenOptionsParams = {}): NativeStackNavigationOptions {
@@ -19,7 +20,7 @@ export function useScreenOptions({
     headerBlurEffect: "dark",
     headerTintColor: theme.text,
     headerStyle: {
-      backgroundColor: "#000000",
+      backgroundColor: theme.backgroundBlack,
     },
     headerTitleStyle: {
       color: theme.text,
