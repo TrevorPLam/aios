@@ -1,3 +1,20 @@
+/**
+ * CalendarScreen Module
+ *
+ * Interactive calendar with multiple view modes and event management.
+ * Features:
+ * - Multiple view modes: Day, Week, Month, and Agenda
+ * - Mini calendar for month navigation
+ * - Today quick navigation
+ * - Event list with time and location display
+ * - Color-coded event indicators
+ * - Add events via FAB button
+ * - AI assistance for event suggestions
+ * - Haptic feedback for interactions
+ *
+ * @module CalendarScreen
+ */
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
@@ -29,7 +46,10 @@ import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+/** Day abbreviations for calendar header */
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** Month names for display */
 const MONTHS = [
   "January",
   "February",
@@ -44,6 +64,8 @@ const MONTHS = [
   "November",
   "December",
 ];
+
+/** Available calendar view modes */
 const VIEW_MODES = [
   { id: "day", label: "Day" },
   { id: "week", label: "Week" },
@@ -51,6 +73,16 @@ const VIEW_MODES = [
   { id: "agenda", label: "Agenda" },
 ] as const;
 
+/**
+ * EventCard Component
+ *
+ * Displays a single calendar event with time, location, and optional image.
+ *
+ * @param {CalendarEvent} event - The event to display
+ * @param {Function} onPress - Callback when card is pressed
+ * @param {number} index - Index in list (for animation delay)
+ * @returns {JSX.Element} The event card component
+ */
 function EventCard({
   event,
   onPress,
@@ -119,9 +151,9 @@ export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
-  const [viewMode, setViewMode] = useState<
-    "day" | "week" | "month" | "agenda"
-  >("day");
+  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "agenda">(
+    "day",
+  );
   const [searchQuery, setSearchQuery] = useState("");
 
   const weekDates = getWeekDates(selectedDate);
@@ -254,10 +286,7 @@ export default function CalendarScreen() {
           <ThemedText type="h2">
             {MONTHS[selectedDate.getMonth()]} {selectedDate.getFullYear()}
           </ThemedText>
-          <Pressable
-            onPress={() => navigatePeriod(1)}
-            style={styles.navButton}
-          >
+          <Pressable onPress={() => navigatePeriod(1)} style={styles.navButton}>
             <Feather
               name="chevron-right"
               size={24}
@@ -286,7 +315,9 @@ export default function CalendarScreen() {
                 <ThemedText
                   type="small"
                   style={{
-                    color: isActive ? theme.backgroundRoot : theme.textSecondary,
+                    color: isActive
+                      ? theme.backgroundRoot
+                      : theme.textSecondary,
                   }}
                 >
                   {mode.label}
@@ -315,7 +346,9 @@ export default function CalendarScreen() {
                   <ThemedText
                     type="small"
                     style={{
-                      color: isSelected ? theme.backgroundRoot : theme.textMuted,
+                      color: isSelected
+                        ? theme.backgroundRoot
+                        : theme.textMuted,
                     }}
                   >
                     {DAYS[date.getDay()]}

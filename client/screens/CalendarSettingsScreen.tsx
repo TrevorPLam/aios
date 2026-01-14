@@ -1,11 +1,19 @@
+/**
+ * CalendarSettingsScreen Module
+ *
+ * Settings screen for the Calendar module.
+ * Currently provides toggle for enabling/disabling the calendar module.
+ *
+ * Features:
+ * - Enable/disable calendar module
+ * - Settings persist to database
+ * - Haptic feedback for toggle interactions
+ *
+ * @module CalendarSettingsScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Switch,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Switch, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -17,12 +25,22 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 import { db } from "@/storage/database";
 import { Settings } from "@/models/types";
 
+/**
+ * CalendarSettingsScreen Component
+ *
+ * Settings screen for managing calendar module preferences.
+ *
+ * @returns {JSX.Element} The calendar settings screen component
+ */
 export default function CalendarSettingsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
   const [settings, setSettings] = useState<Settings | null>(null);
 
+  /**
+   * Load settings from database
+   */
   const loadSettings = useCallback(async () => {
     const data = await db.settings.get();
     if (data) {
@@ -34,24 +52,25 @@ export default function CalendarSettingsScreen() {
     loadSettings();
   }, [loadSettings]);
 
-  const toggleEnabled = useCallback(
-    async () => {
-      if (!settings) return;
+  /**
+   * Toggle calendar module enabled state
+   * Updates settings in database and local state
+   */
+  const toggleEnabled = useCallback(async () => {
+    if (!settings) return;
 
-      if (Platform.OS !== "web") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      }
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
 
-      const isEnabled = settings.enabledModules.includes("calendar");
-      const enabledModules = isEnabled
-        ? settings.enabledModules.filter((m) => m !== "calendar")
-        : [...settings.enabledModules, "calendar"];
+    const isEnabled = settings.enabledModules.includes("calendar");
+    const enabledModules = isEnabled
+      ? settings.enabledModules.filter((m) => m !== "calendar")
+      : [...settings.enabledModules, "calendar"];
 
-      const updated = await db.settings.update({ enabledModules });
-      setSettings(updated);
-    },
-    [settings],
-  );
+    const updated = await db.settings.update({ enabledModules });
+    setSettings(updated);
+  }, [settings]);
 
   if (!settings) {
     return (

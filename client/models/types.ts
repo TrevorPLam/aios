@@ -92,6 +92,27 @@ export interface Project {
   updatedAt: string;
 }
 
+/**
+ * Calendar Event Interface
+ * 
+ * Represents a calendar event with support for recurrence and exceptions.
+ * Events can be all-day or have specific start/end times.
+ * 
+ * @property {string} id - Unique identifier for the event
+ * @property {string} title - Event title/name
+ * @property {string} description - Optional event description
+ * @property {string} location - Optional event location
+ * @property {string} startAt - ISO 8601 timestamp of event start
+ * @property {string} endAt - ISO 8601 timestamp of event end
+ * @property {boolean} allDay - Whether the event is an all-day event
+ * @property {string} timezone - Timezone of the event (e.g., "America/New_York")
+ * @property {RecurrenceRule} recurrenceRule - How often the event repeats
+ * @property {string[]} exceptions - Array of ISO 8601 dates to exclude from recurrence
+ * @property {Record<string, Partial<CalendarEvent>>} overrides - Date-specific overrides for recurring events
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ * @property {"LOCAL"} source - Event source (currently only LOCAL supported)
+ */
 export interface CalendarEvent {
   id: string;
   title: string;

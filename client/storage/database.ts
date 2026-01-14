@@ -191,14 +191,40 @@ export const db = {
     },
   },
 
+  /**
+   * Events Module
+   * 
+   * Manages calendar event storage operations.
+   * Supports event creation, editing, deletion, and date-based filtering.
+   */
   events: {
+    /**
+     * Get all events from storage
+     * 
+     * @returns {Promise<CalendarEvent[]>} Array of all calendar events
+     */
     async getAll(): Promise<CalendarEvent[]> {
       return getData(KEYS.EVENTS, []);
     },
+    
+    /**
+     * Get a specific event by ID
+     * 
+     * @param {string} id - The event ID
+     * @returns {Promise<CalendarEvent | null>} The event if found, null otherwise
+     */
     async get(id: string): Promise<CalendarEvent | null> {
       const all = await this.getAll();
       return all.find((e) => e.id === id) || null;
     },
+    
+    /**
+     * Get all events for a specific date
+     * Compares only the date portion (YYYY-MM-DD) of event startAt timestamps
+     * 
+     * @param {string} date - ISO 8601 date string to filter by
+     * @returns {Promise<CalendarEvent[]>} Array of events on the specified date
+     */
     async getForDate(date: string): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const targetDate = date.split("T")[0];
@@ -207,6 +233,13 @@ export const db = {
         return eventDate === targetDate;
       });
     },
+    
+    /**
+     * Save an event (create new or update existing)
+     * 
+     * @param {CalendarEvent} event - The event to save
+     * @returns {Promise<void>}
+     */
     async save(event: CalendarEvent): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((e) => e.id === event.id);
@@ -217,6 +250,13 @@ export const db = {
       }
       await setData(KEYS.EVENTS, all);
     },
+    
+    /**
+     * Delete an event by ID
+     * 
+     * @param {string} id - The event ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((e) => e.id !== id);
