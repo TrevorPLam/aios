@@ -139,9 +139,13 @@ export default function ContactsScreen() {
           lastName: c.lastName,
           phoneNumbers: c.phoneNumbers?.map((p) => p.number || "") || [],
           emails: c.emails?.map((e) => e.email || "") || [],
-          birthday: c.birthday
-            ? `${c.birthday.year}-${String(c.birthday.month).padStart(2, "0")}-${String(c.birthday.day).padStart(2, "0")}`
-            : undefined,
+          birthday:
+            c.birthday &&
+            c.birthday.year !== undefined &&
+            c.birthday.month !== undefined &&
+            c.birthday.day !== undefined
+              ? `${c.birthday.year}-${String(c.birthday.month).padStart(2, "0")}-${String(c.birthday.day).padStart(2, "0")}`
+              : undefined,
           company: c.company,
           jobTitle: c.jobTitle,
           imageUri: c.imageAvailable && c.image?.uri ? c.image.uri : undefined,
