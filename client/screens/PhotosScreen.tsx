@@ -25,7 +25,7 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Photo, PhotoGridSize } from "@/models/types";
-import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -107,12 +107,7 @@ export default function PhotosScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => (
-        <HeaderRightWithAction
-          actionIcon="plus"
-          onActionPress={handleAddPhoto}
-        />
-      ),
+      headerRight: () => <HeaderRightNav />,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
@@ -291,6 +286,21 @@ export default function PhotosScreen() {
               <Feather name="zoom-out" size={20} color={theme.accent} />
             </Pressable>
           </View>
+
+          {/* FAB for adding photos */}
+          <Pressable
+            onPress={handleAddPhoto}
+            style={[
+              styles.fab,
+              {
+                backgroundColor: theme.accent,
+                bottom: insets.bottom + Spacing.xl + Spacing["3xl"],
+                right: Spacing.lg,
+              },
+            ]}
+          >
+            <Feather name="plus" size={24} color={theme.buttonText} />
+          </Pressable>
         </>
       )}
     </ThemedView>
@@ -364,5 +374,14 @@ const styles = StyleSheet.create({
   gridSizeText: {
     minWidth: 40,
     textAlign: "center",
+  },
+  fab: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.fab,
   },
 });

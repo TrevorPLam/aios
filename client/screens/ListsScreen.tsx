@@ -25,7 +25,7 @@ import { List } from "@/models/types";
 import { formatRelativeDate } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
-import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -98,19 +98,16 @@ export default function ListsScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => (
-        <HeaderRightWithAction
-          actionIcon="plus"
-          onActionPress={() => {
-            if (Platform.OS !== "web") {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }
-            navigation.navigate("ListEditor", {});
-          }}
-        />
-      ),
+      headerRight: () => <HeaderRightNav />,
     });
   }, [navigation, theme]);
+
+  const handleAddList = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    navigation.navigate("ListEditor", {});
+  };
 
   const renderList = ({ item, index }: { item: List; index: number }) => (
     <ListCard
@@ -150,6 +147,20 @@ export default function ListsScreen() {
           </View>
         }
       />
+
+      <Pressable
+        onPress={handleAddList}
+        style={[
+          styles.fab,
+          {
+            backgroundColor: theme.accent,
+            bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
+            right: Spacing.lg,
+          },
+        ]}
+      >
+        <Feather name="plus" size={24} color={theme.buttonText} />
+      </Pressable>
 
       <View
         style={[
@@ -224,5 +235,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  fab: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.fab,
   },
 });

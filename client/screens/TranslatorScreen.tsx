@@ -25,7 +25,7 @@ import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
-import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -88,9 +88,7 @@ export default function TranslatorScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => (
-        <HeaderRightWithAction onActionPress={() => setShowAISheet(true)} />
-      ),
+      headerRight: () => <HeaderRightNav />,
     });
   }, [navigation]);
 

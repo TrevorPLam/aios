@@ -25,7 +25,7 @@ import { CalendarEvent } from "@/models/types";
 import { formatTime, isSameDay, getWeekDates } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
-import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -147,19 +147,18 @@ export default function CalendarScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => (
-        <HeaderRightWithAction
-          actionIcon="plus"
-          onActionPress={() => {
-            if (Platform.OS !== "web") {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }
-            navigation.navigate("EventDetail", {
-              date: selectedDate.toISOString(),
-            });
-          }}
-        />
-      ),
+      headerRight: () => <HeaderRightNav />,
+    });
+  }, [navigation, theme]);
+
+  const handleAddEvent = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    navigation.navigate("EventDetail", {
+      date: selectedDate.toISOString(),
+    });
+  };
     });
   }, [navigation, theme, selectedDate]);
 
@@ -282,6 +281,20 @@ export default function CalendarScreen() {
         }
       />
 
+      <Pressable
+        onPress={handleAddEvent}
+        style={[
+          styles.fab,
+          {
+            backgroundColor: theme.accent,
+            bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
+            right: Spacing.lg,
+          },
+        ]}
+      >
+        <Feather name="plus" size={24} color={theme.buttonText} />
+      </Pressable>
+
       <View
         style={[
           styles.bottomNavContainer,
@@ -382,7 +395,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   fab: {
-    display: "none",
+    position: "absolute",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.fab,
   },
   bottomNavContainer: {
     position: "absolute",

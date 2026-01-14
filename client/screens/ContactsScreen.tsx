@@ -26,7 +26,7 @@ import { db } from "@/storage/database";
 import { Contact } from "@/models/types";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
-import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -188,19 +188,9 @@ export default function ContactsScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => (
-        <HeaderRightWithAction
-          actionIcon="download"
-          onActionPress={() => {
-            if (Platform.OS !== "web") {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }
-            importContacts();
-          }}
-        />
-      ),
+      headerRight: () => <HeaderRightNav />,
     });
-  }, [navigation, theme, importContacts]);
+  }, [navigation, theme]);
 
   const renderContact = ({ item, index }: { item: Contact; index: number }) => (
     <ContactCard
@@ -247,6 +237,25 @@ export default function ContactsScreen() {
           </View>
         }
       />
+
+      <Pressable
+        onPress={() => {
+          if (Platform.OS !== "web") {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+          importContacts();
+        }}
+        style={[
+          styles.fab,
+          {
+            backgroundColor: theme.accent,
+            bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
+            right: Spacing.lg,
+          },
+        ]}
+      >
+        <Feather name="download" size={24} color={theme.buttonText} />
+      </Pressable>
 
       <View
         style={[
@@ -320,6 +329,15 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: "center",
+  },
+  fab: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.fab,
   },
   bottomNavContainer: {
     position: "absolute",
