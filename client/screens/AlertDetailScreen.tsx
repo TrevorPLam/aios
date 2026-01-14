@@ -364,19 +364,17 @@ export default function AlertDetailScreen() {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button
-            title={alertId ? "Update Alert" : "Create Alert"}
-            onPress={handleSave}
-            disabled={isLoading}
-          />
+          <Button onPress={handleSave} disabled={isLoading}>
+            {alertId ? "Update Alert" : "Create Alert"}
+          </Button>
 
           {alertId && (
             <Button
-              title="Delete Alert"
               onPress={handleDelete}
-              variant="danger"
-              style={styles.deleteButton}
-            />
+              style={[styles.deleteButton, { backgroundColor: theme.error }]}
+            >
+              Delete Alert
+            </Button>
           )}
         </View>
       </ScrollView>
