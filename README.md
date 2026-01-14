@@ -56,6 +56,7 @@ A mobile-first iOS/Android application built with React Native and Expo, featuri
 ```bash
 npm run expo:dev
 ```
+> **Note:** This starts Expo in iOS-first mode for mobile development. The app is configured for iOS/Android only - web platform is disabled.
 
 **Start the backend server:**
 ```bash
@@ -63,6 +64,20 @@ npm run server:dev
 ```
 
 **Run both concurrently:** Open two terminal windows and run each command in a separate window.
+
+### Troubleshooting
+
+**Changes not appearing in Expo?** 
+Clear the Metro bundler cache:
+```bash
+npm run expo:clean
+```
+This removes all cache files and restarts Expo with a fresh bundle.
+
+**Seeing a web version instead of native iOS?**
+- Ensure you're using `npm run expo:dev` (which forces iOS mode)
+- Press `i` in the Expo CLI to explicitly open iOS simulator
+- If using Expo Go, make sure you're on a physical iOS device or iOS Simulator
 
 ### Building for Production
 
