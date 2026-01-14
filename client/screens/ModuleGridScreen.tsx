@@ -92,6 +92,20 @@ const MODULES: ModuleItem[] = [
     description: "Alarms & Reminders",
   },
   {
+    id: "contacts",
+    name: "Contacts",
+    icon: "users",
+    route: "Contacts",
+    description: "Manage contacts",
+  },
+  {
+    id: "translator",
+    name: "Translator",
+    icon: "globe",
+    route: "Translator",
+    description: "Language translation",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: "settings",

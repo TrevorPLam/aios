@@ -15,6 +15,7 @@ import {
   Alert,
   Message,
   Conversation,
+  Contact,
 } from "@/models/types";
 
 const KEYS = {
@@ -32,6 +33,7 @@ const KEYS = {
   ALERTS: "@aios/alerts",
   MESSAGES: "@aios/messages",
   CONVERSATIONS: "@aios/conversations",
+  CONTACTS: "@aios/contacts",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -384,6 +386,30 @@ export const db = {
         all.push(conversation);
       }
       await setData(KEYS.CONVERSATIONS, all);
+  contacts: {
+    async getAll(): Promise<Contact[]> {
+      return getData(KEYS.CONTACTS, []);
+    },
+    async getAllSorted(): Promise<Contact[]> {
+      const all = await this.getAll();
+      return all.sort((a, b) => a.name.localeCompare(b.name));
+    },
+    async get(id: string): Promise<Contact | null> {
+      const all = await this.getAll();
+      return all.find((c) => c.id === id) || null;
+    },
+    async save(contact: Contact): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((c) => c.id === contact.id);
+      if (index >= 0) {
+        all[index] = contact;
+      } else {
+        all.push(contact);
+      }
+      await setData(KEYS.CONTACTS, all);
+    },
+    async saveAll(contacts: Contact[]): Promise<void> {
+      await setData(KEYS.CONTACTS, contacts);
     },
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
@@ -453,6 +479,27 @@ export const db = {
           new Date(lastActivity) < fourteenDaysAgo
         );
       });
+      await setData(KEYS.CONTACTS, filtered);
+    },
+    async syncFromNative(nativeContacts: Contact[]): Promise<void> {
+      const existing = await this.getAll();
+      const existingMap = new Map(existing.map((c) => [c.id, c]));
+
+      const updated = nativeContacts.map((nc) => {
+        const existingContact = existingMap.get(nc.id);
+        // Merge native contact data with existing custom fields
+        return {
+          ...nc,
+          // Preserve app-specific fields from existing contact
+          isRegistered: existingContact?.isRegistered || nc.isRegistered,
+          // Keep original creation date if exists
+          createdAt: existingContact?.createdAt || nc.createdAt,
+          // Update the modified timestamp
+          updatedAt: new Date().toISOString(),
+        };
+      });
+
+      await this.saveAll(updated);
     },
   },
 

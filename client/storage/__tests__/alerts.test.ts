@@ -54,7 +54,11 @@ describe("Database Alerts Storage", () => {
 
     it("should update existing alert on save", async () => {
       await db.alerts.save(mockAlert);
-      const updated = { ...mockAlert, title: "Updated Alert", isEnabled: false };
+      const updated = {
+        ...mockAlert,
+        title: "Updated Alert",
+        isEnabled: false,
+      };
       await db.alerts.save(updated);
 
       const all = await db.alerts.getAll();
@@ -114,10 +118,26 @@ describe("Database Alerts Storage", () => {
     });
 
     it("should handle alert with different recurrence rules", async () => {
-      const daily = { ...mockAlert, id: "daily", recurrenceRule: "daily" as const };
-      const weekly = { ...mockAlert, id: "weekly", recurrenceRule: "weekly" as const };
-      const monthly = { ...mockAlert, id: "monthly", recurrenceRule: "monthly" as const };
-      const none = { ...mockAlert, id: "none", recurrenceRule: "none" as const };
+      const daily = {
+        ...mockAlert,
+        id: "daily",
+        recurrenceRule: "daily" as const,
+      };
+      const weekly = {
+        ...mockAlert,
+        id: "weekly",
+        recurrenceRule: "weekly" as const,
+      };
+      const monthly = {
+        ...mockAlert,
+        id: "monthly",
+        recurrenceRule: "monthly" as const,
+      };
+      const none = {
+        ...mockAlert,
+        id: "none",
+        recurrenceRule: "none" as const,
+      };
 
       await db.alerts.save(daily);
       await db.alerts.save(weekly);
@@ -128,13 +148,15 @@ describe("Database Alerts Storage", () => {
       expect(all).toHaveLength(4);
       expect(all.find((a) => a.id === "daily")?.recurrenceRule).toBe("daily");
       expect(all.find((a) => a.id === "weekly")?.recurrenceRule).toBe("weekly");
-      expect(all.find((a) => a.id === "monthly")?.recurrenceRule).toBe("monthly");
+      expect(all.find((a) => a.id === "monthly")?.recurrenceRule).toBe(
+        "monthly",
+      );
       expect(all.find((a) => a.id === "none")?.recurrenceRule).toBe("none");
     });
 
     it("should toggle alert enabled state", async () => {
       await db.alerts.save(mockAlert);
-      
+
       const alert = await db.alerts.get("alert_1");
       expect(alert?.isEnabled).toBe(true);
 

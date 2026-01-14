@@ -598,6 +598,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
         throw new AppError(404, "Message not found");
       }
       res.status(204).send();
+  // Translation route
+  app.post(
+    "/api/translate",
+    asyncHandler(async (req, res) => {
+      const { text, sourceLang, targetLang } = req.body;
+
+      if (!text || !sourceLang || !targetLang) {
+        throw new AppError(400, "Missing required fields: text, sourceLang, targetLang");
+      }
+
+      // Using LibreTranslate API (free and open source)
+      // In production, you might want to use Google Translate API, DeepL, or another service
+      const apiUrl = "https://libretranslate.com/translate";
+      
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            q: text,
+            source: sourceLang,
+            target: targetLang,
+            format: "text",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Translation API error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        res.json({ translatedText: data.translatedText });
+      } catch (error) {
+        console.error("Translation error:", error);
+        throw new AppError(500, "Translation service unavailable");
+      }
     }),
   );
 

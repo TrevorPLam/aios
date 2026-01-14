@@ -403,6 +403,59 @@ Update settings for the authenticated user.
 
 ---
 
+### Translation
+
+#### Translate Text
+Translate text from one language to another.
+
+- **URL:** `/api/translate`
+- **Method:** `POST`
+- **Auth Required:** No
+- **Request Body:**
+  ```json
+  {
+    "text": "string (text to translate)",
+    "sourceLang": "string (source language code, e.g., 'en')",
+    "targetLang": "string (target language code, e.g., 'es')"
+  }
+  ```
+- **Success Response (200):**
+  ```json
+  {
+    "translatedText": "string (translated text)"
+  }
+  ```
+- **Error Response (400):**
+  ```json
+  {
+    "status": "error",
+    "message": "Missing required fields: text, sourceLang, targetLang"
+  }
+  ```
+- **Error Response (500):**
+  ```json
+  {
+    "status": "error",
+    "message": "Translation service unavailable"
+  }
+  ```
+
+**Supported Language Codes:**
+- `en` - English
+- `es` - Spanish
+- `fr` - French
+- `de` - German
+- `it` - Italian
+- `pt` - Portuguese
+- `ru` - Russian
+- `ja` - Japanese
+- `ko` - Korean
+- `zh` - Chinese
+- `ar` - Arabic
+- `hi` - Hindi
+
+---
+
 ## Error Codes
 
 - **400 Bad Request:** Invalid request body or validation error

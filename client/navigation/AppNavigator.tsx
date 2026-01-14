@@ -25,7 +25,12 @@ import CalendarScreen from "@/screens/CalendarScreen";
 import EventDetailScreen from "@/screens/EventDetailScreen";
 import EmailScreen from "@/screens/EmailScreen";
 import ThreadDetailScreen from "@/screens/ThreadDetailScreen";
-import SettingsScreen from "@/screens/SettingsScreen";
+import SettingsMenuScreen from "@/screens/SettingsMenuScreen";
+import GeneralSettingsScreen from "@/screens/GeneralSettingsScreen";
+import AIPreferencesScreen from "@/screens/AIPreferencesScreen";
+import PersonalizationScreen from "@/screens/PersonalizationScreen";
+import IntegrationsScreen from "@/screens/IntegrationsScreen";
+import SystemScreen from "@/screens/SystemScreen";
 import HistoryScreen from "@/screens/HistoryScreen";
 import RecommendationDetailScreen from "@/screens/RecommendationDetailScreen";
 import ListsScreen from "@/screens/ListsScreen";
@@ -34,6 +39,9 @@ import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
 import MessagesScreen from "@/screens/MessagesScreen";
 import ConversationDetailScreen from "@/screens/ConversationDetailScreen";
+import ContactsScreen from "@/screens/ContactsScreen";
+import ContactDetailScreen from "@/screens/ContactDetailScreen";
+import TranslatorScreen from "@/screens/TranslatorScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -48,6 +56,11 @@ export type AppStackParamList = {
   Email: undefined;
   ThreadDetail: { threadId: string };
   Settings: undefined;
+  GeneralSettings: undefined;
+  AIPreferences: undefined;
+  Personalization: undefined;
+  Integrations: undefined;
+  System: undefined;
   History: undefined;
   RecommendationDetail: { recommendationId: string };
   Lists: undefined;
@@ -56,6 +69,9 @@ export type AppStackParamList = {
   AlertDetail: { alertId?: string };
   Messages: undefined;
   ConversationDetail: { conversationId?: string };
+  Contacts: undefined;
+  ContactDetail: { contactId: string };
+  Translator: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -194,8 +210,33 @@ export default function AppNavigator() {
       />
       <Stack.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsMenuScreen}
         options={{ headerTitle: "Settings" }}
+      />
+      <Stack.Screen
+        name="GeneralSettings"
+        component={GeneralSettingsScreen}
+        options={{ headerTitle: "General" }}
+      />
+      <Stack.Screen
+        name="AIPreferences"
+        component={AIPreferencesScreen}
+        options={{ headerTitle: "AI Preferences" }}
+      />
+      <Stack.Screen
+        name="Personalization"
+        component={PersonalizationScreen}
+        options={{ headerTitle: "Personalization" }}
+      />
+      <Stack.Screen
+        name="Integrations"
+        component={IntegrationsScreen}
+        options={{ headerTitle: "Integrations" }}
+      />
+      <Stack.Screen
+        name="System"
+        component={SystemScreen}
+        options={{ headerTitle: "System" }}
       />
       <Stack.Screen
         name="History"
@@ -236,6 +277,19 @@ export default function AppNavigator() {
         name="ConversationDetail"
         component={ConversationDetailScreen}
         options={{ headerTitle: "Chat" }}
+        name="Contacts"
+        component={ContactsScreen}
+        options={{ headerTitle: "Contacts" }}
+      />
+      <Stack.Screen
+        name="ContactDetail"
+        component={ContactDetailScreen}
+        options={{ headerTitle: "Contact" }}
+      />
+      <Stack.Screen
+        name="Translator"
+        component={TranslatorScreen}
+        options={{ headerTitle: "Translator" }}
       />
     </Stack.Navigator>
   );

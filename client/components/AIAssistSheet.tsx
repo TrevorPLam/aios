@@ -168,6 +168,7 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       icon: "bell",
       title: "Suggest Alerts",
       description: "Create from schedule",
+      description: "Create helpful reminders",
     },
     {
       id: "optimize",
@@ -206,6 +207,22 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       icon: "archive",
       title: "Archive Old Chats",
       description: "Archive 14+ day old",
+      title: "Optimize Times",
+      description: "Adjust alert times",
+    },
+  ],
+  contacts: [
+    {
+      id: "organize",
+      icon: "users",
+      title: "Organize Contacts",
+      description: "Group and categorize",
+    },
+    {
+      id: "suggest",
+      icon: "user-plus",
+      title: "Suggest Connections",
+      description: "Find people to add",
     },
   ],
 };

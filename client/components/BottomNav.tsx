@@ -19,6 +19,7 @@ export const MODULES: ModuleItem[] = [
   { name: "Planner", route: "Planner", icon: "check-square" },
   { name: "Calendar", route: "Calendar", icon: "calendar" },
   { name: "Email", route: "Email", icon: "mail" },
+  { name: "Translator", route: "Translator", icon: "globe" },
 ];
 
 interface BottomNavProps {
@@ -51,7 +52,9 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const next = getNextModule();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.backgroundBlack }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.backgroundBlack }]}
+    >
       <Pressable
         onPress={() => navigation.navigate(prev.route as any)}
         style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}

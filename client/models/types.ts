@@ -7,6 +7,8 @@ export type ModuleType =
   | "lists"
   | "alerts"
   | "messages";
+  | "contacts"
+  | "translator";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -201,6 +203,18 @@ export interface Conversation {
   isMuted: boolean;
   isArchived: boolean;
   archivedAt: string | null;
+export interface Contact {
+  id: string;
+  name: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumbers: string[];
+  emails: string[];
+  birthday?: string;
+  company?: string;
+  jobTitle?: string;
+  imageUri?: string;
+  isRegistered: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -230,6 +244,12 @@ export interface VideoCallParticipant {
   isAudioEnabled: boolean;
   joinedAt: string;
   leftAt: string | null;
+export type ContactSharingField = "email" | "birthday" | "business";
+
+export interface ContactSharingPreferences {
+  shareEmail: boolean;
+  shareBirthday: boolean;
+  shareBusinessInfo: boolean;
 }
 
 export interface Settings {
@@ -237,6 +257,7 @@ export interface Settings {
   enabledModules: ModuleType[];
   aiLimitTier: AILimitTier;
   darkMode: boolean;
+  contactSharingPreferences: ContactSharingPreferences;
 }
 
 export interface HistoryLogEntry {
@@ -264,9 +285,16 @@ export const DEFAULT_SETTINGS: Settings = {
     "lists",
     "alerts",
     "messages",
+    "contacts",
+    "translator",
   ],
   aiLimitTier: 1,
   darkMode: true,
+  contactSharingPreferences: {
+    shareEmail: true,
+    shareBirthday: true,
+    shareBusinessInfo: true,
+  },
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {

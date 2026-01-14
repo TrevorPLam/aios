@@ -14,6 +14,8 @@ A mobile-first iOS/Android application built with React Native and Expo, featuri
 6. **Messages** - P2P messaging with group chat, media sharing, and AI assistance
 7. **Lists** - Checklist management
 8. **Alerts** - Alarms and reminders
+6. **Contacts** - Native iOS contacts import with sharing preferences
+7. **Translator** - Real-time language translation with speech-to-text and text-to-speech
 
 ### Key Highlights
 
@@ -229,6 +231,7 @@ The app uses AsyncStorage for local persistence with the following models:
 - **Messages** - Chat messages with attachments and replies
 - **Lists** - Checklists
 - **Alerts** - Alarms and reminders
+- **Contacts** - Native contacts with sharing preferences
 - **Settings** - User preferences and configuration
 - **History Log** - Activity tracking
 - **AI Limits** - Usage tracking with refresh cadence
@@ -307,6 +310,31 @@ DELETE /api/messages/:id               # Delete message
 - 🌐 WebSocket for real-time message delivery
 - 📤 Media upload/download endpoints
 - 🖼️ Media viewer screens
+## 🌐 Translator Module
+
+The Translator module provides real-time language translation with voice input/output capabilities:
+
+### Features
+- **Text Translation**: Translate between 12+ languages in real-time
+- **Speech-to-Text**: Tap the microphone to speak in your source language
+- **Text-to-Speech**: Tap the speaker icon to hear the translation
+- **Language Swap**: Quickly swap source and target languages
+- **Auto-Translation**: Translations appear automatically as you type (with debouncing)
+- **Headphone Detection**: Optimized audio output when headphones are connected
+
+### Supported Languages
+English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese, Arabic, Hindi
+
+### Translation API
+The module uses LibreTranslate (open-source) for translations. To use a different service:
+1. Update the `/api/translate` endpoint in `server/routes.ts`
+2. Configure your API key (Google Translate, DeepL, etc.)
+3. Adjust the request/response format as needed
+
+### Voice Features
+- **Speech-to-Text**: Requires microphone permissions (placeholder implementation ready for full integration)
+- **Text-to-Speech**: Uses expo-speech for natural voice output
+- **Audio Setup**: Configures audio mode for optimal playback
 
 ## 🤖 AI Integration (Scaffold)
 
@@ -334,6 +362,7 @@ To integrate AI:
 - ✅ In-memory storage (ready for database migration)
 - ✅ P2P Messaging module with group chat and media support
 - ✅ AI messaging assistance (draft, suggest, create tasks/events)
+- ✅ Translator module with real-time translation and TTS/STT
 - ❌ Database integration (PostgreSQL configured but not connected yet)
 - ❌ AI recommendation generation (endpoints ready, logic needed)
 - ❌ Video chat capability
