@@ -489,12 +489,7 @@ export default function TranslatorScreen() {
         </View>
       </ScrollView>
 
-      <View
-        style={[
-          styles.bottomNavContainer,
-          { bottom: insets.bottom + Spacing.lg },
-        ]}
-      >
+      <View style={styles.bottomNavContainer}>
         <BottomNav onAiPress={() => setShowAISheet(true)} />
       </View>
 
@@ -610,6 +605,7 @@ const styles = StyleSheet.create({
   },
   bottomNavContainer: {
     position: "absolute",
+    bottom: 0,
     left: 0,
     right: 0,
     alignItems: "center",
