@@ -8,6 +8,7 @@ import {
   ConfidenceLevel,
   TaskPriority,
   ModuleType,
+  List,
 } from "@/models/types";
 
 function generateId(): string {
@@ -429,3 +430,50 @@ export const MOCK_EMAIL_THREADS: EmailThread[] = [
     ],
   },
 ];
+
+export function generateSeedLists(): List[] {
+  return [
+    {
+      id: generateId(),
+      title: "Groceries",
+      items: [
+        { id: generateId(), text: "Milk", isChecked: true },
+        { id: generateId(), text: "Eggs", isChecked: false },
+        { id: generateId(), text: "Bread", isChecked: false },
+        { id: generateId(), text: "Chicken", isChecked: true },
+        { id: generateId(), text: "Vegetables", isChecked: false },
+      ],
+      createdAt: daysFromNow(-5),
+      lastOpenedAt: hoursFromNow(-2),
+      updatedAt: hoursFromNow(-2),
+    },
+    {
+      id: generateId(),
+      title: "Project Launch Checklist",
+      items: [
+        { id: generateId(), text: "Review requirements", isChecked: true },
+        { id: generateId(), text: "Design mockups", isChecked: true },
+        { id: generateId(), text: "Develop features", isChecked: true },
+        { id: generateId(), text: "Write tests", isChecked: false },
+        { id: generateId(), text: "Deploy to staging", isChecked: false },
+        { id: generateId(), text: "QA testing", isChecked: false },
+        { id: generateId(), text: "Production deploy", isChecked: false },
+      ],
+      createdAt: daysFromNow(-10),
+      lastOpenedAt: hoursFromNow(-5),
+      updatedAt: hoursFromNow(-5),
+    },
+    {
+      id: generateId(),
+      title: "Books to Read",
+      items: [
+        { id: generateId(), text: "Atomic Habits", isChecked: true },
+        { id: generateId(), text: "Deep Work", isChecked: false },
+        { id: generateId(), text: "Thinking, Fast and Slow", isChecked: false },
+      ],
+      createdAt: daysFromNow(-3),
+      lastOpenedAt: hoursFromNow(-24),
+      updatedAt: hoursFromNow(-24),
+    },
+  ];
+}

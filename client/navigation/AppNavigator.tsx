@@ -8,6 +8,7 @@ import {
   generateSeedTasks,
   generateSeedProjects,
   generateSeedEvents,
+  generateSeedLists,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -24,6 +25,8 @@ import ThreadDetailScreen from "@/screens/ThreadDetailScreen";
 import SettingsScreen from "@/screens/SettingsScreen";
 import HistoryScreen from "@/screens/HistoryScreen";
 import RecommendationDetailScreen from "@/screens/RecommendationDetailScreen";
+import ListsScreen from "@/screens/ListsScreen";
+import ListEditorScreen from "@/screens/ListEditorScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -40,6 +43,8 @@ export type AppStackParamList = {
   Settings: undefined;
   History: undefined;
   RecommendationDetail: { recommendationId: string };
+  Lists: undefined;
+  ListEditor: { listId?: string };
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -73,6 +78,11 @@ export default function AppNavigator() {
         const events = generateSeedEvents();
         for (const event of events) {
           await db.events.save(event);
+        }
+
+        const lists = generateSeedLists();
+        for (const list of lists) {
+          await db.lists.save(list);
         }
 
         await db.settings.get();
@@ -170,6 +180,16 @@ export default function AppNavigator() {
         name="RecommendationDetail"
         component={RecommendationDetailScreen}
         options={{ headerTitle: "Recommendation", presentation: "modal" }}
+      />
+      <Stack.Screen
+        name="Lists"
+        component={ListsScreen}
+        options={{ headerTitle: "Lists" }}
+      />
+      <Stack.Screen
+        name="ListEditor"
+        component={ListEditorScreen}
+        options={{ headerTitle: "List" }}
       />
     </Stack.Navigator>
   );

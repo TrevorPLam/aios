@@ -11,6 +11,7 @@ import {
   AILimits,
   DEFAULT_SETTINGS,
   TIER_LIMITS,
+  List,
 } from "@/models/types";
 
 const KEYS = {
@@ -24,6 +25,7 @@ const KEYS = {
   HISTORY: "@aios/history",
   AI_LIMITS: "@aios/ai_limits",
   INITIALIZED: "@aios/initialized",
+  LISTS: "@aios/lists",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -207,6 +209,47 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((e) => e.id !== id);
       await setData(KEYS.EVENTS, filtered);
+    },
+  },
+
+  lists: {
+    async getAll(): Promise<List[]> {
+      return getData(KEYS.LISTS, []);
+    },
+    async getAllSorted(): Promise<List[]> {
+      const all = await this.getAll();
+      return all.sort(
+        (a, b) =>
+          new Date(b.lastOpenedAt).getTime() -
+          new Date(a.lastOpenedAt).getTime(),
+      );
+    },
+    async get(id: string): Promise<List | null> {
+      const all = await this.getAll();
+      return all.find((l) => l.id === id) || null;
+    },
+    async save(list: List): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((l) => l.id === list.id);
+      if (index >= 0) {
+        all[index] = list;
+      } else {
+        all.push(list);
+      }
+      await setData(KEYS.LISTS, all);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((l) => l.id !== id);
+      await setData(KEYS.LISTS, filtered);
+    },
+    async updateLastOpened(id: string): Promise<void> {
+      const all = await this.getAll();
+      const list = all.find((l) => l.id === id);
+      if (list) {
+        list.lastOpenedAt = new Date().toISOString();
+        await setData(KEYS.LISTS, all);
+      }
     },
   },
 

@@ -3,7 +3,8 @@ export type ModuleType =
   | "notebook"
   | "planner"
   | "calendar"
-  | "email";
+  | "email"
+  | "lists";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -121,6 +122,21 @@ export interface EmailMessage {
   isRead: boolean;
 }
 
+export interface ListItem {
+  id: string;
+  text: string;
+  isChecked: boolean;
+}
+
+export interface List {
+  id: string;
+  title: string;
+  items: ListItem[];
+  createdAt: string;
+  lastOpenedAt: string;
+  updatedAt: string;
+}
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];
@@ -144,7 +160,14 @@ export interface AILimits {
 
 export const DEFAULT_SETTINGS: Settings = {
   aiName: "AIOS",
-  enabledModules: ["command", "notebook", "planner", "calendar", "email"],
+  enabledModules: [
+    "command",
+    "notebook",
+    "planner",
+    "calendar",
+    "email",
+    "lists",
+  ],
   aiLimitTier: 1,
   darkMode: true,
 };

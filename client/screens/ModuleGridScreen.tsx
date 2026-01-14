@@ -71,6 +71,13 @@ const MODULES: ModuleItem[] = [
     description: "Messages",
   },
   {
+    id: "lists",
+    name: "Lists",
+    icon: "list",
+    route: "Lists",
+    description: "Checklists",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: "settings",
