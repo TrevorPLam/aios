@@ -19,6 +19,8 @@ import {
   Contact,
   Budget,
   Integration,
+  AlertHistoryEntry,
+  AlertStatistics,
 } from "@/models/types";
 
 const KEYS = {
@@ -359,21 +361,35 @@ export const db = {
     /**
      * Get all alerts from storage
      * Automatically migrates old alerts to include new fields with defaults
+     * Migration is performed in-place and persisted to storage
      *
      * @returns {Promise<Alert[]>} Array of all alerts
      */
     async getAll(): Promise<Alert[]> {
       const alerts = await getData<Alert[]>(KEYS.ALERTS, []);
-      // Migrate old alerts to include new fields with defaults
-      const migratedAlerts = alerts.map((alert) => ({
-        ...alert,
-        sound: alert.sound || "default",
-        vibration: alert.vibration || "default",
-        gradualVolume: alert.gradualVolume ?? false,
-        snoozeDuration: alert.snoozeDuration || 10,
-        tags: alert.tags || [],
-      }));
-      return migratedAlerts;
+      
+      // Check if any alert needs migration
+      const needsMigration = alerts.some(
+        (alert) => !alert.sound || !alert.vibration || alert.tags === undefined
+      );
+      
+      if (needsMigration) {
+        // Migrate alerts with default values
+        const migratedAlerts = alerts.map((alert) => ({
+          ...alert,
+          sound: alert.sound || "default",
+          vibration: alert.vibration || "default",
+          gradualVolume: alert.gradualVolume ?? false,
+          snoozeDuration: alert.snoozeDuration || 10,
+          tags: alert.tags || [],
+        }));
+        
+        // Persist migrated data
+        await setData(KEYS.ALERTS, migratedAlerts);
+        return migratedAlerts;
+      }
+      
+      return alerts;
     },
 
     /**
@@ -455,11 +471,15 @@ export const db = {
      * Get alerts by tag
      *
      * @param {string} tag - The tag to filter by
-     * @returns {Promise<Alert[]>} Array of alerts with the specified tag
+     * @returns {Promise<Alert[]>} Array of alerts with the specified tag, sorted by time
      */
     async getByTag(tag: string): Promise<Alert[]> {
       const all = await this.getAll();
-      return all.filter((a) => a.tags.includes(tag));
+      const filtered = all.filter((a) => a.tags.includes(tag));
+      // Sort by time ascending
+      return filtered.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+      );
     },
 
     /**
@@ -516,7 +536,7 @@ export const db = {
      *
      * @returns {Promise<AlertHistoryEntry[]>} Array of all history entries
      */
-    async getAll(): Promise<import("@/models/types").AlertHistoryEntry[]> {
+    async getAll(): Promise<AlertHistoryEntry[]> {
       return getData(KEYS.ALERT_HISTORY, []);
     },
 
@@ -526,7 +546,7 @@ export const db = {
      * @param {string} alertId - The alert ID
      * @returns {Promise<AlertHistoryEntry[]>} Array of history entries for the alert
      */
-    async getByAlert(alertId: string): Promise<import("@/models/types").AlertHistoryEntry[]> {
+    async getByAlert(alertId: string): Promise<AlertHistoryEntry[]> {
       const all = await this.getAll();
       return all.filter((entry) => entry.alertId === alertId);
     },
@@ -538,10 +558,10 @@ export const db = {
      * @returns {Promise<AlertHistoryEntry>} The saved entry with generated id
      */
     async add(
-      entry: Omit<import("@/models/types").AlertHistoryEntry, "id">
-    ): Promise<import("@/models/types").AlertHistoryEntry> {
+      entry: Omit<AlertHistoryEntry, "id">
+    ): Promise<AlertHistoryEntry> {
       const all = await this.getAll();
-      const newEntry: import("@/models/types").AlertHistoryEntry = {
+      const newEntry: AlertHistoryEntry = {
         ...entry,
         id: `alert_history_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
       };
@@ -556,7 +576,7 @@ export const db = {
      * @param {AlertHistoryEntry} entry - The entry to update
      * @returns {Promise<void>}
      */
-    async update(entry: import("@/models/types").AlertHistoryEntry): Promise<void> {
+    async update(entry: AlertHistoryEntry): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((e) => e.id === entry.id);
       if (index >= 0) {
@@ -571,9 +591,7 @@ export const db = {
      * @param {string} alertId - The alert ID
      * @returns {Promise<AlertStatistics>} Calculated statistics
      */
-    async getStatistics(
-      alertId: string
-    ): Promise<import("@/models/types").AlertStatistics> {
+    async getStatistics(alertId: string): Promise<AlertStatistics> {
       const entries = await this.getByAlert(alertId);
       const totalTriggers = entries.length;
       const totalSnoozes = entries.reduce(

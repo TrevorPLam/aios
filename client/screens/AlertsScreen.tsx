@@ -14,7 +14,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, FlatList, Pressable, Platform, Alert as RNAlert, ScrollView } from "react-native";
+import { View, StyleSheet, FlatList, Pressable, Platform, Alert as ReactNativeAlert, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -292,8 +292,8 @@ export default function AlertsScreen() {
   const loadAlerts = useCallback(async () => {
     let data: Alert[];
     if (selectedTag) {
+      // getByTag already returns sorted results
       data = await db.alerts.getByTag(selectedTag);
-      data.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
     } else {
       data = await db.alerts.getAllSorted();
     }
@@ -417,7 +417,7 @@ export default function AlertsScreen() {
   const handleDeleteSelected = () => {
     if (selectedAlerts.size === 0) return;
     
-    RNAlert.alert(
+    ReactNativeAlert.alert(
       "Delete Alerts",
       `Are you sure you want to delete ${selectedAlerts.size} alert(s)?`,
       [
