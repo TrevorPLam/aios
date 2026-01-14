@@ -1,3 +1,5 @@
+import { DEFAULT_AI_CUSTOM_PROMPT } from "@/constants/aiDefaults";
+
 export type ModuleType =
   | "command"
   | "notebook"
@@ -192,6 +194,8 @@ export type PhotoEditOperation =
 
 export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
 export type MessageType = "text" | "image" | "video" | "audio" | "file" | "gif";
+export type ColorTheme = "cyan" | "purple" | "green" | "orange" | "pink" | "blue";
+export type AIPersonality = "default" | "enthusiastic" | "coach" | "witty" | "militant";
 
 export type ConversationType = "direct" | "group";
 
@@ -324,6 +328,9 @@ export interface Settings {
   darkMode: boolean;
   photoGridSize: PhotoGridSize;
   contactSharingPreferences: ContactSharingPreferences;
+  colorTheme: ColorTheme;
+  aiPersonality: AIPersonality;
+  aiCustomPrompt: string;
 }
 
 export interface HistoryLogEntry {
@@ -364,6 +371,9 @@ export const DEFAULT_SETTINGS: Settings = {
     shareBirthday: true,
     shareBusinessInfo: true,
   },
+  colorTheme: "cyan",
+  aiPersonality: "default",
+  aiCustomPrompt: DEFAULT_AI_CUSTOM_PROMPT,
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {

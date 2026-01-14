@@ -49,6 +49,11 @@ import ContactsScreen from "@/screens/ContactsScreen";
 import ContactDetailScreen from "@/screens/ContactDetailScreen";
 import TranslatorScreen from "@/screens/TranslatorScreen";
 import BudgetScreen from "@/screens/BudgetScreen";
+import NotebookSettingsScreen from "@/screens/NotebookSettingsScreen";
+import PlannerSettingsScreen from "@/screens/PlannerSettingsScreen";
+import CalendarSettingsScreen from "@/screens/CalendarSettingsScreen";
+import EmailSettingsScreen from "@/screens/EmailSettingsScreen";
+import ContactsSettingsScreen from "@/screens/ContactsSettingsScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -83,6 +88,11 @@ export type AppStackParamList = {
   ContactDetail: { contactId: string };
   Translator: undefined;
   Budget: undefined;
+  NotebookSettings: undefined;
+  PlannerSettings: undefined;
+  CalendarSettings: undefined;
+  EmailSettings: undefined;
+  ContactsSettings: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -334,6 +344,31 @@ export default function AppNavigator() {
         name="Budget"
         component={BudgetScreen}
         options={{ headerTitle: "Budget" }}
+      />
+      <Stack.Screen
+        name="NotebookSettings"
+        component={NotebookSettingsScreen}
+        options={{ headerTitle: "Notebook Settings" }}
+      />
+      <Stack.Screen
+        name="PlannerSettings"
+        component={PlannerSettingsScreen}
+        options={{ headerTitle: "Planner Settings" }}
+      />
+      <Stack.Screen
+        name="CalendarSettings"
+        component={CalendarSettingsScreen}
+        options={{ headerTitle: "Calendar Settings" }}
+      />
+      <Stack.Screen
+        name="EmailSettings"
+        component={EmailSettingsScreen}
+        options={{ headerTitle: "Email Settings" }}
+      />
+      <Stack.Screen
+        name="ContactsSettings"
+        component={ContactsSettingsScreen}
+        options={{ headerTitle: "Contacts Settings" }}
       />
     </Stack.Navigator>
   );

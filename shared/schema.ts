@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { DEFAULT_AI_CUSTOM_PROMPT } from "./constants";
 
 export const users = pgTable("users", {
   id: varchar("id")
@@ -122,6 +123,9 @@ export const settings = pgTable("settings", {
     .default(["command", "notebook", "planner", "calendar", "email", "messages"]),
   aiLimitTier: integer("ai_limit_tier").notNull().default(1),
   darkMode: boolean("dark_mode").notNull().default(true),
+  colorTheme: text("color_theme").notNull().default("cyan"),
+  aiPersonality: text("ai_personality").notNull().default("default"),
+  aiCustomPrompt: text("ai_custom_prompt").notNull().default(DEFAULT_AI_CUSTOM_PROMPT),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

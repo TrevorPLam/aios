@@ -1,10 +1,23 @@
-import { Colors } from "@/constants/theme";
+import { Colors, ColorThemes } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeContext } from "@/context/ThemeContext";
 
 export function useTheme() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const theme = Colors[colorScheme ?? "light"];
+  const { colorTheme } = useThemeContext();
+  
+  const baseTheme = Colors[colorScheme ?? "light"];
+  const themeColors = ColorThemes[colorTheme];
+  
+  const theme = {
+    ...baseTheme,
+    accent: themeColors.accent,
+    accentDim: themeColors.accentDim,
+    accentGlow: themeColors.accentGlow,
+    tabIconSelected: themeColors.accent,
+    link: themeColors.accent,
+  };
 
   return {
     theme,

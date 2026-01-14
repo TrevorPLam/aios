@@ -11,6 +11,7 @@ import { queryClient } from "@/lib/query-client";
 
 import RootStackNavigator from "@/navigation/RootStackNavigator";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { Colors } from "@/constants/theme";
 
 const AIOSTheme = {
@@ -31,14 +32,16 @@ export default function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <SafeAreaProvider>
-          <GestureHandlerRootView style={styles.root}>
-            <KeyboardProvider>
-              <NavigationContainer theme={AIOSTheme}>
-                <RootStackNavigator />
-              </NavigationContainer>
-              <StatusBar style="light" />
-            </KeyboardProvider>
-          </GestureHandlerRootView>
+          <ThemeProvider>
+            <GestureHandlerRootView style={styles.root}>
+              <KeyboardProvider>
+                <NavigationContainer theme={AIOSTheme}>
+                  <RootStackNavigator />
+                </NavigationContainer>
+                <StatusBar style="light" />
+              </KeyboardProvider>
+            </GestureHandlerRootView>
+          </ThemeProvider>
         </SafeAreaProvider>
       </QueryClientProvider>
     </ErrorBoundary>

@@ -1,5 +1,39 @@
 import { Platform } from "react-native";
 
+// Color theme definitions
+export const ColorThemes = {
+  cyan: {
+    accent: "#00D9FF",
+    accentDim: "rgba(0, 217, 255, 0.15)",
+    accentGlow: "rgba(0, 217, 255, 0.3)",
+  },
+  purple: {
+    accent: "#A855F7",
+    accentDim: "rgba(168, 85, 247, 0.15)",
+    accentGlow: "rgba(168, 85, 247, 0.3)",
+  },
+  green: {
+    accent: "#10B981",
+    accentDim: "rgba(16, 185, 129, 0.15)",
+    accentGlow: "rgba(16, 185, 129, 0.3)",
+  },
+  orange: {
+    accent: "#F97316",
+    accentDim: "rgba(249, 115, 22, 0.15)",
+    accentGlow: "rgba(249, 115, 22, 0.3)",
+  },
+  pink: {
+    accent: "#EC4899",
+    accentDim: "rgba(236, 72, 153, 0.15)",
+    accentGlow: "rgba(236, 72, 153, 0.3)",
+  },
+  blue: {
+    accent: "#3B82F6",
+    accentDim: "rgba(59, 130, 246, 0.15)",
+    accentGlow: "rgba(59, 130, 246, 0.3)",
+  },
+};
+
 export const Colors = {
   light: {
     text: "#FFFFFF",
