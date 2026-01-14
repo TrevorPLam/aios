@@ -1,3 +1,20 @@
+/**
+ * PhotosScreen Module
+ *
+ * Photo gallery with albums and backup management.
+ * Features:
+ * - Grid-based photo layout (configurable size)
+ * - Album organization
+ * - Backup status indicators
+ * - Tag-based filtering
+ * - Import from camera roll
+ * - Photo editing capabilities
+ * - AI assistance for photo organization
+ * - Haptic feedback for interactions
+ *
+ * @module PhotosScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -109,7 +126,6 @@ export default function PhotosScreen() {
       headerLeft: () => <HeaderLeftNav />,
       headerRight: () => <HeaderRightNav />,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   const handleAddPhoto = async () => {
@@ -140,12 +156,12 @@ export default function PhotosScreen() {
       // Save to local storage (avoid duplication by using unique names)
       const fileName = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
       const documentDir = FileSystem.documentDirectory;
-      
+
       if (!documentDir) {
         alert("Unable to access file system");
         return;
       }
-      
+
       const localDir = `${documentDir}photos/`;
 
       // Ensure directory exists

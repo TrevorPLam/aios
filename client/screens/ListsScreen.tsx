@@ -1,3 +1,19 @@
+/**
+ * ListsScreen Module
+ *
+ * Checklist management with progress tracking.
+ * Features:
+ * - Multiple checklists with customizable names
+ * - Item completion tracking with checkboxes
+ * - Progress indicators (X of Y completed)
+ * - Add/delete lists and items
+ * - Empty state prompts
+ * - AI assistance for list suggestions
+ * - Haptic feedback for interactions
+ *
+ * @module ListsScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,

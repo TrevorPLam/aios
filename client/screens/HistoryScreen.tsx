@@ -1,3 +1,18 @@
+/**
+ * HistoryScreen Module
+ *
+ * Activity log tracking user actions and AI interactions.
+ * Features:
+ * - Chronological activity feed
+ * - Type-specific icons (recommendation, archived, error, etc.)
+ * - Formatted timestamps
+ * - Metadata display for context
+ * - Clear history functionality
+ * - Empty state prompts
+ *
+ * @module HistoryScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, FlatList, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

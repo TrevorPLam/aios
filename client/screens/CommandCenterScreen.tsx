@@ -1,3 +1,20 @@
+/**
+ * CommandCenterScreen Module
+ *
+ * AI-powered recommendation hub with swipeable card interface.
+ * Features:
+ * - Swipeable recommendation cards (left to decline, right to accept)
+ * - Confidence meter showing AI certainty level
+ * - Evidence-based recommendations
+ * - Expiry countdown for time-sensitive suggestions
+ * - AI usage limits tracking
+ * - History logging of decisions
+ * - Empty state prompts for AI generation
+ * - Haptic feedback for interactions
+ *
+ * @module CommandCenterScreen
+ */
+
 import React, { useCallback, useState, useEffect } from "react";
 import {
   View,
@@ -39,10 +56,20 @@ import AIAssistSheet from "@/components/AIAssistSheet";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
 const CARD_SPACING = Spacing.lg;
+/** Minimum horizontal swipe distance to trigger accept/decline */
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+/**
+ * ConfidenceMeter Component
+ *
+ * Visual indicator of AI confidence level with 3 segments.
+ * Shows 1-3 filled segments based on confidence level.
+ *
+ * @param {"low" | "medium" | "high"} confidence - AI confidence level
+ * @returns {JSX.Element} The confidence meter component
+ */
 function ConfidenceMeter({
   confidence,
 }: {
@@ -71,6 +98,22 @@ function ConfidenceMeter({
   );
 }
 
+/**
+ * RecommendationCard Component
+ *
+ * Swipeable card displaying AI recommendation with details and actions.
+ * Supports:
+ * - Swipe right to accept (> 30% screen width)
+ * - Swipe left to decline (> 30% screen width)
+ * - Tap to view details
+ * - Visual feedback during swipe (color/opacity changes)
+ *
+ * @param {Recommendation} recommendation - The recommendation data to display
+ * @param {Function} onAccept - Callback when card is swiped right/accepted
+ * @param {Function} onDecline - Callback when card is swiped left/declined
+ * @param {Function} onPress - Callback when card is tapped
+ * @returns {JSX.Element} The recommendation card component
+ */
 function RecommendationCard({
   recommendation,
   onAccept,

@@ -1,11 +1,24 @@
+/**
+ * MessagesScreen Module
+ *
+ * P2P messaging with conversation list interface.
+ * Features:
+ * - Direct and group conversations
+ * - Unread message counts
+ * - Last message preview
+ * - Typing indicators
+ * - Online status
+ * - Pin/mute/archive actions
+ * - Auto-archive old conversations (14+ days)
+ * - New conversation creation
+ * - AI assistance integration
+ * - Haptic feedback
+ *
+ * @module MessagesScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Pressable,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, FlatList, Pressable, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -48,7 +61,7 @@ function ConversationCard({
       return conversation.name;
     }
     const otherParticipant = conversation.participants.find(
-      (p) => p.userId !== "current_user"
+      (p) => p.userId !== "current_user",
     );
     return otherParticipant?.userName || conversation.name;
   };
@@ -65,19 +78,16 @@ function ConversationCard({
         ]}
       >
         <View style={styles.avatarContainer}>
-          <View
-            style={[
-              styles.avatar,
-              { backgroundColor: theme.accentDim },
-            ]}
-          >
+          <View style={[styles.avatar, { backgroundColor: theme.accentDim }]}>
             <Feather
               name={conversation.type === "group" ? "users" : "user"}
               size={24}
               color={theme.accent}
             />
           </View>
-          {conversation.participants.some((p) => p.isOnline && p.userId !== "current_user") && (
+          {conversation.participants.some(
+            (p) => p.isOnline && p.userId !== "current_user",
+          ) && (
             <View
               style={[
                 styles.onlineIndicator,
@@ -97,7 +107,9 @@ function ConversationCard({
               {getParticipantNames()}
             </ThemedText>
             <ThemedText type="small" muted>
-              {formatRelativeDate(conversation.lastMessageAt || conversation.createdAt)}
+              {formatRelativeDate(
+                conversation.lastMessageAt || conversation.createdAt,
+              )}
             </ThemedText>
           </View>
 
@@ -117,10 +129,7 @@ function ConversationCard({
             </ThemedText>
             {hasUnread && (
               <View
-                style={[
-                  styles.unreadBadge,
-                  { backgroundColor: theme.accent },
-                ]}
+                style={[styles.unreadBadge, { backgroundColor: theme.accent }]}
               >
                 <ThemedText
                   type="small"
@@ -178,7 +187,7 @@ export default function MessagesScreen() {
   useFocusEffect(
     useCallback(() => {
       loadConversations();
-    }, [loadConversations])
+    }, [loadConversations]),
   );
 
   useEffect(() => {
@@ -195,7 +204,9 @@ export default function MessagesScreen() {
 
   const handleConversationPress = async (conversation: Conversation) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    navigation.navigate("ConversationDetail", { conversationId: conversation.id });
+    navigation.navigate("ConversationDetail", {
+      conversationId: conversation.id,
+    });
   };
 
   const handleAIAssist = () => {
@@ -224,7 +235,10 @@ export default function MessagesScreen() {
           onPress={() => setShowArchived(false)}
           style={[
             styles.tab,
-            !showArchived && { borderBottomColor: theme.accent, borderBottomWidth: 2 },
+            !showArchived && {
+              borderBottomColor: theme.accent,
+              borderBottomWidth: 2,
+            },
           ]}
         >
           <ThemedText
@@ -238,7 +252,10 @@ export default function MessagesScreen() {
           onPress={() => setShowArchived(true)}
           style={[
             styles.tab,
-            showArchived && { borderBottomColor: theme.accent, borderBottomWidth: 2 },
+            showArchived && {
+              borderBottomColor: theme.accent,
+              borderBottomWidth: 2,
+            },
           ]}
         >
           <ThemedText

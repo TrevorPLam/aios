@@ -1,3 +1,19 @@
+/**
+ * RecommendationDetailScreen Module
+ *
+ * Detailed view of a single AI recommendation with full information.
+ * Features:
+ * - Complete recommendation details (title, summary, evidence)
+ * - Confidence level visualization
+ * - Priority and module information
+ * - Expiry countdown
+ * - Accept/decline actions with history logging
+ * - Evidence timestamps for AI reasoning transparency
+ * - Haptic feedback for actions
+ *
+ * @module RecommendationDetailScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,6 +38,14 @@ import {
 
 type RouteProps = RouteProp<AppStackParamList, "RecommendationDetail">;
 
+/**
+ * RecommendationDetailScreen Component
+ *
+ * Shows full details of an AI recommendation with action buttons.
+ * Logs user decisions to history for AI learning.
+ *
+ * @returns {JSX.Element} The recommendation detail screen component
+ */
 export default function RecommendationDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -32,6 +56,7 @@ export default function RecommendationDetailScreen() {
     null,
   );
 
+  // Load recommendation data on mount
   useEffect(() => {
     async function load() {
       const all = await db.recommendations.getAll();
@@ -41,6 +66,10 @@ export default function RecommendationDetailScreen() {
     load();
   }, [route.params.recommendationId]);
 
+  /**
+   * Accept recommendation
+   * Updates status, saves decision, and logs to history
+   */
   const handleAccept = useCallback(async () => {
     if (!recommendation) return;
     if (Platform.OS !== "web") {
@@ -61,6 +90,10 @@ export default function RecommendationDetailScreen() {
     navigation.goBack();
   }, [recommendation, navigation]);
 
+  /**
+   * Decline recommendation
+   * Updates status, saves decision, and logs to history
+   */
   const handleDecline = useCallback(async () => {
     if (!recommendation) return;
     if (Platform.OS !== "web") {

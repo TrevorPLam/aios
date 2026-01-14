@@ -1,3 +1,20 @@
+/**
+ * EventDetailScreen Module
+ *
+ * Screen for creating and editing calendar events.
+ * Features:
+ * - Create new events or edit existing ones
+ * - Set event title, description, and location
+ * - Toggle all-day events
+ * - Configure recurrence rules (none, daily, weekly, monthly)
+ * - Date/time selection (placeholder for full date picker)
+ * - Delete existing events
+ * - Form validation for required fields
+ * - Haptic feedback for user actions
+ *
+ * @module EventDetailScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -26,8 +43,18 @@ import { generateId } from "@/utils/helpers";
 
 type RouteProps = RouteProp<AppStackParamList, "EventDetail">;
 
+/** Available recurrence rule options */
 const RECURRENCE: RecurrenceRule[] = ["none", "daily", "weekly", "monthly"];
 
+/**
+ * EventDetailScreen Component
+ *
+ * Form screen for creating or editing a calendar event.
+ * Loads existing event data if eventId is provided in route params,
+ * or initializes with date if provided.
+ *
+ * @returns {JSX.Element} The event detail screen component
+ */
 export default function EventDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -43,9 +70,11 @@ export default function EventDetailScreen() {
   const [eventId, setEventId] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>(new Date());
 
+  // Load event data on mount if editing, or initialize with date if creating
   useEffect(() => {
     async function loadData() {
       if (route.params?.eventId) {
+        // Editing existing event
         const event = await db.events.get(route.params.eventId);
         if (event) {
           setTitle(event.title);
@@ -58,6 +87,7 @@ export default function EventDetailScreen() {
           setIsNew(false);
         }
       } else {
+        // Creating new event
         setEventId(generateId());
         setIsNew(true);
         if (route.params?.date) {
@@ -68,6 +98,10 @@ export default function EventDetailScreen() {
     loadData();
   }, [route.params?.eventId, route.params?.date]);
 
+  /**
+   * Save event to database
+   * Validates required fields and creates/updates the event
+   */
   const saveEvent = useCallback(async () => {
     if (!title.trim()) {
       Alert.alert("Error", "Please enter a title");

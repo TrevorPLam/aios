@@ -58,15 +58,40 @@ async function setData<T>(key: string, value: T): Promise<void> {
 }
 
 export const db = {
+  /**
+   * Recommendations Module
+   * 
+   * Manages AI recommendation storage and filtering.
+   * Recommendations are time-sensitive suggestions with confidence levels.
+   */
   recommendations: {
+    /**
+     * Get all recommendations from storage
+     * 
+     * @returns {Promise<Recommendation[]>} Array of all recommendations
+     */
     async getAll(): Promise<Recommendation[]> {
       return getData(KEYS.RECOMMENDATIONS, []);
     },
+    
+    /**
+     * Get only active, non-expired recommendations
+     * Filters by status "active" and expiresAt > current time
+     * 
+     * @returns {Promise<Recommendation[]>} Array of active recommendations
+     */
     async getActive(): Promise<Recommendation[]> {
       const all = await this.getAll();
       const now = new Date().toISOString();
       return all.filter((r) => r.status === "active" && r.expiresAt > now);
     },
+    
+    /**
+     * Save a recommendation (create new or update existing)
+     * 
+     * @param {Recommendation} rec - The recommendation to save
+     * @returns {Promise<void>}
+     */
     async save(rec: Recommendation): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((r) => r.id === rec.id);
@@ -77,9 +102,25 @@ export const db = {
       }
       await setData(KEYS.RECOMMENDATIONS, all);
     },
+    
+    /**
+     * Replace all recommendations at once
+     * Useful for batch updates from AI service
+     * 
+     * @param {Recommendation[]} recs - Array of recommendations to save
+     * @returns {Promise<void>}
+     */
     async saveAll(recs: Recommendation[]): Promise<void> {
       await setData(KEYS.RECOMMENDATIONS, recs);
     },
+    
+    /**
+     * Update recommendation status (active, accepted, declined, expired)
+     * 
+     * @param {string} id - The recommendation ID
+     * @param {Recommendation["status"]} status - New status value
+     * @returns {Promise<void>}
+     */
     async updateStatus(
       id: string,
       status: Recommendation["status"],
@@ -191,14 +232,40 @@ export const db = {
     },
   },
 
+  /**
+   * Events Module
+   * 
+   * Manages calendar event storage operations.
+   * Supports event creation, editing, deletion, and date-based filtering.
+   */
   events: {
+    /**
+     * Get all events from storage
+     * 
+     * @returns {Promise<CalendarEvent[]>} Array of all calendar events
+     */
     async getAll(): Promise<CalendarEvent[]> {
       return getData(KEYS.EVENTS, []);
     },
+    
+    /**
+     * Get a specific event by ID
+     * 
+     * @param {string} id - The event ID
+     * @returns {Promise<CalendarEvent | null>} The event if found, null otherwise
+     */
     async get(id: string): Promise<CalendarEvent | null> {
       const all = await this.getAll();
       return all.find((e) => e.id === id) || null;
     },
+    
+    /**
+     * Get all events for a specific date
+     * Compares only the date portion (YYYY-MM-DD) of event startAt timestamps
+     * 
+     * @param {string} date - ISO 8601 date string to filter by
+     * @returns {Promise<CalendarEvent[]>} Array of events on the specified date
+     */
     async getForDate(date: string): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const targetDate = date.split("T")[0];
@@ -207,6 +274,13 @@ export const db = {
         return eventDate === targetDate;
       });
     },
+    
+    /**
+     * Save an event (create new or update existing)
+     * 
+     * @param {CalendarEvent} event - The event to save
+     * @returns {Promise<void>}
+     */
     async save(event: CalendarEvent): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((e) => e.id === event.id);
@@ -217,6 +291,13 @@ export const db = {
       }
       await setData(KEYS.EVENTS, all);
     },
+    
+    /**
+     * Delete an event by ID
+     * 
+     * @param {string} id - The event ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((e) => e.id !== id);
@@ -265,20 +346,51 @@ export const db = {
     },
   },
 
+  /**
+   * Alerts Module
+   *
+   * Manages alarm and reminder storage operations.
+   * Provides CRUD operations and sorting functionality.
+   */
   alerts: {
+    /**
+     * Get all alerts from storage
+     *
+     * @returns {Promise<Alert[]>} Array of all alerts
+     */
     async getAll(): Promise<Alert[]> {
       return getData(KEYS.ALERTS, []);
     },
+
+    /**
+     * Get all alerts sorted by time in ascending order
+     *
+     * @returns {Promise<Alert[]>} Array of alerts sorted by time (earliest first)
+     */
     async getAllSorted(): Promise<Alert[]> {
       const all = await this.getAll();
       return all.sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       );
     },
+
+    /**
+     * Get a specific alert by ID
+     *
+     * @param {string} id - The alert ID
+     * @returns {Promise<Alert | null>} The alert if found, null otherwise
+     */
     async get(id: string): Promise<Alert | null> {
       const all = await this.getAll();
       return all.find((a) => a.id === id) || null;
     },
+
+    /**
+     * Save an alert (create new or update existing)
+     *
+     * @param {Alert} alert - The alert to save
+     * @returns {Promise<void>}
+     */
     async save(alert: Alert): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((a) => a.id === alert.id);
@@ -289,6 +401,13 @@ export const db = {
       }
       await setData(KEYS.ALERTS, all);
     },
+
+    /**
+     * Delete an alert by ID
+     *
+     * @param {string} id - The alert ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((a) => a.id !== id);
@@ -328,10 +447,7 @@ export const db = {
       const filtered = all.filter((m) => m.id !== id);
       await setData(KEYS.MESSAGES, filtered);
     },
-    async markAsRead(
-      conversationId: string,
-      userId: string,
-    ): Promise<void> {
+    async markAsRead(conversationId: string, userId: string): Promise<void> {
       const all = await this.getAll();
       const now = new Date().toISOString();
       all.forEach((m) => {
@@ -342,7 +458,10 @@ export const db = {
       });
       await setData(KEYS.MESSAGES, all);
     },
-    async getUnreadCount(conversationId: string, userId: string): Promise<number> {
+    async getUnreadCount(
+      conversationId: string,
+      userId: string,
+    ): Promise<number> {
       const all = await this.getAll();
       return all.filter(
         (m) =>
@@ -395,7 +514,7 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((c) => c.id !== id);
       await setData(KEYS.CONVERSATIONS, filtered);
-      
+
       // Also delete all messages in this conversation
       const messages = await db.messages.getAll();
       const filteredMessages = messages.filter((m) => m.conversationId !== id);
@@ -451,28 +570,38 @@ export const db = {
       const all = await this.getAll();
       const fourteenDaysAgo = new Date();
       fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-      
+
       return all.filter((c) => {
         const lastActivity = c.lastMessageAt || c.createdAt;
-        return (
-          !c.isArchived &&
-          new Date(lastActivity) < fourteenDaysAgo
-        );
+        return !c.isArchived && new Date(lastActivity) < fourteenDaysAgo;
       });
     },
   },
+  /**
+   * Contacts Module
+   * 
+   * Manages contact storage with sharing preferences.
+   * Contacts can be imported from device and have configurable sharing settings.
+   */
   contacts: {
+    /** Get all contacts from storage */
     async getAll(): Promise<Contact[]> {
       return getData(KEYS.CONTACTS, []);
     },
+    
+    /** Get all contacts sorted alphabetically by name */
     async getAllSorted(): Promise<Contact[]> {
       const all = await this.getAll();
       return all.sort((a, b) => a.name.localeCompare(b.name));
     },
+    
+    /** Get a specific contact by ID */
     async get(id: string): Promise<Contact | null> {
       const all = await this.getAll();
       return all.find((c) => c.id === id) || null;
     },
+    
+    /** Save a contact (create new or update existing) */
     async save(contact: Contact): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((c) => c.id === contact.id);
@@ -483,9 +612,13 @@ export const db = {
       }
       await setData(KEYS.CONTACTS, all);
     },
+    
+    /** Save multiple contacts at once (for bulk import) */
     async saveAll(contacts: Contact[]): Promise<void> {
       await setData(KEYS.CONTACTS, contacts);
     },
+    
+    /** Delete a contact by ID */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((c) => c.id !== id);
@@ -638,20 +771,51 @@ export const db = {
     },
   },
 
+  /**
+   * Budgets Module
+   * 
+   * Manages monthly budget storage operations.
+   * Budgets contain categories with line items tracking budgeted vs actual amounts.
+   */
   budgets: {
+    /**
+     * Get all budgets from storage
+     * 
+     * @returns {Promise<Budget[]>} Array of all budgets
+     */
     async getAll(): Promise<Budget[]> {
       return getData(KEYS.BUDGETS, []);
     },
+    
+    /**
+     * Get a specific budget by ID
+     * 
+     * @param {string} id - The budget ID
+     * @returns {Promise<Budget | null>} The budget if found, null otherwise
+     */
     async get(id: string): Promise<Budget | null> {
       const all = await this.getAll();
       return all.find((b) => b.id === id) || null;
     },
+    
+    /**
+     * Get the budget for the current month (YYYY-MM format)
+     * 
+     * @returns {Promise<Budget | null>} The current month's budget if found, null otherwise
+     */
     async getCurrent(): Promise<Budget | null> {
       const all = await this.getAll();
       const now = new Date();
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
       return all.find((b) => b.month === currentMonth) || null;
     },
+    
+    /**
+     * Save a budget (create new or update existing)
+     * 
+     * @param {Budget} budget - The budget to save
+     * @returns {Promise<void>}
+     */
     async save(budget: Budget): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((b) => b.id === budget.id);
@@ -662,6 +826,13 @@ export const db = {
       }
       await setData(KEYS.BUDGETS, all);
     },
+    
+    /**
+     * Delete a budget by ID
+     * 
+     * @param {string} id - The budget ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((b) => b.id !== id);

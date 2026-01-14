@@ -1,8 +1,18 @@
+/**
+ * Budget Database Storage Tests
+ * 
+ * Tests the database storage layer for the Budget module.
+ * Validates CRUD operations, current month retrieval, and nested data handling.
+ * 
+ * @module budgets.test
+ */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
 import { Budget, BudgetCategory, BudgetLineItem } from "@/models/types";
 
 describe("Database Budget Storage", () => {
+  // Clear storage before and after each test to ensure isolation
   beforeEach(async () => {
     await AsyncStorage.clear();
   });
@@ -11,6 +21,7 @@ describe("Database Budget Storage", () => {
     await AsyncStorage.clear();
   });
 
+  /** Sample line item for testing */
   const mockLineItem: BudgetLineItem = {
     id: "item_1",
     name: "Rent",
@@ -18,6 +29,7 @@ describe("Database Budget Storage", () => {
     actual: 1500,
   };
 
+  /** Sample category for testing */
   const mockCategory: BudgetCategory = {
     id: "cat_1",
     name: "Housing",
@@ -25,6 +37,7 @@ describe("Database Budget Storage", () => {
     isExpanded: true,
   };
 
+  /** Sample budget for testing */
   const mockBudget: Budget = {
     id: "budget_1",
     name: "January 2026 Budget",

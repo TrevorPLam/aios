@@ -33,6 +33,27 @@ export type RecurrenceRule = "none" | "daily" | "weekly" | "monthly" | "custom";
 
 export type AILimitTier = 0 | 1 | 2 | 3;
 
+/**
+ * Recommendation Interface
+ * 
+ * Represents an AI-generated suggestion/recommendation.
+ * Recommendations are time-bound, have confidence levels, and track evidence.
+ * 
+ * @property {string} id - Unique identifier for the recommendation
+ * @property {ModuleType} module - Which module this recommendation is for
+ * @property {string} title - Short recommendation title
+ * @property {string} summary - Detailed description of the recommendation
+ * @property {string} type - Type/category of recommendation
+ * @property {RecommendationStatus} status - Current status (active, accepted, declined, expired)
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} expiresAt - ISO 8601 timestamp when recommendation expires
+ * @property {ConfidenceLevel} confidence - AI confidence level (low, medium, high)
+ * @property {TaskPriority} priority - Priority level for the recommendation
+ * @property {string} dedupeKey - Key to prevent duplicate recommendations
+ * @property {boolean} countsAgainstLimit - Whether this counts against AI usage limits
+ * @property {string} why - Explanation of why AI made this recommendation
+ * @property {string[]} evidenceTimestamps - Array of ISO timestamps showing evidence
+ */
 export interface Recommendation {
   id: string;
   module: ModuleType;
@@ -50,6 +71,17 @@ export interface Recommendation {
   evidenceTimestamps: string[];
 }
 
+/**
+ * Recommendation Decision Interface
+ * 
+ * Records user's decision on a recommendation (accepted or declined).
+ * Used for tracking AI effectiveness and user preferences.
+ * 
+ * @property {string} id - Unique identifier for the decision
+ * @property {string} recommendationId - ID of the related recommendation
+ * @property {DecisionType} decision - User's decision (accepted or declined)
+ * @property {string} decidedAt - ISO 8601 timestamp when decision was made
+ */
 export interface RecommendationDecision {
   id: string;
   recommendationId: string;
@@ -92,6 +124,27 @@ export interface Project {
   updatedAt: string;
 }
 
+/**
+ * Calendar Event Interface
+ * 
+ * Represents a calendar event with support for recurrence and exceptions.
+ * Events can be all-day or have specific start/end times.
+ * 
+ * @property {string} id - Unique identifier for the event
+ * @property {string} title - Event title/name
+ * @property {string} description - Optional event description
+ * @property {string} location - Optional event location
+ * @property {string} startAt - ISO 8601 timestamp of event start
+ * @property {string} endAt - ISO 8601 timestamp of event end
+ * @property {boolean} allDay - Whether the event is an all-day event
+ * @property {string} timezone - Timezone of the event (e.g., "America/New_York")
+ * @property {RecurrenceRule} recurrenceRule - How often the event repeats
+ * @property {string[]} exceptions - Array of ISO 8601 dates to exclude from recurrence
+ * @property {Record<string, Partial<CalendarEvent>>} overrides - Date-specific overrides for recurring events
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ * @property {"LOCAL"} source - Event source (currently only LOCAL supported)
+ */
 export interface CalendarEvent {
   id: string;
   title: string;
@@ -145,8 +198,31 @@ export interface List {
   updatedAt: string;
 }
 
+/**
+ * Alert Type
+ * 
+ * Defines the type of alert/notification
+ * - alarm: Sound-based alert (typically for wake-up times)
+ * - reminder: Notification-based reminder (for tasks/events)
+ */
 export type AlertType = "alarm" | "reminder";
 
+/**
+ * Alert Interface
+ * 
+ * Represents an alarm or reminder in the system.
+ * Supports one-time and recurring alerts with enable/disable functionality.
+ * 
+ * @property {string} id - Unique identifier for the alert
+ * @property {string} title - Alert title/name
+ * @property {string} description - Optional description or notes
+ * @property {string} time - ISO 8601 timestamp when alert should trigger
+ * @property {AlertType} type - Type of alert (alarm or reminder)
+ * @property {boolean} isEnabled - Whether the alert is currently active
+ * @property {RecurrenceRule} recurrenceRule - How often the alert repeats
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ */
 export interface Alert {
   id: string;
   title: string;
@@ -247,6 +323,26 @@ export interface Conversation {
   updatedAt: string;
 }
 
+/**
+ * Contact Interface
+ * 
+ * Represents a contact from the device with app-specific enhancements.
+ * Includes sharing preferences for controlling what data is shared in-app.
+ * 
+ * @property {string} id - Unique identifier (from device or generated)
+ * @property {string} name - Contact's full name
+ * @property {string} [firstName] - Optional first name
+ * @property {string} [lastName] - Optional last name
+ * @property {string[]} phoneNumbers - Array of phone numbers
+ * @property {string[]} emails - Array of email addresses
+ * @property {string} [birthday] - Optional birthday (ISO 8601 date)
+ * @property {string} [company] - Optional company/organization name
+ * @property {string} [jobTitle] - Optional job title
+ * @property {string} [imageUri] - Optional profile image URI
+ * @property {boolean} isRegistered - Whether contact is registered in the app
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ */
 export interface Contact {
   id: string;
   name: string;
@@ -292,12 +388,32 @@ export interface VideoCallParticipant {
 
 export type ContactSharingField = "email" | "birthday" | "business";
 
+/**
+ * Contact Sharing Preferences Interface
+ * 
+ * Granular control over what contact information is shared within the app.
+ * 
+ * @property {boolean} shareEmail - Share email address
+ * @property {boolean} shareBirthday - Share birthday information
+ * @property {boolean} shareBusinessInfo - Share business/work information (company, jobTitle)
+ */
 export interface ContactSharingPreferences {
   shareEmail: boolean;
   shareBirthday: boolean;
   shareBusinessInfo: boolean;
 }
 
+/**
+ * Budget Line Item Interface
+ * 
+ * Represents a single line item within a budget category.
+ * Tracks both budgeted and actual amounts for comparison.
+ * 
+ * @property {string} id - Unique identifier for the line item
+ * @property {string} name - Line item name/description (e.g., "Rent", "Groceries")
+ * @property {number} budgeted - Budgeted/planned amount
+ * @property {number} actual - Actual spent amount
+ */
 export interface BudgetLineItem {
   id: string;
   name: string;
@@ -305,6 +421,17 @@ export interface BudgetLineItem {
   actual: number;
 }
 
+/**
+ * Budget Category Interface
+ * 
+ * Represents a category containing multiple budget line items.
+ * Categories can be expanded or collapsed in the UI.
+ * 
+ * @property {string} id - Unique identifier for the category
+ * @property {string} name - Category name (e.g., "Housing", "Transportation")
+ * @property {BudgetLineItem[]} lineItems - Array of line items in this category
+ * @property {boolean} isExpanded - Whether the category is expanded in the UI
+ */
 export interface BudgetCategory {
   id: string;
   name: string;
@@ -312,6 +439,19 @@ export interface BudgetCategory {
   isExpanded: boolean;
 }
 
+/**
+ * Budget Interface
+ * 
+ * Represents a monthly budget with multiple categories and line items.
+ * Used for tracking planned vs actual spending across various categories.
+ * 
+ * @property {string} id - Unique identifier for the budget
+ * @property {string} name - Budget name/title
+ * @property {string} month - Month in YYYY-MM format (e.g., "2026-01")
+ * @property {BudgetCategory[]} categories - Array of budget categories
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ */
 export interface Budget {
   id: string;
   name: string;

@@ -1,3 +1,20 @@
+/**
+ * BudgetScreen Module
+ *
+ * Interactive budget management screen with spreadsheet-like interface.
+ * Features:
+ * - Monthly budget tracking with categories and line items
+ * - Real-time calculation of budgeted vs actual amounts
+ * - Inline editing of amounts and names
+ * - Expandable/collapsible categories
+ * - Add/delete categories and line items
+ * - Summary totals showing budget health (under/over budget)
+ * - AI assistance for budget suggestions
+ * - Haptic feedback for interactions
+ *
+ * @module BudgetScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -29,6 +46,14 @@ import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+/**
+ * BudgetScreen Component
+ *
+ * Main screen for budget management with spreadsheet-like editing interface.
+ * Loads the current month's budget or most recent budget if none exists.
+ *
+ * @returns {JSX.Element} The budget screen component
+ */
 export default function BudgetScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -36,6 +61,8 @@ export default function BudgetScreen() {
 
   const [budget, setBudget] = useState<Budget | null>(null);
   const [showAISheet, setShowAISheet] = useState(false);
+
+  /** State for tracking which cell is currently being edited */
   const [editingCell, setEditingCell] = useState<{
     categoryId: string;
     lineItemId: string;
@@ -43,6 +70,10 @@ export default function BudgetScreen() {
     value: string;
   } | null>(null);
 
+  /**
+   * Load current month's budget or most recent budget
+   * Falls back to most recent budget if no current month budget exists
+   */
   const loadBudget = useCallback(async () => {
     let data = await db.budgets.getCurrent();
     if (!data) {
@@ -57,15 +88,18 @@ export default function BudgetScreen() {
     }
   }, []);
 
+  // Load budget on mount
   useEffect(() => {
     loadBudget();
   }, [loadBudget]);
 
+  // Reload budget when screen comes into focus
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", loadBudget);
     return unsubscribe;
   }, [navigation, loadBudget]);
 
+  // Configure navigation header
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
@@ -73,6 +107,11 @@ export default function BudgetScreen() {
     });
   }, [navigation]);
 
+  /**
+   * Save budget to database with updated timestamp
+   *
+   * @param {Budget} updatedBudget - The budget to save
+   */
   const saveBudget = async (updatedBudget: Budget) => {
     const now = new Date().toISOString();
     const budgetToSave = {
@@ -83,6 +122,11 @@ export default function BudgetScreen() {
     setBudget(budgetToSave);
   };
 
+  /**
+   * Toggle category expanded/collapsed state
+   *
+   * @param {string} categoryId - ID of the category to toggle
+   */
   const toggleCategory = (categoryId: string) => {
     if (!budget) return;
     if (Platform.OS !== "web") {
@@ -95,6 +139,16 @@ export default function BudgetScreen() {
     saveBudget({ ...budget, categories: updatedCategories });
   };
 
+  /**
+   * Update a line item's budgeted or actual amount
+   * Validates input to ensure it's a valid number
+   * Empty strings are treated as 0
+   *
+   * @param {string} categoryId - ID of the category containing the line item
+   * @param {string} lineItemId - ID of the line item to update
+   * @param {"budgeted" | "actual"} field - Which field to update
+   * @param {string} value - New value (as string for input handling)
+   */
   const updateLineItem = (
     categoryId: string,
     lineItemId: string,
@@ -122,7 +176,10 @@ export default function BudgetScreen() {
 
     const numValue = parseFloat(trimmedValue);
     // Check if the entire input is a valid number by comparing string representations
-    if (Number.isNaN(numValue) || numValue.toString() !== parseFloat(trimmedValue).toString()) {
+    if (
+      Number.isNaN(numValue) ||
+      numValue.toString() !== parseFloat(trimmedValue).toString()
+    ) {
       return; // Don't update if invalid number or partial number like "123abc"
     }
 
@@ -138,6 +195,9 @@ export default function BudgetScreen() {
     saveBudget({ ...budget, categories: updatedCategories });
   };
 
+  /**
+   * Add a new category with one default line item
+   */
   const addCategory = () => {
     if (!budget) return;
     if (Platform.OS !== "web") {
@@ -164,6 +224,11 @@ export default function BudgetScreen() {
     });
   };
 
+  /**
+   * Delete a category with confirmation dialog
+   *
+   * @param {string} categoryId - ID of the category to delete
+   */
   const deleteCategory = (categoryId: string) => {
     if (!budget) return;
 
@@ -194,6 +259,12 @@ export default function BudgetScreen() {
     }
   };
 
+  /**
+   * Update a category's name
+   *
+   * @param {string} categoryId - ID of the category to update
+   * @param {string} name - New category name
+   */
   const updateCategoryName = (categoryId: string, name: string) => {
     if (!budget) return;
 
@@ -203,6 +274,11 @@ export default function BudgetScreen() {
     saveBudget({ ...budget, categories: updatedCategories });
   };
 
+  /**
+   * Add a new line item to a category
+   *
+   * @param {string} categoryId - ID of the category to add the line item to
+   */
   const addLineItem = (categoryId: string) => {
     if (!budget) return;
     if (Platform.OS !== "web") {
@@ -229,6 +305,12 @@ export default function BudgetScreen() {
     saveBudget({ ...budget, categories: updatedCategories });
   };
 
+  /**
+   * Delete a line item from a category
+   *
+   * @param {string} categoryId - ID of the category containing the line item
+   * @param {string} lineItemId - ID of the line item to delete
+   */
   const deleteLineItem = (categoryId: string, lineItemId: string) => {
     if (!budget) return;
     if (Platform.OS !== "web") {
@@ -248,6 +330,13 @@ export default function BudgetScreen() {
     saveBudget({ ...budget, categories: updatedCategories });
   };
 
+  /**
+   * Update a line item's name
+   *
+   * @param {string} categoryId - ID of the category containing the line item
+   * @param {string} lineItemId - ID of the line item to update
+   * @param {string} name - New line item name
+   */
   const updateLineItemName = (
     categoryId: string,
     lineItemId: string,
@@ -268,6 +357,11 @@ export default function BudgetScreen() {
     saveBudget({ ...budget, categories: updatedCategories });
   };
 
+  /**
+   * Calculate total budgeted and actual amounts across all categories
+   *
+   * @returns {{ totalBudgeted: number, totalActual: number }} Calculated totals
+   */
   const calculateTotals = () => {
     if (!budget) return { totalBudgeted: 0, totalActual: 0 };
 
@@ -380,7 +474,9 @@ export default function BudgetScreen() {
               >
                 <View style={styles.categoryHeaderLeft}>
                   <Feather
-                    name={category.isExpanded ? "chevron-down" : "chevron-right"}
+                    name={
+                      category.isExpanded ? "chevron-down" : "chevron-right"
+                    }
                     size={20}
                     color={theme.text}
                   />

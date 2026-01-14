@@ -1,3 +1,20 @@
+/**
+ * NotebookScreen Module
+ *
+ * Markdown note editor with tag and link parsing.
+ * Features:
+ * - Markdown-formatted notes
+ * - Tag support (#tag syntax)
+ * - Internal link support ([[link]] syntax)
+ * - Note list with preview
+ * - Search and filter by tags
+ * - Last edited timestamps
+ * - AI assistance for note suggestions
+ * - Haptic feedback for interactions
+ *
+ * @module NotebookScreen
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
