@@ -159,8 +159,8 @@ export default function AlertDetailScreen() {
   };
 
   const handleTimeChange = () => {
-    // In a real implementation, this would open a time picker
-    // For now, we'll just set a sample time
+    // TODO: Replace with a proper time picker component (e.g., @react-native-community/datetimepicker)
+    // For now, this sets a sample time 1 hour from now
     const now = new Date();
     now.setHours(now.getHours() + 1);
     now.setMinutes(0);
