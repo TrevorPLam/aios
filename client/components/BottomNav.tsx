@@ -19,6 +19,7 @@ export const MODULES: ModuleItem[] = [
   { name: "Planner", route: "Planner", icon: "check-square" },
   { name: "Calendar", route: "Calendar", icon: "calendar" },
   { name: "Email", route: "Email", icon: "mail" },
+  { name: "Translator", route: "Translator", icon: "globe" },
 ];
 
 interface BottomNavProps {
