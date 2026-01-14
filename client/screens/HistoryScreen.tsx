@@ -252,9 +252,7 @@ export default function HistoryScreen() {
 
         switch (date) {
           case "today":
-            const todayStart = new Date(now);
-            todayStart.setHours(0, 0, 0, 0);
-            startDate = todayStart;
+            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
             break;
           case "week":
             startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -289,7 +287,7 @@ export default function HistoryScreen() {
 
   useEffect(() => {
     applyFilters(allEntries, searchQuery, typeFilter, dateFilter);
-  }, [allEntries, searchQuery, typeFilter, dateFilter, applyFilters]);
+  }, [allEntries, searchQuery, typeFilter, dateFilter]);
 
   const handleClearHistory = useCallback(() => {
     if (Platform.OS !== "web") {

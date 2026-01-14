@@ -164,8 +164,10 @@ describe("History Module", () => {
       const now = new Date();
       await db.history.add({ message: "Today entry", type: "system" });
 
-      const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-      const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+      const startOfDay = new Date(now.getTime());
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(now.getTime());
+      endOfDay.setHours(23, 59, 59, 999);
 
       const entries = await db.history.getByDateRange(startOfDay, endOfDay);
       expect(entries.length).toBeGreaterThan(0);
