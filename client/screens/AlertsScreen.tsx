@@ -763,10 +763,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.md,
   },
-    marginBottom: Spacing.md,
-    alignItems: "center",
-    ...Shadows.card,
-  },
   disabledCard: {
     opacity: 0.6,
   },
