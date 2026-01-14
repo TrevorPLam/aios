@@ -10,7 +10,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
@@ -107,7 +106,6 @@ function ThreadCard({
 export default function EmailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
 
   const [threads] = useState<EmailThread[]>(MOCK_EMAIL_THREADS);
@@ -146,7 +144,7 @@ export default function EmailScreen() {
       <View
         style={[
           styles.banner,
-          { marginTop: headerHeight, backgroundColor: theme.warningDim },
+          { marginTop: 0, backgroundColor: theme.warningDim },
         ]}
       >
         <Feather name="info" size={16} color={theme.warning} />

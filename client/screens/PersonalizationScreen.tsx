@@ -7,7 +7,6 @@ import {
   Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
@@ -21,7 +20,6 @@ import { Settings } from "@/models/types";
 export default function PersonalizationScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
 
   const [settings, setSettings] = useState<Settings | null>(null);
 
@@ -69,7 +67,7 @@ export default function PersonalizationScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: headerHeight + Spacing.md,
+            paddingTop: Spacing.md,
             paddingBottom: insets.bottom + Spacing.xl,
           },
         ]}

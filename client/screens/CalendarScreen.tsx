@@ -10,7 +10,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
@@ -108,7 +107,6 @@ function EventCard({
 export default function CalendarScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -186,7 +184,7 @@ export default function CalendarScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.calendarHeader, { marginTop: headerHeight }]}>
+      <View style={[styles.calendarHeader, { marginTop: 0 }]}>
         <View style={styles.monthRow}>
           <Pressable onPress={() => navigateWeek(-1)} style={styles.navButton}>
             <Feather
