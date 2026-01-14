@@ -72,7 +72,7 @@ export default function SettingsMenuScreen() {
   const navigation = useNavigation<NavigationProp>();
 
   const handleMenuPress = (route: keyof AppStackParamList) => {
-    navigation.navigate(route as any);
+    navigation.navigate(route);
   };
 
   return (
