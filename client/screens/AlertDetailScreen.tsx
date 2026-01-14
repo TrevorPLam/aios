@@ -56,6 +56,34 @@ const RECURRENCE_OPTIONS: { value: RecurrenceRule; label: string }[] = [
   { value: "monthly", label: "Monthly" },
 ];
 
+/** Available sound options */
+const SOUND_OPTIONS: { value: import("@/models/types").AlertSound; label: string }[] = [
+  { value: "default", label: "Default" },
+  { value: "gentle", label: "Gentle" },
+  { value: "radar", label: "Radar" },
+  { value: "bells", label: "Bells" },
+  { value: "chimes", label: "Chimes" },
+  { value: "digital", label: "Digital" },
+];
+
+/** Available vibration pattern options */
+const VIBRATION_OPTIONS: { value: import("@/models/types").VibrationPattern; label: string }[] = [
+  { value: "default", label: "Default" },
+  { value: "pulse", label: "Pulse" },
+  { value: "double", label: "Double" },
+  { value: "long", label: "Long" },
+  { value: "none", label: "None" },
+];
+
+/** Available snooze duration options */
+const SNOOZE_OPTIONS: { value: import("@/models/types").SnoozeDuration; label: string }[] = [
+  { value: 5, label: "5 min" },
+  { value: 10, label: "10 min" },
+  { value: 15, label: "15 min" },
+  { value: 30, label: "30 min" },
+  { value: 60, label: "1 hour" },
+];
+
 /**
  * Generate a unique ID for a new alert
  *
@@ -86,6 +114,12 @@ export default function AlertDetailScreen() {
   const [type, setType] = useState<AlertType>("alarm");
   const [isEnabled, setIsEnabled] = useState(true);
   const [recurrence, setRecurrence] = useState<RecurrenceRule>("none");
+  const [sound, setSound] = useState<import("@/models/types").AlertSound>("default");
+  const [vibration, setVibration] = useState<import("@/models/types").VibrationPattern>("default");
+  const [gradualVolume, setGradualVolume] = useState(false);
+  const [snoozeDuration, setSnoozeDuration] = useState<import("@/models/types").SnoozeDuration>(10);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Load existing alert data or set defaults for new alert
@@ -100,6 +134,11 @@ export default function AlertDetailScreen() {
         setType(alert.type);
         setIsEnabled(alert.isEnabled);
         setRecurrence(alert.recurrenceRule);
+        setSound(alert.sound || "default");
+        setVibration(alert.vibration || "default");
+        setGradualVolume(alert.gradualVolume || false);
+        setSnoozeDuration(alert.snoozeDuration || 10);
+        setTags(alert.tags || []);
       }
     };
 
@@ -139,6 +178,11 @@ export default function AlertDetailScreen() {
         type,
         isEnabled,
         recurrenceRule: recurrence,
+        sound,
+        vibration,
+        gradualVolume,
+        snoozeDuration,
+        tags,
         createdAt: alertId
           ? (await db.alerts.get(alertId))?.createdAt ||
             new Date().toISOString()
@@ -217,6 +261,51 @@ export default function AlertDetailScreen() {
     now.setMinutes(0);
     now.setSeconds(0);
     setTime(now.toISOString());
+  };
+
+  /**
+   * Add a tag to the alert
+   */
+  const handleAddTag = () => {
+    const trimmedTag = tagInput.trim().toLowerCase();
+    if (trimmedTag && !tags.includes(trimmedTag)) {
+      setTags([...tags, trimmedTag]);
+      setTagInput("");
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+    }
+  };
+
+  /**
+   * Remove a tag from the alert
+   */
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
+
+  /**
+   * Duplicate current alert
+   */
+  const handleDuplicate = async () => {
+    if (!alertId) return;
+    
+    try {
+      const duplicated = await db.alerts.duplicate(alertId);
+      if (duplicated) {
+        if (Platform.OS !== "web") {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }
+        // Navigate to the duplicated alert
+        navigation.replace("AlertDetail", { alertId: duplicated.id });
+      }
+    } catch (error) {
+      console.error("Failed to duplicate alert:", error);
+      RNAlert.alert("Error", "Failed to duplicate alert");
+    }
   };
 
   return (
@@ -414,18 +503,263 @@ export default function AlertDetailScreen() {
           </Pressable>
         </View>
 
+        <View style={styles.section}>
+          <ThemedText type="body" style={styles.label}>
+            Sound
+          </ThemedText>
+          <View style={styles.optionGroup}>
+            {SOUND_OPTIONS.map((option) => (
+              <Pressable
+                key={option.value}
+                onPress={() => {
+                  setSound(option.value);
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                }}
+                style={[
+                  styles.option,
+                  {
+                    backgroundColor:
+                      sound === option.value
+                        ? theme.accentDim
+                        : theme.backgroundDefault,
+                    borderColor:
+                      sound === option.value
+                        ? theme.accent
+                        : theme.borderColor,
+                  },
+                ]}
+              >
+                <ThemedText
+                  type="body"
+                  style={{
+                    color:
+                      sound === option.value
+                        ? theme.accent
+                        : theme.textPrimary,
+                  }}
+                >
+                  {option.label}
+                </ThemedText>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <ThemedText type="body" style={styles.label}>
+            Vibration Pattern
+          </ThemedText>
+          <View style={styles.optionGroup}>
+            {VIBRATION_OPTIONS.map((option) => (
+              <Pressable
+                key={option.value}
+                onPress={() => {
+                  setVibration(option.value);
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                }}
+                style={[
+                  styles.option,
+                  {
+                    backgroundColor:
+                      vibration === option.value
+                        ? theme.accentDim
+                        : theme.backgroundDefault,
+                    borderColor:
+                      vibration === option.value
+                        ? theme.accent
+                        : theme.borderColor,
+                  },
+                ]}
+              >
+                <ThemedText
+                  type="body"
+                  style={{
+                    color:
+                      vibration === option.value
+                        ? theme.accent
+                        : theme.textPrimary,
+                  }}
+                >
+                  {option.label}
+                </ThemedText>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        {type === "alarm" && (
+          <View style={styles.section}>
+            <Pressable
+              onPress={() => {
+                setGradualVolume(!gradualVolume);
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+              }}
+              style={[
+                styles.toggleRow,
+                {
+                  backgroundColor: theme.backgroundDefault,
+                  borderColor: theme.borderColor,
+                },
+              ]}
+            >
+              <View>
+                <ThemedText type="body">Gradual Volume</ThemedText>
+                <ThemedText type="small" muted>
+                  Gently increases volume (gentle wake)
+                </ThemedText>
+              </View>
+              <View
+                style={[
+                  styles.toggleSwitch,
+                  {
+                    backgroundColor: gradualVolume
+                      ? theme.accent
+                      : theme.backgroundSecondary,
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.toggleThumb,
+                    { backgroundColor: theme.backgroundDefault },
+                    gradualVolume && styles.toggleThumbActive,
+                  ]}
+                />
+              </View>
+            </Pressable>
+          </View>
+        )}
+
+        <View style={styles.section}>
+          <ThemedText type="body" style={styles.label}>
+            Snooze Duration
+          </ThemedText>
+          <View style={styles.optionGroup}>
+            {SNOOZE_OPTIONS.map((option) => (
+              <Pressable
+                key={option.value}
+                onPress={() => {
+                  setSnoozeDuration(option.value);
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                }}
+                style={[
+                  styles.option,
+                  {
+                    backgroundColor:
+                      snoozeDuration === option.value
+                        ? theme.accentDim
+                        : theme.backgroundDefault,
+                    borderColor:
+                      snoozeDuration === option.value
+                        ? theme.accent
+                        : theme.borderColor,
+                  },
+                ]}
+              >
+                <ThemedText
+                  type="body"
+                  style={{
+                    color:
+                      snoozeDuration === option.value
+                        ? theme.accent
+                        : theme.textPrimary,
+                  }}
+                >
+                  {option.label}
+                </ThemedText>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <ThemedText type="body" style={styles.label}>
+            Tags
+          </ThemedText>
+          <View style={styles.tagContainer}>
+            {tags.map((tag) => (
+              <Pressable
+                key={tag}
+                onPress={() => handleRemoveTag(tag)}
+                style={[
+                  styles.tag,
+                  {
+                    backgroundColor: theme.accentDim,
+                    borderColor: theme.accent,
+                  },
+                ]}
+              >
+                <ThemedText type="small" style={{ color: theme.accent }}>
+                  {tag}
+                </ThemedText>
+                <Feather name="x" size={14} color={theme.accent} />
+              </Pressable>
+            ))}
+          </View>
+          <View style={styles.tagInputContainer}>
+            <TextInput
+              style={[
+                styles.tagInput,
+                {
+                  backgroundColor: theme.backgroundDefault,
+                  color: theme.textPrimary,
+                  borderColor: theme.borderColor,
+                },
+              ]}
+              value={tagInput}
+              onChangeText={setTagInput}
+              placeholder="Add tag (e.g., work, workout)"
+              placeholderTextColor={theme.textMuted}
+              onSubmitEditing={handleAddTag}
+            />
+            <Pressable
+              onPress={handleAddTag}
+              style={[
+                styles.addTagButton,
+                {
+                  backgroundColor: theme.accent,
+                },
+              ]}
+            >
+              <Feather name="plus" size={20} color={theme.buttonText} />
+            </Pressable>
+          </View>
+        </View>
+
         <View style={styles.buttonContainer}>
           <Button onPress={handleSave} disabled={isLoading}>
             {alertId ? "Update Alert" : "Create Alert"}
           </Button>
 
           {alertId && (
-            <Button
-              onPress={handleDelete}
-              style={[styles.deleteButton, { backgroundColor: theme.error }]}
-            >
-              Delete Alert
-            </Button>
+            <>
+              <Button
+                onPress={handleDuplicate}
+                style={[styles.actionButton, { backgroundColor: theme.accentDim, borderColor: theme.accent, borderWidth: 1 }]}
+              >
+                <View style={styles.buttonContent}>
+                  <Feather name="copy" size={18} color={theme.accent} />
+                  <ThemedText type="body" style={{ color: theme.accent, marginLeft: Spacing.xs }}>
+                    Duplicate Alert
+                  </ThemedText>
+                </View>
+              </Button>
+              
+              <Button
+                onPress={handleDelete}
+                style={[styles.deleteButton, { backgroundColor: theme.error }]}
+              >
+                Delete Alert
+              </Button>
+            </>
           )}
         </View>
       </ScrollView>
@@ -508,5 +842,46 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     marginTop: Spacing.sm,
+  },
+  tagContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: Spacing.sm,
+    marginBottom: Spacing.sm,
+  },
+  tag: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+  },
+  tagInputContainer: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+  },
+  tagInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.sm,
+    fontSize: 14,
+  },
+  addTagButton: {
+    width: 40,
+    height: 40,
+    borderRadius: BorderRadius.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  actionButton: {
+    marginTop: Spacing.sm,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

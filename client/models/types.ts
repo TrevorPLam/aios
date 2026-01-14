@@ -208,6 +208,82 @@ export interface List {
 export type AlertType = "alarm" | "reminder";
 
 /**
+ * Alert Sound Type
+ *
+ * Available sound options for alerts
+ */
+export type AlertSound =
+  | "default"
+  | "gentle"
+  | "radar"
+  | "bells"
+  | "chimes"
+  | "digital";
+
+/**
+ * Vibration Pattern Type
+ *
+ * Available vibration patterns for alerts
+ */
+export type VibrationPattern =
+  | "default"
+  | "pulse"
+  | "double"
+  | "long"
+  | "none";
+
+/**
+ * Snooze Duration Type
+ *
+ * Pre-defined snooze duration options in minutes
+ */
+export type SnoozeDuration = 5 | 10 | 15 | 30 | 60;
+
+/**
+ * Alert History Entry Interface
+ *
+ * Tracks individual alert trigger events for analytics
+ *
+ * @property {string} id - Unique identifier for the history entry
+ * @property {string} alertId - ID of the associated alert
+ * @property {string} triggeredAt - ISO 8601 timestamp when alert was triggered
+ * @property {string | null} dismissedAt - ISO 8601 timestamp when alert was dismissed (null if still active)
+ * @property {number} snoozeCount - Number of times alert was snoozed
+ * @property {number} totalSnoozeDuration - Total minutes snoozed
+ * @property {boolean} wasOnTime - Whether the alert was dismissed within 5 minutes of trigger
+ */
+export interface AlertHistoryEntry {
+  id: string;
+  alertId: string;
+  triggeredAt: string;
+  dismissedAt: string | null;
+  snoozeCount: number;
+  totalSnoozeDuration: number;
+  wasOnTime: boolean;
+}
+
+/**
+ * Alert Statistics Interface
+ *
+ * Aggregated statistics for alert performance analytics
+ *
+ * @property {string} alertId - ID of the associated alert
+ * @property {number} totalTriggers - Total number of times alert has triggered
+ * @property {number} totalSnoozes - Total times snoozed across all triggers
+ * @property {number} averageSnoozeCount - Average snoozes per trigger
+ * @property {number} onTimeDismissalRate - Percentage of on-time dismissals (0-100)
+ * @property {string | null} lastTriggeredAt - Last time alert triggered
+ */
+export interface AlertStatistics {
+  alertId: string;
+  totalTriggers: number;
+  totalSnoozes: number;
+  averageSnoozeCount: number;
+  onTimeDismissalRate: number;
+  lastTriggeredAt: string | null;
+}
+
+/**
  * Alert Interface
  *
  * Represents an alarm or reminder in the system.
@@ -220,6 +296,11 @@ export type AlertType = "alarm" | "reminder";
  * @property {AlertType} type - Type of alert (alarm or reminder)
  * @property {boolean} isEnabled - Whether the alert is currently active
  * @property {RecurrenceRule} recurrenceRule - How often the alert repeats
+ * @property {AlertSound} sound - Sound to play when alert triggers (default: "default")
+ * @property {VibrationPattern} vibration - Vibration pattern for alert (default: "default")
+ * @property {boolean} gradualVolume - Whether to gradually increase volume (gentle wake) (default: false)
+ * @property {SnoozeDuration} snoozeDuration - Duration in minutes for snooze (default: 10)
+ * @property {string[]} tags - Tags for categorization (e.g., "workout", "medication")
  * @property {string} createdAt - ISO 8601 timestamp of creation
  * @property {string} updatedAt - ISO 8601 timestamp of last update
  */
@@ -231,6 +312,11 @@ export interface Alert {
   type: AlertType;
   isEnabled: boolean;
   recurrenceRule: RecurrenceRule;
+  sound: AlertSound;
+  vibration: VibrationPattern;
+  gradualVolume: boolean;
+  snoozeDuration: SnoozeDuration;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }

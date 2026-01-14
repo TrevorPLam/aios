@@ -34,6 +34,7 @@ const KEYS = {
   INITIALIZED: "@aios/initialized",
   LISTS: "@aios/lists",
   ALERTS: "@aios/alerts",
+  ALERT_HISTORY: "@aios/alert_history",
   PHOTOS: "@aios/photos",
   MESSAGES: "@aios/messages",
   CONVERSATIONS: "@aios/conversations",
@@ -414,6 +415,189 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((a) => a.id !== id);
       await setData(KEYS.ALERTS, filtered);
+    },
+
+    /**
+     * Duplicate an alert with a new ID
+     *
+     * @param {string} id - The alert ID to duplicate
+     * @returns {Promise<Alert | null>} The new alert if successful, null if original not found
+     */
+    async duplicate(id: string): Promise<Alert | null> {
+      const alert = await this.get(id);
+      if (!alert) return null;
+
+      const now = new Date().toISOString();
+      const newAlert: Alert = {
+        ...alert,
+        id: `alert_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+        title: `${alert.title} (Copy)`,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      await this.save(newAlert);
+      return newAlert;
+    },
+
+    /**
+     * Get alerts by tag
+     *
+     * @param {string} tag - The tag to filter by
+     * @returns {Promise<Alert[]>} Array of alerts with the specified tag
+     */
+    async getByTag(tag: string): Promise<Alert[]> {
+      const all = await this.getAll();
+      return all.filter((a) => a.tags.includes(tag));
+    },
+
+    /**
+     * Get all unique tags across all alerts
+     *
+     * @returns {Promise<string[]>} Array of unique tag names
+     */
+    async getAllTags(): Promise<string[]> {
+      const all = await this.getAll();
+      const tagsSet = new Set<string>();
+      all.forEach((alert) => {
+        alert.tags.forEach((tag) => tagsSet.add(tag));
+      });
+      return Array.from(tagsSet).sort();
+    },
+
+    /**
+     * Toggle enabled state for multiple alerts
+     *
+     * @param {string[]} ids - Array of alert IDs to toggle
+     * @param {boolean} enabled - New enabled state
+     * @returns {Promise<void>}
+     */
+    async toggleMultiple(ids: string[], enabled: boolean): Promise<void> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      
+      const updated = all.map((alert) => {
+        if (ids.includes(alert.id)) {
+          return { ...alert, isEnabled: enabled, updatedAt: now };
+        }
+        return alert;
+      });
+      
+      await setData(KEYS.ALERTS, updated);
+    },
+
+    /**
+     * Delete multiple alerts
+     *
+     * @param {string[]} ids - Array of alert IDs to delete
+     * @returns {Promise<void>}
+     */
+    async deleteMultiple(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((a) => !ids.includes(a.id));
+      await setData(KEYS.ALERTS, filtered);
+    },
+  },
+
+  alertHistory: {
+    /**
+     * Get all alert history entries
+     *
+     * @returns {Promise<AlertHistoryEntry[]>} Array of all history entries
+     */
+    async getAll(): Promise<import("@/models/types").AlertHistoryEntry[]> {
+      return getData(KEYS.ALERT_HISTORY, []);
+    },
+
+    /**
+     * Get history entries for a specific alert
+     *
+     * @param {string} alertId - The alert ID
+     * @returns {Promise<AlertHistoryEntry[]>} Array of history entries for the alert
+     */
+    async getByAlert(alertId: string): Promise<import("@/models/types").AlertHistoryEntry[]> {
+      const all = await this.getAll();
+      return all.filter((entry) => entry.alertId === alertId);
+    },
+
+    /**
+     * Add a new history entry
+     *
+     * @param {Omit<AlertHistoryEntry, "id">} entry - The history entry to add (without id)
+     * @returns {Promise<AlertHistoryEntry>} The saved entry with generated id
+     */
+    async add(
+      entry: Omit<import("@/models/types").AlertHistoryEntry, "id">
+    ): Promise<import("@/models/types").AlertHistoryEntry> {
+      const all = await this.getAll();
+      const newEntry: import("@/models/types").AlertHistoryEntry = {
+        ...entry,
+        id: `alert_history_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      };
+      all.push(newEntry);
+      await setData(KEYS.ALERT_HISTORY, all);
+      return newEntry;
+    },
+
+    /**
+     * Update a history entry
+     *
+     * @param {AlertHistoryEntry} entry - The entry to update
+     * @returns {Promise<void>}
+     */
+    async update(entry: import("@/models/types").AlertHistoryEntry): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((e) => e.id === entry.id);
+      if (index >= 0) {
+        all[index] = entry;
+        await setData(KEYS.ALERT_HISTORY, all);
+      }
+    },
+
+    /**
+     * Calculate statistics for an alert
+     *
+     * @param {string} alertId - The alert ID
+     * @returns {Promise<AlertStatistics>} Calculated statistics
+     */
+    async getStatistics(
+      alertId: string
+    ): Promise<import("@/models/types").AlertStatistics> {
+      const entries = await this.getByAlert(alertId);
+      const totalTriggers = entries.length;
+      const totalSnoozes = entries.reduce(
+        (sum, entry) => sum + entry.snoozeCount,
+        0
+      );
+      const onTimeCount = entries.filter((entry) => entry.wasOnTime).length;
+      const lastEntry = entries.sort(
+        (a, b) =>
+          new Date(b.triggeredAt).getTime() -
+          new Date(a.triggeredAt).getTime()
+      )[0];
+
+      return {
+        alertId,
+        totalTriggers,
+        totalSnoozes,
+        averageSnoozeCount:
+          totalTriggers > 0 ? totalSnoozes / totalTriggers : 0,
+        onTimeDismissalRate:
+          totalTriggers > 0 ? (onTimeCount / totalTriggers) * 100 : 0,
+        lastTriggeredAt: lastEntry ? lastEntry.triggeredAt : null,
+      };
+    },
+
+    /**
+     * Delete history entries for a specific alert
+     *
+     * @param {string} alertId - The alert ID
+     * @returns {Promise<void>}
+     */
+    async deleteByAlert(alertId: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((entry) => entry.alertId !== alertId);
+      await setData(KEYS.ALERT_HISTORY, filtered);
     },
   },
 
