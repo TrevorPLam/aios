@@ -330,7 +330,7 @@ export const DEFAULT_SETTINGS: Settings = {
     "messages",
     "contacts",
     "translator",
-  ],
+  ] as ModuleType[],
   aiLimitTier: 1,
   darkMode: true,
   photoGridSize: 4,
