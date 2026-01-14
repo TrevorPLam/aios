@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -95,24 +95,7 @@ export default function TranslatorScreen() {
     });
   }, [navigation]);
 
-  // Auto-translate when source text changes (debounced)
-  useEffect(() => {
-    if (sourceText.trim()) {
-      const timer = setTimeout(() => {
-        handleTranslate();
-      }, 500);
-      return () => clearTimeout(timer);
-    } else {
-      setTargetText("");
-    }
-  }, [sourceText, sourceLanguage, targetLanguage]);
-
-  const handleTranslate = async () => {
-    if (!sourceText.trim()) return;
-
-    setIsTranslating(true);
-    try {
-  const handleTranslate = async () => {
+  const handleTranslate = useCallback(async () => {
     if (!sourceText.trim()) return;
 
     setIsTranslating(true);
@@ -144,7 +127,19 @@ export default function TranslatorScreen() {
     } finally {
       setIsTranslating(false);
     }
-  };
+  }, [sourceText, sourceLanguage, targetLanguage]);
+
+  // Auto-translate when source text changes (debounced)
+  useEffect(() => {
+    if (sourceText.trim()) {
+      const timer = setTimeout(() => {
+        handleTranslate();
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      setTargetText("");
+    }
+  }, [sourceText, sourceLanguage, targetLanguage, handleTranslate]);
 
   const handleSwapLanguages = () => {
     if (Platform.OS !== "web") {
