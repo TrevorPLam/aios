@@ -342,7 +342,7 @@ export default function CommandCenterScreen() {
                 />
               </View>
             )}
-            ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
+            ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
             contentContainerStyle={styles.listContent}
             snapToInterval={CARD_WIDTH + CARD_SPACING}
             snapToAlignment="start"
@@ -435,9 +435,13 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: CARD_SPACING,
   },
+  cardSeparator: {
+    width: CARD_SPACING,
+  },
   cardContainer: {
     width: CARD_WIDTH,
     justifyContent: "center",
+    minHeight: 300,
   },
   card: {
     width: CARD_WIDTH,
