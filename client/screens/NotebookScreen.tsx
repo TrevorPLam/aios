@@ -1,27 +1,42 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, FlatList, Pressable, Image, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Image,
+  Platform,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius, Shadows } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { Note } from '@/models/types';
-import { formatRelativeDate, truncateText } from '@/utils/helpers';
-import { BottomNav } from '@/components/BottomNav';
-import AIAssistSheet from '@/components/AIAssistSheet';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { Note } from "@/models/types";
+import { formatRelativeDate, truncateText } from "@/utils/helpers";
+import { BottomNav } from "@/components/BottomNav";
+import AIAssistSheet from "@/components/AIAssistSheet";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
-function NoteCard({ note, onPress, index }: { note: Note; onPress: () => void; index: number }) {
+function NoteCard({
+  note,
+  onPress,
+  index,
+}: {
+  note: Note;
+  onPress: () => void;
+  index: number;
+}) {
   const { theme } = useTheme();
 
   return (
@@ -35,10 +50,15 @@ function NoteCard({ note, onPress, index }: { note: Note; onPress: () => void; i
         ]}
       >
         <ThemedText type="h3" style={styles.noteTitle} numberOfLines={1}>
-          {note.title || 'Untitled'}
+          {note.title || "Untitled"}
         </ThemedText>
-        <ThemedText type="body" secondary style={styles.notePreview} numberOfLines={2}>
-          {truncateText(note.bodyMarkdown.replace(/[#*\[\]]/g, ''), 100)}
+        <ThemedText
+          type="body"
+          secondary
+          style={styles.notePreview}
+          numberOfLines={2}
+        >
+          {truncateText(note.bodyMarkdown.replace(/[#*\[\]]/g, ""), 100)}
         </ThemedText>
         <View style={styles.noteMeta}>
           <ThemedText type="small" muted>
@@ -47,7 +67,10 @@ function NoteCard({ note, onPress, index }: { note: Note; onPress: () => void; i
           {note.tags.length > 0 && (
             <View style={styles.tagsRow}>
               {note.tags.slice(0, 3).map((tag) => (
-                <View key={tag} style={[styles.tag, { backgroundColor: theme.accentDim }]}>
+                <View
+                  key={tag}
+                  style={[styles.tag, { backgroundColor: theme.accentDim }]}
+                >
                   <ThemedText type="small" style={{ color: theme.accent }}>
                     #{tag}
                   </ThemedText>
@@ -66,13 +89,18 @@ export default function NotebookScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
-  
+
   const [notes, setNotes] = useState<Note[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
 
   const loadNotes = useCallback(async () => {
     const data = await db.notes.getAll();
-    setNotes(data.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()));
+    setNotes(
+      data.sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      ),
+    );
   }, []);
 
   useEffect(() => {
@@ -80,7 +108,7 @@ export default function NotebookScreen() {
   }, [loadNotes]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadNotes);
+    const unsubscribe = navigation.addListener("focus", loadNotes);
     return unsubscribe;
   }, [navigation, loadNotes]);
 
@@ -89,12 +117,15 @@ export default function NotebookScreen() {
       headerRight: () => (
         <Pressable
           onPress={() => {
-            if (Platform.OS !== 'web') {
+            if (Platform.OS !== "web") {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
-            navigation.navigate('NoteEditor', {});
+            navigation.navigate("NoteEditor", {});
           }}
-          style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && { opacity: 0.7 },
+          ]}
         >
           <Feather name="plus" size={24} color={theme.accent} />
         </Pressable>
@@ -106,7 +137,7 @@ export default function NotebookScreen() {
     <NoteCard
       note={item}
       index={index}
-      onPress={() => navigation.navigate('NoteEditor', { noteId: item.id })}
+      onPress={() => navigation.navigate("NoteEditor", { noteId: item.id })}
     />
   );
 
@@ -120,18 +151,20 @@ export default function NotebookScreen() {
           styles.listContent,
           {
             paddingTop: headerHeight + Spacing.md,
-            paddingBottom: insets.bottom + Spacing['5xl'],
+            paddingBottom: insets.bottom + Spacing["5xl"],
           },
         ]}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Image
-              source={require('../../assets/images/empty-notebook.png')}
+              source={require("../../assets/images/empty-notebook.png")}
               style={styles.emptyImage}
               resizeMode="contain"
             />
-            <ThemedText type="h3" style={styles.emptyTitle}>No Notes Yet</ThemedText>
+            <ThemedText type="h3" style={styles.emptyTitle}>
+              No Notes Yet
+            </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
               Tap + to create your first note
             </ThemedText>
@@ -139,7 +172,12 @@ export default function NotebookScreen() {
         }
       />
 
-      <View style={[styles.bottomNavContainer, { bottom: insets.bottom + Spacing.lg }]}>
+      <View
+        style={[
+          styles.bottomNavContainer,
+          { bottom: insets.bottom + Spacing.lg },
+        ]}
+      >
         <BottomNav onAiPress={() => setShowAISheet(true)} />
       </View>
 
@@ -175,12 +213,12 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   noteMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   tagsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.xs,
   },
   tag: {
@@ -189,9 +227,9 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.xs,
   },
   emptyState: {
-    alignItems: 'center',
-    paddingTop: Spacing['5xl'],
-    paddingHorizontal: Spacing['2xl'],
+    alignItems: "center",
+    paddingTop: Spacing["5xl"],
+    paddingHorizontal: Spacing["2xl"],
   },
   emptyImage: {
     width: 180,
@@ -203,15 +241,15 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   fab: {
-    display: 'none',
+    display: "none",
   },
   bottomNavContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
 });

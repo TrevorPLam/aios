@@ -1,29 +1,37 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, StyleSheet, TextInput, ScrollView, Pressable, Platform, Alert } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Pressable,
+  Platform,
+  Alert,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { Note } from '@/models/types';
-import { generateId, parseTags, parseLinks } from '@/utils/helpers';
-import AIAssistSheet from '@/components/AIAssistSheet';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { Note } from "@/models/types";
+import { generateId, parseTags, parseLinks } from "@/utils/helpers";
+import AIAssistSheet from "@/components/AIAssistSheet";
 
-type RouteProps = RouteProp<AppStackParamList, 'NoteEditor'>;
+type RouteProps = RouteProp<AppStackParamList, "NoteEditor">;
 
 const FORMATTING_TOOLS = [
-  { id: 'heading', icon: 'hash' as const, insert: '# ' },
-  { id: 'bold', icon: 'bold' as const, insert: '**', wrap: true },
-  { id: 'list', icon: 'list' as const, insert: '- ' },
-  { id: 'checkbox', icon: 'check-square' as const, insert: '- [ ] ' },
-  { id: 'link', icon: 'link-2' as const, insert: '[[' },
+  { id: "heading", icon: "hash" as const, insert: "# " },
+  { id: "bold", icon: "bold" as const, insert: "**", wrap: true },
+  { id: "list", icon: "list" as const, insert: "- " },
+  { id: "checkbox", icon: "check-square" as const, insert: "- [ ] " },
+  { id: "link", icon: "link-2" as const, insert: "[[" },
 ];
 
 export default function NoteEditorScreen() {
@@ -32,13 +40,13 @@ export default function NoteEditorScreen() {
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation();
   const route = useRoute<RouteProps>();
-  
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [showAISheet, setShowAISheet] = useState(false);
   const [isNew, setIsNew] = useState(true);
-  const [noteId, setNoteId] = useState<string>('');
-  
+  const [noteId, setNoteId] = useState<string>("");
+
   const bodyRef = useRef<TextInput>(null);
   const autosaveTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -63,17 +71,19 @@ export default function NoteEditorScreen() {
 
   const saveNote = useCallback(async () => {
     if (!title.trim() && !body.trim()) return;
-    
+
     const note: Note = {
       id: noteId,
-      title: title.trim() || 'Untitled',
+      title: title.trim() || "Untitled",
       bodyMarkdown: body,
-      createdAt: isNew ? new Date().toISOString() : (await db.notes.get(noteId))?.createdAt || new Date().toISOString(),
+      createdAt: isNew
+        ? new Date().toISOString()
+        : (await db.notes.get(noteId))?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       tags: parseTags(body),
       links: parseLinks(body),
     };
-    
+
     await db.notes.save(note);
     setIsNew(false);
   }, [noteId, title, body, isNew]);
@@ -94,21 +104,17 @@ export default function NoteEditorScreen() {
   }, [title, body, saveNote]);
 
   const handleDelete = useCallback(async () => {
-    Alert.alert(
-      'Delete Note',
-      'Are you sure you want to delete this note?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await db.notes.delete(noteId);
-            navigation.goBack();
-          },
+    Alert.alert("Delete Note", "Are you sure you want to delete this note?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          await db.notes.delete(noteId);
+          navigation.goBack();
         },
-      ]
-    );
+      },
+    ]);
   }, [noteId, navigation]);
 
   React.useLayoutEffect(() => {
@@ -118,7 +124,10 @@ export default function NoteEditorScreen() {
           {!isNew && (
             <Pressable
               onPress={handleDelete}
-              style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+              style={({ pressed }) => [
+                styles.headerButton,
+                pressed && { opacity: 0.7 },
+              ]}
             >
               <Feather name="trash-2" size={20} color={theme.error} />
             </Pressable>
@@ -128,14 +137,14 @@ export default function NoteEditorScreen() {
     });
   }, [navigation, theme, isNew, handleDelete]);
 
-  const insertFormatting = (tool: typeof FORMATTING_TOOLS[0]) => {
-    if (Platform.OS !== 'web') {
+  const insertFormatting = (tool: (typeof FORMATTING_TOOLS)[0]) => {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     if (tool.wrap) {
-      setBody((prev) => prev + tool.insert + 'text' + tool.insert);
+      setBody((prev) => prev + tool.insert + "text" + tool.insert);
     } else {
-      setBody((prev) => prev + '\n' + tool.insert);
+      setBody((prev) => prev + "\n" + tool.insert);
     }
     bodyRef.current?.focus();
   };
@@ -147,7 +156,7 @@ export default function NoteEditorScreen() {
           styles.scrollContent,
           {
             paddingTop: headerHeight + Spacing.md,
-            paddingBottom: insets.bottom + Spacing['5xl'],
+            paddingBottom: insets.bottom + Spacing["5xl"],
           },
         ]}
         keyboardShouldPersistTaps="handled"
@@ -160,13 +169,18 @@ export default function NoteEditorScreen() {
           placeholderTextColor={theme.textMuted}
           style={[styles.titleInput, { color: theme.text }]}
         />
-        
-        <View style={[styles.toolbar, { backgroundColor: theme.backgroundDefault }]}>
+
+        <View
+          style={[styles.toolbar, { backgroundColor: theme.backgroundDefault }]}
+        >
           {FORMATTING_TOOLS.map((tool) => (
             <Pressable
               key={tool.id}
               onPress={() => insertFormatting(tool)}
-              style={({ pressed }) => [styles.toolButton, pressed && { opacity: 0.7 }]}
+              style={({ pressed }) => [
+                styles.toolButton,
+                pressed && { opacity: 0.7 },
+              ]}
             >
               <Feather name={tool.icon} size={18} color={theme.textSecondary} />
             </Pressable>
@@ -174,12 +188,15 @@ export default function NoteEditorScreen() {
           <View style={styles.toolbarDivider} />
           <Pressable
             onPress={() => setShowAISheet(true)}
-            style={({ pressed }) => [styles.toolButton, pressed && { opacity: 0.7 }]}
+            style={({ pressed }) => [
+              styles.toolButton,
+              pressed && { opacity: 0.7 },
+            ]}
           >
             <Feather name="cpu" size={18} color={theme.accent} />
           </Pressable>
         </View>
-        
+
         <TextInput
           ref={bodyRef}
           value={body}
@@ -197,25 +214,33 @@ export default function NoteEditorScreen() {
         onClose={() => setShowAISheet(false)}
         module="notebook"
         onAction={(actionId) => {
-          if (Platform.OS !== 'web') {
+          if (Platform.OS !== "web") {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           }
           switch (actionId) {
-            case 'title':
+            case "title":
               if (!title.trim() && body.trim()) {
-                const words = body.split(' ').slice(0, 5).join(' ');
+                const words = body.split(" ").slice(0, 5).join(" ");
                 setTitle(words);
               }
               break;
-            case 'tags':
-              const newTags = ['#todo', '#important'];
-              setBody((prev) => prev + '\n\n' + newTags.join(' '));
+            case "tags":
+              const newTags = ["#todo", "#important"];
+              setBody((prev) => prev + "\n\n" + newTags.join(" "));
               break;
-            case 'summary':
-              setBody((prev) => prev + '\n\n## Summary\nThis note contains key information about the topic discussed above.');
+            case "summary":
+              setBody(
+                (prev) =>
+                  prev +
+                  "\n\n## Summary\nThis note contains key information about the topic discussed above.",
+              );
               break;
-            case 'checklist':
-              setBody((prev) => prev + '\n\n- [ ] First item\n- [ ] Second item\n- [ ] Third item');
+            case "checklist":
+              setBody(
+                (prev) =>
+                  prev +
+                  "\n\n- [ ] First item\n- [ ] Second item\n- [ ] Third item",
+              );
               break;
           }
         }}
@@ -232,7 +257,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
   },
   headerActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.md,
   },
   headerButton: {
@@ -240,12 +265,12 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: Spacing.lg,
   },
   toolbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.sm,
@@ -255,14 +280,14 @@ const styles = StyleSheet.create({
   toolButton: {
     width: 36,
     height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: BorderRadius.xs,
   },
   toolbarDivider: {
     width: 1,
     height: 20,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: "rgba(255,255,255,0.1)",
     marginHorizontal: Spacing.xs,
   },
   bodyInput: {

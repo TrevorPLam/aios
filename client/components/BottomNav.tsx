@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius, Shadows } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { ThemedText } from './ThemedText';
+import React from "react";
+import { View, StyleSheet, Pressable } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { ThemedText } from "./ThemedText";
 
 export type ModuleItem = {
   name: string;
@@ -15,10 +15,10 @@ export type ModuleItem = {
 };
 
 export const MODULES: ModuleItem[] = [
-  { name: 'Notebook', route: 'Notebook', icon: 'book-open' },
-  { name: 'Planner', route: 'Planner', icon: 'check-square' },
-  { name: 'Calendar', route: 'Calendar', icon: 'calendar' },
-  { name: 'Email', route: 'Email', icon: 'mail' },
+  { name: "Notebook", route: "Notebook", icon: "book-open" },
+  { name: "Planner", route: "Planner", icon: "check-square" },
+  { name: "Calendar", route: "Calendar", icon: "calendar" },
+  { name: "Email", route: "Email", icon: "mail" },
 ];
 
 interface BottomNavProps {
@@ -27,12 +27,13 @@ interface BottomNavProps {
 
 export function BottomNav({ onAiPress }: BottomNavProps) {
   const { theme } = useTheme();
-  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const route = useRoute();
 
   // Find current module index if we are in one, otherwise default to -1
-  const currentIndex = MODULES.findIndex(m => m.route === route.name);
-  
+  const currentIndex = MODULES.findIndex((m) => m.route === route.name);
+
   // Eternal scrolling logic
   const getPrevModule = () => {
     if (currentIndex === -1) return MODULES[MODULES.length - 1];
@@ -56,12 +57,18 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
         style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
       >
         <Feather name={prev.icon} size={24} color={theme.textSecondary} />
-        <ThemedText type="caption" muted style={styles.label}>{prev.name}</ThemedText>
+        <ThemedText type="caption" muted style={styles.label}>
+          {prev.name}
+        </ThemedText>
       </Pressable>
 
       <Pressable
         onPress={onAiPress}
-        style={({ pressed }) => [styles.aiButton, { backgroundColor: theme.accent }, pressed && { opacity: 0.8 }]}
+        style={({ pressed }) => [
+          styles.aiButton,
+          { backgroundColor: theme.accent },
+          pressed && { opacity: 0.8 },
+        ]}
       >
         <Feather name="cpu" size={28} color={theme.backgroundRoot} />
       </Pressable>
@@ -71,7 +78,9 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
         style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
       >
         <Feather name={next.icon} size={24} color={theme.textSecondary} />
-        <ThemedText type="caption" muted style={styles.label}>{next.name}</ThemedText>
+        <ThemedText type="caption" muted style={styles.label}>
+          {next.name}
+        </ThemedText>
       </Pressable>
     </View>
   );
@@ -79,16 +88,16 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing['3xl'],
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing["3xl"],
     paddingVertical: Spacing.md,
   },
   navButton: {
     width: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   label: {
     marginTop: 4,
@@ -97,8 +106,8 @@ const styles = StyleSheet.create({
   aiButton: {
     width: 64,
     height: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: BorderRadius.full,
     ...Shadows.glow,
   },

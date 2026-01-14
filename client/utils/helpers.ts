@@ -4,7 +4,7 @@ export function formatTimeRemaining(targetDate: string): string {
   const diff = target.getTime() - now.getTime();
 
   if (diff <= 0) {
-    return 'Expired';
+    return "Expired";
   }
 
   const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -26,33 +26,34 @@ export function formatRelativeDate(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
   const diff = now.getTime() - date.getTime();
-  
+
   const minutes = Math.floor(diff / (1000 * 60));
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-  if (minutes < 1) return 'Just now';
+  if (minutes < 1) return "Just now";
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 7) return `${days}d ago`;
-  
+
   return date.toLocaleDateString();
 }
 
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year:
+      date.getFullYear() !== new Date().getFullYear() ? "numeric" : undefined,
   });
 }
 
 export function formatTime(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
   });
 }
 
@@ -78,28 +79,34 @@ export function generateId(): string {
 
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - 3) + '...';
+  return text.slice(0, maxLength - 3) + "...";
 }
 
-export function getConfidenceColor(confidence: 'low' | 'medium' | 'high', colors: { lowConfidence: string; warning: string; success: string }): string {
+export function getConfidenceColor(
+  confidence: "low" | "medium" | "high",
+  colors: { lowConfidence: string; warning: string; success: string },
+): string {
   switch (confidence) {
-    case 'low':
+    case "low":
       return colors.lowConfidence;
-    case 'medium':
+    case "medium":
       return colors.warning;
-    case 'high':
+    case "high":
       return colors.success;
   }
 }
 
-export function getPriorityColor(priority: 'low' | 'medium' | 'high' | 'urgent', colors: { textMuted: string; warning: string; error: string }): string {
+export function getPriorityColor(
+  priority: "low" | "medium" | "high" | "urgent",
+  colors: { textMuted: string; warning: string; error: string },
+): string {
   switch (priority) {
-    case 'low':
+    case "low":
       return colors.textMuted;
-    case 'medium':
+    case "medium":
       return colors.warning;
-    case 'high':
-    case 'urgent':
+    case "high":
+    case "urgent":
       return colors.error;
   }
 }

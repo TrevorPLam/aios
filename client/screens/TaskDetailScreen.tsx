@@ -1,27 +1,40 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, TextInput, ScrollView, Pressable, Platform, Alert } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Pressable,
+  Platform,
+  Alert,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Button } from '@/components/Button';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { Task, TaskPriority, TaskStatus, RecurrenceRule } from '@/models/types';
-import { generateId } from '@/utils/helpers';
-import AIAssistSheet from '@/components/AIAssistSheet';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Button } from "@/components/Button";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { Task, TaskPriority, TaskStatus, RecurrenceRule } from "@/models/types";
+import { generateId } from "@/utils/helpers";
+import AIAssistSheet from "@/components/AIAssistSheet";
 
-type RouteProps = RouteProp<AppStackParamList, 'TaskDetail'>;
+type RouteProps = RouteProp<AppStackParamList, "TaskDetail">;
 
-const PRIORITIES: TaskPriority[] = ['low', 'medium', 'high', 'urgent'];
-const STATUSES: TaskStatus[] = ['pending', 'in_progress', 'completed', 'cancelled'];
-const RECURRENCE: RecurrenceRule[] = ['none', 'daily', 'weekly', 'monthly'];
+const PRIORITIES: TaskPriority[] = ["low", "medium", "high", "urgent"];
+const STATUSES: TaskStatus[] = [
+  "pending",
+  "in_progress",
+  "completed",
+  "cancelled",
+];
+const RECURRENCE: RecurrenceRule[] = ["none", "daily", "weekly", "monthly"];
 
 export default function TaskDetailScreen() {
   const { theme } = useTheme();
@@ -29,16 +42,16 @@ export default function TaskDetailScreen() {
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation();
   const route = useRoute<RouteProps>();
-  
-  const [title, setTitle] = useState('');
-  const [userNotes, setUserNotes] = useState('');
-  const [priority, setPriority] = useState<TaskPriority>('medium');
-  const [status, setStatus] = useState<TaskStatus>('pending');
-  const [recurrence, setRecurrence] = useState<RecurrenceRule>('none');
+
+  const [title, setTitle] = useState("");
+  const [userNotes, setUserNotes] = useState("");
+  const [priority, setPriority] = useState<TaskPriority>("medium");
+  const [status, setStatus] = useState<TaskStatus>("pending");
+  const [recurrence, setRecurrence] = useState<RecurrenceRule>("none");
   const [aiNotes, setAiNotes] = useState<string[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
   const [isNew, setIsNew] = useState(true);
-  const [taskId, setTaskId] = useState<string>('');
+  const [taskId, setTaskId] = useState<string>("");
   const [parentTaskId, setParentTaskId] = useState<string | null>(null);
   const [parentTask, setParentTask] = useState<Task | null>(null);
 
@@ -56,7 +69,7 @@ export default function TaskDetailScreen() {
           setParentTaskId(task.parentTaskId);
           setTaskId(task.id);
           setIsNew(false);
-          
+
           if (task.parentTaskId) {
             const parent = await db.tasks.get(task.parentTaskId);
             setParentTask(parent);
@@ -65,7 +78,7 @@ export default function TaskDetailScreen() {
       } else {
         setTaskId(generateId());
         setIsNew(true);
-        
+
         if (route.params?.parentTaskId) {
           setParentTaskId(route.params.parentTaskId);
           const parent = await db.tasks.get(route.params.parentTaskId);
@@ -78,12 +91,12 @@ export default function TaskDetailScreen() {
 
   const saveTask = useCallback(async () => {
     if (!title.trim()) {
-      Alert.alert('Error', 'Please enter a title');
+      Alert.alert("Error", "Please enter a title");
       return;
     }
-    
+
     const existingTask = isNew ? null : await db.tasks.get(taskId);
-    
+
     const task: Task = {
       id: taskId,
       title: title.trim(),
@@ -96,45 +109,57 @@ export default function TaskDetailScreen() {
       projectId: null,
       parentTaskId: parentTaskId,
       dependencyIds: existingTask?.dependencyIds || [],
-      createdAt: isNew ? new Date().toISOString() : existingTask?.createdAt || new Date().toISOString(),
+      createdAt: isNew
+        ? new Date().toISOString()
+        : existingTask?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
+
     await db.tasks.save(task);
-    
-    if (Platform.OS !== 'web') {
+
+    if (Platform.OS !== "web") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     navigation.goBack();
-  }, [taskId, title, userNotes, aiNotes, priority, status, recurrence, parentTaskId, isNew, navigation]);
+  }, [
+    taskId,
+    title,
+    userNotes,
+    aiNotes,
+    priority,
+    status,
+    recurrence,
+    parentTaskId,
+    isNew,
+    navigation,
+  ]);
 
   const handleDelete = useCallback(async () => {
-    Alert.alert(
-      'Delete Task',
-      'Are you sure you want to delete this task?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await db.tasks.delete(taskId);
-            navigation.goBack();
-          },
+    Alert.alert("Delete Task", "Are you sure you want to delete this task?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          await db.tasks.delete(taskId);
+          navigation.goBack();
         },
-      ]
-    );
+      },
+    ]);
   }, [taskId, navigation]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: parentTaskId ? 'Subtask' : 'Task',
+      headerTitle: parentTaskId ? "Subtask" : "Task",
       headerRight: () => (
         <View style={styles.headerActions}>
           {!isNew && (
             <Pressable
               onPress={handleDelete}
-              style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+              style={({ pressed }) => [
+                styles.headerButton,
+                pressed && { opacity: 0.7 },
+              ]}
             >
               <Feather name="trash-2" size={20} color={theme.error} />
             </Pressable>
@@ -151,14 +176,16 @@ export default function TaskDetailScreen() {
           styles.scrollContent,
           {
             paddingTop: headerHeight + Spacing.md,
-            paddingBottom: insets.bottom + Spacing['5xl'],
+            paddingBottom: insets.bottom + Spacing["5xl"],
           },
         ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         {parentTask ? (
-          <View style={[styles.parentBadge, { backgroundColor: theme.accentDim }]}>
+          <View
+            style={[styles.parentBadge, { backgroundColor: theme.accentDim }]}
+          >
             <Feather name="corner-down-right" size={14} color={theme.accent} />
             <ThemedText type="small" style={{ color: theme.accent }}>
               Subtask of: {parentTask.title}
@@ -173,8 +200,10 @@ export default function TaskDetailScreen() {
           placeholderTextColor={theme.textMuted}
           style={[styles.titleInput, { color: theme.text }]}
         />
-        
-        <ThemedText type="caption" secondary style={styles.label}>Priority</ThemedText>
+
+        <ThemedText type="caption" secondary style={styles.label}>
+          Priority
+        </ThemedText>
         <View style={styles.optionRow}>
           {PRIORITIES.map((p) => (
             <Pressable
@@ -182,20 +211,28 @@ export default function TaskDetailScreen() {
               onPress={() => setPriority(p)}
               style={[
                 styles.optionButton,
-                { backgroundColor: priority === p ? theme.accentDim : theme.backgroundDefault },
+                {
+                  backgroundColor:
+                    priority === p ? theme.accentDim : theme.backgroundDefault,
+                },
               ]}
             >
               <ThemedText
                 type="small"
-                style={{ color: priority === p ? theme.accent : theme.textSecondary, textTransform: 'capitalize' }}
+                style={{
+                  color: priority === p ? theme.accent : theme.textSecondary,
+                  textTransform: "capitalize",
+                }}
               >
                 {p}
               </ThemedText>
             </Pressable>
           ))}
         </View>
-        
-        <ThemedText type="caption" secondary style={styles.label}>Status</ThemedText>
+
+        <ThemedText type="caption" secondary style={styles.label}>
+          Status
+        </ThemedText>
         <View style={styles.optionRow}>
           {STATUSES.map((s) => (
             <Pressable
@@ -203,20 +240,28 @@ export default function TaskDetailScreen() {
               onPress={() => setStatus(s)}
               style={[
                 styles.optionButton,
-                { backgroundColor: status === s ? theme.accentDim : theme.backgroundDefault },
+                {
+                  backgroundColor:
+                    status === s ? theme.accentDim : theme.backgroundDefault,
+                },
               ]}
             >
               <ThemedText
                 type="small"
-                style={{ color: status === s ? theme.accent : theme.textSecondary, textTransform: 'capitalize' }}
+                style={{
+                  color: status === s ? theme.accent : theme.textSecondary,
+                  textTransform: "capitalize",
+                }}
               >
-                {s.replace('_', ' ')}
+                {s.replace("_", " ")}
               </ThemedText>
             </Pressable>
           ))}
         </View>
-        
-        <ThemedText type="caption" secondary style={styles.label}>Recurrence</ThemedText>
+
+        <ThemedText type="caption" secondary style={styles.label}>
+          Recurrence
+        </ThemedText>
         <View style={styles.optionRow}>
           {RECURRENCE.map((r) => (
             <Pressable
@@ -224,57 +269,90 @@ export default function TaskDetailScreen() {
               onPress={() => setRecurrence(r)}
               style={[
                 styles.optionButton,
-                { backgroundColor: recurrence === r ? theme.accentDim : theme.backgroundDefault },
+                {
+                  backgroundColor:
+                    recurrence === r
+                      ? theme.accentDim
+                      : theme.backgroundDefault,
+                },
               ]}
             >
               <ThemedText
                 type="small"
-                style={{ color: recurrence === r ? theme.accent : theme.textSecondary, textTransform: 'capitalize' }}
+                style={{
+                  color: recurrence === r ? theme.accent : theme.textSecondary,
+                  textTransform: "capitalize",
+                }}
               >
                 {r}
               </ThemedText>
             </Pressable>
           ))}
         </View>
-        
-        <ThemedText type="caption" secondary style={styles.label}>Your Notes</ThemedText>
+
+        <ThemedText type="caption" secondary style={styles.label}>
+          Your Notes
+        </ThemedText>
         <TextInput
           value={userNotes}
           onChangeText={setUserNotes}
           placeholder="Add your notes..."
           placeholderTextColor={theme.textMuted}
-          style={[styles.notesInput, { color: theme.text, backgroundColor: theme.backgroundDefault }]}
+          style={[
+            styles.notesInput,
+            { color: theme.text, backgroundColor: theme.backgroundDefault },
+          ]}
           multiline
           textAlignVertical="top"
         />
-        
+
         {aiNotes.length > 0 && (
           <>
             <View style={styles.aiNotesHeader}>
               <Feather name="cpu" size={16} color={theme.accent} />
-              <ThemedText type="caption" style={{ color: theme.accent }}>AI Generated Notes</ThemedText>
+              <ThemedText type="caption" style={{ color: theme.accent }}>
+                AI Generated Notes
+              </ThemedText>
             </View>
-            <View style={[styles.aiNotesContainer, { backgroundColor: theme.backgroundSecondary }]}>
+            <View
+              style={[
+                styles.aiNotesContainer,
+                { backgroundColor: theme.backgroundSecondary },
+              ]}
+            >
               {aiNotes.map((note, index) => (
                 <View key={index} style={styles.aiNoteItem}>
-                  <View style={[styles.aiNoteBullet, { backgroundColor: theme.accent }]} />
-                  <ThemedText type="body" secondary>{note}</ThemedText>
+                  <View
+                    style={[
+                      styles.aiNoteBullet,
+                      { backgroundColor: theme.accent },
+                    ]}
+                  />
+                  <ThemedText type="body" secondary>
+                    {note}
+                  </ThemedText>
                 </View>
               ))}
             </View>
           </>
         )}
-        
+
         <Pressable
           onPress={() => setShowAISheet(true)}
           style={[styles.aiButton, { backgroundColor: theme.accentDim }]}
         >
           <Feather name="cpu" size={20} color={theme.accent} />
-          <ThemedText type="body" style={{ color: theme.accent }}>Get AI Suggestions</ThemedText>
+          <ThemedText type="body" style={{ color: theme.accent }}>
+            Get AI Suggestions
+          </ThemedText>
         </Pressable>
-        
+
         <Button onPress={saveTask} style={styles.saveButton}>
-          {isNew ? (parentTaskId ? 'Create Subtask' : 'Create Task') : 'Save Changes'}
+          {isNew
+            ? parentTaskId
+              ? "Create Subtask"
+              : "Create Task"
+            : "Save Changes"}
         </Button>
       </ScrollView>
 
@@ -284,12 +362,18 @@ export default function TaskDetailScreen() {
         module="planner"
         onAction={(actionId) => {
           switch (actionId) {
-            case 'priority':
-              setPriority('high');
-              setAiNotes([...aiNotes, 'Recommended high priority based on upcoming deadline']);
+            case "priority":
+              setPriority("high");
+              setAiNotes([
+                ...aiNotes,
+                "Recommended high priority based on upcoming deadline",
+              ]);
               break;
-            case 'breakdown':
-              setAiNotes([...aiNotes, 'Consider breaking this into: Research, Implementation, Testing']);
+            case "breakdown":
+              setAiNotes([
+                ...aiNotes,
+                "Consider breaking this into: Research, Implementation, Testing",
+              ]);
               break;
           }
         }}
@@ -306,15 +390,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
   },
   headerActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.md,
   },
   headerButton: {
     padding: Spacing.xs,
   },
   parentBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.sm,
     padding: Spacing.sm,
     borderRadius: BorderRadius.sm,
@@ -322,7 +406,7 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: Spacing.xl,
   },
   label: {
@@ -330,8 +414,8 @@ const styles = StyleSheet.create({
     marginTop: Spacing.md,
   },
   optionRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.sm,
   },
   optionButton: {
@@ -346,8 +430,8 @@ const styles = StyleSheet.create({
     minHeight: 100,
   },
   aiNotesHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.sm,
     marginTop: Spacing.xl,
     marginBottom: Spacing.sm,
@@ -358,8 +442,8 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   aiNoteItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: Spacing.sm,
   },
   aiNoteBullet: {
@@ -369,9 +453,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   aiButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: Spacing.sm,
     padding: Spacing.md,
     borderRadius: BorderRadius.md,

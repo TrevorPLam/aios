@@ -1,7 +1,7 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AppNavigator from '@/navigation/AppNavigator';
-import { useScreenOptions } from '@/hooks/useScreenOptions';
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AppNavigator from "@/navigation/AppNavigator";
+import { useScreenOptions } from "@/hooks/useScreenOptions";
 
 export type RootStackParamList = {
   App: undefined;
