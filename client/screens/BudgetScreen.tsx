@@ -40,6 +40,7 @@ export default function BudgetScreen() {
     categoryId: string;
     lineItemId: string;
     field: "budgeted" | "actual";
+    value: string;
   } | null>(null);
 
   const loadBudget = useCallback(async () => {
@@ -102,7 +103,9 @@ export default function BudgetScreen() {
   ) => {
     if (!budget) return;
 
-    const numValue = parseFloat(value) || 0;
+    const numValue = value === "" ? 0 : parseFloat(value);
+    if (Number.isNaN(numValue)) return; // Don't update if invalid number
+
     const updatedCategories = budget.categories.map((cat) => {
       if (cat.id === categoryId) {
         const updatedLineItems = cat.lineItems.map((item) =>
@@ -421,21 +424,28 @@ export default function BudgetScreen() {
                           backgroundColor: theme.background,
                         },
                       ]}
-                      value={lineItem.budgeted.toString()}
-                      onChangeText={(text) =>
-                        updateLineItem(
-                          category.id,
-                          lineItem.id,
-                          "budgeted",
-                          text,
-                        )
+                      value={
+                        editingCell?.categoryId === category.id &&
+                        editingCell?.lineItemId === lineItem.id &&
+                        editingCell?.field === "budgeted"
+                          ? editingCell.value
+                          : lineItem.budgeted.toString()
                       }
+                      onChangeText={(text) => {
+                        setEditingCell({
+                          categoryId: category.id,
+                          lineItemId: lineItem.id,
+                          field: "budgeted",
+                          value: text,
+                        });
+                      }}
                       keyboardType="numeric"
                       onFocus={() => {
                         setEditingCell({
                           categoryId: category.id,
                           lineItemId: lineItem.id,
                           field: "budgeted",
+                          value: lineItem.budgeted.toString(),
                         });
                         if (Platform.OS !== "web") {
                           Haptics.impactAsync(
@@ -443,7 +453,17 @@ export default function BudgetScreen() {
                           );
                         }
                       }}
-                      onBlur={() => setEditingCell(null)}
+                      onBlur={() => {
+                        if (editingCell) {
+                          updateLineItem(
+                            editingCell.categoryId,
+                            editingCell.lineItemId,
+                            editingCell.field,
+                            editingCell.value,
+                          );
+                        }
+                        setEditingCell(null);
+                      }}
                     />
                     <TextInput
                       style={[
@@ -453,16 +473,28 @@ export default function BudgetScreen() {
                           backgroundColor: theme.background,
                         },
                       ]}
-                      value={lineItem.actual.toString()}
-                      onChangeText={(text) =>
-                        updateLineItem(category.id, lineItem.id, "actual", text)
+                      value={
+                        editingCell?.categoryId === category.id &&
+                        editingCell?.lineItemId === lineItem.id &&
+                        editingCell?.field === "actual"
+                          ? editingCell.value
+                          : lineItem.actual.toString()
                       }
+                      onChangeText={(text) => {
+                        setEditingCell({
+                          categoryId: category.id,
+                          lineItemId: lineItem.id,
+                          field: "actual",
+                          value: text,
+                        });
+                      }}
                       keyboardType="numeric"
                       onFocus={() => {
                         setEditingCell({
                           categoryId: category.id,
                           lineItemId: lineItem.id,
                           field: "actual",
+                          value: lineItem.actual.toString(),
                         });
                         if (Platform.OS !== "web") {
                           Haptics.impactAsync(
@@ -470,7 +502,17 @@ export default function BudgetScreen() {
                           );
                         }
                       }}
-                      onBlur={() => setEditingCell(null)}
+                      onBlur={() => {
+                        if (editingCell) {
+                          updateLineItem(
+                            editingCell.categoryId,
+                            editingCell.lineItemId,
+                            editingCell.field,
+                            editingCell.value,
+                          );
+                        }
+                        setEditingCell(null);
+                      }}
                     />
                     <Pressable
                       onPress={() => deleteLineItem(category.id, lineItem.id)}

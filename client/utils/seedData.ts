@@ -18,10 +18,7 @@ import {
   BudgetCategory,
   BudgetLineItem,
 } from "@/models/types";
-
-function generateId(): string {
-  return `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-}
+import { generateId } from "@/utils/helpers";
 
 function hoursFromNow(hours: number): string {
   const date = new Date();
