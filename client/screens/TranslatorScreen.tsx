@@ -73,9 +73,8 @@ export default function TranslatorScreen() {
           staysActiveInBackground: false,
         });
         
-        // Check if headphones are connected
-        const audioRoutes = await Audio.getStatusAsync();
         // Note: Full headphone detection would require native modules
+        // or platform-specific audio routing APIs.
         // For now, we'll enable TTS by default and mention headphones in the UI
         setHasHeadphones(true); // Simplified - assume available
       } catch (error) {
