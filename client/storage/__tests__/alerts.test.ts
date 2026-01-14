@@ -30,6 +30,11 @@ describe("Database Alerts Storage", () => {
     type: "alarm",
     isEnabled: true,
     recurrenceRule: "daily",
+    sound: "default",
+    vibration: "default",
+    gradualVolume: false,
+    snoozeDuration: 10,
+    tags: [],
     createdAt: "2026-01-14T00:00:00Z",
     updatedAt: "2026-01-14T00:00:00Z",
   };
@@ -176,6 +181,182 @@ describe("Database Alerts Storage", () => {
 
       const updated = await db.alerts.get("alert_1");
       expect(updated?.isEnabled).toBe(false);
+    });
+
+    /** Enhanced Features Tests */
+    describe("Enhanced Alert Features", () => {
+      it("should save and retrieve alert with sound and vibration settings", async () => {
+        const alertWithSettings: Alert = {
+          ...mockAlert,
+          id: "alert_sound",
+          sound: "gentle",
+          vibration: "pulse",
+          gradualVolume: true,
+          snoozeDuration: 15,
+        };
+
+        await db.alerts.save(alertWithSettings);
+        const retrieved = await db.alerts.get("alert_sound");
+
+        expect(retrieved?.sound).toBe("gentle");
+        expect(retrieved?.vibration).toBe("pulse");
+        expect(retrieved?.gradualVolume).toBe(true);
+        expect(retrieved?.snoozeDuration).toBe(15);
+      });
+
+      it("should save and retrieve alert with tags", async () => {
+        const alertWithTags: Alert = {
+          ...mockAlert,
+          id: "alert_tags",
+          tags: ["work", "morning", "routine"],
+        };
+
+        await db.alerts.save(alertWithTags);
+        const retrieved = await db.alerts.get("alert_tags");
+
+        expect(retrieved?.tags).toEqual(["work", "morning", "routine"]);
+      });
+
+      it("should filter alerts by tag", async () => {
+        const alert1: Alert = {
+          ...mockAlert,
+          id: "alert_1",
+          tags: ["work", "morning"],
+        };
+        const alert2: Alert = {
+          ...mockAlert,
+          id: "alert_2",
+          tags: ["personal", "evening"],
+        };
+        const alert3: Alert = {
+          ...mockAlert,
+          id: "alert_3",
+          tags: ["work", "evening"],
+        };
+
+        await db.alerts.save(alert1);
+        await db.alerts.save(alert2);
+        await db.alerts.save(alert3);
+
+        const workAlerts = await db.alerts.getByTag("work");
+        expect(workAlerts).toHaveLength(2);
+        expect(workAlerts.map((a) => a.id)).toContain("alert_1");
+        expect(workAlerts.map((a) => a.id)).toContain("alert_3");
+
+        const morningAlerts = await db.alerts.getByTag("morning");
+        expect(morningAlerts).toHaveLength(1);
+        expect(morningAlerts[0].id).toBe("alert_1");
+      });
+
+      it("should get all unique tags", async () => {
+        const alert1: Alert = {
+          ...mockAlert,
+          id: "alert_1",
+          tags: ["work", "morning"],
+        };
+        const alert2: Alert = {
+          ...mockAlert,
+          id: "alert_2",
+          tags: ["personal", "evening"],
+        };
+        const alert3: Alert = {
+          ...mockAlert,
+          id: "alert_3",
+          tags: ["work", "routine"],
+        };
+
+        await db.alerts.save(alert1);
+        await db.alerts.save(alert2);
+        await db.alerts.save(alert3);
+
+        const tags = await db.alerts.getAllTags();
+        expect(tags).toHaveLength(5);
+        expect(tags).toContain("work");
+        expect(tags).toContain("morning");
+        expect(tags).toContain("personal");
+        expect(tags).toContain("evening");
+        expect(tags).toContain("routine");
+        expect(tags).toEqual(tags.sort()); // Should be sorted
+      });
+
+      it("should duplicate an alert", async () => {
+        await db.alerts.save(mockAlert);
+        const duplicated = await db.alerts.duplicate("alert_1");
+
+        expect(duplicated).not.toBeNull();
+        expect(duplicated?.id).not.toBe("alert_1");
+        expect(duplicated?.title).toBe("Wake up (Copy)");
+        expect(duplicated?.description).toBe(mockAlert.description);
+        expect(duplicated?.time).toBe(mockAlert.time);
+        expect(duplicated?.type).toBe(mockAlert.type);
+
+        const all = await db.alerts.getAll();
+        expect(all).toHaveLength(2);
+      });
+
+      it("should return null when duplicating non-existent alert", async () => {
+        const duplicated = await db.alerts.duplicate("non_existent");
+        expect(duplicated).toBeNull();
+      });
+
+      it("should toggle multiple alerts at once", async () => {
+        const alert1: Alert = { ...mockAlert, id: "alert_1", isEnabled: true };
+        const alert2: Alert = { ...mockAlert, id: "alert_2", isEnabled: true };
+        const alert3: Alert = { ...mockAlert, id: "alert_3", isEnabled: true };
+
+        await db.alerts.save(alert1);
+        await db.alerts.save(alert2);
+        await db.alerts.save(alert3);
+
+        await db.alerts.toggleMultiple(["alert_1", "alert_2"], false);
+
+        const all = await db.alerts.getAll();
+        expect(all.find((a) => a.id === "alert_1")?.isEnabled).toBe(false);
+        expect(all.find((a) => a.id === "alert_2")?.isEnabled).toBe(false);
+        expect(all.find((a) => a.id === "alert_3")?.isEnabled).toBe(true);
+      });
+
+      it("should delete multiple alerts at once", async () => {
+        const alert1: Alert = { ...mockAlert, id: "alert_1" };
+        const alert2: Alert = { ...mockAlert, id: "alert_2" };
+        const alert3: Alert = { ...mockAlert, id: "alert_3" };
+
+        await db.alerts.save(alert1);
+        await db.alerts.save(alert2);
+        await db.alerts.save(alert3);
+
+        await db.alerts.deleteMultiple(["alert_1", "alert_3"]);
+
+        const all = await db.alerts.getAll();
+        expect(all).toHaveLength(1);
+        expect(all[0].id).toBe("alert_2");
+      });
+
+      it("should migrate old alerts without new fields", async () => {
+        // Simulate old alert data without new fields
+        const oldAlert = {
+          id: "old_alert",
+          title: "Old Alert",
+          description: "Legacy alert",
+          time: "2026-01-15T08:00:00Z",
+          type: "alarm" as const,
+          isEnabled: true,
+          recurrenceRule: "daily" as const,
+          createdAt: "2026-01-14T00:00:00Z",
+          updatedAt: "2026-01-14T00:00:00Z",
+        };
+
+        // Save directly to bypass type checking (simulating old data)
+        await db.alerts.save(oldAlert as any);
+
+        // Retrieve should add default values
+        const retrieved = await db.alerts.get("old_alert");
+        expect(retrieved?.sound).toBe("default");
+        expect(retrieved?.vibration).toBe("default");
+        expect(retrieved?.gradualVolume).toBe(false);
+        expect(retrieved?.snoozeDuration).toBe(10);
+        expect(retrieved?.tags).toEqual([]);
+      });
     });
   });
 });
