@@ -38,6 +38,7 @@ import AIAssistSheet from "@/components/AIAssistSheet";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
+const CARD_SPACING = Spacing.lg;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
@@ -341,8 +342,9 @@ export default function CommandCenterScreen() {
                 />
               </View>
             )}
+            ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
             contentContainerStyle={styles.listContent}
-            snapToInterval={CARD_WIDTH + Spacing.lg}
+            snapToInterval={CARD_WIDTH + CARD_SPACING}
             snapToAlignment="start"
             decelerationRate="fast"
           />
@@ -431,12 +433,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingLeft: Spacing.lg,
-    paddingRight: Spacing.lg,
+    paddingHorizontal: CARD_SPACING,
   },
   cardContainer: {
     width: CARD_WIDTH,
-    marginRight: Spacing.lg,
     justifyContent: "center",
   },
   card: {
