@@ -102,7 +102,7 @@ export const events = pgTable("events", {
   recurrenceRule: text("recurrence_rule").notNull().default("none"),
   exceptions: jsonb("exceptions").$type<string[]>().notNull().default([]),
   overrides: jsonb("overrides")
-    .$type<Record<string, any>>()
+    .$type<Record<string, unknown>>()
     .notNull()
     .default({}),
   source: text("source").notNull().default("LOCAL"),

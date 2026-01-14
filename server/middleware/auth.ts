@@ -4,6 +4,14 @@ import { AppError } from "./errorHandler";
 
 const JWT_SECRET =
   process.env.JWT_SECRET || "your-secret-key-change-in-production";
+
+// Warn in production if using default secret
+if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
+  console.error(
+    "WARNING: Using default JWT_SECRET in production! Set JWT_SECRET environment variable.",
+  );
+}
+
 const JWT_EXPIRES_IN = "7d";
 
 export interface JWTPayload {
