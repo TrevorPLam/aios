@@ -1,24 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, TextInput, ScrollView, Pressable, Platform, Alert, Switch } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Pressable,
+  Platform,
+  Alert,
+  Switch,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Button } from '@/components/Button';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { CalendarEvent, RecurrenceRule } from '@/models/types';
-import { generateId } from '@/utils/helpers';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Button } from "@/components/Button";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { CalendarEvent, RecurrenceRule } from "@/models/types";
+import { generateId } from "@/utils/helpers";
 
-type RouteProps = RouteProp<AppStackParamList, 'EventDetail'>;
+type RouteProps = RouteProp<AppStackParamList, "EventDetail">;
 
-const RECURRENCE: RecurrenceRule[] = ['none', 'daily', 'weekly', 'monthly'];
+const RECURRENCE: RecurrenceRule[] = ["none", "daily", "weekly", "monthly"];
 
 export default function EventDetailScreen() {
   const { theme } = useTheme();
@@ -26,14 +35,14 @@ export default function EventDetailScreen() {
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation();
   const route = useRoute<RouteProps>();
-  
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
   const [allDay, setAllDay] = useState(false);
-  const [recurrence, setRecurrence] = useState<RecurrenceRule>('none');
+  const [recurrence, setRecurrence] = useState<RecurrenceRule>("none");
   const [isNew, setIsNew] = useState(true);
-  const [eventId, setEventId] = useState<string>('');
+  const [eventId, setEventId] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>(new Date());
 
   useEffect(() => {
@@ -63,13 +72,13 @@ export default function EventDetailScreen() {
 
   const saveEvent = useCallback(async () => {
     if (!title.trim()) {
-      Alert.alert('Error', 'Please enter a title');
+      Alert.alert("Error", "Please enter a title");
       return;
     }
-    
+
     const endDate = new Date(startDate);
     endDate.setHours(endDate.getHours() + 1);
-    
+
     const event: CalendarEvent = {
       id: eventId,
       title: title.trim(),
@@ -82,34 +91,42 @@ export default function EventDetailScreen() {
       recurrenceRule: recurrence,
       exceptions: [],
       overrides: {},
-      createdAt: isNew ? new Date().toISOString() : (await db.events.get(eventId))?.createdAt || new Date().toISOString(),
+      createdAt: isNew
+        ? new Date().toISOString()
+        : (await db.events.get(eventId))?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      source: 'LOCAL',
+      source: "LOCAL",
     };
-    
+
     await db.events.save(event);
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     navigation.goBack();
-  }, [eventId, title, description, location, startDate, allDay, recurrence, isNew, navigation]);
+  }, [
+    eventId,
+    title,
+    description,
+    location,
+    startDate,
+    allDay,
+    recurrence,
+    isNew,
+    navigation,
+  ]);
 
   const handleDelete = useCallback(async () => {
-    Alert.alert(
-      'Delete Event',
-      'Are you sure you want to delete this event?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await db.events.delete(eventId);
-            navigation.goBack();
-          },
+    Alert.alert("Delete Event", "Are you sure you want to delete this event?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          await db.events.delete(eventId);
+          navigation.goBack();
         },
-      ]
-    );
+      },
+    ]);
   }, [eventId, navigation]);
 
   React.useLayoutEffect(() => {
@@ -119,7 +136,10 @@ export default function EventDetailScreen() {
           {!isNew && (
             <Pressable
               onPress={handleDelete}
-              style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+              style={({ pressed }) => [
+                styles.headerButton,
+                pressed && { opacity: 0.7 },
+              ]}
             >
               <Feather name="trash-2" size={20} color={theme.error} />
             </Pressable>
@@ -136,7 +156,7 @@ export default function EventDetailScreen() {
           styles.scrollContent,
           {
             paddingTop: headerHeight + Spacing.md,
-            paddingBottom: insets.bottom + Spacing['5xl'],
+            paddingBottom: insets.bottom + Spacing["5xl"],
           },
         ]}
         keyboardShouldPersistTaps="handled"
@@ -149,8 +169,10 @@ export default function EventDetailScreen() {
           placeholderTextColor={theme.textMuted}
           style={[styles.titleInput, { color: theme.text }]}
         />
-        
-        <View style={[styles.field, { backgroundColor: theme.backgroundDefault }]}>
+
+        <View
+          style={[styles.field, { backgroundColor: theme.backgroundDefault }]}
+        >
           <Feather name="map-pin" size={20} color={theme.textMuted} />
           <TextInput
             value={location}
@@ -160,8 +182,10 @@ export default function EventDetailScreen() {
             style={[styles.fieldInput, { color: theme.text }]}
           />
         </View>
-        
-        <View style={[styles.field, { backgroundColor: theme.backgroundDefault }]}>
+
+        <View
+          style={[styles.field, { backgroundColor: theme.backgroundDefault }]}
+        >
           <Feather name="align-left" size={20} color={theme.textMuted} />
           <TextInput
             value={description}
@@ -172,8 +196,13 @@ export default function EventDetailScreen() {
             multiline
           />
         </View>
-        
-        <View style={[styles.switchRow, { backgroundColor: theme.backgroundDefault }]}>
+
+        <View
+          style={[
+            styles.switchRow,
+            { backgroundColor: theme.backgroundDefault },
+          ]}
+        >
           <View style={styles.switchLabel}>
             <Feather name="sun" size={20} color={theme.textMuted} />
             <ThemedText type="body">All Day</ThemedText>
@@ -181,12 +210,17 @@ export default function EventDetailScreen() {
           <Switch
             value={allDay}
             onValueChange={setAllDay}
-            trackColor={{ false: theme.backgroundSecondary, true: theme.accentDim }}
+            trackColor={{
+              false: theme.backgroundSecondary,
+              true: theme.accentDim,
+            }}
             thumbColor={allDay ? theme.accent : theme.textSecondary}
           />
         </View>
-        
-        <ThemedText type="caption" secondary style={styles.label}>Repeat</ThemedText>
+
+        <ThemedText type="caption" secondary style={styles.label}>
+          Repeat
+        </ThemedText>
         <View style={styles.optionRow}>
           {RECURRENCE.map((r) => (
             <Pressable
@@ -194,21 +228,29 @@ export default function EventDetailScreen() {
               onPress={() => setRecurrence(r)}
               style={[
                 styles.optionButton,
-                { backgroundColor: recurrence === r ? theme.accentDim : theme.backgroundDefault },
+                {
+                  backgroundColor:
+                    recurrence === r
+                      ? theme.accentDim
+                      : theme.backgroundDefault,
+                },
               ]}
             >
               <ThemedText
                 type="small"
-                style={{ color: recurrence === r ? theme.accent : theme.textSecondary, textTransform: 'capitalize' }}
+                style={{
+                  color: recurrence === r ? theme.accent : theme.textSecondary,
+                  textTransform: "capitalize",
+                }}
               >
                 {r}
               </ThemedText>
             </Pressable>
           ))}
         </View>
-        
+
         <Button onPress={saveEvent} style={styles.saveButton}>
-          {isNew ? 'Create Event' : 'Save Changes'}
+          {isNew ? "Create Event" : "Save Changes"}
         </Button>
       </ScrollView>
     </ThemedView>
@@ -223,7 +265,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
   },
   headerActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.md,
   },
   headerButton: {
@@ -231,12 +273,12 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: Spacing.xl,
   },
   field: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     gap: Spacing.md,
@@ -247,23 +289,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     marginBottom: Spacing.xl,
   },
   switchLabel: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.md,
   },
   label: {
     marginBottom: Spacing.sm,
   },
   optionRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.sm,
   },
   optionButton: {

@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { Platform } from 'react-native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  Platform,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Feather } from "@expo/vector-icons";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius, Shadows } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { ModuleType, Settings } from '@/models/types';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { ModuleType, Settings } from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
 interface ModuleItem {
-  id: ModuleType | 'settings';
+  id: ModuleType | "settings";
   name: string;
   icon: keyof typeof Feather.glyphMap;
   route: keyof AppStackParamList;
@@ -28,46 +33,46 @@ interface ModuleItem {
 
 const MODULES: ModuleItem[] = [
   {
-    id: 'command',
-    name: 'Command Center',
-    icon: 'cpu',
-    route: 'CommandCenter',
-    description: 'AI recommendations',
+    id: "command",
+    name: "Command Center",
+    icon: "cpu",
+    route: "CommandCenter",
+    description: "AI recommendations",
   },
   {
-    id: 'notebook',
-    name: 'Notebook',
-    icon: 'book-open',
-    route: 'Notebook',
-    description: 'Notes & docs',
+    id: "notebook",
+    name: "Notebook",
+    icon: "book-open",
+    route: "Notebook",
+    description: "Notes & docs",
   },
   {
-    id: 'planner',
-    name: 'Planner',
-    icon: 'check-square',
-    route: 'Planner',
-    description: 'Tasks & projects',
+    id: "planner",
+    name: "Planner",
+    icon: "check-square",
+    route: "Planner",
+    description: "Tasks & projects",
   },
   {
-    id: 'calendar',
-    name: 'Calendar',
-    icon: 'calendar',
-    route: 'Calendar',
-    description: 'Events & schedule',
+    id: "calendar",
+    name: "Calendar",
+    icon: "calendar",
+    route: "Calendar",
+    description: "Events & schedule",
   },
   {
-    id: 'email',
-    name: 'Email',
-    icon: 'mail',
-    route: 'Email',
-    description: 'Messages',
+    id: "email",
+    name: "Email",
+    icon: "mail",
+    route: "Email",
+    description: "Messages",
   },
   {
-    id: 'settings',
-    name: 'Settings',
-    icon: 'settings',
-    route: 'Settings',
-    description: 'Preferences',
+    id: "settings",
+    name: "Settings",
+    icon: "settings",
+    route: "Settings",
+    description: "Preferences",
   },
 ];
 
@@ -82,14 +87,14 @@ export default function ModuleGridScreen() {
   }, []);
 
   const handleModulePress = (module: ModuleItem) => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     navigation.navigate(module.route as any);
   };
 
-  const isModuleEnabled = (id: ModuleType | 'settings'): boolean => {
-    if (id === 'settings' || id === 'command') return true;
+  const isModuleEnabled = (id: ModuleType | "settings"): boolean => {
+    if (id === "settings" || id === "command") return true;
     if (!settings) return true;
     return settings.enabledModules.includes(id as ModuleType);
   };
@@ -106,7 +111,7 @@ export default function ModuleGridScreen() {
         <View style={styles.grid}>
           {MODULES.map((module, index) => {
             const enabled = isModuleEnabled(module.id);
-            
+
             return (
               <Animated.View
                 key={module.id}
@@ -119,13 +124,18 @@ export default function ModuleGridScreen() {
                     styles.moduleCard,
                     { backgroundColor: theme.backgroundDefault },
                     !enabled && styles.disabledCard,
-                    pressed && enabled && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+                    pressed &&
+                      enabled && { opacity: 0.8, transform: [{ scale: 0.98 }] },
                   ]}
                 >
                   <View
                     style={[
                       styles.iconContainer,
-                      { backgroundColor: enabled ? theme.accentDim : theme.backgroundSecondary },
+                      {
+                        backgroundColor: enabled
+                          ? theme.accentDim
+                          : theme.backgroundSecondary,
+                      },
                     ]}
                   >
                     <Feather
@@ -143,13 +153,23 @@ export default function ModuleGridScreen() {
                   <ThemedText
                     type="caption"
                     secondary
-                    style={[styles.moduleDescription, !enabled && { opacity: 0.5 }]}
+                    style={[
+                      styles.moduleDescription,
+                      !enabled && { opacity: 0.5 },
+                    ]}
                   >
                     {module.description}
                   </ThemedText>
                   {!enabled && (
-                    <View style={[styles.disabledBadge, { backgroundColor: theme.backgroundSecondary }]}>
-                      <ThemedText type="small" muted>Disabled</ThemedText>
+                    <View
+                      style={[
+                        styles.disabledBadge,
+                        { backgroundColor: theme.backgroundSecondary },
+                      ]}
+                    >
+                      <ThemedText type="small" muted>
+                        Disabled
+                      </ThemedText>
                     </View>
                   )}
                 </Pressable>
@@ -171,17 +191,17 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.xl,
   },
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.md,
   },
   gridItem: {
-    width: '48%',
+    width: "48%",
   },
   moduleCard: {
     padding: Spacing.lg,
     borderRadius: BorderRadius.lg,
-    alignItems: 'center',
+    alignItems: "center",
     minHeight: 160,
     ...Shadows.card,
   },
@@ -192,19 +212,19 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: BorderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: Spacing.md,
   },
   moduleName: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: Spacing.xs,
   },
   moduleDescription: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   disabledBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: Spacing.sm,
     right: Spacing.sm,
     paddingHorizontal: Spacing.sm,

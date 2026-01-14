@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, StyleSheet, Pressable, Modal, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import React from "react";
+import { View, StyleSheet, Pressable, Modal, Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Feather } from "@expo/vector-icons";
+import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius } from '@/constants/theme';
-import { ModuleType } from '@/models/types';
+import { ThemedText } from "@/components/ThemedText";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius } from "@/constants/theme";
+import { ModuleType } from "@/models/types";
 
 interface AIAction {
   id: string;
@@ -17,53 +17,153 @@ interface AIAction {
   description: string;
 }
 
-const MODULE_ACTIONS: Record<ModuleType | 'command', AIAction[]> = {
+const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
   command: [
-    { id: 'refresh', icon: 'refresh-cw', title: 'Refresh Recommendations', description: 'Get new AI suggestions' },
-    { id: 'prioritize', icon: 'trending-up', title: 'Prioritize', description: 'Reorder by urgency' },
-    { id: 'insights', icon: 'bar-chart-2', title: 'View Insights', description: 'Productivity patterns' },
+    {
+      id: "refresh",
+      icon: "refresh-cw",
+      title: "Refresh Recommendations",
+      description: "Get new AI suggestions",
+    },
+    {
+      id: "prioritize",
+      icon: "trending-up",
+      title: "Prioritize",
+      description: "Reorder by urgency",
+    },
+    {
+      id: "insights",
+      icon: "bar-chart-2",
+      title: "View Insights",
+      description: "Productivity patterns",
+    },
   ],
   notebook: [
-    { id: 'grammar', icon: 'check-circle', title: 'Check Grammar', description: 'Fix spelling and grammar' },
-    { id: 'clarity', icon: 'eye', title: 'Improve Clarity', description: 'Make writing clearer' },
-    { id: 'title', icon: 'type', title: 'Suggest Title', description: 'Generate a title' },
-    { id: 'tags', icon: 'tag', title: 'Extract Tags', description: 'Find relevant tags' },
-    { id: 'summary', icon: 'file-text', title: 'Summarize', description: 'Create a summary' },
-    { id: 'checklist', icon: 'list', title: 'To Checklist', description: 'Convert to checklist' },
+    {
+      id: "grammar",
+      icon: "check-circle",
+      title: "Check Grammar",
+      description: "Fix spelling and grammar",
+    },
+    {
+      id: "clarity",
+      icon: "eye",
+      title: "Improve Clarity",
+      description: "Make writing clearer",
+    },
+    {
+      id: "title",
+      icon: "type",
+      title: "Suggest Title",
+      description: "Generate a title",
+    },
+    {
+      id: "tags",
+      icon: "tag",
+      title: "Extract Tags",
+      description: "Find relevant tags",
+    },
+    {
+      id: "summary",
+      icon: "file-text",
+      title: "Summarize",
+      description: "Create a summary",
+    },
+    {
+      id: "checklist",
+      icon: "list",
+      title: "To Checklist",
+      description: "Convert to checklist",
+    },
   ],
   planner: [
-    { id: 'priority', icon: 'alert-circle', title: 'Suggest Priority', description: 'Recommend task priority' },
-    { id: 'duedate', icon: 'calendar', title: 'Suggest Due Date', description: 'Recommend deadline' },
-    { id: 'breakdown', icon: 'git-branch', title: 'Break Down', description: 'Split into subtasks' },
-    { id: 'dependencies', icon: 'link', title: 'Find Dependencies', description: 'Identify related tasks' },
+    {
+      id: "priority",
+      icon: "alert-circle",
+      title: "Suggest Priority",
+      description: "Recommend task priority",
+    },
+    {
+      id: "duedate",
+      icon: "calendar",
+      title: "Suggest Due Date",
+      description: "Recommend deadline",
+    },
+    {
+      id: "breakdown",
+      icon: "git-branch",
+      title: "Break Down",
+      description: "Split into subtasks",
+    },
+    {
+      id: "dependencies",
+      icon: "link",
+      title: "Find Dependencies",
+      description: "Identify related tasks",
+    },
   ],
   calendar: [
-    { id: 'focus', icon: 'clock', title: 'Block Focus Time', description: 'Schedule deep work' },
-    { id: 'conflicts', icon: 'alert-triangle', title: 'Find Conflicts', description: 'Identify overlaps' },
-    { id: 'optimize', icon: 'shuffle', title: 'Optimize Schedule', description: 'Improve time allocation' },
+    {
+      id: "focus",
+      icon: "clock",
+      title: "Block Focus Time",
+      description: "Schedule deep work",
+    },
+    {
+      id: "conflicts",
+      icon: "alert-triangle",
+      title: "Find Conflicts",
+      description: "Identify overlaps",
+    },
+    {
+      id: "optimize",
+      icon: "shuffle",
+      title: "Optimize Schedule",
+      description: "Improve time allocation",
+    },
   ],
   email: [
-    { id: 'draft', icon: 'edit-3', title: 'Draft Reply', description: 'Generate response' },
-    { id: 'summarize', icon: 'file-text', title: 'Summarize Thread', description: 'Get key points' },
-    { id: 'followup', icon: 'send', title: 'Follow Up', description: 'Draft follow-up email' },
+    {
+      id: "draft",
+      icon: "edit-3",
+      title: "Draft Reply",
+      description: "Generate response",
+    },
+    {
+      id: "summarize",
+      icon: "file-text",
+      title: "Summarize Thread",
+      description: "Get key points",
+    },
+    {
+      id: "followup",
+      icon: "send",
+      title: "Follow Up",
+      description: "Draft follow-up email",
+    },
   ],
 };
 
 interface AIAssistSheetProps {
   visible: boolean;
   onClose: () => void;
-  module: ModuleType | 'command';
+  module: ModuleType | "command";
   onAction?: (actionId: string) => void;
 }
 
-export default function AIAssistSheet({ visible, onClose, module, onAction }: AIAssistSheetProps) {
+export default function AIAssistSheet({
+  visible,
+  onClose,
+  module,
+  onAction,
+}: AIAssistSheetProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  
+
   const actions = MODULE_ACTIONS[module] || [];
 
   const handleAction = (actionId: string) => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     onAction?.(actionId);
@@ -78,9 +178,12 @@ export default function AIAssistSheet({ visible, onClose, module, onAction }: AI
       onRequestClose={onClose}
     >
       <Pressable style={styles.overlay} onPress={onClose}>
-        <Animated.View entering={FadeIn} style={[styles.backdrop, { backgroundColor: theme.overlay }]} />
+        <Animated.View
+          entering={FadeIn}
+          style={[styles.backdrop, { backgroundColor: theme.overlay }]}
+        />
       </Pressable>
-      
+
       <Animated.View
         entering={SlideInDown.springify().damping(20)}
         style={[
@@ -92,7 +195,7 @@ export default function AIAssistSheet({ visible, onClose, module, onAction }: AI
         ]}
       >
         <View style={styles.handle} />
-        
+
         <View style={styles.header}>
           <View style={[styles.aiIcon, { backgroundColor: theme.accentDim }]}>
             <Feather name="cpu" size={20} color={theme.accent} />
@@ -102,7 +205,7 @@ export default function AIAssistSheet({ visible, onClose, module, onAction }: AI
             <Feather name="x" size={24} color={theme.textSecondary} />
           </Pressable>
         </View>
-        
+
         <View style={styles.actions}>
           {actions.map((action) => (
             <Pressable
@@ -114,11 +217,16 @@ export default function AIAssistSheet({ visible, onClose, module, onAction }: AI
                 pressed && { opacity: 0.8 },
               ]}
             >
-              <View style={[styles.actionIcon, { backgroundColor: theme.accentDim }]}>
+              <View
+                style={[
+                  styles.actionIcon,
+                  { backgroundColor: theme.accentDim },
+                ]}
+              >
                 <Feather name={action.icon} size={20} color={theme.accent} />
               </View>
               <View style={styles.actionText}>
-                <ThemedText type="body" style={{ fontWeight: '600' }}>
+                <ThemedText type="body" style={{ fontWeight: "600" }}>
                   {action.title}
                 </ThemedText>
                 <ThemedText type="caption" secondary>
@@ -129,7 +237,7 @@ export default function AIAssistSheet({ visible, onClose, module, onAction }: AI
             </Pressable>
           ))}
         </View>
-        
+
         <View style={[styles.footer, { borderTopColor: theme.border }]}>
           <ThemedText type="small" muted style={styles.footerText}>
             AI actions are suggestions. Review before accepting.
@@ -148,7 +256,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   sheet: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
@@ -159,14 +267,14 @@ const styles = StyleSheet.create({
   handle: {
     width: 36,
     height: 4,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 2,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: Spacing.md,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.xl,
     paddingBottom: Spacing.lg,
     gap: Spacing.md,
@@ -175,11 +283,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: BorderRadius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   closeButton: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
     padding: Spacing.xs,
   },
   actions: {
@@ -187,8 +295,8 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   actionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     gap: Spacing.md,
@@ -197,8 +305,8 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: BorderRadius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   actionText: {
     flex: 1,
@@ -211,6 +319,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   footerText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

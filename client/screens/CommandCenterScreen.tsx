@@ -1,9 +1,16 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Image, Dimensions, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Feather } from '@expo/vector-icons';
+import React, { useCallback, useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  Dimensions,
+  Platform,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Feather } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,31 +20,35 @@ import Animated, {
   interpolate,
   FadeIn,
   FadeInDown,
-} from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import * as Haptics from 'expo-haptics';
+} from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { Recommendation, AILimits } from '@/models/types';
-import { formatTimeRemaining, getConfidenceColor } from '@/utils/helpers';
-import { BottomNav } from '@/components/BottomNav';
-import AIAssistSheet from '@/components/AIAssistSheet';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Colors, Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { Recommendation, AILimits } from "@/models/types";
+import { formatTimeRemaining, getConfidenceColor } from "@/utils/helpers";
+import { BottomNav } from "@/components/BottomNav";
+import AIAssistSheet from "@/components/AIAssistSheet";
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH - Spacing['2xl'] * 2;
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
-function ConfidenceMeter({ confidence }: { confidence: 'low' | 'medium' | 'high' }) {
+function ConfidenceMeter({
+  confidence,
+}: {
+  confidence: "low" | "medium" | "high";
+}) {
   const { theme } = useTheme();
-  const levels = confidence === 'high' ? 3 : confidence === 'medium' ? 2 : 1;
-  
+  const levels = confidence === "high" ? 3 : confidence === "medium" ? 2 : 1;
+
   return (
     <View style={styles.confidenceMeter}>
       {[1, 2, 3].map((level) => (
@@ -46,9 +57,10 @@ function ConfidenceMeter({ confidence }: { confidence: 'low' | 'medium' | 'high'
           style={[
             styles.confidenceSegment,
             {
-              backgroundColor: level <= levels
-                ? getConfidenceColor(confidence, theme)
-                : theme.border,
+              backgroundColor:
+                level <= levels
+                  ? getConfidenceColor(confidence, theme)
+                  : theme.border,
             },
           ]}
         />
@@ -94,7 +106,7 @@ function RecommendationCard({
           { duration: 200 },
           () => {
             runOnJS(e.translationX > 0 ? onAccept : onDecline)();
-          }
+          },
         );
       } else {
         translateX.value = withSpring(0);
@@ -111,8 +123,12 @@ function RecommendationCard({
   const gesture = Gesture.Exclusive(panGesture, tapGesture);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const rotate = interpolate(translateX.value, [-SCREEN_WIDTH, 0, SCREEN_WIDTH], [-15, 0, 15]);
-    
+    const rotate = interpolate(
+      translateX.value,
+      [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
+      [-15, 0, 15],
+    );
+
     return {
       transform: [
         { translateX: translateX.value },
@@ -125,38 +141,68 @@ function RecommendationCard({
   });
 
   const acceptGlowStyle = useAnimatedStyle(() => {
-    const glowOpacity = interpolate(translateX.value, [0, SWIPE_THRESHOLD], [0, 0.6]);
+    const glowOpacity = interpolate(
+      translateX.value,
+      [0, SWIPE_THRESHOLD],
+      [0, 0.6],
+    );
     return { opacity: Math.max(0, glowOpacity) };
   });
 
   const declineGlowStyle = useAnimatedStyle(() => {
-    const glowOpacity = interpolate(translateX.value, [-SWIPE_THRESHOLD, 0], [0.6, 0]);
+    const glowOpacity = interpolate(
+      translateX.value,
+      [-SWIPE_THRESHOLD, 0],
+      [0.6, 0],
+    );
     return { opacity: Math.max(0, glowOpacity) };
   });
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.card, { backgroundColor: theme.backgroundDefault }, animatedStyle]}>
-        <Animated.View style={[styles.cardGlow, styles.acceptGlow, { backgroundColor: theme.success }, acceptGlowStyle]} />
-        <Animated.View style={[styles.cardGlow, styles.declineGlow, { backgroundColor: theme.error }, declineGlowStyle]} />
-        
+      <Animated.View
+        style={[
+          styles.card,
+          { backgroundColor: theme.backgroundDefault },
+          animatedStyle,
+        ]}
+      >
+        <Animated.View
+          style={[
+            styles.cardGlow,
+            styles.acceptGlow,
+            { backgroundColor: theme.success },
+            acceptGlowStyle,
+          ]}
+        />
+        <Animated.View
+          style={[
+            styles.cardGlow,
+            styles.declineGlow,
+            { backgroundColor: theme.error },
+            declineGlowStyle,
+          ]}
+        />
+
         <View style={styles.cardHeader}>
-          <View style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}>
+          <View
+            style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}
+          >
             <ThemedText type="small" style={{ color: theme.accent }}>
               {recommendation.module.toUpperCase()}
             </ThemedText>
           </View>
           <ConfidenceMeter confidence={recommendation.confidence} />
         </View>
-        
+
         <ThemedText type="h3" style={styles.cardTitle}>
           {recommendation.title}
         </ThemedText>
-        
+
         <ThemedText type="body" secondary style={styles.cardSummary}>
           {recommendation.summary}
         </ThemedText>
-        
+
         <View style={styles.cardFooter}>
           <View style={styles.expiryContainer}>
             <Feather name="clock" size={14} color={theme.textMuted} />
@@ -177,7 +223,7 @@ export default function CommandCenterScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
-  
+
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [aiLimits, setAiLimits] = useState<AILimits | null>(null);
   const [showAISheet, setShowAISheet] = useState(false);
@@ -194,79 +240,96 @@ export default function CommandCenterScreen() {
   }, [loadData]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadData);
+    const unsubscribe = navigation.addListener("focus", loadData);
     return unsubscribe;
   }, [navigation, loadData]);
 
-  const handleAccept = useCallback(async (rec: Recommendation) => {
-    if (Platform.OS !== 'web') {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
-    await db.recommendations.updateStatus(rec.id, 'accepted');
-    if (rec.countsAgainstLimit) {
-      await db.aiLimits.incrementUsed();
-    }
-    await db.decisions.save({
-      id: `decision_${Date.now()}`,
-      recommendationId: rec.id,
-      decision: 'accepted',
-      decidedAt: new Date().toISOString(),
-    });
-    await db.history.add({
-      message: `AI generated card option: "${rec.title}". User accepted.`,
-      type: 'recommendation',
-      metadata: { recommendationId: rec.id, decision: 'accepted' },
-    });
-    loadData();
-  }, [loadData]);
+  const handleAccept = useCallback(
+    async (rec: Recommendation) => {
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+      await db.recommendations.updateStatus(rec.id, "accepted");
+      if (rec.countsAgainstLimit) {
+        await db.aiLimits.incrementUsed();
+      }
+      await db.decisions.save({
+        id: `decision_${Date.now()}`,
+        recommendationId: rec.id,
+        decision: "accepted",
+        decidedAt: new Date().toISOString(),
+      });
+      await db.history.add({
+        message: `AI generated card option: "${rec.title}". User accepted.`,
+        type: "recommendation",
+        metadata: { recommendationId: rec.id, decision: "accepted" },
+      });
+      loadData();
+    },
+    [loadData],
+  );
 
-  const handleDecline = useCallback(async (rec: Recommendation) => {
-    if (Platform.OS !== 'web') {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    }
-    await db.recommendations.updateStatus(rec.id, 'declined');
-    if (rec.countsAgainstLimit) {
-      await db.aiLimits.incrementUsed();
-    }
-    await db.decisions.save({
-      id: `decision_${Date.now()}`,
-      recommendationId: rec.id,
-      decision: 'declined',
-      decidedAt: new Date().toISOString(),
-    });
-    await db.history.add({
-      message: `AI generated card option: "${rec.title}". User declined.`,
-      type: 'recommendation',
-      metadata: { recommendationId: rec.id, decision: 'declined' },
-    });
-    loadData();
-  }, [loadData]);
+  const handleDecline = useCallback(
+    async (rec: Recommendation) => {
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      }
+      await db.recommendations.updateStatus(rec.id, "declined");
+      if (rec.countsAgainstLimit) {
+        await db.aiLimits.incrementUsed();
+      }
+      await db.decisions.save({
+        id: `decision_${Date.now()}`,
+        recommendationId: rec.id,
+        decision: "declined",
+        decidedAt: new Date().toISOString(),
+      });
+      await db.history.add({
+        message: `AI generated card option: "${rec.title}". User declined.`,
+        type: "recommendation",
+        metadata: { recommendationId: rec.id, decision: "declined" },
+      });
+      loadData();
+    },
+    [loadData],
+  );
 
-  const handleCardPress = useCallback((rec: Recommendation) => {
-    navigation.navigate('RecommendationDetail', { recommendationId: rec.id });
-  }, [navigation]);
+  const handleCardPress = useCallback(
+    (rec: Recommendation) => {
+      navigation.navigate("RecommendationDetail", { recommendationId: rec.id });
+    },
+    [navigation],
+  );
 
   const remaining = aiLimits ? aiLimits.total - aiLimits.used : 0;
   const total = aiLimits?.total || 12;
-  const refreshTime = aiLimits ? formatTimeRemaining(aiLimits.nextRefreshAt) : '--';
+  const refreshTime = aiLimits
+    ? formatTimeRemaining(aiLimits.nextRefreshAt)
+    : "--";
 
   return (
     <ThemedView style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + Spacing.sm }]}>
         <Pressable
-          onPress={() => navigation.navigate('ModuleGrid')}
-          style={({ pressed }) => [styles.headerButton, pressed && styles.pressed]}
+          onPress={() => navigation.navigate("ModuleGrid")}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && styles.pressed,
+          ]}
         >
           <Feather name="grid" size={24} color={theme.text} />
         </Pressable>
-        
+
         <Animated.View entering={FadeIn.delay(200)}>
           <ThemedText type="h2">Command Center</ThemedText>
         </Animated.View>
-        
+
         <Pressable
-          onPress={() => navigation.navigate('Settings')}
-          style={({ pressed }) => [styles.headerButton, pressed && styles.pressed]}
+          onPress={() => navigation.navigate("Settings")}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && styles.pressed,
+          ]}
         >
           <Feather name="settings" size={24} color={theme.text} />
         </Pressable>
@@ -275,22 +338,31 @@ export default function CommandCenterScreen() {
       <View style={styles.content}>
         {recommendations.length > 0 ? (
           <View style={styles.cardStack}>
-            {recommendations.slice(0, 3).reverse().map((rec, index) => (
-              <View key={rec.id} style={[styles.cardContainer, { zIndex: 3 - index }]}>
-                <RecommendationCard
-                  recommendation={rec}
-                  onAccept={() => handleAccept(rec)}
-                  onDecline={() => handleDecline(rec)}
-                  onPress={() => handleCardPress(rec)}
-                  isTop={index === recommendations.slice(0, 3).length - 1}
-                />
-              </View>
-            ))}
+            {recommendations
+              .slice(0, 3)
+              .reverse()
+              .map((rec, index) => (
+                <View
+                  key={rec.id}
+                  style={[styles.cardContainer, { zIndex: 3 - index }]}
+                >
+                  <RecommendationCard
+                    recommendation={rec}
+                    onAccept={() => handleAccept(rec)}
+                    onDecline={() => handleDecline(rec)}
+                    onPress={() => handleCardPress(rec)}
+                    isTop={index === recommendations.slice(0, 3).length - 1}
+                  />
+                </View>
+              ))}
           </View>
         ) : (
-          <Animated.View entering={FadeInDown.delay(300)} style={styles.emptyState}>
+          <Animated.View
+            entering={FadeInDown.delay(300)}
+            style={styles.emptyState}
+          >
             <Image
-              source={require('../../assets/images/empty-command-center.png')}
+              source={require("../../assets/images/empty-command-center.png")}
               style={styles.emptyImage}
               resizeMode="contain"
             />
@@ -304,15 +376,27 @@ export default function CommandCenterScreen() {
         )}
       </View>
 
-      <View style={[styles.footer, { paddingBottom: insets.bottom + Spacing.lg }]}>
+      <View
+        style={[styles.footer, { paddingBottom: insets.bottom + Spacing.lg }]}
+      >
         <View style={styles.limitsContainer}>
-          <View style={[styles.limitBadge, { backgroundColor: theme.backgroundDefault }]}>
+          <View
+            style={[
+              styles.limitBadge,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
             <Feather name="zap" size={14} color={theme.accent} />
             <ThemedText type="small" style={{ color: theme.accent }}>
               AI Cards: {remaining}/{total}
             </ThemedText>
           </View>
-          <View style={[styles.limitBadge, { backgroundColor: theme.backgroundDefault }]}>
+          <View
+            style={[
+              styles.limitBadge,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
             <Feather name="refresh-cw" size={14} color={theme.textMuted} />
             <ThemedText type="small" muted>
               Refreshes in {refreshTime}
@@ -337,17 +421,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
     paddingBottom: Spacing.md,
   },
   headerButton: {
     width: 44,
     height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: BorderRadius.sm,
   },
   pressed: {
@@ -355,27 +439,27 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   cardStack: {
     width: CARD_WIDTH,
     height: 300,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cardContainer: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
   },
   card: {
-    width: '100%',
+    width: "100%",
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...Shadows.card,
   },
   cardGlow: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
     width: 8,
@@ -388,9 +472,9 @@ const styles = StyleSheet.create({
     left: 0,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: Spacing.md,
   },
   moduleTag: {
@@ -399,7 +483,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.xs,
   },
   confidenceMeter: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 4,
   },
   confidenceSegment: {
@@ -414,21 +498,21 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   cardFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   expiryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.xs,
   },
   expiryText: {
     marginLeft: 2,
   },
   emptyState: {
-    alignItems: 'center',
-    paddingHorizontal: Spacing['2xl'],
+    alignItems: "center",
+    paddingHorizontal: Spacing["2xl"],
   },
   emptyImage: {
     width: 200,
@@ -437,36 +521,36 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xl,
   },
   emptyTitle: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: Spacing.sm,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   footer: {
     paddingHorizontal: Spacing.lg,
   },
   limitsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: Spacing.md,
     marginBottom: Spacing.md,
   },
   limitBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.xs,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
   },
   bottomNav: {
-    display: 'none',
+    display: "none",
   },
   aiButton: {
-    display: 'none',
+    display: "none",
   },
   navButton: {
-    display: 'none',
+    display: "none",
   },
 });

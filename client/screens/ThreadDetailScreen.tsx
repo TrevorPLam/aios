@@ -1,37 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TextInput, Pressable, Platform, Alert } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  Pressable,
+  Platform,
+  Alert,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { EmailThread, EmailMessage } from '@/models/types';
-import { MOCK_EMAIL_THREADS } from '@/utils/seedData';
-import { formatDateTime } from '@/utils/helpers';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { EmailThread, EmailMessage } from "@/models/types";
+import { MOCK_EMAIL_THREADS } from "@/utils/seedData";
+import { formatDateTime } from "@/utils/helpers";
 
-type RouteProps = RouteProp<AppStackParamList, 'ThreadDetail'>;
+type RouteProps = RouteProp<AppStackParamList, "ThreadDetail">;
 
-function MessageCard({ message, index }: { message: EmailMessage; index: number }) {
+function MessageCard({
+  message,
+  index,
+}: {
+  message: EmailMessage;
+  index: number;
+}) {
   const { theme } = useTheme();
-  const isFromMe = message.from === 'You';
+  const isFromMe = message.from === "You";
 
   return (
     <Animated.View entering={FadeInDown.delay(index * 100).springify()}>
-      <View style={[styles.messageCard, { backgroundColor: theme.backgroundDefault }]}>
+      <View
+        style={[
+          styles.messageCard,
+          { backgroundColor: theme.backgroundDefault },
+        ]}
+      >
         <View style={styles.messageHeader}>
-          <View style={[styles.avatar, { backgroundColor: isFromMe ? theme.accentDim : theme.backgroundSecondary }]}>
-            <ThemedText type="small" style={{ color: isFromMe ? theme.accent : theme.textSecondary }}>
+          <View
+            style={[
+              styles.avatar,
+              {
+                backgroundColor: isFromMe
+                  ? theme.accentDim
+                  : theme.backgroundSecondary,
+              },
+            ]}
+          >
+            <ThemedText
+              type="small"
+              style={{ color: isFromMe ? theme.accent : theme.textSecondary }}
+            >
               {message.from.charAt(0).toUpperCase()}
             </ThemedText>
           </View>
           <View style={styles.senderInfo}>
-            <ThemedText type="body" style={{ fontWeight: '600' }}>
+            <ThemedText type="body" style={{ fontWeight: "600" }}>
               {message.from}
             </ThemedText>
             <ThemedText type="small" muted>
@@ -52,29 +83,34 @@ export default function ThreadDetailScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const route = useRoute<RouteProps>();
-  
+
   const [thread, setThread] = useState<EmailThread | null>(null);
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
   const [showDraft, setShowDraft] = useState(false);
 
   useEffect(() => {
-    const found = MOCK_EMAIL_THREADS.find((t) => t.id === route.params.threadId);
+    const found = MOCK_EMAIL_THREADS.find(
+      (t) => t.id === route.params.threadId,
+    );
     setThread(found || null);
   }, [route.params.threadId]);
 
   const handleSendPress = () => {
     Alert.alert(
-      'Integrations Not Enabled',
-      'Email sending is not available in this build. Connect your email provider in Settings to enable sending.',
-      [{ text: 'OK' }]
+      "Integrations Not Enabled",
+      "Email sending is not available in this build. Connect your email provider in Settings to enable sending.",
+      [{ text: "OK" }],
     );
   };
 
   const generateDraft = () => {
     if (thread) {
       const lastMessage = thread.messages[thread.messages.length - 1];
-      const sender = lastMessage.from !== 'You' ? lastMessage.from.split(' ')[0] : 'there';
-      setReplyText(`Hi ${sender},\n\nThank you for your message. I'll look into this and get back to you shortly.\n\nBest regards`);
+      const sender =
+        lastMessage.from !== "You" ? lastMessage.from.split(" ")[0] : "there";
+      setReplyText(
+        `Hi ${sender},\n\nThank you for your message. I'll look into this and get back to you shortly.\n\nBest regards`,
+      );
       setShowDraft(true);
     }
   };
@@ -87,18 +123,27 @@ export default function ThreadDetailScreen() {
     );
   }
 
-  const renderMessage = ({ item, index }: { item: EmailMessage; index: number }) => (
-    <MessageCard message={item} index={index} />
-  );
+  const renderMessage = ({
+    item,
+    index,
+  }: {
+    item: EmailMessage;
+    index: number;
+  }) => <MessageCard message={item} index={index} />;
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.subjectHeader, { marginTop: headerHeight, backgroundColor: theme.backgroundDefault }]}>
+      <View
+        style={[
+          styles.subjectHeader,
+          { marginTop: headerHeight, backgroundColor: theme.backgroundDefault },
+        ]}
+      >
         <ThemedText type="h2">{thread.subject}</ThemedText>
         <View style={styles.participantsRow}>
           <Feather name="users" size={14} color={theme.textMuted} />
           <ThemedText type="caption" muted>
-            {thread.participants.join(', ')}
+            {thread.participants.join(", ")}
           </ThemedText>
         </View>
       </View>
@@ -111,7 +156,12 @@ export default function ThreadDetailScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      <View style={[styles.replySection, { paddingBottom: insets.bottom + Spacing.md }]}>
+      <View
+        style={[
+          styles.replySection,
+          { paddingBottom: insets.bottom + Spacing.md },
+        ]}
+      >
         {showDraft ? (
           <View style={styles.draftContainer}>
             <TextInput
@@ -119,24 +169,37 @@ export default function ThreadDetailScreen() {
               onChangeText={setReplyText}
               placeholder="Write your reply..."
               placeholderTextColor={theme.textMuted}
-              style={[styles.replyInput, { color: theme.text, backgroundColor: theme.backgroundDefault }]}
+              style={[
+                styles.replyInput,
+                { color: theme.text, backgroundColor: theme.backgroundDefault },
+              ]}
               multiline
               textAlignVertical="top"
             />
             <View style={styles.draftActions}>
               <Pressable
                 onPress={() => setShowDraft(false)}
-                style={[styles.draftButton, { backgroundColor: theme.backgroundSecondary }]}
+                style={[
+                  styles.draftButton,
+                  { backgroundColor: theme.backgroundSecondary },
+                ]}
               >
                 <Feather name="x" size={18} color={theme.textSecondary} />
-                <ThemedText type="small" secondary>Cancel</ThemedText>
+                <ThemedText type="small" secondary>
+                  Cancel
+                </ThemedText>
               </Pressable>
               <Pressable
                 onPress={handleSendPress}
-                style={[styles.draftButton, { backgroundColor: theme.accentDim }]}
+                style={[
+                  styles.draftButton,
+                  { backgroundColor: theme.accentDim },
+                ]}
               >
                 <Feather name="send" size={18} color={theme.accent} />
-                <ThemedText type="small" style={{ color: theme.accent }}>Send</ThemedText>
+                <ThemedText type="small" style={{ color: theme.accent }}>
+                  Send
+                </ThemedText>
               </Pressable>
             </View>
           </View>
@@ -146,7 +209,10 @@ export default function ThreadDetailScreen() {
             style={[styles.replyButton, { backgroundColor: theme.accent }]}
           >
             <Feather name="edit-2" size={18} color={theme.backgroundRoot} />
-            <ThemedText type="body" style={{ color: theme.backgroundRoot, fontWeight: '600' }}>
+            <ThemedText
+              type="body"
+              style={{ color: theme.backgroundRoot, fontWeight: "600" }}
+            >
               Reply
             </ThemedText>
           </Pressable>
@@ -167,8 +233,8 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
   },
   participantsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.xs,
     marginTop: Spacing.sm,
   },
@@ -182,8 +248,8 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
   },
   messageHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.md,
     marginBottom: Spacing.md,
   },
@@ -191,8 +257,8 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   senderInfo: {
     flex: 1,
@@ -205,9 +271,9 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
   },
   replyButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: Spacing.sm,
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
@@ -222,14 +288,14 @@ const styles = StyleSheet.create({
     minHeight: 120,
   },
   draftActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.md,
   },
   draftButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: Spacing.sm,
     padding: Spacing.md,
     borderRadius: BorderRadius.md,

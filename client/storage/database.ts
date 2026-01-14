@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Recommendation,
   RecommendationDecision,
@@ -11,19 +11,19 @@ import {
   AILimits,
   DEFAULT_SETTINGS,
   TIER_LIMITS,
-} from '@/models/types';
+} from "@/models/types";
 
 const KEYS = {
-  RECOMMENDATIONS: '@aios/recommendations',
-  DECISIONS: '@aios/decisions',
-  NOTES: '@aios/notes',
-  TASKS: '@aios/tasks',
-  PROJECTS: '@aios/projects',
-  EVENTS: '@aios/events',
-  SETTINGS: '@aios/settings',
-  HISTORY: '@aios/history',
-  AI_LIMITS: '@aios/ai_limits',
-  INITIALIZED: '@aios/initialized',
+  RECOMMENDATIONS: "@aios/recommendations",
+  DECISIONS: "@aios/decisions",
+  NOTES: "@aios/notes",
+  TASKS: "@aios/tasks",
+  PROJECTS: "@aios/projects",
+  EVENTS: "@aios/events",
+  SETTINGS: "@aios/settings",
+  HISTORY: "@aios/history",
+  AI_LIMITS: "@aios/ai_limits",
+  INITIALIZED: "@aios/initialized",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -51,7 +51,7 @@ export const db = {
     async getActive(): Promise<Recommendation[]> {
       const all = await this.getAll();
       const now = new Date().toISOString();
-      return all.filter((r) => r.status === 'active' && r.expiresAt > now);
+      return all.filter((r) => r.status === "active" && r.expiresAt > now);
     },
     async save(rec: Recommendation): Promise<void> {
       const all = await this.getAll();
@@ -66,7 +66,10 @@ export const db = {
     async saveAll(recs: Recommendation[]): Promise<void> {
       await setData(KEYS.RECOMMENDATIONS, recs);
     },
-    async updateStatus(id: string, status: Recommendation['status']): Promise<void> {
+    async updateStatus(
+      id: string,
+      status: Recommendation["status"],
+    ): Promise<void> {
       const all = await this.getAll();
       const rec = all.find((r) => r.id === id);
       if (rec) {
@@ -184,9 +187,9 @@ export const db = {
     },
     async getForDate(date: string): Promise<CalendarEvent[]> {
       const all = await this.getAll();
-      const targetDate = date.split('T')[0];
+      const targetDate = date.split("T")[0];
       return all.filter((e) => {
-        const eventDate = e.startAt.split('T')[0];
+        const eventDate = e.startAt.split("T")[0];
         return eventDate === targetDate;
       });
     },
@@ -225,11 +228,12 @@ export const db = {
   history: {
     async getAll(): Promise<HistoryLogEntry[]> {
       const entries = await getData<HistoryLogEntry[]>(KEYS.HISTORY, []);
-      return entries.sort((a, b) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      return entries.sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       );
     },
-    async add(entry: Omit<HistoryLogEntry, 'id' | 'timestamp'>): Promise<void> {
+    async add(entry: Omit<HistoryLogEntry, "id" | "timestamp">): Promise<void> {
       const all = await getData<HistoryLogEntry[]>(KEYS.HISTORY, []);
       const newEntry: HistoryLogEntry = {
         ...entry,
@@ -249,9 +253,9 @@ export const db = {
       const settings = await db.settings.get();
       const tier = settings.aiLimitTier;
       const total = TIER_LIMITS[tier];
-      
+
       const stored = await getData<AILimits | null>(KEYS.AI_LIMITS, null);
-      
+
       if (!stored || new Date(stored.nextRefreshAt) <= new Date()) {
         const refreshTime = new Date();
         refreshTime.setHours(refreshTime.getHours() + 6);
@@ -263,7 +267,7 @@ export const db = {
         await setData(KEYS.AI_LIMITS, fresh);
         return fresh;
       }
-      
+
       return { ...stored, total };
     },
     async incrementUsed(): Promise<AILimits> {
@@ -288,11 +292,11 @@ export const db = {
 
   async isInitialized(): Promise<boolean> {
     const val = await AsyncStorage.getItem(KEYS.INITIALIZED);
-    return val === 'true';
+    return val === "true";
   },
 
   async setInitialized(): Promise<void> {
-    await AsyncStorage.setItem(KEYS.INITIALIZED, 'true');
+    await AsyncStorage.setItem(KEYS.INITIALIZED, "true");
   },
 
   async clearAll(): Promise<void> {

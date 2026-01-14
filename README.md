@@ -83,6 +83,8 @@ npm run server:prod
 
 ## 📱 Testing the App
 
+### Running on Devices
+
 1. **On iOS Simulator:**
    - Press `i` in the Expo CLI
    - Or scan QR code with Camera app
@@ -94,6 +96,30 @@ npm run server:prod
 3. **On Physical Device:**
    - Install Expo Go from App Store / Play Store
    - Scan the QR code displayed in terminal
+
+### Running Automated Tests
+
+The project includes a comprehensive test suite powered by Jest and React Native Testing Library.
+
+**Run all tests:**
+```bash
+npm test
+```
+
+**Run tests in watch mode (for development):**
+```bash
+npm run test:watch
+```
+
+**Generate coverage report:**
+```bash
+npm run test:coverage
+```
+
+**Test coverage includes:**
+- Component tests (Button, etc.)
+- Storage layer tests (database operations)
+- Current coverage: ~48% for storage, growing as more tests are added
 
 ## 🏗️ Project Structure
 
@@ -157,6 +183,11 @@ Using system fonts with the following scale:
 ### Database
 - `npm run db:push` - Push schema changes to database
 
+### Testing
+- `npm test` - Run all tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
+
 ### Code Quality
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues
@@ -213,7 +244,7 @@ To integrate AI:
 - ❌ User authentication
 - ❌ Multi-device sync
 - ❌ AI Assist actions (grammar check, summarization, etc.)
-- ❌ Test coverage
+- ✅ Test coverage (Jest + React Native Testing Library configured)
 
 See [MISSING_FEATURES.md](./MISSING_FEATURES.md) for a complete analysis.
 

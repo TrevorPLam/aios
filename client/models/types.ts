@@ -1,16 +1,26 @@
-export type ModuleType = 'command' | 'notebook' | 'planner' | 'calendar' | 'email';
+export type ModuleType =
+  | "command"
+  | "notebook"
+  | "planner"
+  | "calendar"
+  | "email";
 
-export type ConfidenceLevel = 'low' | 'medium' | 'high';
+export type ConfidenceLevel = "low" | "medium" | "high";
 
-export type RecommendationStatus = 'active' | 'accepted' | 'declined' | 'dismissed' | 'expired';
+export type RecommendationStatus =
+  | "active"
+  | "accepted"
+  | "declined"
+  | "dismissed"
+  | "expired";
 
-export type DecisionType = 'accepted' | 'declined' | 'dismissed';
+export type DecisionType = "accepted" | "declined" | "dismissed";
 
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
+export type TaskStatus = "pending" | "in_progress" | "completed" | "cancelled";
 
-export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
 
-export type RecurrenceRule = 'none' | 'daily' | 'weekly' | 'monthly' | 'custom';
+export type RecurrenceRule = "none" | "daily" | "weekly" | "monthly" | "custom";
 
 export type AILimitTier = 0 | 1 | 2 | 3;
 
@@ -87,7 +97,7 @@ export interface CalendarEvent {
   overrides: Record<string, Partial<CalendarEvent>>;
   createdAt: string;
   updatedAt: string;
-  source: 'LOCAL';
+  source: "LOCAL";
 }
 
 export interface EmailThread {
@@ -122,7 +132,7 @@ export interface HistoryLogEntry {
   id: string;
   timestamp: string;
   message: string;
-  type: 'recommendation' | 'archived' | 'banked' | 'deprecated' | 'system';
+  type: "recommendation" | "archived" | "banked" | "deprecated" | "system";
   metadata?: Record<string, unknown>;
 }
 
@@ -133,8 +143,8 @@ export interface AILimits {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  aiName: 'AIOS',
-  enabledModules: ['command', 'notebook', 'planner', 'calendar', 'email'],
+  aiName: "AIOS",
+  enabledModules: ["command", "notebook", "planner", "calendar", "email"],
   aiLimitTier: 1,
   darkMode: true,
 };

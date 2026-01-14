@@ -1,30 +1,58 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, FlatList, Pressable, Image, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Image,
+  Platform,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius, Shadows } from '@/constants/theme';
-import { AppStackParamList } from '@/navigation/AppNavigator';
-import { db } from '@/storage/database';
-import { CalendarEvent } from '@/models/types';
-import { formatTime, isSameDay, getWeekDates } from '@/utils/helpers';
-import { BottomNav } from '@/components/BottomNav';
-import AIAssistSheet from '@/components/AIAssistSheet';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import { db } from "@/storage/database";
+import { CalendarEvent } from "@/models/types";
+import { formatTime, isSameDay, getWeekDates } from "@/utils/helpers";
+import { BottomNav } from "@/components/BottomNav";
+import AIAssistSheet from "@/components/AIAssistSheet";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-function EventCard({ event, onPress, index }: { event: CalendarEvent; onPress: () => void; index: number }) {
+function EventCard({
+  event,
+  onPress,
+  index,
+}: {
+  event: CalendarEvent;
+  onPress: () => void;
+  index: number;
+}) {
   const { theme } = useTheme();
   const startTime = formatTime(event.startAt);
   const endTime = formatTime(event.endAt);
@@ -39,19 +67,30 @@ function EventCard({ event, onPress, index }: { event: CalendarEvent; onPress: (
           pressed && { opacity: 0.8 },
         ]}
       >
-        <View style={[styles.eventIndicator, { backgroundColor: theme.accent }]} />
+        <View
+          style={[styles.eventIndicator, { backgroundColor: theme.accent }]}
+        />
         <View style={styles.eventContent}>
-          <ThemedText type="body" style={{ fontWeight: '600' }} numberOfLines={1}>
+          <ThemedText
+            type="body"
+            style={{ fontWeight: "600" }}
+            numberOfLines={1}
+          >
             {event.title}
           </ThemedText>
           <View style={styles.eventMeta}>
             <Feather name="clock" size={12} color={theme.textMuted} />
             <ThemedText type="small" muted>
-              {event.allDay ? 'All day' : `${startTime} - ${endTime}`}
+              {event.allDay ? "All day" : `${startTime} - ${endTime}`}
             </ThemedText>
             {event.location ? (
               <>
-                <Feather name="map-pin" size={12} color={theme.textMuted} style={{ marginLeft: Spacing.md }} />
+                <Feather
+                  name="map-pin"
+                  size={12}
+                  color={theme.textMuted}
+                  style={{ marginLeft: Spacing.md }}
+                />
                 <ThemedText type="small" muted numberOfLines={1}>
                   {event.location}
                 </ThemedText>
@@ -70,24 +109,28 @@ export default function CalendarScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
-  
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
-  const [viewMode, setViewMode] = useState<'day' | 'week'>('day');
+  const [viewMode, setViewMode] = useState<"day" | "week">("day");
 
   const weekDates = getWeekDates(selectedDate);
 
   const loadEvents = useCallback(async () => {
     const data = await db.events.getAll();
     setAllEvents(data);
-    
-    const dayEvents = data.filter((e) => {
-      const eventDate = new Date(e.startAt);
-      return isSameDay(eventDate, selectedDate);
-    }).sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
-    
+
+    const dayEvents = data
+      .filter((e) => {
+        const eventDate = new Date(e.startAt);
+        return isSameDay(eventDate, selectedDate);
+      })
+      .sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
+      );
+
     setEvents(dayEvents);
   }, [selectedDate]);
 
@@ -96,7 +139,7 @@ export default function CalendarScreen() {
   }, [loadEvents]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadEvents);
+    const unsubscribe = navigation.addListener("focus", loadEvents);
     return unsubscribe;
   }, [navigation, loadEvents]);
 
@@ -105,12 +148,17 @@ export default function CalendarScreen() {
       headerRight: () => (
         <Pressable
           onPress={() => {
-            if (Platform.OS !== 'web') {
+            if (Platform.OS !== "web") {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
-            navigation.navigate('EventDetail', { date: selectedDate.toISOString() });
+            navigation.navigate("EventDetail", {
+              date: selectedDate.toISOString(),
+            });
           }}
-          style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && { opacity: 0.7 },
+          ]}
         >
           <Feather name="plus" size={24} color={theme.accent} />
         </Pressable>
@@ -128,11 +176,17 @@ export default function CalendarScreen() {
     return allEvents.some((e) => isSameDay(new Date(e.startAt), date));
   };
 
-  const renderEvent = ({ item, index }: { item: CalendarEvent; index: number }) => (
+  const renderEvent = ({
+    item,
+    index,
+  }: {
+    item: CalendarEvent;
+    index: number;
+  }) => (
     <EventCard
       event={item}
       index={index}
-      onPress={() => navigation.navigate('EventDetail', { eventId: item.id })}
+      onPress={() => navigation.navigate("EventDetail", { eventId: item.id })}
     />
   );
 
@@ -141,22 +195,30 @@ export default function CalendarScreen() {
       <View style={[styles.calendarHeader, { marginTop: headerHeight }]}>
         <View style={styles.monthRow}>
           <Pressable onPress={() => navigateWeek(-1)} style={styles.navButton}>
-            <Feather name="chevron-left" size={24} color={theme.textSecondary} />
+            <Feather
+              name="chevron-left"
+              size={24}
+              color={theme.textSecondary}
+            />
           </Pressable>
           <ThemedText type="h2">
             {MONTHS[selectedDate.getMonth()]} {selectedDate.getFullYear()}
           </ThemedText>
           <Pressable onPress={() => navigateWeek(1)} style={styles.navButton}>
-            <Feather name="chevron-right" size={24} color={theme.textSecondary} />
+            <Feather
+              name="chevron-right"
+              size={24}
+              color={theme.textSecondary}
+            />
           </Pressable>
         </View>
-        
+
         <View style={styles.weekRow}>
           {weekDates.map((date, index) => {
             const isSelected = isSameDay(date, selectedDate);
             const isToday = isSameDay(date, new Date());
             const hasEvents = hasEventsOnDate(date);
-            
+
             return (
               <Pressable
                 key={index}
@@ -168,20 +230,28 @@ export default function CalendarScreen() {
               >
                 <ThemedText
                   type="small"
-                  style={{ color: isSelected ? theme.backgroundRoot : theme.textMuted }}
+                  style={{
+                    color: isSelected ? theme.backgroundRoot : theme.textMuted,
+                  }}
                 >
                   {DAYS[date.getDay()]}
                 </ThemedText>
                 <ThemedText
                   type="h3"
                   style={{
-                    color: isSelected ? theme.backgroundRoot : isToday ? theme.accent : theme.text,
+                    color: isSelected
+                      ? theme.backgroundRoot
+                      : isToday
+                        ? theme.accent
+                        : theme.text,
                   }}
                 >
                   {date.getDate()}
                 </ThemedText>
                 {hasEvents && !isSelected && (
-                  <View style={[styles.eventDot, { backgroundColor: theme.accent }]} />
+                  <View
+                    style={[styles.eventDot, { backgroundColor: theme.accent }]}
+                  />
                 )}
               </Pressable>
             );
@@ -195,17 +265,19 @@ export default function CalendarScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={[
           styles.listContent,
-          { paddingBottom: insets.bottom + Spacing['5xl'] },
+          { paddingBottom: insets.bottom + Spacing["5xl"] },
         ]}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Image
-              source={require('../../assets/images/empty-calendar.png')}
+              source={require("../../assets/images/empty-calendar.png")}
               style={styles.emptyImage}
               resizeMode="contain"
             />
-            <ThemedText type="h3" style={styles.emptyTitle}>No Events</ThemedText>
+            <ThemedText type="h3" style={styles.emptyTitle}>
+              No Events
+            </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
               Nothing scheduled for this day
             </ThemedText>
@@ -213,7 +285,12 @@ export default function CalendarScreen() {
         }
       />
 
-      <View style={[styles.bottomNavContainer, { bottom: insets.bottom + Spacing.lg }]}>
+      <View
+        style={[
+          styles.bottomNavContainer,
+          { bottom: insets.bottom + Spacing.lg },
+        ]}
+      >
         <BottomNav onAiPress={() => setShowAISheet(true)} />
       </View>
 
@@ -238,20 +315,20 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.md,
   },
   monthRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: Spacing.lg,
   },
   navButton: {
     padding: Spacing.sm,
   },
   weekRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   dayButton: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderRadius: BorderRadius.md,
@@ -269,8 +346,8 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   eventCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     gap: Spacing.md,
@@ -285,15 +362,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   eventMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
     marginTop: 4,
   },
   emptyState: {
-    alignItems: 'center',
-    paddingTop: Spacing['5xl'],
-    paddingHorizontal: Spacing['2xl'],
+    alignItems: "center",
+    paddingTop: Spacing["5xl"],
+    paddingHorizontal: Spacing["2xl"],
   },
   emptyImage: {
     width: 180,
@@ -305,15 +382,15 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   fab: {
-    display: 'none',
+    display: "none",
   },
   bottomNavContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
 });

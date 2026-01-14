@@ -1,49 +1,55 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, FlatList, Pressable, Alert } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import React, { useState, useEffect, useCallback } from "react";
+import { View, StyleSheet, FlatList, Pressable, Alert } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Feather } from "@expo/vector-icons";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Spacing, BorderRadius } from '@/constants/theme';
-import { db } from '@/storage/database';
-import { HistoryLogEntry } from '@/models/types';
-import { formatDateTime } from '@/utils/helpers';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Spacing, BorderRadius } from "@/constants/theme";
+import { db } from "@/storage/database";
+import { HistoryLogEntry } from "@/models/types";
+import { formatDateTime } from "@/utils/helpers";
 
-function LogEntryCard({ entry, index }: { entry: HistoryLogEntry; index: number }) {
+function LogEntryCard({
+  entry,
+  index,
+}: {
+  entry: HistoryLogEntry;
+  index: number;
+}) {
   const { theme } = useTheme();
-  
+
   const getTypeIcon = (): keyof typeof Feather.glyphMap => {
     switch (entry.type) {
-      case 'recommendation':
-        return 'activity';
-      case 'archived':
-        return 'archive';
-      case 'banked':
-        return 'bookmark';
-      case 'deprecated':
-        return 'trash-2';
-      case 'system':
+      case "recommendation":
+        return "activity";
+      case "archived":
+        return "archive";
+      case "banked":
+        return "bookmark";
+      case "deprecated":
+        return "trash-2";
+      case "system":
       default:
-        return 'info';
+        return "info";
     }
   };
-  
+
   const getTypeColor = () => {
     switch (entry.type) {
-      case 'recommendation':
+      case "recommendation":
         return theme.accent;
-      case 'archived':
+      case "archived":
         return theme.textSecondary;
-      case 'banked':
+      case "banked":
         return theme.success;
-      case 'deprecated':
+      case "deprecated":
         return theme.error;
-      case 'system':
+      case "system":
       default:
         return theme.textMuted;
     }
@@ -51,8 +57,15 @@ function LogEntryCard({ entry, index }: { entry: HistoryLogEntry; index: number 
 
   return (
     <Animated.View entering={FadeInDown.delay(index * 30).springify()}>
-      <View style={[styles.entryCard, { backgroundColor: theme.backgroundDefault }]}>
-        <View style={[styles.iconContainer, { backgroundColor: `${getTypeColor()}20` }]}>
+      <View
+        style={[styles.entryCard, { backgroundColor: theme.backgroundDefault }]}
+      >
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: `${getTypeColor()}20` },
+          ]}
+        >
           <Feather name={getTypeIcon()} size={18} color={getTypeColor()} />
         </View>
         <View style={styles.entryContent}>
@@ -73,7 +86,7 @@ export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation();
-  
+
   const [entries, setEntries] = useState<HistoryLogEntry[]>([]);
 
   const loadHistory = useCallback(async () => {
@@ -87,19 +100,19 @@ export default function HistoryScreen() {
 
   const handleClearHistory = useCallback(() => {
     Alert.alert(
-      'Clear History',
-      'Are you sure you want to clear all history entries?',
+      "Clear History",
+      "Are you sure you want to clear all history entries?",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Clear',
-          style: 'destructive',
+          text: "Clear",
+          style: "destructive",
           onPress: async () => {
             await db.history.clear();
             setEntries([]);
           },
         },
-      ]
+      ],
     );
   }, []);
 
@@ -108,7 +121,10 @@ export default function HistoryScreen() {
       headerRight: () => (
         <Pressable
           onPress={handleClearHistory}
-          style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && { opacity: 0.7 },
+          ]}
         >
           <Feather name="trash-2" size={20} color={theme.error} />
         </Pressable>
@@ -116,9 +132,13 @@ export default function HistoryScreen() {
     });
   }, [navigation, theme, handleClearHistory]);
 
-  const renderEntry = ({ item, index }: { item: HistoryLogEntry; index: number }) => (
-    <LogEntryCard entry={item} index={index} />
-  );
+  const renderEntry = ({
+    item,
+    index,
+  }: {
+    item: HistoryLogEntry;
+    index: number;
+  }) => <LogEntryCard entry={item} index={index} />;
 
   return (
     <ThemedView style={styles.container}>
@@ -137,7 +157,9 @@ export default function HistoryScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Feather name="clock" size={48} color={theme.textMuted} />
-            <ThemedText type="h3" style={styles.emptyTitle}>No History</ThemedText>
+            <ThemedText type="h3" style={styles.emptyTitle}>
+              No History
+            </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
               Your activity will appear here
             </ThemedText>
@@ -160,7 +182,7 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   entryCard: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     gap: Spacing.md,
@@ -169,8 +191,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: BorderRadius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   entryContent: {
     flex: 1,
@@ -180,15 +202,15 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   emptyState: {
-    alignItems: 'center',
-    paddingTop: Spacing['5xl'],
-    paddingHorizontal: Spacing['2xl'],
+    alignItems: "center",
+    paddingTop: Spacing["5xl"],
+    paddingHorizontal: Spacing["2xl"],
   },
   emptyTitle: {
     marginTop: Spacing.lg,
     marginBottom: Spacing.sm,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
