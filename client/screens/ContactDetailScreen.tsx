@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
@@ -27,7 +26,6 @@ type ContactDetailRouteProp = RouteProp<AppStackParamList, "ContactDetail">;
 export default function ContactDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const route = useRoute<ContactDetailRouteProp>();
 
   const [contact, setContact] = useState<Contact | null>(null);
@@ -69,7 +67,7 @@ export default function ContactDetailScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: headerHeight + Spacing.md,
+            paddingTop: Spacing.md,
             paddingBottom: insets.bottom + Spacing.xl,
           },
         ]}

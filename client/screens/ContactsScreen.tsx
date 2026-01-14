@@ -11,7 +11,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
@@ -90,7 +89,6 @@ function ContactCard({
 export default function ContactsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
 
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -211,7 +209,7 @@ export default function ContactsScreen() {
         contentContainerStyle={[
           styles.listContent,
           {
-            paddingTop: headerHeight + Spacing.md,
+            paddingTop: Spacing.md,
             paddingBottom: insets.bottom + Spacing["5xl"],
           },
         ]}

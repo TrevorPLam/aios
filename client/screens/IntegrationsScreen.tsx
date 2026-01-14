@@ -5,7 +5,6 @@ import {
   ScrollView,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -16,7 +15,6 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 export default function IntegrationsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
 
   return (
     <ThemedView style={styles.container}>
@@ -24,7 +22,7 @@ export default function IntegrationsScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: headerHeight + Spacing.md,
+            paddingTop: Spacing.md,
             paddingBottom: insets.bottom + Spacing.xl,
           },
         ]}

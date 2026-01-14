@@ -9,7 +9,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
@@ -144,7 +143,6 @@ function ConversationCard({ conversation, onPress, index }: ConversationCardProp
 export default function MessagesScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -202,7 +200,7 @@ export default function MessagesScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.tabBar, { marginTop: headerHeight }]}>
+      <View style={[styles.tabBar, { marginTop: 0 }]}>
         <Pressable
           onPress={() => setShowArchived(false)}
           style={[

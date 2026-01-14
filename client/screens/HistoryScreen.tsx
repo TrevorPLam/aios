@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, FlatList, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
@@ -84,7 +83,6 @@ function LogEntryCard({
 export default function HistoryScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const navigation = useNavigation();
 
   const [entries, setEntries] = useState<HistoryLogEntry[]>([]);
@@ -149,7 +147,7 @@ export default function HistoryScreen() {
         contentContainerStyle={[
           styles.listContent,
           {
-            paddingTop: headerHeight + Spacing.md,
+            paddingTop: Spacing.md,
             paddingBottom: insets.bottom + Spacing.xl,
           },
         ]}

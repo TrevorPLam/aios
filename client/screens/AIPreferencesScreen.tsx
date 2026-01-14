@@ -6,7 +6,6 @@ import {
   TextInput,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -19,7 +18,6 @@ import { Settings } from "@/models/types";
 export default function AIPreferencesScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [aiName, setAiName] = useState("AIOS");
@@ -60,7 +58,7 @@ export default function AIPreferencesScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: headerHeight + Spacing.md,
+            paddingTop: Spacing.md,
             paddingBottom: insets.bottom + Spacing.xl,
           },
         ]}

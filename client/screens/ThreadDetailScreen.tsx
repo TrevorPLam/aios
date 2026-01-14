@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
@@ -81,7 +80,6 @@ function MessageCard({
 export default function ThreadDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const route = useRoute<RouteProps>();
 
   const [thread, setThread] = useState<EmailThread | null>(null);
@@ -136,7 +134,7 @@ export default function ThreadDetailScreen() {
       <View
         style={[
           styles.subjectHeader,
-          { marginTop: headerHeight, backgroundColor: theme.backgroundDefault },
+          { marginTop: 0, backgroundColor: theme.backgroundDefault },
         ]}
       >
         <ThemedText type="h2">{thread.subject}</ThemedText>
