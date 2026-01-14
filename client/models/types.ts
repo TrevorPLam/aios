@@ -5,7 +5,8 @@ export type ModuleType =
   | "calendar"
   | "email"
   | "lists"
-  | "alerts";
+  | "alerts"
+  | "messages";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -152,6 +153,85 @@ export interface Alert {
   updatedAt: string;
 }
 
+export type MessageType = "text" | "image" | "video" | "audio" | "file" | "gif";
+
+export type ConversationType = "direct" | "group";
+
+export interface MessageAttachment {
+  id: string;
+  type: MessageType;
+  url: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  thumbnailUrl?: string;
+  duration?: number; // For audio/video in seconds
+  width?: number;
+  height?: number;
+}
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  type: MessageType;
+  attachments: MessageAttachment[];
+  replyToId: string | null;
+  isEdited: boolean;
+  isRead: boolean;
+  deliveredAt: string | null;
+  readAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Conversation {
+  id: string;
+  type: ConversationType;
+  name: string; // For group chats, otherwise derived from participants
+  participants: ConversationParticipant[];
+  lastMessageId: string | null;
+  lastMessageAt: string | null;
+  lastMessagePreview: string;
+  unreadCount: number;
+  isTyping: string[]; // Array of user IDs currently typing
+  isPinned: boolean;
+  isMuted: boolean;
+  isArchived: boolean;
+  archivedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConversationParticipant {
+  userId: string;
+  userName: string;
+  avatarUrl?: string;
+  isOnline: boolean;
+  lastSeenAt: string;
+  joinedAt: string;
+}
+
+export interface VideoCallSession {
+  id: string;
+  conversationId: string;
+  participants: VideoCallParticipant[];
+  startedAt: string;
+  endedAt: string | null;
+  isActive: boolean;
+}
+
+export interface VideoCallParticipant {
+  userId: string;
+  userName: string;
+  isVideoEnabled: boolean;
+  isAudioEnabled: boolean;
+  joinedAt: string;
+  leftAt: string | null;
+}
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];
@@ -183,6 +263,7 @@ export const DEFAULT_SETTINGS: Settings = {
     "email",
     "lists",
     "alerts",
+    "messages",
   ],
   aiLimitTier: 1,
   darkMode: true,

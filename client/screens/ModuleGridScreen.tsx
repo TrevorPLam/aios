@@ -68,7 +68,14 @@ const MODULES: ModuleItem[] = [
     name: "Email",
     icon: "mail",
     route: "Email",
-    description: "Messages",
+    description: "Email threads",
+  },
+  {
+    id: "messages",
+    name: "Messages",
+    icon: "message-square",
+    route: "Messages",
+    description: "P2P messaging",
   },
   {
     id: "lists",
