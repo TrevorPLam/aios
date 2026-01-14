@@ -90,7 +90,7 @@ function MessageBubble({ message, isCurrentUser }: MessageBubbleProps) {
             <ThemedText
               style={[
                 styles.messageText,
-                isCurrentUser && { color: theme.background },
+                isCurrentUser && { color: theme.backgroundBlack },
               ]}
             >
               {message.content}
@@ -120,13 +120,13 @@ function MessageBubble({ message, isCurrentUser }: MessageBubbleProps) {
                               : "file"
                       }
                       size={16}
-                      color={isCurrentUser ? theme.background : theme.accent}
+                      color={isCurrentUser ? theme.backgroundBlack : theme.accent}
                     />
                     <ThemedText
                       type="small"
                       style={[
                         styles.attachmentName,
-                        isCurrentUser && { color: theme.background },
+                        isCurrentUser && { color: theme.backgroundBlack },
                       ]}
                       numberOfLines={1}
                     >
@@ -327,8 +327,8 @@ export default function ConversationDetailScreen() {
             style={[
               styles.input,
               {
-                backgroundColor: theme.background,
-                color: theme.textPrimary,
+                backgroundColor: theme.backgroundBlack,
+                color: theme.text,
               },
             ]}
             value={inputText}
@@ -350,7 +350,7 @@ export default function ConversationDetailScreen() {
             <Feather
               name="send"
               size={20}
-              color={inputText.trim() ? theme.background : theme.textMuted}
+              color={inputText.trim() ? theme.backgroundBlack : theme.textMuted}
             />
           </Pressable>
         </View>

@@ -102,7 +102,7 @@ function ConversationCard({ conversation, onPress, index }: ConversationCardProp
               secondary={!hasUnread}
               style={[
                 styles.messagePreview,
-                hasUnread && { color: theme.textPrimary, fontWeight: "600" },
+                hasUnread && { color: theme.text, fontWeight: "600" },
               ]}
               numberOfLines={2}
             >
@@ -253,10 +253,10 @@ export default function MessagesScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      <BottomNav currentModule="messages" onAIAssist={handleAIAssist} />
+      <BottomNav // No currentModule prop needed onAiPress={handleAIAssist} />
 
       <AIAssistSheet
-        isVisible={showAISheet}
+        visible={showAISheet}
         onClose={() => setShowAISheet(false)}
         module="messages"
       />

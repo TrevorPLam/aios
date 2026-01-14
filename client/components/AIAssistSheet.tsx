@@ -162,6 +162,52 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       description: "Add related items",
     },
   ],
+  alerts: [
+    {
+      id: "suggest",
+      icon: "bell",
+      title: "Suggest Alerts",
+      description: "Create from schedule",
+    },
+    {
+      id: "optimize",
+      icon: "clock",
+      title: "Optimize Timing",
+      description: "Suggest better times",
+    },
+  ],
+  messages: [
+    {
+      id: "draft",
+      icon: "edit-3",
+      title: "Draft Message",
+      description: "Help compose message",
+    },
+    {
+      id: "suggest_response",
+      icon: "message-circle",
+      title: "Suggest Response",
+      description: "Recommend reply",
+    },
+    {
+      id: "recommend_task",
+      icon: "check-square",
+      title: "Create Task",
+      description: "Task from conversation",
+    },
+    {
+      id: "recommend_event",
+      icon: "calendar",
+      title: "Add to Calendar",
+      description: "Event from message",
+    },
+    {
+      id: "archive_old",
+      icon: "archive",
+      title: "Archive Old Chats",
+      description: "Archive 14+ day old",
+    },
+  ],
 };
 
 interface AIAssistSheetProps {
