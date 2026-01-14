@@ -127,13 +127,20 @@ export default function TaskDetailScreen() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
+            if (selectedProjectId) {
+              const project = await db.projects.get(selectedProjectId);
+              if (project) {
+                project.taskIds = project.taskIds.filter((id) => id !== taskId);
+                await db.projects.save(project);
+              }
+            }
             await db.tasks.delete(taskId);
             navigation.goBack();
           },
         },
       ]
     );
-  }, [taskId, navigation]);
+  }, [taskId, selectedProjectId, navigation]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
