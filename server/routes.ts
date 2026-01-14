@@ -598,6 +598,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         throw new AppError(404, "Message not found");
       }
       res.status(204).send();
+    }),
+  );
+
   // Translation route
   app.post(
     "/api/translate",
