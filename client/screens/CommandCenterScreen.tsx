@@ -1,0 +1,498 @@
+import React, { useCallback, useState, useEffect } from 'react';
+import { View, StyleSheet, Pressable, Image, Dimensions, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Feather } from '@expo/vector-icons';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+  interpolate,
+  FadeIn,
+  FadeInDown,
+} from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import * as Haptics from 'expo-haptics';
+
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useTheme } from '@/hooks/useTheme';
+import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
+import { AppStackParamList } from '@/navigation/AppNavigator';
+import { db } from '@/storage/database';
+import { Recommendation, AILimits } from '@/models/types';
+import { formatTimeRemaining, getConfidenceColor } from '@/utils/helpers';
+import AIAssistSheet from '@/components/AIAssistSheet';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CARD_WIDTH = SCREEN_WIDTH - Spacing['2xl'] * 2;
+const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
+
+type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
+
+function ConfidenceMeter({ confidence }: { confidence: 'low' | 'medium' | 'high' }) {
+  const { theme } = useTheme();
+  const levels = confidence === 'high' ? 3 : confidence === 'medium' ? 2 : 1;
+  
+  return (
+    <View style={styles.confidenceMeter}>
+      {[1, 2, 3].map((level) => (
+        <View
+          key={level}
+          style={[
+            styles.confidenceSegment,
+            {
+              backgroundColor: level <= levels
+                ? getConfidenceColor(confidence, theme)
+                : theme.border,
+            },
+          ]}
+        />
+      ))}
+    </View>
+  );
+}
+
+function RecommendationCard({
+  recommendation,
+  onAccept,
+  onDecline,
+  onPress,
+  isTop,
+}: {
+  recommendation: Recommendation;
+  onAccept: () => void;
+  onDecline: () => void;
+  onPress: () => void;
+  isTop: boolean;
+}) {
+  const { theme } = useTheme();
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const scale = useSharedValue(isTop ? 1 : 0.95);
+  const opacity = useSharedValue(isTop ? 1 : 0.7);
+
+  useEffect(() => {
+    scale.value = withSpring(isTop ? 1 : 0.95);
+    opacity.value = withTiming(isTop ? 1 : 0.7);
+  }, [isTop]);
+
+  const panGesture = Gesture.Pan()
+    .enabled(isTop)
+    .onUpdate((e) => {
+      translateX.value = e.translationX;
+      translateY.value = e.translationY * 0.3;
+    })
+    .onEnd((e) => {
+      if (Math.abs(e.translationX) > SWIPE_THRESHOLD) {
+        translateX.value = withTiming(
+          e.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH,
+          { duration: 200 },
+          () => {
+            runOnJS(e.translationX > 0 ? onAccept : onDecline)();
+          }
+        );
+      } else {
+        translateX.value = withSpring(0);
+        translateY.value = withSpring(0);
+      }
+    });
+
+  const tapGesture = Gesture.Tap()
+    .enabled(isTop)
+    .onEnd(() => {
+      runOnJS(onPress)();
+    });
+
+  const gesture = Gesture.Exclusive(panGesture, tapGesture);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const rotate = interpolate(translateX.value, [-SCREEN_WIDTH, 0, SCREEN_WIDTH], [-15, 0, 15]);
+    
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value },
+        { rotate: `${rotate}deg` },
+        { scale: scale.value },
+      ],
+      opacity: opacity.value,
+    };
+  });
+
+  const acceptGlowStyle = useAnimatedStyle(() => {
+    const glowOpacity = interpolate(translateX.value, [0, SWIPE_THRESHOLD], [0, 0.6]);
+    return { opacity: Math.max(0, glowOpacity) };
+  });
+
+  const declineGlowStyle = useAnimatedStyle(() => {
+    const glowOpacity = interpolate(translateX.value, [-SWIPE_THRESHOLD, 0], [0.6, 0]);
+    return { opacity: Math.max(0, glowOpacity) };
+  });
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <Animated.View style={[styles.card, { backgroundColor: theme.backgroundDefault }, animatedStyle]}>
+        <Animated.View style={[styles.cardGlow, styles.acceptGlow, { backgroundColor: theme.success }, acceptGlowStyle]} />
+        <Animated.View style={[styles.cardGlow, styles.declineGlow, { backgroundColor: theme.error }, declineGlowStyle]} />
+        
+        <View style={styles.cardHeader}>
+          <View style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}>
+            <ThemedText type="small" style={{ color: theme.accent }}>
+              {recommendation.module.toUpperCase()}
+            </ThemedText>
+          </View>
+          <ConfidenceMeter confidence={recommendation.confidence} />
+        </View>
+        
+        <ThemedText type="h3" style={styles.cardTitle}>
+          {recommendation.title}
+        </ThemedText>
+        
+        <ThemedText type="body" secondary style={styles.cardSummary}>
+          {recommendation.summary}
+        </ThemedText>
+        
+        <View style={styles.cardFooter}>
+          <View style={styles.expiryContainer}>
+            <Feather name="clock" size={14} color={theme.textMuted} />
+            <ThemedText type="small" muted style={styles.expiryText}>
+              {formatTimeRemaining(recommendation.expiresAt)}
+            </ThemedText>
+          </View>
+          <ThemedText type="small" style={{ color: theme.accent }}>
+            Tap for details
+          </ThemedText>
+        </View>
+      </Animated.View>
+    </GestureDetector>
+  );
+}
+
+export default function CommandCenterScreen() {
+  const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation<NavigationProp>();
+  
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [aiLimits, setAiLimits] = useState<AILimits | null>(null);
+  const [showAISheet, setShowAISheet] = useState(false);
+
+  const loadData = useCallback(async () => {
+    const recs = await db.recommendations.getActive();
+    setRecommendations(recs);
+    const limits = await db.aiLimits.get();
+    setAiLimits(limits);
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', loadData);
+    return unsubscribe;
+  }, [navigation, loadData]);
+
+  const handleAccept = useCallback(async (rec: Recommendation) => {
+    if (Platform.OS !== 'web') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+    await db.recommendations.updateStatus(rec.id, 'accepted');
+    await db.decisions.save({
+      id: `decision_${Date.now()}`,
+      recommendationId: rec.id,
+      decision: 'accepted',
+      decidedAt: new Date().toISOString(),
+    });
+    await db.history.add({
+      message: `AI generated card option: "${rec.title}". User accepted.`,
+      type: 'recommendation',
+      metadata: { recommendationId: rec.id, decision: 'accepted' },
+    });
+    loadData();
+  }, [loadData]);
+
+  const handleDecline = useCallback(async (rec: Recommendation) => {
+    if (Platform.OS !== 'web') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    }
+    await db.recommendations.updateStatus(rec.id, 'declined');
+    await db.decisions.save({
+      id: `decision_${Date.now()}`,
+      recommendationId: rec.id,
+      decision: 'declined',
+      decidedAt: new Date().toISOString(),
+    });
+    await db.history.add({
+      message: `AI generated card option: "${rec.title}". User declined.`,
+      type: 'recommendation',
+      metadata: { recommendationId: rec.id, decision: 'declined' },
+    });
+    loadData();
+  }, [loadData]);
+
+  const handleCardPress = useCallback((rec: Recommendation) => {
+    navigation.navigate('RecommendationDetail', { recommendationId: rec.id });
+  }, [navigation]);
+
+  const remaining = aiLimits ? aiLimits.total - aiLimits.used : 0;
+  const total = aiLimits?.total || 12;
+  const refreshTime = aiLimits ? formatTimeRemaining(aiLimits.nextRefreshAt) : '--';
+
+  return (
+    <ThemedView style={styles.container}>
+      <View style={[styles.header, { paddingTop: insets.top + Spacing.sm }]}>
+        <Pressable
+          onPress={() => navigation.navigate('ModuleGrid')}
+          style={({ pressed }) => [styles.headerButton, pressed && styles.pressed]}
+        >
+          <Feather name="grid" size={24} color={theme.text} />
+        </Pressable>
+        
+        <Animated.View entering={FadeIn.delay(200)}>
+          <ThemedText type="h2">Command Center</ThemedText>
+        </Animated.View>
+        
+        <Pressable
+          onPress={() => navigation.navigate('Settings')}
+          style={({ pressed }) => [styles.headerButton, pressed && styles.pressed]}
+        >
+          <Feather name="settings" size={24} color={theme.text} />
+        </Pressable>
+      </View>
+
+      <View style={styles.content}>
+        {recommendations.length > 0 ? (
+          <View style={styles.cardStack}>
+            {recommendations.slice(0, 3).reverse().map((rec, index) => (
+              <View key={rec.id} style={[styles.cardContainer, { zIndex: 3 - index }]}>
+                <RecommendationCard
+                  recommendation={rec}
+                  onAccept={() => handleAccept(rec)}
+                  onDecline={() => handleDecline(rec)}
+                  onPress={() => handleCardPress(rec)}
+                  isTop={index === recommendations.slice(0, 3).length - 1}
+                />
+              </View>
+            ))}
+          </View>
+        ) : (
+          <Animated.View entering={FadeInDown.delay(300)} style={styles.emptyState}>
+            <Image
+              source={require('../../assets/images/empty-command-center.png')}
+              style={styles.emptyImage}
+              resizeMode="contain"
+            />
+            <ThemedText type="h3" style={styles.emptyTitle}>
+              No Active Recommendations
+            </ThemedText>
+            <ThemedText type="body" secondary style={styles.emptyText}>
+              Check back in {refreshTime}
+            </ThemedText>
+          </Animated.View>
+        )}
+      </View>
+
+      <View style={[styles.footer, { paddingBottom: insets.bottom + Spacing.lg }]}>
+        <View style={styles.limitsContainer}>
+          <View style={[styles.limitBadge, { backgroundColor: theme.backgroundDefault }]}>
+            <Feather name="zap" size={14} color={theme.accent} />
+            <ThemedText type="small" style={{ color: theme.accent }}>
+              AI Cards: {remaining}/{total}
+            </ThemedText>
+          </View>
+          <View style={[styles.limitBadge, { backgroundColor: theme.backgroundDefault }]}>
+            <Feather name="refresh-cw" size={14} color={theme.textMuted} />
+            <ThemedText type="small" muted>
+              Refreshes in {refreshTime}
+            </ThemedText>
+          </View>
+        </View>
+
+        <View style={styles.bottomNav}>
+          <Pressable
+            onPress={() => navigation.navigate('Notebook')}
+            style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
+          >
+            <Feather name="book-open" size={24} color={theme.textSecondary} />
+          </Pressable>
+          
+          <Pressable
+            onPress={() => setShowAISheet(true)}
+            style={({ pressed }) => [styles.aiButton, { backgroundColor: theme.accent }, pressed && { opacity: 0.8 }]}
+          >
+            <Feather name="cpu" size={28} color={theme.backgroundRoot} />
+          </Pressable>
+          
+          <Pressable
+            onPress={() => navigation.navigate('Planner')}
+            style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
+          >
+            <Feather name="check-square" size={24} color={theme.textSecondary} />
+          </Pressable>
+        </View>
+      </View>
+
+      <AIAssistSheet
+        visible={showAISheet}
+        onClose={() => setShowAISheet(false)}
+        module="command"
+      />
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.md,
+  },
+  headerButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: BorderRadius.sm,
+  },
+  pressed: {
+    opacity: 0.7,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardStack: {
+    width: CARD_WIDTH,
+    height: 300,
+    alignItems: 'center',
+  },
+  cardContainer: {
+    position: 'absolute',
+    width: '100%',
+  },
+  card: {
+    width: '100%',
+    padding: Spacing.xl,
+    borderRadius: BorderRadius.lg,
+    overflow: 'hidden',
+    ...Shadows.card,
+  },
+  cardGlow: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 8,
+    borderRadius: BorderRadius.lg,
+  },
+  acceptGlow: {
+    right: 0,
+  },
+  declineGlow: {
+    left: 0,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  moduleTag: {
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.xs,
+  },
+  confidenceMeter: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  confidenceSegment: {
+    width: 20,
+    height: 6,
+    borderRadius: 3,
+  },
+  cardTitle: {
+    marginBottom: Spacing.sm,
+  },
+  cardSummary: {
+    marginBottom: Spacing.lg,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  expiryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
+  expiryText: {
+    marginLeft: 2,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingHorizontal: Spacing['2xl'],
+  },
+  emptyImage: {
+    width: 200,
+    height: 200,
+    opacity: 0.8,
+    marginBottom: Spacing.xl,
+  },
+  emptyTitle: {
+    textAlign: 'center',
+    marginBottom: Spacing.sm,
+  },
+  emptyText: {
+    textAlign: 'center',
+  },
+  footer: {
+    paddingHorizontal: Spacing.lg,
+  },
+  limitsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: Spacing.md,
+    marginBottom: Spacing.lg,
+  },
+  limitBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.full,
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing['3xl'],
+  },
+  navButton: {
+    width: 52,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: BorderRadius.full,
+  },
+  aiButton: {
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: BorderRadius.full,
+    ...Shadows.glow,
+  },
+});

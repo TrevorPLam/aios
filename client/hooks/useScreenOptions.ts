@@ -11,19 +11,22 @@ interface UseScreenOptionsParams {
 export function useScreenOptions({
   transparent = true,
 }: UseScreenOptionsParams = {}): NativeStackNavigationOptions {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   return {
     headerTitleAlign: "center",
     headerTransparent: transparent,
-    headerBlurEffect: isDark ? "dark" : "light",
+    headerBlurEffect: "dark",
     headerTintColor: theme.text,
     headerStyle: {
       backgroundColor: Platform.select({
-        ios: undefined,
+        ios: transparent ? undefined : theme.backgroundRoot,
         android: theme.backgroundRoot,
         web: theme.backgroundRoot,
       }),
+    },
+    headerTitleStyle: {
+      color: theme.text,
     },
     gestureEnabled: true,
     gestureDirection: "horizontal",
