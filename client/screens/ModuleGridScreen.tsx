@@ -23,6 +23,9 @@ import { ModuleType, Settings } from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+// Delay to allow modal close animation to complete before navigation
+const MODAL_CLOSE_DELAY_MS = 100;
+
 interface ModuleItem {
   id: ModuleType | "settings";
   name: string;
@@ -90,7 +93,12 @@ export default function ModuleGridScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    navigation.navigate(module.route as any);
+    // Close the modal first, then navigate to the module
+    navigation.goBack();
+    // Use setTimeout to ensure modal closes before navigation
+    setTimeout(() => {
+      navigation.navigate(module.route as any);
+    }, MODAL_CLOSE_DELAY_MS);
   };
 
   const isModuleEnabled = (id: ModuleType | "settings"): boolean => {
@@ -188,7 +196,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.xl,
+    paddingTop: Spacing["3xl"],
   },
   grid: {
     flexDirection: "row",
