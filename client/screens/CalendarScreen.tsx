@@ -25,6 +25,7 @@ import { CalendarEvent } from "@/models/types";
 import { formatTime, isSameDay, getWeekDates } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
+import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -145,9 +146,11 @@ export default function CalendarScreen() {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerLeft: () => <HeaderLeftNav />,
       headerRight: () => (
-        <Pressable
-          onPress={() => {
+        <HeaderRightWithAction
+          actionIcon="plus"
+          onActionPress={() => {
             if (Platform.OS !== "web") {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
@@ -155,13 +158,7 @@ export default function CalendarScreen() {
               date: selectedDate.toISOString(),
             });
           }}
-          style={({ pressed }) => [
-            styles.headerButton,
-            pressed && { opacity: 0.7 },
-          ]}
-        >
-          <Feather name="plus" size={24} color={theme.accent} />
-        </Pressable>
+        />
       ),
     });
   }, [navigation, theme, selectedDate]);

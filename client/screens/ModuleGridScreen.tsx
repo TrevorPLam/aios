@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing["3xl"],
+    paddingTop: Spacing["5xl"],
   },
   grid: {
     flexDirection: "row",

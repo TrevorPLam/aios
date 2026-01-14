@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "@/hooks/useTheme";
@@ -51,12 +51,17 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const next = getNextModule();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.backgroundBlack }]}>
       <Pressable
         onPress={() => navigation.navigate(prev.route as any)}
         style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
       >
-        <Feather name={prev.icon} size={24} color={theme.textSecondary} />
+        <View style={styles.navContent}>
+          <ThemedText type="caption" muted style={styles.arrow}>
+            ‹
+          </ThemedText>
+          <Feather name={prev.icon} size={24} color={theme.textSecondary} />
+        </View>
         <ThemedText type="caption" muted style={styles.label}>
           {prev.name}
         </ThemedText>
@@ -70,14 +75,23 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
           pressed && { opacity: 0.8 },
         ]}
       >
-        <Feather name="cpu" size={28} color={theme.backgroundRoot} />
+        <MaterialCommunityIcons
+          name="brain"
+          size={28}
+          color={theme.backgroundRoot}
+        />
       </Pressable>
 
       <Pressable
         onPress={() => navigation.navigate(next.route as any)}
         style={({ pressed }) => [styles.navButton, pressed && styles.pressed]}
       >
-        <Feather name={next.icon} size={24} color={theme.textSecondary} />
+        <View style={styles.navContent}>
+          <Feather name={next.icon} size={24} color={theme.textSecondary} />
+          <ThemedText type="caption" muted style={styles.arrow}>
+            ›
+          </ThemedText>
+        </View>
         <ThemedText type="caption" muted style={styles.label}>
           {next.name}
         </ThemedText>
@@ -98,6 +112,15 @@ const styles = StyleSheet.create({
     width: 64,
     alignItems: "center",
     justifyContent: "center",
+  },
+  navContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+  },
+  arrow: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
   label: {
     marginTop: 4,

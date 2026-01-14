@@ -293,7 +293,12 @@ export default function CommandCenterScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + Spacing.sm }]}>
+      <View
+        style={[
+          styles.header,
+          { paddingTop: insets.top + Spacing.sm, backgroundColor: theme.backgroundBlack },
+        ]}
+      >
         <Pressable
           onPress={() => navigation.navigate("ModuleGrid")}
           style={({ pressed }) => [
@@ -427,7 +432,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    height: Spacing.sm,
+    height: Spacing.xs,
   },
   cardContainer: {
     width: CARD_WIDTH,
