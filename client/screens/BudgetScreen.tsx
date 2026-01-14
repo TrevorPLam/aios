@@ -103,8 +103,28 @@ export default function BudgetScreen() {
   ) => {
     if (!budget) return;
 
-    const numValue = value === "" ? 0 : parseFloat(value);
-    if (Number.isNaN(numValue)) return; // Don't update if invalid number
+    // Validate that the entire string is a valid number
+    const trimmedValue = value.trim();
+    if (trimmedValue === "") {
+      // Allow empty string to be treated as 0
+      const updatedCategories = budget.categories.map((cat) => {
+        if (cat.id === categoryId) {
+          const updatedLineItems = cat.lineItems.map((item) =>
+            item.id === lineItemId ? { ...item, [field]: 0 } : item,
+          );
+          return { ...cat, lineItems: updatedLineItems };
+        }
+        return cat;
+      });
+      saveBudget({ ...budget, categories: updatedCategories });
+      return;
+    }
+
+    const numValue = parseFloat(trimmedValue);
+    // Check if the entire input is a valid number by comparing string representations
+    if (Number.isNaN(numValue) || numValue.toString() !== parseFloat(trimmedValue).toString()) {
+      return; // Don't update if invalid number or partial number like "123abc"
+    }
 
     const updatedCategories = budget.categories.map((cat) => {
       if (cat.id === categoryId) {
