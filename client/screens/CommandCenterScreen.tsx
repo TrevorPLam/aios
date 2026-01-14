@@ -343,6 +343,7 @@ export default function CommandCenterScreen() {
             )}
             contentContainerStyle={styles.listContent}
             snapToInterval={CARD_WIDTH + Spacing.lg}
+            snapToAlignment="start"
             decelerationRate="fast"
           />
         ) : (
@@ -430,10 +431,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: Spacing.lg,
+    paddingLeft: Spacing.lg,
+    paddingRight: Spacing.lg,
   },
   cardContainer: {
-    width: CARD_WIDTH + Spacing.lg,
+    width: CARD_WIDTH,
+    marginRight: Spacing.lg,
     justifyContent: "center",
   },
   card: {
