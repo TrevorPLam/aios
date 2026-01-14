@@ -245,7 +245,10 @@ export default function AlertsScreen() {
         )}
         contentContainerStyle={[
           styles.content,
-          { paddingBottom: insets.bottom + 80 },
+          {
+            paddingTop: headerHeight + Spacing.md,
+            paddingBottom: insets.bottom + Spacing["5xl"],
+          },
         ]}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
@@ -260,15 +263,31 @@ export default function AlertsScreen() {
         }
       />
 
-      <BottomNav
-        onCreatePress={handleCreateAlert}
-        onAIPress={handleAIAssist}
-        createIcon="plus"
-        createLabel="Add"
-      />
+      <Pressable
+        onPress={handleCreateAlert}
+        style={[
+          styles.fab,
+          {
+            backgroundColor: theme.accent,
+            bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
+            right: Spacing.lg,
+          },
+        ]}
+      >
+        <Feather name="plus" size={24} color={theme.buttonText} />
+      </Pressable>
+
+      <View
+        style={[
+          styles.bottomNavContainer,
+          { bottom: insets.bottom + Spacing.lg },
+        ]}
+      >
+        <BottomNav onAiPress={handleAIAssist} />
+      </View>
 
       <AIAssistSheet
-        isVisible={showAISheet}
+        visible={showAISheet}
         onClose={() => setShowAISheet(false)}
         module="alerts"
       />
@@ -282,7 +301,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.lg,
   },
   clockContainer: {
     alignItems: "center",
@@ -363,5 +381,20 @@ const styles = StyleSheet.create({
   emptySubtext: {
     marginTop: Spacing.xs,
     textAlign: "center",
+  },
+  fab: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.fab,
+  },
+  bottomNavContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 });

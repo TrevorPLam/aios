@@ -202,7 +202,7 @@ export default function MessagesScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <View style={styles.tabBar}>
+      <View style={[styles.tabBar, { marginTop: headerHeight }]}>
         <Pressable
           onPress={() => setShowArchived(false)}
           style={[
@@ -245,6 +245,9 @@ export default function MessagesScreen() {
         )}
         contentContainerStyle={[
           styles.listContent,
+          {
+            paddingBottom: insets.bottom + Spacing["5xl"],
+          },
           conversations.length === 0 && styles.emptyList,
         ]}
         ListEmptyComponent={renderEmpty}
@@ -257,7 +260,7 @@ export default function MessagesScreen() {
           styles.fab,
           {
             backgroundColor: theme.accent,
-            bottom: insets.bottom + Spacing.lg,
+            bottom: insets.bottom + Spacing["5xl"] + Spacing.lg,
             right: Spacing.lg,
           },
         ]}
@@ -265,7 +268,14 @@ export default function MessagesScreen() {
         <Feather name="plus" size={24} color={theme.buttonText} />
       </Pressable>
 
-      <BottomNav onAiPress={handleAIAssist} />
+      <View
+        style={[
+          styles.bottomNavContainer,
+          { bottom: insets.bottom + Spacing.lg },
+        ]}
+      >
+        <BottomNav onAiPress={handleAIAssist} />
+      </View>
 
       <AIAssistSheet
         visible={showAISheet}
@@ -389,5 +399,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,
+  },
+  bottomNavContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 });

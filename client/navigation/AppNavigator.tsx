@@ -294,6 +294,8 @@ export default function AppNavigator() {
         name="PhotoEditor"
         component={PhotoEditorScreen}
         options={{ headerTitle: "Edit Photo" }}
+      />
+      <Stack.Screen
         name="Messages"
         component={MessagesScreen}
         options={{ headerTitle: "Messages" }}
@@ -302,6 +304,8 @@ export default function AppNavigator() {
         name="ConversationDetail"
         component={ConversationDetailScreen}
         options={{ headerTitle: "Chat" }}
+      />
+      <Stack.Screen
         name="Contacts"
         component={ContactsScreen}
         options={{ headerTitle: "Contacts" }}
