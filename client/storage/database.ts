@@ -13,6 +13,7 @@ import {
   TIER_LIMITS,
   List,
   Alert,
+  Photo,
 } from "@/models/types";
 
 const KEYS = {
@@ -28,6 +29,7 @@ const KEYS = {
   INITIALIZED: "@aios/initialized",
   LISTS: "@aios/lists",
   ALERTS: "@aios/alerts",
+  PHOTOS: "@aios/photos",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -363,6 +365,51 @@ export const db = {
       };
       await setData(KEYS.AI_LIMITS, fresh);
       return fresh;
+    },
+  },
+
+  photos: {
+    async getAll(): Promise<Photo[]> {
+      return getData(KEYS.PHOTOS, []);
+    },
+    async getAllSorted(): Promise<Photo[]> {
+      const all = await this.getAll();
+      return all.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+    },
+    async get(id: string): Promise<Photo | null> {
+      const all = await this.getAll();
+      return all.find((p) => p.id === id) || null;
+    },
+    async save(photo: Photo): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((p) => p.id === photo.id);
+      if (index >= 0) {
+        all[index] = photo;
+      } else {
+        all.push(photo);
+      }
+      await setData(KEYS.PHOTOS, all);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((p) => p.id !== id);
+      await setData(KEYS.PHOTOS, filtered);
+    },
+    async updateBackupStatus(id: string, isBackedUp: boolean): Promise<void> {
+      const all = await this.getAll();
+      const photo = all.find((p) => p.id === id);
+      if (photo) {
+        photo.isBackedUp = isBackedUp;
+        photo.updatedAt = new Date().toISOString();
+        await setData(KEYS.PHOTOS, all);
+      }
+    },
+    async getByTag(tag: string): Promise<Photo[]> {
+      const all = await this.getAll();
+      return all.filter((p) => p.tags.includes(tag));
     },
   },
 

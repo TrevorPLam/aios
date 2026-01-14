@@ -5,7 +5,8 @@ export type ModuleType =
   | "calendar"
   | "email"
   | "lists"
-  | "alerts";
+  | "alerts"
+  | "photos";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -152,11 +153,47 @@ export interface Alert {
   updatedAt: string;
 }
 
+export interface Photo {
+  id: string;
+  uri: string;
+  localPath: string;
+  thumbnailUri?: string;
+  width: number;
+  height: number;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  createdAt: string;
+  updatedAt: string;
+  isBackedUp: boolean;
+  tags: string[];
+}
+
+export interface PhotoEdit {
+  photoId: string;
+  editedUri: string;
+  operations: PhotoEditOperation[];
+  createdAt: string;
+}
+
+export type PhotoEditOperation =
+  | { type: "crop"; x: number; y: number; width: number; height: number }
+  | { type: "rotate"; degrees: number }
+  | { type: "flip"; direction: "horizontal" | "vertical" }
+  | { type: "brightness"; value: number }
+  | { type: "contrast"; value: number }
+  | { type: "saturation"; value: number }
+  | { type: "filter"; name: string }
+  | { type: "ai_auto_fix" };
+
+export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];
   aiLimitTier: AILimitTier;
   darkMode: boolean;
+  photoGridSize: PhotoGridSize;
 }
 
 export interface HistoryLogEntry {
@@ -183,9 +220,11 @@ export const DEFAULT_SETTINGS: Settings = {
     "email",
     "lists",
     "alerts",
+    "photos",
   ],
   aiLimitTier: 1,
   darkMode: true,
+  photoGridSize: 4,
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {
