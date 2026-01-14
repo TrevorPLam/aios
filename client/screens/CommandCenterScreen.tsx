@@ -28,7 +28,7 @@ import * as Haptics from "expo-haptics";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
-import { Colors, Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { Spacing, BorderRadius } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Recommendation, AILimits } from "@/models/types";
@@ -106,10 +106,9 @@ function RecommendationCard({
       }
     });
 
-  const tapGesture = Gesture.Tap()
-    .onEnd(() => {
-      runOnJS(onPress)();
-    });
+  const tapGesture = Gesture.Tap().onEnd(() => {
+    runOnJS(onPress)();
+  });
 
   const gesture = Gesture.Exclusive(panGesture, tapGesture);
 
@@ -121,10 +120,7 @@ function RecommendationCard({
     );
 
     return {
-      transform: [
-        { translateX: translateX.value },
-        { rotate: `${rotate}deg` },
-      ],
+      transform: [{ translateX: translateX.value }, { rotate: `${rotate}deg` }],
     };
   });
 
@@ -431,7 +427,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    height: Spacing.lg,
+    height: Spacing.sm,
   },
   cardContainer: {
     width: CARD_WIDTH,
@@ -443,7 +439,12 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
     overflow: "hidden",
-    ...Shadows.card,
+    // Soft white glow around cards
+    shadowColor: "#FFFFFF",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 6,
   },
   cardGlow: {
     position: "absolute",
