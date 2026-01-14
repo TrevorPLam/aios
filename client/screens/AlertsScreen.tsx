@@ -18,6 +18,7 @@ import { Alert } from "@/models/types";
 import { formatTime } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -193,6 +194,13 @@ export default function AlertsScreen() {
       loadAlerts();
     }, [loadAlerts]),
   );
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <HeaderLeftNav />,
+      headerRight: () => <HeaderRightNav />,
+    });
+  }, [navigation]);
 
   const handleCreateAlert = () => {
     if (Platform.OS !== "web") {

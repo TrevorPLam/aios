@@ -129,6 +129,13 @@ export const Shadows = {
     shadowRadius: 12,
     elevation: 8,
   },
+  fab: {
+    shadowColor: "#00D9FF",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
+  },
 };
 
 export const Fonts = Platform.select({

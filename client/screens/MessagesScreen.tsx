@@ -24,7 +24,7 @@ import { Conversation } from "@/models/types";
 import { formatRelativeDate } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
-import { HeaderLeftNav, HeaderRightWithAction } from "@/components/HeaderNav";
+import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -167,17 +167,14 @@ export default function MessagesScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => (
-        <HeaderRightWithAction
-          actionIcon="plus"
-          onActionPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            navigation.navigate("ConversationDetail", {});
-          }}
-        />
-      ),
+      headerRight: () => <HeaderRightNav />,
     });
   }, [navigation]);
+
+  const handleAddConversation = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    navigation.navigate("ConversationDetail", {});
+  };
 
   const handleConversationPress = async (conversation: Conversation) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -253,6 +250,20 @@ export default function MessagesScreen() {
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
       />
+
+      <Pressable
+        onPress={handleAddConversation}
+        style={[
+          styles.fab,
+          {
+            backgroundColor: theme.accent,
+            bottom: insets.bottom + Spacing.lg,
+            right: Spacing.lg,
+          },
+        ]}
+      >
+        <Feather name="plus" size={24} color={theme.buttonText} />
+      </Pressable>
 
       <BottomNav onAiPress={handleAIAssist} />
 
@@ -369,5 +380,14 @@ const styles = StyleSheet.create({
   },
   emptySubtitle: {
     textAlign: "center",
+  },
+  fab: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.fab,
   },
 });
