@@ -164,6 +164,42 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
   ],
   alerts: [
     {
+      id: "smart-schedule",
+      icon: "clock",
+      title: "Smart Schedule",
+      description: "AI-optimized timing",
+    },
+    {
+      id: "group-similar",
+      icon: "layers",
+      title: "Group Similar",
+      description: "Combine related alerts",
+    },
+    {
+      id: "suggest-alerts",
+      icon: "bell",
+      title: "Suggest Alerts",
+      description: "Add missing reminders",
+    },
+  ],
+  photos: [
+    {
+      id: "auto-organize",
+      icon: "grid",
+      title: "Auto Organize",
+      description: "Sort by date or content",
+    },
+    {
+      id: "enhance-batch",
+      icon: "zap",
+      title: "Batch Enhance",
+      description: "AI enhance all photos",
+    },
+    {
+      id: "tag-suggestions",
+      icon: "tag",
+      title: "Tag Suggestions",
+      description: "AI-powered tagging",
       id: "suggest",
       icon: "bell",
       title: "Suggest Alerts",

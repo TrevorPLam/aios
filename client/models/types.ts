@@ -6,6 +6,7 @@ export type ModuleType =
   | "email"
   | "lists"
   | "alerts"
+  | "photos";
   | "messages";
   | "contacts"
   | "translator";
@@ -155,6 +156,40 @@ export interface Alert {
   updatedAt: string;
 }
 
+export interface Photo {
+  id: string;
+  uri: string;
+  localPath: string;
+  thumbnailUri?: string;
+  width: number;
+  height: number;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  createdAt: string;
+  updatedAt: string;
+  isBackedUp: boolean;
+  tags: string[];
+}
+
+export interface PhotoEdit {
+  photoId: string;
+  editedUri: string;
+  operations: PhotoEditOperation[];
+  createdAt: string;
+}
+
+export type PhotoEditOperation =
+  | { type: "crop"; x: number; y: number; width: number; height: number }
+  | { type: "rotate"; degrees: number }
+  | { type: "flip"; direction: "horizontal" | "vertical" }
+  | { type: "brightness"; value: number }
+  | { type: "contrast"; value: number }
+  | { type: "saturation"; value: number }
+  | { type: "filter"; name: string }
+  | { type: "ai_auto_fix" };
+
+export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
 export type MessageType = "text" | "image" | "video" | "audio" | "file" | "gif";
 
 export type ConversationType = "direct" | "group";
@@ -257,6 +292,7 @@ export interface Settings {
   enabledModules: ModuleType[];
   aiLimitTier: AILimitTier;
   darkMode: boolean;
+  photoGridSize: PhotoGridSize;
   contactSharingPreferences: ContactSharingPreferences;
 }
 
@@ -284,6 +320,11 @@ export const DEFAULT_SETTINGS: Settings = {
     "email",
     "lists",
     "alerts",
+    "photos",
+  ],
+  aiLimitTier: 1,
+  darkMode: true,
+  photoGridSize: 4,
     "messages",
     "contacts",
     "translator",

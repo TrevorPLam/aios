@@ -10,6 +10,7 @@ import {
   generateSeedEvents,
   generateSeedLists,
   generateSeedAlerts,
+  generateSeedPhotos,
   generateSeedConversations,
   generateSeedMessages,
 } from "@/utils/seedData";
@@ -37,6 +38,9 @@ import ListsScreen from "@/screens/ListsScreen";
 import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
+import PhotosScreen from "@/screens/PhotosScreen";
+import PhotoDetailScreen from "@/screens/PhotoDetailScreen";
+import PhotoEditorScreen from "@/screens/PhotoEditorScreen";
 import MessagesScreen from "@/screens/MessagesScreen";
 import ConversationDetailScreen from "@/screens/ConversationDetailScreen";
 import ContactsScreen from "@/screens/ContactsScreen";
@@ -67,6 +71,9 @@ export type AppStackParamList = {
   ListEditor: { listId?: string };
   Alerts: undefined;
   AlertDetail: { alertId?: string };
+  Photos: undefined;
+  PhotoDetail: { photoId: string };
+  PhotoEditor: { photoId: string };
   Messages: undefined;
   ConversationDetail: { conversationId?: string };
   Contacts: undefined;
@@ -117,6 +124,9 @@ export default function AppNavigator() {
           await db.alerts.save(alert);
         }
 
+        const photos = generateSeedPhotos();
+        for (const photo of photos) {
+          await db.photos.save(photo);
         const conversations = generateSeedConversations();
         for (const conversation of conversations) {
           await db.conversations.save(conversation);
@@ -269,6 +279,19 @@ export default function AppNavigator() {
         options={{ headerTitle: "Alert" }}
       />
       <Stack.Screen
+        name="Photos"
+        component={PhotosScreen}
+        options={{ headerTitle: "Photos" }}
+      />
+      <Stack.Screen
+        name="PhotoDetail"
+        component={PhotoDetailScreen}
+        options={{ headerTitle: "Photo" }}
+      />
+      <Stack.Screen
+        name="PhotoEditor"
+        component={PhotoEditorScreen}
+        options={{ headerTitle: "Edit Photo" }}
         name="Messages"
         component={MessagesScreen}
         options={{ headerTitle: "Messages" }}

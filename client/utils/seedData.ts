@@ -10,6 +10,7 @@ import {
   ModuleType,
   List,
   Alert,
+  Photo,
   Message,
   Conversation,
   ConversationParticipant,
@@ -558,6 +559,80 @@ export function generateSeedAlerts(): Alert[] {
   ];
 }
 
+export function generateSeedPhotos(): Photo[] {
+  // Note: In a real app, these would be actual image files.
+  // For seed data, we'll use placeholder data that represents photos
+  // The app will handle real photos when users upload them.
+  return [
+    {
+      id: generateId(),
+      uri: "https://picsum.photos/800/600?random=1",
+      localPath: "placeholder",
+      width: 800,
+      height: 600,
+      fileName: "sample_photo_1.jpg",
+      fileSize: 245000,
+      mimeType: "image/jpeg",
+      createdAt: daysFromNow(-7),
+      updatedAt: daysFromNow(-7),
+      isBackedUp: false,
+      tags: ["landscape", "nature"],
+    },
+    {
+      id: generateId(),
+      uri: "https://picsum.photos/600/800?random=2",
+      localPath: "placeholder",
+      width: 600,
+      height: 800,
+      fileName: "sample_photo_2.jpg",
+      fileSize: 189000,
+      mimeType: "image/jpeg",
+      createdAt: daysFromNow(-5),
+      updatedAt: daysFromNow(-5),
+      isBackedUp: true,
+      tags: ["portrait"],
+    },
+    {
+      id: generateId(),
+      uri: "https://picsum.photos/800/800?random=3",
+      localPath: "placeholder",
+      width: 800,
+      height: 800,
+      fileName: "sample_photo_3.jpg",
+      fileSize: 312000,
+      mimeType: "image/jpeg",
+      createdAt: daysFromNow(-3),
+      updatedAt: daysFromNow(-3),
+      isBackedUp: false,
+      tags: ["architecture"],
+    },
+    {
+      id: generateId(),
+      uri: "https://picsum.photos/1200/800?random=4",
+      localPath: "placeholder",
+      width: 1200,
+      height: 800,
+      fileName: "sample_photo_4.jpg",
+      fileSize: 456000,
+      mimeType: "image/jpeg",
+      createdAt: daysFromNow(-2),
+      updatedAt: daysFromNow(-2),
+      isBackedUp: true,
+      tags: ["landscape", "sunset"],
+    },
+    {
+      id: generateId(),
+      uri: "https://picsum.photos/800/1200?random=5",
+      localPath: "placeholder",
+      width: 800,
+      height: 1200,
+      fileName: "sample_photo_5.jpg",
+      fileSize: 378000,
+      mimeType: "image/jpeg",
+      createdAt: daysFromNow(-1),
+      updatedAt: daysFromNow(-1),
+      isBackedUp: false,
+      tags: ["urban", "street"],
 export function generateSeedConversations(): Conversation[] {
   const currentUserId = "current_user";
 
