@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, FlatList, Pressable, Image, Platform, SectionList } from 'react-native';
+import { View, StyleSheet, FlatList, Pressable, Image, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -14,14 +14,37 @@ import { useTheme } from '@/hooks/useTheme';
 import { Spacing, BorderRadius, Shadows } from '@/constants/theme';
 import { AppStackParamList } from '@/navigation/AppNavigator';
 import { db } from '@/storage/database';
-import { Task, Project } from '@/models/types';
+import { Task } from '@/models/types';
 import { formatDate, getPriorityColor } from '@/utils/helpers';
 import { BottomNav } from '@/components/BottomNav';
 import AIAssistSheet from '@/components/AIAssistSheet';
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
-function TaskCard({ task, onPress, index }: { task: Task; onPress: () => void; index: number }) {
+interface TaskWithSubtasks extends Task {
+  subtasks: Task[];
+  isExpanded?: boolean;
+}
+
+function TaskCard({ 
+  task, 
+  onPress, 
+  index, 
+  isSubtask = false,
+  hasSubtasks = false,
+  isExpanded = false,
+  onToggleExpand,
+  onAddSubtask,
+}: { 
+  task: Task; 
+  onPress: () => void; 
+  index: number;
+  isSubtask?: boolean;
+  hasSubtasks?: boolean;
+  isExpanded?: boolean;
+  onToggleExpand?: () => void;
+  onAddSubtask?: () => void;
+}) {
   const { theme } = useTheme();
   const priorityColor = getPriorityColor(task.priority, theme);
   const isCompleted = task.status === 'completed';
@@ -33,67 +56,89 @@ function TaskCard({ task, onPress, index }: { task: Task; onPress: () => void; i
         style={({ pressed }) => [
           styles.taskCard,
           { backgroundColor: theme.backgroundDefault },
+          isSubtask && styles.subtaskCard,
           pressed && { opacity: 0.8 },
         ]}
       >
-        <View style={[styles.priorityIndicator, { backgroundColor: priorityColor }]} />
-        <View style={styles.taskContent}>
-          <ThemedText
-            type="body"
-            style={[styles.taskTitle, isCompleted && styles.completedTask]}
-            numberOfLines={1}
+        {hasSubtasks ? (
+          <Pressable
+            onPress={onToggleExpand}
+            style={[styles.expandButton, { backgroundColor: theme.accentDim }]}
+            hitSlop={8}
           >
-            {task.title}
-          </ThemedText>
+            <Feather
+              name={isExpanded ? 'chevron-down' : 'chevron-right'}
+              size={16}
+              color={theme.accent}
+            />
+          </Pressable>
+        ) : (
+          <View style={[styles.priorityIndicator, { backgroundColor: priorityColor }]} />
+        )}
+        <View style={styles.taskContent}>
+          <View style={styles.titleRow}>
+            <ThemedText
+              type="body"
+              style={[
+                styles.taskTitle, 
+                isCompleted && styles.completedTask,
+                hasSubtasks && { fontWeight: '600' },
+              ]}
+              numberOfLines={1}
+            >
+              {task.title}
+            </ThemedText>
+            {hasSubtasks && (
+              <View style={[styles.projectBadge, { backgroundColor: theme.accentDim }]}>
+                <Feather name="folder" size={10} color={theme.accent} />
+              </View>
+            )}
+          </View>
           <View style={styles.taskMeta}>
-            {task.dueDate && (
+            {task.dueDate ? (
               <View style={styles.metaItem}>
                 <Feather name="calendar" size={12} color={theme.textMuted} />
                 <ThemedText type="small" muted>
                   {formatDate(task.dueDate)}
                 </ThemedText>
               </View>
-            )}
-            {task.recurrenceRule !== 'none' && (
+            ) : null}
+            {task.recurrenceRule !== 'none' ? (
               <View style={styles.metaItem}>
                 <Feather name="repeat" size={12} color={theme.textMuted} />
                 <ThemedText type="small" muted>
                   {task.recurrenceRule}
                 </ThemedText>
               </View>
-            )}
+            ) : null}
           </View>
         </View>
-        <View style={[styles.statusBadge, { backgroundColor: isCompleted ? theme.successDim : theme.backgroundSecondary }]}>
-          <Feather
-            name={isCompleted ? 'check' : 'circle'}
-            size={16}
-            color={isCompleted ? theme.success : theme.textMuted}
-          />
+        <View style={styles.cardActions}>
+          {!isSubtask ? (
+            <Pressable
+              onPress={(e) => {
+                e.stopPropagation();
+                if (Platform.OS !== 'web') {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                onAddSubtask?.();
+              }}
+              style={[styles.addSubtaskButton, { borderColor: theme.border }]}
+              hitSlop={8}
+            >
+              <Feather name="plus" size={14} color={theme.textMuted} />
+            </Pressable>
+          ) : null}
+          <View style={[styles.statusBadge, { backgroundColor: isCompleted ? theme.successDim : theme.backgroundSecondary }]}>
+            <Feather
+              name={isCompleted ? 'check' : 'circle'}
+              size={16}
+              color={isCompleted ? theme.success : theme.textMuted}
+            />
+          </View>
         </View>
       </Pressable>
     </Animated.View>
-  );
-}
-
-function ProjectSection({ project, onPress }: { project: Project; onPress: () => void }) {
-  const { theme } = useTheme();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.projectCard,
-        { backgroundColor: theme.accentDim },
-        pressed && { opacity: 0.8 },
-      ]}
-    >
-      <Feather name="folder" size={18} color={theme.accent} />
-      <ThemedText type="body" style={{ color: theme.accent, fontWeight: '600', flex: 1 }}>
-        {project.name}
-      </ThemedText>
-      <Feather name="chevron-right" size={18} color={theme.accent} />
-    </Pressable>
   );
 }
 
@@ -103,23 +148,36 @@ export default function PlannerScreen() {
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
   
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<TaskWithSubtasks[]>([]);
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
   const [showAISheet, setShowAISheet] = useState(false);
-  const [viewMode, setViewMode] = useState<'tasks' | 'projects'>('tasks');
 
   const loadData = useCallback(async () => {
-    const [tasksData, projectsData] = await Promise.all([
-      db.tasks.getAll(),
-      db.projects.getAll(),
-    ]);
-    setTasks(tasksData.sort((a, b) => {
+    const allTasks = await db.tasks.getAll();
+    
+    const topLevel = allTasks.filter((t) => !t.parentTaskId);
+    
+    const buildSubtasksRecursive = (parentId: string): Task[] => {
+      return allTasks.filter((t) => t.parentTaskId === parentId);
+    };
+    
+    const tasksWithSubtasks: TaskWithSubtasks[] = topLevel.map((task) => ({
+      ...task,
+      subtasks: buildSubtasksRecursive(task.id),
+    }));
+    
+    tasksWithSubtasks.sort((a, b) => {
+      const aHasSubtasks = a.subtasks.length > 0;
+      const bHasSubtasks = b.subtasks.length > 0;
+      if (aHasSubtasks && !bHasSubtasks) return -1;
+      if (!aHasSubtasks && bHasSubtasks) return 1;
       if (a.status === 'completed' && b.status !== 'completed') return 1;
       if (a.status !== 'completed' && b.status === 'completed') return -1;
       const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
       return priorityOrder[a.priority] - priorityOrder[b.priority];
-    }));
-    setProjects(projectsData);
+    });
+    
+    setTasks(tasksWithSubtasks);
   }, []);
 
   useEffect(() => {
@@ -139,7 +197,7 @@ export default function PlannerScreen() {
             if (Platform.OS !== 'web') {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
-            navigation.navigate(viewMode === 'tasks' ? 'TaskDetail' : 'ProjectDetail', {});
+            navigation.navigate('TaskDetail', {});
           }}
           style={({ pressed }) => [styles.headerButton, pressed && { opacity: 0.7 }]}
         >
@@ -147,112 +205,103 @@ export default function PlannerScreen() {
         </Pressable>
       ),
     });
-  }, [navigation, theme, viewMode]);
+  }, [navigation, theme]);
 
-  const renderTask = ({ item, index }: { item: Task; index: number }) => (
-    <TaskCard
-      task={item}
-      index={index}
-      onPress={() => navigation.navigate('TaskDetail', { taskId: item.id })}
-    />
-  );
+  const toggleExpand = (taskId: string) => {
+    setExpandedTasks((prev) => {
+      const next = new Set(prev);
+      if (next.has(taskId)) {
+        next.delete(taskId);
+      } else {
+        next.add(taskId);
+      }
+      return next;
+    });
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
 
-  const renderProject = ({ item }: { item: Project }) => (
-    <ProjectSection
-      project={item}
-      onPress={() => navigation.navigate('ProjectDetail', { projectId: item.id })}
-    />
-  );
+  const handleAddSubtask = (parentId: string) => {
+    navigation.navigate('TaskDetail', { parentTaskId: parentId });
+  };
+
+  const buildListData = () => {
+    const result: Array<{ type: 'task' | 'subtask'; task: Task; parentHasSubtasks: boolean; index: number }> = [];
+    let index = 0;
+    
+    tasks.forEach((task) => {
+      const hasSubtasks = task.subtasks.length > 0;
+      result.push({ type: 'task', task, parentHasSubtasks: hasSubtasks, index: index++ });
+      
+      if (hasSubtasks && expandedTasks.has(task.id)) {
+        task.subtasks.forEach((subtask) => {
+          result.push({ type: 'subtask', task: subtask, parentHasSubtasks: false, index: index++ });
+        });
+      }
+    });
+    
+    return result;
+  };
+
+  const listData = buildListData();
+
+  const renderItem = ({ item }: { item: typeof listData[0] }) => {
+    const isSubtask = item.type === 'subtask';
+    const hasSubtasks = item.parentHasSubtasks;
+    const isExpanded = expandedTasks.has(item.task.id);
+    
+    return (
+      <TaskCard
+        task={item.task}
+        index={item.index}
+        isSubtask={isSubtask}
+        hasSubtasks={hasSubtasks}
+        isExpanded={isExpanded}
+        onPress={() => navigation.navigate('TaskDetail', { taskId: item.task.id })}
+        onToggleExpand={() => toggleExpand(item.task.id)}
+        onAddSubtask={() => handleAddSubtask(item.task.id)}
+      />
+    );
+  };
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.tabBar, { marginTop: headerHeight }]}>
-        <Pressable
-          onPress={() => setViewMode('tasks')}
-          style={[
-            styles.tab,
-            viewMode === 'tasks' && { backgroundColor: theme.accentDim },
-          ]}
-        >
-          <ThemedText
-            type="body"
-            style={{ color: viewMode === 'tasks' ? theme.accent : theme.textSecondary, fontWeight: '600' }}
-          >
-            Tasks
-          </ThemedText>
-        </Pressable>
-        <Pressable
-          onPress={() => setViewMode('projects')}
-          style={[
-            styles.tab,
-            viewMode === 'projects' && { backgroundColor: theme.accentDim },
-          ]}
-        >
-          <ThemedText
-            type="body"
-            style={{ color: viewMode === 'projects' ? theme.accent : theme.textSecondary, fontWeight: '600' }}
-          >
-            Projects
-          </ThemedText>
-        </Pressable>
-      </View>
-
-      {viewMode === 'tasks' ? (
-        <FlatList
-          data={tasks}
-          renderItem={renderTask}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={[
-            styles.listContent,
-            { paddingBottom: insets.bottom + Spacing['5xl'] },
-          ]}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <View style={styles.emptyState}>
-              <Image
-                source={require('../../assets/images/empty-planner.png')}
-                style={styles.emptyImage}
-                resizeMode="contain"
-              />
-              <ThemedText type="h3" style={styles.emptyTitle}>No Tasks Yet</ThemedText>
-              <ThemedText type="body" secondary style={styles.emptyText}>
-                Tap + to create your first task
+      <FlatList
+        data={listData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.task.id}
+        contentContainerStyle={[
+          styles.listContent,
+          { 
+            paddingTop: headerHeight + Spacing.md,
+            paddingBottom: insets.bottom + Spacing['5xl'] + 80,
+          },
+        ]}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          listData.length > 0 ? (
+            <View style={styles.listHeader}>
+              <ThemedText type="caption" muted>
+                Tasks with subtasks become projects
               </ThemedText>
             </View>
-          }
-        />
-      ) : (
-        <FlatList
-          data={projects}
-          renderItem={renderProject}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={[
-            styles.listContent,
-            { paddingBottom: insets.bottom + Spacing['5xl'] },
-          ]}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <View style={styles.emptyState}>
-              <Image
-                source={require('../../assets/images/empty-planner.png')}
-                style={styles.emptyImage}
-                resizeMode="contain"
-              />
-              <ThemedText type="h3" style={styles.emptyTitle}>No Projects Yet</ThemedText>
-              <ThemedText type="body" secondary style={styles.emptyText}>
-                Tap + to create a project
-              </ThemedText>
-            </View>
-          }
-        />
-      )}
-
-      <Pressable
-        onPress={() => setShowAISheet(true)}
-        style={[styles.fab, { backgroundColor: theme.accent, bottom: insets.bottom + Spacing.xl }]}
-      >
-        <Feather name="cpu" size={24} color={theme.backgroundRoot} />
-      </Pressable>
+          ) : null
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyState}>
+            <Image
+              source={require('../../assets/images/empty-planner.png')}
+              style={styles.emptyImage}
+              resizeMode="contain"
+            />
+            <ThemedText type="h3" style={styles.emptyTitle}>No Tasks Yet</ThemedText>
+            <ThemedText type="body" secondary style={styles.emptyText}>
+              Tap + to create your first task. Add subtasks to turn any task into a project.
+            </ThemedText>
+          </View>
+        }
+      />
 
       <View style={[styles.bottomNavContainer, { bottom: insets.bottom + Spacing.lg }]}>
         <BottomNav onAiPress={() => setShowAISheet(true)} />
@@ -274,21 +323,13 @@ const styles = StyleSheet.create({
   headerButton: {
     padding: Spacing.xs,
   },
-  tabBar: {
-    flexDirection: 'row',
-    marginHorizontal: Spacing.lg,
-    marginBottom: Spacing.md,
-    gap: Spacing.sm,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: Spacing.sm,
-    alignItems: 'center',
-    borderRadius: BorderRadius.sm,
-  },
   listContent: {
     paddingHorizontal: Spacing.lg,
     gap: Spacing.sm,
+  },
+  listHeader: {
+    paddingBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   taskCard: {
     flexDirection: 'row',
@@ -298,16 +339,40 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
     ...Shadows.card,
   },
+  subtaskCard: {
+    marginLeft: Spacing.xl,
+    opacity: 0.9,
+  },
   priorityIndicator: {
     width: 4,
     height: 32,
     borderRadius: 2,
   },
+  expandButton: {
+    width: 28,
+    height: 28,
+    borderRadius: BorderRadius.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   taskContent: {
     flex: 1,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
   taskTitle: {
     marginBottom: Spacing.xs,
+    flex: 1,
+  },
+  projectBadge: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   completedTask: {
     textDecorationLine: 'line-through',
@@ -322,19 +387,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
   },
+  cardActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+  },
+  addSubtaskButton: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   statusBadge: {
     width: 32,
     height: 32,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  projectCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: Spacing.lg,
-    borderRadius: BorderRadius.md,
-    gap: Spacing.md,
   },
   emptyState: {
     alignItems: 'center',
@@ -352,9 +423,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-  },
-  fab: {
-    display: 'none',
   },
   bottomNavContainer: {
     position: 'absolute',

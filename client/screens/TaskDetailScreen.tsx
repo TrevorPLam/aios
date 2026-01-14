@@ -13,7 +13,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { Spacing, BorderRadius } from '@/constants/theme';
 import { AppStackParamList } from '@/navigation/AppNavigator';
 import { db } from '@/storage/database';
-import { Task, TaskPriority, TaskStatus, RecurrenceRule, Project } from '@/models/types';
+import { Task, TaskPriority, TaskStatus, RecurrenceRule } from '@/models/types';
 import { generateId } from '@/utils/helpers';
 import AIAssistSheet from '@/components/AIAssistSheet';
 
@@ -36,17 +36,14 @@ export default function TaskDetailScreen() {
   const [status, setStatus] = useState<TaskStatus>('pending');
   const [recurrence, setRecurrence] = useState<RecurrenceRule>('none');
   const [aiNotes, setAiNotes] = useState<string[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [showAISheet, setShowAISheet] = useState(false);
   const [isNew, setIsNew] = useState(true);
   const [taskId, setTaskId] = useState<string>('');
+  const [parentTaskId, setParentTaskId] = useState<string | null>(null);
+  const [parentTask, setParentTask] = useState<Task | null>(null);
 
   useEffect(() => {
     async function loadData() {
-      const projectsData = await db.projects.getAll();
-      setProjects(projectsData);
-      
       if (route.params?.taskId) {
         const task = await db.tasks.get(route.params.taskId);
         if (task) {
@@ -56,17 +53,28 @@ export default function TaskDetailScreen() {
           setStatus(task.status);
           setRecurrence(task.recurrenceRule);
           setAiNotes(task.aiNotes);
-          setSelectedProjectId(task.projectId);
+          setParentTaskId(task.parentTaskId);
           setTaskId(task.id);
           setIsNew(false);
+          
+          if (task.parentTaskId) {
+            const parent = await db.tasks.get(task.parentTaskId);
+            setParentTask(parent);
+          }
         }
       } else {
         setTaskId(generateId());
         setIsNew(true);
+        
+        if (route.params?.parentTaskId) {
+          setParentTaskId(route.params.parentTaskId);
+          const parent = await db.tasks.get(route.params.parentTaskId);
+          setParentTask(parent);
+        }
       }
     }
     loadData();
-  }, [route.params?.taskId]);
+  }, [route.params?.taskId, route.params?.parentTaskId]);
 
   const saveTask = useCallback(async () => {
     if (!title.trim()) {
@@ -75,7 +83,6 @@ export default function TaskDetailScreen() {
     }
     
     const existingTask = isNew ? null : await db.tasks.get(taskId);
-    const previousProjectId = existingTask?.projectId || null;
     
     const task: Task = {
       id: taskId,
@@ -86,7 +93,8 @@ export default function TaskDetailScreen() {
       dueDate: existingTask?.dueDate || null,
       status,
       recurrenceRule: recurrence,
-      projectId: selectedProjectId,
+      projectId: null,
+      parentTaskId: parentTaskId,
       dependencyIds: existingTask?.dependencyIds || [],
       createdAt: isNew ? new Date().toISOString() : existingTask?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -94,28 +102,11 @@ export default function TaskDetailScreen() {
     
     await db.tasks.save(task);
     
-    if (previousProjectId !== selectedProjectId) {
-      if (previousProjectId) {
-        const prevProject = await db.projects.get(previousProjectId);
-        if (prevProject) {
-          prevProject.taskIds = prevProject.taskIds.filter((id) => id !== taskId);
-          await db.projects.save(prevProject);
-        }
-      }
-      if (selectedProjectId) {
-        const newProject = await db.projects.get(selectedProjectId);
-        if (newProject && !newProject.taskIds.includes(taskId)) {
-          newProject.taskIds.push(taskId);
-          await db.projects.save(newProject);
-        }
-      }
-    }
-    
     if (Platform.OS !== 'web') {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     navigation.goBack();
-  }, [taskId, title, userNotes, aiNotes, priority, status, recurrence, selectedProjectId, isNew, navigation]);
+  }, [taskId, title, userNotes, aiNotes, priority, status, recurrence, parentTaskId, isNew, navigation]);
 
   const handleDelete = useCallback(async () => {
     Alert.alert(
@@ -127,23 +118,17 @@ export default function TaskDetailScreen() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            if (selectedProjectId) {
-              const project = await db.projects.get(selectedProjectId);
-              if (project) {
-                project.taskIds = project.taskIds.filter((id) => id !== taskId);
-                await db.projects.save(project);
-              }
-            }
             await db.tasks.delete(taskId);
             navigation.goBack();
           },
         },
       ]
     );
-  }, [taskId, selectedProjectId, navigation]);
+  }, [taskId, navigation]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerTitle: parentTaskId ? 'Subtask' : 'Task',
       headerRight: () => (
         <View style={styles.headerActions}>
           {!isNew && (
@@ -157,7 +142,7 @@ export default function TaskDetailScreen() {
         </View>
       ),
     });
-  }, [navigation, theme, isNew, handleDelete]);
+  }, [navigation, theme, isNew, handleDelete, parentTaskId]);
 
   return (
     <ThemedView style={styles.container}>
@@ -172,10 +157,19 @@ export default function TaskDetailScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        {parentTask ? (
+          <View style={[styles.parentBadge, { backgroundColor: theme.accentDim }]}>
+            <Feather name="corner-down-right" size={14} color={theme.accent} />
+            <ThemedText type="small" style={{ color: theme.accent }}>
+              Subtask of: {parentTask.title}
+            </ThemedText>
+          </View>
+        ) : null}
+
         <TextInput
           value={title}
           onChangeText={setTitle}
-          placeholder="Task Title"
+          placeholder={parentTaskId ? "Subtask Title" : "Task Title"}
           placeholderTextColor={theme.textMuted}
           style={[styles.titleInput, { color: theme.text }]}
         />
@@ -243,47 +237,6 @@ export default function TaskDetailScreen() {
           ))}
         </View>
         
-        {projects.length > 0 && (
-          <>
-            <ThemedText type="caption" secondary style={styles.label}>Project</ThemedText>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.projectScroll}>
-              <View style={styles.optionRow}>
-                <Pressable
-                  onPress={() => setSelectedProjectId(null)}
-                  style={[
-                    styles.optionButton,
-                    { backgroundColor: selectedProjectId === null ? theme.accentDim : theme.backgroundDefault },
-                  ]}
-                >
-                  <ThemedText
-                    type="small"
-                    style={{ color: selectedProjectId === null ? theme.accent : theme.textSecondary }}
-                  >
-                    None
-                  </ThemedText>
-                </Pressable>
-                {projects.map((p) => (
-                  <Pressable
-                    key={p.id}
-                    onPress={() => setSelectedProjectId(p.id)}
-                    style={[
-                      styles.optionButton,
-                      { backgroundColor: selectedProjectId === p.id ? theme.accentDim : theme.backgroundDefault },
-                    ]}
-                  >
-                    <ThemedText
-                      type="small"
-                      style={{ color: selectedProjectId === p.id ? theme.accent : theme.textSecondary }}
-                    >
-                      {p.name}
-                    </ThemedText>
-                  </Pressable>
-                ))}
-              </View>
-            </ScrollView>
-          </>
-        )}
-        
         <ThemedText type="caption" secondary style={styles.label}>Your Notes</ThemedText>
         <TextInput
           value={userNotes}
@@ -321,7 +274,7 @@ export default function TaskDetailScreen() {
         </Pressable>
         
         <Button onPress={saveTask} style={styles.saveButton}>
-          {isNew ? 'Create Task' : 'Save Changes'}
+          {isNew ? (parentTaskId ? 'Create Subtask' : 'Create Task') : 'Save Changes'}
         </Button>
       </ScrollView>
 
@@ -359,6 +312,14 @@ const styles = StyleSheet.create({
   headerButton: {
     padding: Spacing.xs,
   },
+  parentBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    padding: Spacing.sm,
+    borderRadius: BorderRadius.sm,
+    marginBottom: Spacing.md,
+  },
   titleInput: {
     fontSize: 24,
     fontWeight: '600',
@@ -377,9 +338,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.sm,
-  },
-  projectScroll: {
-    marginBottom: Spacing.sm,
   },
   notesInput: {
     fontSize: 16,

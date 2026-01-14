@@ -120,6 +120,18 @@ export const db = {
       const all = await this.getAll();
       return all.find((t) => t.id === id) || null;
     },
+    async getTopLevel(): Promise<Task[]> {
+      const all = await this.getAll();
+      return all.filter((t) => !t.parentTaskId);
+    },
+    async getSubtasks(parentId: string): Promise<Task[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.parentTaskId === parentId);
+    },
+    async hasSubtasks(taskId: string): Promise<boolean> {
+      const all = await this.getAll();
+      return all.some((t) => t.parentTaskId === taskId);
+    },
     async save(task: Task): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((t) => t.id === task.id);
@@ -132,7 +144,7 @@ export const db = {
     },
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
-      const filtered = all.filter((t) => t.id !== id);
+      const filtered = all.filter((t) => t.id !== id && t.parentTaskId !== id);
       await setData(KEYS.TASKS, filtered);
     },
   },

@@ -58,6 +58,7 @@ export interface Task {
   status: TaskStatus;
   recurrenceRule: RecurrenceRule;
   projectId: string | null;
+  parentTaskId: string | null;
   dependencyIds: string[];
   createdAt: string;
   updatedAt: string;

@@ -25,7 +25,7 @@ export type AppStackParamList = {
   Notebook: undefined;
   NoteEditor: { noteId?: string };
   Planner: undefined;
-  TaskDetail: { taskId?: string };
+  TaskDetail: { taskId?: string; parentTaskId?: string };
   ProjectDetail: { projectId?: string };
   Calendar: undefined;
   EventDetail: { eventId?: string; date?: string };
