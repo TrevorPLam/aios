@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   Platform,
+  FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -74,27 +75,17 @@ function RecommendationCard({
   onAccept,
   onDecline,
   onPress,
-  isTop,
 }: {
   recommendation: Recommendation;
   onAccept: () => void;
   onDecline: () => void;
   onPress: () => void;
-  isTop: boolean;
 }) {
   const { theme } = useTheme();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-  const scale = useSharedValue(isTop ? 1 : 0.95);
-  const opacity = useSharedValue(isTop ? 1 : 0.7);
-
-  useEffect(() => {
-    scale.value = withSpring(isTop ? 1 : 0.95);
-    opacity.value = withTiming(isTop ? 1 : 0.7);
-  }, [isTop]);
 
   const panGesture = Gesture.Pan()
-    .enabled(isTop)
     .onUpdate((e) => {
       translateX.value = e.translationX;
       translateY.value = e.translationY * 0.3;
@@ -115,7 +106,6 @@ function RecommendationCard({
     });
 
   const tapGesture = Gesture.Tap()
-    .enabled(isTop)
     .onEnd(() => {
       runOnJS(onPress)();
     });
@@ -134,9 +124,7 @@ function RecommendationCard({
         { translateX: translateX.value },
         { translateY: translateY.value },
         { rotate: `${rotate}deg` },
-        { scale: scale.value },
       ],
-      opacity: opacity.value,
     };
   });
 
@@ -337,25 +325,26 @@ export default function CommandCenterScreen() {
 
       <View style={styles.content}>
         {recommendations.length > 0 ? (
-          <View style={styles.cardStack}>
-            {recommendations
-              .slice(0, 3)
-              .reverse()
-              .map((rec, index) => (
-                <View
-                  key={rec.id}
-                  style={[styles.cardContainer, { zIndex: 3 - index }]}
-                >
-                  <RecommendationCard
-                    recommendation={rec}
-                    onAccept={() => handleAccept(rec)}
-                    onDecline={() => handleDecline(rec)}
-                    onPress={() => handleCardPress(rec)}
-                    isTop={index === recommendations.slice(0, 3).length - 1}
-                  />
-                </View>
-              ))}
-          </View>
+          <FlatList
+            data={recommendations}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.cardContainer}>
+                <RecommendationCard
+                  recommendation={item}
+                  onAccept={() => handleAccept(item)}
+                  onDecline={() => handleDecline(item)}
+                  onPress={() => handleCardPress(item)}
+                />
+              </View>
+            )}
+            contentContainerStyle={styles.listContent}
+            snapToInterval={CARD_WIDTH + Spacing.lg}
+            decelerationRate="fast"
+          />
         ) : (
           <Animated.View
             entering={FadeInDown.delay(300)}
@@ -439,20 +428,16 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
-  cardStack: {
-    width: CARD_WIDTH,
-    height: 300,
-    alignItems: "center",
+  listContent: {
+    paddingHorizontal: Spacing.lg,
   },
   cardContainer: {
-    position: "absolute",
-    width: "100%",
+    width: CARD_WIDTH + Spacing.lg,
+    justifyContent: "center",
   },
   card: {
-    width: "100%",
+    width: CARD_WIDTH,
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
     overflow: "hidden",
