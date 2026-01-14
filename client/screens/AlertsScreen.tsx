@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Pressable,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, FlatList, Pressable, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -49,7 +43,10 @@ function DigitalClock() {
         <ThemedText type="title" style={styles.clockText}>
           {hours}:{minutes}
         </ThemedText>
-        <ThemedText type="h2" style={[styles.secondsText, { color: theme.textMuted }]}>
+        <ThemedText
+          type="h2"
+          style={[styles.secondsText, { color: theme.textMuted }]}
+        >
           :{seconds}
         </ThemedText>
       </View>
@@ -127,7 +124,11 @@ function AlertCard({
           ) : null}
           <View style={styles.alertMeta}>
             <Feather name="clock" size={12} color={theme.textMuted} />
-            <ThemedText type="small" muted style={!alert.isEnabled && { opacity: 0.5 }}>
+            <ThemedText
+              type="small"
+              muted
+              style={!alert.isEnabled && { opacity: 0.5 }}
+            >
               {alertTime}
             </ThemedText>
             {alert.recurrenceRule !== "none" && (
@@ -138,7 +139,11 @@ function AlertCard({
                   color={theme.textMuted}
                   style={{ marginLeft: Spacing.md }}
                 />
-                <ThemedText type="small" muted style={!alert.isEnabled && { opacity: 0.5 }}>
+                <ThemedText
+                  type="small"
+                  muted
+                  style={!alert.isEnabled && { opacity: 0.5 }}
+                >
                   {alert.recurrenceRule}
                 </ThemedText>
               </>

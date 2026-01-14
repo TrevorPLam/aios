@@ -82,7 +82,6 @@ function PhotoCard({ photo, onPress, index, gridSize }: PhotoCardProps) {
 export default function PhotosScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const navigation = useNavigation<NavigationProp>();
 
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -115,6 +114,7 @@ export default function PhotosScreen() {
         />
       ),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   const handleAddPhoto = async () => {
@@ -141,20 +141,20 @@ export default function PhotosScreen() {
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const asset = result.assets[0];
-      
+
       // Save to local storage (avoid duplication by using unique names)
       const fileName = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
       const documentDir = (FileSystem as any).documentDirectory as string;
       const localDir = `${documentDir}photos/`;
-      
+
       // Ensure directory exists
       const dirInfo = await FileSystem.getInfoAsync(localDir);
       if (!dirInfo.exists) {
         await FileSystem.makeDirectoryAsync(localDir, { intermediates: true });
       }
-      
+
       const localPath = `${localDir}${fileName}`;
-      
+
       // Copy image to local storage
       await FileSystem.copyAsync({
         from: asset.uri,
@@ -185,7 +185,7 @@ export default function PhotosScreen() {
         type: "system",
         metadata: { photoId: newPhoto.id },
       });
-      
+
       loadPhotos();
     }
   };
@@ -244,7 +244,7 @@ export default function PhotosScreen() {
             columnWrapperStyle={styles.columnWrapper}
             showsVerticalScrollIndicator={false}
           />
-          
+
           {/* Grid size controls */}
           <View
             style={[
@@ -267,11 +267,11 @@ export default function PhotosScreen() {
             >
               <Feather name="zoom-in" size={20} color={theme.accent} />
             </Pressable>
-            
+
             <ThemedText type="body" style={styles.gridSizeText}>
               {gridSize}x{gridSize}
             </ThemedText>
-            
+
             <Pressable
               onPress={() => handleGridSizeChange(1)}
               disabled={gridSize === 6}

@@ -62,6 +62,7 @@ export default function PhotoEditorScreen() {
 
   useEffect(() => {
     loadPhoto();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params.photoId]);
 
   useEffect(() => {
@@ -85,6 +86,7 @@ export default function PhotoEditorScreen() {
         </Pressable>
       ),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, isSaving]);
 
   const loadPhoto = async () => {
@@ -253,7 +255,10 @@ export default function PhotoEditorScreen() {
               maximumValue={100}
               value={editState.brightness}
               onValueChange={(value) =>
-                setEditState((prev) => ({ ...prev, brightness: Math.round(value) }))
+                setEditState((prev) => ({
+                  ...prev,
+                  brightness: Math.round(value),
+                }))
               }
               minimumTrackTintColor={theme.accent}
               maximumTrackTintColor={theme.backgroundSecondary}
@@ -273,7 +278,10 @@ export default function PhotoEditorScreen() {
               maximumValue={100}
               value={editState.contrast}
               onValueChange={(value) =>
-                setEditState((prev) => ({ ...prev, contrast: Math.round(value) }))
+                setEditState((prev) => ({
+                  ...prev,
+                  contrast: Math.round(value),
+                }))
               }
               minimumTrackTintColor={theme.accent}
               maximumTrackTintColor={theme.backgroundSecondary}
@@ -293,7 +301,10 @@ export default function PhotoEditorScreen() {
               maximumValue={100}
               value={editState.saturation}
               onValueChange={(value) =>
-                setEditState((prev) => ({ ...prev, saturation: Math.round(value) }))
+                setEditState((prev) => ({
+                  ...prev,
+                  saturation: Math.round(value),
+                }))
               }
               minimumTrackTintColor={theme.accent}
               maximumTrackTintColor={theme.backgroundSecondary}
@@ -388,11 +399,15 @@ export default function PhotoEditorScreen() {
             </Pressable>
 
             <Pressable
-              onPress={() => setActiveTool(activeTool === "brightness" ? null : "brightness")}
+              onPress={() =>
+                setActiveTool(activeTool === "brightness" ? null : "brightness")
+              }
               style={({ pressed }) => [
                 styles.toolButton,
                 { backgroundColor: theme.backgroundSecondary },
-                activeTool === "brightness" && { backgroundColor: theme.accentDim },
+                activeTool === "brightness" && {
+                  backgroundColor: theme.accentDim,
+                },
                 pressed && { opacity: 0.8 },
               ]}
             >
@@ -401,11 +416,15 @@ export default function PhotoEditorScreen() {
             </Pressable>
 
             <Pressable
-              onPress={() => setActiveTool(activeTool === "contrast" ? null : "contrast")}
+              onPress={() =>
+                setActiveTool(activeTool === "contrast" ? null : "contrast")
+              }
               style={({ pressed }) => [
                 styles.toolButton,
                 { backgroundColor: theme.backgroundSecondary },
-                activeTool === "contrast" && { backgroundColor: theme.accentDim },
+                activeTool === "contrast" && {
+                  backgroundColor: theme.accentDim,
+                },
                 pressed && { opacity: 0.8 },
               ]}
             >
@@ -414,11 +433,15 @@ export default function PhotoEditorScreen() {
             </Pressable>
 
             <Pressable
-              onPress={() => setActiveTool(activeTool === "saturation" ? null : "saturation")}
+              onPress={() =>
+                setActiveTool(activeTool === "saturation" ? null : "saturation")
+              }
               style={({ pressed }) => [
                 styles.toolButton,
                 { backgroundColor: theme.backgroundSecondary },
-                activeTool === "saturation" && { backgroundColor: theme.accentDim },
+                activeTool === "saturation" && {
+                  backgroundColor: theme.accentDim,
+                },
                 pressed && { opacity: 0.8 },
               ]}
             >
@@ -483,7 +506,8 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   toolButton: {
-    width: (SCREEN_WIDTH - Spacing.lg * 2 - Spacing.lg * 2 - Spacing.md * 3) / 4,
+    width:
+      (SCREEN_WIDTH - Spacing.lg * 2 - Spacing.lg * 2 - Spacing.md * 3) / 4,
     aspectRatio: 1,
     alignItems: "center",
     justifyContent: "center",

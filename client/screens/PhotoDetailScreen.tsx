@@ -40,6 +40,7 @@ export default function PhotoDetailScreen() {
 
   useEffect(() => {
     loadPhoto();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params.photoId]);
 
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function PhotoDetailScreen() {
         </View>
       ),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, photo]);
 
   const loadPhoto = async () => {
@@ -196,7 +198,9 @@ export default function PhotoDetailScreen() {
             <ThemedText type="caption" muted>
               File Size
             </ThemedText>
-            <ThemedText type="body">{formatFileSize(photo.fileSize)}</ThemedText>
+            <ThemedText type="body">
+              {formatFileSize(photo.fileSize)}
+            </ThemedText>
           </View>
 
           <View style={styles.infoRow}>

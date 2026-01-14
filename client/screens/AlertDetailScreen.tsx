@@ -103,7 +103,8 @@ export default function AlertDetailScreen() {
         isEnabled,
         recurrenceRule: recurrence,
         createdAt: alertId
-          ? (await db.alerts.get(alertId))?.createdAt || new Date().toISOString()
+          ? (await db.alerts.get(alertId))?.createdAt ||
+            new Date().toISOString()
           : new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

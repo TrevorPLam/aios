@@ -167,8 +167,7 @@ const RECOMMENDATION_TEMPLATES: {
       },
       {
         title: "Email follow-up reminder",
-        summary:
-          "Reminder to follow up on partnership proposal in 2 days",
+        summary: "Reminder to follow up on partnership proposal in 2 days",
         why: "Email thread 'Partnership Proposal' has no response in 6 days. Follow-up reminders improve response rates.",
         confidence: "medium",
         priority: "low",
