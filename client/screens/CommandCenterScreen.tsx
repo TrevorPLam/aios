@@ -28,7 +28,7 @@ import * as Haptics from "expo-haptics";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
-import { Colors, Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { Spacing, BorderRadius } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Recommendation, AILimits } from "@/models/types";
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
     overflow: "hidden",
-    ...Shadows.card,
+    // Soft white glow around cards
     shadowColor: "#FFFFFF",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
