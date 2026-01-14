@@ -30,10 +30,16 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 interface ConversationCardProps {
   conversation: Conversation;
   onPress: () => void;
+  onMessagePress: () => void;
   index: number;
 }
 
-function ConversationCard({ conversation, onPress, index }: ConversationCardProps) {
+function ConversationCard({
+  conversation,
+  onPress,
+  onMessagePress,
+  index,
+}: ConversationCardProps) {
   const { theme } = useTheme();
   const hasUnread = conversation.unreadCount > 0;
 
@@ -128,6 +134,19 @@ function ConversationCard({ conversation, onPress, index }: ConversationCardProp
         </View>
 
         <View style={styles.conversationActions}>
+          <Pressable
+            onPress={(event) => {
+              event.stopPropagation?.();
+              onMessagePress();
+            }}
+            style={({ pressed }) => [
+              styles.messageButton,
+              { backgroundColor: theme.accentDim },
+              pressed && { opacity: 0.8 },
+            ]}
+          >
+            <Feather name="message-circle" size={16} color={theme.accent} />
+          </Pressable>
           {conversation.isPinned && (
             <Feather name="bookmark" size={16} color={theme.accent} />
           )}
@@ -238,6 +257,7 @@ export default function MessagesScreen() {
           <ConversationCard
             conversation={item}
             onPress={() => handleConversationPress(item)}
+            onMessagePress={() => handleConversationPress(item)}
             index={index}
           />
         )}
@@ -370,6 +390,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: Spacing.sm,
     marginLeft: Spacing.sm,
+  },
+  messageButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: Spacing.xs,
+    borderRadius: 999,
   },
   emptyContainer: {
     flex: 1,
