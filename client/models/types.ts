@@ -9,7 +9,8 @@ export type ModuleType =
   | "photos"
   | "messages"
   | "contacts"
-  | "translator";
+  | "translator"
+  | "budget";
 
 export type ConfidenceLevel = "low" | "medium" | "high";
 
@@ -293,6 +294,29 @@ export interface ContactSharingPreferences {
   shareBusinessInfo: boolean;
 }
 
+export interface BudgetLineItem {
+  id: string;
+  name: string;
+  budgeted: number;
+  actual: number;
+}
+
+export interface BudgetCategory {
+  id: string;
+  name: string;
+  lineItems: BudgetLineItem[];
+  isExpanded: boolean;
+}
+
+export interface Budget {
+  id: string;
+  name: string;
+  month: string;
+  categories: BudgetCategory[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Settings {
   aiName: string;
   enabledModules: ModuleType[];
@@ -330,6 +354,7 @@ export const DEFAULT_SETTINGS: Settings = {
     "messages",
     "contacts",
     "translator",
+    "budget",
   ] as ModuleType[],
   aiLimitTier: 1,
   darkMode: true,

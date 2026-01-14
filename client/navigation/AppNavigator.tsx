@@ -13,6 +13,7 @@ import {
   generateSeedPhotos,
   generateSeedConversations,
   generateSeedMessages,
+  generateSeedBudget,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -46,6 +47,7 @@ import ConversationDetailScreen from "@/screens/ConversationDetailScreen";
 import ContactsScreen from "@/screens/ContactsScreen";
 import ContactDetailScreen from "@/screens/ContactDetailScreen";
 import TranslatorScreen from "@/screens/TranslatorScreen";
+import BudgetScreen from "@/screens/BudgetScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -79,6 +81,7 @@ export type AppStackParamList = {
   Contacts: undefined;
   ContactDetail: { contactId: string };
   Translator: undefined;
+  Budget: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -138,6 +141,9 @@ export default function AppNavigator() {
         for (const message of messages) {
           await db.messages.save(message);
         }
+
+        const budget = generateSeedBudget();
+        await db.budgets.save(budget);
 
         await db.settings.get();
         await db.aiLimits.get();
@@ -319,6 +325,11 @@ export default function AppNavigator() {
         name="Translator"
         component={TranslatorScreen}
         options={{ headerTitle: "Translator" }}
+      />
+      <Stack.Screen
+        name="Budget"
+        component={BudgetScreen}
+        options={{ headerTitle: "Budget" }}
       />
     </Stack.Navigator>
   );

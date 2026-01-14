@@ -20,6 +20,7 @@ export const MODULES: ModuleItem[] = [
   { name: "Planner", route: "Planner", icon: "check-square" },
   { name: "Calendar", route: "Calendar", icon: "calendar" },
   { name: "Email", route: "Email", icon: "mail" },
+  { name: "Budget", route: "Budget", icon: "pie-chart" },
   { name: "Translator", route: "Translator", icon: "globe" },
 ];
 
