@@ -17,6 +17,10 @@ import {
   insertEventSchema,
   updateEventSchema,
   updateSettingsSchema,
+  insertConversationSchema,
+  updateConversationSchema,
+  insertMessageSchema,
+  updateMessageSchema,
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -449,6 +453,151 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }),
   );
 
+  // Conversation routes
+  app.get(
+    "/api/conversations",
+    authenticate,
+    asyncHandler(async (req, res) => {
+      const conversations = await storage.getConversations(req.user!.userId);
+      res.json(conversations);
+    }),
+  );
+
+  app.get(
+    "/api/conversations/:id",
+    authenticate,
+    validateParams(idParamSchema),
+    asyncHandler(async (req, res) => {
+      const conversation = await storage.getConversation(
+        req.params.id,
+        req.user!.userId,
+      );
+      if (!conversation) {
+        throw new AppError(404, "Conversation not found");
+      }
+      res.json(conversation);
+    }),
+  );
+
+  app.post(
+    "/api/conversations",
+    authenticate,
+    validate(insertConversationSchema),
+    asyncHandler(async (req, res) => {
+      const conversation = await storage.createConversation({
+        ...req.body,
+        userId: req.user!.userId,
+      });
+      res.status(201).json(conversation);
+    }),
+  );
+
+  app.put(
+    "/api/conversations/:id",
+    authenticate,
+    validateParams(idParamSchema),
+    validate(updateConversationSchema),
+    asyncHandler(async (req, res) => {
+      const conversation = await storage.updateConversation(
+        req.params.id,
+        req.user!.userId,
+        req.body,
+      );
+      if (!conversation) {
+        throw new AppError(404, "Conversation not found");
+      }
+      res.json(conversation);
+    }),
+  );
+
+  app.delete(
+    "/api/conversations/:id",
+    authenticate,
+    validateParams(idParamSchema),
+    asyncHandler(async (req, res) => {
+      const deleted = await storage.deleteConversation(
+        req.params.id,
+        req.user!.userId,
+      );
+      if (!deleted) {
+        throw new AppError(404, "Conversation not found");
+      }
+      res.status(204).send();
+    }),
+  );
+
+  // Message routes
+  app.get(
+    "/api/conversations/:id/messages",
+    authenticate,
+    validateParams(idParamSchema),
+    asyncHandler(async (req, res) => {
+      const messages = await storage.getMessages(
+        req.params.id,
+        req.user!.userId,
+      );
+      res.json(messages);
+    }),
+  );
+
+  app.get(
+    "/api/messages/:id",
+    authenticate,
+    validateParams(idParamSchema),
+    asyncHandler(async (req, res) => {
+      const message = await storage.getMessage(req.params.id, req.user!.userId);
+      if (!message) {
+        throw new AppError(404, "Message not found");
+      }
+      res.json(message);
+    }),
+  );
+
+  app.post(
+    "/api/conversations/:id/messages",
+    authenticate,
+    validateParams(idParamSchema),
+    validate(insertMessageSchema),
+    asyncHandler(async (req, res) => {
+      const message = await storage.createMessage({
+        ...req.body,
+        conversationId: req.params.id,
+      });
+      res.status(201).json(message);
+    }),
+  );
+
+  app.put(
+    "/api/messages/:id",
+    authenticate,
+    validateParams(idParamSchema),
+    validate(updateMessageSchema),
+    asyncHandler(async (req, res) => {
+      const message = await storage.updateMessage(
+        req.params.id,
+        req.user!.userId,
+        req.body,
+      );
+      if (!message) {
+        throw new AppError(404, "Message not found");
+      }
+      res.json(message);
+    }),
+  );
+
+  app.delete(
+    "/api/messages/:id",
+    authenticate,
+    validateParams(idParamSchema),
+    asyncHandler(async (req, res) => {
+      const deleted = await storage.deleteMessage(
+        req.params.id,
+        req.user!.userId,
+      );
+      if (!deleted) {
+        throw new AppError(404, "Message not found");
+      }
+      res.status(204).send();
   // Translation route
   app.post(
     "/api/translate",

@@ -7,6 +7,8 @@ import type {
   Project,
   Event,
   Settings,
+  Conversation,
+  Message,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -90,6 +92,35 @@ export interface IStorage {
     userId: string,
     updates: Partial<Settings>,
   ): Promise<Settings | undefined>;
+
+  // Conversation methods
+  getConversations(userId: string): Promise<Conversation[]>;
+  getConversation(
+    id: string,
+    userId: string,
+  ): Promise<Conversation | undefined>;
+  createConversation(
+    conversation: Omit<Conversation, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Conversation>;
+  updateConversation(
+    id: string,
+    userId: string,
+    updates: Partial<Conversation>,
+  ): Promise<Conversation | undefined>;
+  deleteConversation(id: string, userId: string): Promise<boolean>;
+
+  // Message methods
+  getMessages(conversationId: string, userId: string): Promise<Message[]>;
+  getMessage(id: string, userId: string): Promise<Message | undefined>;
+  createMessage(
+    message: Omit<Message, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Message>;
+  updateMessage(
+    id: string,
+    userId: string,
+    updates: Partial<Message>,
+  ): Promise<Message | undefined>;
+  deleteMessage(id: string, userId: string): Promise<boolean>;
 }
 
 // In-memory storage implementation
@@ -101,6 +132,8 @@ export class MemStorage implements IStorage {
   private projects: Map<string, Project>;
   private events: Map<string, Event>;
   private settings: Map<string, Settings>;
+  private conversations: Map<string, Conversation>;
+  private messages: Map<string, Message>;
 
   constructor() {
     this.users = new Map();
@@ -110,6 +143,8 @@ export class MemStorage implements IStorage {
     this.projects = new Map();
     this.events = new Map();
     this.settings = new Map();
+    this.conversations = new Map();
+    this.messages = new Map();
   }
 
   // User methods
@@ -397,6 +432,137 @@ export class MemStorage implements IStorage {
     const updated = { ...existing, ...updates, updatedAt: new Date() };
     this.settings.set(existing.id, updated);
     return updated;
+  }
+
+  // Conversation methods
+  async getConversations(userId: string): Promise<Conversation[]> {
+    return Array.from(this.conversations.values()).filter(
+      (conversation) => conversation.userId === userId,
+    );
+  }
+
+  async getConversation(
+    id: string,
+    userId: string,
+  ): Promise<Conversation | undefined> {
+    const conversation = this.conversations.get(id);
+    if (!conversation || conversation.userId !== userId) return undefined;
+    return conversation;
+  }
+
+  async createConversation(
+    conversation: Omit<Conversation, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Conversation> {
+    const id = randomUUID();
+    const now = new Date();
+    const newConversation: Conversation = {
+      ...conversation,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.conversations.set(id, newConversation);
+    return newConversation;
+  }
+
+  async updateConversation(
+    id: string,
+    userId: string,
+    updates: Partial<Conversation>,
+  ): Promise<Conversation | undefined> {
+    const conversation = this.conversations.get(id);
+    if (!conversation || conversation.userId !== userId) return undefined;
+
+    const updated = { ...conversation, ...updates, updatedAt: new Date() };
+    this.conversations.set(id, updated);
+    return updated;
+  }
+
+  async deleteConversation(id: string, userId: string): Promise<boolean> {
+    const conversation = this.conversations.get(id);
+    if (!conversation || conversation.userId !== userId) return false;
+
+    // Also delete all messages in this conversation
+    const messagesToDelete = Array.from(this.messages.values()).filter(
+      (message) => message.conversationId === id,
+    );
+    messagesToDelete.forEach((message) => this.messages.delete(message.id));
+
+    return this.conversations.delete(id);
+  }
+
+  // Message methods
+  async getMessages(
+    conversationId: string,
+    userId: string,
+  ): Promise<Message[]> {
+    // Verify user has access to this conversation
+    const conversation = this.conversations.get(conversationId);
+    if (!conversation || conversation.userId !== userId) return [];
+
+    return Array.from(this.messages.values())
+      .filter((message) => message.conversationId === conversationId)
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      );
+  }
+
+  async getMessage(
+    id: string,
+    userId: string,
+  ): Promise<Message | undefined> {
+    const message = this.messages.get(id);
+    if (!message) return undefined;
+
+    // Verify user has access to the conversation
+    const conversation = this.conversations.get(message.conversationId);
+    if (!conversation || conversation.userId !== userId) return undefined;
+
+    return message;
+  }
+
+  async createMessage(
+    message: Omit<Message, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Message> {
+    const id = randomUUID();
+    const now = new Date();
+    const newMessage: Message = {
+      ...message,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.messages.set(id, newMessage);
+    return newMessage;
+  }
+
+  async updateMessage(
+    id: string,
+    userId: string,
+    updates: Partial<Message>,
+  ): Promise<Message | undefined> {
+    const message = this.messages.get(id);
+    if (!message) return undefined;
+
+    // Verify user has access to the conversation
+    const conversation = this.conversations.get(message.conversationId);
+    if (!conversation || conversation.userId !== userId) return undefined;
+
+    const updated = { ...message, ...updates, updatedAt: new Date() };
+    this.messages.set(id, updated);
+    return updated;
+  }
+
+  async deleteMessage(id: string, userId: string): Promise<boolean> {
+    const message = this.messages.get(id);
+    if (!message) return false;
+
+    // Verify user has access to the conversation
+    const conversation = this.conversations.get(message.conversationId);
+    if (!conversation || conversation.userId !== userId) return false;
+
+    return this.messages.delete(id);
   }
 }
 

@@ -10,6 +10,8 @@ import {
   generateSeedEvents,
   generateSeedLists,
   generateSeedAlerts,
+  generateSeedConversations,
+  generateSeedMessages,
 } from "@/utils/seedData";
 
 import CommandCenterScreen from "@/screens/CommandCenterScreen";
@@ -35,6 +37,8 @@ import ListsScreen from "@/screens/ListsScreen";
 import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
+import MessagesScreen from "@/screens/MessagesScreen";
+import ConversationDetailScreen from "@/screens/ConversationDetailScreen";
 import ContactsScreen from "@/screens/ContactsScreen";
 import ContactDetailScreen from "@/screens/ContactDetailScreen";
 import TranslatorScreen from "@/screens/TranslatorScreen";
@@ -63,6 +67,8 @@ export type AppStackParamList = {
   ListEditor: { listId?: string };
   Alerts: undefined;
   AlertDetail: { alertId?: string };
+  Messages: undefined;
+  ConversationDetail: { conversationId?: string };
   Contacts: undefined;
   ContactDetail: { contactId: string };
   Translator: undefined;
@@ -109,6 +115,16 @@ export default function AppNavigator() {
         const alerts = generateSeedAlerts();
         for (const alert of alerts) {
           await db.alerts.save(alert);
+        }
+
+        const conversations = generateSeedConversations();
+        for (const conversation of conversations) {
+          await db.conversations.save(conversation);
+        }
+
+        const messages = generateSeedMessages();
+        for (const message of messages) {
+          await db.messages.save(message);
         }
 
         await db.settings.get();
@@ -253,6 +269,14 @@ export default function AppNavigator() {
         options={{ headerTitle: "Alert" }}
       />
       <Stack.Screen
+        name="Messages"
+        component={MessagesScreen}
+        options={{ headerTitle: "Messages" }}
+      />
+      <Stack.Screen
+        name="ConversationDetail"
+        component={ConversationDetailScreen}
+        options={{ headerTitle: "Chat" }}
         name="Contacts"
         component={ContactsScreen}
         options={{ headerTitle: "Contacts" }}
