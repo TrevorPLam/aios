@@ -10,6 +10,7 @@ import { AppStackParamList } from "@/navigation/AppNavigator";
 import { ThemedText } from "./ThemedText";
 import { db } from "@/storage/database";
 import { ModuleType } from "@/models/types";
+import { useNavigationContext } from "@/context/NavigationContext";
 
 export type ModuleItem = {
   id: ModuleType;
@@ -43,6 +44,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const route = useRoute();
   const insets = useSafeAreaInsets();
   const [orderedModules, setOrderedModules] = useState<ModuleItem[]>(ALL_MODULES);
+  const { contextualModule, clearContextualModule } = useNavigationContext();
 
   useEffect(() => {
     loadModuleOrder();
@@ -78,6 +80,14 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   };
 
   const getNextModule = () => {
+    // If there's a contextual module, use it instead of the next in order
+    if (contextualModule) {
+      const contextModule = orderedModules.find(m => m.id === contextualModule);
+      if (contextModule) {
+        return contextModule;
+      }
+    }
+    
     if (currentIndex === -1) return orderedModules[0];
     const nextIndex = (currentIndex + 1) % orderedModules.length;
     return orderedModules[nextIndex];
@@ -88,6 +98,10 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
 
   const handleNavigation = async (module: ModuleItem) => {
     await db.settings.trackModuleUsage(module.id);
+    // Clear contextual module after navigation
+    if (contextualModule) {
+      clearContextualModule();
+    }
     navigation.navigate(module.route as any);
   };
 
