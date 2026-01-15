@@ -22,6 +22,7 @@ import {
   AlertHistoryEntry,
   AlertStatistics,
 } from "@/models/types";
+import { generateId } from "@/utils/helpers";
 
 const KEYS = {
   RECOMMENDATIONS: "@aios/recommendations",
@@ -322,6 +323,22 @@ export const db = {
           new Date(a.lastOpenedAt).getTime(),
       );
     },
+    async getActive(): Promise<List[]> {
+      const all = await this.getAll();
+      return all.filter((l) => !l.isArchived && !l.isTemplate);
+    },
+    async getArchived(): Promise<List[]> {
+      const all = await this.getAll();
+      return all.filter((l) => l.isArchived === true);
+    },
+    async getTemplates(): Promise<List[]> {
+      const all = await this.getAll();
+      return all.filter((l) => l.isTemplate === true);
+    },
+    async getByCategory(category: string): Promise<List[]> {
+      const all = await this.getAll();
+      return all.filter((l) => l.category === category && !l.isArchived);
+    },
     async get(id: string): Promise<List | null> {
       const all = await this.getAll();
       return all.find((l) => l.id === id) || null;
@@ -341,6 +358,47 @@ export const db = {
       const filtered = all.filter((l) => l.id !== id);
       await setData(KEYS.LISTS, filtered);
     },
+    async duplicate(id: string): Promise<List | null> {
+      const list = await this.get(id);
+      if (!list) return null;
+      
+      const now = new Date().toISOString();
+      const duplicated: List = {
+        ...list,
+        id: generateId(),
+        title: `${list.title} (Copy)`,
+        items: list.items.map((item) => ({
+          ...item,
+          id: generateId(),
+          isChecked: false, // Reset completion status for copy
+        })),
+        isTemplate: false, // Copies are not templates
+        createdAt: now,
+        lastOpenedAt: now,
+        updatedAt: now,
+      };
+      
+      await this.save(duplicated);
+      return duplicated;
+    },
+    async archive(id: string): Promise<void> {
+      const all = await this.getAll();
+      const list = all.find((l) => l.id === id);
+      if (list) {
+        list.isArchived = true;
+        list.updatedAt = new Date().toISOString();
+        await setData(KEYS.LISTS, all);
+      }
+    },
+    async unarchive(id: string): Promise<void> {
+      const all = await this.getAll();
+      const list = all.find((l) => l.id === id);
+      if (list) {
+        list.isArchived = false;
+        list.updatedAt = new Date().toISOString();
+        await setData(KEYS.LISTS, all);
+      }
+    },
     async updateLastOpened(id: string): Promise<void> {
       const all = await this.getAll();
       const list = all.find((l) => l.id === id);
@@ -348,6 +406,45 @@ export const db = {
         list.lastOpenedAt = new Date().toISOString();
         await setData(KEYS.LISTS, all);
       }
+    },
+    async getStats(): Promise<{
+      total: number;
+      active: number;
+      archived: number;
+      templates: number;
+      byCategory: Record<string, number>;
+      totalItems: number;
+      completedItems: number;
+    }> {
+      const all = await this.getAll();
+      const active = all.filter((l) => !l.isArchived && !l.isTemplate);
+      const archived = all.filter((l) => l.isArchived === true);
+      const templates = all.filter((l) => l.isTemplate === true);
+      
+      // Count categories only for active lists
+      const byCategory: Record<string, number> = {};
+      active.forEach((list) => {
+        if (list.category) {
+          byCategory[list.category] = (byCategory[list.category] || 0) + 1;
+        }
+      });
+      
+      let totalItems = 0;
+      let completedItems = 0;
+      all.forEach((list) => {
+        totalItems += list.items.length;
+        completedItems += list.items.filter((item) => item.isChecked).length;
+      });
+      
+      return {
+        total: all.length,
+        active: active.length,
+        archived: archived.length,
+        templates: templates.length,
+        byCategory,
+        totalItems,
+        completedItems,
+      };
     },
   },
 
