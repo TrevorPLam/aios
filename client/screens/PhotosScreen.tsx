@@ -243,6 +243,15 @@ export default function PhotosScreen() {
       headerRight: () => (
         <View style={{ flexDirection: "row", gap: Spacing.sm }}>
           <Pressable
+            onPress={() => navigation.navigate("Albums")}
+            style={({ pressed }) => [
+              { padding: Spacing.xs },
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <Feather name="folder" size={22} color={theme.accent} />
+          </Pressable>
+          <Pressable
             onPress={() => setShowStatsSheet(true)}
             style={({ pressed }) => [
               { padding: Spacing.xs },

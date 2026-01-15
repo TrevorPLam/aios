@@ -43,6 +43,7 @@ import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
 import PhotosScreen from "@/screens/PhotosScreen";
+import AlbumsScreen from "@/screens/AlbumsScreen";
 import PhotoDetailScreen from "@/screens/PhotoDetailScreen";
 import PhotoEditorScreen from "@/screens/PhotoEditorScreen";
 import MessagesScreen from "@/screens/MessagesScreen";
@@ -83,6 +84,7 @@ export type AppStackParamList = {
   Alerts: undefined;
   AlertDetail: { alertId?: string };
   Photos: undefined;
+  Albums: undefined;
   PhotoDetail: { photoId: string };
   PhotoEditor: { photoId: string };
   Messages: undefined;
@@ -317,6 +319,11 @@ export default function AppNavigator() {
         name="Photos"
         component={PhotosScreen}
         options={{ headerTitle: "Photos" }}
+      />
+      <Stack.Screen
+        name="Albums"
+        component={AlbumsScreen}
+        options={{ headerTitle: "Albums" }}
       />
       <Stack.Screen
         name="PhotoDetail"
