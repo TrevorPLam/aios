@@ -716,7 +716,7 @@ export interface Settings {
   moduleViewMode: ModuleViewMode;
   moduleArrangement: ModuleArrangement;
   moduleOrder?: ModuleType[]; // For static arrangement
-  moduleUsageStats?: ModuleUsageStats; // Track usage for intuitive ordering
+  moduleUsageStats: ModuleUsageStats; // Track usage for intuitive ordering
 }
 
 export interface HistoryLogEntry {

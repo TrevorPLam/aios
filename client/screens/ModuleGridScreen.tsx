@@ -30,6 +30,15 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 // Delay to allow modal close animation to complete before navigation
 const MODAL_CLOSE_DELAY_MS = 100;
 
+/**
+ * ModuleItem interface represents a navigable module in the app.
+ * 
+ * Note: Command Center, Settings, and Integrations are intentionally
+ * excluded from this list as they have dedicated access points:
+ * - Command Center: Accessible via home button in header
+ * - Settings: Accessible via settings button in header
+ * - Integrations: Accessible via Settings menu
+ */
 interface ModuleItem {
   id: ModuleType;
   name: string;
@@ -142,28 +151,31 @@ export default function ModuleGridScreen() {
   const updateModuleOrder = (s: Settings) => {
     let orderedModules = [...ALL_MODULES];
 
-    // Filter based on enabled modules
-    orderedModules = orderedModules.filter(m => 
-      s.enabledModules.includes(m.id as ModuleType)
-    );
+    // Filter based on enabled modules - ensure enabledModules exists
+    if (s.enabledModules && Array.isArray(s.enabledModules)) {
+      orderedModules = orderedModules.filter(m => 
+        s.enabledModules.includes(m.id)
+      );
+    }
 
     // Apply arrangement
+    const stats = s.moduleUsageStats || {};
     switch (s.moduleArrangement || "intuitive") {
       case "alphabetical":
         orderedModules.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case "most_recent":
         // Sort by last used timestamp (most recent first)
-        if (s.moduleUsageStats) {
+        if (Object.keys(stats).length > 0) {
           orderedModules.sort((a, b) => {
-            const aTime = s.moduleUsageStats?.[a.id]?.lastUsed || "0";
-            const bTime = s.moduleUsageStats?.[b.id]?.lastUsed || "0";
+            const aTime = stats[a.id]?.lastUsed || "0";
+            const bTime = stats[b.id]?.lastUsed || "0";
             return bTime.localeCompare(aTime);
           });
         }
         break;
       case "static":
-        if (s.moduleOrder) {
+        if (s.moduleOrder && Array.isArray(s.moduleOrder)) {
           orderedModules.sort((a, b) => {
             const indexA = s.moduleOrder!.indexOf(a.id);
             const indexB = s.moduleOrder!.indexOf(b.id);
@@ -176,10 +188,10 @@ export default function ModuleGridScreen() {
       case "intuitive":
       default:
         // Sort by usage count (most used first)
-        if (s.moduleUsageStats) {
+        if (Object.keys(stats).length > 0) {
           orderedModules.sort((a, b) => {
-            const aCount = s.moduleUsageStats?.[a.id]?.count || 0;
-            const bCount = s.moduleUsageStats?.[b.id]?.count || 0;
+            const aCount = stats[a.id]?.count || 0;
+            const bCount = stats[b.id]?.count || 0;
             return bCount - aCount;
           });
         }

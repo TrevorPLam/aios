@@ -54,14 +54,17 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     const settings = await db.settings.get();
     let modules = [...ALL_MODULES];
     
-    // Filter by enabled modules
-    modules = modules.filter(m => settings.enabledModules.includes(m.id));
+    // Filter by enabled modules - ensure enabledModules exists
+    if (settings.enabledModules && Array.isArray(settings.enabledModules)) {
+      modules = modules.filter(m => settings.enabledModules.includes(m.id));
+    }
     
     // Sort by usage count (intuitive ordering)
-    if (settings.moduleUsageStats) {
+    const stats = settings.moduleUsageStats || {};
+    if (Object.keys(stats).length > 0) {
       modules.sort((a, b) => {
-        const aCount = settings.moduleUsageStats?.[a.id]?.count || 0;
-        const bCount = settings.moduleUsageStats?.[b.id]?.count || 0;
+        const aCount = stats[a.id]?.count || 0;
+        const bCount = stats[b.id]?.count || 0;
         return bCount - aCount; // Most used first
       });
     }
