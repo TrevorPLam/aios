@@ -97,6 +97,8 @@ export interface Note {
   updatedAt: string;
   tags: string[];
   links: string[];
+  isPinned?: boolean;
+  isArchived?: boolean;
 }
 
 export interface Task {

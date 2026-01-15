@@ -44,6 +44,8 @@ export default function NoteEditorScreen() {
   const [showAISheet, setShowAISheet] = useState(false);
   const [isNew, setIsNew] = useState(true);
   const [noteId, setNoteId] = useState<string>("");
+  const [isPinned, setIsPinned] = useState(false);
+  const [isArchived, setIsArchived] = useState(false);
 
   const bodyRef = useRef<TextInput>(null);
   const autosaveTimer = useRef<NodeJS.Timeout | null>(null);
@@ -57,6 +59,8 @@ export default function NoteEditorScreen() {
           setBody(note.bodyMarkdown);
           setNoteId(note.id);
           setIsNew(false);
+          setIsPinned(note.isPinned || false);
+          setIsArchived(note.isArchived || false);
         }
       } else {
         const id = generateId();
@@ -80,11 +84,13 @@ export default function NoteEditorScreen() {
       updatedAt: new Date().toISOString(),
       tags: parseTags(body),
       links: parseLinks(body),
+      isPinned,
+      isArchived,
     };
 
     await db.notes.save(note);
     setIsNew(false);
-  }, [noteId, title, body, isNew]);
+  }, [noteId, title, body, isNew, isPinned, isArchived]);
 
   useEffect(() => {
     if (autosaveTimer.current) {
@@ -115,25 +121,67 @@ export default function NoteEditorScreen() {
     ]);
   }, [noteId, navigation]);
 
+  const handleTogglePin = useCallback(async () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setIsPinned((prev) => !prev);
+  }, []);
+
+  const handleToggleArchive = useCallback(async () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setIsArchived((prev) => !prev);
+  }, []);
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View style={styles.headerActions}>
           {!isNew && (
-            <Pressable
-              onPress={handleDelete}
-              style={({ pressed }) => [
-                styles.headerButton,
-                pressed && { opacity: 0.7 },
-              ]}
-            >
-              <Feather name="trash-2" size={20} color={theme.error} />
-            </Pressable>
+            <>
+              <Pressable
+                onPress={handleTogglePin}
+                style={({ pressed }) => [
+                  styles.headerButton,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <Feather
+                  name="bookmark"
+                  size={20}
+                  color={isPinned ? theme.accent : theme.textSecondary}
+                />
+              </Pressable>
+              <Pressable
+                onPress={handleToggleArchive}
+                style={({ pressed }) => [
+                  styles.headerButton,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <Feather
+                  name="archive"
+                  size={20}
+                  color={isArchived ? theme.accent : theme.textSecondary}
+                />
+              </Pressable>
+              <Pressable
+                onPress={handleDelete}
+                style={({ pressed }) => [
+                  styles.headerButton,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <Feather name="trash-2" size={20} color={theme.error} />
+              </Pressable>
+            </>
           )}
         </View>
       ),
     });
-  }, [navigation, theme, isNew, handleDelete]);
+  }, [navigation, theme, isNew, handleDelete, handleTogglePin, handleToggleArchive, isPinned, isArchived]);
 
   const insertFormatting = (tool: (typeof FORMATTING_TOOLS)[0]) => {
     if (Platform.OS !== "web") {
