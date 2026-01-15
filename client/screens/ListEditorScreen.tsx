@@ -224,7 +224,7 @@ export default function ListEditorScreen() {
         </View>
       ),
     });
-  }, [navigation, theme, title, category, color, items, isNewList, list, listId]);
+  }, [navigation, theme, title, category, color, items, isNewList, list?.id, list?.createdAt, list?.isArchived, list?.isTemplate, listId]);
 
   return (
     <ThemedView style={styles.container}>

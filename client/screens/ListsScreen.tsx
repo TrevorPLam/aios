@@ -255,6 +255,7 @@ export default function ListsScreen() {
     // Load stats
     const statsData = await db.lists.getStats();
     setStats(statsData);
+  }, [filter]);
   }, []);
 
   useEffect(() => {
@@ -394,7 +395,6 @@ export default function ListsScreen() {
         <Pressable
           style={[
             styles.filterTab,
-            filter === "active" && { backgroundColor: theme.accent },
             { backgroundColor: filter === "active" ? theme.accent : theme.backgroundDefault },
           ]}
           onPress={() => {

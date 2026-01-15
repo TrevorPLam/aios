@@ -276,8 +276,9 @@ describe("Database Lists Storage", () => {
         expect(stats.active).toBe(1);
         expect(stats.archived).toBe(1);
         expect(stats.templates).toBe(1);
-        expect(stats.byCategory.grocery).toBe(2);
-        expect(stats.byCategory.work).toBe(1);
+        // Category counts should only include active lists
+        expect(stats.byCategory.grocery).toBe(1);
+        expect(stats.byCategory.work).toBeUndefined();
         expect(stats.totalItems).toBe(3);
         expect(stats.completedItems).toBe(2);
       });

@@ -421,8 +421,9 @@ export const db = {
       const archived = all.filter((l) => l.isArchived === true);
       const templates = all.filter((l) => l.isTemplate === true);
       
+      // Count categories only for active lists
       const byCategory: Record<string, number> = {};
-      all.forEach((list) => {
+      active.forEach((list) => {
         if (list.category) {
           byCategory[list.category] = (byCategory[list.category] || 0) + 1;
         }
