@@ -48,6 +48,20 @@ export default function PhotoDetailScreen() {
       headerRight: () => (
         <View style={styles.headerActions}>
           <Pressable
+            onPress={handleToggleFavorite}
+            style={({ pressed }) => [
+              styles.headerButton,
+              pressed && { opacity: 0.8 },
+            ]}
+          >
+            <Feather 
+              name={photo?.isFavorite ? "star" : "star"} 
+              size={22} 
+              color={photo?.isFavorite ? theme.warning : theme.accent}
+              fill={photo?.isFavorite ? theme.warning : "none"}
+            />
+          </Pressable>
+          <Pressable
             onPress={handleEdit}
             style={({ pressed }) => [
               styles.headerButton,
@@ -74,6 +88,22 @@ export default function PhotoDetailScreen() {
   const loadPhoto = async () => {
     const data = await db.photos.get(route.params.photoId);
     setPhoto(data);
+  };
+
+  const handleToggleFavorite = async () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    if (photo) {
+      await db.photos.toggleFavorite(photo.id);
+      await db.history.add({
+        message: photo.isFavorite 
+          ? `Removed ${photo.fileName} from favorites` 
+          : `Added ${photo.fileName} to favorites`,
+        type: "system",
+      });
+      loadPhoto();
+    }
   };
 
   const handleEdit = () => {
@@ -236,6 +266,23 @@ export default function PhotoDetailScreen() {
                 }}
               >
                 {photo.isBackedUp ? "Backed up" : "Not backed up"}
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.infoRow}>
+            <ThemedText type="caption" muted>
+              Favorite
+            </ThemedText>
+            <View style={styles.backupStatus}>
+              <Feather
+                name="star"
+                size={16}
+                color={photo.isFavorite ? theme.warning : theme.textMuted}
+                fill={photo.isFavorite ? theme.warning : "none"}
+              />
+              <ThemedText type="body">
+                {photo.isFavorite ? "Yes" : "No"}
               </ThemedText>
             </View>
           </View>
