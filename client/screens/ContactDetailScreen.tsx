@@ -144,7 +144,13 @@ export default function ContactDetailScreen() {
               name="star"
               size={22}
               color={contact.isFavorite ? theme.accent : theme.textSecondary}
-              fill={contact.isFavorite ? theme.accent : "none"}
+              style={
+                contact.isFavorite && {
+                  shadowColor: theme.accent,
+                  shadowOpacity: 0.5,
+                  shadowRadius: 2,
+                }
+              }
             />
           </Pressable>
         ) : null,
