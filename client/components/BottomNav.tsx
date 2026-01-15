@@ -75,14 +75,8 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
           pressed && styles.pressed,
         ]}
       >
-        <View style={styles.navContent}>
-          <ThemedText type="caption" muted style={styles.arrow}>
-            ‹
-          </ThemedText>
-          <Feather name={prev.icon} size={24} color={theme.textSecondary} />
-        </View>
-        <ThemedText type="caption" muted style={styles.label}>
-          {prev.name}
+        <ThemedText type="h2" muted style={styles.arrow}>
+          ‹
         </ThemedText>
       </Pressable>
 
@@ -112,14 +106,8 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
           pressed && styles.pressed,
         ]}
       >
-        <View style={styles.navContent}>
-          <Feather name={next.icon} size={24} color={theme.textSecondary} />
-          <ThemedText type="caption" muted style={styles.arrow}>
-            ›
-          </ThemedText>
-        </View>
-        <ThemedText type="caption" muted style={styles.label}>
-          {next.name}
+        <ThemedText type="h2" muted style={styles.arrow}>
+          ›
         </ThemedText>
       </Pressable>
     </View>
@@ -133,11 +121,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xs,
+    // Ensure the bar always fills to the edges
+    width: "100%",
+    minHeight: 80,
   },
   navButton: {
-    minWidth: 80,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
+    width: 56,
+    height: 56,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.lg,
@@ -149,7 +139,7 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   arrow: {
-    fontSize: 18,
+    fontSize: 32,
     fontWeight: "bold",
   },
   label: {

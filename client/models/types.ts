@@ -14,6 +14,10 @@ export type ModuleType =
   | "translator"
   | "budget";
 
+export type ModuleViewMode = "grid" | "list";
+
+export type ModuleArrangement = "most_recent" | "intuitive" | "alphabetical" | "static";
+
 export type ConfidenceLevel = "low" | "medium" | "high";
 
 export type RecommendationStatus =
@@ -702,6 +706,9 @@ export interface Settings {
   colorTheme: ColorTheme;
   aiPersonality: AIPersonality;
   aiCustomPrompt: string;
+  moduleViewMode: ModuleViewMode;
+  moduleArrangement: ModuleArrangement;
+  moduleOrder?: ModuleType[]; // For static arrangement
 }
 
 export interface HistoryLogEntry {
@@ -745,6 +752,9 @@ export const DEFAULT_SETTINGS: Settings = {
   colorTheme: "cyan",
   aiPersonality: "default",
   aiCustomPrompt: DEFAULT_AI_CUSTOM_PROMPT,
+  moduleViewMode: "grid",
+  moduleArrangement: "intuitive",
+  moduleOrder: undefined,
 };
 
 export const TIER_LIMITS: Record<AILimitTier, number> = {

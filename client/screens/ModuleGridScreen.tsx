@@ -12,6 +12,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import DraggableFlatList, {
+  RenderItemParams,
+  ScaleDecorator,
+} from "react-native-draggable-flatlist";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -19,7 +23,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { ModuleType, Settings } from "@/models/types";
+import { ModuleType, Settings, ModuleViewMode, ModuleArrangement } from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -27,21 +31,14 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 const MODAL_CLOSE_DELAY_MS = 100;
 
 interface ModuleItem {
-  id: ModuleType | "settings";
+  id: ModuleType;
   name: string;
   icon: keyof typeof Feather.glyphMap;
   route: keyof AppStackParamList;
   description: string;
 }
 
-const MODULES: ModuleItem[] = [
-  {
-    id: "command",
-    name: "Command Center",
-    icon: "cpu",
-    route: "CommandCenter",
-    description: "AI recommendations",
-  },
+const ALL_MODULES: ModuleItem[] = [
   {
     id: "notebook",
     name: "Notebook",
@@ -119,13 +116,6 @@ const MODULES: ModuleItem[] = [
     route: "Budget",
     description: "Personal budgeting",
   },
-  {
-    id: "settings",
-    name: "Settings",
-    icon: "settings",
-    route: "Settings",
-    description: "Preferences",
-  },
 ];
 
 export default function ModuleGridScreen() {
@@ -133,108 +123,264 @@ export default function ModuleGridScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [viewMode, setViewMode] = useState<ModuleViewMode>("grid");
+  const [arrangement, setArrangement] = useState<ModuleArrangement>("intuitive");
+  const [modules, setModules] = useState<ModuleItem[]>([]);
 
   useEffect(() => {
-    db.settings.get().then(setSettings);
+    loadSettings();
   }, []);
+
+  const loadSettings = async () => {
+    const s = await db.settings.get();
+    setSettings(s);
+    setViewMode(s.moduleViewMode || "grid");
+    setArrangement(s.moduleArrangement || "intuitive");
+    updateModuleOrder(s);
+  };
+
+  const updateModuleOrder = (s: Settings) => {
+    let orderedModules = [...ALL_MODULES];
+
+    // Filter based on enabled modules
+    orderedModules = orderedModules.filter(m => 
+      s.enabledModules.includes(m.id as ModuleType)
+    );
+
+    // Apply arrangement
+    switch (s.moduleArrangement || "intuitive") {
+      case "alphabetical":
+        orderedModules.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "most_recent":
+        // For now, use default order - could be enhanced with usage tracking
+        break;
+      case "static":
+        if (s.moduleOrder) {
+          orderedModules.sort((a, b) => {
+            const indexA = s.moduleOrder!.indexOf(a.id);
+            const indexB = s.moduleOrder!.indexOf(b.id);
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+          });
+        }
+        break;
+      case "intuitive":
+      default:
+        // Keep default order for intuitive
+        break;
+    }
+
+    setModules(orderedModules);
+  };
 
   const handleModulePress = (module: ModuleItem) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    // Close the modal first, then navigate to the module
     navigation.goBack();
-    // Use setTimeout to ensure modal closes before navigation
     setTimeout(() => {
       navigation.navigate(module.route as any);
     }, MODAL_CLOSE_DELAY_MS);
   };
 
-  const isModuleEnabled = (id: ModuleType | "settings"): boolean => {
-    if (id === "settings" || id === "command") return true;
-    if (!settings) return true;
-    return settings.enabledModules.includes(id as ModuleType);
+  const handleViewModeChange = async (mode: ModuleViewMode) => {
+    setViewMode(mode);
+    if (settings) {
+      const updated = { ...settings, moduleViewMode: mode };
+      await db.settings.update(updated);
+      setSettings(updated);
+    }
   };
+
+  const handleArrangementChange = async (arr: ModuleArrangement) => {
+    setArrangement(arr);
+    if (settings) {
+      const updated = { ...settings, moduleArrangement: arr };
+      await db.settings.update(updated);
+      setSettings(updated);
+      updateModuleOrder(updated);
+    }
+  };
+
+  const handleDragEnd = async ({ data }: { data: ModuleItem[] }) => {
+    setModules(data);
+    if (settings && arrangement === "static") {
+      const moduleOrder = data.map(m => m.id);
+      const updated = { ...settings, moduleOrder };
+      await db.settings.update(updated);
+      setSettings(updated);
+    }
+  };
+
+  const handleHomePress = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    navigation.goBack();
+    setTimeout(() => {
+      navigation.navigate("CommandCenter");
+    }, MODAL_CLOSE_DELAY_MS);
+  };
+
+  const renderModuleCard = (module: ModuleItem, isDragging?: boolean) => (
+    <Pressable
+      onPress={() => handleModulePress(module)}
+      style={({ pressed }) => [
+        viewMode === "grid" ? styles.moduleCard : styles.moduleListItem,
+        { backgroundColor: theme.backgroundDefault },
+        pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+        isDragging && styles.dragging,
+      ]}
+    >
+      <View
+        style={[
+          styles.iconContainer,
+          { backgroundColor: theme.accentDim },
+        ]}
+      >
+        <Feather
+          name={module.icon}
+          size={viewMode === "grid" ? 28 : 24}
+          color={theme.accent}
+        />
+      </View>
+      <View style={viewMode === "list" ? styles.listContent : undefined}>
+        <ThemedText type="h3" style={viewMode === "grid" ? styles.moduleName : styles.listTitle}>
+          {module.name}
+        </ThemedText>
+        <ThemedText
+          type="caption"
+          secondary
+          style={viewMode === "grid" ? styles.moduleDescription : styles.listDescription}
+        >
+          {module.description}
+        </ThemedText>
+      </View>
+    </Pressable>
+  );
+
+  const renderDraggableItem = ({ item, drag, isActive }: RenderItemParams<ModuleItem>) => (
+    <ScaleDecorator>
+      <Pressable
+        onLongPress={drag}
+        disabled={arrangement !== "static"}
+        style={{ width: "100%" }}
+      >
+        {renderModuleCard(item, isActive)}
+      </Pressable>
+    </ScaleDecorator>
+  );
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingBottom: insets.bottom + Spacing.xl },
+      {/* Header with controls */}
+      <View
+        style={[
+          styles.header,
+          {
+            paddingTop: insets.top + Spacing.md,
+            backgroundColor: theme.backgroundBlack,
+          },
         ]}
-        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.grid}>
-          {MODULES.map((module, index) => {
-            const enabled = isModuleEnabled(module.id);
+        {/* View mode toggle */}
+        <Pressable
+          onPress={() => handleViewModeChange(viewMode === "grid" ? "list" : "grid")}
+          style={({ pressed }) => [
+            styles.headerButton,
+            { backgroundColor: theme.backgroundSecondary },
+            pressed && styles.pressed,
+          ]}
+        >
+          <Feather 
+            name={viewMode === "grid" ? "list" : "grid"} 
+            size={24} 
+            color={theme.accent} 
+          />
+        </Pressable>
 
-            return (
+        {/* Arrangement selector */}
+        <View style={styles.headerCenter}>
+          <Pressable
+            onPress={() => {
+              const arrangements: ModuleArrangement[] = ["intuitive", "alphabetical", "most_recent", "static"];
+              const currentIndex = arrangements.indexOf(arrangement);
+              const nextIndex = (currentIndex + 1) % arrangements.length;
+              handleArrangementChange(arrangements[nextIndex]);
+            }}
+            style={({ pressed }) => [
+              styles.arrangementButton,
+              { backgroundColor: theme.backgroundSecondary },
+              pressed && styles.pressed,
+            ]}
+          >
+            <Feather 
+              name={
+                arrangement === "alphabetical" ? "type" :
+                arrangement === "most_recent" ? "clock" :
+                arrangement === "static" ? "move" :
+                "zap"
+              } 
+              size={18} 
+              color={theme.textSecondary} 
+            />
+            <ThemedText type="caption" secondary style={styles.arrangementLabel}>
+              {arrangement === "most_recent" ? "Recent" :
+               arrangement === "intuitive" ? "Smart" :
+               arrangement === "alphabetical" ? "A-Z" :
+               "Custom"}
+            </ThemedText>
+          </Pressable>
+        </View>
+
+        {/* Home button */}
+        <Pressable
+          onPress={handleHomePress}
+          style={({ pressed }) => [
+            styles.headerButton,
+            { backgroundColor: theme.backgroundSecondary },
+            pressed && styles.pressed,
+          ]}
+        >
+          <Feather name="home" size={24} color={theme.accent} />
+        </Pressable>
+      </View>
+
+      {/* Module display */}
+      {viewMode === "grid" ? (
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingBottom: insets.bottom + Spacing.xl },
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.grid}>
+            {modules.map((module, index) => (
               <Animated.View
                 key={module.id}
                 entering={FadeInDown.delay(index * 50).springify()}
                 style={styles.gridItem}
               >
-                <Pressable
-                  onPress={() => enabled && handleModulePress(module)}
-                  style={({ pressed }) => [
-                    styles.moduleCard,
-                    { backgroundColor: theme.backgroundDefault },
-                    !enabled && styles.disabledCard,
-                    pressed &&
-                      enabled && { opacity: 0.8, transform: [{ scale: 0.98 }] },
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.iconContainer,
-                      {
-                        backgroundColor: enabled
-                          ? theme.accentDim
-                          : theme.backgroundSecondary,
-                      },
-                    ]}
-                  >
-                    <Feather
-                      name={module.icon}
-                      size={28}
-                      color={enabled ? theme.accent : theme.textMuted}
-                    />
-                  </View>
-                  <ThemedText
-                    type="h3"
-                    style={[styles.moduleName, !enabled && { opacity: 0.5 }]}
-                  >
-                    {module.name}
-                  </ThemedText>
-                  <ThemedText
-                    type="caption"
-                    secondary
-                    style={[
-                      styles.moduleDescription,
-                      !enabled && { opacity: 0.5 },
-                    ]}
-                  >
-                    {module.description}
-                  </ThemedText>
-                  {!enabled && (
-                    <View
-                      style={[
-                        styles.disabledBadge,
-                        { backgroundColor: theme.backgroundSecondary },
-                      ]}
-                    >
-                      <ThemedText type="small" muted>
-                        Disabled
-                      </ThemedText>
-                    </View>
-                  )}
-                </Pressable>
+                {renderModuleCard(module)}
               </Animated.View>
-            );
-          })}
-        </View>
-      </ScrollView>
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <DraggableFlatList
+          data={modules}
+          renderItem={renderDraggableItem}
+          keyExtractor={(item) => item.id}
+          onDragEnd={handleDragEnd}
+          contentContainerStyle={[
+            styles.listContainer,
+            { paddingBottom: insets.bottom + Spacing.xl },
+          ]}
+        />
+      )}
     </ThemedView>
   );
 }
@@ -243,9 +389,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.md,
+    width: "100%",
+  },
+  headerButton: {
+    width: 48,
+    height: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: BorderRadius.md,
+  },
+  headerCenter: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  arrangementButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+  },
+  arrangementLabel: {
+    fontSize: 12,
+  },
+  pressed: {
+    opacity: 0.7,
+  },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing["5xl"],
+    paddingTop: Spacing.lg,
   },
   grid: {
     flexDirection: "row",
@@ -262,9 +442,6 @@ const styles = StyleSheet.create({
     minHeight: 160,
     ...Shadows.card,
   },
-  disabledCard: {
-    opacity: 0.6,
-  },
   iconContainer: {
     width: 56,
     height: 56,
@@ -279,6 +456,35 @@ const styles = StyleSheet.create({
   },
   moduleDescription: {
     textAlign: "center",
+  },
+  listContainer: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.lg,
+  },
+  moduleListItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    marginBottom: Spacing.md,
+    ...Shadows.card,
+  },
+  listContent: {
+    flex: 1,
+    marginLeft: Spacing.md,
+  },
+  listTitle: {
+    marginBottom: Spacing.xs,
+  },
+  listDescription: {
+    fontSize: 12,
+  },
+  dragging: {
+    opacity: 0.8,
+    transform: [{ scale: 1.05 }],
+  },
+  disabledCard: {
+    opacity: 0.6,
   },
   disabledBadge: {
     position: "absolute",
