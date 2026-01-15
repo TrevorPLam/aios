@@ -325,7 +325,7 @@ export const db = {
     },
     async getActive(): Promise<List[]> {
       const all = await this.getAll();
-      return all.filter((l) => !l.isArchived);
+      return all.filter((l) => !l.isArchived && !l.isTemplate);
     },
     async getArchived(): Promise<List[]> {
       const all = await this.getAll();
@@ -417,7 +417,7 @@ export const db = {
       completedItems: number;
     }> {
       const all = await this.getAll();
-      const active = all.filter((l) => !l.isArchived);
+      const active = all.filter((l) => !l.isArchived && !l.isTemplate);
       const archived = all.filter((l) => l.isArchived === true);
       const templates = all.filter((l) => l.isTemplate === true);
       

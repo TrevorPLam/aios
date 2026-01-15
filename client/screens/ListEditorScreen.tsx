@@ -256,6 +256,86 @@ export default function ListEditorScreen() {
           />
         </View>
 
+        {/* Category Selection */}
+        <View style={styles.section}>
+          <ThemedText type="small" style={styles.label}>
+            Category
+          </ThemedText>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.optionsScroll}
+          >
+            {CATEGORY_OPTIONS.map((option) => (
+              <Pressable
+                key={option.value}
+                onPress={() => {
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                  setCategory(option.value);
+                }}
+                style={[
+                  styles.optionButton,
+                  {
+                    backgroundColor: category === option.value ? theme.accent : theme.backgroundDefault,
+                  },
+                ]}
+              >
+                <Feather 
+                  name={option.icon as any} 
+                  size={16} 
+                  color={category === option.value ? theme.buttonText : theme.textSecondary} 
+                />
+                <ThemedText 
+                  type="small"
+                  style={{
+                    color: category === option.value ? theme.buttonText : theme.textSecondary,
+                  }}
+                >
+                  {option.label}
+                </ThemedText>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Color Selection */}
+        <View style={styles.section}>
+          <ThemedText type="small" style={styles.label}>
+            Color Theme
+          </ThemedText>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.optionsScroll}
+          >
+            {COLOR_OPTIONS.map((colorOption) => (
+              <Pressable
+                key={colorOption}
+                onPress={() => {
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                  setColor(colorOption);
+                }}
+                style={[
+                  styles.colorButton,
+                  {
+                    backgroundColor: colorOption,
+                    borderWidth: color === colorOption ? 3 : 0,
+                    borderColor: theme.text,
+                  },
+                ]}
+              >
+                {color === colorOption && (
+                  <Feather name="check" size={16} color="#FFF" />
+                )}
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+
         <View style={styles.section}>
           <ThemedText type="small" style={styles.label}>
             Items
@@ -269,47 +349,118 @@ export default function ListEditorScreen() {
                 { backgroundColor: theme.backgroundDefault },
               ]}
             >
-              <Pressable
-                onPress={() => toggleItem(item.id)}
-                style={styles.checkboxContainer}
-              >
-                <View
-                  style={[
-                    styles.checkbox,
-                    {
-                      borderColor: item.isChecked ? theme.accent : theme.border,
-                      backgroundColor: item.isChecked
-                        ? theme.accent
-                        : "transparent",
-                    },
-                  ]}
-                >
-                  {item.isChecked && (
-                    <Feather
-                      name="check"
-                      size={16}
-                      color={theme.backgroundRoot}
-                    />
+              <View style={styles.itemContent}>
+                <View style={styles.itemTopRow}>
+                  <Pressable
+                    onPress={() => toggleItem(item.id)}
+                    style={styles.checkboxContainer}
+                  >
+                    <View
+                      style={[
+                        styles.checkbox,
+                        {
+                          borderColor: item.isChecked ? theme.accent : theme.border,
+                          backgroundColor: item.isChecked
+                            ? theme.accent
+                            : "transparent",
+                        },
+                      ]}
+                    >
+                      {item.isChecked && (
+                        <Feather
+                          name="check"
+                          size={16}
+                          color={theme.backgroundRoot}
+                        />
+                      )}
+                    </View>
+                  </Pressable>
+
+                  <View style={styles.itemTextContainer}>
+                    <ThemedText
+                      type="body"
+                      style={[
+                        styles.itemText,
+                        item.isChecked && styles.itemTextChecked,
+                      ]}
+                    >
+                      {item.text}
+                    </ThemedText>
+                    {item.notes && (
+                      <ThemedText type="small" muted style={styles.itemNotes}>
+                        {item.notes}
+                      </ThemedText>
+                    )}
+                  </View>
+
+                  {item.priority && item.priority !== "none" && (
+                    <View 
+                      style={[
+                        styles.priorityBadge,
+                        { 
+                          backgroundColor: 
+                            PRIORITY_OPTIONS.find(p => p.value === item.priority)?.color || theme.textMuted 
+                        }
+                      ]}
+                    >
+                      <ThemedText type="small" style={{ color: "#FFF", fontSize: 10 }}>
+                        {item.priority.toUpperCase()}
+                      </ThemedText>
+                    </View>
                   )}
+
+                  <Pressable
+                    onPress={() => deleteItem(item.id)}
+                    style={styles.deleteButton}
+                  >
+                    <Feather name="x" size={20} color={theme.textMuted} />
+                  </Pressable>
                 </View>
-              </Pressable>
 
-              <ThemedText
-                type="body"
-                style={[
-                  styles.itemText,
-                  item.isChecked && styles.itemTextChecked,
-                ]}
-              >
-                {item.text}
-              </ThemedText>
-
-              <Pressable
-                onPress={() => deleteItem(item.id)}
-                style={styles.deleteButton}
-              >
-                <Feather name="x" size={20} color={theme.textMuted} />
-              </Pressable>
+                {/* Item Actions */}
+                <View style={styles.itemActions}>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {PRIORITY_OPTIONS.map((priorityOption) => (
+                      <Pressable
+                        key={priorityOption.value}
+                        onPress={() => setPriority(item.id, priorityOption.value)}
+                        style={[
+                          styles.priorityButton,
+                          {
+                            backgroundColor: item.priority === priorityOption.value 
+                              ? priorityOption.color 
+                              : theme.backgroundSecondary,
+                          },
+                        ]}
+                      >
+                        <ThemedText 
+                          type="small" 
+                          style={{
+                            color: item.priority === priorityOption.value ? "#FFF" : theme.textSecondary,
+                            fontSize: 10,
+                          }}
+                        >
+                          {priorityOption.label}
+                        </ThemedText>
+                      </Pressable>
+                    ))}
+                  </ScrollView>
+                  
+                  <Pressable
+                    onPress={() => {
+                      setEditingItem(item.id);
+                      setEditingItemNotes(item.notes || "");
+                    }}
+                    style={styles.notesButton}
+                  >
+                    <Feather 
+                      name="file-text" 
+                      size={14} 
+                      color={item.notes ? theme.accent : theme.textMuted} 
+                    />
+                  </Pressable>
+                </View>
+              </View>
             </View>
           ))}
 
@@ -352,6 +503,58 @@ export default function ListEditorScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Notes Editor Modal */}
+      <Modal
+        visible={editingItem !== null}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setEditingItem(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: theme.backgroundRoot }]}>
+            <View style={styles.modalHeader}>
+              <ThemedText type="h3">Item Notes</ThemedText>
+              <Pressable onPress={() => setEditingItem(null)}>
+                <Feather name="x" size={24} color={theme.text} />
+              </Pressable>
+            </View>
+            
+            <TextInput
+              style={[
+                styles.notesInput,
+                {
+                  backgroundColor: theme.backgroundDefault,
+                  color: theme.text,
+                  borderColor: theme.border,
+                },
+              ]}
+              placeholder="Add notes for this item..."
+              placeholderTextColor={theme.textMuted}
+              value={editingItemNotes}
+              onChangeText={setEditingItemNotes}
+              multiline
+              numberOfLines={4}
+              autoFocus
+            />
+
+            <Pressable
+              onPress={() => {
+                if (editingItem) {
+                  setItemNotes(editingItem, editingItemNotes);
+                  setEditingItem(null);
+                  setEditingItemNotes("");
+                }
+              }}
+              style={[styles.saveNotesButton, { backgroundColor: theme.accent }]}
+            >
+              <ThemedText type="body" style={{ color: theme.buttonText }}>
+                Save Notes
+              </ThemedText>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </ThemedView>
   );
 }
@@ -383,13 +586,42 @@ const styles = StyleSheet.create({
     fontSize: 16,
     ...Shadows.card,
   },
-  itemRow: {
+  optionsScroll: {
+    marginHorizontal: -Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+  },
+  optionButton: {
     flexDirection: "row",
     alignItems: "center",
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    marginRight: Spacing.sm,
+    ...Shadows.card,
+  },
+  colorButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: Spacing.sm,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.card,
+  },
+  itemRow: {
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     marginBottom: Spacing.sm,
     ...Shadows.card,
+  },
+  itemContent: {
+    flex: 1,
+  },
+  itemTopRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: Spacing.xs,
   },
   checkboxContainer: {
     marginRight: Spacing.md,
@@ -402,6 +634,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  itemTextContainer: {
+    flex: 1,
+  },
   itemText: {
     flex: 1,
   },
@@ -409,7 +644,33 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
     opacity: 0.6,
   },
+  itemNotes: {
+    marginTop: Spacing.xs,
+    fontSize: 12,
+  },
+  priorityBadge: {
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 2,
+    borderRadius: BorderRadius.sm,
+    marginLeft: Spacing.sm,
+  },
   deleteButton: {
+    padding: Spacing.xs,
+    marginLeft: Spacing.sm,
+  },
+  itemActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 36,
+    gap: Spacing.sm,
+  },
+  priorityButton: {
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.sm,
+    marginRight: Spacing.xs,
+  },
+  notesButton: {
     padding: Spacing.xs,
   },
   addItemRow: {
@@ -425,5 +686,36 @@ const styles = StyleSheet.create({
   },
   addButton: {
     marginLeft: Spacing.sm,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    borderTopLeftRadius: BorderRadius.lg,
+    borderTopRightRadius: BorderRadius.lg,
+    padding: Spacing.xl,
+    minHeight: 300,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: Spacing.lg,
+  },
+  notesInput: {
+    borderWidth: 1,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
+    fontSize: 16,
+    minHeight: 120,
+    textAlignVertical: "top",
+    marginBottom: Spacing.lg,
+  },
+  saveNotesButton: {
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    alignItems: "center",
   },
 });
