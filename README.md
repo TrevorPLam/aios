@@ -233,7 +233,7 @@ The app uses AsyncStorage for local persistence with the following models:
 - **Alerts** - Alarms and reminders
 - **Contacts** - Native contacts with sharing preferences
 - **Settings** - User preferences and configuration
-- **History Log** - Activity tracking
+- **History Log** - Enhanced activity tracking with filtering, search, statistics, and export
 - **AI Limits** - Usage tracking with refresh cadence
 
 ## 🔌 API Integration
@@ -363,6 +363,7 @@ To integrate AI:
 - ✅ P2P Messaging module with group chat and media support
 - ✅ AI messaging assistance (draft, suggest, create tasks/events)
 - ✅ Translator module with real-time translation and TTS/STT
+- ✅ Enhanced History module with advanced filtering, search, analytics, and export
 - ❌ Database integration (PostgreSQL configured but not connected yet)
 - ❌ AI recommendation generation (endpoints ready, logic needed)
 - ❌ Video chat capability
@@ -371,6 +372,27 @@ To integrate AI:
 - ❌ AI Assist actions implementation (grammar check, summarization, etc.)
 
 See [MISSING_FEATURES.md](./MISSING_FEATURES.md) for a complete analysis.
+
+## 📊 History Module (Enhanced)
+
+The History module has been significantly enhanced from a basic activity log into a comprehensive tracking and analysis tool:
+
+### Features
+- **Advanced Filtering** - Filter by type (AI, archived, banked, deprecated, system) and date range (today, week, month)
+- **Real-time Search** - Search across messages and types with instant results
+- **Activity Statistics** - View total entries, breakdowns by type, and tracking duration
+- **Entry Management** - View detailed information, bulk selection, and multi-delete operations
+- **Export Functionality** - Export history to JSON for backup or analysis
+- **Enhanced UI** - Type badges, relative timestamps, metadata indicators, smooth animations
+
+### Technical Details
+- 8 new database methods for filtering, search, and statistics
+- 40+ comprehensive unit tests
+- Full backward compatibility
+- 0 security vulnerabilities (CodeQL verified)
+- Platform-specific features (haptic feedback, native sharing)
+
+See [HISTORY_MODULE_ENHANCEMENTS.md](./HISTORY_MODULE_ENHANCEMENTS.md) for complete documentation.
 
 ## 📚 Tech Stack
 
