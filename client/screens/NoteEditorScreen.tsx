@@ -149,10 +149,9 @@ export default function NoteEditorScreen() {
                 ]}
               >
                 <Feather
-                  name={isPinned ? "bookmark" : "bookmark"}
+                  name="bookmark"
                   size={20}
                   color={isPinned ? theme.accent : theme.textSecondary}
-                  fill={isPinned ? theme.accent : "none"}
                 />
               </Pressable>
               <Pressable

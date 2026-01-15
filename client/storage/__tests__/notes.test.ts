@@ -111,7 +111,7 @@ describe("Database Notes Storage", () => {
     it("should toggle pin status", async () => {
       await db.notes.save(mockNote);
 
-      // Pin the note
+      // Pin the note.
       const note = await db.notes.get("note_1");
       if (note) {
         await db.notes.save({ ...note, isPinned: true });
@@ -120,7 +120,7 @@ describe("Database Notes Storage", () => {
       let updated = await db.notes.get("note_1");
       expect(updated?.isPinned).toBe(true);
 
-      // Unpin the note
+      // Unpin the note.
       if (updated) {
         await db.notes.save({ ...updated, isPinned: false });
       }
@@ -132,7 +132,7 @@ describe("Database Notes Storage", () => {
     it("should toggle archive status", async () => {
       await db.notes.save(mockNote);
 
-      // Archive the note
+      // Archive the note.
       const note = await db.notes.get("note_1");
       if (note) {
         await db.notes.save({ ...note, isArchived: true });
@@ -141,7 +141,7 @@ describe("Database Notes Storage", () => {
       let updated = await db.notes.get("note_1");
       expect(updated?.isArchived).toBe(true);
 
-      // Unarchive the note
+      // Unarchive the note.
       if (updated) {
         await db.notes.save({ ...updated, isArchived: false });
       }
