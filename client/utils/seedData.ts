@@ -1061,7 +1061,11 @@ export function generateSeedContacts(): Contact[] {
       lastName: "Smith",
       phoneNumbers: ["+1 (646) 555-0112"],
       emails: ["taylor.smith@example.com"],
-      birthday: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7).toISOString().split("T")[0], // Birthday in 7 days
+      birthday: (() => {
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 7);
+        return futureDate.toISOString().split("T")[0];
+      })(), // Birthday in 7 days
       company: "Redwood Analytics",
       jobTitle: "Customer Success",
       imageUri: undefined,
