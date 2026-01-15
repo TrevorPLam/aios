@@ -256,7 +256,6 @@ export default function ListsScreen() {
     const statsData = await db.lists.getStats();
     setStats(statsData);
   }, [filter]);
-  }, []);
 
   useEffect(() => {
     loadLists();
