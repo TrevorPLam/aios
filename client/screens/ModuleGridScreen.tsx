@@ -153,7 +153,14 @@ export default function ModuleGridScreen() {
         orderedModules.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case "most_recent":
-        // For now, use default order - could be enhanced with usage tracking
+        // Sort by last used timestamp (most recent first)
+        if (s.moduleUsageStats) {
+          orderedModules.sort((a, b) => {
+            const aTime = s.moduleUsageStats?.[a.id]?.lastUsed || "0";
+            const bTime = s.moduleUsageStats?.[b.id]?.lastUsed || "0";
+            return bTime.localeCompare(aTime);
+          });
+        }
         break;
       case "static":
         if (s.moduleOrder) {
@@ -168,17 +175,27 @@ export default function ModuleGridScreen() {
         break;
       case "intuitive":
       default:
-        // Keep default order for intuitive
+        // Sort by usage count (most used first)
+        if (s.moduleUsageStats) {
+          orderedModules.sort((a, b) => {
+            const aCount = s.moduleUsageStats?.[a.id]?.count || 0;
+            const bCount = s.moduleUsageStats?.[b.id]?.count || 0;
+            return bCount - aCount;
+          });
+        }
         break;
     }
 
     setModules(orderedModules);
   };
 
-  const handleModulePress = (module: ModuleItem) => {
+  const handleModulePress = async (module: ModuleItem) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+    // Track module usage
+    await db.settings.trackModuleUsage(module.id);
+    
     navigation.goBack();
     setTimeout(() => {
       navigation.navigate(module.route as any);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -8,20 +8,28 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { ThemedText } from "./ThemedText";
+import { db } from "@/storage/database";
+import { ModuleType } from "@/models/types";
 
 export type ModuleItem = {
+  id: ModuleType;
   name: string;
   route: keyof AppStackParamList;
   icon: keyof typeof Feather.glyphMap;
 };
 
-export const MODULES: ModuleItem[] = [
-  { name: "Notebook", route: "Notebook", icon: "book-open" },
-  { name: "Planner", route: "Planner", icon: "check-square" },
-  { name: "Calendar", route: "Calendar", icon: "calendar" },
-  { name: "Email", route: "Email", icon: "mail" },
-  { name: "Budget", route: "Budget", icon: "pie-chart" },
-  { name: "Translator", route: "Translator", icon: "globe" },
+const ALL_MODULES: ModuleItem[] = [
+  { id: "notebook", name: "Notebook", route: "Notebook", icon: "book-open" },
+  { id: "planner", name: "Planner", route: "Planner", icon: "check-square" },
+  { id: "calendar", name: "Calendar", route: "Calendar", icon: "calendar" },
+  { id: "email", name: "Email", route: "Email", icon: "mail" },
+  { id: "messages", name: "Messages", route: "Messages", icon: "message-square" },
+  { id: "lists", name: "Lists", route: "Lists", icon: "list" },
+  { id: "alerts", name: "Alerts", route: "Alerts", icon: "bell" },
+  { id: "photos", name: "Photos", route: "Photos", icon: "image" },
+  { id: "contacts", name: "Contacts", route: "Contacts", icon: "users" },
+  { id: "budget", name: "Budget", route: "Budget", icon: "pie-chart" },
+  { id: "translator", name: "Translator", route: "Translator", icon: "globe" },
 ];
 
 interface BottomNavProps {
@@ -34,25 +42,54 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const route = useRoute();
   const insets = useSafeAreaInsets();
+  const [orderedModules, setOrderedModules] = useState<ModuleItem[]>(ALL_MODULES);
+
+  useEffect(() => {
+    loadModuleOrder();
+  }, []);
+
+  const loadModuleOrder = async () => {
+    const settings = await db.settings.get();
+    let modules = [...ALL_MODULES];
+    
+    // Filter by enabled modules
+    modules = modules.filter(m => settings.enabledModules.includes(m.id));
+    
+    // Sort by usage count (intuitive ordering)
+    if (settings.moduleUsageStats) {
+      modules.sort((a, b) => {
+        const aCount = settings.moduleUsageStats?.[a.id]?.count || 0;
+        const bCount = settings.moduleUsageStats?.[b.id]?.count || 0;
+        return bCount - aCount; // Most used first
+      });
+    }
+    
+    setOrderedModules(modules);
+  };
 
   // Find current module index if we are in one, otherwise default to -1
-  const currentIndex = MODULES.findIndex((m) => m.route === route.name);
+  const currentIndex = orderedModules.findIndex((m) => m.route === route.name);
 
-  // Eternal scrolling logic
+  // Circular navigation logic - CommandCenter is in the center
   const getPrevModule = () => {
-    if (currentIndex === -1) return MODULES[MODULES.length - 1];
-    const prevIndex = (currentIndex - 1 + MODULES.length) % MODULES.length;
-    return MODULES[prevIndex];
+    if (currentIndex === -1) return orderedModules[orderedModules.length - 1];
+    const prevIndex = (currentIndex - 1 + orderedModules.length) % orderedModules.length;
+    return orderedModules[prevIndex];
   };
 
   const getNextModule = () => {
-    if (currentIndex === -1) return MODULES[0];
-    const nextIndex = (currentIndex + 1) % MODULES.length;
-    return MODULES[nextIndex];
+    if (currentIndex === -1) return orderedModules[0];
+    const nextIndex = (currentIndex + 1) % orderedModules.length;
+    return orderedModules[nextIndex];
   };
 
   const prev = getPrevModule();
   const next = getNextModule();
+
+  const handleNavigation = async (module: ModuleItem) => {
+    await db.settings.trackModuleUsage(module.id);
+    navigation.navigate(module.route as any);
+  };
 
   return (
     <View
@@ -65,7 +102,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       ]}
     >
       <Pressable
-        onPress={() => navigation.navigate(prev.route as any)}
+        onPress={() => handleNavigation(prev)}
         style={({ pressed }) => [
           styles.navButton,
           {
@@ -96,7 +133,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       </Pressable>
 
       <Pressable
-        onPress={() => navigation.navigate(next.route as any)}
+        onPress={() => handleNavigation(next)}
         style={({ pressed }) => [
           styles.navButton,
           {
@@ -121,11 +158,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xs,
-    // Ensure the bar always fills to the edges
+    // IMPORTANT: These constraints ensure the bar fills to screen edges
+    // Do not change width or minHeight without updating this comment
     width: "100%",
     minHeight: 80,
   },
   navButton: {
+    // FIXED SIZE: Do not change without updating constraint comment
     width: 56,
     height: 56,
     alignItems: "center",
@@ -139,6 +178,7 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   arrow: {
+    // BOLD ARROWS ONLY: size 32, bold - per requirements
     fontSize: 32,
     fontWeight: "bold",
   },
@@ -147,6 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   aiButton: {
+    // FIXED SIZE: AI button centered between arrows
     width: 64,
     height: 64,
     alignItems: "center",
