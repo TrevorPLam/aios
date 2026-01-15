@@ -966,6 +966,9 @@ export function generateSeedConversations(): Conversation[] {
 
 export function generateSeedContacts(): Contact[] {
   const now = new Date().toISOString();
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+  const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   return [
     {
@@ -982,6 +985,25 @@ export function generateSeedContacts(): Contact[] {
       isRegistered: true,
       createdAt: now,
       updatedAt: now,
+      isFavorite: true,
+      groups: ["Work", "Friends"],
+      tags: ["colleague", "product"],
+      notes: [
+        {
+          id: generateId(),
+          text: "Great collaborator on the mobile redesign project. Has excellent UX insights.",
+          createdAt: twoWeeksAgo,
+          updatedAt: twoWeeksAgo,
+        },
+        {
+          id: generateId(),
+          text: "Mentioned she's interested in trying the new AI features we're building.",
+          createdAt: lastWeek,
+          updatedAt: lastWeek,
+        },
+      ],
+      lastContactedAt: yesterday,
+      contactFrequency: 15,
     },
     {
       id: "user_alex",
@@ -997,6 +1019,19 @@ export function generateSeedContacts(): Contact[] {
       isRegistered: true,
       createdAt: now,
       updatedAt: now,
+      isFavorite: true,
+      groups: ["Work"],
+      tags: ["engineering", "mentor"],
+      notes: [
+        {
+          id: generateId(),
+          text: "Helped me debug the React Native navigation issues. Very knowledgeable about mobile architecture.",
+          createdAt: lastWeek,
+          updatedAt: lastWeek,
+        },
+      ],
+      lastContactedAt: lastWeek,
+      contactFrequency: 8,
     },
     {
       id: "user_marcus",
@@ -1012,6 +1047,12 @@ export function generateSeedContacts(): Contact[] {
       isRegistered: true,
       createdAt: now,
       updatedAt: now,
+      isFavorite: false,
+      groups: ["Work"],
+      tags: ["design", "ux"],
+      notes: [],
+      lastContactedAt: twoWeeksAgo,
+      contactFrequency: 5,
     },
     {
       id: "user_taylor",
@@ -1020,13 +1061,25 @@ export function generateSeedContacts(): Contact[] {
       lastName: "Smith",
       phoneNumbers: ["+1 (646) 555-0112"],
       emails: ["taylor.smith@example.com"],
-      birthday: "1993-01-09",
+      birthday: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7).toISOString().split("T")[0], // Birthday in 7 days
       company: "Redwood Analytics",
       jobTitle: "Customer Success",
       imageUri: undefined,
       isRegistered: false,
       createdAt: now,
       updatedAt: now,
+      isFavorite: false,
+      groups: ["Friends"],
+      tags: ["networking"],
+      notes: [
+        {
+          id: generateId(),
+          text: "Met at the tech conference last month. Interested in customer success strategies.",
+          createdAt: twoWeeksAgo,
+          updatedAt: twoWeeksAgo,
+        },
+      ],
+      contactFrequency: 2,
     },
   ];
 }
