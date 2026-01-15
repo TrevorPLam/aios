@@ -25,6 +25,15 @@ import {
   ContactGroup,
 } from "@/models/types";
 import { generateId } from "@/utils/helpers";
+import {
+  isBirthdayInRange,
+  sortByUpcomingBirthday,
+  validateTag,
+  validateGroup,
+  validateNote,
+  arePotentialDuplicates,
+  matchesSearchQuery,
+} from "@/utils/contactHelpers";
 
 const KEYS = {
   RECOMMENDATIONS: "@aios/recommendations",
@@ -935,44 +944,18 @@ export const db = {
       const now = new Date();
       const futureDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
 
-      return all.filter((c) => {
+      const contactsWithUpcomingBirthdays = all.filter((c) => {
         if (!c.birthday) return false;
-        const birthday = new Date(c.birthday);
-        const thisYearBirthday = new Date(
-          now.getFullYear(),
-          birthday.getMonth(),
-          birthday.getDate()
-        );
-        const nextYearBirthday = new Date(
-          now.getFullYear() + 1,
-          birthday.getMonth(),
-          birthday.getDate()
-        );
-
-        return (
-          (thisYearBirthday >= now && thisYearBirthday <= futureDate) ||
-          (nextYearBirthday >= now && nextYearBirthday <= futureDate)
-        );
-      }).sort((a, b) => {
-        const aBday = new Date(a.birthday!);
-        const bBday = new Date(b.birthday!);
-        return aBday.getMonth() * 31 + aBday.getDate() - (bBday.getMonth() * 31 + bBday.getDate());
+        return isBirthdayInRange(c.birthday, now, futureDate);
       });
+
+      return sortByUpcomingBirthday(contactsWithUpcomingBirthdays);
     },
 
     /** Search contacts by name, email, phone, company, tags, or notes */
     async search(query: string): Promise<Contact[]> {
       const all = await this.getAll();
-      const lowerQuery = query.toLowerCase();
-      return all.filter(
-        (c) =>
-          c.name.toLowerCase().includes(lowerQuery) ||
-          c.emails.some((e) => e.toLowerCase().includes(lowerQuery)) ||
-          c.phoneNumbers.some((p) => p.includes(lowerQuery)) ||
-          c.company?.toLowerCase().includes(lowerQuery) ||
-          c.tags?.some((t) => t.toLowerCase().includes(lowerQuery)) ||
-          c.notes?.some((n) => n.text.toLowerCase().includes(lowerQuery))
-      );
+      return all.filter((c) => matchesSearchQuery(c, query));
     },
 
     /** Get a specific contact by ID */
@@ -1005,11 +988,14 @@ export const db = {
 
     /** Add a note to a contact */
     async addNote(id: string, noteText: string): Promise<void> {
+      const validatedText = validateNote(noteText);
+      if (!validatedText) return; // Invalid note text
+      
       const contact = await this.get(id);
       if (contact) {
         const note = {
           id: generateId(),
-          text: noteText,
+          text: validatedText,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
@@ -1021,11 +1007,14 @@ export const db = {
 
     /** Update a note */
     async updateNote(contactId: string, noteId: string, newText: string): Promise<void> {
+      const validatedText = validateNote(newText);
+      if (!validatedText) return; // Invalid note text
+      
       const contact = await this.get(contactId);
       if (contact && contact.notes) {
         const noteIndex = contact.notes.findIndex((n) => n.id === noteId);
         if (noteIndex >= 0) {
-          contact.notes[noteIndex].text = newText;
+          contact.notes[noteIndex].text = validatedText;
           contact.notes[noteIndex].updatedAt = new Date().toISOString();
           contact.updatedAt = new Date().toISOString();
           await this.save(contact);
@@ -1045,9 +1034,12 @@ export const db = {
 
     /** Add a tag to a contact */
     async addTag(id: string, tag: string): Promise<void> {
+      const validatedTag = validateTag(tag);
+      if (!validatedTag) return; // Invalid tag
+      
       const contact = await this.get(id);
       if (contact) {
-        contact.tags = [...new Set([...(contact.tags || []), tag])];
+        contact.tags = [...new Set([...(contact.tags || []), validatedTag])];
         contact.updatedAt = new Date().toISOString();
         await this.save(contact);
       }
@@ -1065,9 +1057,12 @@ export const db = {
 
     /** Add a contact to a group */
     async addToGroup(id: string, groupName: string): Promise<void> {
+      const validatedGroup = validateGroup(groupName);
+      if (!validatedGroup) return; // Invalid group name
+      
       const contact = await this.get(id);
       if (contact) {
-        contact.groups = [...new Set([...(contact.groups || []), groupName])];
+        contact.groups = [...new Set([...(contact.groups || []), validatedGroup])];
         contact.updatedAt = new Date().toISOString();
         await this.save(contact);
       }
@@ -1134,10 +1129,10 @@ export const db = {
       primary.updatedAt = new Date().toISOString();
       await this.save(primary);
 
-      // Delete duplicates
-      for (const dupId of duplicateIds) {
-        await this.delete(dupId);
-      }
+      // Delete duplicates in batch (more efficient)
+      const all = await this.getAll();
+      const filtered = all.filter((c) => !duplicateIds.includes(c.id));
+      await setData(KEYS.CONTACTS, filtered);
     },
 
     /** Find potential duplicate contacts */
@@ -1153,16 +1148,7 @@ export const db = {
         for (let j = i + 1; j < all.length; j++) {
           if (processed.has(all[j].id)) continue;
 
-          // Check for duplicate by name similarity or matching phone/email
-          const isSimilarName = all[i].name.toLowerCase() === all[j].name.toLowerCase();
-          const hasMatchingPhone = all[i].phoneNumbers.some((p) =>
-            all[j].phoneNumbers.includes(p)
-          );
-          const hasMatchingEmail = all[i].emails.some((e) =>
-            all[j].emails.includes(e)
-          );
-
-          if (isSimilarName || hasMatchingPhone || hasMatchingEmail) {
+          if (arePotentialDuplicates(all[i], all[j])) {
             group.push(all[j]);
             processed.add(all[j].id);
           }

@@ -53,6 +53,7 @@ import { Contact } from "@/models/types";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import { isBirthdayInRange, matchesSearchQuery } from "@/utils/contactHelpers";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -246,13 +247,7 @@ export default function ContactsScreen() {
       const thirtyDaysLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
       result = result.filter((c) => {
         if (!c.birthday) return false;
-        const birthday = new Date(c.birthday);
-        const thisYearBirthday = new Date(
-          today.getFullYear(),
-          birthday.getMonth(),
-          birthday.getDate()
-        );
-        return thisYearBirthday >= today && thisYearBirthday <= thirtyDaysLater;
+        return isBirthdayInRange(c.birthday, today, thirtyDaysLater);
       });
     } else if (filterType === "recent") {
       result = result
@@ -264,18 +259,9 @@ export default function ContactsScreen() {
         );
     }
 
-    // Apply search
+    // Apply search using helper function
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (c) =>
-          c.name.toLowerCase().includes(query) ||
-          c.emails.some((e) => e.toLowerCase().includes(query)) ||
-          c.phoneNumbers.some((p) => p.includes(query)) ||
-          c.company?.toLowerCase().includes(query) ||
-          c.tags?.some((t) => t.toLowerCase().includes(query)) ||
-          c.notes?.some((n) => n.text.toLowerCase().includes(query))
-      );
+      result = result.filter((c) => matchesSearchQuery(c, searchQuery));
     }
 
     // Apply sort
