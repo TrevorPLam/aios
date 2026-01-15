@@ -185,16 +185,34 @@ export interface EmailMessage {
   isRead: boolean;
 }
 
+export type ListItemPriority = "none" | "low" | "medium" | "high";
+
+export type ListCategory = 
+  | "general"
+  | "grocery"
+  | "shopping"
+  | "travel"
+  | "work"
+  | "home"
+  | "personal";
+
 export interface ListItem {
   id: string;
   text: string;
   isChecked: boolean;
+  priority?: ListItemPriority;
+  dueDate?: string; // ISO 8601 timestamp
+  notes?: string;
 }
 
 export interface List {
   id: string;
   title: string;
   items: ListItem[];
+  category?: ListCategory;
+  color?: string; // Hex color code for visual distinction
+  isArchived?: boolean;
+  isTemplate?: boolean;
   createdAt: string;
   lastOpenedAt: string;
   updatedAt: string;

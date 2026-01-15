@@ -7,6 +7,7 @@ import {
   TextInput,
   Platform,
   Alert,
+  Modal,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -20,11 +21,39 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { List, ListItem } from "@/models/types";
+import { List, ListItem, ListCategory, ListItemPriority } from "@/models/types";
 import { generateId } from "@/utils/helpers";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type ListEditorRouteProp = RouteProp<AppStackParamList, "ListEditor">;
+
+const PRIORITY_OPTIONS: { value: ListItemPriority; label: string; color: string }[] = [
+  { value: "none", label: "None", color: "#666" },
+  { value: "low", label: "Low", color: "#FFB800" },
+  { value: "medium", label: "Medium", color: "#00D9FF" },
+  { value: "high", label: "High", color: "#FF3B5C" },
+];
+
+const CATEGORY_OPTIONS: { value: ListCategory; label: string; icon: string }[] = [
+  { value: "general", label: "General", icon: "list" },
+  { value: "grocery", label: "Grocery", icon: "shopping-cart" },
+  { value: "shopping", label: "Shopping", icon: "shopping-bag" },
+  { value: "travel", label: "Travel", icon: "map" },
+  { value: "work", label: "Work", icon: "briefcase" },
+  { value: "home", label: "Home", icon: "home" },
+  { value: "personal", label: "Personal", icon: "user" },
+];
+
+const COLOR_OPTIONS = [
+  "#00D9FF", // Electric Blue
+  "#00FF94", // Success Green
+  "#FFB800", // Warning Yellow
+  "#FF3B5C", // Error Red
+  "#9D4EDD", // Purple
+  "#06FFA5", // Mint
+  "#FF006E", // Pink
+  "#8338EC", // Violet
+];
 
 export default function ListEditorScreen() {
   const { theme } = useTheme();
@@ -34,8 +63,13 @@ export default function ListEditorScreen() {
 
   const [list, setList] = useState<List | null>(null);
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState<ListCategory>("general");
+  const [color, setColor] = useState<string>("#00D9FF");
   const [items, setItems] = useState<ListItem[]>([]);
   const [newItemText, setNewItemText] = useState("");
+  const [editingItem, setEditingItem] = useState<string | null>(null);
+  const [editingItemNotes, setEditingItemNotes] = useState("");
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const listId = route.params?.listId;
   const isNewList = !listId;
@@ -47,6 +81,8 @@ export default function ListEditorScreen() {
         if (data) {
           setList(data);
           setTitle(data.title);
+          setCategory(data.category || "general");
+          setColor(data.color || "#00D9FF");
           setItems(data.items);
           await db.lists.updateLastOpened(listId);
         }
@@ -77,10 +113,30 @@ export default function ListEditorScreen() {
       id: generateId(),
       text: newItemText.trim(),
       isChecked: false,
+      priority: "none",
     };
 
     setItems((prev) => [...prev, newItem]);
     setNewItemText("");
+  };
+
+  const setPriority = (itemId: string, priority: ListItemPriority) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, priority } : item
+      )
+    );
+  };
+
+  const setItemNotes = (itemId: string, notes: string) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, notes: notes || undefined } : item
+      )
+    );
   };
 
   const deleteItem = (itemId: string) => {
@@ -101,7 +157,11 @@ export default function ListEditorScreen() {
       const listData: List = {
         id: list?.id || generateId(),
         title: title.trim(),
+        category,
+        color,
         items,
+        isArchived: list?.isArchived,
+        isTemplate: list?.isTemplate,
         createdAt: list?.createdAt || now,
         lastOpenedAt: now,
         updatedAt: now,
@@ -164,7 +224,7 @@ export default function ListEditorScreen() {
         </View>
       ),
     });
-  }, [navigation, theme, title, items, isNewList, list, listId]);
+  }, [navigation, theme, title, category, color, items, isNewList, list, listId]);
 
   return (
     <ThemedView style={styles.container}>
