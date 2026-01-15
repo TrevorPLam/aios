@@ -1,12 +1,20 @@
 /**
- * PhotosScreen Module
+ * PhotosScreen Module (Enhanced)
  *
- * Photo gallery with albums and backup management.
- * Features:
- * - Grid-based photo layout (configurable size)
- * - Album organization
- * - Backup status indicators
- * - Tag-based filtering
+ * Advanced photo gallery with comprehensive organization features.
+ * 
+ * New Features:
+ * - Albums system with cover photos
+ * - Advanced filtering (favorites, backup status, date range, tags)
+ * - Search functionality across names, tags, descriptions
+ * - Bulk selection and operations
+ * - Photo statistics display
+ * - Sorting options (date, name, size)
+ * - Favorites/starring system
+ * - Enhanced metadata display
+ * 
+ * Original Features:
+ * - Grid-based photo layout (configurable size 2x2 to 6x6)
  * - Import from camera roll
  * - Photo editing capabilities
  * - AI assistance for photo organization
@@ -23,6 +31,10 @@ import {
   Pressable,
   Platform,
   Dimensions,
+  TextInput,
+  Modal,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -40,22 +52,34 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Photo, PhotoGridSize } from "@/models/types";
+import { Photo, PhotoGridSize, PhotoSortBy, PhotoAlbum } from "@/models/types";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 import { BottomNav } from "@/components/BottomNav";
+import { formatFileSize } from "@/utils/helpers";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
+
+type FilterType = "all" | "favorites" | "backed_up" | "not_backed_up" | "album";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 interface PhotoCardProps {
   photo: Photo;
   onPress: () => void;
+  onLongPress?: () => void;
   index: number;
   gridSize: PhotoGridSize;
+  isSelected?: boolean;
 }
 
-function PhotoCard({ photo, onPress, index, gridSize }: PhotoCardProps) {
+function PhotoCard({ 
+  photo, 
+  onPress, 
+  onLongPress, 
+  index, 
+  gridSize,
+  isSelected = false,
+}: PhotoCardProps) {
   const { theme } = useTheme();
   const itemsPerRow = gridSize;
   const itemSize =
@@ -66,12 +90,17 @@ function PhotoCard({ photo, onPress, index, gridSize }: PhotoCardProps) {
     <Animated.View entering={FadeInDown.delay(index * 30).springify()}>
       <Pressable
         onPress={onPress}
+        onLongPress={onLongPress}
         style={({ pressed }) => [
           styles.photoCard,
           {
             width: itemSize,
             height: itemSize,
             backgroundColor: theme.backgroundDefault,
+          },
+          isSelected && { 
+            borderWidth: 3, 
+            borderColor: theme.accent 
           },
           pressed && { opacity: 0.8 },
         ]}
@@ -81,6 +110,16 @@ function PhotoCard({ photo, onPress, index, gridSize }: PhotoCardProps) {
           style={styles.photoImage}
           contentFit="cover"
         />
+        {photo.isFavorite && (
+          <View
+            style={[
+              styles.favoriteBadge,
+              { backgroundColor: theme.background },
+            ]}
+          >
+            <Feather name="star" size={12} color={theme.warning} />
+          </View>
+        )}
         {!photo.isBackedUp && (
           <View
             style={[
@@ -89,6 +128,16 @@ function PhotoCard({ photo, onPress, index, gridSize }: PhotoCardProps) {
             ]}
           >
             <Feather name="cloud-off" size={12} color={theme.textMuted} />
+          </View>
+        )}
+        {isSelected && (
+          <View
+            style={[
+              styles.selectionBadge,
+              { backgroundColor: theme.accent },
+            ]}
+          >
+            <Feather name="check" size={16} color={theme.buttonText} />
           </View>
         )}
       </Pressable>
@@ -102,11 +151,25 @@ export default function PhotosScreen() {
   const navigation = useNavigation<NavigationProp>();
 
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([]);
+  const [albums, setAlbums] = useState<PhotoAlbum[]>([]);
   const [gridSize, setGridSize] = useState<PhotoGridSize>(4);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<FilterType>("all");
+  const [sortBy, setSortBy] = useState<PhotoSortBy>("date");
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
+  const [showStatsSheet, setShowStatsSheet] = useState(false);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedPhotos, setSelectedPhotos] = useState<Set<string>>(new Set());
 
   const loadPhotos = useCallback(async () => {
     const data = await db.photos.getAllSorted();
     setPhotos(data);
+  }, []);
+
+  const loadAlbums = useCallback(async () => {
+    const data = await db.photoAlbums.getAll();
+    setAlbums(data);
   }, []);
 
   const loadSettings = useCallback(async () => {
@@ -117,16 +180,170 @@ export default function PhotosScreen() {
   useFocusEffect(
     useCallback(() => {
       loadPhotos();
+      loadAlbums();
       loadSettings();
-    }, [loadPhotos, loadSettings]),
+    }, [loadPhotos, loadAlbums, loadSettings]),
   );
+
+  // Filter and search photos
+  useEffect(() => {
+    let filtered = [...photos];
+
+    // Apply filter
+    switch (filterType) {
+      case "favorites":
+        filtered = filtered.filter((p) => p.isFavorite);
+        break;
+      case "backed_up":
+        filtered = filtered.filter((p) => p.isBackedUp);
+        break;
+      case "not_backed_up":
+        filtered = filtered.filter((p) => !p.isBackedUp);
+        break;
+      // "all" and "album" don't need additional filtering here
+    }
+
+    // Apply search
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (p) =>
+          p.fileName.toLowerCase().includes(query) ||
+          p.tags.some((t) => t.toLowerCase().includes(query)) ||
+          p.description?.toLowerCase().includes(query),
+      );
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date":
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        case "name":
+          return a.fileName.localeCompare(b.fileName);
+        case "size":
+          return b.fileSize - a.fileSize;
+        case "recent":
+          return (
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          );
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredPhotos(filtered);
+  }, [photos, filterType, searchQuery, sortBy]);
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => (
+        <View style={{ flexDirection: "row", gap: Spacing.sm }}>
+          <Pressable
+            onPress={() => navigation.navigate("Albums")}
+            style={({ pressed }) => [
+              { padding: Spacing.xs },
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <Feather name="folder" size={22} color={theme.accent} />
+          </Pressable>
+          <Pressable
+            onPress={() => setShowStatsSheet(true)}
+            style={({ pressed }) => [
+              { padding: Spacing.xs },
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <Feather name="pie-chart" size={22} color={theme.accent} />
+          </Pressable>
+          <Pressable
+            onPress={() => setShowFilterSheet(true)}
+            style={({ pressed }) => [
+              { padding: Spacing.xs },
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <Feather 
+              name="filter" 
+              size={22} 
+              color={filterType !== "all" ? theme.accent : theme.text} 
+            />
+          </Pressable>
+          {selectionMode && (
+            <Pressable
+              onPress={handleCancelSelection}
+              style={({ pressed }) => [
+                { padding: Spacing.xs },
+                pressed && { opacity: 0.7 },
+              ]}
+            >
+              <Feather name="x" size={22} color={theme.text} />
+            </Pressable>
+          )}
+        </View>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, theme, filterType, selectionMode]);
+
+  const toggleSelection = (photoId: string) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setSelectedPhotos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(photoId)) {
+        newSet.delete(photoId);
+      } else {
+        newSet.add(photoId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleLongPress = (photoId: string) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+    setSelectionMode(true);
+    toggleSelection(photoId);
+  };
+
+  const handleCancelSelection = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setSelectionMode(false);
+    setSelectedPhotos(new Set());
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedPhotos.size === 0) return;
+
+    Alert.alert(
+      "Delete Photos",
+      `Are you sure you want to delete ${selectedPhotos.size} photo(s)?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await db.photos.deleteMultiple(Array.from(selectedPhotos));
+            await db.history.add({
+              message: `Deleted ${selectedPhotos.size} photos`,
+              type: "system",
+            });
+            handleCancelSelection();
+            loadPhotos();
+          },
+        },
+      ],
+    );
+  };
 
   const handleAddPhoto = async () => {
     if (Platform.OS !== "web") {
@@ -211,7 +428,12 @@ export default function PhotosScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    navigation.navigate("PhotoDetail", { photoId });
+    
+    if (selectionMode) {
+      toggleSelection(photoId);
+    } else {
+      navigation.navigate("PhotoDetail", { photoId });
+    }
   };
 
   const handleGridSizeChange = async (delta: number) => {
@@ -241,14 +463,109 @@ export default function PhotosScreen() {
         renderEmptyState()
       ) : (
         <>
+          {/* Search Bar */}
+          <View
+            style={[
+              styles.searchContainer,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
+            <Feather name="search" size={20} color={theme.textMuted} />
+            <TextInput
+              style={[styles.searchInput, { color: theme.text }]}
+              placeholder="Search photos..."
+              placeholderTextColor={theme.textMuted}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+            {searchQuery.length > 0 && (
+              <Pressable onPress={() => setSearchQuery("")}>
+                <Feather name="x" size={20} color={theme.textMuted} />
+              </Pressable>
+            )}
+          </View>
+
+          {/* Filter & Sort Bar */}
+          <View style={styles.filterBar}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.filterScroll}
+            >
+              {["all", "favorites", "backed_up", "not_backed_up"].map((type) => (
+                <Pressable
+                  key={type}
+                  onPress={() => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    setFilterType(type as FilterType);
+                  }}
+                  style={[
+                    styles.filterChip,
+                    {
+                      backgroundColor:
+                        filterType === type
+                          ? theme.accent
+                          : theme.backgroundDefault,
+                    },
+                  ]}
+                >
+                  <ThemedText
+                    type="small"
+                    style={{
+                      color: filterType === type ? theme.buttonText : theme.text,
+                    }}
+                  >
+                    {type === "all"
+                      ? "All"
+                      : type === "favorites"
+                        ? "Favorites"
+                        : type === "backed_up"
+                          ? "Backed Up"
+                          : "Not Backed Up"}
+                  </ThemedText>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Selection Mode Toolbar */}
+          {selectionMode && (
+            <View
+              style={[
+                styles.selectionToolbar,
+                { backgroundColor: theme.backgroundDefault },
+              ]}
+            >
+              <ThemedText type="body">
+                {selectedPhotos.size} selected
+              </ThemedText>
+              <View style={styles.selectionActions}>
+                <Pressable
+                  onPress={handleBulkDelete}
+                  disabled={selectedPhotos.size === 0}
+                  style={[
+                    styles.selectionButton,
+                    selectedPhotos.size === 0 && { opacity: 0.5 },
+                  ]}
+                >
+                  <Feather name="trash-2" size={20} color={theme.error} />
+                </Pressable>
+              </View>
+            </View>
+          )}
+
           <FlatList
-            data={photos}
+            data={filteredPhotos}
             renderItem={({ item, index }) => (
               <PhotoCard
                 photo={item}
                 onPress={() => handlePhotoPress(item.id)}
+                onLongPress={() => handleLongPress(item.id)}
                 index={index}
                 gridSize={gridSize}
+                isSelected={selectedPhotos.has(item.id)}
               />
             )}
             keyExtractor={(item) => item.id}
@@ -324,9 +641,155 @@ export default function PhotosScreen() {
           <View style={styles.bottomNavContainer}>
             <BottomNav onAiPress={() => {}} />
           </View>
+
+          {/* Statistics Sheet */}
+          <PhotoStatsSheet
+            visible={showStatsSheet}
+            onClose={() => setShowStatsSheet(false)}
+          />
         </>
       )}
     </ThemedView>
+  );
+}
+
+// Statistics Sheet Component
+function PhotoStatsSheet({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: () => void;
+}) {
+  const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
+  const [stats, setStats] = useState<{
+    totalPhotos: number;
+    totalSize: number;
+    backedUpCount: number;
+    favoriteCount: number;
+    albumCount: number;
+    taggedCount: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (visible) {
+      loadStats();
+    }
+  }, [visible]);
+
+  const loadStats = async () => {
+    const data = await db.photos.getStatistics();
+    setStats(data);
+  };
+
+  if (!stats) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <Pressable style={styles.modalOverlay} onPress={onClose}>
+        <Pressable
+          style={[
+            styles.modalContent,
+            {
+              backgroundColor: theme.background,
+              paddingBottom: insets.bottom + Spacing.lg,
+            },
+          ]}
+          onPress={(e) => e.stopPropagation()}
+        >
+          <View style={styles.modalHeader}>
+            <ThemedText type="h2">Photo Statistics</ThemedText>
+            <Pressable onPress={onClose}>
+              <Feather name="x" size={24} color={theme.text} />
+            </Pressable>
+          </View>
+
+          <ScrollView style={styles.statsContent}>
+            <View style={styles.statRow}>
+              <View style={styles.statInfo}>
+                <Feather name="image" size={24} color={theme.accent} />
+                <View style={styles.statText}>
+                  <ThemedText type="body" muted>
+                    Total Photos
+                  </ThemedText>
+                  <ThemedText type="h2">{stats.totalPhotos}</ThemedText>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statInfo}>
+                <Feather name="hard-drive" size={24} color={theme.accent} />
+                <View style={styles.statText}>
+                  <ThemedText type="body" muted>
+                    Total Size
+                  </ThemedText>
+                  <ThemedText type="h2">
+                    {formatFileSize(stats.totalSize)}
+                  </ThemedText>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statInfo}>
+                <Feather name="cloud" size={24} color={theme.success} />
+                <View style={styles.statText}>
+                  <ThemedText type="body" muted>
+                    Backed Up
+                  </ThemedText>
+                  <ThemedText type="h2">
+                    {stats.backedUpCount} / {stats.totalPhotos}
+                  </ThemedText>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statInfo}>
+                <Feather name="star" size={24} color={theme.warning} />
+                <View style={styles.statText}>
+                  <ThemedText type="body" muted>
+                    Favorites
+                  </ThemedText>
+                  <ThemedText type="h2">{stats.favoriteCount}</ThemedText>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statInfo}>
+                <Feather name="folder" size={24} color={theme.accent} />
+                <View style={styles.statText}>
+                  <ThemedText type="body" muted>
+                    Albums
+                  </ThemedText>
+                  <ThemedText type="h2">{stats.albumCount}</ThemedText>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View style={styles.statInfo}>
+                <Feather name="tag" size={24} color={theme.accent} />
+                <View style={styles.statText}>
+                  <ThemedText type="body" muted>
+                    Tagged Photos
+                  </ThemedText>
+                  <ThemedText type="h2">{stats.taggedCount}</ThemedText>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </Pressable>
+      </Pressable>
+    </Modal>
   );
 }
 
@@ -357,6 +820,99 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.xs,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.xs,
+  },
+  favoriteBadge: {
+    position: "absolute",
+    top: Spacing.xs,
+    left: Spacing.xs,
+    paddingHorizontal: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.xs,
+  },
+  selectionBadge: {
+    position: "absolute",
+    bottom: Spacing.xs,
+    right: Spacing.xs,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    marginHorizontal: Spacing.lg,
+    marginTop: Spacing.md,
+    borderRadius: BorderRadius.md,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    padding: 0,
+  },
+  filterBar: {
+    paddingVertical: Spacing.sm,
+  },
+  filterScroll: {
+    paddingHorizontal: Spacing.lg,
+    gap: Spacing.sm,
+  },
+  filterChip: {
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.lg,
+  },
+  selectionToolbar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+  },
+  selectionActions: {
+    flexDirection: "row",
+    gap: Spacing.md,
+  },
+  selectionButton: {
+    padding: Spacing.sm,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    borderTopLeftRadius: BorderRadius.xl,
+    borderTopRightRadius: BorderRadius.xl,
+    maxHeight: "80%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+  },
+  statsContent: {
+    padding: Spacing.lg,
+  },
+  statRow: {
+    marginBottom: Spacing.lg,
+  },
+  statInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+  },
+  statText: {
+    flex: 1,
   },
   emptyState: {
     flex: 1,

@@ -366,6 +366,14 @@ export interface Photo {
   updatedAt: string;
   isBackedUp: boolean;
   tags: string[];
+  isFavorite?: boolean;
+  albumId?: string;
+  location?: {
+    latitude: number;
+    longitude: number;
+    address?: string;
+  };
+  description?: string;
 }
 
 export interface PhotoEdit {
@@ -386,6 +394,33 @@ export type PhotoEditOperation =
   | { type: "ai_auto_fix" };
 
 export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
+
+/**
+ * Photo Album Interface
+ * 
+ * Represents a collection of photos grouped together.
+ * Albums can have cover photos and custom names.
+ * 
+ * @property {string} id - Unique identifier for the album
+ * @property {string} name - Album name/title
+ * @property {string} coverPhotoId - ID of the photo to use as album cover
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} updatedAt - ISO 8601 timestamp of last update
+ * @property {number} photoCount - Number of photos in the album
+ * @property {string} description - Optional album description
+ */
+export interface PhotoAlbum {
+  id: string;
+  name: string;
+  coverPhotoId?: string;
+  createdAt: string;
+  updatedAt: string;
+  photoCount: number;
+  description?: string;
+}
+
+export type PhotoSortBy = "date" | "name" | "size" | "recent";
+export type PhotoSortOrder = "asc" | "desc";
 export type MessageType = "text" | "image" | "video" | "audio" | "file" | "gif";
 export type ColorTheme =
   | "cyan"

@@ -14,6 +14,7 @@ import {
   List,
   Alert,
   Photo,
+  PhotoAlbum,
   Message,
   Conversation,
   Contact,
@@ -39,6 +40,7 @@ const KEYS = {
   ALERTS: "@aios/alerts",
   ALERT_HISTORY: "@aios/alert_history",
   PHOTOS: "@aios/photos",
+  PHOTO_ALBUMS: "@aios/photo_albums",
   MESSAGES: "@aios/messages",
   CONVERSATIONS: "@aios/conversations",
   CONTACTS: "@aios/contacts",
@@ -1149,6 +1151,11 @@ export const db = {
       const filtered = all.filter((p) => p.id !== id);
       await setData(KEYS.PHOTOS, filtered);
     },
+    async deleteMultiple(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((p) => !ids.includes(p.id));
+      await setData(KEYS.PHOTOS, filtered);
+    },
     async updateBackupStatus(id: string, isBackedUp: boolean): Promise<void> {
       const all = await this.getAll();
       const photo = all.find((p) => p.id === id);
@@ -1161,6 +1168,146 @@ export const db = {
     async getByTag(tag: string): Promise<Photo[]> {
       const all = await this.getAll();
       return all.filter((p) => p.tags.includes(tag));
+    },
+    async toggleFavorite(id: string): Promise<void> {
+      const all = await this.getAll();
+      const photo = all.find((p) => p.id === id);
+      if (photo) {
+        photo.isFavorite = !photo.isFavorite;
+        photo.updatedAt = new Date().toISOString();
+        await setData(KEYS.PHOTOS, all);
+      }
+    },
+    async getFavorites(): Promise<Photo[]> {
+      const all = await this.getAll();
+      return all.filter((p) => p.isFavorite === true);
+    },
+    async getByAlbum(albumId: string): Promise<Photo[]> {
+      const all = await this.getAll();
+      return all.filter((p) => p.albumId === albumId);
+    },
+    async getWithoutAlbum(): Promise<Photo[]> {
+      const all = await this.getAll();
+      return all.filter((p) => !p.albumId);
+    },
+    async moveToAlbum(photoIds: string[], albumId: string): Promise<void> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      photoIds.forEach((id) => {
+        const photo = all.find((p) => p.id === id);
+        if (photo) {
+          photo.albumId = albumId;
+          photo.updatedAt = now;
+        }
+      });
+      await setData(KEYS.PHOTOS, all);
+    },
+    async removeFromAlbum(photoIds: string[]): Promise<void> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      photoIds.forEach((id) => {
+        const photo = all.find((p) => p.id === id);
+        if (photo) {
+          photo.albumId = undefined;
+          photo.updatedAt = now;
+        }
+      });
+      await setData(KEYS.PHOTOS, all);
+    },
+    async addTags(id: string, tags: string[]): Promise<void> {
+      const all = await this.getAll();
+      const photo = all.find((p) => p.id === id);
+      if (photo) {
+        const uniqueTags = [...new Set([...photo.tags, ...tags])];
+        photo.tags = uniqueTags;
+        photo.updatedAt = new Date().toISOString();
+        await setData(KEYS.PHOTOS, all);
+      }
+    },
+    async removeTags(id: string, tags: string[]): Promise<void> {
+      const all = await this.getAll();
+      const photo = all.find((p) => p.id === id);
+      if (photo) {
+        photo.tags = photo.tags.filter((t) => !tags.includes(t));
+        photo.updatedAt = new Date().toISOString();
+        await setData(KEYS.PHOTOS, all);
+      }
+    },
+    async search(query: string): Promise<Photo[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase();
+      return all.filter(
+        (p) =>
+          p.fileName.toLowerCase().includes(lowerQuery) ||
+          p.tags.some((t) => t.toLowerCase().includes(lowerQuery)) ||
+          p.description?.toLowerCase().includes(lowerQuery),
+      );
+    },
+    async getStatistics(): Promise<{
+      totalPhotos: number;
+      totalSize: number;
+      backedUpCount: number;
+      favoriteCount: number;
+      albumCount: number;
+      taggedCount: number;
+    }> {
+      const all = await this.getAll();
+      const albums = await db.photoAlbums.getAll();
+      return {
+        totalPhotos: all.length,
+        totalSize: all.reduce((sum, p) => sum + p.fileSize, 0),
+        backedUpCount: all.filter((p) => p.isBackedUp).length,
+        favoriteCount: all.filter((p) => p.isFavorite).length,
+        albumCount: albums.length,
+        taggedCount: all.filter((p) => p.tags.length > 0).length,
+      };
+    },
+  },
+
+  /**
+   * Photo Albums Module
+   *
+   * Manages photo album storage operations.
+   * Albums are collections of photos with custom names and cover photos.
+   */
+  photoAlbums: {
+    async getAll(): Promise<PhotoAlbum[]> {
+      return getData(KEYS.PHOTO_ALBUMS, []);
+    },
+    async get(id: string): Promise<PhotoAlbum | null> {
+      const all = await this.getAll();
+      return all.find((a) => a.id === id) || null;
+    },
+    async save(album: PhotoAlbum): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((a) => a.id === album.id);
+      if (index >= 0) {
+        all[index] = album;
+      } else {
+        all.push(album);
+      }
+      await setData(KEYS.PHOTO_ALBUMS, all);
+    },
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((a) => a.id !== id);
+      await setData(KEYS.PHOTO_ALBUMS, filtered);
+      
+      // Remove album reference from photos
+      const photos = await db.photos.getByAlbum(id);
+      if (photos.length > 0) {
+        await db.photos.removeFromAlbum(photos.map((p) => p.id));
+      }
+    },
+    async updatePhotoCount(albumId: string): Promise<void> {
+      const photos = await db.photos.getByAlbum(albumId);
+      const all = await this.getAll();
+      const album = all.find((a) => a.id === albumId);
+      if (album) {
+        album.photoCount = photos.length;
+        album.updatedAt = new Date().toISOString();
+        await setData(KEYS.PHOTO_ALBUMS, all);
+      }
     },
   },
 
