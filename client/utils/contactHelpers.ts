@@ -125,16 +125,20 @@ export function arePotentialDuplicates(
     return true;
   }
   
-  // Check for matching phone numbers
-  if (
-    contact1.phoneNumbers.some((p) => contact2.phoneNumbers.includes(p))
-  ) {
-    return true;
+  // Check for matching phone numbers using Set for O(1) lookup
+  if (contact1.phoneNumbers.length > 0 && contact2.phoneNumbers.length > 0) {
+    const phoneSet = new Set(contact2.phoneNumbers);
+    if (contact1.phoneNumbers.some((p) => phoneSet.has(p))) {
+      return true;
+    }
   }
   
-  // Check for matching email addresses
-  if (contact1.emails.some((e) => contact2.emails.includes(e))) {
-    return true;
+  // Check for matching email addresses using Set for O(1) lookup
+  if (contact1.emails.length > 0 && contact2.emails.length > 0) {
+    const emailSet = new Set(contact2.emails);
+    if (contact1.emails.some((e) => emailSet.has(e))) {
+      return true;
+    }
   }
   
   return false;
