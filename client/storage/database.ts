@@ -971,6 +971,18 @@ export const db = {
       await this.save(updated);
       return updated;
     },
+    async trackModuleUsage(moduleId: string): Promise<void> {
+      const current = await this.get();
+      const stats = current.moduleUsageStats || {};
+      const now = new Date().toISOString();
+      
+      stats[moduleId] = {
+        count: (stats[moduleId]?.count || 0) + 1,
+        lastUsed: now,
+      };
+      
+      await this.update({ moduleUsageStats: stats });
+    },
   },
 
   history: {
