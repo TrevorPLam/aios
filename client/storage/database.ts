@@ -2447,6 +2447,385 @@ export const db = {
         await this.save(integration);
       }
     },
+
+    /**
+     * Search integrations by query (name, service name, or description)
+     * Performs case-insensitive search across multiple fields
+     * Returns all integrations when query is empty or whitespace only
+     *
+     * @param {string} query - Search query string
+     * @returns {Promise<Integration[]>} Array of matching integrations
+     */
+    async search(query: string): Promise<Integration[]> {
+      const all = await this.getAll();
+      if (!query.trim()) return all;
+
+      const lowerQuery = query.toLowerCase();
+      return all.filter(
+        (integration) =>
+          integration.name.toLowerCase().includes(lowerQuery) ||
+          integration.serviceName.toLowerCase().includes(lowerQuery) ||
+          integration.description.toLowerCase().includes(lowerQuery),
+      );
+    },
+
+    /**
+     * Get integrations with advanced filtering options
+     * Supports filtering by category, status, and enabled state
+     *
+     * @param {Object} filters - Filter options
+     * @param {string} [filters.category] - Filter by category
+     * @param {string} [filters.status] - Filter by status
+     * @param {boolean} [filters.isEnabled] - Filter by enabled state
+     * @returns {Promise<Integration[]>} Filtered array of integrations
+     */
+    async filter(filters: {
+      category?: string;
+      status?: string;
+      isEnabled?: boolean;
+    }): Promise<Integration[]> {
+      const all = await this.getAll();
+      return all.filter((integration) => {
+        if (
+          filters.category &&
+          integration.category !== filters.category
+        ) {
+          return false;
+        }
+        if (filters.status && integration.status !== filters.status) {
+          return false;
+        }
+        if (
+          filters.isEnabled !== undefined &&
+          integration.isEnabled !== filters.isEnabled
+        ) {
+          return false;
+        }
+        return true;
+      });
+    },
+
+    /**
+     * Get integration statistics
+     * Calculates metrics for connected integrations, sync stats, and health
+     *
+     * @returns {Promise<Object>} Statistics object with various metrics
+     */
+    async getStatistics(): Promise<{
+      totalIntegrations: number;
+      connectedCount: number;
+      disconnectedCount: number;
+      errorCount: number;
+      syncingCount: number;
+      enabledCount: number;
+      totalSyncs: number;
+      totalDataItemsSynced: number;
+      averageSyncDuration: number;
+      totalErrors: number;
+      categoryCounts: Record<string, number>;
+      recentSyncs: Array<{ id: string; name: string; lastSyncAt: string }>;
+    }> {
+      const all = await this.getAll();
+
+      const connectedIntegrations = all.filter(
+        (i) => i.status === "connected",
+      );
+      const disconnectedIntegrations = all.filter(
+        (i) => i.status === "disconnected",
+      );
+      const errorIntegrations = all.filter((i) => i.status === "error");
+      const syncingIntegrations = all.filter(
+        (i) => i.status === "syncing",
+      );
+      const enabledIntegrations = all.filter((i) => i.isEnabled);
+
+      const totalSyncs = all.reduce(
+        (sum, i) => sum + i.stats.totalSyncs,
+        0,
+      );
+      const totalDataItemsSynced = all.reduce(
+        (sum, i) => sum + i.stats.dataItemsSynced,
+        0,
+      );
+
+      // Calculate average sync duration across all integrations
+      const integrationsWithSyncs = all.filter(
+        (i) => i.stats.totalSyncs > 0,
+      );
+      const averageSyncDuration =
+        integrationsWithSyncs.length > 0
+          ? integrationsWithSyncs.reduce(
+              (sum, i) => sum + i.stats.lastSyncDurationMs,
+              0,
+            ) / integrationsWithSyncs.length
+          : 0;
+
+      const totalErrors = all.reduce(
+        (sum, i) => sum + i.stats.errorCount,
+        0,
+      );
+
+      // Count integrations by category
+      const categoryCounts: Record<string, number> = {};
+      all.forEach((integration) => {
+        categoryCounts[integration.category] =
+          (categoryCounts[integration.category] || 0) + 1;
+      });
+
+      // Get recent syncs (last 5 integrations that synced)
+      const recentSyncs = all
+        .filter((i) => i.lastSyncAt)
+        .sort(
+          (a, b) =>
+            new Date(b.lastSyncAt!).getTime() -
+            new Date(a.lastSyncAt!).getTime(),
+        )
+        .slice(0, 5)
+        .map((i) => ({
+          id: i.id,
+          name: i.name,
+          lastSyncAt: i.lastSyncAt!,
+        }));
+
+      return {
+        totalIntegrations: all.length,
+        connectedCount: connectedIntegrations.length,
+        disconnectedCount: disconnectedIntegrations.length,
+        errorCount: errorIntegrations.length,
+        syncingCount: syncingIntegrations.length,
+        enabledCount: enabledIntegrations.length,
+        totalSyncs,
+        totalDataItemsSynced,
+        averageSyncDuration,
+        totalErrors,
+        categoryCounts,
+        recentSyncs,
+      };
+    },
+
+    /**
+     * Trigger sync for an integration
+     * Updates sync timestamp and increments sync count
+     *
+     * @param {string} id - Integration ID
+     * @param {number} durationMs - Sync duration in milliseconds
+     * @param {number} itemsSynced - Number of items synced
+     */
+    async triggerSync(
+      id: string,
+      durationMs: number,
+      itemsSynced: number,
+    ): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.lastSyncAt = new Date().toISOString();
+        integration.stats.totalSyncs += 1;
+        integration.stats.lastSyncDurationMs = durationMs;
+        integration.stats.dataItemsSynced += itemsSynced;
+        integration.status = "connected";
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
+    },
+
+    /**
+     * Record sync error for an integration
+     * Updates error count and sets status to error
+     *
+     * @param {string} id - Integration ID
+     */
+    async recordSyncError(id: string): Promise<void> {
+      const integration = await this.getById(id);
+      if (integration) {
+        integration.stats.errorCount += 1;
+        integration.status = "error";
+        integration.updatedAt = new Date().toISOString();
+        await this.save(integration);
+      }
+    },
+
+    /**
+     * Bulk enable/disable integrations
+     * Enables or disables multiple integrations at once
+     *
+     * @param {string[]} ids - Array of integration IDs
+     * @param {boolean} enabled - Whether to enable or disable
+     */
+    async bulkSetEnabled(
+      ids: string[],
+      enabled: boolean,
+    ): Promise<void> {
+      const all = await this.getAll();
+      const updated = all.map((integration) => {
+        if (ids.includes(integration.id)) {
+          return {
+            ...integration,
+            isEnabled: enabled,
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return integration;
+      });
+      await setData(KEYS.INTEGRATIONS, updated);
+    },
+
+    /**
+     * Bulk update integration status
+     * Updates status for multiple integrations
+     *
+     * @param {string[]} ids - Array of integration IDs
+     * @param {string} status - New status
+     */
+    async bulkUpdateStatus(ids: string[], status: string): Promise<void> {
+      const all = await this.getAll();
+      const updated = all.map((integration) => {
+        if (ids.includes(integration.id)) {
+          return {
+            ...integration,
+            status: status as any,
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return integration;
+      });
+      await setData(KEYS.INTEGRATIONS, updated);
+    },
+
+    /**
+     * Export integration configuration to JSON
+     * Creates a JSON export of a specific integration
+     *
+     * @param {string} id - Integration ID
+     * @returns {Promise<string>} JSON string of the integration
+     * @throws {Error} When integration with specified ID is not found
+     */
+    async exportToJSON(id: string): Promise<string> {
+      const integration = await this.getById(id);
+      if (!integration) {
+        throw new Error(`Integration with ID "${id}" not found`);
+      }
+      return JSON.stringify(integration, null, 2);
+    },
+
+    /**
+     * Export all integrations to JSON
+     * Creates a JSON export of all integrations
+     *
+     * @returns {Promise<string>} JSON string of all integrations
+     */
+    async exportAllToJSON(): Promise<string> {
+      const all = await this.getAll();
+      return JSON.stringify(all, null, 2);
+    },
+
+    /**
+     * Get integrations requiring sync
+     * Returns integrations that are enabled and connected but haven't synced recently
+     *
+     * @param {number} hoursThreshold - Hours since last sync (default: 24)
+     * @returns {Promise<Integration[]>} Array of integrations needing sync
+     */
+    async getRequiringSync(
+      hoursThreshold: number = 24,
+    ): Promise<Integration[]> {
+      const all = await this.getAll();
+      const threshold = Date.now() - hoursThreshold * 60 * 60 * 1000;
+
+      return all.filter((integration) => {
+        if (!integration.isEnabled || integration.status !== "connected") {
+          return false;
+        }
+
+        if (!integration.lastSyncAt) {
+          return true; // Never synced
+        }
+
+        const lastSync = new Date(integration.lastSyncAt).getTime();
+        return lastSync < threshold;
+      });
+    },
+
+    /**
+     * Get integrations health report
+     * Provides a summary of integration health and issues
+     *
+     * @returns {Promise<Object>} Health report with warnings and recommendations
+     */
+    async getHealthReport(): Promise<{
+      healthy: boolean;
+      warnings: string[];
+      recommendations: string[];
+      errorIntegrations: Array<{ id: string; name: string }>;
+      staleIntegrations: Array<{ id: string; name: string; lastSyncAt: string }>;
+    }> {
+      const all = await this.getAll();
+      const warnings: string[] = [];
+      const recommendations: string[] = [];
+
+      // Check for integrations with errors
+      const errorIntegrations = all
+        .filter((i) => i.status === "error")
+        .map((i) => ({ id: i.id, name: i.name }));
+
+      if (errorIntegrations.length > 0) {
+        warnings.push(
+          `${errorIntegrations.length} integration(s) have errors`,
+        );
+        recommendations.push("Review and reconnect integrations with errors");
+      }
+
+      // Check for stale integrations (no sync in 7+ days)
+      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      const staleIntegrations = all
+        .filter((i) => {
+          if (
+            !i.isEnabled ||
+            i.status !== "connected" ||
+            !i.lastSyncAt
+          ) {
+            return false;
+          }
+          return new Date(i.lastSyncAt).getTime() < sevenDaysAgo;
+        })
+        .map((i) => ({ id: i.id, name: i.name, lastSyncAt: i.lastSyncAt! }));
+
+      if (staleIntegrations.length > 0) {
+        warnings.push(
+          `${staleIntegrations.length} integration(s) haven't synced in 7+ days`,
+        );
+        recommendations.push("Trigger manual sync for stale integrations");
+      }
+
+      // Check for disabled integrations that might be useful
+      const disabledCount = all.filter((i) => !i.isEnabled).length;
+      if (disabledCount > all.length / 2) {
+        recommendations.push(
+          "Consider enabling more integrations for better productivity",
+        );
+      }
+
+      // Check for high error rates
+      const highErrorIntegrations = all.filter(
+        (i) => i.stats.errorCount > 5 && i.stats.totalSyncs > 0,
+      );
+      if (highErrorIntegrations.length > 0) {
+        warnings.push(
+          `${highErrorIntegrations.length} integration(s) have high error rates`,
+        );
+        recommendations.push("Check integration configurations and credentials");
+      }
+
+      const healthy =
+        warnings.length === 0 && errorIntegrations.length === 0;
+
+      return {
+        healthy,
+        warnings,
+        recommendations,
+        errorIntegrations,
+        staleIntegrations,
+      };
+    },
   },
 
   /**
