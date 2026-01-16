@@ -960,61 +960,23 @@ const loadBudget = useCallback(async () => {
                   },
                 ]}
               >
-              <Pressable
-                style={styles.categoryHeader}
-                onPress={() => toggleCategory(category.id)}
-              >
-                <View style={styles.categoryHeaderLeft}>
-                  <Feather
-                    name={
-                      category.isExpanded ? "chevron-down" : "chevron-right"
-                    }
-                    size={20}
-                    color={theme.text}
-                  />
-                  <TextInput
-                    style={[styles.categoryNameInput, { color: theme.text }]}
-                    value={category.name}
-                    onChangeText={(text) =>
-                      updateCategoryName(category.id, text)
-                    }
-                    onFocus={() => {
-                      if (Platform.OS !== "web") {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                <Pressable
+                  style={styles.categoryHeader}
+                  onPress={() => toggleCategory(category.id)}
+                >
+                  <View style={styles.categoryHeaderLeft}>
+                    <Feather
+                      name={
+                        category.isExpanded ? "chevron-down" : "chevron-right"
                       }
-                    }}
-                  />
-                </View>
-                <View style={styles.categoryActions}>
-                  <Pressable
-                    onPress={() => addLineItem(category.id)}
-                    style={({ pressed }) => [
-                      styles.iconButton,
-                      pressed && { opacity: 0.7 },
-                    ]}
-                  >
-                    <Feather name="plus" size={18} color={theme.accent} />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => deleteCategory(category.id)}
-                    style={({ pressed }) => [
-                      styles.iconButton,
-                      pressed && { opacity: 0.7 },
-                    ]}
-                  >
-                    <Feather name="trash-2" size={18} color={theme.error} />
-                  </Pressable>
-                </View>
-              </Pressable>
-
-              {category.isExpanded &&
-                category.lineItems.map((lineItem) => (
-                  <View key={lineItem.id} style={styles.lineItemRow}>
+                      size={20}
+                      color={theme.text}
+                    />
                     <TextInput
-                      style={[styles.lineItemName, { color: theme.text }]}
-                      value={lineItem.name}
+                      style={[styles.categoryNameInput, { color: theme.text }]}
+                      value={category.name}
                       onChangeText={(text) =>
-                        updateLineItemName(category.id, lineItem.id, text)
+                        updateCategoryName(category.id, text)
                       }
                       onFocus={() => {
                         if (Platform.OS !== "web") {
@@ -1024,118 +986,159 @@ const loadBudget = useCallback(async () => {
                         }
                       }}
                     />
-                    <TextInput
-                      style={[
-                        styles.amountInput,
-                        {
-                          color: theme.text,
-                          backgroundColor: theme.background,
-                        },
-                      ]}
-                      value={
-                        editingCell?.categoryId === category.id &&
-                        editingCell?.lineItemId === lineItem.id &&
-                        editingCell?.field === "budgeted"
-                          ? editingCell.value
-                          : lineItem.budgeted.toString()
-                      }
-                      onChangeText={(text) => {
-                        setEditingCell({
-                          categoryId: category.id,
-                          lineItemId: lineItem.id,
-                          field: "budgeted",
-                          value: text,
-                        });
-                      }}
-                      keyboardType="numeric"
-                      onFocus={() => {
-                        setEditingCell({
-                          categoryId: category.id,
-                          lineItemId: lineItem.id,
-                          field: "budgeted",
-                          value: lineItem.budgeted.toString(),
-                        });
-                        if (Platform.OS !== "web") {
-                          Haptics.impactAsync(
-                            Haptics.ImpactFeedbackStyle.Light,
-                          );
-                        }
-                      }}
-                      onBlur={() => {
-                        if (editingCell) {
-                          updateLineItem(
-                            editingCell.categoryId,
-                            editingCell.lineItemId,
-                            editingCell.field,
-                            editingCell.value,
-                          );
-                        }
-                        setEditingCell(null);
-                      }}
-                    />
-                    <TextInput
-                      style={[
-                        styles.amountInput,
-                        {
-                          color: theme.text,
-                          backgroundColor: theme.background,
-                        },
-                      ]}
-                      value={
-                        editingCell?.categoryId === category.id &&
-                        editingCell?.lineItemId === lineItem.id &&
-                        editingCell?.field === "actual"
-                          ? editingCell.value
-                          : lineItem.actual.toString()
-                      }
-                      onChangeText={(text) => {
-                        setEditingCell({
-                          categoryId: category.id,
-                          lineItemId: lineItem.id,
-                          field: "actual",
-                          value: text,
-                        });
-                      }}
-                      keyboardType="numeric"
-                      onFocus={() => {
-                        setEditingCell({
-                          categoryId: category.id,
-                          lineItemId: lineItem.id,
-                          field: "actual",
-                          value: lineItem.actual.toString(),
-                        });
-                        if (Platform.OS !== "web") {
-                          Haptics.impactAsync(
-                            Haptics.ImpactFeedbackStyle.Light,
-                          );
-                        }
-                      }}
-                      onBlur={() => {
-                        if (editingCell) {
-                          updateLineItem(
-                            editingCell.categoryId,
-                            editingCell.lineItemId,
-                            editingCell.field,
-                            editingCell.value,
-                          );
-                        }
-                        setEditingCell(null);
-                      }}
-                    />
+                  </View>
+                  <View style={styles.categoryActions}>
                     <Pressable
-                      onPress={() => deleteLineItem(category.id, lineItem.id)}
+                      onPress={() => addLineItem(category.id)}
                       style={({ pressed }) => [
-                        styles.deleteLineItem,
+                        styles.iconButton,
                         pressed && { opacity: 0.7 },
                       ]}
                     >
-                      <Feather name="x" size={16} color={theme.textMuted} />
+                      <Feather name="plus" size={18} color={theme.accent} />
+                    </Pressable>
+                    <Pressable
+                      onPress={() => deleteCategory(category.id)}
+                      style={({ pressed }) => [
+                        styles.iconButton,
+                        pressed && { opacity: 0.7 },
+                      ]}
+                    >
+                      <Feather name="trash-2" size={18} color={theme.error} />
                     </Pressable>
                   </View>
-                ))}
-            </View>
-          </Animated.View>
-        ))}
+                </Pressable>
+
+                {category.isExpanded &&
+                  category.lineItems.map((lineItem) => (
+                    <View key={lineItem.id} style={styles.lineItemRow}>
+                      <TextInput
+                        style={[styles.lineItemName, { color: theme.text }]}
+                        value={lineItem.name}
+                        onChangeText={(text) =>
+                          updateLineItemName(category.id, lineItem.id, text)
+                        }
+                        onFocus={() => {
+                          if (Platform.OS !== "web") {
+                            Haptics.impactAsync(
+                              Haptics.ImpactFeedbackStyle.Light,
+                            );
+                          }
+                        }}
+                      />
+                      <TextInput
+                        style={[
+                          styles.amountInput,
+                          {
+                            color: theme.text,
+                            backgroundColor: theme.background,
+                          },
+                        ]}
+                        value={
+                          editingCell?.categoryId === category.id &&
+                          editingCell?.lineItemId === lineItem.id &&
+                          editingCell?.field === "budgeted"
+                            ? editingCell.value
+                            : lineItem.budgeted.toString()
+                        }
+                        onChangeText={(text) => {
+                          setEditingCell({
+                            categoryId: category.id,
+                            lineItemId: lineItem.id,
+                            field: "budgeted",
+                            value: text,
+                          });
+                        }}
+                        keyboardType="numeric"
+                        onFocus={() => {
+                          setEditingCell({
+                            categoryId: category.id,
+                            lineItemId: lineItem.id,
+                            field: "budgeted",
+                            value: lineItem.budgeted.toString(),
+                          });
+                          if (Platform.OS !== "web") {
+                            Haptics.impactAsync(
+                              Haptics.ImpactFeedbackStyle.Light,
+                            );
+                          }
+                        }}
+                        onBlur={() => {
+                          if (editingCell) {
+                            updateLineItem(
+                              editingCell.categoryId,
+                              editingCell.lineItemId,
+                              editingCell.field,
+                              editingCell.value,
+                            );
+                          }
+                          setEditingCell(null);
+                        }}
+                      />
+                      <TextInput
+                        style={[
+                          styles.amountInput,
+                          {
+                            color: theme.text,
+                            backgroundColor: theme.background,
+                          },
+                        ]}
+                        value={
+                          editingCell?.categoryId === category.id &&
+                          editingCell?.lineItemId === lineItem.id &&
+                          editingCell?.field === "actual"
+                            ? editingCell.value
+                            : lineItem.actual.toString()
+                        }
+                        onChangeText={(text) => {
+                          setEditingCell({
+                            categoryId: category.id,
+                            lineItemId: lineItem.id,
+                            field: "actual",
+                            value: text,
+                          });
+                        }}
+                        keyboardType="numeric"
+                        onFocus={() => {
+                          setEditingCell({
+                            categoryId: category.id,
+                            lineItemId: lineItem.id,
+                            field: "actual",
+                            value: lineItem.actual.toString(),
+                          });
+                          if (Platform.OS !== "web") {
+                            Haptics.impactAsync(
+                              Haptics.ImpactFeedbackStyle.Light,
+                            );
+                          }
+                        }}
+                        onBlur={() => {
+                          if (editingCell) {
+                            updateLineItem(
+                              editingCell.categoryId,
+                              editingCell.lineItemId,
+                              editingCell.field,
+                              editingCell.value,
+                            );
+                          }
+                          setEditingCell(null);
+                        }}
+                      />
+                      <Pressable
+                        onPress={() => deleteLineItem(category.id, lineItem.id)}
+                        style={({ pressed }) => [
+                          styles.deleteLineItem,
+                          pressed && { opacity: 0.7 },
+                        ]}
+                      >
+                        <Feather name="x" size={16} color={theme.textMuted} />
+                      </Pressable>
+                    </View>
+                  ))}
+              </View>
+            </Animated.View>
+          );
+        })}
 
         <Pressable
           style={({ pressed }) => [
