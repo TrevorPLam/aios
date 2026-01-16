@@ -5457,7 +5457,7 @@ export const db = {
         retained = [
           ...favorites,
           ...filteredNonFavorites.slice(0, availableSlots),
-        ];
+        ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       } else {
         let toRetain = all;
         if (cutoff) {
