@@ -1,3 +1,11 @@
+/**
+ * Server-side storage layer.
+ *
+ * Provides in-memory persistence with messaging quick wins:
+ * - Search helpers for API usage
+ * - Edited metadata updates
+ * - Conversation preview synchronization on message changes
+ */
 import type {
   User,
   InsertUser,
@@ -11,6 +19,34 @@ import type {
   Message,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+
+const MESSAGE_PREVIEW_LIMIT = 80;
+
+/**
+ * Build a short preview string for conversation summaries.
+ */
+function buildMessagePreview(content: string): string {
+  const trimmed = content.trim();
+  if (trimmed.length <= MESSAGE_PREVIEW_LIMIT) return trimmed;
+  return `${trimmed.slice(0, MESSAGE_PREVIEW_LIMIT - 1)}…`;
+}
+
+/**
+ * Assemble a searchable string for message content and metadata.
+ * Keeps server search logic consistent with client-side filtering.
+ */
+function buildMessageSearchIndex(message: Message): string {
+  const attachmentTokens = message.attachments
+    .map((attachment) =>
+      [attachment.fileName, attachment.mimeType, attachment.type]
+        .filter(Boolean)
+        .join(" "),
+    )
+    .filter(Boolean);
+  return [message.content, message.senderName, ...attachmentTokens]
+    .join(" ")
+    .toLowerCase();
+}
 
 // Storage interface with all CRUD methods
 export interface IStorage {
@@ -121,6 +157,14 @@ export interface IStorage {
     updates: Partial<Message>,
   ): Promise<Message | undefined>;
   deleteMessage(id: string, userId: string): Promise<boolean>;
+  searchMessages(
+    query: string,
+    userId: string,
+    options?: {
+      conversationId?: string;
+      limit?: number;
+    },
+  ): Promise<Message[]>;
 }
 
 // In-memory storage implementation
@@ -145,6 +189,35 @@ export class MemStorage implements IStorage {
     this.settings = new Map();
     this.conversations = new Map();
     this.messages = new Map();
+  }
+
+  /**
+   * Update conversation preview fields based on the latest message.
+   * Keeps message edits/deletes in sync with list previews.
+   */
+  private syncConversationPreview(conversationId: string): void {
+    const conversation = this.conversations.get(conversationId);
+    if (!conversation) return;
+
+    const latest = Array.from(this.messages.values())
+      .filter((message) => message.conversationId === conversationId)
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )[0];
+
+    if (latest) {
+      conversation.lastMessageId = latest.id;
+      conversation.lastMessageAt = latest.createdAt;
+      conversation.lastMessagePreview = buildMessagePreview(latest.content);
+    } else {
+      conversation.lastMessageId = null;
+      conversation.lastMessageAt = null;
+      conversation.lastMessagePreview = "";
+    }
+
+    conversation.updatedAt = new Date();
+    this.conversations.set(conversationId, conversation);
   }
 
   // User methods
@@ -531,6 +604,17 @@ export class MemStorage implements IStorage {
       updatedAt: now,
     };
     this.messages.set(id, newMessage);
+
+    // Sync conversation previews for new message insertions.
+    const conversation = this.conversations.get(newMessage.conversationId);
+    if (conversation) {
+      conversation.lastMessageId = newMessage.id;
+      conversation.lastMessageAt = newMessage.createdAt;
+      conversation.lastMessagePreview = buildMessagePreview(newMessage.content);
+      conversation.updatedAt = now;
+      this.conversations.set(conversation.id, conversation);
+    }
+
     return newMessage;
   }
 
@@ -546,8 +630,24 @@ export class MemStorage implements IStorage {
     const conversation = this.conversations.get(message.conversationId);
     if (!conversation || conversation.userId !== userId) return undefined;
 
-    const updated = { ...message, ...updates, updatedAt: new Date() };
+    const contentUpdated =
+      typeof updates.content === "string" && updates.content !== message.content;
+    const updatedAt = new Date();
+    const updated = {
+      ...message,
+      ...updates,
+      isEdited: contentUpdated ? true : updates.isEdited ?? message.isEdited,
+      updatedAt,
+    };
     this.messages.set(id, updated);
+
+    // Refresh preview if the latest message was edited.
+    if (contentUpdated && conversation.lastMessageId === updated.id) {
+      conversation.lastMessagePreview = buildMessagePreview(updated.content);
+      conversation.updatedAt = updatedAt;
+      this.conversations.set(conversation.id, conversation);
+    }
+
     return updated;
   }
 
@@ -559,7 +659,58 @@ export class MemStorage implements IStorage {
     const conversation = this.conversations.get(message.conversationId);
     if (!conversation || conversation.userId !== userId) return false;
 
-    return this.messages.delete(id);
+    const deleted = this.messages.delete(id);
+    if (deleted && conversation.lastMessageId === message.id) {
+      this.syncConversationPreview(message.conversationId);
+    }
+
+    return deleted;
+  }
+
+  async searchMessages(
+    query: string,
+    userId: string,
+    options?: {
+      conversationId?: string;
+      limit?: number;
+    },
+  ): Promise<Message[]> {
+    const normalized = query.trim().toLowerCase();
+
+    const accessibleConversationIds = new Set(
+      Array.from(this.conversations.values())
+        .filter((conversation) => conversation.userId === userId)
+        .map((conversation) => conversation.id),
+    );
+
+    if (
+      options?.conversationId &&
+      !accessibleConversationIds.has(options.conversationId)
+    ) {
+      return [];
+    }
+
+    const scoped = Array.from(this.messages.values()).filter(
+      (message) =>
+        accessibleConversationIds.has(message.conversationId) &&
+        (!options?.conversationId ||
+          message.conversationId === options.conversationId),
+    );
+
+    const filtered = normalized
+      ? scoped.filter((message) =>
+          buildMessageSearchIndex(message).includes(normalized),
+        )
+      : scoped;
+
+    const sorted = filtered.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    return typeof options?.limit === "number"
+      ? sorted.slice(0, options.limit)
+      : sorted;
   }
 }
 

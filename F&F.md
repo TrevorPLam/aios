@@ -81,8 +81,8 @@ P2P messaging with AI-powered assistance for internal communication.
 - Message threading/replies
 - Character limit (1000)
 - AI Assist Sheet interface
-- Message search (data layer)
-- Message editing (data layer)
+- Message search (data layer + API)
+- Message editing metadata + preview sync (data layer + API)
 
 ### ⬜ Planned (12/30)
 - WebSocket real-time messaging
@@ -762,8 +762,8 @@ See [UI/UX Revolutionary Strategy](docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md) 
 
 ## 📝 Document Notes
 
-- **Last Updated:** March 10, 2026
-- **Version:** 2.3 (Quick win completion + scheduling/data-layer hooks)
+- **Last Updated:** March 12, 2026
+- **Version:** 2.4 (Messaging quick wins: API search + preview sync)
 - Percentages based on comparison with market-leading applications
 - AI features tracked separately (framework vs. implementation)
 - All features subject to technical feasibility and user demand
