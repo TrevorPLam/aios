@@ -142,6 +142,98 @@ describe("Database Messages Storage", () => {
       expect(all).toHaveLength(1);
       expect(all[0].content).toBe("Updated content");
     });
+
+    it("should search messages by content, sender, and attachment metadata", async () => {
+      const messageWithAttachment: Message = {
+        ...mockMessage,
+        id: "msg_2",
+        content: "Quarterly report attached",
+        attachments: [
+          {
+            id: "att_1",
+            type: "file",
+            url: "https://example.com/report.pdf",
+            fileName: "Q1-report.pdf",
+          },
+        ],
+      };
+
+      await db.messages.save(mockMessage);
+      await db.messages.save(messageWithAttachment);
+
+      const byContent = await db.messages.search("report");
+      const bySender = await db.messages.search("user one");
+      const byAttachment = await db.messages.search("q1-report");
+
+      expect(byContent.map((m) => m.id)).toContain("msg_2");
+      expect(bySender.map((m) => m.id)).toContain("msg_1");
+      expect(byAttachment.map((m) => m.id)).toContain("msg_2");
+    });
+
+    it("should scope message search to a conversation", async () => {
+      const message2: Message = {
+        ...mockMessage,
+        id: "msg_2",
+        conversationId: "conv_2",
+        content: "Conversation two message",
+      };
+
+      await db.messages.save(mockMessage);
+      await db.messages.save(message2);
+
+      const scoped = await db.messages.search("message", {
+        conversationId: "conv_2",
+      });
+
+      expect(scoped).toHaveLength(1);
+      expect(scoped[0].id).toBe("msg_2");
+    });
+
+    it("should edit message content and refresh conversation preview", async () => {
+      await db.conversations.save({
+        ...mockConversation,
+        lastMessageId: mockMessage.id,
+        lastMessageAt: mockMessage.createdAt,
+        lastMessagePreview: mockMessage.content,
+      });
+      await db.messages.save(mockMessage);
+
+      const edited = await db.messages.editContent(
+        mockMessage.id,
+        "Edited message content",
+      );
+
+      const conversation = await db.conversations.get(mockConversation.id);
+
+      expect(edited?.content).toBe("Edited message content");
+      expect(edited?.isEdited).toBe(true);
+      expect(conversation?.lastMessagePreview).toBe("Edited message content");
+    });
+
+    it("should update conversation preview when deleting the latest message", async () => {
+      const olderMessage: Message = {
+        ...mockMessage,
+        id: "msg_0",
+        content: "Older message",
+        createdAt: "2026-01-13T00:00:00Z",
+      };
+
+      await db.conversations.save({
+        ...mockConversation,
+        lastMessageId: mockMessage.id,
+        lastMessageAt: mockMessage.createdAt,
+        lastMessagePreview: mockMessage.content,
+      });
+      await db.messages.save(olderMessage);
+      await db.messages.save(mockMessage);
+
+      await db.messages.delete(mockMessage.id);
+
+      const conversation = await db.conversations.get(mockConversation.id);
+
+      expect(conversation?.lastMessageId).toBe("msg_0");
+      expect(conversation?.lastMessagePreview).toBe("Older message");
+    });
   });
 
   describe("conversations", () => {
