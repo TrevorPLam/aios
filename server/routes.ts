@@ -539,7 +539,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Message routes
   // Search endpoint to support message lookups without UI changes.
-  app.get(
+app.get(
+    "/api/messages/search",
+    authenticate,
+    validateQuery(messageSearchQuerySchema),
+    asyncHandler(async (req, res) => {
+      // req.query is already validated and typed by validateQuery middleware
+      const { q, conversationId, limit } = req.query;
+      const results = await storage.searchMessages(q, req.user!.userId, {
+        conversationId,
+        limit,
+      });
+      res.json(results);
+    }),
+  );
     "/api/messages/search",
     authenticate,
     validateQuery(messageSearchQuerySchema),
