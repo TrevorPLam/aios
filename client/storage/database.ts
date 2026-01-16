@@ -172,14 +172,417 @@ export const db = {
     },
   },
 
+  /**
+   * Notes Module
+   *
+   * Manages markdown note storage with support for tags, links,
+   * pinning, archiving, searching, and comprehensive filtering.
+   * Provides statistics and bulk operations for efficient note management.
+   */
   notes: {
+    /**
+     * Get all notes from storage
+     *
+     * @returns {Promise<Note[]>} Array of all notes
+     */
     async getAll(): Promise<Note[]> {
       return getData(KEYS.NOTES, []);
     },
+
+    /**
+     * Get a specific note by ID
+     *
+     * @param {string} id - The note ID
+     * @returns {Promise<Note | null>} The note if found, null otherwise
+     */
     async get(id: string): Promise<Note | null> {
       const all = await this.getAll();
       return all.find((n) => n.id === id) || null;
     },
+
+    /**
+     * Get active (non-archived) notes
+     *
+     * @returns {Promise<Note[]>} Array of active notes
+     */
+    async getActive(): Promise<Note[]> {
+      const all = await this.getAll();
+      return all.filter((n) => !n.isArchived);
+    },
+
+    /**
+     * Get archived notes
+     *
+     * @returns {Promise<Note[]>} Array of archived notes
+     */
+    async getArchived(): Promise<Note[]> {
+      const all = await this.getAll();
+      return all.filter((n) => n.isArchived === true);
+    },
+
+    /**
+     * Get pinned notes (excluding archived)
+     *
+     * @returns {Promise<Note[]>} Array of pinned notes
+     */
+    async getPinned(): Promise<Note[]> {
+      const all = await this.getAll();
+      return all.filter((n) => n.isPinned === true && !n.isArchived);
+    },
+
+    /**
+     * Get notes by specific tag
+     *
+     * @param {string} tag - The tag to filter by
+     * @returns {Promise<Note[]>} Array of notes with the specified tag
+     */
+    async getByTag(tag: string): Promise<Note[]> {
+      const all = await this.getAll();
+      return all.filter((n) => n.tags.includes(tag) && !n.isArchived);
+    },
+
+    /**
+     * Get notes that contain any of the specified tags
+     *
+     * @param {string[]} tags - Array of tags to filter by
+     * @returns {Promise<Note[]>} Array of notes matching any tag
+     */
+    async getByAnyTag(tags: string[]): Promise<Note[]> {
+      const all = await this.getAll();
+      return all.filter(
+        (n) => n.tags.some((tag) => tags.includes(tag)) && !n.isArchived,
+      );
+    },
+
+    /**
+     * Get all unique tags across all notes
+     *
+     * @returns {Promise<string[]>} Array of unique tag names, sorted alphabetically
+     */
+    async getAllTags(): Promise<string[]> {
+      const all = await this.getAll();
+      const tags = new Set<string>();
+      all.forEach((note) => {
+        note.tags.forEach((tag) => tags.add(tag));
+      });
+      return Array.from(tags).sort();
+    },
+
+    /**
+     * Search notes by query string
+     * Searches across title, body content, and tags
+     *
+     * @param {string} query - Search query string
+     * @returns {Promise<Note[]>} Array of matching notes
+     */
+    async search(query: string): Promise<Note[]> {
+      if (!query.trim()) {
+        return this.getActive();
+      }
+
+      const all = await this.getActive();
+      const lowerQuery = query.toLowerCase();
+
+      return all.filter((note) => {
+        // Search in title
+        if (note.title.toLowerCase().includes(lowerQuery)) {
+          return true;
+        }
+
+        // Search in body markdown
+        if (note.bodyMarkdown.toLowerCase().includes(lowerQuery)) {
+          return true;
+        }
+
+        // Search in tags
+        if (note.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))) {
+          return true;
+        }
+
+        return false;
+      });
+    },
+
+    /**
+     * Get notes sorted by specified criteria
+     *
+     * @param {string} sortBy - Sort criteria: 'recent', 'alphabetical', 'tags', 'wordCount'
+     * @param {string} order - Sort order: 'asc' or 'desc' (default: 'desc')
+     * @returns {Promise<Note[]>} Array of sorted notes (pinned notes always first)
+     */
+    async getSorted(
+      sortBy: "recent" | "alphabetical" | "tags" | "wordCount" = "recent",
+      order: "asc" | "desc" = "desc",
+    ): Promise<Note[]> {
+      const notes = await this.getActive();
+
+      const sorted = notes.sort((a, b) => {
+        // Pinned notes always come first
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+
+        let comparison = 0;
+
+        switch (sortBy) {
+          case "alphabetical":
+            comparison = a.title.localeCompare(b.title);
+            break;
+          case "tags":
+            comparison = a.tags.length - b.tags.length;
+            break;
+          case "wordCount": {
+            const aWords = a.bodyMarkdown.split(/\s+/).filter(Boolean).length;
+            const bWords = b.bodyMarkdown.split(/\s+/).filter(Boolean).length;
+            comparison = aWords - bWords;
+            break;
+          }
+          case "recent":
+          default:
+            comparison =
+              new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+            break;
+        }
+
+        return order === "desc" ? -comparison : comparison;
+      });
+
+      return sorted;
+    },
+
+    /**
+     * Get note statistics
+     *
+     * @returns {Promise<object>} Object containing various note statistics
+     */
+    async getStatistics(): Promise<{
+      totalNotes: number;
+      activeNotes: number;
+      archivedNotes: number;
+      pinnedNotes: number;
+      totalWords: number;
+      averageWordsPerNote: number;
+      totalTags: number;
+      uniqueTags: number;
+      notesWithTags: number;
+      notesWithLinks: number;
+    }> {
+      const all = await this.getAll();
+      const active = all.filter((n) => !n.isArchived);
+      const archived = all.filter((n) => n.isArchived);
+      const pinned = all.filter((n) => n.isPinned && !n.isArchived);
+
+      let totalWords = 0;
+      let totalTags = 0;
+      let notesWithTags = 0;
+      let notesWithLinks = 0;
+      const uniqueTagsSet = new Set<string>();
+
+      all.forEach((note) => {
+        const words = note.bodyMarkdown.split(/\s+/).filter(Boolean).length;
+        totalWords += words;
+        totalTags += note.tags.length;
+
+        if (note.tags.length > 0) {
+          notesWithTags++;
+          note.tags.forEach((tag) => uniqueTagsSet.add(tag));
+        }
+
+        if (note.links.length > 0) {
+          notesWithLinks++;
+        }
+      });
+
+      return {
+        totalNotes: all.length,
+        activeNotes: active.length,
+        archivedNotes: archived.length,
+        pinnedNotes: pinned.length,
+        totalWords,
+        averageWordsPerNote:
+          all.length > 0 ? Math.round(totalWords / all.length) : 0,
+        totalTags,
+        uniqueTags: uniqueTagsSet.size,
+        notesWithTags,
+        notesWithLinks,
+      };
+    },
+
+    /**
+     * Calculate word count for a note
+     *
+     * @param {string} noteId - The note ID
+     * @returns {Promise<number>} Word count of the note
+     */
+    async getWordCount(noteId: string): Promise<number> {
+      const note = await this.get(noteId);
+      if (!note) return 0;
+      return note.bodyMarkdown.split(/\s+/).filter(Boolean).length;
+    },
+
+    /**
+     * Add a tag to a note
+     *
+     * @param {string} noteId - The note ID
+     * @param {string} tag - The tag to add
+     * @returns {Promise<void>}
+     */
+    async addTag(noteId: string, tag: string): Promise<void> {
+      const note = await this.get(noteId);
+      if (!note) return;
+
+      if (!note.tags.includes(tag)) {
+        note.tags.push(tag);
+        note.updatedAt = new Date().toISOString();
+        await this.save(note);
+      }
+    },
+
+    /**
+     * Remove a tag from a note
+     *
+     * @param {string} noteId - The note ID
+     * @param {string} tag - The tag to remove
+     * @returns {Promise<void>}
+     */
+    async removeTag(noteId: string, tag: string): Promise<void> {
+      const note = await this.get(noteId);
+      if (!note) return;
+
+      note.tags = note.tags.filter((t) => t !== tag);
+      note.updatedAt = new Date().toISOString();
+      await this.save(note);
+    },
+
+    /**
+     * Bulk add tags to multiple notes
+     *
+     * @param {string[]} noteIds - Array of note IDs
+     * @param {string[]} tags - Array of tags to add
+     * @returns {Promise<void>}
+     */
+    async bulkAddTags(noteIds: string[], tags: string[]): Promise<void> {
+      const all = await this.getAll();
+      const updatedAt = new Date().toISOString();
+
+      const updated = all.map((note) => {
+        if (noteIds.includes(note.id)) {
+          const newTags = [...note.tags];
+          tags.forEach((tag) => {
+            if (!newTags.includes(tag)) {
+              newTags.push(tag);
+            }
+          });
+          return { ...note, tags: newTags, updatedAt };
+        }
+        return note;
+      });
+
+      await setData(KEYS.NOTES, updated);
+    },
+
+    /**
+     * Bulk archive/unarchive multiple notes
+     *
+     * @param {string[]} noteIds - Array of note IDs
+     * @param {boolean} archive - True to archive, false to unarchive
+     * @returns {Promise<void>}
+     */
+    async bulkArchive(noteIds: string[], archive: boolean): Promise<void> {
+      const all = await this.getAll();
+      const updatedAt = new Date().toISOString();
+
+      const updated = all.map((note) => {
+        if (noteIds.includes(note.id)) {
+          return { ...note, isArchived: archive, updatedAt };
+        }
+        return note;
+      });
+
+      await setData(KEYS.NOTES, updated);
+    },
+
+    /**
+     * Bulk pin/unpin multiple notes
+     *
+     * @param {string[]} noteIds - Array of note IDs
+     * @param {boolean} pin - True to pin, false to unpin
+     * @returns {Promise<void>}
+     */
+    async bulkPin(noteIds: string[], pin: boolean): Promise<void> {
+      const all = await this.getAll();
+      const updatedAt = new Date().toISOString();
+
+      const updated = all.map((note) => {
+        if (noteIds.includes(note.id)) {
+          return { ...note, isPinned: pin, updatedAt };
+        }
+        return note;
+      });
+
+      await setData(KEYS.NOTES, updated);
+    },
+
+    /**
+     * Bulk delete multiple notes
+     *
+     * @param {string[]} noteIds - Array of note IDs to delete
+     * @returns {Promise<void>}
+     */
+    async bulkDelete(noteIds: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((n) => !noteIds.includes(n.id));
+      await setData(KEYS.NOTES, filtered);
+    },
+
+    /**
+     * Find notes with similar content (potential duplicates)
+     *
+     * @param {string} noteId - The note ID to compare against
+     * @param {number} threshold - Similarity threshold (0-1, default: 0.7)
+     * @returns {Promise<Note[]>} Array of potentially similar notes
+     */
+    async findSimilar(
+      noteId: string,
+      threshold: number = 0.7,
+    ): Promise<Note[]> {
+      const targetNote = await this.get(noteId);
+      if (!targetNote) return [];
+
+      const all = await this.getActive();
+      const similar: Note[] = [];
+
+      const targetWords = new Set(
+        targetNote.bodyMarkdown.toLowerCase().split(/\s+/).filter(Boolean),
+      );
+
+      all.forEach((note) => {
+        if (note.id === noteId) return;
+
+        const noteWords = new Set(
+          note.bodyMarkdown.toLowerCase().split(/\s+/).filter(Boolean),
+        );
+
+        // Calculate Jaccard similarity
+        const intersection = new Set(
+          [...targetWords].filter((word) => noteWords.has(word)),
+        );
+        const union = new Set([...targetWords, ...noteWords]);
+        const similarity = intersection.size / union.size;
+
+        if (similarity >= threshold) {
+          similar.push(note);
+        }
+      });
+
+      return similar;
+    },
+
+    /**
+     * Save a note (create or update)
+     *
+     * @param {Note} note - The note to save
+     * @returns {Promise<void>}
+     */
     async save(note: Note): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((n) => n.id === note.id);
@@ -190,6 +593,13 @@ export const db = {
       }
       await setData(KEYS.NOTES, all);
     },
+
+    /**
+     * Delete a note by ID
+     *
+     * @param {string} id - The note ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((n) => n.id !== id);
