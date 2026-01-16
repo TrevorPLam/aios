@@ -60,7 +60,9 @@ import { eventBus, EVENT_TYPES } from '@/lib/eventBus';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SIDEBAR_WIDTH = 280;
 const COLLAPSED_WIDTH = 60;
-const EDGE_SWIPE_WIDTH = 30; // Distance from edge to detect swipe
+// TODO: Implement PanResponder for edge swipe gesture detection
+// For now, using button alternative for accessibility
+const EDGE_SWIPE_WIDTH = 30; // Distance from edge to detect swipe (not yet implemented)
 
 export interface PersistentSidebarProps {
   currentModuleId?: string;

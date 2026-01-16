@@ -84,7 +84,7 @@ const MODULE_CONTEXT_MAP: Record<ContextZone, ModuleType[]> = {
     'planner',
     'notebook',
     'contacts',
-    'messages', // Work contacts only (filtered separately)
+    'messages', // Future: Filter to work contacts only when contact filtering implemented
   ],
   [ContextZone.PERSONAL]: [
     'command',
@@ -162,13 +162,15 @@ class ContextEngine {
   private getContextRules(): ContextRule[] {
     return [
       // Focus mode overrides everything
+      // TODO: Implement focus mode toggle in settings
       {
         zone: ContextZone.FOCUS,
         priority: 100,
         condition: () => {
           // Check if user has manually enabled focus mode
           // This would be set via a toggle in the UI
-          return false; // Placeholder for focus mode check
+          // TODO: Wire to settings.focusModeEnabled once implemented
+          return false; // Placeholder - focus mode not implemented yet
         },
         reason: 'Focus mode enabled',
       },
@@ -318,10 +320,16 @@ class ContextEngine {
    * Technical: Returns modules not in the suggested list.
    * We always keep 'command' visible as it's the home screen.
    * 
+   * Note: This method will be updated to get modules from registry
+   * once circular dependency is resolved (registry imports this file).
+   * For now, uses hardcoded list matching current core modules.
+   * 
    * @param suggestedModules - Modules to show
    * @returns Modules to hide
    */
   private getHiddenModules(suggestedModules: ModuleType[]): ModuleType[] {
+    // TODO: Get from moduleRegistry.getAllModules() once circular dependency resolved
+    // For now, hardcoded list of core modules
     const allModules: ModuleType[] = [
       'command',
       'notebook',

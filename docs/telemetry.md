@@ -4,7 +4,7 @@
 
 Telemetry helps us measure success and improve the product while respecting user privacy.
 
-**Last Updated:** January 16, 2026  
+**Last Updated:** January 16, 2025  
 **Privacy**: Opt-in only, no PII collected
 
 ---
