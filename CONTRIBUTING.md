@@ -15,7 +15,8 @@ Thank you for your interest in contributing to AIOS! This document provides guid
 
 ## Code of Conduct
 
-Be respectful, inclusive, and professional in all interactions. We're building something cool together!
+Be respectful, inclusive, and professional in all interactions. Please read and follow the
+[Code of Conduct](CODE_OF_CONDUCT.md) to help keep the community welcoming.
 
 ## Getting Started
 

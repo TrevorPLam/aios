@@ -180,7 +180,7 @@
 - Grouped by change type
 - Links to PRs/commits
 
-**AIOS Status:** ⚠️ Missing (recommended to add)
+**AIOS Status:** ✅ Exists (Keep a Changelog format in root)
 
 ### 5. LICENSE (Legal Protection)
 
@@ -198,7 +198,7 @@
 - **GPL v3:** Copyleft, viral
 - **BSD:** Permissive, minimal restrictions
 
-**AIOS Status:** ⚠️ Missing (legal risk)
+**AIOS Status:** ✅ Exists (LICENSE in root)
 
 ### 6. CODE_OF_CONDUCT.md (Community Standards)
 
@@ -210,7 +210,7 @@
 - Explain enforcement process
 - Provide contact information
 
-**AIOS Status:** ⚠️ Missing (recommended for open source)
+**AIOS Status:** ✅ Exists (Contributor Covenant 2.1 in root)
 
 ---
 
