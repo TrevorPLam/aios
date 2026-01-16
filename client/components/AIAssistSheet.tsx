@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Pressable, Modal, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -9,6 +9,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { ModuleType } from "@/models/types";
+import analytics from "@/analytics";
 
 interface AIAction {
   id: string;
@@ -281,10 +282,23 @@ export default function AIAssistSheet({
 
   const actions = MODULE_ACTIONS[module] || [];
 
+  // Track AI opened when sheet becomes visible
+  useEffect(() => {
+    if (visible && module !== "command") {
+      analytics.trackAIOpened(module as ModuleType, "none");
+    }
+  }, [visible, module]);
+
   const handleAction = (actionId: string) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+
+    // Track AI suggestion applied (simulated - in real implementation would track after actual application)
+    if (module !== "command") {
+      analytics.trackAISuggestionApplied(actionId, "medium");
+    }
+
     onAction?.(actionId);
     onClose();
   };

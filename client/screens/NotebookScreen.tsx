@@ -51,6 +51,7 @@ import { formatRelativeDate, truncateText } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import analytics from "@/analytics";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -298,6 +299,7 @@ export default function NotebookScreen() {
     if (selectionMode) {
       toggleNoteSelection(note.id);
     } else {
+      analytics.trackItemViewed("notebook", "note");
       navigation.navigate("NoteEditor", { noteId: note.id });
     }
   };
@@ -369,6 +371,7 @@ export default function NotebookScreen() {
 
     for (const noteId of selectedNotes) {
       await db.notes.delete(noteId);
+      analytics.trackItemDeleted("notebook", "note");
     }
     loadNotes();
     exitSelectionMode();
