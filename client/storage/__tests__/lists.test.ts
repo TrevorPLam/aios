@@ -351,5 +351,590 @@ describe("Database Lists Storage", () => {
         expect(retrieved!.items[0].dueDate).toBe(dueDate);
       });
     });
+
+    // Advanced Enhancement Tests
+    describe("Advanced Enhancements", () => {
+      it("should search lists by title", async () => {
+        const list1 = { ...mockList, id: "list_1", title: "Grocery Shopping" };
+        const list2 = { ...mockList, id: "list_2", title: "Work Tasks" };
+        const list3 = { ...mockList, id: "list_3", title: "Shopping List" };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const results = await db.lists.search("shopping");
+        expect(results).toHaveLength(2);
+        expect(results.map((l) => l.id)).toContain("list_1");
+        expect(results.map((l) => l.id)).toContain("list_3");
+      });
+
+      it("should search lists by item text", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          title: "List One",
+          items: [
+            { id: "i1", text: "Buy milk", isChecked: false, priority: "none" },
+            { id: "i2", text: "Buy bread", isChecked: false, priority: "none" },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          title: "List Two",
+          items: [
+            { id: "i3", text: "Call client", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const results = await db.lists.search("buy");
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("list_1");
+      });
+
+      it("should search lists by item notes", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { 
+              id: "i1", 
+              text: "Task", 
+              isChecked: false, 
+              priority: "none",
+              notes: "This is urgent project work"
+            },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i2", text: "Task 2", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const results = await db.lists.search("urgent");
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("list_1");
+      });
+
+      it("should perform case-insensitive search", async () => {
+        const list = { ...mockList, title: "Important Tasks" };
+        await db.lists.save(list);
+
+        const results1 = await db.lists.search("IMPORTANT");
+        const results2 = await db.lists.search("important");
+        const results3 = await db.lists.search("ImPoRtAnT");
+
+        expect(results1).toHaveLength(1);
+        expect(results2).toHaveLength(1);
+        expect(results3).toHaveLength(1);
+      });
+
+      it("should return all lists for empty search", async () => {
+        await db.lists.save({ ...mockList, id: "list_1" });
+        await db.lists.save({ ...mockList, id: "list_2" });
+
+        const results = await db.lists.search("");
+        expect(results).toHaveLength(2);
+      });
+
+      it("should sort lists by recent (descending)", async () => {
+        const list1 = { ...mockList, id: "list_1", lastOpenedAt: "2026-01-14T10:00:00Z" };
+        const list2 = { ...mockList, id: "list_2", lastOpenedAt: "2026-01-14T12:00:00Z" };
+        const list3 = { ...mockList, id: "list_3", lastOpenedAt: "2026-01-14T11:00:00Z" };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const sorted = await db.lists.sort("recent", "desc");
+        expect(sorted[0].id).toBe("list_2");
+        expect(sorted[1].id).toBe("list_3");
+        expect(sorted[2].id).toBe("list_1");
+      });
+
+      it("should sort lists alphabetically", async () => {
+        const list1 = { ...mockList, id: "list_1", title: "Zebra List" };
+        const list2 = { ...mockList, id: "list_2", title: "Apple List" };
+        const list3 = { ...mockList, id: "list_3", title: "Mango List" };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const sorted = await db.lists.sort("alphabetical", "asc");
+        expect(sorted[0].title).toBe("Apple List");
+        expect(sorted[1].title).toBe("Mango List");
+        expect(sorted[2].title).toBe("Zebra List");
+      });
+
+      it("should sort lists by priority", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { id: "i1", text: "Item", isChecked: false, priority: "high" },
+            { id: "i2", text: "Item", isChecked: false, priority: "high" },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i3", text: "Item", isChecked: false, priority: "low" },
+          ],
+        };
+        const list3: List = {
+          ...mockList,
+          id: "list_3",
+          items: [
+            { id: "i4", text: "Item", isChecked: false, priority: "high" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const sorted = await db.lists.sort("priority", "desc");
+        expect(sorted[0].id).toBe("list_1"); // 2 high priority items
+        expect(sorted[1].id).toBe("list_3"); // 1 high priority item
+      });
+
+      it("should sort lists by completion percentage", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { id: "i1", text: "Item", isChecked: true, priority: "none" },
+            { id: "i2", text: "Item", isChecked: true, priority: "none" },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i3", text: "Item", isChecked: true, priority: "none" },
+            { id: "i4", text: "Item", isChecked: false, priority: "none" },
+          ],
+        };
+        const list3: List = {
+          ...mockList,
+          id: "list_3",
+          items: [
+            { id: "i5", text: "Item", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const sorted = await db.lists.sort("completion", "desc");
+        expect(sorted[0].id).toBe("list_1"); // 100%
+        expect(sorted[1].id).toBe("list_2"); // 50%
+        expect(sorted[2].id).toBe("list_3"); // 0%
+      });
+
+      it("should sort lists by item count", async () => {
+        const list1: List = { 
+          ...mockList, 
+          id: "list_1", 
+          items: [
+            { id: "i1", text: "Item", isChecked: false, priority: "none" }
+          ] 
+        };
+        const list2: List = { 
+          ...mockList, 
+          id: "list_2", 
+          items: [
+            { id: "i2", text: "Item", isChecked: false, priority: "none" },
+            { id: "i3", text: "Item", isChecked: false, priority: "none" },
+            { id: "i4", text: "Item", isChecked: false, priority: "none" }
+          ] 
+        };
+        const list3: List = { 
+          ...mockList, 
+          id: "list_3", 
+          items: [
+            { id: "i5", text: "Item", isChecked: false, priority: "none" },
+            { id: "i6", text: "Item", isChecked: false, priority: "none" }
+          ] 
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const sorted = await db.lists.sort("itemCount", "desc");
+        expect(sorted[0].id).toBe("list_2"); // 3 items
+        expect(sorted[1].id).toBe("list_3"); // 2 items
+        expect(sorted[2].id).toBe("list_1"); // 1 item
+      });
+
+      it("should filter lists by category", async () => {
+        const list1 = { ...mockList, id: "list_1", category: "grocery" as const };
+        const list2 = { ...mockList, id: "list_2", category: "work" as const };
+        const list3 = { ...mockList, id: "list_3", category: "grocery" as const };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const filtered = await db.lists.filter({ category: "grocery" });
+        expect(filtered).toHaveLength(2);
+      });
+
+      it("should filter lists by priority", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { id: "i1", text: "Item", isChecked: false, priority: "high" },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i2", text: "Item", isChecked: false, priority: "low" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const filtered = await db.lists.filter({ priority: "high" });
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].id).toBe("list_1");
+      });
+
+      it("should filter lists with overdue items", async () => {
+        const pastDate = "2026-01-01T10:00:00Z";
+        const futureDate = "2027-01-01T10:00:00Z";
+
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { 
+              id: "i1", 
+              text: "Item", 
+              isChecked: false, 
+              priority: "none",
+              dueDate: pastDate
+            },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { 
+              id: "i2", 
+              text: "Item", 
+              isChecked: false, 
+              priority: "none",
+              dueDate: futureDate
+            },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const filtered = await db.lists.filter({ hasOverdue: true });
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].id).toBe("list_1");
+      });
+
+      it("should filter lists with items containing notes", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { 
+              id: "i1", 
+              text: "Item", 
+              isChecked: false, 
+              priority: "none",
+              notes: "Important note"
+            },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i2", text: "Item", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const filtered = await db.lists.filter({ hasNotes: true });
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].id).toBe("list_1");
+      });
+
+      it("should filter incomplete lists", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { id: "i1", text: "Item", isChecked: true, priority: "none" },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i2", text: "Item", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const filtered = await db.lists.filter({ isIncomplete: true });
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].id).toBe("list_2");
+      });
+
+      it("should filter by min/max items", async () => {
+        const list1: List = { ...mockList, id: "list_1", items: [mockListItem] };
+        const list2: List = { 
+          ...mockList, 
+          id: "list_2", 
+          items: [mockListItem, mockListItem, mockListItem, mockListItem, mockListItem]
+        };
+        const list3: List = { 
+          ...mockList, 
+          id: "list_3", 
+          items: [mockListItem, mockListItem, mockListItem]
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+        await db.lists.save(list3);
+
+        const filtered = await db.lists.filter({ minItems: 2, maxItems: 4 });
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].id).toBe("list_3");
+      });
+
+      it("should get lists with overdue items", async () => {
+        const pastDate = "2026-01-01T10:00:00Z";
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { 
+              id: "i1", 
+              text: "Item", 
+              isChecked: false, 
+              priority: "none",
+              dueDate: pastDate
+            },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i2", text: "Item", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const withOverdue = await db.lists.getWithOverdueItems();
+        expect(withOverdue).toHaveLength(1);
+        expect(withOverdue[0].id).toBe("list_1");
+      });
+
+      it("should get lists with high priority items", async () => {
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [
+            { id: "i1", text: "Item", isChecked: false, priority: "high" },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            { id: "i2", text: "Item", isChecked: false, priority: "low" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const withHighPriority = await db.lists.getWithHighPriorityItems();
+        expect(withHighPriority).toHaveLength(1);
+        expect(withHighPriority[0].id).toBe("list_1");
+      });
+
+      it("should bulk archive multiple lists", async () => {
+        await db.lists.save({ ...mockList, id: "list_1" });
+        await db.lists.save({ ...mockList, id: "list_2" });
+        await db.lists.save({ ...mockList, id: "list_3" });
+
+        await db.lists.bulkArchive(["list_1", "list_3"]);
+
+        const list1 = await db.lists.get("list_1");
+        const list2 = await db.lists.get("list_2");
+        const list3 = await db.lists.get("list_3");
+
+        expect(list1!.isArchived).toBe(true);
+        expect(list2!.isArchived).toBeFalsy();
+        expect(list3!.isArchived).toBe(true);
+      });
+
+      it("should bulk unarchive multiple lists", async () => {
+        await db.lists.save({ ...mockList, id: "list_1", isArchived: true });
+        await db.lists.save({ ...mockList, id: "list_2", isArchived: true });
+        await db.lists.save({ ...mockList, id: "list_3", isArchived: true });
+
+        await db.lists.bulkUnarchive(["list_1", "list_3"]);
+
+        const list1 = await db.lists.get("list_1");
+        const list2 = await db.lists.get("list_2");
+        const list3 = await db.lists.get("list_3");
+
+        expect(list1!.isArchived).toBe(false);
+        expect(list2!.isArchived).toBe(true);
+        expect(list3!.isArchived).toBe(false);
+      });
+
+      it("should bulk delete multiple lists", async () => {
+        await db.lists.save({ ...mockList, id: "list_1" });
+        await db.lists.save({ ...mockList, id: "list_2" });
+        await db.lists.save({ ...mockList, id: "list_3" });
+
+        await db.lists.bulkDelete(["list_1", "list_3"]);
+
+        const all = await db.lists.getAll();
+        expect(all).toHaveLength(1);
+        expect(all[0].id).toBe("list_2");
+      });
+
+      it("should get enhanced statistics", async () => {
+        const pastDate = "2026-01-01T10:00:00Z";
+        
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          category: "grocery",
+          items: [
+            { 
+              id: "i1", 
+              text: "Item", 
+              isChecked: true, 
+              priority: "none",
+              notes: "Note 1"
+            },
+            { 
+              id: "i2", 
+              text: "Item", 
+              isChecked: false, 
+              priority: "high",
+              dueDate: pastDate
+            },
+          ],
+        };
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          category: "work",
+          isArchived: true,
+          items: [
+            { id: "i3", text: "Item", isChecked: false, priority: "high" },
+          ],
+        };
+
+        await db.lists.save(list1);
+        await db.lists.save(list2);
+
+        const stats = await db.lists.getEnhancedStats();
+
+        expect(stats.total).toBe(2);
+        expect(stats.active).toBe(1);
+        expect(stats.archived).toBe(1);
+        expect(stats.totalItems).toBe(3);
+        expect(stats.completedItems).toBe(1);
+        expect(stats.pendingItems).toBe(2);
+        expect(stats.highPriorityItems).toBe(2);
+        expect(stats.overdueItems).toBe(1);
+        expect(stats.itemsWithNotes).toBe(1);
+        expect(stats.completionRate).toBe(33); // 1/3 = 33%
+      });
+
+      it("should clear completed items from a list", async () => {
+        const list: List = {
+          ...mockList,
+          items: [
+            { id: "i1", text: "Item 1", isChecked: true, priority: "none" },
+            { id: "i2", text: "Item 2", isChecked: false, priority: "none" },
+            { id: "i3", text: "Item 3", isChecked: true, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list);
+        await db.lists.clearCompleted("list_1");
+
+        const updated = await db.lists.get("list_1");
+        expect(updated!.items).toHaveLength(1);
+        expect(updated!.items[0].id).toBe("i2");
+      });
+
+      it("should mark all items as completed", async () => {
+        const list: List = {
+          ...mockList,
+          items: [
+            { id: "i1", text: "Item 1", isChecked: false, priority: "none" },
+            { id: "i2", text: "Item 2", isChecked: false, priority: "none" },
+            { id: "i3", text: "Item 3", isChecked: true, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list);
+        await db.lists.completeAll("list_1");
+
+        const updated = await db.lists.get("list_1");
+        expect(updated!.items.every((item) => item.isChecked)).toBe(true);
+      });
+
+      it("should mark all items as incomplete", async () => {
+        const list: List = {
+          ...mockList,
+          items: [
+            { id: "i1", text: "Item 1", isChecked: true, priority: "none" },
+            { id: "i2", text: "Item 2", isChecked: true, priority: "none" },
+            { id: "i3", text: "Item 3", isChecked: false, priority: "none" },
+          ],
+        };
+
+        await db.lists.save(list);
+        await db.lists.uncompleteAll("list_1");
+
+        const updated = await db.lists.get("list_1");
+        expect(updated!.items.every((item) => !item.isChecked)).toBe(true);
+      });
+    });
   });
 });
+

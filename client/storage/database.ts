@@ -12,6 +12,7 @@ import {
   DEFAULT_SETTINGS,
   TIER_LIMITS,
   List,
+  ListItemPriority,
   Alert,
   Photo,
   PhotoAlbum,
@@ -1548,6 +1549,381 @@ export const db = {
         totalItems,
         completedItems,
       };
+    },
+
+    /**
+     * Search lists by title and item text
+     * Performs case-insensitive search across list titles and item text
+     * @param query - Search query string
+     * @returns Promise<List[]> - Lists matching the search query
+     */
+    async search(query: string): Promise<List[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase().trim();
+      
+      if (!lowerQuery) {
+        return all;
+      }
+
+      return all.filter((list) => {
+        // Search in title
+        if (list.title.toLowerCase().includes(lowerQuery)) {
+          return true;
+        }
+        
+        // Search in items
+        return list.items.some((item) =>
+          item.text.toLowerCase().includes(lowerQuery) ||
+          (item.notes && item.notes.toLowerCase().includes(lowerQuery))
+        );
+      });
+    },
+
+    /**
+     * Sort lists by specified criteria
+     * @param sortBy - Sort criteria ('recent', 'alphabetical', 'priority', 'completion', 'itemCount')
+     * @param direction - Sort direction ('asc' or 'desc')
+     * @returns Promise<List[]> - Sorted lists
+     */
+    async sort(
+      sortBy: "recent" | "alphabetical" | "priority" | "completion" | "itemCount",
+      direction: "asc" | "desc" = "desc"
+    ): Promise<List[]> {
+      const all = await this.getAll();
+
+      return all.sort((a, b) => {
+        let comparison = 0;
+        
+        switch (sortBy) {
+          case "recent":
+            comparison = 
+              new Date(b.lastOpenedAt).getTime() - 
+              new Date(a.lastOpenedAt).getTime();
+            break;
+          
+          case "alphabetical":
+            comparison = a.title.localeCompare(b.title);
+            break;
+          
+          case "priority": {
+            // Count high priority items
+            const aHighPriority = a.items.filter(
+              (item) => item.priority === "high" && !item.isChecked
+            ).length;
+            const bHighPriority = b.items.filter(
+              (item) => item.priority === "high" && !item.isChecked
+            ).length;
+            comparison = bHighPriority - aHighPriority;
+            break;
+          }
+          
+          case "completion": {
+            // Calculate completion percentage
+            const aTotal = a.items.length;
+            const bTotal = b.items.length;
+            const aCompleted = a.items.filter((item) => item.isChecked).length;
+            const bCompleted = b.items.filter((item) => item.isChecked).length;
+            const aPercent = aTotal > 0 ? (aCompleted / aTotal) * 100 : 0;
+            const bPercent = bTotal > 0 ? (bCompleted / bTotal) * 100 : 0;
+            comparison = bPercent - aPercent;
+            break;
+          }
+          
+          case "itemCount":
+            comparison = b.items.length - a.items.length;
+            break;
+          
+          default:
+            comparison = 0;
+        }
+        
+        // For alphabetical, default is ascending, so reverse for desc
+        // For others, default is descending, so reverse for asc
+        if (sortBy === "alphabetical") {
+          return direction === "desc" ? -comparison : comparison;
+        } else {
+          return direction === "asc" ? -comparison : comparison;
+        }
+      });
+    },
+
+    /**
+     * Filter lists by multiple criteria
+     * @param filters - Filter criteria object
+     * @returns Promise<List[]> - Filtered lists
+     */
+    async filter(filters: {
+      category?: string;
+      priority?: ListItemPriority;
+      hasOverdue?: boolean;
+      hasNotes?: boolean;
+      isIncomplete?: boolean;
+      minItems?: number;
+      maxItems?: number;
+    }): Promise<List[]> {
+      const all = await this.getAll();
+      const now = new Date();
+
+      return all.filter((list) => {
+        // Filter by category
+        if (filters.category && list.category !== filters.category) {
+          return false;
+        }
+
+        // Filter by priority (at least one item with this priority)
+        if (filters.priority) {
+          const hasPriority = list.items.some(
+            (item) => item.priority === filters.priority && !item.isChecked
+          );
+          if (!hasPriority) return false;
+        }
+
+        // Filter by overdue items
+        if (filters.hasOverdue) {
+          const hasOverdueItem = list.items.some((item) => {
+            if (!item.dueDate || item.isChecked) return false;
+            return new Date(item.dueDate) < now;
+          });
+          if (!hasOverdueItem) return false;
+        }
+
+        // Filter by items with notes
+        if (filters.hasNotes) {
+          const hasNotesItem = list.items.some(
+            (item) => item.notes && item.notes.trim().length > 0
+          );
+          if (!hasNotesItem) return false;
+        }
+
+        // Filter by incomplete lists (has unchecked items)
+        if (filters.isIncomplete) {
+          const hasUnchecked = list.items.some((item) => !item.isChecked);
+          if (!hasUnchecked) return false;
+        }
+
+        // Filter by minimum items
+        if (filters.minItems !== undefined && list.items.length < filters.minItems) {
+          return false;
+        }
+
+        // Filter by maximum items
+        if (filters.maxItems !== undefined && list.items.length > filters.maxItems) {
+          return false;
+        }
+
+        return true;
+      });
+    },
+
+    /**
+     * Get lists with overdue items
+     * @returns Promise<List[]> - Lists containing overdue items
+     */
+    async getWithOverdueItems(): Promise<List[]> {
+      const all = await this.getAll();
+      const now = new Date();
+
+      return all.filter((list) => {
+        return list.items.some((item) => {
+          if (!item.dueDate || item.isChecked) return false;
+          return new Date(item.dueDate) < now;
+        });
+      });
+    },
+
+    /**
+     * Get lists with high priority items
+     * @returns Promise<List[]> - Lists containing unchecked high priority items
+     */
+    async getWithHighPriorityItems(): Promise<List[]> {
+      const all = await this.getAll();
+      
+      return all.filter((list) => {
+        return list.items.some(
+          (item) => item.priority === "high" && !item.isChecked
+        );
+      });
+    },
+
+    /**
+     * Bulk archive multiple lists
+     * @param ids - Array of list IDs to archive
+     */
+    async bulkArchive(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      
+      all.forEach((list) => {
+        if (ids.includes(list.id)) {
+          list.isArchived = true;
+          list.updatedAt = now;
+        }
+      });
+
+      await setData(KEYS.LISTS, all);
+    },
+
+    /**
+     * Bulk unarchive multiple lists
+     * @param ids - Array of list IDs to unarchive
+     */
+    async bulkUnarchive(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      
+      all.forEach((list) => {
+        if (ids.includes(list.id)) {
+          list.isArchived = false;
+          list.updatedAt = now;
+        }
+      });
+
+      await setData(KEYS.LISTS, all);
+    },
+
+    /**
+     * Bulk delete multiple lists
+     * @param ids - Array of list IDs to delete
+     */
+    async bulkDelete(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((list) => !ids.includes(list.id));
+      await setData(KEYS.LISTS, filtered);
+    },
+
+    /**
+     * Get enhanced statistics with detailed breakdowns
+     * @returns Promise<object> - Comprehensive statistics
+     */
+    async getEnhancedStats(): Promise<{
+      total: number;
+      active: number;
+      archived: number;
+      templates: number;
+      byCategory: Record<string, number>;
+      totalItems: number;
+      completedItems: number;
+      pendingItems: number;
+      highPriorityItems: number;
+      overdueItems: number;
+      itemsWithNotes: number;
+      completionRate: number;
+    }> {
+      const all = await this.getAll();
+      const active = all.filter((l) => !l.isArchived && !l.isTemplate);
+      const archived = all.filter((l) => l.isArchived === true);
+      const templates = all.filter((l) => l.isTemplate === true);
+      const now = new Date();
+
+      // Count categories only for active lists
+      const byCategory: Record<string, number> = {};
+      active.forEach((list) => {
+        if (list.category) {
+          byCategory[list.category] = (byCategory[list.category] || 0) + 1;
+        }
+      });
+
+      let totalItems = 0;
+      let completedItems = 0;
+      let pendingItems = 0;
+      let highPriorityItems = 0;
+      let overdueItems = 0;
+      let itemsWithNotes = 0;
+
+      all.forEach((list) => {
+        list.items.forEach((item) => {
+          totalItems++;
+          
+          if (item.isChecked) {
+            completedItems++;
+          } else {
+            pendingItems++;
+            
+            // Count high priority unchecked items
+            if (item.priority === "high") {
+              highPriorityItems++;
+            }
+            
+            // Count overdue unchecked items
+            if (item.dueDate && new Date(item.dueDate) < now) {
+              overdueItems++;
+            }
+          }
+          
+          // Count items with notes
+          if (item.notes && item.notes.trim().length > 0) {
+            itemsWithNotes++;
+          }
+        });
+      });
+
+      const completionRate = totalItems > 0 
+        ? Math.round((completedItems / totalItems) * 100) 
+        : 0;
+
+      return {
+        total: all.length,
+        active: active.length,
+        archived: archived.length,
+        templates: templates.length,
+        byCategory,
+        totalItems,
+        completedItems,
+        pendingItems,
+        highPriorityItems,
+        overdueItems,
+        itemsWithNotes,
+        completionRate,
+      };
+    },
+
+    /**
+     * Clear all completed items from a list
+     * @param id - List ID
+     */
+    async clearCompleted(id: string): Promise<void> {
+      const all = await this.getAll();
+      const list = all.find((l) => l.id === id);
+      
+      if (list) {
+        list.items = list.items.filter((item) => !item.isChecked);
+        list.updatedAt = new Date().toISOString();
+        await setData(KEYS.LISTS, all);
+      }
+    },
+
+    /**
+     * Mark all items in a list as completed
+     * @param id - List ID
+     */
+    async completeAll(id: string): Promise<void> {
+      const all = await this.getAll();
+      const list = all.find((l) => l.id === id);
+      
+      if (list) {
+        list.items.forEach((item) => {
+          item.isChecked = true;
+        });
+        list.updatedAt = new Date().toISOString();
+        await setData(KEYS.LISTS, all);
+      }
+    },
+
+    /**
+     * Mark all items in a list as incomplete
+     * @param id - List ID
+     */
+    async uncompleteAll(id: string): Promise<void> {
+      const all = await this.getAll();
+      const list = all.find((l) => l.id === id);
+      
+      if (list) {
+        list.items.forEach((item) => {
+          item.isChecked = false;
+        });
+        list.updatedAt = new Date().toISOString();
+        await setData(KEYS.LISTS, all);
+      }
     },
   },
 
