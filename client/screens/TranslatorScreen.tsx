@@ -539,10 +539,7 @@ export default function TranslatorScreen() {
           text: "Clear All",
           style: "destructive",
           onPress: async () => {
-            const all = await db.translations.getAll();
-            for (const t of all) {
-              await db.translations.delete(t.id);
-            }
+            await db.translations.clearAll();
             await loadData();
             Alert.alert("Success", "History cleared");
           },
