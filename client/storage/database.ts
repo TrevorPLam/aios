@@ -227,8 +227,11 @@ export const db = {
       const expiredRecs = all.filter((r) => r.status === "expired");
 
       const totalDecided = acceptedRecs.length + declinedRecs.length;
+      const PERCENTAGE_MULTIPLIER = 100;
       const acceptanceRate =
-        totalDecided > 0 ? (acceptedRecs.length / totalDecided) * 100 : 0;
+        totalDecided > 0
+          ? (acceptedRecs.length / totalDecided) * PERCENTAGE_MULTIPLIER
+          : 0;
 
       const byModule = all.reduce(
         (acc, rec) => {

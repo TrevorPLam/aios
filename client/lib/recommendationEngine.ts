@@ -72,6 +72,17 @@ function daysBetween(date1: Date, date2: Date): number {
 }
 
 /**
+ * Gets date string in YYYY-MM-DD format
+ * Used for deduplication keys to ensure one recommendation per day
+ *
+ * @param {Date} date - Date to format (defaults to current date)
+ * @returns {string} Date string in YYYY-MM-DD format
+ */
+function getDateString(date: Date = new Date()): string {
+  return date.toISOString().split("T")[0];
+}
+
+/**
  * Generates ISO timestamp for hours from now
  *
  * @param {number} hours - Number of hours to add
@@ -270,7 +281,7 @@ const suggestFocusTime: RecommendationRule = {
       expiresAt: hoursFromNow(36),
       confidence: "high",
       priority: "high",
-      dedupeKey: `focus_time_${new Date().toISOString().split("T")[0]}`,
+      dedupeKey: `focus_time_${getDateString()}`,
       countsAgainstLimit: true,
       why: `You have ${highPriorityTasks.length} high-priority tasks but no dedicated focus time scheduled. Cal Newport research shows focused blocks increase output by 2-3x.`,
       evidenceTimestamps: highPriorityTasks.map((t) => t.createdAt),
@@ -320,7 +331,7 @@ const suggestWeeklyReflection: RecommendationRule = {
       expiresAt: hoursFromNow(48),
       confidence: "medium",
       priority: "low",
-      dedupeKey: `weekly_reflection_${new Date().toISOString().split("T")[0]}`,
+      dedupeKey: `weekly_reflection_${getDateString()}`,
       countsAgainstLimit: true,
       why: "Weekly reflections help identify patterns and celebrate progress. Studies show regular reflection increases goal achievement by 23%.",
       evidenceTimestamps: [new Date().toISOString()],
@@ -371,7 +382,7 @@ const suggestDueDateReview: RecommendationRule = {
       expiresAt: hoursFromNow(12),
       confidence: "high",
       priority: "urgent",
-      dedupeKey: `due_date_review_${new Date().toISOString().split("T")[0]}`,
+      dedupeKey: `due_date_review_${getDateString()}`,
       countsAgainstLimit: true,
       why: `Multiple deadlines approaching. Early review reduces stress and improves quality. Tasks: ${upcomingTasks.map((t) => t.title).join(", ")}.`,
       evidenceTimestamps: upcomingTasks
