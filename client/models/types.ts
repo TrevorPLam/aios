@@ -175,6 +175,12 @@ export interface CalendarEvent {
   source: "LOCAL";
 }
 
+/**
+ * EmailThread Model
+ *
+ * Represents an email conversation thread.
+ * Features: read/unread status, starring, archiving, labeling, importance marking
+ */
 export interface EmailThread {
   id: string;
   subject: string;
@@ -183,8 +189,24 @@ export interface EmailThread {
   isRead: boolean;
   isStarred: boolean;
   lastMessageAt: string;
+  /** Optional: Archive threads to clean up inbox */
+  isArchived?: boolean;
+  /** Optional: Important/priority marking for urgent threads */
+  isImportant?: boolean;
+  /** Optional: Labels/tags for thread organization */
+  labels?: string[];
+  /** Optional: Draft status (true if thread contains unsent messages) */
+  isDraft?: boolean;
+  /** Optional: Total size in bytes for storage tracking */
+  totalSize?: number;
 }
 
+/**
+ * EmailMessage Model
+ *
+ * Individual email message within a thread.
+ * Tracks sender, recipients, content, read status, and attachments
+ */
 export interface EmailMessage {
   id: string;
   threadId: string;
@@ -194,6 +216,12 @@ export interface EmailMessage {
   body: string;
   sentAt: string;
   isRead: boolean;
+  /** Optional: List of attachment file names */
+  attachments?: string[];
+  /** Optional: CC recipients */
+  cc?: string[];
+  /** Optional: BCC recipients */
+  bcc?: string[];
 }
 
 export type ListItemPriority = "none" | "low" | "medium" | "high";
