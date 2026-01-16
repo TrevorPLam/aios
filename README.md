@@ -525,16 +525,31 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 
 ## 📚 Documentation
 
+### Quick Start
+- **[README.md](./README.md)** - This file! Installation and quick start
+- **[DOCUMENTATION_GUIDE.md](./DOCUMENTATION_GUIDE.md)** - Navigation guide to all documentation
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute to the project
+
 ### Core Documentation
 - **[F&F.md](./F&F.md)** - Features & Functionality overview (main reference)
 - **[MODULE_DETAILS.md](./MODULE_DETAILS.md)** - Technical implementation details
-- **[COMPETITIVE_ANALYSIS.md](./COMPETITIVE_ANALYSIS.md)** - Market positioning & competitive landscape
 
-### Additional Resources
-- **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** - API endpoints and usage
-- **[MISSING_FEATURES.md](./MISSING_FEATURES.md)** - Known limitations and roadmap
-- **[design_guidelines.md](./design_guidelines.md)** - UI/UX design specifications
-- **Module-specific docs** - See individual `*_MODULE_COMPLETION_SUMMARY.md` files
+### Technical Documentation
+- **[docs/technical/API_DOCUMENTATION.md](./docs/technical/API_DOCUMENTATION.md)** - API endpoints and usage
+- **[docs/technical/TESTING_INSTRUCTIONS.md](./docs/technical/TESTING_INSTRUCTIONS.md)** - How to test the application
+- **[docs/technical/design_guidelines.md](./docs/technical/design_guidelines.md)** - UI/UX design specifications
+- **[docs/technical/IMPLEMENTATION_ROADMAP.md](./docs/technical/IMPLEMENTATION_ROADMAP.md)** - Development roadmap
+
+### Analysis & Planning
+- **[docs/analysis/COMPETITIVE_ANALYSIS.md](./docs/analysis/COMPETITIVE_ANALYSIS.md)** - Market positioning & competitive landscape
+- **[docs/planning/MISSING_FEATURES.md](./docs/planning/MISSING_FEATURES.md)** - Known limitations and roadmap
+
+### Security
+- **[SECURITY.md](./SECURITY.md)** - Security policy and vulnerability reporting
+- **[docs/security/SECURITY.md](./docs/security/SECURITY.md)** - Comprehensive security documentation
+
+### Archive
+- **[docs/archive/](./docs/archive/)** - Historical documentation and analysis reports
 
 ## 📄 License
 
@@ -544,9 +559,10 @@ This project is available as open source under the terms of your chosen license.
 
 For questions or issues:
 - Open an issue on GitHub
-- Check [F&F.md](./F&F.md) for feature status
-- Review [MISSING_FEATURES.md](./MISSING_FEATURES.md) for known limitations
-- See [design_guidelines.md](./design_guidelines.md) for design specifications
+- Check [DOCUMENTATION_GUIDE.md](./DOCUMENTATION_GUIDE.md) to find relevant documentation
+- Review [F&F.md](./F&F.md) for feature status
+- See [docs/planning/MISSING_FEATURES.md](./docs/planning/MISSING_FEATURES.md) for known limitations
+- Read [docs/technical/design_guidelines.md](./docs/technical/design_guidelines.md) for design specifications
 
 ## 🙏 Acknowledgments
 
