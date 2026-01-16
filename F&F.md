@@ -41,6 +41,33 @@ This document provides a comprehensive overview of all modules within AIOS, trac
 
 ---
 
+## ✅ Quick Win Candidates (Non-UI/UX Safe)
+
+The following items are low-risk because they are **data-layer, API, or automation-only** changes that do **not** touch the UI/UX during the current refactor:
+
+**Messaging**
+- Message search (storage + API endpoints)
+- Message editing metadata (edited flag + timestamps)
+- Conversation preview synchronization on message edits/deletes
+
+**History**
+- Scheduled export job (background task + export API)
+- Pattern recognition data hooks (analytics-only)
+
+**Calendar**
+- Recurring expansion (data model expansion + scheduler)
+- Reminder scheduling hooks (notifications layer only)
+
+**Alerts**
+- Notification scheduling (system layer only)
+- Sound/vibration presets (config-only, no UI)
+
+**Translator**
+- Translation history retention rules (storage-only)
+- Phrasebook tagging (storage-only)
+
+---
+
 ## 1. 💬 Messaging (65%)
 
 ### Purpose
@@ -54,6 +81,8 @@ P2P messaging with AI-powered assistance for internal communication.
 - Message threading/replies
 - Character limit (1000)
 - AI Assist Sheet interface
+- Message search (data layer)
+- Message editing (data layer)
 
 ### ⬜ Planned (12/30)
 - WebSocket real-time messaging
@@ -61,7 +90,6 @@ P2P messaging with AI-powered assistance for internal communication.
 - Message reactions
 - Media upload/download
 - Voice & video messages
-- Message search, editing, deletion
 - Video chat & screen sharing
 
 ### AI Features (6/15 framework ready)
@@ -733,8 +761,8 @@ See [UI/UX Revolutionary Strategy](docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md) 
 
 ## 📝 Document Notes
 
-- **Last Updated:** January 16, 2026
-- **Version:** 2.1 (Added Super App Vision)
+- **Last Updated:** March 9, 2026
+- **Version:** 2.2 (Quick win assessment + messaging data-layer upgrades)
 - Percentages based on comparison with market-leading applications
 - AI features tracked separately (framework vs. implementation)
 - All features subject to technical feasibility and user demand

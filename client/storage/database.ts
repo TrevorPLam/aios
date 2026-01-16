@@ -87,6 +87,30 @@ async function setData<T>(key: string, value: T): Promise<void> {
   }
 }
 
+/**
+ * Messaging helpers
+ *
+ * Centralizes small, reusable transforms to keep message operations consistent.
+ * These utilities support AI-assisted iteration by documenting intent and flow.
+ */
+const MESSAGE_PREVIEW_LIMIT = 80;
+
+function buildMessagePreview(content: string): string {
+  const trimmed = content.trim();
+  if (trimmed.length <= MESSAGE_PREVIEW_LIMIT) return trimmed;
+  return `${trimmed.slice(0, MESSAGE_PREVIEW_LIMIT - 1)}…`;
+}
+
+function buildMessageSearchIndex(message: Message): string {
+  const attachmentTokens = message.attachments
+    .map((attachment) => attachment.fileName || attachment.url)
+    .filter(Boolean);
+
+  return [message.content, message.senderName, ...attachmentTokens]
+    .join(" ")
+    .toLowerCase();
+}
+
 export const db = {
   /**
    * Recommendations Module
@@ -2269,13 +2293,30 @@ export const db = {
   },
 
   messages: {
+    /**
+     * Get all messages from storage
+     *
+     * @returns {Promise<Message[]>} Array of all messages
+     */
     async getAll(): Promise<Message[]> {
       return getData(KEYS.MESSAGES, []);
     },
+    /**
+     * Get a single message by ID
+     *
+     * @param {string} id - Message ID
+     * @returns {Promise<Message | null>} Message or null if missing
+     */
     async get(id: string): Promise<Message | null> {
       const all = await this.getAll();
       return all.find((m) => m.id === id) || null;
     },
+    /**
+     * Get messages for a specific conversation (chronological order)
+     *
+     * @param {string} conversationId - Conversation ID
+     * @returns {Promise<Message[]>} Messages sorted oldest → newest
+     */
     async getByConversation(conversationId: string): Promise<Message[]> {
       const all = await this.getAll();
       return all
@@ -2285,6 +2326,48 @@ export const db = {
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         );
     },
+    /**
+     * Search messages by content, sender name, and attachment metadata.
+     *
+     * Notes for AI iteration:
+     * - If query is empty, returns scoped messages ordered by recency.
+     * - Keep results stable by sorting on createdAt descending.
+     *
+     * @param {string} query - Search query string
+     * @param {{ conversationId?: string; limit?: number }} options - Scope & limit
+     * @returns {Promise<Message[]>} Matching messages
+     */
+    async search(
+      query: string,
+      options: { conversationId?: string; limit?: number } = {},
+    ): Promise<Message[]> {
+      const normalized = query.trim().toLowerCase();
+      const all = await this.getAll();
+      const scoped = options.conversationId
+        ? all.filter((m) => m.conversationId === options.conversationId)
+        : all;
+
+      const matches = normalized
+        ? scoped.filter((message) =>
+            buildMessageSearchIndex(message).includes(normalized),
+          )
+        : scoped;
+
+      const sorted = matches.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      return typeof options.limit === "number"
+        ? sorted.slice(0, options.limit)
+        : sorted;
+    },
+    /**
+     * Save a message (create new or update existing)
+     *
+     * @param {Message} message - Message to persist
+     * @returns {Promise<void>}
+     */
     async save(message: Message): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((m) => m.id === message.id);
@@ -2295,10 +2378,80 @@ export const db = {
       }
       await setData(KEYS.MESSAGES, all);
     },
+    /**
+     * Edit an existing message and mark it as edited.
+     * Also refreshes the conversation preview if this is the latest message.
+     *
+     * @param {string} id - Message ID to edit
+     * @param {string} content - Updated message content
+     * @returns {Promise<Message | null>} Updated message or null if missing
+     */
+    async editContent(id: string, content: string): Promise<Message | null> {
+      const all = await this.getAll();
+      const index = all.findIndex((m) => m.id === id);
+      if (index < 0) return null;
+
+      const now = new Date().toISOString();
+      const updated: Message = {
+        ...all[index],
+        content,
+        isEdited: true,
+        updatedAt: now,
+      };
+
+      all[index] = updated;
+      await setData(KEYS.MESSAGES, all);
+
+      const conversations = await db.conversations.getAll();
+      const conversation = conversations.find(
+        (c) => c.id === updated.conversationId,
+      );
+
+      if (conversation?.lastMessageId === updated.id) {
+        conversation.lastMessagePreview = buildMessagePreview(updated.content);
+        conversation.updatedAt = now;
+        await setData(KEYS.CONVERSATIONS, conversations);
+      }
+
+      return updated;
+    },
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
+      const target = all.find((m) => m.id === id);
       const filtered = all.filter((m) => m.id !== id);
       await setData(KEYS.MESSAGES, filtered);
+
+      if (!target) return;
+
+      const conversations = await db.conversations.getAll();
+      const conversation = conversations.find(
+        (c) => c.id === target.conversationId,
+      );
+
+      if (!conversation || conversation.lastMessageId !== target.id) {
+        return;
+      }
+
+      const remaining = filtered
+        .filter((m) => m.conversationId === target.conversationId)
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+
+      if (remaining.length > 0) {
+        const latest = remaining[0];
+        conversation.lastMessageId = latest.id;
+        conversation.lastMessageAt = latest.createdAt;
+        conversation.lastMessagePreview = buildMessagePreview(latest.content);
+      } else {
+        conversation.lastMessageId = null;
+        conversation.lastMessageAt = null;
+        conversation.lastMessagePreview = "";
+      }
+
+      conversation.updatedAt = new Date().toISOString();
+      await setData(KEYS.CONVERSATIONS, conversations);
     },
     async markAsRead(conversationId: string, userId: string): Promise<void> {
       const all = await this.getAll();
