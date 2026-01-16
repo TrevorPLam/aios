@@ -512,6 +512,12 @@ export const db = {
    * Manages calendar event storage operations.
    * Supports event creation, editing, deletion, and date-based filtering.
    */
+  /**
+   * Calendar Events Module
+   *
+   * Manages calendar events with comprehensive date-based queries.
+   * Supports recurring events, time zones, and flexible filtering.
+   */
   events: {
     /**
      * Get all events from storage
@@ -538,15 +544,254 @@ export const db = {
      * Compares only the date portion (YYYY-MM-DD) of event startAt timestamps
      *
      * @param {string} date - ISO 8601 date string to filter by
-     * @returns {Promise<CalendarEvent[]>} Array of events on the specified date
+     * @returns {Promise<CalendarEvent[]>} Array of events on the specified date, sorted by start time
      */
     async getForDate(date: string): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const targetDate = date.split("T")[0];
-      return all.filter((e) => {
+      const filtered = all.filter((e) => {
         const eventDate = e.startAt.split("T")[0];
         return eventDate === targetDate;
       });
+      // Sort by start time
+      return filtered.sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get all events for a week starting from a specific date
+     *
+     * @param {string} startDate - ISO 8601 date string for the start of the week
+     * @returns {Promise<CalendarEvent[]>} Array of events within the 7-day period, sorted by start time
+     */
+    async getForWeek(startDate: string): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const start = new Date(startDate.split("T")[0]);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 7);
+
+      const filtered = all.filter((e) => {
+        const eventDate = new Date(e.startAt.split("T")[0]);
+        return eventDate >= start && eventDate < end;
+      });
+
+      return filtered.sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get all events for a specific month
+     *
+     * @param {number} year - Year (e.g., 2024)
+     * @param {number} month - Month (1-12)
+     * @returns {Promise<CalendarEvent[]>} Array of events in the specified month, sorted by start time
+     */
+    async getForMonth(year: number, month: number): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const filtered = all.filter((e) => {
+        const eventDate = new Date(e.startAt);
+        return (
+          eventDate.getFullYear() === year &&
+          eventDate.getMonth() + 1 === month
+        );
+      });
+
+      return filtered.sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get all events in a date range (inclusive)
+     *
+     * @param {string} startDate - ISO 8601 date string for range start
+     * @param {string} endDate - ISO 8601 date string for range end
+     * @returns {Promise<CalendarEvent[]>} Array of events in the date range, sorted by start time
+     */
+    async getForDateRange(startDate: string, endDate: string): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const start = new Date(startDate.split("T")[0]);
+      const end = new Date(endDate.split("T")[0]);
+      end.setDate(end.getDate() + 1); // Make end date inclusive
+
+      const filtered = all.filter((e) => {
+        const eventDate = new Date(e.startAt.split("T")[0]);
+        return eventDate >= start && eventDate < end;
+      });
+
+      return filtered.sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get upcoming events within the next N days
+     *
+     * @param {number} days - Number of days to look ahead (default: 7)
+     * @returns {Promise<CalendarEvent[]>} Array of upcoming events, sorted by start time
+     */
+    async getUpcoming(days: number = 7): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const now = new Date();
+      const future = new Date();
+      future.setDate(future.getDate() + days);
+
+      const filtered = all.filter((e) => {
+        const eventDate = new Date(e.startAt);
+        return eventDate >= now && eventDate <= future;
+      });
+
+      return filtered.sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get events due today
+     *
+     * @returns {Promise<CalendarEvent[]>} Array of today's events, sorted by start time
+     */
+    async getDueToday(): Promise<CalendarEvent[]> {
+      const today = new Date().toISOString().split("T")[0];
+      return this.getForDate(today);
+    },
+
+    /**
+     * Get all-day events for a specific date
+     *
+     * @param {string} date - ISO 8601 date string to filter by
+     * @returns {Promise<CalendarEvent[]>} Array of all-day events on the specified date
+     */
+    async getAllDayEvents(date: string): Promise<CalendarEvent[]> {
+      const events = await this.getForDate(date);
+      return events.filter((e) => e.allDay);
+    },
+
+    /**
+     * Get recurring events
+     *
+     * @returns {Promise<CalendarEvent[]>} Array of events with recurrence rules
+     */
+    async getRecurring(): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      return all.filter((e) => e.recurrenceRule && e.recurrenceRule !== "none");
+    },
+
+    /**
+     * Search events by title, description, or location
+     *
+     * @param {string} query - Search query string
+     * @returns {Promise<CalendarEvent[]>} Array of matching events
+     */
+    async search(query: string): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase();
+      
+      return all.filter((e) => 
+        e.title.toLowerCase().includes(lowerQuery) ||
+        e.description.toLowerCase().includes(lowerQuery) ||
+        e.location.toLowerCase().includes(lowerQuery)
+      ).sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get events by location
+     *
+     * @param {string} location - Location to filter by
+     * @returns {Promise<CalendarEvent[]>} Array of events at the specified location
+     */
+    async getByLocation(location: string): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const lowerLocation = location.toLowerCase();
+      
+      return all.filter((e) => 
+        e.location.toLowerCase().includes(lowerLocation)
+      ).sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Check for conflicting events in a time range
+     * An event conflicts if it overlaps with the specified time range
+     *
+     * @param {string} startAt - ISO 8601 start time
+     * @param {string} endAt - ISO 8601 end time
+     * @param {string} excludeId - Optional event ID to exclude (for update scenarios)
+     * @returns {Promise<CalendarEvent[]>} Array of conflicting events
+     */
+    async getConflicts(
+      startAt: string,
+      endAt: string,
+      excludeId?: string
+    ): Promise<CalendarEvent[]> {
+      const all = await this.getAll();
+      const newStart = new Date(startAt).getTime();
+      const newEnd = new Date(endAt).getTime();
+
+      return all.filter((e) => {
+        if (excludeId && e.id === excludeId) return false;
+        
+        const eventStart = new Date(e.startAt).getTime();
+        const eventEnd = new Date(e.endAt).getTime();
+
+        // Check for overlap: events overlap if one starts before the other ends
+        return (
+          (eventStart < newEnd && eventEnd > newStart) ||
+          (newStart < eventEnd && newEnd > eventStart)
+        );
+      }).sort((a, b) => 
+        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      );
+    },
+
+    /**
+     * Get statistics about calendar events
+     *
+     * @returns {Promise<object>} Statistics object with various metrics
+     */
+    async getStats(): Promise<{
+      totalEvents: number;
+      upcomingEvents: number;
+      todayEvents: number;
+      recurringEvents: number;
+      allDayEvents: number;
+      eventsThisWeek: number;
+      eventsThisMonth: number;
+    }> {
+      const all = await this.getAll();
+      const today = new Date();
+      const todayStr = today.toISOString().split("T")[0];
+      
+      // Week range
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 7);
+
+      // Month range
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      return {
+        totalEvents: all.length,
+        upcomingEvents: all.filter((e) => new Date(e.startAt) >= today).length,
+        todayEvents: all.filter((e) => e.startAt.split("T")[0] === todayStr).length,
+        recurringEvents: all.filter((e) => e.recurrenceRule && e.recurrenceRule !== "none").length,
+        allDayEvents: all.filter((e) => e.allDay).length,
+        eventsThisWeek: all.filter((e) => {
+          const eventDate = new Date(e.startAt);
+          return eventDate >= weekStart && eventDate < weekEnd;
+        }).length,
+        eventsThisMonth: all.filter((e) => {
+          const eventDate = new Date(e.startAt);
+          return eventDate >= monthStart && eventDate <= monthEnd;
+        }).length,
+      };
     },
 
     /**
@@ -576,6 +821,41 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((e) => e.id !== id);
       await setData(KEYS.EVENTS, filtered);
+    },
+
+    /**
+     * Delete multiple events by IDs (bulk delete)
+     *
+     * @param {string[]} ids - Array of event IDs to delete
+     * @returns {Promise<void>}
+     */
+    async bulkDelete(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((e) => !ids.includes(e.id));
+      await setData(KEYS.EVENTS, filtered);
+    },
+
+    /**
+     * Duplicate an event
+     *
+     * @param {string} id - The event ID to duplicate
+     * @returns {Promise<CalendarEvent | null>} The duplicated event, or null if not found
+     */
+    async duplicate(id: string): Promise<CalendarEvent | null> {
+      const event = await this.get(id);
+      if (!event) return null;
+
+      const now = new Date().toISOString();
+      const duplicated: CalendarEvent = {
+        ...event,
+        id: generateId(),
+        title: `${event.title} (Copy)`,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      await this.save(duplicated);
+      return duplicated;
     },
   },
 
