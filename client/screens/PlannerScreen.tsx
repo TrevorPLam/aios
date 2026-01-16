@@ -703,16 +703,15 @@ export default function PlannerScreen() {
         <ThemedText type="small" muted style={styles.filterLabel}>
           Status:
         </ThemedText>
-        {STATUS_FILTERS.map(
-          (filter) => (
-            <Pressable
-              key={filter}
-              onPress={() => {
-                setStatusFilter(filter);
-                if (Platform.OS !== "web") {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                }
-              }}
+        {STATUS_FILTERS.map((filter) => (
+          <Pressable
+            key={filter}
+            onPress={() => {
+              setStatusFilter(filter);
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            }}
               style={[
                 styles.filterChip,
                 {
@@ -730,8 +729,7 @@ export default function PlannerScreen() {
                 {filter === "in_progress" ? "In Progress" : filter.charAt(0).toUpperCase() + filter.slice(1)}
               </ThemedText>
             </Pressable>
-          )
-        )}
+          ))}
       </ScrollView>
 
       {/* Filter chips - Due Date */}
