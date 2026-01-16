@@ -33,3 +33,13 @@
 - Update monthly in the first week.
 - Capture CI pass rate per release.
 - Review trends quarterly.
+
+## Feedback metrics
+
+| Metric | Definition | Target | Current | Notes |
+| --- | --- | --- | --- | --- |
+| Issues opened | Documentation issues opened | Track trend | 0 | GitHub issues with [DOCS] tag |
+| Issues closed | Documentation issues resolved | Track trend | 0 | Closed issues this month |
+| Average resolution time | Time from open to close | < 7 days | N/A | Track median time |
+| Discussion posts | GitHub discussion activity | Track trend | 0 | Doc-related discussions |
+| High priority items | Critical doc issues | < 5 | 0 | Blocking issues |

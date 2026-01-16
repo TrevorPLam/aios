@@ -1,0 +1,55 @@
+name: Documentation Feedback
+description: Report documentation issues, suggest improvements, or request clarifications
+title: "[DOCS]: "
+labels: ["documentation"]
+body:
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation needs attention?
+      options:
+        - README / Getting Started
+        - API Documentation
+        - Module Documentation
+        - Architecture Diagrams
+        - Contributing Guide
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue Description
+      description: What's wrong or missing in the documentation?
+      placeholder: "Be specific about what's unclear, incorrect, or missing"
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Document Location
+      description: Where is this documentation located?
+      placeholder: "e.g., docs/technical/API_DOCUMENTATION.md, line 45"
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How would you improve this documentation?
+      placeholder: "Provide your suggestion for better documentation"
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low - Nice to have
+        - Medium - Important for clarity
+        - High - Blocking understanding
+    validations:
+      required: true
