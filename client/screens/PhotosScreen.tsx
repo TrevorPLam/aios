@@ -391,6 +391,8 @@ export default function PhotosScreen() {
 
       // Save to local storage (avoid duplication by using unique names)
       const fileName = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
+      // Note: documentDirectory exists in FileSystem namespace but ESLint can't detect it
+      // This is a known issue with expo-file-system type definitions
       // eslint-disable-next-line import/namespace
       const documentDir = FileSystem.documentDirectory;
 

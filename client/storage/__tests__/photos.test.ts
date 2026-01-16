@@ -584,15 +584,19 @@ describe("Database Photos Storage", () => {
     it("should update album timestamp when updating photo count", async () => {
       await db.photoAlbums.save(mockAlbum);
 
-      // Wait a bit to ensure timestamp difference
+      const originalTimestamp = new Date(mockAlbum.updatedAt).getTime();
+      
+      // Wait to ensure timestamp difference
+      // Using a promise-based delay for deterministic testing
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       await db.photoAlbums.updatePhotoCount("album_1");
 
       const album = await db.photoAlbums.get("album_1");
-      expect(new Date(album!.updatedAt).getTime()).toBeGreaterThan(
-        new Date(mockAlbum.updatedAt).getTime(),
-      );
+      const updatedTimestamp = new Date(album!.updatedAt).getTime();
+      
+      // Verify timestamp was updated
+      expect(updatedTimestamp).toBeGreaterThan(originalTimestamp);
     });
   });
 
