@@ -5459,13 +5459,11 @@ export const db = {
           ...filteredNonFavorites.slice(0, availableSlots),
         ];
       } else {
-        const filtered = cutoff
-          ? [...favorites, ...filteredNonFavorites].filter(
-              (t) => new Date(t.createdAt) >= cutoff,
-            )
-          : [...favorites, ...filteredNonFavorites];
-
-        retained = filtered.slice(0, policy.maxEntries);
+        let toRetain = all;
+        if (cutoff) {
+          toRetain = all.filter((t) => new Date(t.createdAt) >= cutoff);
+        }
+        retained = toRetain.slice(0, policy.maxEntries);
       }
 
       await setData(KEYS.TRANSLATIONS, retained);
