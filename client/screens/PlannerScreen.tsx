@@ -337,12 +337,13 @@ export default function PlannerScreen() {
     navigation.navigate("TaskDetail", { parentTaskId: parentId });
   };
 
-  // Toggle task completion status between completed and pending/previous status
+  // Toggle task completion status between completed and pending
+  // Note: Always reverts to "pending" when uncompleting for simplicity and consistency
   const handleToggleComplete = async (task: Task) => {
     let newStatus: TaskStatus;
     
     if (task.status === "completed") {
-      // If completed, revert to pending (or could track previous status)
+      // If completed, revert to pending
       newStatus = "pending";
     } else {
       // If not completed, mark as completed
@@ -368,7 +369,7 @@ export default function PlannerScreen() {
       return taskList.filter(
         (t) =>
           t.title.toLowerCase().includes(lowerQuery) ||
-          t.userNotes.toLowerCase().includes(lowerQuery)
+          (t.userNotes || "").toLowerCase().includes(lowerQuery)
       );
     };
   }, [searchQuery]);

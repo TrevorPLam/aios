@@ -260,7 +260,7 @@ export const db = {
       return all.filter(
         (t) =>
           t.title.toLowerCase().includes(lowerQuery) ||
-          t.userNotes.toLowerCase().includes(lowerQuery)
+          (t.userNotes || "").toLowerCase().includes(lowerQuery)
       );
     },
 
