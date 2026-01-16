@@ -16,7 +16,7 @@
  * @module PlannerScreen
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   StyleSheet,
@@ -24,6 +24,8 @@ import {
   Pressable,
   Image,
   Platform,
+  TextInput,
+  ScrollView,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -38,7 +40,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Task } from "@/models/types";
+import { Task, TaskStatus, TaskPriority } from "@/models/types";
 import { formatDate, getPriorityColor } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
@@ -49,7 +51,20 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 interface TaskWithSubtasks extends Task {
   subtasks: Task[];
   isExpanded?: boolean;
+  progress?: number; // Completion percentage for tasks with subtasks
 }
+
+// Filter types for UI state management
+type PriorityFilter = "all" | TaskPriority;
+type StatusFilter = "all" | TaskStatus;
+type DueDateFilter = "all" | "overdue" | "today" | "week";
+type SortOption = "priority" | "dueDate" | "alphabetical" | "updated";
+
+// Filter options constants
+const PRIORITY_FILTERS: PriorityFilter[] = ["all", "urgent", "high", "medium", "low"];
+const STATUS_FILTERS: StatusFilter[] = ["all", "pending", "in_progress", "completed", "cancelled"];
+const DUE_DATE_FILTERS: DueDateFilter[] = ["all", "overdue", "today", "week"];
+const SORT_OPTIONS: SortOption[] = ["priority", "dueDate", "alphabetical", "updated"];
 
 function TaskCard({
   task,
@@ -60,6 +75,8 @@ function TaskCard({
   isExpanded = false,
   onToggleExpand,
   onAddSubtask,
+  onToggleComplete,
+  progress,
 }: {
   task: Task;
   onPress: () => void;
@@ -69,6 +86,8 @@ function TaskCard({
   isExpanded?: boolean;
   onToggleExpand?: () => void;
   onAddSubtask?: () => void;
+  onToggleComplete?: () => void;
+  progress?: number;
 }) {
   const { theme } = useTheme();
   const priorityColor = getPriorityColor(task.priority, theme);
@@ -146,6 +165,15 @@ function TaskCard({
                 </ThemedText>
               </View>
             ) : null}
+            {/* Show progress for parent tasks with subtasks */}
+            {hasSubtasks && progress !== undefined && progress !== null ? (
+              <View style={styles.metaItem}>
+                <Feather name="check-circle" size={12} color={theme.textMuted} />
+                <ThemedText type="small" muted>
+                  {progress}%
+                </ThemedText>
+              </View>
+            ) : null}
           </View>
         </View>
         <View style={styles.cardActions}>
@@ -164,7 +192,15 @@ function TaskCard({
               <Feather name="plus" size={14} color={theme.textMuted} />
             </Pressable>
           ) : null}
-          <View
+          {/* Make status badge pressable to toggle completion */}
+          <Pressable
+            onPress={(e) => {
+              e.stopPropagation();
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }
+              onToggleComplete?.();
+            }}
             style={[
               styles.statusBadge,
               {
@@ -173,13 +209,17 @@ function TaskCard({
                   : theme.backgroundSecondary,
               },
             ]}
+            hitSlop={8}
+            accessibilityLabel={isCompleted ? "Mark task as incomplete" : "Mark task as complete"}
+            accessibilityRole="button"
+            accessibilityHint={`Double tap to ${isCompleted ? "uncomplete" : "complete"} this task`}
           >
             <Feather
               name={isCompleted ? "check" : "circle"}
               size={16}
               color={isCompleted ? theme.success : theme.textMuted}
             />
-          </View>
+          </Pressable>
         </View>
       </Pressable>
     </Animated.View>
@@ -195,6 +235,23 @@ export default function PlannerScreen() {
   const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
   const [showAISheet, setShowAISheet] = useState(false);
 
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [dueDateFilter, setDueDateFilter] = useState<DueDateFilter>("all");
+  const [sortBy, setSortBy] = useState<SortOption>("priority");
+  
+  // Statistics state
+  const [statistics, setStatistics] = useState({
+    total: 0,
+    completed: 0,
+    inProgress: 0,
+    overdue: 0,
+    dueToday: 0,
+  });
+  const [showStats, setShowStats] = useState(false);
+
   const loadData = useCallback(async () => {
     const allTasks = await db.tasks.getAll();
 
@@ -204,10 +261,24 @@ export default function PlannerScreen() {
       return allTasks.filter((t) => t.parentTaskId === parentId);
     };
 
-    const tasksWithSubtasks: TaskWithSubtasks[] = topLevel.map((task) => ({
-      ...task,
-      subtasks: buildSubtasksRecursive(task.id),
-    }));
+    // Build tasks with subtasks and calculate progress for parent tasks
+    const tasksWithSubtasks: TaskWithSubtasks[] = await Promise.all(
+      topLevel.map(async (task) => {
+        const subtasks = buildSubtasksRecursive(task.id);
+        let progress = undefined;
+        
+        // Calculate progress if task has subtasks
+        if (subtasks.length > 0) {
+          progress = await db.tasks.getSubtaskProgress(task.id);
+        }
+        
+        return {
+          ...task,
+          subtasks,
+          progress,
+        };
+      })
+    );
 
     tasksWithSubtasks.sort((a, b) => {
       const aHasSubtasks = a.subtasks.length > 0;
@@ -221,6 +292,16 @@ export default function PlannerScreen() {
     });
 
     setTasks(tasksWithSubtasks);
+    
+    // Load statistics for dashboard
+    const stats = await db.tasks.getStatistics();
+    setStatistics({
+      total: stats.total,
+      completed: stats.completed,
+      inProgress: stats.inProgress,
+      overdue: stats.overdue,
+      dueToday: stats.dueToday,
+    });
   }, []);
 
   useEffect(() => {
@@ -265,21 +346,192 @@ export default function PlannerScreen() {
     navigation.navigate("TaskDetail", { parentTaskId: parentId });
   };
 
+  // Toggle task completion status between completed and pending
+  // Note: Always reverts to "pending" when uncompleting for simplicity and consistency
+  const handleToggleComplete = async (task: Task) => {
+    let newStatus: TaskStatus;
+    
+    if (task.status === "completed") {
+      // If completed, revert to pending
+      newStatus = "pending";
+    } else {
+      // If not completed, mark as completed
+      newStatus = "completed";
+    }
+    
+    const updatedTask = {
+      ...task,
+      status: newStatus,
+      updatedAt: new Date().toISOString(),
+    };
+    
+    await db.tasks.save(updatedTask);
+    await loadData(); // Reload to update progress indicators
+  };
+
+  // Apply search filter - filters by title and userNotes
+  const applySearchFilter = useMemo(() => {
+    return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
+      if (!searchQuery.trim()) return taskList;
+      
+      const lowerQuery = searchQuery.toLowerCase();
+      return taskList.filter(
+        (t) =>
+          t.title.toLowerCase().includes(lowerQuery) ||
+          (t.userNotes || "").toLowerCase().includes(lowerQuery)
+      );
+    };
+  }, [searchQuery]);
+
+  // Apply priority filter
+  const applyPriorityFilter = useMemo(() => {
+    return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
+      if (priorityFilter === "all") return taskList;
+      return taskList.filter((t) => t.priority === priorityFilter);
+    };
+  }, [priorityFilter]);
+
+  // Apply status filter
+  const applyStatusFilter = useMemo(() => {
+    return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
+      if (statusFilter === "all") return taskList;
+      return taskList.filter((t) => t.status === statusFilter);
+    };
+  }, [statusFilter]);
+
+  // Apply due date filter
+  const applyDueDateFilter = useMemo(() => {
+    return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
+      if (dueDateFilter === "all") return taskList;
+      
+      const now = new Date().toISOString();
+      const today = now.split("T")[0];
+      const weekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      
+      switch (dueDateFilter) {
+        case "overdue":
+          return taskList.filter(
+            (t) =>
+              t.dueDate &&
+              t.dueDate < now &&
+              t.status !== "completed" &&
+              t.status !== "cancelled"
+          );
+        case "today":
+          return taskList.filter((t) => t.dueDate && t.dueDate.startsWith(today));
+        case "week":
+          return taskList.filter(
+            (t) =>
+              t.dueDate &&
+              t.dueDate >= now &&
+              t.dueDate <= weekFromNow &&
+              t.status !== "completed" &&
+              t.status !== "cancelled"
+          );
+        default:
+          return taskList;
+      }
+    };
+  }, [dueDateFilter]);
+
+  // Apply sorting
+  const applySorting = useMemo(() => {
+    return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
+      const sorted = [...taskList];
+      
+      switch (sortBy) {
+        case "priority":
+          sorted.sort((a, b) => {
+            // Keep parent tasks at top
+            const aHasSubtasks = a.subtasks.length > 0;
+            const bHasSubtasks = b.subtasks.length > 0;
+            if (aHasSubtasks && !bHasSubtasks) return -1;
+            if (!aHasSubtasks && bHasSubtasks) return 1;
+            
+            // Then by completion status
+            if (a.status === "completed" && b.status !== "completed") return 1;
+            if (a.status !== "completed" && b.status === "completed") return -1;
+            
+            // Finally by priority
+            const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+          });
+          break;
+          
+        case "dueDate":
+          sorted.sort((a, b) => {
+            // Keep parent tasks at top
+            const aHasSubtasks = a.subtasks.length > 0;
+            const bHasSubtasks = b.subtasks.length > 0;
+            if (aHasSubtasks && !bHasSubtasks) return -1;
+            if (!aHasSubtasks && bHasSubtasks) return 1;
+            
+            // Sort by due date
+            if (!a.dueDate && !b.dueDate) return 0;
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return a.dueDate.localeCompare(b.dueDate);
+          });
+          break;
+          
+        case "alphabetical":
+          sorted.sort((a, b) => {
+            // Keep parent tasks at top
+            const aHasSubtasks = a.subtasks.length > 0;
+            const bHasSubtasks = b.subtasks.length > 0;
+            if (aHasSubtasks && !bHasSubtasks) return -1;
+            if (!aHasSubtasks && bHasSubtasks) return 1;
+            
+            return a.title.localeCompare(b.title);
+          });
+          break;
+          
+        case "updated":
+          sorted.sort((a, b) => {
+            // Keep parent tasks at top
+            const aHasSubtasks = a.subtasks.length > 0;
+            const bHasSubtasks = b.subtasks.length > 0;
+            if (aHasSubtasks && !bHasSubtasks) return -1;
+            if (!aHasSubtasks && bHasSubtasks) return 1;
+            
+            return b.updatedAt.localeCompare(a.updatedAt);
+          });
+          break;
+      }
+      
+      return sorted;
+    };
+  }, [sortBy]);
+
+  // Memoized filtered and sorted tasks
+  const filteredAndSortedTasks = useMemo(() => {
+    let result = tasks;
+    result = applySearchFilter(result);
+    result = applyPriorityFilter(result);
+    result = applyStatusFilter(result);
+    result = applyDueDateFilter(result);
+    result = applySorting(result);
+    return result;
+  }, [tasks, applySearchFilter, applyPriorityFilter, applyStatusFilter, applyDueDateFilter, applySorting]);
+
   const buildListData = () => {
     const result: {
       type: "task" | "subtask";
       task: Task;
       parentHasSubtasks: boolean;
+      parentProgress?: number;
       index: number;
     }[] = [];
     let index = 0;
 
-    tasks.forEach((task) => {
+    // Use filtered and sorted tasks instead of raw tasks
+    filteredAndSortedTasks.forEach((task) => {
       const hasSubtasks = task.subtasks.length > 0;
       result.push({
         type: "task",
         task,
         parentHasSubtasks: hasSubtasks,
+        parentProgress: task.progress,
         index: index++,
       });
 
@@ -312,17 +564,256 @@ export default function PlannerScreen() {
         isSubtask={isSubtask}
         hasSubtasks={hasSubtasks}
         isExpanded={isExpanded}
+        progress={item.parentProgress}
         onPress={() =>
           navigation.navigate("TaskDetail", { taskId: item.task.id })
         }
         onToggleExpand={() => toggleExpand(item.task.id)}
         onAddSubtask={() => handleAddSubtask(item.task.id)}
+        onToggleComplete={() => handleToggleComplete(item.task)}
       />
     );
   };
 
   return (
     <ThemedView style={styles.container}>
+      {/* Search bar at the top */}
+      <View style={[styles.searchContainer, { backgroundColor: theme.backgroundDefault }]}>
+        <Feather name="search" size={18} color={theme.textMuted} />
+        <TextInput
+          style={[styles.searchInput, { color: theme.text }]}
+          placeholder="Search tasks..."
+          placeholderTextColor={theme.textMuted}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {searchQuery.length > 0 && (
+          <Pressable
+            onPress={() => setSearchQuery("")}
+            hitSlop={8}
+          >
+            <Feather name="x" size={18} color={theme.textMuted} />
+          </Pressable>
+        )}
+      </View>
+
+      {/* Statistics Dashboard - Collapsible */}
+      <Pressable
+        onPress={() => {
+          setShowStats(!showStats);
+          if (Platform.OS !== "web") {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+        }}
+        style={[styles.statsHeader, { backgroundColor: theme.backgroundSecondary }]}
+      >
+        <ThemedText type="body" style={{ fontWeight: "600" }}>
+          Statistics
+        </ThemedText>
+        <Feather
+          name={showStats ? "chevron-up" : "chevron-down"}
+          size={20}
+          color={theme.text}
+        />
+      </Pressable>
+
+      {showStats && (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.statsContainer}
+        >
+          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
+            <ThemedText type="small" muted>Total</ThemedText>
+            <ThemedText type="h3" style={{ color: theme.accent }}>
+              {statistics.total}
+            </ThemedText>
+          </View>
+          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
+            <ThemedText type="small" muted>Completed</ThemedText>
+            <ThemedText type="h3" style={{ color: theme.success }}>
+              {statistics.completed}
+            </ThemedText>
+          </View>
+          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
+            <ThemedText type="small" muted>In Progress</ThemedText>
+            <ThemedText type="h3" style={{ color: theme.warning }}>
+              {statistics.inProgress}
+            </ThemedText>
+          </View>
+          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
+            <ThemedText type="small" muted>Overdue</ThemedText>
+            <ThemedText type="h3" style={{ color: theme.error }}>
+              {statistics.overdue}
+            </ThemedText>
+          </View>
+          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
+            <ThemedText type="small" muted>Due Today</ThemedText>
+            <ThemedText type="h3" style={{ color: theme.accent }}>
+              {statistics.dueToday}
+            </ThemedText>
+          </View>
+        </ScrollView>
+      )}
+
+      {/* Filter chips - Priority */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterContainer}
+      >
+        <ThemedText type="small" muted style={styles.filterLabel}>
+          Priority:
+        </ThemedText>
+        {PRIORITY_FILTERS.map((filter) => (
+          <Pressable
+            key={filter}
+            onPress={() => {
+              setPriorityFilter(filter);
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            }}
+            style={[
+              styles.filterChip,
+              {
+                backgroundColor:
+                  priorityFilter === filter ? theme.accent : theme.backgroundSecondary,
+              },
+            ]}
+          >
+            <ThemedText
+              type="small"
+              style={{
+                color: priorityFilter === filter ? theme.buttonText : theme.text,
+              }}
+            >
+              {filter.charAt(0).toUpperCase() + filter.slice(1)}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      {/* Filter chips - Status */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterContainer}
+      >
+        <ThemedText type="small" muted style={styles.filterLabel}>
+          Status:
+        </ThemedText>
+        {STATUS_FILTERS.map((filter) => (
+          <Pressable
+            key={filter}
+            onPress={() => {
+              setStatusFilter(filter);
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            }}
+              style={[
+                styles.filterChip,
+                {
+                  backgroundColor:
+                    statusFilter === filter ? theme.accent : theme.backgroundSecondary,
+                },
+              ]}
+            >
+              <ThemedText
+                type="small"
+                style={{
+                  color: statusFilter === filter ? theme.buttonText : theme.text,
+                }}
+              >
+                {filter === "in_progress" ? "In Progress" : filter.charAt(0).toUpperCase() + filter.slice(1)}
+              </ThemedText>
+            </Pressable>
+          ))}
+      </ScrollView>
+
+      {/* Filter chips - Due Date */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterContainer}
+      >
+        <ThemedText type="small" muted style={styles.filterLabel}>
+          Due:
+        </ThemedText>
+        {DUE_DATE_FILTERS.map((filter) => (
+          <Pressable
+            key={filter}
+            onPress={() => {
+              setDueDateFilter(filter);
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            }}
+            style={[
+              styles.filterChip,
+              {
+                backgroundColor:
+                  dueDateFilter === filter ? theme.accent : theme.backgroundSecondary,
+              },
+            ]}
+          >
+            <ThemedText
+              type="small"
+              style={{
+                color: dueDateFilter === filter ? theme.buttonText : theme.text,
+              }}
+            >
+              {filter === "week" ? "This Week" : filter.charAt(0).toUpperCase() + filter.slice(1)}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      {/* Sort options */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterContainer}
+      >
+        <ThemedText type="small" muted style={styles.filterLabel}>
+          Sort:
+        </ThemedText>
+        {SORT_OPTIONS.map((option) => (
+          <Pressable
+            key={option}
+            onPress={() => {
+              setSortBy(option);
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+            }}
+            style={[
+              styles.filterChip,
+              {
+                backgroundColor:
+                  sortBy === option ? theme.accent : theme.backgroundSecondary,
+              },
+            ]}
+          >
+            <ThemedText
+              type="small"
+              style={{
+                color: sortBy === option ? theme.buttonText : theme.text,
+              }}
+            >
+              {option === "dueDate"
+                ? "Due Date"
+                : option === "alphabetical"
+                ? "A-Z"
+                : option === "updated"
+                ? "Recently Updated"
+                : "Priority"}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </ScrollView>
+
       <FlatList
         data={listData}
         renderItem={renderItem}
@@ -339,7 +830,7 @@ export default function PlannerScreen() {
           listData.length > 0 ? (
             <View style={styles.listHeader}>
               <ThemedText type="caption" muted>
-                Tasks with subtasks become projects
+                {listData.length} {listData.length === 1 ? "task" : "tasks"}
               </ThemedText>
             </View>
           ) : null
@@ -352,11 +843,14 @@ export default function PlannerScreen() {
               resizeMode="contain"
             />
             <ThemedText type="h3" style={styles.emptyTitle}>
-              No Tasks Yet
+              {searchQuery || priorityFilter !== "all" || statusFilter !== "all" || dueDateFilter !== "all"
+                ? "No Matching Tasks"
+                : "No Tasks Yet"}
             </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
-              Tap + to create your first task. Add subtasks to turn any task
-              into a project.
+              {searchQuery || priorityFilter !== "all" || statusFilter !== "all" || dueDateFilter !== "all"
+                ? "Try adjusting your filters or search query"
+                : "Tap + to create your first task. Add subtasks to turn any task into a project."}
             </ThemedText>
           </View>
         }
@@ -395,6 +889,52 @@ const styles = StyleSheet.create({
   },
   headerButton: {
     padding: Spacing.xs,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    gap: Spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: Spacing.xs,
+  },
+  statsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+  },
+  statsContainer: {
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.sm,
+    gap: Spacing.sm,
+  },
+  statChip: {
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    alignItems: "center",
+    minWidth: 80,
+    ...Shadows.card,
+  },
+  filterContainer: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+    gap: Spacing.xs,
+    alignItems: "center",
+  },
+  filterLabel: {
+    marginRight: Spacing.xs,
+  },
+  filterChip: {
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.full,
   },
   listContent: {
     paddingHorizontal: Spacing.lg,
