@@ -105,8 +105,11 @@ function ThreadCard({
   const sender =
     thread.participants.find((p) => p !== "You") || thread.participants[0];
   
-  /** Check if thread has attachments in any message */
-  const hasAttachments = thread.messages.some((m) => m.attachments && m.attachments.length > 0);
+  /** Check if thread has attachments in any message - memoized for performance */
+  const hasAttachments = useMemo(
+    () => thread.messages.some((m) => m.attachments && m.attachments.length > 0),
+    [thread.messages]
+  );
 
   return (
     <Animated.View entering={FadeInDown.delay(index * 30).springify()}>

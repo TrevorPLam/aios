@@ -14,8 +14,9 @@ import { generateId } from "@/utils/helpers";
 // Helper function to create mock email thread
 function createMockThread(overrides?: Partial<EmailThread>): EmailThread {
   const now = new Date().toISOString();
+  const threadId = generateId();
   return {
-    id: generateId(),
+    id: threadId,
     subject: "Test Email Subject",
     participants: ["sender@example.com", "You"],
     isRead: false,
@@ -24,7 +25,7 @@ function createMockThread(overrides?: Partial<EmailThread>): EmailThread {
     messages: [
       {
         id: generateId(),
-        threadId: "test",
+        threadId: threadId, // Use actual thread ID for data integrity
         from: "sender@example.com",
         to: ["you@example.com"],
         subject: "Test Email Subject",

@@ -2149,6 +2149,7 @@ export const db = {
    * Email Threads Module
    *
    * Manages email thread storage with advanced filtering, search, and organization features.
+   * Provides persistent storage via AsyncStorage with 28 database methods for comprehensive operations.
    * Supports starring, archiving, labeling, importance marking, and bulk operations.
    */
   emailThreads: {
