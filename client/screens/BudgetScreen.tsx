@@ -101,9 +101,19 @@ export default function BudgetScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const [statistics, setStatistics] = useState<any>(null);
+  const [statistics, setStatistics] = useState<{
+    totalBudgets: number;
+    totalBudgeted: number;
+    totalActual: number;
+    totalDifference: number;
+    averageBudgeted: number;
+    averageActual: number;
+    categoryCount: number;
+    lineItemCount: number;
+    mostRecentMonth: string | null;
+    oldestMonth: string | null;
+  } | null>(null);
 
   /** State for tracking which cell is currently being edited */
   const [editingCell, setEditingCell] = useState<{
@@ -113,12 +123,30 @@ export default function BudgetScreen() {
     value: string;
   } | null>(null);
 
-  /**
-   * Load current month's budget or most recent budget
-   * Also loads all budgets for month picker and statistics
-   * Falls back to most recent budget if no current month budget exists
-   */
-  const loadBudget = useCallback(async () => {
+/**
+ * Trigger haptic feedback on supported platforms
+ * Provides tactile response for user interactions
+ * 
+ * @param {Haptics.ImpactFeedbackStyle} style - Feedback intensity (Light, Medium, Heavy)
+ */
+const triggerHaptic = useCallback(
+  (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(style);
+    }
+  },
+  []
+);
+
+/**
+ * Load current month's budget or most recent budget
+ * Also loads all budgets for month picker and statistics
+ * Falls back to most recent budget if no current month budget exists
+ * 
+ * @throws Will log error but continue gracefully on database failures
+ */
+const loadBudget = useCallback(async () => {
+  try {
     let data = await db.budgets.getCurrent();
     if (!data) {
       // If no current budget exists, get the most recent one
@@ -138,7 +166,11 @@ export default function BudgetScreen() {
     // Load statistics
     const stats = await db.budgets.getStatistics();
     setStatistics(stats);
-  }, []);
+  } catch (error) {
+    console.error("Error loading budget:", error);
+    // Continue gracefully - user can still create new budget
+  }
+}, []);
 
   /**
    * Load a specific budget by ID
@@ -147,14 +179,16 @@ export default function BudgetScreen() {
    * @param {string} budgetId - The budget ID to load
    */
   const loadSpecificBudget = useCallback(async (budgetId: string) => {
-    const data = await db.budgets.get(budgetId);
-    if (data) {
-      setBudget(data);
-      if (Platform.OS !== "web") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    try {
+      const data = await db.budgets.get(budgetId);
+      if (data) {
+        setBudget(data);
+        triggerHaptic();
       }
+    } catch (error) {
+      console.error("Error loading specific budget:", error);
     }
-  }, []);
+  }, [triggerHaptic]);
 
   // Load budget on mount
   useEffect(() => {
@@ -198,9 +232,7 @@ export default function BudgetScreen() {
    */
   const toggleCategory = (categoryId: string) => {
     if (!budget) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    triggerHaptic();
 
     const updatedCategories = budget.categories.map((cat) =>
       cat.id === categoryId ? { ...cat, isExpanded: !cat.isExpanded } : cat,
@@ -244,12 +276,10 @@ export default function BudgetScreen() {
     }
 
     const numValue = parseFloat(trimmedValue);
-    // Check if the entire input is a valid number by comparing string representations
-    if (
-      Number.isNaN(numValue) ||
-      numValue.toString() !== parseFloat(trimmedValue).toString()
-    ) {
-      return; // Don't update if invalid number or partial number like "123abc"
+    // Validate that input is a valid number and matches the original string
+    // This prevents partial numbers like "123abc" or "12.34.56"
+    if (Number.isNaN(numValue) || trimmedValue !== numValue.toString()) {
+      return; // Don't update if invalid number format
     }
 
     const updatedCategories = budget.categories.map((cat) => {
@@ -269,9 +299,7 @@ export default function BudgetScreen() {
    */
   const addCategory = () => {
     if (!budget) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    triggerHaptic();
 
     const newCategory: BudgetCategory = {
       id: generateId(),
@@ -350,9 +378,7 @@ export default function BudgetScreen() {
    */
   const addLineItem = (categoryId: string) => {
     if (!budget) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    triggerHaptic();
 
     const newLineItem: BudgetLineItem = {
       id: generateId(),
@@ -382,9 +408,7 @@ export default function BudgetScreen() {
    */
   const deleteLineItem = (categoryId: string, lineItemId: string) => {
     if (!budget) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    triggerHaptic();
 
     const updatedCategories = budget.categories.map((cat) => {
       if (cat.id === categoryId) {
@@ -457,9 +481,7 @@ export default function BudgetScreen() {
   const handleDuplicateBudget = async () => {
     if (!budget) return;
     
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
     // Calculate next month
     const currentDate = new Date(budget.month + "-01");
@@ -478,8 +500,13 @@ export default function BudgetScreen() {
             text: "Overwrite",
             style: "destructive",
             onPress: async () => {
-              await db.budgets.delete(existing.id);
-              await performDuplication(nextMonth);
+              try {
+                await db.budgets.delete(existing.id);
+                await performDuplication(nextMonth);
+              } catch (error) {
+                console.error("Error overwriting budget:", error);
+                Alert.alert("Error", "Failed to overwrite budget. Please try again.");
+              }
             },
           },
         ]
@@ -497,20 +524,27 @@ export default function BudgetScreen() {
   const performDuplication = async (newMonth: string) => {
     if (!budget) return;
     
-    const monthName = new Date(newMonth + "-01").toLocaleDateString("en-US", {
-      month: "long",
-      year: "numeric",
-    });
-    
-    const duplicated = await db.budgets.duplicate(
-      budget.id,
-      newMonth,
-      `${monthName} Budget`
-    );
-    
-    if (duplicated) {
-      await loadBudget();
-      Alert.alert("Success", `Budget template created for ${monthName}!`);
+    try {
+      const monthName = new Date(newMonth + "-01").toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      });
+      
+      const duplicated = await db.budgets.duplicate(
+        budget.id,
+        newMonth,
+        `${monthName} Budget`
+      );
+      
+      if (duplicated) {
+        await loadBudget();
+        Alert.alert("Success", `Budget template created for ${monthName}!`);
+      } else {
+        Alert.alert("Error", "Failed to create budget template.");
+      }
+    } catch (error) {
+      console.error("Error duplicating budget:", error);
+      Alert.alert("Error", "Failed to create budget template. Please try again.");
     }
   };
 
@@ -521,9 +555,7 @@ export default function BudgetScreen() {
   const handleExportBudget = async () => {
     if (!budget) return;
     
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
     const json = await db.budgets.exportToJSON(budget.id);
     if (!json) return;
@@ -563,31 +595,35 @@ export default function BudgetScreen() {
    * Handle export of all budgets
    */
   const handleExportAllBudgets = async () => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
-    const json = await db.budgets.exportAllToJSON();
+    try {
+      const json = await db.budgets.exportAllToJSON();
 
-    if (Platform.OS === "web") {
-      const blob = new Blob([json], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `all-budgets-${new Date().toISOString().split("T")[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } else {
-      try {
+      if (Platform.OS === "web") {
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `all-budgets-${new Date().toISOString().split("T")[0]}.json`;
+        
+        try {
+          document.body.appendChild(a);
+          a.click();
+        } finally {
+          // Ensure cleanup even if download fails
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      } else {
         await Share.share({
           message: json,
           title: "All Budgets Export",
         });
-      } catch (error) {
-        console.error("Error sharing budgets:", error);
       }
+    } catch (error) {
+      console.error("Error exporting budgets:", error);
+      Alert.alert("Error", "Failed to export budgets. Please try again.");
     }
     
     setShowExportMenu(false);
