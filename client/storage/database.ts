@@ -2213,10 +2213,15 @@ export const db = {
 
       const budgetedDiff = total2.budgeted - total1.budgeted;
       const actualDiff = total2.actual - total1.actual;
+      
+      // Calculate percentage change
+      // If total1.actual is 0, percentage change is 100% if total2 > 0, 0% if total2 = 0
       const percentageChange =
         total1.actual > 0
           ? ((total2.actual - total1.actual) / total1.actual) * 100
-          : 0;
+          : total2.actual > 0
+            ? 100
+            : 0;
 
       return {
         month1Budget: budget1,

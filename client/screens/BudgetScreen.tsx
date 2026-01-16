@@ -83,6 +83,10 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
  *
  * @returns {JSX.Element} The budget screen component
  */
+
+/** Animation delay per category for staggered entrance (in milliseconds) */
+const ANIMATION_DELAY_PER_ITEM = 50;
+
 export default function BudgetScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -531,10 +535,15 @@ export default function BudgetScreen() {
       const a = document.createElement("a");
       a.href = url;
       a.download = `budget-${budget.month}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      
+      try {
+        document.body.appendChild(a);
+        a.click();
+      } finally {
+        // Ensure cleanup even if download fails
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
     } else {
       // Mobile: Share
       try {
@@ -614,6 +623,37 @@ export default function BudgetScreen() {
     if (totalBudgeted === 0) return 0;
     return (totalActual / totalBudgeted) * 100;
   }, [totalBudgeted, totalActual]);
+
+  /**
+   * Calculate category totals for all categories
+   * Memoized to avoid recalculation on every render
+   * 
+   * @returns {Map} Map of category IDs to totals
+   */
+  const categoryTotals = useMemo(() => {
+    const totals = new Map<string, { budgeted: number; actual: number; diff: number; isOverBudget: boolean }>();
+    
+    filteredCategories.forEach((category) => {
+      const catBudgeted = category.lineItems.reduce(
+        (sum, item) => sum + item.budgeted,
+        0
+      );
+      const catActual = category.lineItems.reduce(
+        (sum, item) => sum + item.actual,
+        0
+      );
+      const catDiff = catBudgeted - catActual;
+      
+      totals.set(category.id, {
+        budgeted: catBudgeted,
+        actual: catActual,
+        diff: catDiff,
+        isOverBudget: catDiff < 0,
+      });
+    });
+    
+    return totals;
+  }, [filteredCategories]);
 
   if (!budget) {
     return (
@@ -861,28 +901,24 @@ export default function BudgetScreen() {
         )}
 
         {filteredCategories.map((category, catIndex) => {
-          // Calculate category totals for visual indicators
-          const catBudgeted = category.lineItems.reduce(
-            (sum, item) => sum + item.budgeted,
-            0
-          );
-          const catActual = category.lineItems.reduce(
-            (sum, item) => sum + item.actual,
-            0
-          );
-          const catDiff = catBudgeted - catActual;
-          const isOverBudget = catDiff < 0;
+          // Get pre-calculated category totals from memoized map
+          const totals = categoryTotals.get(category.id) || {
+            budgeted: 0,
+            actual: 0,
+            diff: 0,
+            isOverBudget: false,
+          };
 
           return (
             <Animated.View
               key={category.id}
-              entering={FadeInDown.delay(catIndex * 50).springify()}
+              entering={FadeInDown.delay(catIndex * ANIMATION_DELAY_PER_ITEM).springify()}
             >
               <View
                 style={[
                   styles.categoryCard,
                   { backgroundColor: theme.backgroundDefault },
-                  isOverBudget && {
+                  totals.isOverBudget && {
                     borderLeftWidth: 3,
                     borderLeftColor: theme.error,
                   },
