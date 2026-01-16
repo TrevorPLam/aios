@@ -60,6 +60,12 @@ type StatusFilter = "all" | TaskStatus;
 type DueDateFilter = "all" | "overdue" | "today" | "week";
 type SortOption = "priority" | "dueDate" | "alphabetical" | "updated";
 
+// Filter options constants
+const PRIORITY_FILTERS: PriorityFilter[] = ["all", "urgent", "high", "medium", "low"];
+const STATUS_FILTERS: StatusFilter[] = ["all", "pending", "in_progress", "completed", "cancelled"];
+const DUE_DATE_FILTERS: DueDateFilter[] = ["all", "overdue", "today", "week"];
+const SORT_OPTIONS: SortOption[] = ["priority", "dueDate", "alphabetical", "updated"];
+
 function TaskCard({
   task,
   onPress,
@@ -204,6 +210,9 @@ function TaskCard({
               },
             ]}
             hitSlop={8}
+            accessibilityLabel={isCompleted ? "Mark task as incomplete" : "Mark task as complete"}
+            accessibilityRole="button"
+            accessibilityHint={`Double tap to ${isCompleted ? "uncomplete" : "complete"} this task`}
           >
             <Feather
               name={isCompleted ? "check" : "circle"}
@@ -656,7 +665,7 @@ export default function PlannerScreen() {
         <ThemedText type="small" muted style={styles.filterLabel}>
           Priority:
         </ThemedText>
-        {(["all", "urgent", "high", "medium", "low"] as PriorityFilter[]).map((filter) => (
+        {PRIORITY_FILTERS.map((filter) => (
           <Pressable
             key={filter}
             onPress={() => {
@@ -694,7 +703,7 @@ export default function PlannerScreen() {
         <ThemedText type="small" muted style={styles.filterLabel}>
           Status:
         </ThemedText>
-        {(["all", "pending", "in_progress", "completed", "cancelled"] as StatusFilter[]).map(
+        {STATUS_FILTERS.map(
           (filter) => (
             <Pressable
               key={filter}
@@ -734,7 +743,7 @@ export default function PlannerScreen() {
         <ThemedText type="small" muted style={styles.filterLabel}>
           Due:
         </ThemedText>
-        {(["all", "overdue", "today", "week"] as DueDateFilter[]).map((filter) => (
+        {DUE_DATE_FILTERS.map((filter) => (
           <Pressable
             key={filter}
             onPress={() => {
@@ -772,7 +781,7 @@ export default function PlannerScreen() {
         <ThemedText type="small" muted style={styles.filterLabel}>
           Sort:
         </ThemedText>
-        {(["priority", "dueDate", "alphabetical", "updated"] as SortOption[]).map((option) => (
+        {SORT_OPTIONS.map((option) => (
           <Pressable
             key={option}
             onPress={() => {
@@ -823,7 +832,7 @@ export default function PlannerScreen() {
           listData.length > 0 ? (
             <View style={styles.listHeader}>
               <ThemedText type="caption" muted>
-                {listData.length} {listData.length === 1 ? "task" : "tasks"} • Tap checkmark to complete
+                {listData.length} {listData.length === 1 ? "task" : "tasks"}
               </ThemedText>
             </View>
           ) : null
