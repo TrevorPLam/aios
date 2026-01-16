@@ -466,4 +466,4 @@ Each module follows this enhancement cycle:
 
 **Last Updated:** January 16, 2026  
 **Document Version:** 1.0  
-**See also:** F&F.md (Overview), COMPETITIVE_ANALYSIS.md (Market positioning)
+**See also:** [F&F.md](F&F.md) (Overview), [docs/analysis/COMPETITIVE_ANALYSIS.md](docs/analysis/COMPETITIVE_ANALYSIS.md) (Market positioning)
