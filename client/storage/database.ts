@@ -2005,6 +2005,305 @@ export const db = {
       const filtered = all.filter((b) => b.id !== id);
       await setData(KEYS.BUDGETS, filtered);
     },
+
+    /**
+     * Search budgets by query string
+     * Searches across budget name, category names, and line item names
+     *
+     * @param {string} query - The search query
+     * @returns {Promise<Budget[]>} Array of matching budgets
+     */
+    async search(query: string): Promise<Budget[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase().trim();
+      
+      if (!lowerQuery) {
+        return all;
+      }
+
+      return all.filter((budget) => {
+        // Search in budget name
+        if (budget.name.toLowerCase().includes(lowerQuery)) {
+          return true;
+        }
+        
+        // Search in categories and line items
+        return budget.categories.some((category) => {
+          if (category.name.toLowerCase().includes(lowerQuery)) {
+            return true;
+          }
+          return category.lineItems.some((item) =>
+            item.name.toLowerCase().includes(lowerQuery)
+          );
+        });
+      });
+    },
+
+    /**
+     * Get budgets within a date range (by month)
+     *
+     * @param {string} startMonth - Start month in YYYY-MM format
+     * @param {string} endMonth - End month in YYYY-MM format
+     * @returns {Promise<Budget[]>} Array of budgets within the range
+     */
+    async getByDateRange(
+      startMonth: string,
+      endMonth: string
+    ): Promise<Budget[]> {
+      const all = await this.getAll();
+      return all.filter(
+        (budget) => budget.month >= startMonth && budget.month <= endMonth
+      );
+    },
+
+    /**
+     * Get all budgets sorted by month (most recent first)
+     *
+     * @returns {Promise<Budget[]>} Array of budgets sorted by month descending
+     */
+    async getAllSorted(): Promise<Budget[]> {
+      const all = await this.getAll();
+      return all.sort((a, b) => b.month.localeCompare(a.month));
+    },
+
+    /**
+     * Calculate statistics across all budgets
+     *
+     * @returns {Promise<object>} Budget statistics
+     */
+    async getStatistics(): Promise<{
+      totalBudgets: number;
+      totalBudgeted: number;
+      totalActual: number;
+      totalDifference: number;
+      averageBudgeted: number;
+      averageActual: number;
+      categoryCount: number;
+      lineItemCount: number;
+      mostRecentMonth: string | null;
+      oldestMonth: string | null;
+    }> {
+      const all = await this.getAll();
+      
+      if (all.length === 0) {
+        return {
+          totalBudgets: 0,
+          totalBudgeted: 0,
+          totalActual: 0,
+          totalDifference: 0,
+          averageBudgeted: 0,
+          averageActual: 0,
+          categoryCount: 0,
+          lineItemCount: 0,
+          mostRecentMonth: null,
+          oldestMonth: null,
+        };
+      }
+
+      let totalBudgeted = 0;
+      let totalActual = 0;
+      let categoryCount = 0;
+      let lineItemCount = 0;
+
+      all.forEach((budget) => {
+        categoryCount += budget.categories.length;
+        budget.categories.forEach((category) => {
+          lineItemCount += category.lineItems.length;
+          category.lineItems.forEach((item) => {
+            totalBudgeted += item.budgeted;
+            totalActual += item.actual;
+          });
+        });
+      });
+
+      const sorted = [...all].sort((a, b) => b.month.localeCompare(a.month));
+
+      return {
+        totalBudgets: all.length,
+        totalBudgeted,
+        totalActual,
+        totalDifference: totalBudgeted - totalActual,
+        averageBudgeted: totalBudgeted / all.length,
+        averageActual: totalActual / all.length,
+        categoryCount,
+        lineItemCount,
+        mostRecentMonth: sorted[0]?.month || null,
+        oldestMonth: sorted[sorted.length - 1]?.month || null,
+      };
+    },
+
+    /**
+     * Get category totals for a specific budget
+     *
+     * @param {string} budgetId - The budget ID
+     * @returns {Promise<Array>} Array of category totals
+     */
+    async getCategoryTotals(budgetId: string): Promise<
+      Array<{
+        categoryId: string;
+        categoryName: string;
+        budgeted: number;
+        actual: number;
+        difference: number;
+      }>
+    > {
+      const budget = await this.get(budgetId);
+      if (!budget) {
+        return [];
+      }
+
+      return budget.categories.map((category) => {
+        let budgeted = 0;
+        let actual = 0;
+        
+        category.lineItems.forEach((item) => {
+          budgeted += item.budgeted;
+          actual += item.actual;
+        });
+
+        return {
+          categoryId: category.id,
+          categoryName: category.name,
+          budgeted,
+          actual,
+          difference: budgeted - actual,
+        };
+      });
+    },
+
+    /**
+     * Compare two budgets by month
+     *
+     * @param {string} month1 - First month in YYYY-MM format
+     * @param {string} month2 - Second month in YYYY-MM format
+     * @returns {Promise<object | null>} Comparison data or null if budgets not found
+     */
+    async compareMonths(
+      month1: string,
+      month2: string
+    ): Promise<{
+      month1Budget: Budget;
+      month2Budget: Budget;
+      budgetedDiff: number;
+      actualDiff: number;
+      percentageChange: number;
+    } | null> {
+      const all = await this.getAll();
+      const budget1 = all.find((b) => b.month === month1);
+      const budget2 = all.find((b) => b.month === month2);
+
+      if (!budget1 || !budget2) {
+        return null;
+      }
+
+      const calcTotal = (budget: Budget) => {
+        let budgeted = 0;
+        let actual = 0;
+        budget.categories.forEach((cat) => {
+          cat.lineItems.forEach((item) => {
+            budgeted += item.budgeted;
+            actual += item.actual;
+          });
+        });
+        return { budgeted, actual };
+      };
+
+      const total1 = calcTotal(budget1);
+      const total2 = calcTotal(budget2);
+
+      const budgetedDiff = total2.budgeted - total1.budgeted;
+      const actualDiff = total2.actual - total1.actual;
+      const percentageChange =
+        total1.actual > 0
+          ? ((total2.actual - total1.actual) / total1.actual) * 100
+          : 0;
+
+      return {
+        month1Budget: budget1,
+        month2Budget: budget2,
+        budgetedDiff,
+        actualDiff,
+        percentageChange,
+      };
+    },
+
+    /**
+     * Duplicate a budget to a new month
+     *
+     * @param {string} budgetId - The budget ID to duplicate
+     * @param {string} newMonth - New month in YYYY-MM format
+     * @param {string} newName - Name for the new budget
+     * @returns {Promise<Budget>} The newly created budget
+     */
+    async duplicate(
+      budgetId: string,
+      newMonth: string,
+      newName: string
+    ): Promise<Budget | null> {
+      const budget = await this.get(budgetId);
+      if (!budget) {
+        return null;
+      }
+
+      const now = new Date().toISOString();
+      const newBudget: Budget = {
+        ...budget,
+        id: generateId(),
+        name: newName,
+        month: newMonth,
+        createdAt: now,
+        updatedAt: now,
+        // Reset all actual amounts to 0 for the new month
+        categories: budget.categories.map((cat) => ({
+          ...cat,
+          id: generateId(),
+          lineItems: cat.lineItems.map((item) => ({
+            ...item,
+            id: generateId(),
+            actual: 0,
+          })),
+        })),
+      };
+
+      await this.save(newBudget);
+      return newBudget;
+    },
+
+    /**
+     * Export budget data as JSON string
+     *
+     * @param {string} budgetId - The budget ID to export
+     * @returns {Promise<string | null>} JSON string or null if budget not found
+     */
+    async exportToJSON(budgetId: string): Promise<string | null> {
+      const budget = await this.get(budgetId);
+      if (!budget) {
+        return null;
+      }
+      return JSON.stringify(budget, null, 2);
+    },
+
+    /**
+     * Export all budgets as JSON string
+     *
+     * @returns {Promise<string>} JSON string of all budgets
+     */
+    async exportAllToJSON(): Promise<string> {
+      const all = await this.getAll();
+      return JSON.stringify(all, null, 2);
+    },
+
+    /**
+     * Delete multiple budgets by IDs
+     *
+     * @param {string[]} ids - Array of budget IDs to delete
+     * @returns {Promise<void>}
+     */
+    async bulkDelete(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((b) => !ids.includes(b.id));
+      await setData(KEYS.BUDGETS, filtered);
+    },
   },
 
   /**
