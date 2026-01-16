@@ -39,6 +39,39 @@ jest.mock("@/storage/database", () => ({
   },
 }));
 
+/**
+ * Test Utilities
+ */
+let RealDate: typeof Date;
+
+/**
+ * Mock Date to return a specific date
+ */
+function mockDateTo(targetDate: Date): void {
+  RealDate = Date;
+  global.Date = class extends RealDate {
+    constructor(...args: any[]) {
+      if (args.length === 0) {
+        super(targetDate.getTime());
+      } else {
+        super(...args);
+      }
+    }
+    static now() {
+      return targetDate.getTime();
+    }
+  } as any;
+}
+
+/**
+ * Restore the original Date implementation
+ */
+function restoreDate(): void {
+  if (RealDate) {
+    global.Date = RealDate;
+  }
+}
+
 describe("RecommendationEngine", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -49,31 +82,18 @@ describe("RecommendationEngine", () => {
     (db.decisions.getAll as jest.Mock).mockResolvedValue([]);
     (db.recommendations.getAll as jest.Mock).mockResolvedValue([]);
   });
+  
+  afterEach(() => {
+    restoreDate();
+  });
 
   describe("generateRecommendations", () => {
     it("should return empty array when no conditions are met", async () => {
       // Mock current date to be a Tuesday (weekday, not weekend)
-      const tuesday = new Date("2024-01-16T10:00:00Z"); // Tuesday
-      const RealDate = Date;
-      
-      global.Date = class extends RealDate {
-        constructor(...args: any[]) {
-          if (args.length === 0) {
-            super(tuesday.getTime());
-          } else {
-            super(...args);
-          }
-        }
-        static now() {
-          return tuesday.getTime();
-        }
-      } as any;
+      mockDateTo(new Date("2024-01-16T10:00:00Z"));
       
       const recommendations = await RecommendationEngine.generateRecommendations();
       expect(recommendations).toEqual([]);
-      
-      // Restore original Date
-      global.Date = RealDate;
     });
 
     it("should generate meeting notes recommendation for recent events", async () => {
@@ -282,22 +302,7 @@ describe("RecommendationEngine", () => {
 
     it("should generate weekly reflection on weekends", async () => {
       // Mock current date to be a Saturday
-      const saturday = new Date("2024-01-20T10:00:00Z"); // Saturday
-      const RealDate = Date;
-      
-      // Mock Date constructor to return our saturday date
-      global.Date = class extends RealDate {
-        constructor(...args: any[]) {
-          if (args.length === 0) {
-            super(saturday.getTime());
-          } else {
-            super(...args);
-          }
-        }
-        static now() {
-          return saturday.getTime();
-        }
-      } as any;
+      mockDateTo(new Date("2024-01-20T10:00:00Z"));
 
       (db.notes.getAll as jest.Mock).mockResolvedValue([]);
 
@@ -308,9 +313,6 @@ describe("RecommendationEngine", () => {
       );
       expect(reflectionRec).toBeDefined();
       expect(reflectionRec?.module).toBe("notebook");
-
-      // Restore original Date
-      global.Date = RealDate;
     });
 
     it("should generate deadline alert for upcoming tasks", async () => {
@@ -576,21 +578,7 @@ describe("RecommendationEngine", () => {
   describe("Error handling", () => {
     it("should handle database errors gracefully", async () => {
       // Mock current date to be a Tuesday (weekday, not weekend)
-      const tuesday = new Date("2024-01-16T10:00:00Z"); // Tuesday
-      const RealDate = Date;
-      
-      global.Date = class extends RealDate {
-        constructor(...args: any[]) {
-          if (args.length === 0) {
-            super(tuesday.getTime());
-          } else {
-            super(...args);
-          }
-        }
-        static now() {
-          return tuesday.getTime();
-        }
-      } as any;
+      mockDateTo(new Date("2024-01-16T10:00:00Z"));
       
       (db.notes.getAll as jest.Mock).mockRejectedValue(
         new Error("Database error"),
@@ -600,9 +588,6 @@ describe("RecommendationEngine", () => {
 
       // Should return empty array instead of throwing
       expect(recommendations).toEqual([]);
-      
-      // Restore original Date
-      global.Date = RealDate;
     });
 
     it("should continue processing other rules if one fails", async () => {
