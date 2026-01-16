@@ -39,6 +39,21 @@ To future-proof documentation health, execution prioritizes tooling, governance,
 **Deferred**
 - Tutorials and how-to guides (Phase 3.1 and 3.2)
 
+## Execution update (2026-01-17)
+
+To future-proof documentation health, execution continues to prioritize tooling,
+methodologies, and governance over tutorials and guides.
+
+**Completed**
+- Code of Conduct published using Contributor Covenant 2.1 and linked from CONTRIBUTING.md
+
+**Prioritized**
+- Documentation tooling (CI checks, templates, metrics) and review practices
+- Governance and ownership clarity
+
+**Deferred**
+- Tutorials and how-to guides remain deferred until tooling/practices are stable
+
 ---
 
 ## Phase 1: Foundation (Week 1-2) 🏗️
@@ -157,6 +172,7 @@ furnished to do so, subject to the following conditions:
 **Priority:** MEDIUM  
 **Effort:** 1 hour  
 **Owner:** Community manager
+**Status:** ✅ Completed
 
 **Implementation:**
 Use Contributor Covenant 2.1 (industry standard)

@@ -13,6 +13,7 @@ This index provides direct links to all active documentation in the repository.
 |----------|---------|------|
 | [README.md](../README.md) | Project overview, setup, quick start | 560 lines |
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines | - |
+| [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Community standards and enforcement | - |
 | [SECURITY.md](../SECURITY.md) | Security policy & reporting | 70 lines |
 | [F&F.md](../F&F.md) | Features & Functionality (main reference) | 669 lines |
 | [MODULE_DETAILS.md](../MODULE_DETAILS.md) | Technical implementation details | 469 lines |
