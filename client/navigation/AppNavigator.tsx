@@ -58,6 +58,9 @@ import PlannerSettingsScreen from "@/screens/PlannerSettingsScreen";
 import CalendarSettingsScreen from "@/screens/CalendarSettingsScreen";
 import EmailSettingsScreen from "@/screens/EmailSettingsScreen";
 import ContactsSettingsScreen from "@/screens/ContactsSettingsScreen";
+import AttentionCenterScreen from "@/screens/AttentionCenterScreen";
+import OnboardingWelcomeScreen from "@/screens/OnboardingWelcomeScreen";
+import OnboardingModuleSelectionScreen from "@/screens/OnboardingModuleSelectionScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -100,6 +103,9 @@ export type AppStackParamList = {
   CalendarSettings: undefined;
   EmailSettings: undefined;
   ContactsSettings: undefined;
+  AttentionCenter: undefined;
+  OnboardingWelcome: undefined;
+  OnboardingModuleSelection: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -396,6 +402,21 @@ export default function AppNavigator() {
         name="ContactsSettings"
         component={ContactsSettingsScreen}
         options={{ headerTitle: "Contacts Settings" }}
+      />
+      <Stack.Screen
+        name="AttentionCenter"
+        component={AttentionCenterScreen}
+        options={{ headerTitle: "Attention Center", headerShown: false }}
+      />
+      <Stack.Screen
+        name="OnboardingWelcome"
+        component={OnboardingWelcomeScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="OnboardingModuleSelection"
+        component={OnboardingModuleSelectionScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
   );
