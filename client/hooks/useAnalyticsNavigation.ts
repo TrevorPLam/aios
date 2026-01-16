@@ -47,7 +47,9 @@ export function useAnalyticsNavigation() {
     const moduleId = ROUTE_TO_MODULE[routeName];
     if (!moduleId) return;
 
-    // Track module_opened (source: "deeplink" for now, can be enhanced)
+    // Track module_opened
+    // Note: source defaults to "contextual" as we track navigation within the app
+    // For deeplinks or external navigation, this would need to be enhanced
     analytics.trackModuleOpened(moduleId, "contextual");
 
     // Track module_switch if we have a previous route

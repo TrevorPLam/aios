@@ -9,7 +9,7 @@
  * - Detect and drop forbidden fields
  */
 
-import { AnalyticsEvent, EventName, DayOfWeek } from "./types";
+import { AnalyticsEvent, EventName, DayOfWeek, EventPropsMap } from "./types";
 import {
   TextLengthBucket,
   DurationBucket,
@@ -184,10 +184,10 @@ export function getHourOfDay(date: Date): number {
  */
 export function sanitizeProps(
   eventName: EventName,
-  props: Record<string, any>
-): Record<string, any> {
+  props: Record<string, unknown>
+): Record<string, unknown> {
   const allowedProps = getAllowedProps(eventName);
-  const sanitized: Record<string, any> = {};
+  const sanitized: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(props)) {
     // Check if key is in allowlist
@@ -240,8 +240,8 @@ export function sanitizeEvent<T extends EventName>(
     // Add coarse time buckets
     day_of_week: getDayOfWeek(timestamp),
     hour_of_day: getHourOfDay(timestamp),
-    // Sanitize props
-    props: sanitizeProps(event.event_name, event.props as Record<string, any>) as any,
+    // Sanitize props with proper typing
+    props: sanitizeProps(event.event_name, event.props as unknown as Record<string, unknown>) as EventPropsMap[T],
   };
 
   return sanitized;

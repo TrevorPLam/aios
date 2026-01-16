@@ -140,7 +140,8 @@ export class DefaultIdentityProvider implements IdentityProvider {
     const now = new Date();
     const diffMs = now.getTime() - install.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    return diffDays;
+    // Guard against negative values (clock changes or corrupted data)
+    return Math.max(0, diffDays);
   }
 }
 

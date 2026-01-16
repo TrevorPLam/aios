@@ -75,7 +75,7 @@ export class Transport {
     // If transport is disabled (e.g., in dev), skip sending
     if (!this.config.enabled) {
       if (__DEV__) {
-        console.log("[Analytics] Transport disabled, events not sent:", events.length);
+        console.debug("[Analytics] Transport disabled, events not sent:", events.length);
       }
       return { success: true, shouldRetry: false };
     }
