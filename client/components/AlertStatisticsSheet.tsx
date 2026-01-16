@@ -34,6 +34,15 @@ import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { db } from "@/storage/database";
 import { AlertStatistics, AlertHistoryEntry } from "@/models/types";
 
+/** Number of recent history entries to analyze for pattern detection */
+const RECENT_HISTORY_COUNT = 3;
+
+/** Minimum average snooze count to trigger snooze warning */
+const MIN_SNOOZE_WARNING_THRESHOLD = 2;
+
+/** Multiplier for detecting worsening snooze patterns */
+const SNOOZE_PATTERN_WORSENING_FACTOR = 3;
+
 interface AlertStatisticsSheetProps {
   visible: boolean;
   alertId: string;
@@ -227,7 +236,7 @@ function generateInsights(
   }
 
   // Snooze pattern insights
-  if (stats.averageSnoozeCount > 2) {
+  if (stats.averageSnoozeCount > MIN_SNOOZE_WARNING_THRESHOLD) {
     insights.push({
       icon: "moon",
       title: "High Snooze Pattern",
@@ -244,10 +253,11 @@ function generateInsights(
   }
 
   // Recent pattern analysis
-  if (recentHistory.length >= 3) {
+  if (recentHistory.length >= RECENT_HISTORY_COUNT) {
     const recentSnoozes = recentHistory
-      .slice(-3)
+      .slice(-RECENT_HISTORY_COUNT)
       .reduce((sum, entry) => sum + entry.snoozeCount, 0);
+    
     if (recentSnoozes === 0 && stats.averageSnoozeCount > 1) {
       insights.push({
         icon: "trending-up",
@@ -256,7 +266,10 @@ function generateInsights(
           "Your recent responses have been better than average. Keep it up!",
         type: "success",
       });
-    } else if (recentSnoozes > stats.averageSnoozeCount * 3) {
+    } else if (
+      stats.averageSnoozeCount > 0 &&
+      recentSnoozes > stats.averageSnoozeCount * SNOOZE_PATTERN_WORSENING_FACTOR
+    ) {
       insights.push({
         icon: "trending-down",
         title: "Recent Struggles",

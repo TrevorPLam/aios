@@ -775,8 +775,7 @@ export const db = {
         snoozedEntries.length;
 
       // Estimate optimal single snooze duration
-      const estimatedOptimal =
-        avgSnoozeCount > 0 ? avgTotalSnoozeDuration / avgSnoozeCount : 10;
+      const estimatedOptimal = avgTotalSnoozeDuration / avgSnoozeCount;
 
       // Round to nearest valid snooze option: 5, 10, 15, 30, or 60 minutes
       const validOptions = [5, 10, 15, 30, 60];
