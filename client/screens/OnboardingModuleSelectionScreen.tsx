@@ -56,20 +56,24 @@ const CARD_WIDTH =
 
 /**
  * Module descriptions for onboarding
+ * Provides user-friendly descriptions for module selection
  */
-const MODULE_DESCRIPTIONS: Record<string, string> = {
-  planner: "Manage tasks and projects",
-  notebook: "Take notes and capture ideas",
-  calendar: "Schedule events and meetings",
-  messages: "Chat with contacts",
-  email: "Manage your inbox",
-  lists: "Create checklists",
-  budget: "Track expenses",
-  alerts: "Set reminders",
-  contacts: "Manage your contacts",
-  photos: "Organize your photos",
-  translator: "Translate languages",
-  history: "View activity history",
+const getModuleDescription = (moduleId: string): string => {
+  const descriptions: Record<string, string> = {
+    planner: "Manage tasks and projects",
+    notebook: "Take notes and capture ideas",
+    calendar: "Schedule events and meetings",
+    messages: "Chat with contacts",
+    email: "Manage your inbox",
+    lists: "Create checklists",
+    budget: "Track expenses",
+    alerts: "Set reminders",
+    contacts: "Manage your contacts",
+    photos: "Organize your photos",
+    translator: "Translate languages",
+    history: "View activity history",
+  };
+  return descriptions[moduleId] || "Explore this module";
 };
 
 /**
@@ -97,7 +101,7 @@ function ModuleCard({
     }
   }, [disabled, selected, onToggle]);
 
-  const description = MODULE_DESCRIPTIONS[module.id] || "Explore this module";
+  const description = getModuleDescription(module.id);
 
   return (
     <Pressable

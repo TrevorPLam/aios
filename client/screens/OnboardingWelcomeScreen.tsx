@@ -95,7 +95,7 @@ export default function OnboardingWelcomeScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
-    navigation.navigate("OnboardingModuleSelection" as any);
+    navigation.navigate("OnboardingModuleSelection");
   };
 
   const handleSkip = async () => {

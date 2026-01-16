@@ -461,7 +461,7 @@ export default function AttentionCenterScreen() {
         const module = parts[0];
 
         // Map module names to screen names
-        const screenMap: Record<string, keyof AppStackParamList> = {
+        const screenMap: Partial<Record<string, keyof AppStackParamList>> = {
           planner: "Planner",
           calendar: "Calendar",
           notebook: "Notebook",
@@ -471,11 +471,14 @@ export default function AttentionCenterScreen() {
           lists: "Lists",
           alerts: "Alerts",
           contacts: "Contacts",
+          photos: "Photos",
+          translator: "Translator",
+          history: "History",
         };
 
         const screenName = screenMap[module];
         if (screenName) {
-          navigation.navigate(screenName as any);
+          navigation.navigate(screenName);
         }
       }
     },
