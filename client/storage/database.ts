@@ -3883,6 +3883,16 @@ export const db = {
         mostUsedTargetLang,
       };
     },
+
+    /**
+     * Export all translations to JSON format
+     *
+     * @returns {Promise<string>} JSON string of all translations
+     */
+    async exportToJSON(): Promise<string> {
+      const all = await this.getAll();
+      return JSON.stringify(all, null, 2);
+    },
   },
 
   /**
