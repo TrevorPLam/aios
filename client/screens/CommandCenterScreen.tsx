@@ -52,6 +52,7 @@ import { Recommendation, AILimits } from "@/models/types";
 import { formatTimeRemaining, getConfidenceColor } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
+import { RecommendationEngine } from "@/lib/recommendationEngine";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
@@ -254,12 +255,22 @@ export default function CommandCenterScreen() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [aiLimits, setAiLimits] = useState<AILimits | null>(null);
   const [showAISheet, setShowAISheet] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
+  /**
+   * Load recommendations and AI limits from database
+   * Also triggers automatic refresh if needed
+   */
   const loadData = useCallback(async () => {
     const recs = await db.recommendations.getActive();
     setRecommendations(recs);
     const limits = await db.aiLimits.get();
     setAiLimits(limits);
+
+    // Auto-refresh if we have few or no recommendations
+    if (recs.length < 3) {
+      await handleRefreshRecommendations();
+    }
   }, []);
 
   useEffect(() => {
@@ -270,6 +281,29 @@ export default function CommandCenterScreen() {
     const unsubscribe = navigation.addListener("focus", loadData);
     return unsubscribe;
   }, [navigation, loadData]);
+
+  /**
+   * Manually refresh recommendations using the AI engine
+   * Generates new recommendations based on user data across modules
+   */
+  const handleRefreshRecommendations = useCallback(async () => {
+    if (isRefreshing) return;
+
+    setIsRefreshing(true);
+    try {
+      const count = await RecommendationEngine.refreshRecommendations();
+      if (count > 0) {
+        await loadData();
+        if (Platform.OS !== "web") {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }
+      }
+    } catch (error) {
+      console.error("Error refreshing recommendations:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [isRefreshing, loadData]);
 
   const handleAccept = useCallback(
     async (rec: Recommendation) => {
@@ -444,6 +478,12 @@ export default function CommandCenterScreen() {
         visible={showAISheet}
         onClose={() => setShowAISheet(false)}
         module="command"
+        onAction={(actionId) => {
+          if (actionId === "refresh") {
+            handleRefreshRecommendations();
+          }
+          setShowAISheet(false);
+        }}
       />
     </ThemedView>
   );
