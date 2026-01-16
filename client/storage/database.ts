@@ -25,6 +25,9 @@ import {
   ContactGroup,
   EmailThread,
   EmailMessage,
+  Translation,
+  SavedPhrase,
+  TranslationStatistics,
 } from "@/models/types";
 import { generateId } from "@/utils/helpers";
 import {
@@ -60,6 +63,8 @@ const KEYS = {
   BUDGETS: "@aios/budgets",
   INTEGRATIONS: "@aios/integrations",
   EMAIL_THREADS: "@aios/email_threads",
+  TRANSLATIONS: "@aios/translations",
+  SAVED_PHRASES: "@aios/saved_phrases",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -3619,6 +3624,404 @@ export const db = {
       });
 
       return sorted;
+    },
+  },
+
+  /**
+   * Translations Module
+   *
+   * Manages translation history, favorites, and saved phrases.
+   * Provides comprehensive translation tracking and organization.
+   */
+  translations: {
+    /**
+     * Get all translations from storage
+     * Returns translations sorted by creation date (newest first)
+     *
+     * @returns {Promise<Translation[]>} Array of all translations
+     */
+    async getAll(): Promise<Translation[]> {
+      const all = await getData(KEYS.TRANSLATIONS, []);
+      return all.sort(
+        (a: Translation, b: Translation) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+    },
+
+    /**
+     * Get a specific translation by ID
+     *
+     * @param {string} id - Translation ID
+     * @returns {Promise<Translation | null>} The translation or null if not found
+     */
+    async get(id: string): Promise<Translation | null> {
+      const all = await this.getAll();
+      return all.find((t) => t.id === id) || null;
+    },
+
+    /**
+     * Save a new translation or update existing one
+     *
+     * @param {Translation} translation - Translation to save
+     * @returns {Promise<Translation>} The saved translation
+     */
+    async save(translation: Translation): Promise<Translation> {
+      const all = await this.getAll();
+      const index = all.findIndex((t) => t.id === translation.id);
+      if (index >= 0) {
+        all[index] = translation;
+      } else {
+        all.push(translation);
+      }
+      await setData(KEYS.TRANSLATIONS, all);
+      return translation;
+    },
+
+    /**
+     * Delete a translation by ID
+     *
+     * @param {string} id - Translation ID to delete
+     * @returns {Promise<void>}
+     */
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((t) => t.id !== id);
+      await setData(KEYS.TRANSLATIONS, filtered);
+    },
+
+    /**
+     * Toggle favorite status of a translation
+     *
+     * @param {string} id - Translation ID
+     * @returns {Promise<void>}
+     */
+    async toggleFavorite(id: string): Promise<void> {
+      const all = await this.getAll();
+      const translation = all.find((t) => t.id === id);
+      if (translation) {
+        translation.isFavorite = !translation.isFavorite;
+        await setData(KEYS.TRANSLATIONS, all);
+      }
+    },
+
+    /**
+     * Get all favorite translations
+     *
+     * @returns {Promise<Translation[]>} Array of favorited translations
+     */
+    async getFavorites(): Promise<Translation[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.isFavorite);
+    },
+
+    /**
+     * Search translations by text content
+     * Searches both source and target text
+     *
+     * @param {string} query - Search query
+     * @returns {Promise<Translation[]>} Matching translations
+     */
+    async search(query: string): Promise<Translation[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase();
+      return all.filter(
+        (t) =>
+          t.sourceText.toLowerCase().includes(lowerQuery) ||
+          t.targetText.toLowerCase().includes(lowerQuery) ||
+          t.tags?.some((tag) => tag.toLowerCase().includes(lowerQuery)),
+      );
+    },
+
+    /**
+     * Filter translations by language pair
+     *
+     * @param {string} sourceLang - Source language code
+     * @param {string} targetLang - Target language code
+     * @returns {Promise<Translation[]>} Translations for the language pair
+     */
+    async getByLanguagePair(
+      sourceLang: string,
+      targetLang: string,
+    ): Promise<Translation[]> {
+      const all = await this.getAll();
+      return all.filter(
+        (t) => t.sourceLang === sourceLang && t.targetLang === targetLang,
+      );
+    },
+
+    /**
+     * Get translations by source language
+     *
+     * @param {string} sourceLang - Source language code
+     * @returns {Promise<Translation[]>} Translations in that source language
+     */
+    async getBySourceLanguage(sourceLang: string): Promise<Translation[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.sourceLang === sourceLang);
+    },
+
+    /**
+     * Get translations by target language
+     *
+     * @param {string} targetLang - Target language code
+     * @returns {Promise<Translation[]>} Translations in that target language
+     */
+    async getByTargetLanguage(targetLang: string): Promise<Translation[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.targetLang === targetLang);
+    },
+
+    /**
+     * Get recent translations (last N translations)
+     *
+     * @param {number} limit - Number of recent translations to retrieve
+     * @returns {Promise<Translation[]>} Recent translations
+     */
+    async getRecent(limit: number = 20): Promise<Translation[]> {
+      const all = await this.getAll();
+      return all.slice(0, limit);
+    },
+
+    /**
+     * Get translations by tag
+     *
+     * @param {string} tag - Tag to filter by
+     * @returns {Promise<Translation[]>} Translations with that tag
+     */
+    async getByTag(tag: string): Promise<Translation[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.tags?.includes(tag));
+    },
+
+    /**
+     * Get all unique tags from translations
+     *
+     * @returns {Promise<string[]>} Array of unique tags
+     */
+    async getAllTags(): Promise<string[]> {
+      const all = await this.getAll();
+      const tagSet = new Set<string>();
+      all.forEach((t) => {
+        t.tags?.forEach((tag) => tagSet.add(tag));
+      });
+      return Array.from(tagSet).sort();
+    },
+
+    /**
+     * Bulk delete translations
+     *
+     * @param {string[]} ids - Array of translation IDs to delete
+     * @returns {Promise<void>}
+     */
+    async bulkDelete(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((t) => !ids.includes(t.id));
+      await setData(KEYS.TRANSLATIONS, filtered);
+    },
+
+    /**
+     * Clear all translations
+     *
+     * @returns {Promise<void>}
+     */
+    async clearAll(): Promise<void> {
+      await setData(KEYS.TRANSLATIONS, []);
+    },
+
+    /**
+     * Get translation statistics
+     * Calculates comprehensive translation usage metrics
+     *
+     * @returns {Promise<TranslationStatistics>} Statistics object
+     */
+    async getStatistics(): Promise<TranslationStatistics> {
+      const all = await this.getAll();
+      const languagePairs: Record<string, number> = {};
+      const languageUsage: Record<string, number> = {};
+
+      all.forEach((t) => {
+        // Track language pairs
+        const pairKey = `${t.sourceLang}-${t.targetLang}`;
+        languagePairs[pairKey] = (languagePairs[pairKey] || 0) + 1;
+
+        // Track individual language usage
+        languageUsage[t.sourceLang] = (languageUsage[t.sourceLang] || 0) + 1;
+        languageUsage[t.targetLang] = (languageUsage[t.targetLang] || 0) + 1;
+      });
+
+      // Find most used languages
+      let mostUsedSourceLang = "";
+      let mostUsedTargetLang = "";
+      let maxSourceCount = 0;
+      let maxTargetCount = 0;
+
+      all.forEach((t) => {
+        const sourceCount = all.filter(
+          (tr) => tr.sourceLang === t.sourceLang,
+        ).length;
+        const targetCount = all.filter(
+          (tr) => tr.targetLang === t.targetLang,
+        ).length;
+
+        if (sourceCount > maxSourceCount) {
+          maxSourceCount = sourceCount;
+          mostUsedSourceLang = t.sourceLang;
+        }
+        if (targetCount > maxTargetCount) {
+          maxTargetCount = targetCount;
+          mostUsedTargetLang = t.targetLang;
+        }
+      });
+
+      return {
+        totalTranslations: all.length,
+        favoriteCount: all.filter((t) => t.isFavorite).length,
+        savedPhrasesCount: (await getData(KEYS.SAVED_PHRASES, [])).length,
+        languagePairs,
+        languageUsage,
+        mostUsedSourceLang,
+        mostUsedTargetLang,
+      };
+    },
+  },
+
+  /**
+   * Saved Phrases Module
+   *
+   * Manages frequently used phrases for quick translation.
+   * Tracks usage count and last used timestamp.
+   */
+  savedPhrases: {
+    /**
+     * Get all saved phrases
+     * Returns phrases sorted by usage count (most used first)
+     *
+     * @returns {Promise<SavedPhrase[]>} Array of all saved phrases
+     */
+    async getAll(): Promise<SavedPhrase[]> {
+      const all = await getData(KEYS.SAVED_PHRASES, []);
+      return all.sort(
+        (a: SavedPhrase, b: SavedPhrase) => b.usageCount - a.usageCount,
+      );
+    },
+
+    /**
+     * Get a specific saved phrase by ID
+     *
+     * @param {string} id - Phrase ID
+     * @returns {Promise<SavedPhrase | null>} The phrase or null if not found
+     */
+    async get(id: string): Promise<SavedPhrase | null> {
+      const all = await this.getAll();
+      return all.find((p) => p.id === id) || null;
+    },
+
+    /**
+     * Save a new phrase or update existing one
+     *
+     * @param {SavedPhrase} phrase - Phrase to save
+     * @returns {Promise<SavedPhrase>} The saved phrase
+     */
+    async save(phrase: SavedPhrase): Promise<SavedPhrase> {
+      const all = await this.getAll();
+      const index = all.findIndex((p) => p.id === phrase.id);
+      if (index >= 0) {
+        all[index] = phrase;
+      } else {
+        all.push(phrase);
+      }
+      await setData(KEYS.SAVED_PHRASES, all);
+      return phrase;
+    },
+
+    /**
+     * Delete a saved phrase by ID
+     *
+     * @param {string} id - Phrase ID to delete
+     * @returns {Promise<void>}
+     */
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((p) => p.id !== id);
+      await setData(KEYS.SAVED_PHRASES, filtered);
+    },
+
+    /**
+     * Increment usage count for a phrase
+     * Also updates lastUsedAt timestamp
+     *
+     * @param {string} id - Phrase ID
+     * @returns {Promise<void>}
+     */
+    async incrementUsage(id: string): Promise<void> {
+      const all = await this.getAll();
+      const phrase = all.find((p) => p.id === id);
+      if (phrase) {
+        phrase.usageCount += 1;
+        phrase.lastUsedAt = new Date().toISOString();
+        await setData(KEYS.SAVED_PHRASES, all);
+      }
+    },
+
+    /**
+     * Get phrases by language
+     *
+     * @param {string} sourceLang - Source language code
+     * @returns {Promise<SavedPhrase[]>} Phrases in that language
+     */
+    async getByLanguage(sourceLang: string): Promise<SavedPhrase[]> {
+      const all = await this.getAll();
+      return all.filter((p) => p.sourceLang === sourceLang);
+    },
+
+    /**
+     * Get phrases by category
+     *
+     * @param {string} category - Category name
+     * @returns {Promise<SavedPhrase[]>} Phrases in that category
+     */
+    async getByCategory(category: string): Promise<SavedPhrase[]> {
+      const all = await this.getAll();
+      return all.filter((p) => p.category === category);
+    },
+
+    /**
+     * Get all unique categories
+     *
+     * @returns {Promise<string[]>} Array of unique categories
+     */
+    async getAllCategories(): Promise<string[]> {
+      const all = await this.getAll();
+      const categories = new Set<string>();
+      all.forEach((p) => {
+        if (p.category) categories.add(p.category);
+      });
+      return Array.from(categories).sort();
+    },
+
+    /**
+     * Search saved phrases
+     *
+     * @param {string} query - Search query
+     * @returns {Promise<SavedPhrase[]>} Matching phrases
+     */
+    async search(query: string): Promise<SavedPhrase[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase();
+      return all.filter(
+        (p) =>
+          p.phrase.toLowerCase().includes(lowerQuery) ||
+          p.category?.toLowerCase().includes(lowerQuery),
+      );
+    },
+
+    /**
+     * Clear all saved phrases
+     *
+     * @returns {Promise<void>}
+     */
+    async clearAll(): Promise<void> {
+      await setData(KEYS.SAVED_PHRASES, []);
     },
   },
 
