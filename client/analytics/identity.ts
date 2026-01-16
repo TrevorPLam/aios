@@ -162,10 +162,7 @@ export class PrivacyIdentityProvider implements IdentityProvider {
     const currentDate = getCurrentDateString();
 
     // Check if we need to refresh (new session or date changed)
-    if (
-      this.cachedIdentity &&
-      this.lastRotationDate === currentDate
-    ) {
+    if (this.cachedIdentity && this.lastRotationDate === currentDate) {
       return this.cachedIdentity;
     }
 
@@ -205,5 +202,7 @@ export class PrivacyIdentityProvider implements IdentityProvider {
  * Create identity provider based on mode
  */
 export function createIdentityProvider(privacyMode: boolean): IdentityProvider {
-  return privacyMode ? new PrivacyIdentityProvider() : new DefaultIdentityProvider();
+  return privacyMode
+    ? new PrivacyIdentityProvider()
+    : new DefaultIdentityProvider();
 }

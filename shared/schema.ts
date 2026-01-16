@@ -120,12 +120,21 @@ export const settings = pgTable("settings", {
   enabledModules: jsonb("enabled_modules")
     .$type<string[]>()
     .notNull()
-    .default(["command", "notebook", "planner", "calendar", "email", "messages"]),
+    .default([
+      "command",
+      "notebook",
+      "planner",
+      "calendar",
+      "email",
+      "messages",
+    ]),
   aiLimitTier: integer("ai_limit_tier").notNull().default(1),
   darkMode: boolean("dark_mode").notNull().default(true),
   colorTheme: text("color_theme").notNull().default("cyan"),
   aiPersonality: text("ai_personality").notNull().default("default"),
-  aiCustomPrompt: text("ai_custom_prompt").notNull().default(DEFAULT_AI_CUSTOM_PROMPT),
+  aiCustomPrompt: text("ai_custom_prompt")
+    .notNull()
+    .default(DEFAULT_AI_CUSTOM_PROMPT),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -137,16 +146,17 @@ export const conversations = pgTable("conversations", {
   userId: varchar("user_id").notNull(),
   type: text("type").notNull(),
   name: text("name").notNull(),
-  participants: jsonb("participants").$type<
-    Array<{
-      userId: string;
-      userName: string;
-      avatarUrl?: string;
-      isOnline: boolean;
-      lastSeenAt: string;
-      joinedAt: string;
-    }>
-  >()
+  participants: jsonb("participants")
+    .$type<
+      {
+        userId: string;
+        userName: string;
+        avatarUrl?: string;
+        isOnline: boolean;
+        lastSeenAt: string;
+        joinedAt: string;
+      }[]
+    >()
     .notNull()
     .default([]),
   lastMessageId: varchar("last_message_id"),
@@ -173,7 +183,7 @@ export const messages = pgTable("messages", {
   type: text("type").notNull(),
   attachments: jsonb("attachments")
     .$type<
-      Array<{
+      {
         id: string;
         type: string;
         url: string;
@@ -184,7 +194,7 @@ export const messages = pgTable("messages", {
         duration?: number;
         width?: number;
         height?: number;
-      }>
+      }[]
     >()
     .notNull()
     .default([]),

@@ -64,7 +64,10 @@ export class EventQueue {
     // Check if queue is at capacity
     if (this.queue.length >= this.config.maxSize) {
       if (__DEV__) {
-        console.warn("[Analytics] Queue is full, event dropped:", event.event_name);
+        console.warn(
+          "[Analytics] Queue is full, event dropped:",
+          event.event_name,
+        );
       }
       return false;
     }
@@ -139,7 +142,9 @@ export class EventQueue {
     if (removedCount > 0) {
       await this.persist();
       if (__DEV__) {
-        console.warn(`[Analytics] Removed ${removedCount} events that exceeded max retries`);
+        console.warn(
+          `[Analytics] Removed ${removedCount} events that exceeded max retries`,
+        );
       }
     }
 
@@ -172,7 +177,9 @@ export class EventQueue {
     if (removeCount > 0) {
       this.queue = this.queue.slice(removeCount);
       if (__DEV__) {
-        console.warn(`[Analytics] Compacted queue, removed ${removeCount} oldest events`);
+        console.warn(
+          `[Analytics] Compacted queue, removed ${removeCount} oldest events`,
+        );
       }
     }
   }
@@ -194,7 +201,9 @@ export class EventQueue {
    * This is used when privacy mode is enabled after events were queued
    * in default mode. Events are sanitized before being flushed.
    */
-  async sanitizeQueuedEvents(sanitizer: (event: AnalyticsEvent) => AnalyticsEvent): Promise<void> {
+  async sanitizeQueuedEvents(
+    sanitizer: (event: AnalyticsEvent) => AnalyticsEvent,
+  ): Promise<void> {
     await this.initialize();
 
     this.queue = this.queue.map((queuedEvent) => ({
@@ -222,7 +231,8 @@ export class EventQueue {
 
     for (const event of this.queue) {
       // Track retry distribution
-      retryDistribution[event.retryCount] = (retryDistribution[event.retryCount] || 0) + 1;
+      retryDistribution[event.retryCount] =
+        (retryDistribution[event.retryCount] || 0) + 1;
 
       // Track oldest/newest
       if (oldestTimestamp === null || event.timestamp < oldestTimestamp) {

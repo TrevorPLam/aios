@@ -35,8 +35,10 @@ export class DestinationRouter {
    * TODO: Route event to appropriate destinations
    */
   async route(event: AnalyticsEvent): Promise<void> {
-    const applicableDestinations = Array.from(this.destinations.values()).filter(
-      (dest) => dest.enabled && (!dest.eventFilter || dest.eventFilter(event))
+    const applicableDestinations = Array.from(
+      this.destinations.values(),
+    ).filter(
+      (dest) => dest.enabled && (!dest.eventFilter || dest.eventFilter(event)),
     );
 
     // TODO: Send to all applicable destinations in parallel
@@ -48,21 +50,21 @@ export class DestinationRouter {
    */
   getDestinationsForEvent(event: AnalyticsEvent): Destination[] {
     return Array.from(this.destinations.values()).filter(
-      (dest) => dest.enabled && (!dest.eventFilter || dest.eventFilter(event))
+      (dest) => dest.enabled && (!dest.eventFilter || dest.eventFilter(event)),
     );
   }
 }
 
 /**
  * Example Usage:
- * 
+ *
  * router.registerDestination({
  *   name: "analytics",
  *   endpoint: "/api/analytics",
  *   enabled: true,
  *   eventFilter: (e) => !e.event_name.startsWith("debug_")
  * });
- * 
+ *
  * router.registerDestination({
  *   name: "monitoring",
  *   endpoint: "/api/monitoring",

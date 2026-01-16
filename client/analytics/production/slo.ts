@@ -41,7 +41,7 @@ export const ANALYTICS_SLOS: SLO[] = [
 
 /**
  * TODO: SLI Calculator
- * 
+ *
  * Calculates current SLI values and compares against targets
  */
 export class SLICalculator {

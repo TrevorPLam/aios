@@ -11,8 +11,18 @@
 import { AppState, AppStateStatus, Platform } from "react-native";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AnalyticsEvent, EventName, EventPropsMap, AnalyticsConfig, AnalyticsMode } from "./types";
-import { IdentityProvider, DefaultIdentityProvider, PrivacyIdentityProvider } from "./identity";
+import {
+  AnalyticsEvent,
+  EventName,
+  EventPropsMap,
+  AnalyticsConfig,
+  AnalyticsMode,
+} from "./types";
+import {
+  IdentityProvider,
+  DefaultIdentityProvider,
+  PrivacyIdentityProvider,
+} from "./identity";
 import { sanitizeEvent } from "./sanitizer";
 import { EventQueue } from "./queue";
 import { Transport } from "./transport";
@@ -94,7 +104,11 @@ export class AnalyticsClient {
     this.isInitialized = true;
 
     if (this.config.debugMode) {
-      console.log("[Analytics] Client initialized in", this.config.mode, "mode");
+      console.log(
+        "[Analytics] Client initialized in",
+        this.config.mode,
+        "mode",
+      );
     }
   }
 
@@ -105,7 +119,7 @@ export class AnalyticsClient {
    */
   async log<T extends EventName>(
     eventName: T,
-    props: EventPropsMap[T]
+    props: EventPropsMap[T],
   ): Promise<void> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -128,15 +142,17 @@ export class AnalyticsClient {
       };
 
       // Apply privacy mode transformations if enabled
-      const processedEvent = this.config.mode === "privacy"
-        ? sanitizeEvent(event)
-        : event;
+      const processedEvent =
+        this.config.mode === "privacy" ? sanitizeEvent(event) : event;
 
       // Enqueue event
       const enqueued = await this.queue.enqueue(processedEvent);
 
       if (!enqueued && this.config.debugMode) {
-        console.warn("[Analytics] Event dropped due to queue backpressure:", eventName);
+        console.warn(
+          "[Analytics] Event dropped due to queue backpressure:",
+          eventName,
+        );
       }
 
       if (this.config.debugMode) {
@@ -319,14 +335,16 @@ export class AnalyticsClient {
   private setupAppStateListener(): void {
     this.appStateSubscription = AppState.addEventListener(
       "change",
-      this.handleAppStateChange.bind(this)
+      this.handleAppStateChange.bind(this),
     );
   }
 
   /**
    * Handle app state changes
    */
-  private async handleAppStateChange(nextAppState: AppStateStatus): Promise<void> {
+  private async handleAppStateChange(
+    nextAppState: AppStateStatus,
+  ): Promise<void> {
     if (nextAppState === "active") {
       // App came to foreground
       await this.flush();
@@ -357,8 +375,13 @@ export class AnalyticsClient {
    */
   async trackSessionStart(): Promise<void> {
     this.sessionStartTime = Date.now();
-    await AsyncStorage.setItem(SESSION_START_TIME_KEY, String(this.sessionStartTime));
-    await this.log("session_start", { session_id: (await this.identityProvider.getIdentity()).session_id });
+    await AsyncStorage.setItem(
+      SESSION_START_TIME_KEY,
+      String(this.sessionStartTime),
+    );
+    await this.log("session_start", {
+      session_id: (await this.identityProvider.getIdentity()).session_id,
+    });
   }
 
   /**
@@ -368,7 +391,9 @@ export class AnalyticsClient {
     if (this.sessionStartTime) {
       const duration = Math.floor((Date.now() - this.sessionStartTime) / 1000);
       const { getDurationBucket } = await import("./sanitizer");
-      await this.log("session_end", { duration_bucket: getDurationBucket(duration) });
+      await this.log("session_end", {
+        duration_bucket: getDurationBucket(duration),
+      });
     }
   }
 

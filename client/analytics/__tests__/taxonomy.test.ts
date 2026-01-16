@@ -56,14 +56,22 @@ describe("Taxonomy", () => {
         expect(EVENT_TAXONOMY[eventName]).toBeDefined();
         expect(EVENT_TAXONOMY[eventName].name).toBe(eventName);
         expect(EVENT_TAXONOMY[eventName].description).toBeTruthy();
-        expect(Array.isArray(EVENT_TAXONOMY[eventName].requiredProps)).toBe(true);
-        expect(Array.isArray(EVENT_TAXONOMY[eventName].optionalProps)).toBe(true);
+        expect(Array.isArray(EVENT_TAXONOMY[eventName].requiredProps)).toBe(
+          true,
+        );
+        expect(Array.isArray(EVENT_TAXONOMY[eventName].optionalProps)).toBe(
+          true,
+        );
       }
     });
 
     it("should have correct required props for key events", () => {
-      expect(EVENT_TAXONOMY.app_opened.requiredProps).toContain("install_age_bucket");
-      expect(EVENT_TAXONOMY.app_opened.requiredProps).toContain("network_state");
+      expect(EVENT_TAXONOMY.app_opened.requiredProps).toContain(
+        "install_age_bucket",
+      );
+      expect(EVENT_TAXONOMY.app_opened.requiredProps).toContain(
+        "network_state",
+      );
 
       expect(EVENT_TAXONOMY.module_opened.requiredProps).toContain("module_id");
       expect(EVENT_TAXONOMY.module_opened.requiredProps).toContain("source");
@@ -71,8 +79,12 @@ describe("Taxonomy", () => {
       expect(EVENT_TAXONOMY.item_created.requiredProps).toContain("module_id");
       expect(EVENT_TAXONOMY.item_created.requiredProps).toContain("item_type");
 
-      expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain("context_module");
-      expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain("selection_state");
+      expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain(
+        "context_module",
+      );
+      expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain(
+        "selection_state",
+      );
     });
   });
 
@@ -129,17 +141,20 @@ describe("Taxonomy", () => {
 
       for (const eventName of Object.keys(EVENT_TAXONOMY) as EventName[]) {
         const definition = EVENT_TAXONOMY[eventName];
-        const allProps = [...definition.requiredProps, ...definition.optionalProps];
+        const allProps = [
+          ...definition.requiredProps,
+          ...definition.optionalProps,
+        ];
 
         for (const prop of allProps) {
           const hasForbiddenPattern = forbiddenPatterns.some((pattern) =>
-            pattern.test(prop)
+            pattern.test(prop),
           );
 
           if (hasForbiddenPattern) {
             fail(
               `Event "${eventName}" has forbidden field pattern in prop "${prop}". ` +
-                `This could lead to sensitive data being logged.`
+                `This could lead to sensitive data being logged.`,
             );
           }
         }

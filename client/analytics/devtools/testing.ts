@@ -19,7 +19,10 @@ export class MockAnalyticsClient {
   /**
    * TODO: Mock log method
    */
-  async log<T extends EventName>(eventName: T, props: EventPropsMap[T]): Promise<void> {
+  async log<T extends EventName>(
+    eventName: T,
+    props: EventPropsMap[T],
+  ): Promise<void> {
     const event: AnalyticsEvent<T> = {
       event_name: eventName,
       event_id: `mock_${Date.now()}`,
@@ -57,12 +60,12 @@ export class MockAnalyticsClient {
 
 /**
  * Usage in tests:
- * 
+ *
  * const mockAnalytics = new MockAnalyticsClient();
- * 
+ *
  * // In your test
  * await mockAnalytics.log("button_clicked", { button_id: "submit" });
- * 
+ *
  * expect(mockAnalytics.assertEventLogged("button_clicked")).toBe(true);
  * expect(mockAnalytics.getEvents()).toHaveLength(1);
  */

@@ -86,11 +86,12 @@ function ListCard({
   const [showActions, setShowActions] = useState(false);
   const checkedCount = list.items.filter((item) => item.isChecked).length;
   const totalCount = list.items.length;
-  const progressPercent = totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
-  
+  const progressPercent =
+    totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
+
   // Count priority items
   const highPriorityCount = list.items.filter(
-    (item) => item.priority === "high" && !item.isChecked
+    (item) => item.priority === "high" && !item.isChecked,
   ).length;
 
   const handleLongPress = () => {
@@ -107,7 +108,7 @@ function ListCard({
         onLongPress={handleLongPress}
         style={({ pressed }) => [
           styles.listCard,
-          { 
+          {
             backgroundColor: theme.backgroundDefault,
             borderLeftWidth: 4,
             borderLeftColor: list.color || theme.accent,
@@ -118,11 +119,16 @@ function ListCard({
         <View style={styles.listHeader}>
           <View style={styles.listTitleRow}>
             {list.category && (
-              <View style={[styles.categoryBadge, { backgroundColor: theme.accentDim }]}>
-                <Feather 
-                  name={CATEGORY_ICONS[list.category] as any} 
-                  size={12} 
-                  color={theme.accent} 
+              <View
+                style={[
+                  styles.categoryBadge,
+                  { backgroundColor: theme.accentDim },
+                ]}
+              >
+                <Feather
+                  name={CATEGORY_ICONS[list.category] as any}
+                  size={12}
+                  color={theme.accent}
                 />
                 <ThemedText type="small" style={styles.categoryText}>
                   {CATEGORY_LABELS[list.category]}
@@ -130,7 +136,12 @@ function ListCard({
               </View>
             )}
             {list.isTemplate && (
-              <View style={[styles.templateBadge, { backgroundColor: theme.accentDim }]}>
+              <View
+                style={[
+                  styles.templateBadge,
+                  { backgroundColor: theme.accentDim },
+                ]}
+              >
                 <Feather name="copy" size={12} color={theme.accent} />
                 <ThemedText type="small" style={styles.categoryText}>
                   Template
@@ -138,7 +149,12 @@ function ListCard({
               </View>
             )}
             {list.isArchived && (
-              <View style={[styles.archivedBadge, { backgroundColor: theme.backgroundSecondary }]}>
+              <View
+                style={[
+                  styles.archivedBadge,
+                  { backgroundColor: theme.backgroundSecondary },
+                ]}
+              >
                 <Feather name="archive" size={12} color={theme.textMuted} />
                 <ThemedText type="small" muted>
                   Archived
@@ -153,14 +169,14 @@ function ListCard({
 
         <View style={styles.progressContainer}>
           <View style={[styles.progressBar, { backgroundColor: theme.border }]}>
-            <View 
+            <View
               style={[
-                styles.progressFill, 
-                { 
+                styles.progressFill,
+                {
                   backgroundColor: list.color || theme.accent,
                   width: `${progressPercent}%`,
-                }
-              ]} 
+                },
+              ]}
             />
           </View>
           <View style={styles.statsRow}>
@@ -185,8 +201,13 @@ function ListCard({
         </View>
 
         {showActions && (
-          <View style={[styles.actionsRow, { backgroundColor: theme.backgroundSecondary }]}>
-            <Pressable 
+          <View
+            style={[
+              styles.actionsRow,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
+          >
+            <Pressable
               style={styles.actionButton}
               onPress={() => {
                 setShowActions(false);
@@ -196,17 +217,17 @@ function ListCard({
               <Feather name="copy" size={18} color={theme.accent} />
               <ThemedText type="small">Duplicate</ThemedText>
             </Pressable>
-            <Pressable 
+            <Pressable
               style={styles.actionButton}
               onPress={() => {
                 setShowActions(false);
                 onArchive();
               }}
             >
-              <Feather 
-                name={list.isArchived ? "inbox" : "archive"} 
-                size={18} 
-                color={theme.textSecondary} 
+              <Feather
+                name={list.isArchived ? "inbox" : "archive"}
+                size={18}
+                color={theme.textSecondary}
               />
               <ThemedText type="small">
                 {list.isArchived ? "Unarchive" : "Archive"}
@@ -244,14 +265,15 @@ export default function ListsScreen() {
       default:
         data = await db.lists.getAllSorted();
     }
-    
+
     // Sort by lastOpenedAt
-    data.sort((a, b) => 
-      new Date(b.lastOpenedAt).getTime() - new Date(a.lastOpenedAt).getTime()
+    data.sort(
+      (a, b) =>
+        new Date(b.lastOpenedAt).getTime() - new Date(a.lastOpenedAt).getTime(),
     );
-    
+
     setLists(data);
-    
+
     // Load stats
     const statsData = await db.lists.getStats();
     setStats(statsData);
@@ -303,7 +325,7 @@ export default function ListsScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
-    
+
     if (list.isArchived) {
       await db.lists.unarchive(list.id);
     } else {
@@ -331,7 +353,9 @@ export default function ListsScreen() {
         if (item.isTemplate) {
           // For templates, show option to use them
           if (Platform.OS === "web") {
-            if (confirm(`Create a new list from the "${item.title}" template?`)) {
+            if (
+              confirm(`Create a new list from the "${item.title}" template?`)
+            ) {
               handleUseTemplate(item.id);
             }
           } else {
@@ -344,7 +368,7 @@ export default function ListsScreen() {
                   text: "Create",
                   onPress: () => handleUseTemplate(item.id),
                 },
-              ]
+              ],
             );
           }
         } else {
@@ -360,7 +384,12 @@ export default function ListsScreen() {
     <View style={styles.headerSection}>
       {/* Stats Card */}
       {stats && filter === "active" && (
-        <View style={[styles.statsCard, { backgroundColor: theme.backgroundDefault }]}>
+        <View
+          style={[
+            styles.statsCard,
+            { backgroundColor: theme.backgroundDefault },
+          ]}
+        >
           <View style={styles.statsHeader}>
             <Feather name="bar-chart-2" size={20} color={theme.accent} />
             <ThemedText type="h3">Your Lists</ThemedText>
@@ -368,25 +397,31 @@ export default function ListsScreen() {
           <View style={styles.statsGrid}>
             <View style={styles.statItem}>
               <ThemedText type="h2">{stats.active}</ThemedText>
-              <ThemedText type="small" muted>Active</ThemedText>
+              <ThemedText type="small" muted>
+                Active
+              </ThemedText>
             </View>
             <View style={styles.statItem}>
               <ThemedText type="h2">{stats.totalItems}</ThemedText>
-              <ThemedText type="small" muted>Total Items</ThemedText>
+              <ThemedText type="small" muted>
+                Total Items
+              </ThemedText>
             </View>
             <View style={styles.statItem}>
               <ThemedText type="h2" style={{ color: theme.success }}>
                 {stats.completedItems}
               </ThemedText>
-              <ThemedText type="small" muted>Completed</ThemedText>
+              <ThemedText type="small" muted>
+                Completed
+              </ThemedText>
             </View>
           </View>
         </View>
       )}
 
       {/* Filter Tabs */}
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.filterScroll}
         contentContainerStyle={styles.filterContent}
@@ -394,7 +429,10 @@ export default function ListsScreen() {
         <Pressable
           style={[
             styles.filterTab,
-            { backgroundColor: filter === "active" ? theme.accent : theme.backgroundDefault },
+            {
+              backgroundColor:
+                filter === "active" ? theme.accent : theme.backgroundDefault,
+            },
           ]}
           onPress={() => {
             if (Platform.OS !== "web") {
@@ -403,15 +441,16 @@ export default function ListsScreen() {
             setFilter("active");
           }}
         >
-          <Feather 
-            name="list" 
-            size={16} 
-            color={filter === "active" ? theme.buttonText : theme.textSecondary} 
+          <Feather
+            name="list"
+            size={16}
+            color={filter === "active" ? theme.buttonText : theme.textSecondary}
           />
-          <ThemedText 
-            type="body" 
-            style={{ 
-              color: filter === "active" ? theme.buttonText : theme.textSecondary,
+          <ThemedText
+            type="body"
+            style={{
+              color:
+                filter === "active" ? theme.buttonText : theme.textSecondary,
               fontWeight: filter === "active" ? "600" : "400",
             }}
           >
@@ -422,7 +461,10 @@ export default function ListsScreen() {
         <Pressable
           style={[
             styles.filterTab,
-            { backgroundColor: filter === "templates" ? theme.accent : theme.backgroundDefault },
+            {
+              backgroundColor:
+                filter === "templates" ? theme.accent : theme.backgroundDefault,
+            },
           ]}
           onPress={() => {
             if (Platform.OS !== "web") {
@@ -431,15 +473,18 @@ export default function ListsScreen() {
             setFilter("templates");
           }}
         >
-          <Feather 
-            name="copy" 
-            size={16} 
-            color={filter === "templates" ? theme.buttonText : theme.textSecondary} 
+          <Feather
+            name="copy"
+            size={16}
+            color={
+              filter === "templates" ? theme.buttonText : theme.textSecondary
+            }
           />
-          <ThemedText 
+          <ThemedText
             type="body"
-            style={{ 
-              color: filter === "templates" ? theme.buttonText : theme.textSecondary,
+            style={{
+              color:
+                filter === "templates" ? theme.buttonText : theme.textSecondary,
               fontWeight: filter === "templates" ? "600" : "400",
             }}
           >
@@ -450,7 +495,10 @@ export default function ListsScreen() {
         <Pressable
           style={[
             styles.filterTab,
-            { backgroundColor: filter === "archived" ? theme.accent : theme.backgroundDefault },
+            {
+              backgroundColor:
+                filter === "archived" ? theme.accent : theme.backgroundDefault,
+            },
           ]}
           onPress={() => {
             if (Platform.OS !== "web") {
@@ -459,15 +507,18 @@ export default function ListsScreen() {
             setFilter("archived");
           }}
         >
-          <Feather 
-            name="archive" 
-            size={16} 
-            color={filter === "archived" ? theme.buttonText : theme.textSecondary} 
+          <Feather
+            name="archive"
+            size={16}
+            color={
+              filter === "archived" ? theme.buttonText : theme.textSecondary
+            }
           />
-          <ThemedText 
+          <ThemedText
             type="body"
-            style={{ 
-              color: filter === "archived" ? theme.buttonText : theme.textSecondary,
+            style={{
+              color:
+                filter === "archived" ? theme.buttonText : theme.textSecondary,
               fontWeight: filter === "archived" ? "600" : "400",
             }}
           >
@@ -501,13 +552,18 @@ export default function ListsScreen() {
               resizeMode="contain"
             />
             <ThemedText type="h3" style={styles.emptyTitle}>
-              {filter === "templates" ? "No Templates Available" : 
-               filter === "archived" ? "No Archived Lists" : "No Lists Yet"}
+              {filter === "templates"
+                ? "No Templates Available"
+                : filter === "archived"
+                  ? "No Archived Lists"
+                  : "No Lists Yet"}
             </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
-              {filter === "templates" ? "Templates help you create lists faster" :
-               filter === "archived" ? "Archived lists will appear here" :
-               "Tap + to create your first list"}
+              {filter === "templates"
+                ? "Templates help you create lists faster"
+                : filter === "archived"
+                  ? "Archived lists will appear here"
+                  : "Tap + to create your first list"}
             </ThemedText>
           </View>
         }

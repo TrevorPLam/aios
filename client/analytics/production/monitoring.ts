@@ -53,9 +53,9 @@ export class ProductionMonitor {
 
 /**
  * Integration with alerting services:
- * 
+ *
  * const monitor = new ProductionMonitor();
- * 
+ *
  * monitor.onAlert((alert) => {
  *   // Send to Sentry, PagerDuty, etc.
  *   if (alert.severity === "critical") {

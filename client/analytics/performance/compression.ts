@@ -33,7 +33,7 @@ export class PayloadCompressor {
 
     if (__DEV__) {
       console.log(
-        `[Compression] Original: ${originalSize} bytes, Compressed: ${compressedSize} bytes, Ratio: ${compressionRatio.toFixed(1)}%`
+        `[Compression] Original: ${originalSize} bytes, Compressed: ${compressedSize} bytes, Ratio: ${compressionRatio.toFixed(1)}%`,
       );
     }
 
@@ -90,19 +90,19 @@ export class PayloadCompressor {
 
 /**
  * Note: This requires adding 'pako' package for gzip compression
- * 
+ *
  * Installation: npm install pako @types/pako
- * 
+ *
  * Usage in transport.ts:
- * 
+ *
  * const compressor = new PayloadCompressor();
  * const { data, isCompressed } = compressor.compressIfBeneficial(payload);
- * 
+ *
  * const headers = {
  *   'Content-Type': 'application/json',
  *   ...(isCompressed && { 'Content-Encoding': 'gzip' })
  * };
- * 
+ *
  * await fetch(endpoint, {
  *   method: 'POST',
  *   headers,

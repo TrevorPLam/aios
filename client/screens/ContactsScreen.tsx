@@ -134,10 +134,7 @@ function ContactCard({
                   {contact.tags.slice(0, 2).map((tag, idx) => (
                     <View
                       key={idx}
-                      style={[
-                        styles.tag,
-                        { backgroundColor: theme.accentDim },
-                      ]}
+                      style={[styles.tag, { backgroundColor: theme.accentDim }]}
                     >
                       <ThemedText
                         type="small"
@@ -243,7 +240,9 @@ export default function ContactsScreen() {
       result = result.filter((c) => c.isFavorite);
     } else if (filterType === "birthdays") {
       const today = new Date();
-      const thirtyDaysLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+      const thirtyDaysLater = new Date(
+        today.getTime() + 30 * 24 * 60 * 60 * 1000,
+      );
       result = result.filter((c) => {
         if (!c.birthday) return false;
         return isBirthdayInRange(c.birthday, today, thirtyDaysLater);
@@ -254,7 +253,7 @@ export default function ContactsScreen() {
         .sort(
           (a, b) =>
             new Date(b.lastContactedAt!).getTime() -
-            new Date(a.lastContactedAt!).getTime()
+            new Date(a.lastContactedAt!).getTime(),
         );
     }
 
@@ -268,12 +267,18 @@ export default function ContactsScreen() {
       result = result.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortType === "recent") {
       result = result.sort((a, b) => {
-        const aTime = a.lastContactedAt ? new Date(a.lastContactedAt).getTime() : 0;
-        const bTime = b.lastContactedAt ? new Date(b.lastContactedAt).getTime() : 0;
+        const aTime = a.lastContactedAt
+          ? new Date(a.lastContactedAt).getTime()
+          : 0;
+        const bTime = b.lastContactedAt
+          ? new Date(b.lastContactedAt).getTime()
+          : 0;
         return bTime - aTime;
       });
     } else if (sortType === "frequency") {
-      result = result.sort((a, b) => (b.contactFrequency || 0) - (a.contactFrequency || 0));
+      result = result.sort(
+        (a, b) => (b.contactFrequency || 0) - (a.contactFrequency || 0),
+      );
     }
 
     setFilteredContacts(result);
@@ -291,7 +296,7 @@ export default function ContactsScreen() {
     try {
       const jsonData = await db.contacts.exportToJSON();
       const fileName = `contacts-export-${new Date().toISOString().split("T")[0]}.json`;
-      
+
       if (Platform.OS === "web") {
         // For web, use download
         const blob = new Blob([jsonData], { type: "application/json" });
@@ -305,14 +310,14 @@ export default function ContactsScreen() {
         // For native, save to file and share
         const fileUri = `${FileSystem.documentDirectory}${fileName}`;
         await FileSystem.writeAsStringAsync(fileUri, jsonData);
-        
+
         await Share.share({
           title: "Contacts Export",
           message: "Exported contacts JSON.",
           url: fileUri,
         });
       }
-      
+
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
@@ -518,7 +523,9 @@ export default function ContactsScreen() {
             </ThemedText>
           </View>
 
-          <View style={[styles.statDivider, { backgroundColor: theme.textMuted }]} />
+          <View
+            style={[styles.statDivider, { backgroundColor: theme.textMuted }]}
+          />
 
           <Pressable
             style={styles.statItem}
@@ -532,7 +539,9 @@ export default function ContactsScreen() {
             </ThemedText>
           </Pressable>
 
-          <View style={[styles.statDivider, { backgroundColor: theme.textMuted }]} />
+          <View
+            style={[styles.statDivider, { backgroundColor: theme.textMuted }]}
+          />
 
           <Pressable
             style={styles.statItem}
@@ -548,7 +557,12 @@ export default function ContactsScreen() {
 
           {duplicatesCount > 0 && (
             <>
-              <View style={[styles.statDivider, { backgroundColor: theme.textMuted }]} />
+              <View
+                style={[
+                  styles.statDivider,
+                  { backgroundColor: theme.textMuted },
+                ]}
+              />
               <View style={styles.statItem}>
                 <ThemedText type="h3" style={{ color: theme.error }}>
                   {duplicatesCount}
@@ -601,7 +615,9 @@ export default function ContactsScreen() {
                 styles.filterChip,
                 {
                   backgroundColor:
-                    filterType === "all" ? theme.accent : theme.backgroundDefault,
+                    filterType === "all"
+                      ? theme.accent
+                      : theme.backgroundDefault,
                 },
               ]}
             >
@@ -622,14 +638,18 @@ export default function ContactsScreen() {
                 styles.filterChip,
                 {
                   backgroundColor:
-                    filterType === "favorites" ? theme.accent : theme.backgroundDefault,
+                    filterType === "favorites"
+                      ? theme.accent
+                      : theme.backgroundDefault,
                 },
               ]}
             >
               <Feather
                 name="star"
                 size={14}
-                color={filterType === "favorites" ? theme.buttonText : theme.text}
+                color={
+                  filterType === "favorites" ? theme.buttonText : theme.text
+                }
               />
               <ThemedText
                 type="small"
@@ -649,14 +669,18 @@ export default function ContactsScreen() {
                 styles.filterChip,
                 {
                   backgroundColor:
-                    filterType === "birthdays" ? theme.accent : theme.backgroundDefault,
+                    filterType === "birthdays"
+                      ? theme.accent
+                      : theme.backgroundDefault,
                 },
               ]}
             >
               <Feather
                 name="gift"
                 size={14}
-                color={filterType === "birthdays" ? theme.buttonText : theme.text}
+                color={
+                  filterType === "birthdays" ? theme.buttonText : theme.text
+                }
               />
               <ThemedText
                 type="small"
@@ -676,7 +700,9 @@ export default function ContactsScreen() {
                 styles.filterChip,
                 {
                   backgroundColor:
-                    filterType === "recent" ? theme.accent : theme.backgroundDefault,
+                    filterType === "recent"
+                      ? theme.accent
+                      : theme.backgroundDefault,
                 },
               ]}
             >
@@ -688,7 +714,8 @@ export default function ContactsScreen() {
               <ThemedText
                 type="small"
                 style={{
-                  color: filterType === "recent" ? theme.buttonText : theme.text,
+                  color:
+                    filterType === "recent" ? theme.buttonText : theme.text,
                   fontWeight: "600",
                 }}
               >
@@ -738,7 +765,12 @@ export default function ContactsScreen() {
       />
 
       {/* Action FABs */}
-      <View style={[styles.fabContainer, { bottom: insets.bottom + Spacing["5xl"] + Spacing.lg }]}>
+      <View
+        style={[
+          styles.fabContainer,
+          { bottom: insets.bottom + Spacing["5xl"] + Spacing.lg },
+        ]}
+      >
         {contacts.length > 0 && (
           <>
             <Pressable

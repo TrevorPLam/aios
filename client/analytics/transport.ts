@@ -34,7 +34,7 @@ export interface TransportResult {
 function calculateBackoff(attempt: number): number {
   const exponentialBackoff = Math.min(
     BASE_BACKOFF_MS * Math.pow(2, attempt),
-    MAX_BACKOFF_MS
+    MAX_BACKOFF_MS,
   );
   // Add jitter: random value between 0 and exponentialBackoff
   const jitter = Math.random() * exponentialBackoff;
@@ -70,12 +70,15 @@ export class Transport {
   async send(
     events: AnalyticsEvent[],
     mode: AnalyticsMode,
-    schemaVersion: string = "1.0.0"
+    schemaVersion: string = "1.0.0",
   ): Promise<TransportResult> {
     // If transport is disabled (e.g., in dev), skip sending
     if (!this.config.enabled) {
       if (__DEV__) {
-        console.debug("[Analytics] Transport disabled, events not sent:", events.length);
+        console.debug(
+          "[Analytics] Transport disabled, events not sent:",
+          events.length,
+        );
       }
       return { success: true, shouldRetry: false };
     }
@@ -109,7 +112,7 @@ export class Transport {
           const backoffMs = calculateBackoff(attempt);
           if (__DEV__) {
             console.log(
-              `[Analytics] Retry attempt ${attempt + 1}/${this.config.maxRetries} after ${Math.round(backoffMs)}ms`
+              `[Analytics] Retry attempt ${attempt + 1}/${this.config.maxRetries} after ${Math.round(backoffMs)}ms`,
             );
           }
           await sleep(backoffMs);

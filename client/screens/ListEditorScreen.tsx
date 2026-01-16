@@ -27,22 +27,27 @@ import { generateId } from "@/utils/helpers";
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type ListEditorRouteProp = RouteProp<AppStackParamList, "ListEditor">;
 
-const PRIORITY_OPTIONS: { value: ListItemPriority; label: string; color: string }[] = [
+const PRIORITY_OPTIONS: {
+  value: ListItemPriority;
+  label: string;
+  color: string;
+}[] = [
   { value: "none", label: "None", color: "#666" },
   { value: "low", label: "Low", color: "#FFB800" },
   { value: "medium", label: "Medium", color: "#00D9FF" },
   { value: "high", label: "High", color: "#FF3B5C" },
 ];
 
-const CATEGORY_OPTIONS: { value: ListCategory; label: string; icon: string }[] = [
-  { value: "general", label: "General", icon: "list" },
-  { value: "grocery", label: "Grocery", icon: "shopping-cart" },
-  { value: "shopping", label: "Shopping", icon: "shopping-bag" },
-  { value: "travel", label: "Travel", icon: "map" },
-  { value: "work", label: "Work", icon: "briefcase" },
-  { value: "home", label: "Home", icon: "home" },
-  { value: "personal", label: "Personal", icon: "user" },
-];
+const CATEGORY_OPTIONS: { value: ListCategory; label: string; icon: string }[] =
+  [
+    { value: "general", label: "General", icon: "list" },
+    { value: "grocery", label: "Grocery", icon: "shopping-cart" },
+    { value: "shopping", label: "Shopping", icon: "shopping-bag" },
+    { value: "travel", label: "Travel", icon: "map" },
+    { value: "work", label: "Work", icon: "briefcase" },
+    { value: "home", label: "Home", icon: "home" },
+    { value: "personal", label: "Personal", icon: "user" },
+  ];
 
 const COLOR_OPTIONS = [
   "#00D9FF", // Electric Blue
@@ -125,17 +130,15 @@ export default function ListEditorScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === itemId ? { ...item, priority } : item
-      )
+      prev.map((item) => (item.id === itemId ? { ...item, priority } : item)),
     );
   };
 
   const setItemNotes = (itemId: string, notes: string) => {
     setItems((prev) =>
       prev.map((item) =>
-        item.id === itemId ? { ...item, notes: notes || undefined } : item
-      )
+        item.id === itemId ? { ...item, notes: notes || undefined } : item,
+      ),
     );
   };
 
@@ -224,7 +227,20 @@ export default function ListEditorScreen() {
         </View>
       ),
     });
-  }, [navigation, theme, title, category, color, items, isNewList, list?.id, list?.createdAt, list?.isArchived, list?.isTemplate, listId]);
+  }, [
+    navigation,
+    theme,
+    title,
+    category,
+    color,
+    items,
+    isNewList,
+    list?.id,
+    list?.createdAt,
+    list?.isArchived,
+    list?.isTemplate,
+    listId,
+  ]);
 
   return (
     <ThemedView style={styles.container}>
@@ -261,8 +277,8 @@ export default function ListEditorScreen() {
           <ThemedText type="small" style={styles.label}>
             Category
           </ThemedText>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.optionsScroll}
           >
@@ -278,19 +294,29 @@ export default function ListEditorScreen() {
                 style={[
                   styles.optionButton,
                   {
-                    backgroundColor: category === option.value ? theme.accent : theme.backgroundDefault,
+                    backgroundColor:
+                      category === option.value
+                        ? theme.accent
+                        : theme.backgroundDefault,
                   },
                 ]}
               >
-                <Feather 
-                  name={option.icon as any} 
-                  size={16} 
-                  color={category === option.value ? theme.buttonText : theme.textSecondary} 
+                <Feather
+                  name={option.icon as any}
+                  size={16}
+                  color={
+                    category === option.value
+                      ? theme.buttonText
+                      : theme.textSecondary
+                  }
                 />
-                <ThemedText 
+                <ThemedText
                   type="small"
                   style={{
-                    color: category === option.value ? theme.buttonText : theme.textSecondary,
+                    color:
+                      category === option.value
+                        ? theme.buttonText
+                        : theme.textSecondary,
                   }}
                 >
                   {option.label}
@@ -305,8 +331,8 @@ export default function ListEditorScreen() {
           <ThemedText type="small" style={styles.label}>
             Color Theme
           </ThemedText>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.optionsScroll}
           >
@@ -359,7 +385,9 @@ export default function ListEditorScreen() {
                       style={[
                         styles.checkbox,
                         {
-                          borderColor: item.isChecked ? theme.accent : theme.border,
+                          borderColor: item.isChecked
+                            ? theme.accent
+                            : theme.border,
                           backgroundColor: item.isChecked
                             ? theme.accent
                             : "transparent",
@@ -394,16 +422,21 @@ export default function ListEditorScreen() {
                   </View>
 
                   {item.priority && item.priority !== "none" && (
-                    <View 
+                    <View
                       style={[
                         styles.priorityBadge,
-                        { 
-                          backgroundColor: 
-                            PRIORITY_OPTIONS.find(p => p.value === item.priority)?.color || theme.textMuted 
-                        }
+                        {
+                          backgroundColor:
+                            PRIORITY_OPTIONS.find(
+                              (p) => p.value === item.priority,
+                            )?.color || theme.textMuted,
+                        },
                       ]}
                     >
-                      <ThemedText type="small" style={{ color: "#FFF", fontSize: 10 }}>
+                      <ThemedText
+                        type="small"
+                        style={{ color: "#FFF", fontSize: 10 }}
+                      >
                         {item.priority.toUpperCase()}
                       </ThemedText>
                     </View>
@@ -423,20 +456,26 @@ export default function ListEditorScreen() {
                     {PRIORITY_OPTIONS.map((priorityOption) => (
                       <Pressable
                         key={priorityOption.value}
-                        onPress={() => setPriority(item.id, priorityOption.value)}
+                        onPress={() =>
+                          setPriority(item.id, priorityOption.value)
+                        }
                         style={[
                           styles.priorityButton,
                           {
-                            backgroundColor: item.priority === priorityOption.value 
-                              ? priorityOption.color 
-                              : theme.backgroundSecondary,
+                            backgroundColor:
+                              item.priority === priorityOption.value
+                                ? priorityOption.color
+                                : theme.backgroundSecondary,
                           },
                         ]}
                       >
-                        <ThemedText 
-                          type="small" 
+                        <ThemedText
+                          type="small"
                           style={{
-                            color: item.priority === priorityOption.value ? "#FFF" : theme.textSecondary,
+                            color:
+                              item.priority === priorityOption.value
+                                ? "#FFF"
+                                : theme.textSecondary,
                             fontSize: 10,
                           }}
                         >
@@ -445,7 +484,7 @@ export default function ListEditorScreen() {
                       </Pressable>
                     ))}
                   </ScrollView>
-                  
+
                   <Pressable
                     onPress={() => {
                       setEditingItem(item.id);
@@ -453,10 +492,10 @@ export default function ListEditorScreen() {
                     }}
                     style={styles.notesButton}
                   >
-                    <Feather 
-                      name="file-text" 
-                      size={14} 
-                      color={item.notes ? theme.accent : theme.textMuted} 
+                    <Feather
+                      name="file-text"
+                      size={14}
+                      color={item.notes ? theme.accent : theme.textMuted}
                     />
                   </Pressable>
                 </View>
@@ -512,14 +551,19 @@ export default function ListEditorScreen() {
         onRequestClose={() => setEditingItem(null)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: theme.backgroundRoot }]}>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: theme.backgroundRoot },
+            ]}
+          >
             <View style={styles.modalHeader}>
               <ThemedText type="h3">Item Notes</ThemedText>
               <Pressable onPress={() => setEditingItem(null)}>
                 <Feather name="x" size={24} color={theme.text} />
               </Pressable>
             </View>
-            
+
             <TextInput
               style={[
                 styles.notesInput,
@@ -546,7 +590,10 @@ export default function ListEditorScreen() {
                   setEditingItemNotes("");
                 }
               }}
-              style={[styles.saveNotesButton, { backgroundColor: theme.accent }]}
+              style={[
+                styles.saveNotesButton,
+                { backgroundColor: theme.accent },
+              ]}
             >
               <ThemedText type="body" style={{ color: theme.buttonText }}>
                 Save Notes

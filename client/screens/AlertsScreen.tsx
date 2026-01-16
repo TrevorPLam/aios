@@ -14,7 +14,15 @@
  */
 
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, FlatList, Pressable, Platform, Alert as ReactNativeAlert, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Platform,
+  Alert as ReactNativeAlert,
+  ScrollView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -152,7 +160,9 @@ function AlertCard({
               },
             ]}
           >
-            {isSelected && <Feather name="check" size={16} color={theme.buttonText} />}
+            {isSelected && (
+              <Feather name="check" size={16} color={theme.buttonText} />
+            )}
           </View>
         )}
         <View
@@ -226,10 +236,16 @@ function AlertCard({
                   key={tag}
                   style={[
                     styles.tagBadge,
-                    { backgroundColor: theme.accentDim, borderColor: theme.accent },
+                    {
+                      backgroundColor: theme.accentDim,
+                      borderColor: theme.accent,
+                    },
                   ]}
                 >
-                  <ThemedText type="small" style={{ color: theme.accent, fontSize: 10 }}>
+                  <ThemedText
+                    type="small"
+                    style={{ color: theme.accent, fontSize: 10 }}
+                  >
                     {tag}
                   </ThemedText>
                 </View>
@@ -360,7 +376,7 @@ export default function AlertsScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
+
     if (bulkSelectMode) {
       // Toggle selection in bulk mode
       const newSelection = new Set(selectedAlerts);
@@ -416,7 +432,7 @@ export default function AlertsScreen() {
    */
   const handleDeleteSelected = () => {
     if (selectedAlerts.size === 0) return;
-    
+
     ReactNativeAlert.alert(
       "Delete Alerts",
       `Are you sure you want to delete ${selectedAlerts.size} alert(s)?`,
@@ -431,7 +447,9 @@ export default function AlertsScreen() {
             setSelectedAlerts(new Set());
             await loadAlerts();
             if (Platform.OS !== "web") {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
             }
           },
         },
@@ -467,7 +485,7 @@ export default function AlertsScreen() {
         ListHeaderComponent={
           <>
             <DigitalClock />
-            
+
             {/* Tag Filter */}
             {allTags.length > 0 && (
               <View style={styles.filterSection}>
@@ -491,7 +509,9 @@ export default function AlertsScreen() {
                     <ThemedText
                       type="small"
                       style={{
-                        color: !selectedTag ? theme.buttonText : theme.textMuted,
+                        color: !selectedTag
+                          ? theme.buttonText
+                          : theme.textMuted,
                       }}
                     >
                       All
@@ -529,7 +549,7 @@ export default function AlertsScreen() {
                 </ScrollView>
               </View>
             )}
-            
+
             {/* Section Header with Bulk Selection Toggle */}
             <View style={styles.sectionHeader}>
               <ThemedText type="h3">

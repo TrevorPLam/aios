@@ -120,7 +120,9 @@ function MessageBubble({ message, isCurrentUser }: MessageBubbleProps) {
                               : "file"
                       }
                       size={16}
-                      color={isCurrentUser ? theme.backgroundBlack : theme.accent}
+                      color={
+                        isCurrentUser ? theme.backgroundBlack : theme.accent
+                      }
                     />
                     <ThemedText
                       type="small"
@@ -174,7 +176,7 @@ export default function ConversationDetailScreen() {
       await db.messages.markAsRead(conversationId, currentUserId);
       const unreadCount = await db.messages.getUnreadCount(
         conversationId,
-        currentUserId
+        currentUserId,
       );
       await db.conversations.updateUnreadCount(conversationId, unreadCount);
     }
@@ -215,7 +217,7 @@ export default function ConversationDetailScreen() {
     };
 
     await db.messages.save(newMessage);
-    
+
     // Update conversation
     if (conversation) {
       const updatedConversation = {
@@ -239,7 +241,7 @@ export default function ConversationDetailScreen() {
 
   const handleTyping = (text: string) => {
     setInputText(text);
-    
+
     if (text.length > 0 && !isTyping) {
       setIsTyping(true);
       if (conversationId) {
@@ -294,7 +296,7 @@ export default function ConversationDetailScreen() {
                   {conversation.isTyping
                     .map((id) => {
                       const participant = conversation.participants.find(
-                        (p) => p.userId === id
+                        (p) => p.userId === id,
                       );
                       return participant?.userName;
                     })
@@ -344,7 +346,11 @@ export default function ConversationDetailScreen() {
             disabled={!inputText.trim()}
             style={[
               styles.sendButton,
-              { backgroundColor: inputText.trim() ? theme.accent : theme.backgroundDefault },
+              {
+                backgroundColor: inputText.trim()
+                  ? theme.accent
+                  : theme.backgroundDefault,
+              },
             ]}
           >
             <Feather

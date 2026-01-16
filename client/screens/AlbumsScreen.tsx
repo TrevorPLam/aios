@@ -2,14 +2,14 @@
  * AlbumsScreen Module
  *
  * Photo album management interface for organizing photos into collections.
- * 
+ *
  * Features:
  * - Create, edit, and delete albums
  * - View album covers and photo counts
  * - Navigate to album detail view
  * - Search albums by name
  * - Sort albums by name, date, or photo count
- * 
+ *
  * @module AlbumsScreen
  */
 
@@ -150,9 +150,7 @@ export default function AlbumsScreen() {
   const navigation = useNavigation<NavigationProp>();
 
   const [albums, setAlbums] = useState<PhotoAlbum[]>([]);
-  const [coverPhotos, setCoverPhotos] = useState<Map<string, Photo>>(
-    new Map(),
-  );
+  const [coverPhotos, setCoverPhotos] = useState<Map<string, Photo>>(new Map());
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingAlbum, setEditingAlbum] = useState<PhotoAlbum | null>(null);
@@ -482,10 +480,7 @@ function AlbumFormModal({
 
             <Pressable
               onPress={handleSave}
-              style={[
-                styles.saveButton,
-                { backgroundColor: theme.accent },
-              ]}
+              style={[styles.saveButton, { backgroundColor: theme.accent }]}
             >
               <ThemedText type="body" style={{ color: theme.buttonText }}>
                 {album ? "Save Changes" : "Create Album"}

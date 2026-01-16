@@ -74,7 +74,7 @@ export class PluginManager {
 
 /**
  * Example Plugin:
- * 
+ *
  * const enrichmentPlugin: Plugin = {
  *   name: "user-enrichment",
  *   version: "1.0.0",

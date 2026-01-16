@@ -261,7 +261,9 @@ describe("Task Database Operations", () => {
 
   describe("Due Date Management", () => {
     test("should get overdue tasks", async () => {
-      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const yesterday = new Date(
+        Date.now() - 24 * 60 * 60 * 1000,
+      ).toISOString();
       const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
       const overdueTask = createTask({
@@ -309,8 +311,12 @@ describe("Task Database Operations", () => {
 
     test("should get tasks due in next N days", async () => {
       const now = new Date();
-      const in3Days = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
-      const in10Days = new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000).toISOString();
+      const in3Days = new Date(
+        now.getTime() + 3 * 24 * 60 * 60 * 1000,
+      ).toISOString();
+      const in10Days = new Date(
+        now.getTime() + 10 * 24 * 60 * 60 * 1000,
+      ).toISOString();
 
       const nearTask = createTask({
         title: "Near Task",
@@ -335,21 +341,25 @@ describe("Task Database Operations", () => {
   describe("Task Statistics", () => {
     test("should calculate comprehensive statistics", async () => {
       const now = new Date().toISOString();
-      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const yesterday = new Date(
+        Date.now() - 24 * 60 * 60 * 1000,
+      ).toISOString();
       const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-      const nextWeek = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
+      const nextWeek = new Date(
+        Date.now() + 5 * 24 * 60 * 60 * 1000,
+      ).toISOString();
 
       await db.tasks.save(createTask({ status: "completed" }));
       await db.tasks.save(createTask({ status: "in_progress" }));
-      await db.tasks.save(createTask({ status: "pending", priority: "urgent" }));
+      await db.tasks.save(
+        createTask({ status: "pending", priority: "urgent" }),
+      );
       await db.tasks.save(createTask({ status: "pending", priority: "high" }));
       await db.tasks.save(
-        createTask({ status: "pending", dueDate: yesterday })
+        createTask({ status: "pending", dueDate: yesterday }),
       ); // overdue
       await db.tasks.save(createTask({ status: "pending", dueDate: now })); // due today
-      await db.tasks.save(
-        createTask({ status: "pending", dueDate: nextWeek })
-      ); // due this week
+      await db.tasks.save(createTask({ status: "pending", dueDate: nextWeek })); // due this week
 
       const stats = await db.tasks.getStatistics();
 

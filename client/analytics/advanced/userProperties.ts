@@ -66,7 +66,10 @@ export class UserPropertiesManager {
    *
    * Similar to Segment's identify() or Amplitude's setUserId()
    */
-  async identify(userId: string, properties?: Partial<UserProperties>): Promise<void> {
+  async identify(
+    userId: string,
+    properties?: Partial<UserProperties>,
+  ): Promise<void> {
     await this.initialize();
 
     this.properties = {
@@ -99,7 +102,10 @@ export class UserPropertiesManager {
   /**
    * Set a single property
    */
-  async setProperty(key: string, value: string | number | boolean): Promise<void> {
+  async setProperty(
+    key: string,
+    value: string | number | boolean,
+  ): Promise<void> {
     await this.setProperties({ [key]: value });
   }
 
@@ -126,7 +132,9 @@ export class UserPropertiesManager {
   /**
    * Get specific property
    */
-  async getProperty(key: string): Promise<string | number | boolean | undefined> {
+  async getProperty(
+    key: string,
+  ): Promise<string | number | boolean | undefined> {
     await this.initialize();
     return this.properties[key];
   }
@@ -170,7 +178,10 @@ export class UserPropertiesManager {
    */
   private async persist(): Promise<void> {
     try {
-      await AsyncStorage.setItem(USER_PROPERTIES_KEY, JSON.stringify(this.properties));
+      await AsyncStorage.setItem(
+        USER_PROPERTIES_KEY,
+        JSON.stringify(this.properties),
+      );
     } catch (error) {
       console.error("[UserProperties] Failed to persist:", error);
     }

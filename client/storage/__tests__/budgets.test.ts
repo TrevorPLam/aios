@@ -1,9 +1,9 @@
 /**
  * Budget Database Storage Tests
- * 
+ *
  * Tests the database storage layer for the Budget module.
  * Validates CRUD operations, current month retrieval, and nested data handling.
- * 
+ *
  * @module budgets.test
  */
 
@@ -89,7 +89,7 @@ describe("Database Budget Storage", () => {
     it("should get current budget by month", async () => {
       const now = new Date();
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-      
+
       const currentBudget: Budget = {
         ...mockBudget,
         id: "budget_current",
@@ -112,7 +112,7 @@ describe("Database Budget Storage", () => {
         ...mockBudget,
         month: "2020-01", // Far in the past
       };
-      
+
       await db.budgets.save(pastBudget);
       const current = await db.budgets.getCurrent();
 
@@ -280,7 +280,7 @@ describe("Database Budget Storage", () => {
 
     it("should calculate statistics correctly", async () => {
       const stats = await db.budgets.getStatistics();
-      
+
       expect(stats.totalBudgets).toBe(3);
       expect(stats.totalBudgeted).toBe(2500); // 1700 + 500 + 300
       expect(stats.totalActual).toBe(2450); // 1680 + 450 + 320
@@ -294,7 +294,7 @@ describe("Database Budget Storage", () => {
     it("should return zero statistics for empty database", async () => {
       await AsyncStorage.clear();
       const stats = await db.budgets.getStatistics();
-      
+
       expect(stats.totalBudgets).toBe(0);
       expect(stats.totalBudgeted).toBe(0);
       expect(stats.totalActual).toBe(0);
@@ -304,7 +304,7 @@ describe("Database Budget Storage", () => {
 
     it("should get category totals for a budget", async () => {
       const totals = await db.budgets.getCategoryTotals("budget_1");
-      
+
       expect(totals).toHaveLength(1);
       expect(totals[0].categoryName).toBe("Housing");
       expect(totals[0].budgeted).toBe(1700); // 1500 + 200
@@ -319,7 +319,7 @@ describe("Database Budget Storage", () => {
 
     it("should compare two budgets by month", async () => {
       const comparison = await db.budgets.compareMonths("2026-01", "2026-02");
-      
+
       expect(comparison).not.toBeNull();
       expect(comparison!.month1Budget.id).toBe("budget_1");
       expect(comparison!.month2Budget.id).toBe("budget_2");
@@ -336,14 +336,14 @@ describe("Database Budget Storage", () => {
       const duplicated = await db.budgets.duplicate(
         "budget_1",
         "2026-04",
-        "April 2026 Budget"
+        "April 2026 Budget",
       );
-      
+
       expect(duplicated).not.toBeNull();
       expect(duplicated!.name).toBe("April 2026 Budget");
       expect(duplicated!.month).toBe("2026-04");
       expect(duplicated!.id).not.toBe("budget_1");
-      
+
       // Check that actual amounts are reset to 0
       duplicated!.categories.forEach((cat) => {
         cat.lineItems.forEach((item) => {
@@ -361,14 +361,14 @@ describe("Database Budget Storage", () => {
       const duplicated = await db.budgets.duplicate(
         "non_existent",
         "2026-04",
-        "April Budget"
+        "April Budget",
       );
       expect(duplicated).toBeNull();
     });
 
     it("should export budget to JSON", async () => {
       const json = await db.budgets.exportToJSON("budget_1");
-      
+
       expect(json).not.toBeNull();
       const parsed = JSON.parse(json!);
       expect(parsed.id).toBe("budget_1");
@@ -383,7 +383,7 @@ describe("Database Budget Storage", () => {
     it("should export all budgets to JSON", async () => {
       const json = await db.budgets.exportAllToJSON();
       const parsed = JSON.parse(json);
-      
+
       expect(parsed).toHaveLength(3);
       expect(parsed.map((b: Budget) => b.id).sort()).toEqual([
         "budget_1",
@@ -394,7 +394,7 @@ describe("Database Budget Storage", () => {
 
     it("should bulk delete multiple budgets", async () => {
       await db.budgets.bulkDelete(["budget_1", "budget_2"]);
-      
+
       const remaining = await db.budgets.getAll();
       expect(remaining).toHaveLength(1);
       expect(remaining[0].id).toBe("budget_3");

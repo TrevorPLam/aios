@@ -19,7 +19,7 @@ export function HeaderLeftNav() {
         onPress={() => navigation.navigate("ModuleGrid")}
         style={({ pressed }) => [
           styles.iconButton,
-          { opacity: pressed ? 0.7 : 1 }
+          { opacity: pressed ? 0.7 : 1 },
         ]}
       >
         <Feather name="grid" size={24} color={theme.text} />
@@ -28,7 +28,7 @@ export function HeaderLeftNav() {
         onPress={() => navigation.navigate("CommandCenter")}
         style={({ pressed }) => [
           styles.iconButton,
-          { opacity: pressed ? 0.7 : 1 }
+          { opacity: pressed ? 0.7 : 1 },
         ]}
       >
         <Feather name="home" size={24} color={theme.text} />
@@ -46,7 +46,7 @@ export function HeaderRightNav() {
       onPress={() => navigation.navigate("Settings")}
       style={({ pressed }) => [
         styles.iconButton,
-        { opacity: pressed ? 0.7 : 1 }
+        { opacity: pressed ? 0.7 : 1 },
       ]}
     >
       <Feather name="settings" size={24} color={theme.text} />

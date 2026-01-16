@@ -508,10 +508,7 @@ export class MemStorage implements IStorage {
       );
   }
 
-  async getMessage(
-    id: string,
-    userId: string,
-  ): Promise<Message | undefined> {
+  async getMessage(id: string, userId: string): Promise<Message | undefined> {
     const message = this.messages.get(id);
     if (!message) return undefined;
 

@@ -190,7 +190,16 @@ export default function NoteEditorScreen() {
         </View>
       ),
     });
-  }, [navigation, theme, isNew, handleDelete, handleTogglePin, handleToggleArchive, isPinned, isArchived]);
+  }, [
+    navigation,
+    theme,
+    isNew,
+    handleDelete,
+    handleTogglePin,
+    handleToggleArchive,
+    isPinned,
+    isArchived,
+  ]);
 
   const insertFormatting = (tool: (typeof FORMATTING_TOOLS)[0]) => {
     if (Platform.OS !== "web") {

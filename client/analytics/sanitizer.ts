@@ -9,8 +9,11 @@
  * - Detect and drop forbidden fields
  */
 
-import { AnalyticsEvent, EventName, DayOfWeek, EventPropsMap } from "./types";
 import {
+  AnalyticsEvent,
+  EventName,
+  DayOfWeek,
+  EventPropsMap,
   TextLengthBucket,
   DurationBucket,
   LatencyBucket,
@@ -58,7 +61,7 @@ export function warnForbiddenField(key: string, eventName: EventName): void {
   if (__DEV__) {
     console.warn(
       `[Analytics] Forbidden field detected and removed: "${key}" in event "${eventName}". ` +
-        `This field matches sensitive data patterns and should not be logged.`
+        `This field matches sensitive data patterns and should not be logged.`,
     );
   }
 }
@@ -184,7 +187,7 @@ export function getHourOfDay(date: Date): number {
  */
 export function sanitizeProps(
   eventName: EventName,
-  props: Record<string, unknown>
+  props: Record<string, unknown>,
 ): Record<string, unknown> {
   const allowedProps = getAllowedProps(eventName);
   const sanitized: Record<string, unknown> = {};
@@ -194,7 +197,7 @@ export function sanitizeProps(
     if (!allowedProps.includes(key)) {
       if (__DEV__) {
         console.warn(
-          `[Analytics] Property "${key}" not in allowlist for event "${eventName}", removing.`
+          `[Analytics] Property "${key}" not in allowlist for event "${eventName}", removing.`,
         );
       }
       continue;
@@ -227,10 +230,12 @@ export function sanitizeProps(
  * 4. Event already has session_id from PrivacyIdentityProvider
  */
 export function sanitizeEvent<T extends EventName>(
-  event: AnalyticsEvent<T>
+  event: AnalyticsEvent<T>,
 ): AnalyticsEvent<T> {
   // Parse occurred_at if present
-  const timestamp = event.occurred_at ? new Date(event.occurred_at) : new Date();
+  const timestamp = event.occurred_at
+    ? new Date(event.occurred_at)
+    : new Date();
 
   // Create sanitized event
   const sanitized: AnalyticsEvent<T> = {
@@ -241,7 +246,10 @@ export function sanitizeEvent<T extends EventName>(
     day_of_week: getDayOfWeek(timestamp),
     hour_of_day: getHourOfDay(timestamp),
     // Sanitize props with proper typing
-    props: sanitizeProps(event.event_name, event.props as unknown as Record<string, unknown>) as EventPropsMap[T],
+    props: sanitizeProps(
+      event.event_name,
+      event.props as unknown as Record<string, unknown>,
+    ) as EventPropsMap[T],
   };
 
   return sanitized;

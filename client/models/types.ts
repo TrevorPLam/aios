@@ -16,7 +16,11 @@ export type ModuleType =
 
 export type ModuleViewMode = "grid" | "list";
 
-export type ModuleArrangement = "most_recent" | "intuitive" | "alphabetical" | "static";
+export type ModuleArrangement =
+  | "most_recent"
+  | "intuitive"
+  | "alphabetical"
+  | "static";
 
 export interface ModuleUsageStats {
   [moduleId: string]: {
@@ -226,7 +230,7 @@ export interface EmailMessage {
 
 export type ListItemPriority = "none" | "low" | "medium" | "high";
 
-export type ListCategory = 
+export type ListCategory =
   | "general"
   | "grocery"
   | "shopping"
@@ -284,12 +288,7 @@ export type AlertSound =
  *
  * Available vibration patterns for alerts
  */
-export type VibrationPattern =
-  | "default"
-  | "pulse"
-  | "double"
-  | "long"
-  | "none";
+export type VibrationPattern = "default" | "pulse" | "double" | "long" | "none";
 
 /**
  * Snooze Duration Type
@@ -425,10 +424,10 @@ export type PhotoGridSize = 2 | 3 | 4 | 5 | 6;
 
 /**
  * Photo Album Interface
- * 
+ *
  * Represents a collection of photos grouped together.
  * Albums can have cover photos and custom names.
- * 
+ *
  * @property {string} id - Unique identifier for the album
  * @property {string} name - Album name/title
  * @property {string} coverPhotoId - ID of the photo to use as album cover

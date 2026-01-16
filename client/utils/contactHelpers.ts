@@ -1,6 +1,6 @@
 /**
  * Contact Helper Utilities
- * 
+ *
  * Shared utility functions for contact management to avoid code duplication
  * and improve maintainability.
  */
@@ -14,30 +14,30 @@ import { Contact } from "@/models/types";
 export function isBirthdayInRange(
   birthday: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): boolean {
   const birthdayDate = new Date(birthday);
   const currentYear = startDate.getFullYear();
-  
+
   // Create birthday for current year
   const thisYearBirthday = new Date(
     currentYear,
     birthdayDate.getMonth(),
-    birthdayDate.getDate()
+    birthdayDate.getDate(),
   );
-  
+
   // Check if this year's birthday is in range
   if (thisYearBirthday >= startDate && thisYearBirthday <= endDate) {
     return true;
   }
-  
+
   // Check if next year's birthday is in range (for year boundaries)
   const nextYearBirthday = new Date(
     currentYear + 1,
     birthdayDate.getMonth(),
-    birthdayDate.getDate()
+    birthdayDate.getDate(),
   );
-  
+
   return nextYearBirthday >= startDate && nextYearBirthday <= endDate;
 }
 
@@ -49,23 +49,23 @@ export function getNextBirthdayDate(birthday: string): Date {
   const birthdayDate = new Date(birthday);
   const today = new Date();
   const currentYear = today.getFullYear();
-  
+
   // Try this year first
   const thisYearBirthday = new Date(
     currentYear,
     birthdayDate.getMonth(),
-    birthdayDate.getDate()
+    birthdayDate.getDate(),
   );
-  
+
   if (thisYearBirthday >= today) {
     return thisYearBirthday;
   }
-  
+
   // Use next year
   return new Date(
     currentYear + 1,
     birthdayDate.getMonth(),
-    birthdayDate.getDate()
+    birthdayDate.getDate(),
   );
 }
 
@@ -118,13 +118,13 @@ export function validateNote(note: string): string | null {
  */
 export function arePotentialDuplicates(
   contact1: Contact,
-  contact2: Contact
+  contact2: Contact,
 ): boolean {
   // Check for exact name match (case-insensitive)
   if (contact1.name.toLowerCase() === contact2.name.toLowerCase()) {
     return true;
   }
-  
+
   // Check for matching phone numbers using Set for O(1) lookup
   if (contact1.phoneNumbers.length > 0 && contact2.phoneNumbers.length > 0) {
     const phoneSet = new Set(contact2.phoneNumbers);
@@ -132,7 +132,7 @@ export function arePotentialDuplicates(
       return true;
     }
   }
-  
+
   // Check for matching email addresses using Set for O(1) lookup
   if (contact1.emails.length > 0 && contact2.emails.length > 0) {
     const emailSet = new Set(contact2.emails);
@@ -140,7 +140,7 @@ export function arePotentialDuplicates(
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -150,30 +150,30 @@ export function arePotentialDuplicates(
  */
 export function matchesSearchQuery(contact: Contact, query: string): boolean {
   const lowerQuery = query.toLowerCase();
-  
+
   // Search in name
   if (contact.name.toLowerCase().includes(lowerQuery)) return true;
-  
+
   // Search in emails
   if (contact.emails.some((e) => e.toLowerCase().includes(lowerQuery))) {
     return true;
   }
-  
+
   // Search in phone numbers
   if (contact.phoneNumbers.some((p) => p.includes(lowerQuery))) return true;
-  
+
   // Search in company
   if (contact.company?.toLowerCase().includes(lowerQuery)) return true;
-  
+
   // Search in tags
   if (contact.tags?.some((t) => t.toLowerCase().includes(lowerQuery))) {
     return true;
   }
-  
+
   // Search in notes
   if (contact.notes?.some((n) => n.text.toLowerCase().includes(lowerQuery))) {
     return true;
   }
-  
+
   return false;
 }

@@ -13,9 +13,9 @@
 
 /**
  * GitHub Action / CI Script
- * 
+ *
  * .github/workflows/analytics-validation.yml
- * 
+ *
  * name: Analytics Validation
  * on: [pull_request]
  * jobs:

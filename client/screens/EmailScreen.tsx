@@ -2,7 +2,7 @@
  * EmailScreen Module (Enhanced)
  *
  * Professional email thread management system with advanced features.
- * 
+ *
  * Core Features:
  * - Real-time search across subjects, senders, and message bodies
  * - Filter by read/unread, starred, important, archived status
@@ -16,13 +16,13 @@
  * - Long-press context menu
  * - Haptic feedback throughout
  * - Smooth animations and transitions
- * 
+ *
  * Database Integration:
  * - Persistent storage via AsyncStorage
  * - 20+ database methods for comprehensive operations
  * - Bulk operations support
  * - Advanced filtering and search capabilities
- * 
+ *
  * @module EmailScreen
  * @enhanced 2026-01-16
  */
@@ -70,10 +70,10 @@ type FilterOption = "all" | "unread" | "starred" | "important" | "archived";
 
 /**
  * ThreadCard Component
- * 
+ *
  * Displays a single email thread with interactive controls.
  * Features: Selection checkbox, star button, read status, attachment indicator
- * 
+ *
  * @param {EmailThread} thread - The email thread to display
  * @param {Function} onPress - Callback when card is pressed
  * @param {Function} onLongPress - Callback for long press (context menu)
@@ -104,11 +104,12 @@ function ThreadCard({
   const lastMessage = thread.messages[thread.messages.length - 1];
   const sender =
     thread.participants.find((p) => p !== "You") || thread.participants[0];
-  
+
   /** Check if thread has attachments in any message - memoized for performance */
   const hasAttachments = useMemo(
-    () => thread.messages.some((m) => m.attachments && m.attachments.length > 0),
-    [thread.messages]
+    () =>
+      thread.messages.some((m) => m.attachments && m.attachments.length > 0),
+    [thread.messages],
   );
 
   return (
@@ -174,7 +175,7 @@ function ThreadCard({
               {formatRelativeDate(thread.lastMessageAt)}
             </ThemedText>
           </View>
-          
+
           {/* Subject line with badges */}
           <View style={styles.subjectRow}>
             <ThemedText
@@ -199,7 +200,10 @@ function ThreadCard({
                   key={label}
                   style={[
                     styles.labelChip,
-                    { backgroundColor: theme.accentDim, borderColor: theme.accent },
+                    {
+                      backgroundColor: theme.accentDim,
+                      borderColor: theme.accent,
+                    },
                   ]}
                 >
                   <ThemedText type="small" style={{ color: theme.accent }}>
@@ -251,7 +255,7 @@ function ThreadCard({
 
 /**
  * EmailScreen Component
- * 
+ *
  * Main email management interface with comprehensive features.
  * Manages state for search, filters, sorting, selection, and modals.
  */
@@ -271,7 +275,9 @@ export default function EmailScreen() {
 
   // Selection and bulk operations state
   const [selectionMode, setSelectionMode] = useState(false);
-  const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set());
+  const [selectedThreads, setSelectedThreads] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Modal visibility state
   const [showAISheet, setShowAISheet] = useState(false);
@@ -298,7 +304,7 @@ export default function EmailScreen() {
   const loadThreads = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       // Check if we need to initialize with seed data
       const existing = await db.emailThreads.getAll();
       if (existing.length === 0) {
@@ -334,11 +340,16 @@ export default function EmailScreen() {
         if (filterOption !== "all") {
           loadedThreads = loadedThreads.filter((t) => {
             switch (filterOption) {
-              case "unread": return !t.isRead;
-              case "starred": return t.isStarred;
-              case "important": return t.isImportant;
-              case "archived": return t.isArchived;
-              default: return true;
+              case "unread":
+                return !t.isRead;
+              case "starred":
+                return t.isStarred;
+              case "important":
+                return t.isImportant;
+              case "archived":
+                return t.isArchived;
+              default:
+                return true;
             }
           });
         }
@@ -367,7 +378,7 @@ export default function EmailScreen() {
   useFocusEffect(
     useCallback(() => {
       loadThreads();
-    }, [loadThreads])
+    }, [loadThreads]),
   );
 
   // Set up navigation header
@@ -403,7 +414,7 @@ export default function EmailScreen() {
         navigation.navigate("ThreadDetail", { threadId: thread.id });
       }
     },
-    [selectionMode, selectedThreads, navigation, loadThreads]
+    [selectionMode, selectedThreads, navigation, loadThreads],
   );
 
   /**
@@ -430,7 +441,7 @@ export default function EmailScreen() {
       }
       db.emailThreads.toggleStar(thread.id).then(loadThreads);
     },
-    [loadThreads]
+    [loadThreads],
   );
 
   /**
@@ -510,7 +521,7 @@ export default function EmailScreen() {
             loadThreads();
           },
         },
-      ]
+      ],
     );
   }, [selectedThreads, exitSelectionMode, loadThreads]);
 
@@ -546,7 +557,7 @@ export default function EmailScreen() {
       handleStarPress,
       selectedThreads,
       selectionMode,
-    ]
+    ],
   );
 
   /**
@@ -596,40 +607,50 @@ export default function EmailScreen() {
           contentContainerStyle={styles.toolbarContent}
         >
           {/* Filter chips */}
-          {(["all", "unread", "starred", "important", "archived"] as FilterOption[]).map(
-            (filter) => (
-              <Pressable
-                key={filter}
-                onPress={() => {
-                  if (Platform.OS !== "web") {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  }
-                  setFilterOption(filter);
+          {(
+            [
+              "all",
+              "unread",
+              "starred",
+              "important",
+              "archived",
+            ] as FilterOption[]
+          ).map((filter) => (
+            <Pressable
+              key={filter}
+              onPress={() => {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                setFilterOption(filter);
+              }}
+              style={[
+                styles.filterChip,
+                {
+                  backgroundColor:
+                    filterOption === filter
+                      ? theme.accent
+                      : theme.backgroundDefault,
+                  borderColor:
+                    filterOption === filter ? theme.accent : theme.border,
+                },
+              ]}
+            >
+              <ThemedText
+                type="small"
+                style={{
+                  color:
+                    filterOption === filter ? theme.buttonText : theme.text,
+                  fontWeight: filterOption === filter ? "600" : "400",
                 }}
-                style={[
-                  styles.filterChip,
-                  {
-                    backgroundColor:
-                      filterOption === filter ? theme.accent : theme.backgroundDefault,
-                    borderColor:
-                      filterOption === filter ? theme.accent : theme.border,
-                  },
-                ]}
               >
-                <ThemedText
-                  type="small"
-                  style={{
-                    color:
-                      filterOption === filter ? theme.buttonText : theme.text,
-                    fontWeight: filterOption === filter ? "600" : "400",
-                  }}
-                >
-                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                  {filter === "unread" && statistics.unread > 0 && ` (${statistics.unread})`}
-                </ThemedText>
-              </Pressable>
-            )
-          )}
+                {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                {filter === "unread" &&
+                  statistics.unread > 0 &&
+                  ` (${statistics.unread})`}
+              </ThemedText>
+            </Pressable>
+          ))}
 
           {/* Sort button */}
           <Pressable
@@ -675,7 +696,12 @@ export default function EmailScreen() {
 
       {/* Search bar (collapsible) */}
       {showSearchBar && (
-        <View style={[styles.searchContainer, { backgroundColor: theme.backgroundDefault }]}>
+        <View
+          style={[
+            styles.searchContainer,
+            { backgroundColor: theme.backgroundDefault },
+          ]}
+        >
           <Feather name="search" size={20} color={theme.textSecondary} />
           <TextInput
             value={searchQuery}
@@ -695,18 +721,32 @@ export default function EmailScreen() {
 
       {/* Selection mode toolbar */}
       {selectionMode && (
-        <View style={[styles.selectionToolbar, { backgroundColor: theme.accentDim }]}>
+        <View
+          style={[
+            styles.selectionToolbar,
+            { backgroundColor: theme.accentDim },
+          ]}
+        >
           <Pressable onPress={exitSelectionMode} style={styles.toolbarButton}>
             <Feather name="x" size={20} color={theme.accent} />
           </Pressable>
-          <ThemedText type="body" style={{ color: theme.accent, fontWeight: "600" }}>
+          <ThemedText
+            type="body"
+            style={{ color: theme.accent, fontWeight: "600" }}
+          >
             {selectedThreads.size} selected
           </ThemedText>
           <View style={styles.bulkActions}>
-            <Pressable onPress={handleBulkMarkRead} style={styles.toolbarButton}>
+            <Pressable
+              onPress={handleBulkMarkRead}
+              style={styles.toolbarButton}
+            >
               <Feather name="mail" size={20} color={theme.accent} />
             </Pressable>
-            <Pressable onPress={handleBulkMarkUnread} style={styles.toolbarButton}>
+            <Pressable
+              onPress={handleBulkMarkUnread}
+              style={styles.toolbarButton}
+            >
               <Feather name="mail-open" size={20} color={theme.accent} />
             </Pressable>
             <Pressable onPress={handleBulkStar} style={styles.toolbarButton}>
@@ -816,8 +856,8 @@ export default function EmailScreen() {
                   {option === "date"
                     ? "Date (Newest First)"
                     : option === "sender"
-                    ? "Sender (A-Z)"
-                    : "Subject (A-Z)"}
+                      ? "Sender (A-Z)"
+                      : "Subject (A-Z)"}
                 </ThemedText>
                 {sortOption === option && (
                   <Feather name="check" size={20} color={theme.accent} />
@@ -852,7 +892,7 @@ export default function EmailScreen() {
                 <Feather name="x" size={24} color={theme.text} />
               </Pressable>
             </View>
-            
+
             <View style={styles.statsGrid}>
               <View style={styles.statCard}>
                 <Feather name="mail" size={24} color={theme.accent} />
@@ -863,7 +903,7 @@ export default function EmailScreen() {
                   Total Threads
                 </ThemedText>
               </View>
-              
+
               <View style={styles.statCard}>
                 <Feather name="mail-open" size={24} color={theme.warning} />
                 <ThemedText type="h2" style={{ marginTop: Spacing.sm }}>
@@ -873,7 +913,7 @@ export default function EmailScreen() {
                   Unread
                 </ThemedText>
               </View>
-              
+
               <View style={styles.statCard}>
                 <Feather name="star" size={24} color={theme.success} />
                 <ThemedText type="h2" style={{ marginTop: Spacing.sm }}>
@@ -883,7 +923,7 @@ export default function EmailScreen() {
                   Starred
                 </ThemedText>
               </View>
-              
+
               <View style={styles.statCard}>
                 <Feather name="archive" size={24} color={theme.textSecondary} />
                 <ThemedText type="h2" style={{ marginTop: Spacing.sm }}>
@@ -893,7 +933,7 @@ export default function EmailScreen() {
                   Archived
                 </ThemedText>
               </View>
-              
+
               <View style={styles.statCard}>
                 <Feather name="alert-circle" size={24} color={theme.error} />
                 <ThemedText type="h2" style={{ marginTop: Spacing.sm }}>
@@ -903,10 +943,13 @@ export default function EmailScreen() {
                   Important
                 </ThemedText>
               </View>
-              
+
               <View style={styles.statCard}>
                 <Feather name="hard-drive" size={24} color={theme.accent} />
-                <ThemedText type="h2" style={{ marginTop: Spacing.sm, fontSize: 18 }}>
+                <ThemedText
+                  type="h2"
+                  style={{ marginTop: Spacing.sm, fontSize: 18 }}
+                >
                   {formatStorageSize(statistics.totalSize)}
                 </ThemedText>
                 <ThemedText type="caption" muted>

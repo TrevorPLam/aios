@@ -103,7 +103,7 @@ describe("Email Threads Database", () => {
       const activeThreads = await db.emailThreads.getActive();
       expect(activeThreads).toHaveLength(2);
       expect(activeThreads.every((t) => !t.isArchived && !t.isDraft)).toBe(
-        true
+        true,
       );
     });
 

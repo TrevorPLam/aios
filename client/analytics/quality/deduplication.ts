@@ -63,12 +63,16 @@ export class EventDeduplicator {
         entry.eventId === event.event_id &&
         entry.identityKey === identityKey &&
         entry.eventName === event.event_name &&
-        now - entry.timestamp < DEDUP_WINDOW_MS
+        now - entry.timestamp < DEDUP_WINDOW_MS,
     );
 
     if (exists) {
       if (__DEV__) {
-        console.warn("[Deduplicator] Duplicate event dropped:", event.event_name, event.event_id);
+        console.warn(
+          "[Deduplicator] Duplicate event dropped:",
+          event.event_name,
+          event.event_id,
+        );
       }
       return true;
     }
@@ -81,7 +85,10 @@ export class EventDeduplicator {
   /**
    * Add event to deduplication cache
    */
-  private async addToCache(event: AnalyticsEvent, identityKey: string): Promise<void> {
+  private async addToCache(
+    event: AnalyticsEvent,
+    identityKey: string,
+  ): Promise<void> {
     const entry: DedupEntry = {
       eventId: event.event_id,
       identityKey,
@@ -120,11 +127,13 @@ export class EventDeduplicator {
   private cleanExpiredEntries(): void {
     const now = Date.now();
     const originalSize = this.cache.length;
-    this.cache = this.cache.filter((entry) => now - entry.timestamp < DEDUP_WINDOW_MS);
+    this.cache = this.cache.filter(
+      (entry) => now - entry.timestamp < DEDUP_WINDOW_MS,
+    );
 
     if (__DEV__ && this.cache.length < originalSize) {
       console.log(
-        `[Deduplicator] Cleaned ${originalSize - this.cache.length} expired entries`
+        `[Deduplicator] Cleaned ${originalSize - this.cache.length} expired entries`,
       );
     }
   }

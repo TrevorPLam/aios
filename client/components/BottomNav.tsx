@@ -24,7 +24,12 @@ const ALL_MODULES: ModuleItem[] = [
   { id: "planner", name: "Planner", route: "Planner", icon: "check-square" },
   { id: "calendar", name: "Calendar", route: "Calendar", icon: "calendar" },
   { id: "email", name: "Email", route: "Email", icon: "mail" },
-  { id: "messages", name: "Messages", route: "Messages", icon: "message-square" },
+  {
+    id: "messages",
+    name: "Messages",
+    route: "Messages",
+    icon: "message-square",
+  },
   { id: "lists", name: "Lists", route: "Lists", icon: "list" },
   { id: "alerts", name: "Alerts", route: "Alerts", icon: "bell" },
   { id: "photos", name: "Photos", route: "Photos", icon: "image" },
@@ -43,7 +48,8 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const route = useRoute();
   const insets = useSafeAreaInsets();
-  const [orderedModules, setOrderedModules] = useState<ModuleItem[]>(ALL_MODULES);
+  const [orderedModules, setOrderedModules] =
+    useState<ModuleItem[]>(ALL_MODULES);
   const { contextualModule, clearContextualModule } = useNavigationContext();
 
   useEffect(() => {
@@ -53,12 +59,12 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const loadModuleOrder = async () => {
     const settings = await db.settings.get();
     let modules = [...ALL_MODULES];
-    
+
     // Filter by enabled modules - ensure enabledModules exists
     if (settings.enabledModules && Array.isArray(settings.enabledModules)) {
-      modules = modules.filter(m => settings.enabledModules.includes(m.id));
+      modules = modules.filter((m) => settings.enabledModules.includes(m.id));
     }
-    
+
     // Sort by usage count (intuitive ordering)
     const stats = settings.moduleUsageStats || {};
     if (Object.keys(stats).length > 0) {
@@ -68,7 +74,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
         return bCount - aCount; // Most used first
       });
     }
-    
+
     setOrderedModules(modules);
   };
 
@@ -78,19 +84,22 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   // Circular navigation logic - CommandCenter is in the center
   const getPrevModule = () => {
     if (currentIndex === -1) return orderedModules[orderedModules.length - 1];
-    const prevIndex = (currentIndex - 1 + orderedModules.length) % orderedModules.length;
+    const prevIndex =
+      (currentIndex - 1 + orderedModules.length) % orderedModules.length;
     return orderedModules[prevIndex];
   };
 
   const getNextModule = () => {
     // If there's a contextual module, use it instead of the next in order
     if (contextualModule) {
-      const contextModule = orderedModules.find(m => m.id === contextualModule);
+      const contextModule = orderedModules.find(
+        (m) => m.id === contextualModule,
+      );
       if (contextModule) {
         return contextModule;
       }
     }
-    
+
     if (currentIndex === -1) return orderedModules[0];
     const nextIndex = (currentIndex + 1) % orderedModules.length;
     return orderedModules[nextIndex];

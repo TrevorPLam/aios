@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Switch,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Switch, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -102,7 +96,9 @@ export default function PersonalizationScreen() {
             <View style={styles.settingInfo}>
               <Feather name="shield" size={20} color={theme.textSecondary} />
               <View style={{ flex: 1 }}>
-                <ThemedText type="body">Privacy-Respecting Analytics</ThemedText>
+                <ThemedText type="body">
+                  Privacy-Respecting Analytics
+                </ThemedText>
                 <ThemedText type="caption" muted style={{ marginTop: 4 }}>
                   Premium feature: Collect de-identified telemetry only
                 </ThemedText>
@@ -116,9 +112,7 @@ export default function PersonalizationScreen() {
                 true: theme.accentDim,
               }}
               thumbColor={
-                privacyModeEnabled
-                  ? theme.accent
-                  : theme.textSecondary
+                privacyModeEnabled ? theme.accent : theme.textSecondary
               }
             />
           </View>

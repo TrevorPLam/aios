@@ -2,7 +2,7 @@
  * IntegrationsScreen Module - Enhanced
  *
  * Professional third-party service integration management system with advanced features.
- * 
+ *
  * Core Features:
  * - List all connected and available integrations
  * - Group by category (Calendar, Email, Cloud Storage, etc.)
@@ -10,7 +10,7 @@
  * - Last sync information with relative timestamps
  * - Quick enable/disable toggle with haptic feedback
  * - Navigate to detail screen for configuration
- * 
+ *
  * Enhanced Features (NEW):
  * - Real-time search across integration names and descriptions
  * - Advanced filtering by category, status, and enabled state
@@ -22,25 +22,25 @@
  * - Visual indicators for health status
  * - Empty states with context-aware messaging
  * - Smooth animations and haptic feedback throughout
- * 
+ *
  * Database Integration:
  * - 22 database methods for complete integration management
  * - Search, filter, statistics, bulk operations, export
  * - Health monitoring and sync tracking
- * 
+ *
  * AI Features:
  * - Integration recommendations (placeholder)
  * - Auto-sync optimization
  * - Error diagnostics and resolution suggestions
- * 
+ *
  * Technical Details:
  * - Performance optimized with useMemo and useCallback
  * - Full TypeScript type safety
  * - Platform-specific features (iOS/Android haptics)
  * - Comprehensive inline documentation
- * 
+ *
  * Enhanced: 2026-01-16
- * 
+ *
  * @module IntegrationsScreen
  */
 
@@ -388,7 +388,9 @@ export default function IntegrationsScreen() {
             <Feather name="alert-circle" size={20} color={theme.error} />
             <View style={{ flex: 1 }}>
               <ThemedText type="body" style={{ color: theme.error }}>
-                {statistics.errorCount} integration{statistics.errorCount > 1 ? "s" : ""} {statistics.errorCount > 1 ? "have" : "has"} errors
+                {statistics.errorCount} integration
+                {statistics.errorCount > 1 ? "s" : ""}{" "}
+                {statistics.errorCount > 1 ? "have" : "has"} errors
               </ThemedText>
               <ThemedText type="small" muted>
                 Review and reconnect to resume syncing

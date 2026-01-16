@@ -12,9 +12,9 @@
 
 /**
  * Command: analytics validate
- * 
+ *
  * Validates that events match taxonomy definitions
- * 
+ *
  * Usage:
  *   npx analytics validate
  *   npx analytics validate --event=module_opened
@@ -23,9 +23,9 @@
 
 /**
  * Command: analytics test
- * 
+ *
  * Tests analytics instrumentation
- * 
+ *
  * Usage:
  *   npx analytics test
  *   npx analytics test --coverage
@@ -33,9 +33,9 @@
 
 /**
  * Command: analytics codegen
- * 
+ *
  * Generates TypeScript types from schema
- * 
+ *
  * Usage:
  *   npx analytics codegen
  *   npx analytics codegen --output=./types
