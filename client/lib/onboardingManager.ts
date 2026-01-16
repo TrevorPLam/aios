@@ -155,6 +155,7 @@ class OnboardingManager {
   private listeners: Set<() => void> = new Set();
   private eventUnsubscribers: Array<() => void> = [];
   private lastUnlockDate?: Date;
+  private lastUnlockThreshold = 0; // Track when we last unlocked to avoid modulo issues
 
   /**
    * Initialize the onboarding manager
@@ -190,6 +191,7 @@ class OnboardingManager {
       usageCount: 0,
     };
     this.lastUnlockDate = undefined;
+    this.lastUnlockThreshold = 0;
   }
 
   /**
