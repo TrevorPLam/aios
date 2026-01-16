@@ -358,5 +358,297 @@ describe("Database Alerts Storage", () => {
         expect(retrieved?.tags).toEqual([]);
       });
     });
+
+    /** Alert History and Statistics Tests */
+    describe("Alert History and Statistics", () => {
+      it("should add an alert history entry", async () => {
+        await db.alerts.save(mockAlert);
+        
+        const entry = await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:03:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        expect(entry.id).toBeDefined();
+        expect(entry.alertId).toBe("alert_1");
+        expect(entry.snoozeCount).toBe(0);
+        expect(entry.wasOnTime).toBe(true);
+
+        const all = await db.alertHistory.getAll();
+        expect(all).toHaveLength(1);
+        expect(all[0]).toEqual(entry);
+      });
+
+      it("should get history entries for a specific alert", async () => {
+        await db.alerts.save(mockAlert);
+        const alert2: Alert = { ...mockAlert, id: "alert_2" };
+        await db.alerts.save(alert2);
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:03:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_2",
+          triggeredAt: "2026-01-15T09:00:00Z",
+          dismissedAt: "2026-01-15T09:05:00Z",
+          snoozeCount: 1,
+          totalSnoozeDuration: 10,
+          wasOnTime: true,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-16T08:00:00Z",
+          dismissedAt: "2026-01-16T08:15:00Z",
+          snoozeCount: 2,
+          totalSnoozeDuration: 20,
+          wasOnTime: false,
+        });
+
+        const alert1History = await db.alertHistory.getByAlert("alert_1");
+        expect(alert1History).toHaveLength(2);
+        expect(alert1History.every((e) => e.alertId === "alert_1")).toBe(true);
+
+        const alert2History = await db.alertHistory.getByAlert("alert_2");
+        expect(alert2History).toHaveLength(1);
+        expect(alert2History[0].alertId).toBe("alert_2");
+      });
+
+      it("should update an alert history entry", async () => {
+        const entry = await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: null,
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        // Update entry when dismissed
+        const updatedEntry = {
+          ...entry,
+          dismissedAt: "2026-01-15T08:05:00Z",
+          wasOnTime: true,
+        };
+
+        await db.alertHistory.update(updatedEntry);
+
+        const all = await db.alertHistory.getAll();
+        expect(all).toHaveLength(1);
+        expect(all[0].dismissedAt).toBe("2026-01-15T08:05:00Z");
+        expect(all[0].wasOnTime).toBe(true);
+      });
+
+      it("should calculate statistics for an alert", async () => {
+        await db.alerts.save(mockAlert);
+
+        // Add history entries with varying snooze patterns
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:03:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-16T08:00:00Z",
+          dismissedAt: "2026-01-16T08:15:00Z",
+          snoozeCount: 2,
+          totalSnoozeDuration: 20,
+          wasOnTime: false,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-17T08:00:00Z",
+          dismissedAt: "2026-01-17T08:04:00Z",
+          snoozeCount: 1,
+          totalSnoozeDuration: 10,
+          wasOnTime: true,
+        });
+
+        const stats = await db.alertHistory.getStatistics("alert_1");
+
+        expect(stats.alertId).toBe("alert_1");
+        expect(stats.totalTriggers).toBe(3);
+        expect(stats.totalSnoozes).toBe(3);
+        expect(stats.averageSnoozeCount).toBe(1);
+        expect(stats.onTimeDismissalRate).toBe((2 / 3) * 100);
+        expect(stats.lastTriggeredAt).toBe("2026-01-17T08:00:00Z");
+      });
+
+      it("should calculate statistics for alert with no history", async () => {
+        const stats = await db.alertHistory.getStatistics("alert_nonexistent");
+
+        expect(stats.alertId).toBe("alert_nonexistent");
+        expect(stats.totalTriggers).toBe(0);
+        expect(stats.totalSnoozes).toBe(0);
+        expect(stats.averageSnoozeCount).toBe(0);
+        expect(stats.onTimeDismissalRate).toBe(0);
+        expect(stats.lastTriggeredAt).toBeNull();
+      });
+
+      it("should delete history entries when alert is deleted", async () => {
+        await db.alerts.save(mockAlert);
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:03:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-16T08:00:00Z",
+          dismissedAt: "2026-01-16T08:04:00Z",
+          snoozeCount: 1,
+          totalSnoozeDuration: 10,
+          wasOnTime: true,
+        });
+
+        const historyBefore = await db.alertHistory.getByAlert("alert_1");
+        expect(historyBefore).toHaveLength(2);
+
+        await db.alertHistory.deleteByAlert("alert_1");
+
+        const historyAfter = await db.alertHistory.getByAlert("alert_1");
+        expect(historyAfter).toHaveLength(0);
+      });
+
+      it("should track snooze patterns correctly", async () => {
+        await db.alerts.save(mockAlert);
+
+        // Alert with multiple snoozes (not on time)
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:45:00Z",
+          snoozeCount: 5,
+          totalSnoozeDuration: 50,
+          wasOnTime: false,
+        });
+
+        // Alert dismissed immediately (on time)
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-16T08:00:00Z",
+          dismissedAt: "2026-01-16T08:02:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        const stats = await db.alertHistory.getStatistics("alert_1");
+        expect(stats.averageSnoozeCount).toBe(2.5);
+        expect(stats.onTimeDismissalRate).toBe(50);
+      });
+
+      it("should handle active alerts (not yet dismissed)", async () => {
+        const entry = await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: null,
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        expect(entry.dismissedAt).toBeNull();
+
+        const all = await db.alertHistory.getAll();
+        expect(all).toHaveLength(1);
+        expect(all[0].dismissedAt).toBeNull();
+      });
+
+      it("should suggest optimal snooze duration based on history", async () => {
+        await db.alerts.save(mockAlert);
+
+        // Add history with consistent 15-minute snooze pattern
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:30:00Z",
+          snoozeCount: 2,
+          totalSnoozeDuration: 30, // 15 min per snooze
+          wasOnTime: false,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-16T08:00:00Z",
+          dismissedAt: "2026-01-16T08:15:00Z",
+          snoozeCount: 1,
+          totalSnoozeDuration: 15,
+          wasOnTime: false,
+        });
+
+        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
+        expect(suggestion).toBe(15); // Should suggest 15 minutes
+      });
+
+      it("should suggest 5 minutes for users who never snooze", async () => {
+        await db.alerts.save(mockAlert);
+
+        // Add history with no snoozing
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:02:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-16T08:00:00Z",
+          dismissedAt: "2026-01-16T08:01:00Z",
+          snoozeCount: 0,
+          totalSnoozeDuration: 0,
+          wasOnTime: true,
+        });
+
+        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
+        expect(suggestion).toBe(5); // Shorter duration for disciplined users
+      });
+
+      it("should default to 10 minutes with no history", async () => {
+        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_new");
+        expect(suggestion).toBe(10); // Default value
+      });
+
+      it("should round to nearest valid snooze option", async () => {
+        await db.alerts.save(mockAlert);
+
+        // Add history with 12-minute average (should round to 10 or 15)
+        await db.alertHistory.add({
+          alertId: "alert_1",
+          triggeredAt: "2026-01-15T08:00:00Z",
+          dismissedAt: "2026-01-15T08:24:00Z",
+          snoozeCount: 2,
+          totalSnoozeDuration: 24, // 12 min average
+          wasOnTime: false,
+        });
+
+        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
+        expect([10, 15]).toContain(suggestion); // Should be closest valid option
+      });
+    });
   });
 });

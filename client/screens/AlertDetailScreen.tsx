@@ -38,6 +38,7 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Alert, AlertType, RecurrenceRule } from "@/models/types";
+import AlertStatisticsSheet from "@/components/AlertStatisticsSheet";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type AlertDetailRouteProp = RouteProp<AppStackParamList, "AlertDetail">;
@@ -121,6 +122,8 @@ export default function AlertDetailScreen() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
+  const [smartSnoozeSuggestion, setSmartSnoozeSuggestion] = useState<number | null>(null);
 
   // Load existing alert data or set defaults for new alert
   useEffect(() => {
@@ -139,6 +142,10 @@ export default function AlertDetailScreen() {
         setGradualVolume(alert.gradualVolume || false);
         setSnoozeDuration(alert.snoozeDuration || 10);
         setTags(alert.tags || []);
+
+        // Load smart snooze suggestion
+        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion(alertId);
+        setSmartSnoozeSuggestion(suggestion);
       }
     };
 
@@ -637,9 +644,34 @@ export default function AlertDetailScreen() {
         )}
 
         <View style={styles.section}>
-          <ThemedText type="body" style={styles.label}>
-            Snooze Duration
-          </ThemedText>
+          <View style={styles.labelWithHint}>
+            <ThemedText type="body" style={styles.label}>
+              Snooze Duration
+            </ThemedText>
+            {smartSnoozeSuggestion &&
+              smartSnoozeSuggestion !== snoozeDuration && (
+                <Pressable
+                  onPress={() => {
+                    setSnoozeDuration(smartSnoozeSuggestion);
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                  }}
+                  style={({ pressed }) => [
+                    styles.smartHint,
+                    {
+                      backgroundColor: theme.accentDim,
+                      opacity: pressed ? 0.7 : 1,
+                    },
+                  ]}
+                >
+                  <Feather name="zap" size={12} color={theme.accent} />
+                  <ThemedText type="small" style={{ color: theme.accent }}>
+                    Suggested: {smartSnoozeSuggestion} min
+                  </ThemedText>
+                </Pressable>
+              )}
+          </View>
           <View style={styles.optionGroup}>
             {SNOOZE_OPTIONS.map((option) => (
               <Pressable
@@ -742,6 +774,18 @@ export default function AlertDetailScreen() {
           {alertId && (
             <>
               <Button
+                onPress={() => setShowStatistics(true)}
+                style={[styles.actionButton, { backgroundColor: theme.accentDim, borderColor: theme.accent, borderWidth: 1 }]}
+              >
+                <View style={styles.buttonContent}>
+                  <Feather name="bar-chart-2" size={18} color={theme.accent} />
+                  <ThemedText type="body" style={{ color: theme.accent, marginLeft: Spacing.xs }}>
+                    View Statistics
+                  </ThemedText>
+                </View>
+              </Button>
+              
+              <Button
                 onPress={handleDuplicate}
                 style={[styles.actionButton, { backgroundColor: theme.accentDim, borderColor: theme.accent, borderWidth: 1 }]}
               >
@@ -763,6 +807,15 @@ export default function AlertDetailScreen() {
           )}
         </View>
       </ScrollView>
+
+      {/* Statistics Sheet */}
+      {alertId && (
+        <AlertStatisticsSheet
+          visible={showStatistics}
+          alertId={alertId}
+          onClose={() => setShowStatistics(false)}
+        />
+      )}
     </ThemedView>
   );
 }
@@ -883,5 +936,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  labelWithHint: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: Spacing.sm,
+  },
+  smartHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.sm,
   },
 });
