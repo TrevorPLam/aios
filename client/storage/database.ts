@@ -29,6 +29,8 @@ import {
   Translation,
   SavedPhrase,
   TranslationStatistics,
+  ModuleType,
+  TaskPriority,
 } from "@/models/types";
 import { generateId } from "@/utils/helpers";
 import {
@@ -159,6 +161,130 @@ export const db = {
         rec.status = status;
         await setData(KEYS.RECOMMENDATIONS, all);
       }
+    },
+
+    /**
+     * Get recommendation history (accepted, declined, expired)
+     * Sorted by most recent first
+     *
+     * @param {number} limit - Maximum number of items to return
+     * @returns {Promise<Recommendation[]>} Array of historical recommendations
+     */
+    async getHistory(limit: number = 50): Promise<Recommendation[]> {
+      const all = await this.getAll();
+      return all
+        .filter((r) => r.status !== "active")
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        )
+        .slice(0, limit);
+    },
+
+    /**
+     * Get recommendations by module
+     *
+     * @param {ModuleType} module - Module to filter by
+     * @returns {Promise<Recommendation[]>} Recommendations for the module
+     */
+    async getByModule(module: ModuleType): Promise<Recommendation[]> {
+      const all = await this.getAll();
+      return all.filter((r) => r.module === module);
+    },
+
+    /**
+     * Get recommendations by status
+     *
+     * @param {Recommendation["status"]} status - Status to filter by
+     * @returns {Promise<Recommendation[]>} Recommendations with the status
+     */
+    async getByStatus(
+      status: Recommendation["status"],
+    ): Promise<Recommendation[]> {
+      const all = await this.getAll();
+      return all.filter((r) => r.status === status);
+    },
+
+    /**
+     * Get recommendation statistics
+     * Provides insights into recommendation usage and effectiveness
+     *
+     * @returns {Promise<Object>} Statistics object with counts and rates
+     */
+    async getStatistics(): Promise<{
+      total: number;
+      active: number;
+      accepted: number;
+      declined: number;
+      expired: number;
+      acceptanceRate: number;
+      byModule: Record<ModuleType, number>;
+      byPriority: Record<TaskPriority, number>;
+    }> {
+      const all = await this.getAll();
+      const activeRecs = all.filter((r) => r.status === "active");
+      const acceptedRecs = all.filter((r) => r.status === "accepted");
+      const declinedRecs = all.filter((r) => r.status === "declined");
+      const expiredRecs = all.filter((r) => r.status === "expired");
+
+      const totalDecided = acceptedRecs.length + declinedRecs.length;
+      const PERCENTAGE_MULTIPLIER = 100;
+      const acceptanceRate =
+        totalDecided > 0
+          ? (acceptedRecs.length / totalDecided) * PERCENTAGE_MULTIPLIER
+          : 0;
+
+      const byModule = all.reduce(
+        (acc, rec) => {
+          acc[rec.module] = (acc[rec.module] || 0) + 1;
+          return acc;
+        },
+        {} as Record<ModuleType, number>,
+      );
+
+      const byPriority = all.reduce(
+        (acc, rec) => {
+          acc[rec.priority] = (acc[rec.priority] || 0) + 1;
+          return acc;
+        },
+        {} as Record<TaskPriority, number>,
+      );
+
+      return {
+        total: all.length,
+        active: activeRecs.length,
+        accepted: acceptedRecs.length,
+        declined: declinedRecs.length,
+        expired: expiredRecs.length,
+        acceptanceRate: Math.round(acceptanceRate),
+        byModule,
+        byPriority,
+      };
+    },
+
+    /**
+     * Delete old recommendations (older than specified days)
+     * Helps maintain database performance
+     *
+     * @param {number} days - Delete recommendations older than this many days
+     * @returns {Promise<number>} Number of deleted recommendations
+     */
+    async deleteOld(days: number = 30): Promise<number> {
+      const all = await this.getAll();
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+
+      const toKeep = all.filter((r) => {
+        const createdDate = new Date(r.createdAt);
+        return createdDate > cutoffDate || r.status === "active";
+      });
+
+      const deletedCount = all.length - toKeep.length;
+      if (deletedCount > 0) {
+        await setData(KEYS.RECOMMENDATIONS, toKeep);
+      }
+
+      return deletedCount;
     },
   },
 
