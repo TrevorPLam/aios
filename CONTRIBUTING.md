@@ -359,6 +359,27 @@ Update relevant documentation:
 - `IMPLEMENTATION_ROADMAP.md` - When completing roadmap items
 - `design_guidelines.md` - For design system changes
 
+### Documentation standards
+
+- Follow the style guide in `docs/STYLE_GUIDE.md`.
+- Use templates from `docs/.templates/` when creating new docs.
+- Keep internal links relative and include the `.md` extension.
+
+### Documentation review process
+
+**PR requirements:**
+- [ ] Documentation changes pass the docs-quality GitHub Actions workflow
+- [ ] Links validate (no broken links)
+- [ ] Spelling checks pass or are documented
+- [ ] Screenshots included for UI-related documentation updates
+
+**Review checklist:**
+- [ ] Accurate and up to date
+- [ ] Clear and concise
+- [ ] Consistent with the style guide
+- [ ] Uses the appropriate template
+- [ ] References updated or added
+
 ## Areas Needing Contributions
 
 Check out these areas where we especially need help:

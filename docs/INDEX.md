@@ -18,6 +18,7 @@ This index provides direct links to all active documentation in the repository.
 | [MODULE_DETAILS.md](../MODULE_DETAILS.md) | Technical implementation details | 469 lines |
 | [DOCUMENTATION_GUIDE.md](../DOCUMENTATION_GUIDE.md) | Navigation guide (start here!) | 200+ lines |
 | [QUICK_REFERENCE.md](../QUICK_REFERENCE.md) | Mobile configuration reference | 145 lines |
+| [DOCUMENTATION_METRICS.md](../DOCUMENTATION_METRICS.md) | Documentation health dashboard | - |
 
 ---
 
@@ -33,6 +34,11 @@ This index provides direct links to all active documentation in the repository.
 - [design_guidelines.md](technical/design_guidelines.md) - UI/UX design system
 - [CONTEXTUAL_NAVIGATION.md](technical/CONTEXTUAL_NAVIGATION.md) - Navigation patterns
 - [NAVIGATION_IMPROVEMENTS.md](technical/NAVIGATION_IMPROVEMENTS.md) - Navigation enhancements
+- [STYLE_GUIDE.md](STYLE_GUIDE.md) - Documentation style guide
+
+### Decisions & Governance
+- [decisions/](decisions/) - Architecture decision records
+- [.templates/](.templates/) - Documentation templates
 
 ### Deployment
 - [replit-deployment.md](technical/replit-deployment.md) - Replit deployment guide

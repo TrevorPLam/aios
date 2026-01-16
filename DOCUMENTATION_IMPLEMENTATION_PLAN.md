@@ -25,6 +25,22 @@ This plan outlines the roadmap to elevate AIOS documentation from "Defined" to "
 
 ---
 
+## Execution update (2026-01-16)
+
+To future-proof documentation health, execution prioritizes tooling, governance, and repeatable practices over tutorials and guides. The following items are now completed or deferred:
+
+**Completed**
+- Documentation quality CI (link checks, markdown lint, spell check)
+- Style guide and documentation templates
+- ADR framework and initial decisions
+- Metrics dashboard for ongoing documentation health
+- Contributor documentation review checklist
+
+**Deferred**
+- Tutorials and how-to guides (Phase 3.1 and 3.2)
+
+---
+
 ## Phase 1: Foundation (Week 1-2) 🏗️
 
 ### Goal: Complete missing core documentation
@@ -176,7 +192,7 @@ reported to the community leaders responsible for enforcement at
 
 ### Goal: Implement automated quality checks
 
-#### Task 2.1: Add Link Checking to CI
+#### Task 2.1: Add Link Checking to CI (Completed)
 
 **Priority:** HIGH  
 **Effort:** 3 hours  
@@ -229,7 +245,7 @@ Create `.github/workflows/markdown-link-check-config.json`:
 - [ ] Configuration excludes localhost links
 - [ ] False positives handled
 
-#### Task 2.2: Add Markdown Linting
+#### Task 2.2: Add Markdown Linting (Completed)
 
 **Priority:** MEDIUM  
 **Effort:** 2 hours  
@@ -270,7 +286,7 @@ Create `.markdownlint.json`:
 - [ ] Line length warnings (not errors)
 - [ ] HTML allowed where needed
 
-#### Task 2.3: Add Spell Checking
+#### Task 2.3: Add Spell Checking (Completed)
 
 **Priority:** LOW  
 **Effort:** 2 hours  
@@ -329,7 +345,7 @@ Create `.cspell.json`:
 
 ### Goal: Add missing documentation types
 
-#### Task 3.1: Create Getting Started Tutorial
+#### Task 3.1: Create Getting Started Tutorial (Deferred)
 
 **Priority:** MEDIUM  
 **Effort:** 4 hours  
@@ -381,7 +397,7 @@ Common issues and solutions
 - [ ] Screenshots included
 - [ ] All steps work
 
-#### Task 3.2: Create How-To Guides
+#### Task 3.2: Create How-To Guides (Deferred)
 
 **Priority:** MEDIUM  
 **Effort:** 6 hours  
@@ -427,7 +443,7 @@ Common issues and solutions
 - [ ] Code examples work
 - [ ] Cross-referenced
 
-#### Task 3.3: Add Architecture Decision Records
+#### Task 3.3: Add Architecture Decision Records (Completed)
 
 **Priority:** LOW  
 **Effort:** 4 hours  
@@ -578,7 +594,7 @@ graph TD
 
 ### Goal: Establish documentation governance
 
-#### Task 5.1: Create Documentation Style Guide
+#### Task 5.1: Create Documentation Style Guide (Completed)
 
 **Priority:** MEDIUM  
 **Effort:** 3 hours  
@@ -622,7 +638,7 @@ graph TD
 - [ ] Easy to reference
 - [ ] Referenced in CONTRIBUTING.md
 
-#### Task 5.2: Create Documentation Templates
+#### Task 5.2: Create Documentation Templates (Completed)
 
 **Priority:** LOW  
 **Effort:** 2 hours  
@@ -681,7 +697,7 @@ Brief description
 - [ ] Easy to copy
 - [ ] Documented in CONTRIBUTING.md
 
-#### Task 5.3: Establish Review Process
+#### Task 5.3: Establish Review Process (Completed)
 
 **Priority:** MEDIUM  
 **Effort:** 2 hours  
@@ -722,7 +738,7 @@ Update `CONTRIBUTING.md` with review process
 
 ### Goal: Measure and improve continuously
 
-#### Task 6.1: Establish Metrics Dashboard
+#### Task 6.1: Establish Metrics Dashboard (Completed)
 
 **Priority:** LOW  
 **Effort:** 4 hours  

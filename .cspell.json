@@ -1,0 +1,21 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "AIOS",
+    "AsyncStorage",
+    "Drizzle",
+    "Haptics",
+    "Reanimated",
+    "TypeScript",
+    "README",
+    "changelog",
+    "codebase",
+    "JWT"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "docs/archive/**",
+    "*.lock"
+  ]
+}
