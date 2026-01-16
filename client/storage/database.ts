@@ -23,6 +23,8 @@ import {
   AlertHistoryEntry,
   AlertStatistics,
   ContactGroup,
+  EmailThread,
+  EmailMessage,
 } from "@/models/types";
 import { generateId } from "@/utils/helpers";
 import {
@@ -57,6 +59,7 @@ const KEYS = {
   CONTACT_GROUPS: "@aios/contact_groups",
   BUDGETS: "@aios/budgets",
   INTEGRATIONS: "@aios/integrations",
+  EMAIL_THREADS: "@aios/email_threads",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -2139,6 +2142,510 @@ export const db = {
         integration.updatedAt = new Date().toISOString();
         await this.save(integration);
       }
+    },
+  },
+
+  /**
+   * Email Threads Module
+   *
+   * Manages email thread storage with advanced filtering, search, and organization features.
+   * Supports starring, archiving, labeling, importance marking, and bulk operations.
+   */
+  emailThreads: {
+    /**
+     * Get all email threads from storage
+     *
+     * @returns {Promise<EmailThread[]>} Array of all email threads
+     */
+    async getAll(): Promise<EmailThread[]> {
+      return getData(KEYS.EMAIL_THREADS, []);
+    },
+
+    /**
+     * Get active (non-archived) email threads
+     * Excludes archived and draft threads by default
+     *
+     * @returns {Promise<EmailThread[]>} Array of active threads
+     */
+    async getActive(): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => !t.isArchived && !t.isDraft);
+    },
+
+    /**
+     * Get archived email threads
+     *
+     * @returns {Promise<EmailThread[]>} Array of archived threads
+     */
+    async getArchived(): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.isArchived === true);
+    },
+
+    /**
+     * Get draft email threads
+     *
+     * @returns {Promise<EmailThread[]>} Array of draft threads
+     */
+    async getDrafts(): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.isDraft === true);
+    },
+
+    /**
+     * Get starred email threads
+     *
+     * @returns {Promise<EmailThread[]>} Array of starred threads
+     */
+    async getStarred(): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.isStarred === true);
+    },
+
+    /**
+     * Get unread email threads
+     *
+     * @returns {Promise<EmailThread[]>} Array of unread threads
+     */
+    async getUnread(): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => !t.isRead);
+    },
+
+    /**
+     * Get important/priority email threads
+     *
+     * @returns {Promise<EmailThread[]>} Array of important threads
+     */
+    async getImportant(): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.isImportant === true);
+    },
+
+    /**
+     * Get threads by label/tag
+     *
+     * @param {string} label - The label to filter by
+     * @returns {Promise<EmailThread[]>} Array of threads with the specified label
+     */
+    async getByLabel(label: string): Promise<EmailThread[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.labels?.includes(label));
+    },
+
+    /**
+     * Get all unique labels across all threads
+     *
+     * @returns {Promise<string[]>} Array of unique label names
+     */
+    async getAllLabels(): Promise<string[]> {
+      const all = await this.getAll();
+      const labels = new Set<string>();
+      all.forEach((thread) => {
+        thread.labels?.forEach((label) => labels.add(label));
+      });
+      return Array.from(labels).sort();
+    },
+
+    /**
+     * Search threads by query string
+     * Searches across subject, participants, and message bodies
+     *
+     * @param {string} query - Search query string
+     * @returns {Promise<EmailThread[]>} Array of matching threads
+     */
+    async search(query: string): Promise<EmailThread[]> {
+      if (!query.trim()) {
+        return this.getActive();
+      }
+
+      const all = await this.getActive();
+      const lowerQuery = query.toLowerCase();
+
+      return all.filter((thread) => {
+        // Search in subject
+        if (thread.subject.toLowerCase().includes(lowerQuery)) {
+          return true;
+        }
+
+        // Search in participants
+        if (
+          thread.participants.some((p) => p.toLowerCase().includes(lowerQuery))
+        ) {
+          return true;
+        }
+
+        // Search in message bodies
+        if (
+          thread.messages.some((m) =>
+            m.body.toLowerCase().includes(lowerQuery),
+          )
+        ) {
+          return true;
+        }
+
+        // Search in labels
+        if (
+          thread.labels?.some((l) => l.toLowerCase().includes(lowerQuery))
+        ) {
+          return true;
+        }
+
+        return false;
+      });
+    },
+
+    /**
+     * Get thread by ID
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<EmailThread | undefined>} The thread or undefined
+     */
+    async getById(id: string): Promise<EmailThread | undefined> {
+      const all = await this.getAll();
+      return all.find((t) => t.id === id);
+    },
+
+    /**
+     * Save an email thread (create or update)
+     *
+     * @param {EmailThread} thread - The thread to save
+     * @returns {Promise<void>}
+     */
+    async save(thread: EmailThread): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((t) => t.id === thread.id);
+      if (index >= 0) {
+        all[index] = thread;
+      } else {
+        all.push(thread);
+      }
+      await setData(KEYS.EMAIL_THREADS, all);
+    },
+
+    /**
+     * Delete a thread by ID
+     *
+     * @param {string} id - Thread ID to delete
+     * @returns {Promise<void>}
+     */
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((t) => t.id !== id);
+      await setData(KEYS.EMAIL_THREADS, filtered);
+    },
+
+    /**
+     * Toggle starred status for a thread
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<void>}
+     */
+    async toggleStar(id: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        thread.isStarred = !thread.isStarred;
+        await this.save(thread);
+      }
+    },
+
+    /**
+     * Mark thread as read
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<void>}
+     */
+    async markAsRead(id: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        thread.isRead = true;
+        // Also mark all messages as read
+        thread.messages.forEach((m) => (m.isRead = true));
+        await this.save(thread);
+      }
+    },
+
+    /**
+     * Mark thread as unread
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<void>}
+     */
+    async markAsUnread(id: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        thread.isRead = false;
+        await this.save(thread);
+      }
+    },
+
+    /**
+     * Toggle important/priority status for a thread
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<void>}
+     */
+    async toggleImportant(id: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        thread.isImportant = !thread.isImportant;
+        await this.save(thread);
+      }
+    },
+
+    /**
+     * Archive a thread
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<void>}
+     */
+    async archive(id: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        thread.isArchived = true;
+        await this.save(thread);
+      }
+    },
+
+    /**
+     * Unarchive a thread
+     *
+     * @param {string} id - Thread ID
+     * @returns {Promise<void>}
+     */
+    async unarchive(id: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        thread.isArchived = false;
+        await this.save(thread);
+      }
+    },
+
+    /**
+     * Add a label to a thread
+     *
+     * @param {string} id - Thread ID
+     * @param {string} label - Label to add
+     * @returns {Promise<void>}
+     */
+    async addLabel(id: string, label: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        if (!thread.labels) {
+          thread.labels = [];
+        }
+        if (!thread.labels.includes(label)) {
+          thread.labels.push(label);
+          await this.save(thread);
+        }
+      }
+    },
+
+    /**
+     * Remove a label from a thread
+     *
+     * @param {string} id - Thread ID
+     * @param {string} label - Label to remove
+     * @returns {Promise<void>}
+     */
+    async removeLabel(id: string, label: string): Promise<void> {
+      const thread = await this.getById(id);
+      if (thread) {
+        if (thread.labels) {
+          thread.labels = thread.labels.filter((l) => l !== label);
+          await this.save(thread);
+        }
+      }
+    },
+
+    /**
+     * Bulk mark threads as read
+     *
+     * @param {string[]} ids - Array of thread IDs
+     * @returns {Promise<void>}
+     */
+    async bulkMarkAsRead(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      let modified = false;
+
+      all.forEach((thread) => {
+        if (ids.includes(thread.id) && !thread.isRead) {
+          thread.isRead = true;
+          thread.messages.forEach((m) => (m.isRead = true));
+          modified = true;
+        }
+      });
+
+      if (modified) {
+        await setData(KEYS.EMAIL_THREADS, all);
+      }
+    },
+
+    /**
+     * Bulk mark threads as unread
+     *
+     * @param {string[]} ids - Array of thread IDs
+     * @returns {Promise<void>}
+     */
+    async bulkMarkAsUnread(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      let modified = false;
+
+      all.forEach((thread) => {
+        if (ids.includes(thread.id) && thread.isRead) {
+          thread.isRead = false;
+          modified = true;
+        }
+      });
+
+      if (modified) {
+        await setData(KEYS.EMAIL_THREADS, all);
+      }
+    },
+
+    /**
+     * Bulk star threads
+     *
+     * @param {string[]} ids - Array of thread IDs
+     * @returns {Promise<void>}
+     */
+    async bulkStar(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      let modified = false;
+
+      all.forEach((thread) => {
+        if (ids.includes(thread.id) && !thread.isStarred) {
+          thread.isStarred = true;
+          modified = true;
+        }
+      });
+
+      if (modified) {
+        await setData(KEYS.EMAIL_THREADS, all);
+      }
+    },
+
+    /**
+     * Bulk unstar threads
+     *
+     * @param {string[]} ids - Array of thread IDs
+     * @returns {Promise<void>}
+     */
+    async bulkUnstar(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      let modified = false;
+
+      all.forEach((thread) => {
+        if (ids.includes(thread.id) && thread.isStarred) {
+          thread.isStarred = false;
+          modified = true;
+        }
+      });
+
+      if (modified) {
+        await setData(KEYS.EMAIL_THREADS, all);
+      }
+    },
+
+    /**
+     * Bulk archive threads
+     *
+     * @param {string[]} ids - Array of thread IDs
+     * @returns {Promise<void>}
+     */
+    async bulkArchive(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      let modified = false;
+
+      all.forEach((thread) => {
+        if (ids.includes(thread.id) && !thread.isArchived) {
+          thread.isArchived = true;
+          modified = true;
+        }
+      });
+
+      if (modified) {
+        await setData(KEYS.EMAIL_THREADS, all);
+      }
+    },
+
+    /**
+     * Bulk delete threads
+     *
+     * @param {string[]} ids - Array of thread IDs to delete
+     * @returns {Promise<void>}
+     */
+    async bulkDelete(ids: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((t) => !ids.includes(t.id));
+      await setData(KEYS.EMAIL_THREADS, filtered);
+    },
+
+    /**
+     * Get email statistics
+     * Calculates counts and storage metrics
+     *
+     * @returns {Promise<{total: number, unread: number, starred: number, archived: number, important: number, drafts: number, totalSize: number}>}
+     */
+    async getStatistics(): Promise<{
+      total: number;
+      unread: number;
+      starred: number;
+      archived: number;
+      important: number;
+      drafts: number;
+      totalSize: number;
+    }> {
+      const all = await this.getAll();
+
+      return {
+        total: all.filter((t) => !t.isDraft).length,
+        unread: all.filter((t) => !t.isRead && !t.isDraft).length,
+        starred: all.filter((t) => t.isStarred).length,
+        archived: all.filter((t) => t.isArchived).length,
+        important: all.filter((t) => t.isImportant).length,
+        drafts: all.filter((t) => t.isDraft).length,
+        totalSize: all.reduce(
+          (sum, t) => sum + (t.totalSize || 0),
+          0,
+        ),
+      };
+    },
+
+    /**
+     * Sort threads by different criteria
+     *
+     * @param {EmailThread[]} threads - Threads to sort
+     * @param {"date" | "sender" | "subject"} sortBy - Sort criterion
+     * @param {"asc" | "desc"} order - Sort order
+     * @returns {EmailThread[]} Sorted threads
+     */
+    sort(
+      threads: EmailThread[],
+      sortBy: "date" | "sender" | "subject",
+      order: "asc" | "desc" = "desc",
+    ): EmailThread[] {
+      const sorted = [...threads].sort((a, b) => {
+        let comparison = 0;
+
+        switch (sortBy) {
+          case "date":
+            comparison =
+              new Date(a.lastMessageAt).getTime() -
+              new Date(b.lastMessageAt).getTime();
+            break;
+          case "sender":
+            comparison = a.participants[0].localeCompare(b.participants[0]);
+            break;
+          case "subject":
+            comparison = a.subject.localeCompare(b.subject);
+            break;
+        }
+
+        return order === "asc" ? comparison : -comparison;
+      });
+
+      return sorted;
     },
   },
 
