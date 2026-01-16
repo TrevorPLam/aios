@@ -38,6 +38,7 @@ import IntegrationDetailScreen from "@/screens/IntegrationDetailScreen";
 import SystemScreen from "@/screens/SystemScreen";
 import HistoryScreen from "@/screens/HistoryScreen";
 import RecommendationDetailScreen from "@/screens/RecommendationDetailScreen";
+import RecommendationHistoryScreen from "@/screens/RecommendationHistoryScreen";
 import ListsScreen from "@/screens/ListsScreen";
 import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
@@ -79,6 +80,7 @@ export type AppStackParamList = {
   System: undefined;
   History: undefined;
   RecommendationDetail: { recommendationId: string };
+  RecommendationHistory: undefined;
   Lists: undefined;
   ListEditor: { listId?: string };
   Alerts: undefined;
@@ -294,6 +296,11 @@ export default function AppNavigator() {
         name="RecommendationDetail"
         component={RecommendationDetailScreen}
         options={{ headerTitle: "Recommendation", presentation: "modal" }}
+      />
+      <Stack.Screen
+        name="RecommendationHistory"
+        component={RecommendationHistoryScreen}
+        options={{ headerTitle: "Recommendation History" }}
       />
       <Stack.Screen
         name="Lists"

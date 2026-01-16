@@ -393,15 +393,26 @@ export default function CommandCenterScreen() {
           <ThemedText type="h2">Command Center</ThemedText>
         </Animated.View>
 
-        <Pressable
-          onPress={() => navigation.navigate("Settings")}
-          style={({ pressed }) => [
-            styles.headerButton,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Feather name="settings" size={24} color={theme.text} />
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => navigation.navigate("RecommendationHistory")}
+            style={({ pressed }) => [
+              styles.headerButton,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Feather name="clock" size={24} color={theme.text} />
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate("Settings")}
+            style={({ pressed }) => [
+              styles.headerButton,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Feather name="settings" size={24} color={theme.text} />
+          </Pressable>
+        </View>
       </View>
 
       <View style={styles.content}>
@@ -506,6 +517,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.sm,
+  },
+  headerActions: {
+    flexDirection: "row",
+    gap: Spacing.xs,
   },
   pressed: {
     opacity: 0.7,
