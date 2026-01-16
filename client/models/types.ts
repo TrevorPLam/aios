@@ -827,6 +827,81 @@ export interface AILimits {
   nextRefreshAt: string;
 }
 
+/**
+ * Translation Interface
+ *
+ * Represents a single translation record with source and target text.
+ * Used for translation history and bookmarks.
+ *
+ * @property {string} id - Unique identifier for the translation
+ * @property {string} sourceText - Original text to translate
+ * @property {string} targetText - Translated text result
+ * @property {string} sourceLang - Source language code (ISO 639-1)
+ * @property {string} targetLang - Target language code (ISO 639-1)
+ * @property {string} createdAt - ISO 8601 timestamp of translation
+ * @property {boolean} isFavorite - Whether this translation is bookmarked
+ * @property {string[]} tags - Optional tags for organizing translations
+ * @property {number} characterCount - Character count of source text
+ */
+export interface Translation {
+  id: string;
+  sourceText: string;
+  targetText: string;
+  sourceLang: string;
+  targetLang: string;
+  createdAt: string;
+  isFavorite?: boolean;
+  tags?: string[];
+  characterCount: number;
+}
+
+/**
+ * Saved Phrase Interface
+ *
+ * Represents a commonly used phrase saved for quick translation.
+ * Useful for frequently translated expressions.
+ *
+ * @property {string} id - Unique identifier for the phrase
+ * @property {string} phrase - The saved phrase text
+ * @property {string} sourceLang - Language code of the phrase
+ * @property {string} category - Category/group for organization
+ * @property {number} usageCount - How many times this phrase has been used
+ * @property {string} createdAt - ISO 8601 timestamp of creation
+ * @property {string} lastUsedAt - ISO 8601 timestamp of last use
+ */
+export interface SavedPhrase {
+  id: string;
+  phrase: string;
+  sourceLang: string;
+  category?: string;
+  usageCount: number;
+  createdAt: string;
+  lastUsedAt: string;
+}
+
+/**
+ * Translation Statistics Interface
+ *
+ * Aggregated statistics about translation usage.
+ *
+ * @property {number} totalTranslations - Total number of translations performed
+ * @property {number} favoriteCount - Number of favorited translations
+ * @property {number} savedPhrasesCount - Number of saved phrases
+ * @property {Record<string, number>} languagePairs - Translation count per language pair
+ * @property {Record<string, number>} languageUsage - Usage count per language
+ * @property {string} mostUsedSourceLang - Most frequently used source language
+ * @property {string} mostUsedTargetLang - Most frequently used target language
+ */
+export interface TranslationStatistics {
+  totalTranslations: number;
+  favoriteCount: number;
+  savedPhrasesCount: number;
+  languagePairs: Record<string, number>;
+  languageUsage: Record<string, number>;
+  mostUsedSourceLang: string;
+  mostUsedTargetLang: string;
+}
+
 export const DEFAULT_SETTINGS: Settings = {
   aiName: "AIOS",
   enabledModules: [
