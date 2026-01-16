@@ -27,6 +27,7 @@ export const errorHandler = (
   // Unknown error
   // TODO: Use a proper logging library (e.g., Winston, Pino) instead of console.error
   // for production environments to enable better error tracking and structured logging
+  // Missing Features: See MISSING_FEATURES.md (Backend Infrastructure - Logging)
   console.error("Unexpected error:", err);
   return res.status(500).json({
     status: "error",

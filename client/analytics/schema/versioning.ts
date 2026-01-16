@@ -9,6 +9,9 @@
  * - Validate events against versioned schemas
  * - Auto-migrate events between versions
  * - Detect breaking changes
+ * 
+ * Documentation: See docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
+ * Missing Features: See MISSING_FEATURES.md (Analytics section)
  */
 
 import { EventName, EventPropsMap } from "../types";

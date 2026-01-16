@@ -8,6 +8,9 @@
  * - Configurable retention periods per data type
  * - Automatic cleanup of old data
  * - User data export before deletion
+ * 
+ * Documentation: See docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
+ * Missing Features: See MISSING_FEATURES.md (Analytics section)
  */
 
 export interface RetentionPolicy {
