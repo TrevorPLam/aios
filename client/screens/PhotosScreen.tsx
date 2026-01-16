@@ -3,24 +3,29 @@
  *
  * Advanced photo gallery with comprehensive organization features.
  *
- * New Features:
+ * Features:
  * - Albums system with cover photos
- * - Advanced filtering (favorites, backup status, date range, tags)
+ * - Advanced filtering (favorites, backup status)
  * - Search functionality across names, tags, descriptions
  * - Bulk selection and operations
  * - Photo statistics display
- * - Sorting options (date, name, size)
- * - Favorites/starring system
- * - Enhanced metadata display
- *
- * Original Features:
- * - Grid-based photo layout (configurable size 2x2 to 6x6)
- * - Import from camera roll
- * - Photo editing capabilities
- * - AI assistance for photo organization
+ * - Favorites/starring system with toggle
+ * - Grid size adjustment (2x2 to 6x6)
  * - Haptic feedback for interactions
+ * - Automatic date-based sorting (newest first)
+ *
+ * Database Operations:
+ * - Photo CRUD with automatic history logging
+ * - Favorites management
+ * - Album assignment and removal
+ * - Tag management
+ * - Comprehensive search across multiple fields
+ * - Statistics computation
  *
  * @module PhotosScreen
+ * @see {@link PhotoAlbum} for album management
+ * @see {@link PhotoDetailScreen} for individual photo viewing
+ * @see {@link PhotoEditorScreen} for photo editing capabilities
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -52,8 +57,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Photo, PhotoGridSize, PhotoSortBy, PhotoAlbum } from "@/models/types";
-import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import { Photo, PhotoGridSize } from "@/models/types";
+import { HeaderLeftNav } from "@/components/HeaderNav";
 import { BottomNav } from "@/components/BottomNav";
 import { formatFileSize } from "@/utils/helpers";
 
@@ -147,28 +152,37 @@ export default function PhotosScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
 
+  // State Management
+  // - photos: All photos from database (pre-sorted by date)
+  // - filteredPhotos: Photos after applying search/filter
+  // - gridSize: Number of columns in grid (2-6)
+  // - searchQuery: Current search text
+  // - filterType: Active filter (all, favorites, backed_up, not_backed_up)
+  // - showStatsSheet: Controls statistics modal visibility
+  // - selectionMode: Enables bulk operations mode
+  // - selectedPhotos: Set of photo IDs selected for bulk operations
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([]);
-  const [albums, setAlbums] = useState<PhotoAlbum[]>([]);
   const [gridSize, setGridSize] = useState<PhotoGridSize>(4);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<FilterType>("all");
-  const [sortBy, setSortBy] = useState<PhotoSortBy>("date");
-  const [showFilterSheet, setShowFilterSheet] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedPhotos, setSelectedPhotos] = useState<Set<string>>(new Set());
 
+  /**
+   * Loads all photos from database
+   * Photos are pre-sorted by creation date (newest first)
+   */
   const loadPhotos = useCallback(async () => {
     const data = await db.photos.getAllSorted();
     setPhotos(data);
   }, []);
 
-  const loadAlbums = useCallback(async () => {
-    const data = await db.photoAlbums.getAll();
-    setAlbums(data);
-  }, []);
-
+  /**
+   * Loads user preferences from settings
+   * Currently loads grid size preference
+   */
   const loadSettings = useCallback(async () => {
     const settings = await db.settings.get();
     setGridSize(settings.photoGridSize);
@@ -177,16 +191,21 @@ export default function PhotosScreen() {
   useFocusEffect(
     useCallback(() => {
       loadPhotos();
-      loadAlbums();
       loadSettings();
-    }, [loadPhotos, loadAlbums, loadSettings]),
+    }, [loadPhotos, loadSettings]),
   );
 
+  /**
+   * Reactive filtering and search
+   * Applies in order: filter -> search
+   * No sorting needed as photos are pre-sorted by getAllSorted()
+   */
   // Filter and search photos
   useEffect(() => {
     let filtered = [...photos];
 
-    // Apply filter
+    // Apply filter based on type
+    // Reasoning: Filter first to reduce search scope
     switch (filterType) {
       case "favorites":
         filtered = filtered.filter((p) => p.isFavorite);
@@ -197,10 +216,11 @@ export default function PhotosScreen() {
       case "not_backed_up":
         filtered = filtered.filter((p) => !p.isBackedUp);
         break;
-      // "all" and "album" don't need additional filtering here
+      // "all" case: no filtering needed
     }
 
-    // Apply search
+    // Apply search query across multiple fields
+    // Searches: filename, tags, description
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -211,28 +231,9 @@ export default function PhotosScreen() {
       );
     }
 
-    // Apply sorting
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "date":
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        case "name":
-          return a.fileName.localeCompare(b.fileName);
-        case "size":
-          return b.fileSize - a.fileSize;
-        case "recent":
-          return (
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-          );
-        default:
-          return 0;
-      }
-    });
-
+    // Photos maintain chronological order from getAllSorted()
     setFilteredPhotos(filtered);
-  }, [photos, filterType, searchQuery, sortBy]);
+  }, [photos, filterType, searchQuery]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -286,6 +287,10 @@ export default function PhotosScreen() {
     });
   }, [navigation, theme, filterType, selectionMode]);
 
+  /**
+   * Toggles photo selection in bulk operations mode
+   * Uses Set for O(1) add/remove operations
+   */
   const toggleSelection = (photoId: string) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -301,6 +306,10 @@ export default function PhotosScreen() {
     });
   };
 
+  /**
+   * Activates selection mode on long press
+   * First photo long-pressed is auto-selected
+   */
   const handleLongPress = (photoId: string) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -309,6 +318,9 @@ export default function PhotosScreen() {
     toggleSelection(photoId);
   };
 
+  /**
+   * Exits selection mode and clears all selections
+   */
   const handleCancelSelection = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -317,6 +329,10 @@ export default function PhotosScreen() {
     setSelectedPhotos(new Set());
   };
 
+  /**
+   * Bulk delete operation with confirmation
+   * Logs deletion to history for audit trail
+   */
   const handleBulkDelete = async () => {
     if (selectedPhotos.size === 0) return;
 
@@ -329,7 +345,9 @@ export default function PhotosScreen() {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
+            // Delete photos from database
             await db.photos.deleteMultiple(Array.from(selectedPhotos));
+            // Log action for history tracking
             await db.history.add({
               message: `Deleted ${selectedPhotos.size} photos`,
               type: "system",
@@ -342,6 +360,10 @@ export default function PhotosScreen() {
     );
   };
 
+  /**
+   * Imports photo from device camera roll
+   * Flow: Request permission -> Launch picker -> Copy to app storage -> Save to database
+   */
   const handleAddPhoto = async () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -369,6 +391,7 @@ export default function PhotosScreen() {
 
       // Save to local storage (avoid duplication by using unique names)
       const fileName = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
+      // eslint-disable-next-line import/namespace
       const documentDir = FileSystem.documentDirectory;
 
       if (!documentDir) {
