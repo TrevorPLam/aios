@@ -12,16 +12,9 @@
  * @module tasks.test
  */
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
 import { Task, TaskStatus, TaskPriority } from "@/models/types";
-
-// Mock AsyncStorage
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-}));
 
 describe("Task Database Operations", () => {
   // Sample task data for testing
@@ -43,10 +36,8 @@ describe("Task Database Operations", () => {
   });
 
   beforeEach(async () => {
-    // Clear all tasks before each test
-    const AsyncStorage = require("@react-native-async-storage/async-storage");
-    AsyncStorage.getItem.mockResolvedValue(null);
-    AsyncStorage.setItem.mockResolvedValue(undefined);
+    // Clear AsyncStorage before each test
+    await AsyncStorage.clear();
   });
 
   describe("Basic CRUD Operations", () => {
@@ -340,14 +331,16 @@ describe("Task Database Operations", () => {
 
   describe("Task Statistics", () => {
     test("should calculate comprehensive statistics", async () => {
-      const now = new Date().toISOString();
-      const yesterday = new Date(
-        Date.now() - 24 * 60 * 60 * 1000,
-      ).toISOString();
-      const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-      const nextWeek = new Date(
-        Date.now() + 5 * 24 * 60 * 60 * 1000,
-      ).toISOString();
+      // Create date strings that are clearly in the right buckets
+      const now = new Date();
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1); // Yesterday - definitely overdue
+      
+      const today = new Date(now);
+      today.setHours(23, 59, 0, 0); // End of today - not overdue yet
+      
+      const nextWeek = new Date(now);
+      nextWeek.setDate(nextWeek.getDate() + 5); // 5 days from now
 
       await db.tasks.save(createTask({ status: "completed" }));
       await db.tasks.save(createTask({ status: "in_progress" }));
@@ -356,10 +349,10 @@ describe("Task Database Operations", () => {
       );
       await db.tasks.save(createTask({ status: "pending", priority: "high" }));
       await db.tasks.save(
-        createTask({ status: "pending", dueDate: yesterday }),
+        createTask({ status: "pending", dueDate: yesterday.toISOString() }),
       ); // overdue
-      await db.tasks.save(createTask({ status: "pending", dueDate: now })); // due today
-      await db.tasks.save(createTask({ status: "pending", dueDate: nextWeek })); // due this week
+      await db.tasks.save(createTask({ status: "pending", dueDate: today.toISOString() })); // due today
+      await db.tasks.save(createTask({ status: "pending", dueDate: nextWeek.toISOString() })); // due this week
 
       const stats = await db.tasks.getStatistics();
 

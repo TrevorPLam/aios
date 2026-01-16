@@ -510,8 +510,8 @@ describe("Email Threads Database", () => {
     it("should calculate correct statistics", async () => {
       const active1 = createMockThread({ isRead: false });
       const active2 = createMockThread({ isRead: true, isStarred: true });
-      const archived = createMockThread({ isArchived: true });
-      const important = createMockThread({ isImportant: true });
+      const archived = createMockThread({ isRead: true, isArchived: true }); // Mark as read
+      const important = createMockThread({ isRead: true, isImportant: true }); // Mark as read
       const draft = createMockThread({ isDraft: true });
 
       await db.emailThreads.save(active1);
@@ -523,7 +523,7 @@ describe("Email Threads Database", () => {
       const stats = await db.emailThreads.getStatistics();
 
       expect(stats.total).toBe(4); // Excludes drafts
-      expect(stats.unread).toBe(1);
+      expect(stats.unread).toBe(1); // Only active1 is unread
       expect(stats.starred).toBe(1);
       expect(stats.archived).toBe(1);
       expect(stats.important).toBe(1);
