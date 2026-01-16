@@ -17,7 +17,10 @@ describe("Quick Win Data-Layer E2E", () => {
     await AsyncStorage.clear();
   });
 
-  it("runs a quick-win pipeline across history, translations, events, and alerts", async () => {
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+// Use tomorrow.toISOString() for test data
     await db.history.add({ message: "Pipeline start", type: "system" });
     await db.history.setExportSchedule({
       enabled: true,
