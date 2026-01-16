@@ -10,6 +10,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
 
 import RootStackNavigator from "@/navigation/RootStackNavigator";
+import { useAnalyticsNavigation } from "@/hooks/useAnalyticsNavigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { NavigationProvider } from "@/context/NavigationContext";
@@ -30,6 +31,12 @@ const AIOSTheme = {
 };
 
 export default function App() {
+  const {
+    navigationRef,
+    handleNavigationReady,
+    handleNavigationStateChange,
+  } = useAnalyticsNavigation();
+
   useEffect(() => {
     // Initialize analytics on app start
     const initAnalytics = async () => {
@@ -62,7 +69,12 @@ export default function App() {
             <NavigationProvider>
               <GestureHandlerRootView style={styles.root}>
                 <KeyboardProvider>
-                  <NavigationContainer theme={AIOSTheme}>
+                  <NavigationContainer
+                    ref={navigationRef}
+                    theme={AIOSTheme}
+                    onReady={handleNavigationReady}
+                    onStateChange={handleNavigationStateChange}
+                  >
                     <RootStackNavigator />
                   </NavigationContainer>
                   <StatusBar style="light" />
