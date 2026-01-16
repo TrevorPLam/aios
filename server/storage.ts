@@ -617,7 +617,12 @@ export class MemStorage implements IStorage {
 
     return newMessage;
   }
-
+const updated = {
+      ...message,
+      ...updates,
+      isEdited: updates.isEdited ?? (contentUpdated ? true : message.isEdited),
+      updatedAt,
+    };
   async updateMessage(
     id: string,
     userId: string,
