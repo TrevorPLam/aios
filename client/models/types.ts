@@ -520,6 +520,38 @@ export interface Contact {
   isRegistered: boolean;
   createdAt: string;
   updatedAt: string;
+  // Enhanced features
+  isFavorite?: boolean;
+  groups?: string[]; // Array of group names/IDs
+  tags?: string[]; // Custom tags for filtering
+  notes?: ContactNote[];
+  callHistory?: CallRecord[];
+  lastContactedAt?: string;
+  contactFrequency?: number; // Number of interactions
+}
+
+export interface ContactNote {
+  id: string;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CallRecord {
+  id: string;
+  type: "incoming" | "outgoing" | "missed";
+  duration: number; // in seconds
+  timestamp: string;
+}
+
+export interface ContactGroup {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  contactIds: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ConversationParticipant {

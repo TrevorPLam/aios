@@ -22,8 +22,18 @@ import {
   Integration,
   AlertHistoryEntry,
   AlertStatistics,
+  ContactGroup,
 } from "@/models/types";
 import { generateId } from "@/utils/helpers";
+import {
+  isBirthdayInRange,
+  sortByUpcomingBirthday,
+  validateTag,
+  validateGroup,
+  validateNote,
+  arePotentialDuplicates,
+  matchesSearchQuery,
+} from "@/utils/contactHelpers";
 
 const KEYS = {
   RECOMMENDATIONS: "@aios/recommendations",
@@ -44,6 +54,7 @@ const KEYS = {
   MESSAGES: "@aios/messages",
   CONVERSATIONS: "@aios/conversations",
   CONTACTS: "@aios/contacts",
+  CONTACT_GROUPS: "@aios/contact_groups",
   BUDGETS: "@aios/budgets",
   INTEGRATIONS: "@aios/integrations",
 };
@@ -909,6 +920,44 @@ export const db = {
       return all.sort((a, b) => a.name.localeCompare(b.name));
     },
 
+    /** Get favorite contacts only */
+    async getFavorites(): Promise<Contact[]> {
+      const all = await this.getAll();
+      return all.filter((c) => c.isFavorite);
+    },
+
+    /** Get contacts by group */
+    async getByGroup(groupName: string): Promise<Contact[]> {
+      const all = await this.getAll();
+      return all.filter((c) => c.groups?.includes(groupName));
+    },
+
+    /** Get contacts by tag */
+    async getByTag(tag: string): Promise<Contact[]> {
+      const all = await this.getAll();
+      return all.filter((c) => c.tags?.includes(tag));
+    },
+
+    /** Get upcoming birthdays within specified days */
+    async getUpcomingBirthdays(daysAhead: number = 30): Promise<Contact[]> {
+      const all = await this.getAll();
+      const now = new Date();
+      const futureDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
+
+      const contactsWithUpcomingBirthdays = all.filter((c) => {
+        if (!c.birthday) return false;
+        return isBirthdayInRange(c.birthday, now, futureDate);
+      });
+
+      return sortByUpcomingBirthday(contactsWithUpcomingBirthdays);
+    },
+
+    /** Search contacts by name, email, phone, company, tags, or notes */
+    async search(query: string): Promise<Contact[]> {
+      const all = await this.getAll();
+      return all.filter((c) => matchesSearchQuery(c, query));
+    },
+
     /** Get a specific contact by ID */
     async get(id: string): Promise<Contact | null> {
       const all = await this.getAll();
@@ -927,6 +976,119 @@ export const db = {
       await setData(KEYS.CONTACTS, all);
     },
 
+    /** Toggle favorite status */
+    async toggleFavorite(id: string): Promise<void> {
+      const contact = await this.get(id);
+      if (contact) {
+        contact.isFavorite = !contact.isFavorite;
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Add a note to a contact */
+    async addNote(id: string, noteText: string): Promise<void> {
+      const validatedText = validateNote(noteText);
+      if (!validatedText) return; // Invalid note text
+      
+      const contact = await this.get(id);
+      if (contact) {
+        const note = {
+          id: generateId(),
+          text: validatedText,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        contact.notes = [...(contact.notes || []), note];
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Update a note */
+    async updateNote(contactId: string, noteId: string, newText: string): Promise<void> {
+      const validatedText = validateNote(newText);
+      if (!validatedText) return; // Invalid note text
+      
+      const contact = await this.get(contactId);
+      if (contact && contact.notes) {
+        const noteIndex = contact.notes.findIndex((n) => n.id === noteId);
+        if (noteIndex >= 0) {
+          contact.notes[noteIndex].text = validatedText;
+          contact.notes[noteIndex].updatedAt = new Date().toISOString();
+          contact.updatedAt = new Date().toISOString();
+          await this.save(contact);
+        }
+      }
+    },
+
+    /** Delete a note */
+    async deleteNote(contactId: string, noteId: string): Promise<void> {
+      const contact = await this.get(contactId);
+      if (contact && contact.notes) {
+        contact.notes = contact.notes.filter((n) => n.id !== noteId);
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Add a tag to a contact */
+    async addTag(id: string, tag: string): Promise<void> {
+      const validatedTag = validateTag(tag);
+      if (!validatedTag) return; // Invalid tag
+      
+      const contact = await this.get(id);
+      if (contact) {
+        contact.tags = [...new Set([...(contact.tags || []), validatedTag])];
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Remove a tag from a contact */
+    async removeTag(id: string, tag: string): Promise<void> {
+      const contact = await this.get(id);
+      if (contact && contact.tags) {
+        contact.tags = contact.tags.filter((t) => t !== tag);
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Add a contact to a group */
+    async addToGroup(id: string, groupName: string): Promise<void> {
+      const validatedGroup = validateGroup(groupName);
+      if (!validatedGroup) return; // Invalid group name
+      
+      const contact = await this.get(id);
+      if (contact) {
+        contact.groups = [...new Set([...(contact.groups || []), validatedGroup])];
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Remove a contact from a group */
+    async removeFromGroup(id: string, groupName: string): Promise<void> {
+      const contact = await this.get(id);
+      if (contact && contact.groups) {
+        contact.groups = contact.groups.filter((g) => g !== groupName);
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
+    /** Record interaction with contact */
+    async recordInteraction(id: string): Promise<void> {
+      const contact = await this.get(id);
+      if (contact) {
+        contact.lastContactedAt = new Date().toISOString();
+        contact.contactFrequency = (contact.contactFrequency || 0) + 1;
+        contact.updatedAt = new Date().toISOString();
+        await this.save(contact);
+      }
+    },
+
     /** Save multiple contacts at once (for bulk import) */
     async saveAll(contacts: Contact[]): Promise<void> {
       await setData(KEYS.CONTACTS, contacts);
@@ -938,6 +1100,93 @@ export const db = {
       const filtered = all.filter((c) => c.id !== id);
       await setData(KEYS.CONTACTS, filtered);
     },
+
+    /** Merge duplicate contacts */
+    async merge(primaryId: string, duplicateIds: string[]): Promise<void> {
+      const primary = await this.get(primaryId);
+      if (!primary) return;
+
+      for (const dupId of duplicateIds) {
+        const duplicate = await this.get(dupId);
+        if (duplicate) {
+          // Merge phone numbers
+          primary.phoneNumbers = [...new Set([...primary.phoneNumbers, ...duplicate.phoneNumbers])];
+          // Merge emails
+          primary.emails = [...new Set([...primary.emails, ...duplicate.emails])];
+          // Merge tags
+          primary.tags = [...new Set([...(primary.tags || []), ...(duplicate.tags || [])])];
+          // Merge groups
+          primary.groups = [...new Set([...(primary.groups || []), ...(duplicate.groups || [])])];
+          // Merge notes
+          primary.notes = [...(primary.notes || []), ...(duplicate.notes || [])];
+          // Merge call history
+          primary.callHistory = [...(primary.callHistory || []), ...(duplicate.callHistory || [])];
+          // Update contact frequency
+          primary.contactFrequency = (primary.contactFrequency || 0) + (duplicate.contactFrequency || 0);
+        }
+      }
+
+      primary.updatedAt = new Date().toISOString();
+      await this.save(primary);
+
+      // Delete duplicates in batch (more efficient)
+      const all = await this.getAll();
+      const filtered = all.filter((c) => !duplicateIds.includes(c.id));
+      await setData(KEYS.CONTACTS, filtered);
+    },
+
+    /** Find potential duplicate contacts */
+    async findDuplicates(): Promise<Contact[][]> {
+      const all = await this.getAll();
+      const duplicates: Contact[][] = [];
+      const processed = new Set<string>();
+
+      for (let i = 0; i < all.length; i++) {
+        if (processed.has(all[i].id)) continue;
+
+        const group: Contact[] = [all[i]];
+        for (let j = i + 1; j < all.length; j++) {
+          if (processed.has(all[j].id)) continue;
+
+          if (arePotentialDuplicates(all[i], all[j])) {
+            group.push(all[j]);
+            processed.add(all[j].id);
+          }
+        }
+
+        if (group.length > 1) {
+          duplicates.push(group);
+          group.forEach((c) => processed.add(c.id));
+        }
+      }
+
+      return duplicates;
+    },
+
+    /** Export contacts to JSON */
+    async exportToJSON(): Promise<string> {
+      const all = await this.getAll();
+      return JSON.stringify(all, null, 2);
+    },
+
+    /** Import contacts from JSON */
+    async importFromJSON(jsonString: string): Promise<number> {
+      try {
+        const imported = JSON.parse(jsonString) as Contact[];
+        const existing = await this.getAll();
+        const existingIds = new Set(existing.map((c) => c.id));
+
+        // Only import contacts that don't already exist
+        const newContacts = imported.filter((c) => !existingIds.has(c.id));
+        if (newContacts.length > 0) {
+          await setData(KEYS.CONTACTS, [...existing, ...newContacts]);
+        }
+        return newContacts.length;
+      } catch {
+        return 0;
+      }
+    },
+
     async syncFromNative(nativeContacts: Contact[]): Promise<void> {
       const existing = await this.getAll();
       const existingMap = new Map(existing.map((c) => [c.id, c]));
@@ -949,6 +1198,13 @@ export const db = {
           ...nc,
           // Preserve app-specific fields from existing contact
           isRegistered: existingContact?.isRegistered || nc.isRegistered,
+          isFavorite: existingContact?.isFavorite || false,
+          groups: existingContact?.groups || [],
+          tags: existingContact?.tags || [],
+          notes: existingContact?.notes || [],
+          callHistory: existingContact?.callHistory || [],
+          lastContactedAt: existingContact?.lastContactedAt,
+          contactFrequency: existingContact?.contactFrequency || 0,
           // Keep original creation date if exists
           createdAt: existingContact?.createdAt || nc.createdAt,
           // Update the modified timestamp
@@ -957,6 +1213,58 @@ export const db = {
       });
 
       await this.saveAll(updated);
+    },
+  },
+
+  contactGroups: {
+    /** Get all contact groups */
+    async getAll(): Promise<ContactGroup[]> {
+      return getData(KEYS.CONTACT_GROUPS, []);
+    },
+
+    /** Get a specific contact group by ID */
+    async get(id: string): Promise<ContactGroup | null> {
+      const all = await this.getAll();
+      return all.find((g) => g.id === id) || null;
+    },
+
+    /** Create or update a contact group */
+    async save(group: ContactGroup): Promise<void> {
+      const all = await this.getAll();
+      const index = all.findIndex((g) => g.id === group.id);
+      if (index >= 0) {
+        all[index] = group;
+      } else {
+        all.push(group);
+      }
+      await setData(KEYS.CONTACT_GROUPS, all);
+    },
+
+    /** Delete a contact group */
+    async delete(id: string): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter((g) => g.id !== id);
+      await setData(KEYS.CONTACT_GROUPS, filtered);
+    },
+
+    /** Add contacts to a group */
+    async addContacts(groupId: string, contactIds: string[]): Promise<void> {
+      const group = await this.get(groupId);
+      if (group) {
+        group.contactIds = [...new Set([...group.contactIds, ...contactIds])];
+        group.updatedAt = new Date().toISOString();
+        await this.save(group);
+      }
+    },
+
+    /** Remove contacts from a group */
+    async removeContacts(groupId: string, contactIds: string[]): Promise<void> {
+      const group = await this.get(groupId);
+      if (group) {
+        group.contactIds = group.contactIds.filter((id) => !contactIds.includes(id));
+        group.updatedAt = new Date().toISOString();
+        await this.save(group);
+      }
     },
   },
 
