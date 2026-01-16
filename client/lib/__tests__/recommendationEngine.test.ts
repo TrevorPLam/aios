@@ -52,8 +52,28 @@ describe("RecommendationEngine", () => {
 
   describe("generateRecommendations", () => {
     it("should return empty array when no conditions are met", async () => {
+      // Mock current date to be a Tuesday (weekday, not weekend)
+      const tuesday = new Date("2024-01-16T10:00:00Z"); // Tuesday
+      const RealDate = Date;
+      
+      global.Date = class extends RealDate {
+        constructor(...args: any[]) {
+          if (args.length === 0) {
+            super(tuesday.getTime());
+          } else {
+            super(...args);
+          }
+        }
+        static now() {
+          return tuesday.getTime();
+        }
+      } as any;
+      
       const recommendations = await RecommendationEngine.generateRecommendations();
       expect(recommendations).toEqual([]);
+      
+      // Restore original Date
+      global.Date = RealDate;
     });
 
     it("should generate meeting notes recommendation for recent events", async () => {
@@ -263,7 +283,21 @@ describe("RecommendationEngine", () => {
     it("should generate weekly reflection on weekends", async () => {
       // Mock current date to be a Saturday
       const saturday = new Date("2024-01-20T10:00:00Z"); // Saturday
-      jest.spyOn(global, "Date").mockImplementation(() => saturday as any);
+      const RealDate = Date;
+      
+      // Mock Date constructor to return our saturday date
+      global.Date = class extends RealDate {
+        constructor(...args: any[]) {
+          if (args.length === 0) {
+            super(saturday.getTime());
+          } else {
+            super(...args);
+          }
+        }
+        static now() {
+          return saturday.getTime();
+        }
+      } as any;
 
       (db.notes.getAll as jest.Mock).mockResolvedValue([]);
 
@@ -275,7 +309,8 @@ describe("RecommendationEngine", () => {
       expect(reflectionRec).toBeDefined();
       expect(reflectionRec?.module).toBe("notebook");
 
-      jest.restoreAllMocks();
+      // Restore original Date
+      global.Date = RealDate;
     });
 
     it("should generate deadline alert for upcoming tasks", async () => {
@@ -540,6 +575,23 @@ describe("RecommendationEngine", () => {
 
   describe("Error handling", () => {
     it("should handle database errors gracefully", async () => {
+      // Mock current date to be a Tuesday (weekday, not weekend)
+      const tuesday = new Date("2024-01-16T10:00:00Z"); // Tuesday
+      const RealDate = Date;
+      
+      global.Date = class extends RealDate {
+        constructor(...args: any[]) {
+          if (args.length === 0) {
+            super(tuesday.getTime());
+          } else {
+            super(...args);
+          }
+        }
+        static now() {
+          return tuesday.getTime();
+        }
+      } as any;
+      
       (db.notes.getAll as jest.Mock).mockRejectedValue(
         new Error("Database error"),
       );
@@ -548,6 +600,9 @@ describe("RecommendationEngine", () => {
 
       // Should return empty array instead of throwing
       expect(recommendations).toEqual([]);
+      
+      // Restore original Date
+      global.Date = RealDate;
     });
 
     it("should continue processing other rules if one fails", async () => {
