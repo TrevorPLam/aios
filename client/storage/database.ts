@@ -738,6 +738,70 @@ export const db = {
       const filtered = all.filter((entry) => entry.alertId !== alertId);
       await setData(KEYS.ALERT_HISTORY, filtered);
     },
+
+    /**
+     * Get smart snooze duration recommendation based on history
+     * Analyzes past snooze patterns to suggest optimal snooze duration
+     * 
+     * Algorithm:
+     * 1. If no history: return 10 min (default)
+     * 2. If user never snoozes: return 5 min (disciplined user)
+     * 3. Otherwise: calculate average snooze duration per instance
+     *    - avgTotalDuration = total snooze time / number of snoozed alerts
+     *    - avgCount = total snoozes / number of snoozed alerts  
+     *    - estimatedOptimal = avgTotalDuration / avgCount
+     * 4. Round to nearest valid option (5, 10, 15, 30, 60)
+     *
+     * @param {string} alertId - The alert ID
+     * @returns {Promise<number>} Recommended snooze duration in minutes
+     * 
+     * @example
+     * // User consistently snoozes 2x at 15min each = 30min total
+     * // Returns: 15 (optimal per-snooze duration)
+     */
+    async getSmartSnoozeSuggestion(alertId: string): Promise<number> {
+      const entries = await this.getByAlert(alertId);
+      
+      // Default to 10 minutes if no history
+      if (entries.length === 0) {
+        return 10;
+      }
+
+      // Filter entries where snoozing occurred
+      const snoozedEntries = entries.filter((entry) => entry.snoozeCount > 0);
+      
+      if (snoozedEntries.length === 0) {
+        // If user never snoozes, suggest shorter duration
+        return 5;
+      }
+
+      // Calculate average total snooze duration per entry
+      const avgTotalSnoozeDuration =
+        snoozedEntries.reduce(
+          (sum, entry) => sum + entry.totalSnoozeDuration,
+          0
+        ) / snoozedEntries.length;
+
+      // Calculate average snooze count
+      const avgSnoozeCount =
+        snoozedEntries.reduce((sum, entry) => sum + entry.snoozeCount, 0) /
+        snoozedEntries.length;
+
+      // Estimate optimal single snooze duration with defensive check
+      const estimatedOptimal = avgSnoozeCount > 0
+        ? avgTotalSnoozeDuration / avgSnoozeCount
+        : 10; // Default fallback if somehow avgSnoozeCount is 0
+
+      // Round to nearest valid snooze option: 5, 10, 15, 30, or 60 minutes
+      const validOptions = [5, 10, 15, 30, 60];
+      const closest = validOptions.reduce((prev, curr) =>
+        Math.abs(curr - estimatedOptimal) < Math.abs(prev - estimatedOptimal)
+          ? curr
+          : prev
+      );
+
+      return closest;
+    },
   },
 
   messages: {
