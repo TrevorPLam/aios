@@ -189,26 +189,271 @@ export const db = {
     },
   },
 
+  /**
+   * Tasks Module
+   *
+   * Manages task storage operations with support for hierarchical tasks,
+   * filtering, searching, and statistics tracking.
+   */
   tasks: {
+    /**
+     * Get all tasks from storage
+     *
+     * @returns {Promise<Task[]>} Array of all tasks
+     */
     async getAll(): Promise<Task[]> {
       return getData(KEYS.TASKS, []);
     },
+
+    /**
+     * Get a specific task by ID
+     *
+     * @param {string} id - The task ID
+     * @returns {Promise<Task | null>} The task if found, null otherwise
+     */
     async get(id: string): Promise<Task | null> {
       const all = await this.getAll();
       return all.find((t) => t.id === id) || null;
     },
+
+    /**
+     * Get all top-level tasks (tasks without parent)
+     *
+     * @returns {Promise<Task[]>} Array of top-level tasks
+     */
     async getTopLevel(): Promise<Task[]> {
       const all = await this.getAll();
       return all.filter((t) => !t.parentTaskId);
     },
+
+    /**
+     * Get all subtasks for a given parent task
+     *
+     * @param {string} parentId - The parent task ID
+     * @returns {Promise<Task[]>} Array of subtasks
+     */
     async getSubtasks(parentId: string): Promise<Task[]> {
       const all = await this.getAll();
       return all.filter((t) => t.parentTaskId === parentId);
     },
+
+    /**
+     * Check if a task has any subtasks
+     *
+     * @param {string} taskId - The task ID to check
+     * @returns {Promise<boolean>} True if task has subtasks, false otherwise
+     */
     async hasSubtasks(taskId: string): Promise<boolean> {
       const all = await this.getAll();
       return all.some((t) => t.parentTaskId === taskId);
     },
+
+    /**
+     * Search tasks by title or user notes (case-insensitive)
+     *
+     * @param {string} query - Search query string
+     * @returns {Promise<Task[]>} Array of matching tasks
+     */
+    async search(query: string): Promise<Task[]> {
+      const all = await this.getAll();
+      const lowerQuery = query.toLowerCase();
+      return all.filter(
+        (t) =>
+          t.title.toLowerCase().includes(lowerQuery) ||
+          t.userNotes.toLowerCase().includes(lowerQuery)
+      );
+    },
+
+    /**
+     * Filter tasks by status
+     *
+     * @param {TaskStatus} status - The status to filter by
+     * @returns {Promise<Task[]>} Array of tasks with matching status
+     */
+    async getByStatus(status: TaskStatus): Promise<Task[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.status === status);
+    },
+
+    /**
+     * Filter tasks by priority
+     *
+     * @param {TaskPriority} priority - The priority to filter by
+     * @returns {Promise<Task[]>} Array of tasks with matching priority
+     */
+    async getByPriority(priority: TaskPriority): Promise<Task[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.priority === priority);
+    },
+
+    /**
+     * Filter tasks by project
+     *
+     * @param {string} projectId - The project ID to filter by
+     * @returns {Promise<Task[]>} Array of tasks in the specified project
+     */
+    async getByProject(projectId: string): Promise<Task[]> {
+      const all = await this.getAll();
+      return all.filter((t) => t.projectId === projectId);
+    },
+
+    /**
+     * Get overdue tasks (due date in the past and not completed)
+     *
+     * @returns {Promise<Task[]>} Array of overdue tasks
+     */
+    async getOverdue(): Promise<Task[]> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      return all.filter(
+        (t) =>
+          t.dueDate &&
+          t.dueDate < now &&
+          t.status !== "completed" &&
+          t.status !== "cancelled"
+      );
+    },
+
+    /**
+     * Get tasks due today
+     *
+     * @returns {Promise<Task[]>} Array of tasks due today
+     */
+    async getDueToday(): Promise<Task[]> {
+      const all = await this.getAll();
+      const today = new Date().toISOString().split("T")[0];
+      return all.filter((t) => t.dueDate && t.dueDate.startsWith(today));
+    },
+
+    /**
+     * Get tasks due within the next N days
+     *
+     * @param {number} days - Number of days to look ahead
+     * @returns {Promise<Task[]>} Array of tasks due in the specified period
+     */
+    async getDueInDays(days: number): Promise<Task[]> {
+      const all = await this.getAll();
+      const now = new Date();
+      const future = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+      const futureISO = future.toISOString();
+      const nowISO = now.toISOString();
+
+      return all.filter(
+        (t) =>
+          t.dueDate &&
+          t.dueDate >= nowISO &&
+          t.dueDate <= futureISO &&
+          t.status !== "completed" &&
+          t.status !== "cancelled"
+      );
+    },
+
+    /**
+     * Get task statistics for dashboard display
+     *
+     * @returns {Promise<object>} Object containing task statistics
+     */
+    async getStatistics(): Promise<{
+      total: number;
+      completed: number;
+      inProgress: number;
+      pending: number;
+      overdue: number;
+      dueToday: number;
+      dueThisWeek: number;
+      highPriority: number;
+      urgent: number;
+    }> {
+      const all = await this.getAll();
+      const now = new Date().toISOString();
+      const today = now.split("T")[0];
+      const weekFromNow = new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000
+      ).toISOString();
+
+      return {
+        total: all.length,
+        completed: all.filter((t) => t.status === "completed").length,
+        inProgress: all.filter((t) => t.status === "in_progress").length,
+        pending: all.filter((t) => t.status === "pending").length,
+        overdue: all.filter(
+          (t) =>
+            t.dueDate &&
+            t.dueDate < now &&
+            t.status !== "completed" &&
+            t.status !== "cancelled"
+        ).length,
+        dueToday: all.filter((t) => t.dueDate && t.dueDate.startsWith(today))
+          .length,
+        dueThisWeek: all.filter(
+          (t) =>
+            t.dueDate &&
+            t.dueDate >= now &&
+            t.dueDate <= weekFromNow &&
+            t.status !== "completed" &&
+            t.status !== "cancelled"
+        ).length,
+        highPriority: all.filter((t) => t.priority === "high").length,
+        urgent: all.filter((t) => t.priority === "urgent").length,
+      };
+    },
+
+    /**
+     * Get completion percentage for a parent task based on subtask completion
+     *
+     * @param {string} parentId - The parent task ID
+     * @returns {Promise<number>} Completion percentage (0-100)
+     */
+    async getSubtaskProgress(parentId: string): Promise<number> {
+      const subtasks = await this.getSubtasks(parentId);
+      if (subtasks.length === 0) return 0;
+
+      const completedCount = subtasks.filter(
+        (t) => t.status === "completed"
+      ).length;
+      return Math.round((completedCount / subtasks.length) * 100);
+    },
+
+    /**
+     * Bulk update task status
+     *
+     * @param {string[]} taskIds - Array of task IDs to update
+     * @param {TaskStatus} status - The new status
+     * @returns {Promise<void>}
+     */
+    async bulkUpdateStatus(
+      taskIds: string[],
+      status: TaskStatus
+    ): Promise<void> {
+      const all = await this.getAll();
+      const updated = all.map((t) =>
+        taskIds.includes(t.id)
+          ? { ...t, status, updatedAt: new Date().toISOString() }
+          : t
+      );
+      await setData(KEYS.TASKS, updated);
+    },
+
+    /**
+     * Bulk delete tasks
+     *
+     * @param {string[]} taskIds - Array of task IDs to delete
+     * @returns {Promise<void>}
+     */
+    async bulkDelete(taskIds: string[]): Promise<void> {
+      const all = await this.getAll();
+      const filtered = all.filter(
+        (t) => !taskIds.includes(t.id) && !taskIds.includes(t.parentTaskId || "")
+      );
+      await setData(KEYS.TASKS, filtered);
+    },
+
+    /**
+     * Save or update a task
+     *
+     * @param {Task} task - The task to save
+     * @returns {Promise<void>}
+     */
     async save(task: Task): Promise<void> {
       const all = await this.getAll();
       const index = all.findIndex((t) => t.id === task.id);
@@ -219,6 +464,13 @@ export const db = {
       }
       await setData(KEYS.TASKS, all);
     },
+
+    /**
+     * Delete a task and all its subtasks (cascade delete)
+     *
+     * @param {string} id - The task ID to delete
+     * @returns {Promise<void>}
+     */
     async delete(id: string): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter((t) => t.id !== id && t.parentTaskId !== id);
