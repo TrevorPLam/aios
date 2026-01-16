@@ -117,13 +117,7 @@ export function QuickCaptureOverlay({
       icon: 'dollar-sign',
       label: 'Expense',
       color: Colors.error,
-      // Note: Budget mini-mode not yet implemented
-      handler: () => {
-        if (Platform.OS !== 'web') {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-        }
-        alert('Budget mini-mode coming soon!');
-      },
+      miniModeModule: 'budget', // Now implemented!
     },
     {
       id: 'photo',

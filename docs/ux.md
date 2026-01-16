@@ -546,6 +546,29 @@ No Context Loss
 
 ## Implementation Status
 
+### ✅ Implemented (Phase 3)
+- **Module Handoff System** (`client/lib/moduleHandoff.ts`)
+  - State-preserving navigation between modules
+  - iOS-specific AsyncStorage persistence
+  - Breadcrumb navigation UI with blur backdrop
+  - Depth limiting (max 5 levels)
+  - Circular handoff prevention
+  - 22/22 tests passing
+
+- **Mini-Mode Extensions** (`client/components/miniModes/`)
+  - Budget Mini-Mode for quick expense tracking
+  - Contacts Mini-Mode for contact selection
+  - iOS-native keyboards and haptics
+  - Quick Capture integration
+  - Total: 5 mini-modes available
+
+- **Handoff Breadcrumb UI** (`client/components/HandoffBreadcrumb.tsx`)
+  - Full breadcrumb with back button
+  - Compact breadcrumb for headers
+  - iOS BlurView backdrop
+  - Safe area inset handling
+  - Native haptic feedback
+
 ### ✅ Implemented (Phase 2)
 - **Progressive Onboarding System** (`client/lib/onboardingManager.ts`)
   - 3-module initial selection with auto-unlock
@@ -574,24 +597,196 @@ No Context Loss
 - **Module Registry** - Core system complete, needs usage tracking UI
 - **Event Bus** - Complete and tested (19/19 tests)
 
-### ⏳ Planned (Phase 3)
+### ⏳ Planned (Phase 3 Remaining)
+- **Status-Aware UI** - Urgency-based visual system
+- **Performance Optimization** - Lazy loading and prefetch
 - **Command Center UI** - Recommendation display screen
 - **Attention Center UI** - Notification management screen  
 - **Onboarding Screens** - Module selection and welcome flow
-- **Mini-Mode Pattern** - Inline module instances
-- **Module Handoff** - Breadcrumb navigation
-- **Quick Capture Overlay** - Universal capture interface
 - **Predictive Prefetch** - Background module loading
+
+---
+
+## Module Handoff User Flows (Phase 3)
+
+### Flow 1: Calendar → Maps (Get Directions)
+
+**Plain English:**  
+User sees "Dinner at 7pm at Downtown Restaurant" in Calendar. Taps "Directions" button. Maps opens with destination pre-filled. When done, taps back arrow to return to Calendar with original scroll position preserved.
+
+**Technical Flow:**
+```
+User in: CalendarScreen
+  Current State: { scrollY: 500, date: '2026-01-16', view: 'week' }
+  ↓
+User taps: "Get Directions" on event
+  ↓
+Handoff Manager: startHandoff()
+  From: { moduleId: 'calendar', state: { scrollY: 500, ... } }
+  To: { moduleId: 'maps', state: { destination: 'Downtown Restaurant' } }
+  ↓
+Navigation: push MapsScreen
+  ↓
+MapsScreen opens with:
+  - Breadcrumb shows: "← Calendar    Calendar › Maps"
+  - Destination pre-filled: "Downtown Restaurant"
+  - User plans route
+  ↓
+User taps: Breadcrumb back button or system back
+  ↓
+Handoff Manager: returnFromHandoff({ selectedRoute: 'Route A' })
+  Returns: { moduleState: { scrollY: 500, date: '2026-01-16', ... } }
+  ↓
+Navigation: pop MapsScreen
+  ↓
+CalendarScreen restores:
+  - Scroll position to Y=500
+  - Date selection to '2026-01-16'
+  - View mode to 'week'
+  - Optional: Shows toast "Directions saved for event"
+```
+
+### Flow 2: Messages → Calendar → Food (Dinner Plans)
+
+**Plain English:**  
+Friend texts "Dinner at 7?" User taps inline calendar icon, picks time, then taps food icon, picks restaurant. All without leaving Messages. Returns to chat with summary card.
+
+**Technical Flow:**
+```
+User in: MessagesScreen (Conversation with Sarah)
+  ↓
+User taps: Calendar icon in message compose bar
+  ↓
+Mini-Mode: Opens CalendarMiniMode
+  - Shows inline form for quick event creation
+  - Pre-fills: title="Dinner with Sarah", time=7pm
+  ↓
+User completes: Creates event "Dinner with Sarah at 7pm"
+  ↓
+Mini-Mode: Closes, returns { action: 'created', data: { eventId } }
+  ↓
+User taps: Food icon for restaurant
+  ↓
+Handoff Manager: startHandoff()
+  From: { moduleId: 'messages', state: { conversationId, scrollY } }
+  To: { moduleId: 'food', state: { searchQuery: 'dinner', time: '7pm' } }
+  ↓
+FoodScreen opens with:
+  - Breadcrumb: "← Messages    Messages › Food"
+  - Search pre-filled: "dinner"
+  - Time filter: 7pm
+  ↓
+User selects: Downtown Restaurant
+  ↓
+User taps: "Done" or back button
+  ↓
+Handoff Manager: returnFromHandoff({ restaurant: { name, address } })
+  ↓
+MessagesScreen restores:
+  - Scroll position preserved
+  - Conversation in view
+  - Shows summary card: "Dinner at Downtown Restaurant, 7pm"
+```
+
+### Flow 3: Deep Chain (Calendar → Maps → Food → Wallet)
+
+**Plain English:**  
+User creates event → Gets directions → Books restaurant → Sets up bill split. Each step remembers previous context.
+
+**Technical Flow:**
+```
+Chain: Calendar → Maps → Food → Wallet
+
+Step 1: Calendar → Maps
+Breadcrumb: "← Calendar    Calendar › Maps"
+State: calendar={ scrollY: 500 }
+
+Step 2: Maps → Food
+Breadcrumb: "← Maps    Calendar › Maps › Food"
+State: calendar={ scrollY: 500 }, maps={ zoom: 15, route: 'A' }
+
+Step 3: Food → Wallet
+Breadcrumb: "← Food    Calendar › Maps › Food › Wallet"
+State: calendar={ ... }, maps={ ... }, food={ restaurant: 'X' }
+
+Return Flow:
+  Wallet → Food: Restores food={ restaurant: 'X' }
+  Food → Maps: Restores maps={ zoom: 15, route: 'A' }
+  Maps → Calendar: Restores calendar={ scrollY: 500 }
+```
+
+**Depth Limit Enforcement:**
+- Max 5 levels: Calendar → Maps → Food → Wallet → Messages
+- 6th handoff rejected with warning
+- User must complete or cancel current chain first
+
+### Flow 4: Handoff Cancellation (Error Recovery)
+
+**Plain English:**  
+User deep in a handoff chain (Calendar → Maps → Food) encounters error. Taps "Cancel All" to return to Calendar instantly.
+
+**Technical Flow:**
+```
+Current Chain: Calendar → Maps → Food
+User in: FoodScreen (3 levels deep)
+  ↓
+Error occurs: Restaurant data fails to load
+  ↓
+User taps: "Cancel" or system error dialog "Return to Calendar"
+  ↓
+Handoff Manager: cancelHandoff()
+  - Skips Maps screen
+  - Directly returns to Calendar
+  - Restores original Calendar state
+  ↓
+CalendarScreen restores:
+  - Exact state from before handoff started
+  - No data from Maps or Food
+```
+
+### iOS-Specific UX Details
+
+1. **Breadcrumb Appearance**
+   - iOS blur backdrop (like Safari tab bar)
+   - 44pt height (standard nav bar)
+   - Safe area aware (notch, dynamic island)
+   - Haptic feedback on tap
+
+2. **Animations**
+   - Native iOS push/pop transitions
+   - Card modal style for secondary handoffs
+   - Smooth 300ms spring animations
+
+3. **Gestures**
+   - Left edge swipe to go back (iOS standard)
+   - Breadcrumb back button (explicit alternative)
+   - Both trigger same handoff return
+
+4. **State Restoration**
+   - Automatic on app backgrounding
+   - Persists through app termination
+   - Cleared on logout/sign-out
+
+### Handoff UX Principles
+
+1. **Always Show Path**: Breadcrumb must be visible in handoff
+2. **One Tap Return**: Back button clearly labeled with destination
+3. **State Preserved**: Scroll, filters, selections all saved
+4. **Depth Limited**: Max 5 to prevent disorientation
+5. **Escape Hatch**: Cancel returns to root immediately
+6. **Visual Feedback**: Haptics + animations confirm transitions
+7. **Accessible**: VoiceOver announces path, keyboard navigable
 
 ---
 
 ## Testing Coverage
 
-All Phase 2 components have comprehensive unit tests:
-- `client/lib/__tests__/onboardingManager.test.ts` - 29 tests
-- `client/lib/__tests__/attentionManager.test.ts` - 25 tests
-- `client/lib/__tests__/recommendationEngine.test.ts` - 17 tests
-- `client/lib/__tests__/eventBus.test.ts` - 19 tests
+All Phase 2 & 3 components have comprehensive unit tests:
+- `client/lib/__tests__/moduleHandoff.test.ts` - 22 tests ✅
+- `client/lib/__tests__/onboardingManager.test.ts` - 29 tests ✅
+- `client/lib/__tests__/attentionManager.test.ts` - 25 tests ✅
+- `client/lib/__tests__/recommendationEngine.test.ts` - 17 tests ✅
+- `client/lib/__tests__/eventBus.test.ts` - 19 tests ✅
 
-**Total Phase 1 & 2:** 90/90 tests passing (100% pass rate)
+**Total Phase 1, 2 & 3:** 112/112 tests passing (100% pass rate)
 

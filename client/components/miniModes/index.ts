@@ -23,6 +23,8 @@ import { miniModeRegistry, MiniModeProvider } from '../../lib/miniMode';
 import { CalendarMiniMode } from './CalendarMiniMode';
 import { TaskMiniMode } from './TaskMiniMode';
 import { NoteMiniMode } from './NoteMiniMode';
+import { BudgetMiniMode } from './BudgetMiniMode';
+import { ContactsMiniMode } from './ContactsMiniMode';
 
 /**
  * All available mini-mode providers
@@ -48,6 +50,18 @@ const miniModeProviders: MiniModeProvider[] = [
     displayName: 'Note',
     description: 'Quickly capture a note',
     component: NoteMiniMode,
+  },
+  {
+    id: 'budget',
+    displayName: 'Transaction',
+    description: 'Quickly log an expense or income',
+    component: BudgetMiniMode,
+  },
+  {
+    id: 'contacts',
+    displayName: 'Contact',
+    description: 'Quickly select a contact',
+    component: ContactsMiniMode,
   },
 ];
 
@@ -99,3 +113,5 @@ export function unregisterAllMiniModes(): void {
 export { CalendarMiniMode } from './CalendarMiniMode';
 export { TaskMiniMode } from './TaskMiniMode';
 export { NoteMiniMode } from './NoteMiniMode';
+export { BudgetMiniMode } from './BudgetMiniMode';
+export { ContactsMiniMode } from './ContactsMiniMode';
