@@ -23,6 +23,13 @@ describe("Translations Database", () => {
     (AsyncStorage.multiRemove as jest.Mock).mockResolvedValue(undefined);
   });
 
+  const mockStorage = (data: Record<string, unknown>): void => {
+    (AsyncStorage.getItem as jest.Mock).mockImplementation((key: string) => {
+      const value = data[key];
+      return Promise.resolve(value ? JSON.stringify(value) : null);
+    });
+  };
+
   describe("Basic CRUD Operations", () => {
     test("getAll returns empty array when no translations exist", async () => {
       const translations = await db.translations.getAll();
@@ -459,6 +466,90 @@ describe("Translations Database", () => {
       expect(stats.mostUsedTargetLang).toBe("es");
     });
   });
+
+  describe("Retention Policy", () => {
+    test("applyRetentionPolicy trims history to max entries", async () => {
+      const translations: Translation[] = [
+        {
+          id: "trans-1",
+          sourceText: "One",
+          targetText: "Uno",
+          sourceLang: "en",
+          targetLang: "es",
+          createdAt: "2024-01-01T00:00:00.000Z",
+          characterCount: 3,
+        },
+        {
+          id: "trans-2",
+          sourceText: "Two",
+          targetText: "Dos",
+          sourceLang: "en",
+          targetLang: "es",
+          createdAt: "2024-02-01T00:00:00.000Z",
+          characterCount: 3,
+        },
+        {
+          id: "trans-3",
+          sourceText: "Three",
+          targetText: "Tres",
+          sourceLang: "en",
+          targetLang: "es",
+          createdAt: "2024-03-01T00:00:00.000Z",
+          characterCount: 5,
+        },
+      ];
+
+      mockStorage({ "@aios/translations": translations });
+
+      await db.translations.applyRetentionPolicy({
+        maxEntries: 1,
+        maxAgeDays: null,
+        keepFavorites: false,
+      });
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "@aios/translations",
+        JSON.stringify([translations[2]]),
+      );
+    });
+
+    test("applyRetentionPolicy preserves favorites when configured", async () => {
+      const translations: Translation[] = [
+        {
+          id: "trans-1",
+          sourceText: "Hello",
+          targetText: "Hola",
+          sourceLang: "en",
+          targetLang: "es",
+          createdAt: "2024-01-01T00:00:00.000Z",
+          characterCount: 5,
+          isFavorite: true,
+        },
+        {
+          id: "trans-2",
+          sourceText: "Goodbye",
+          targetText: "Adiós",
+          sourceLang: "en",
+          targetLang: "es",
+          createdAt: "2024-01-02T00:00:00.000Z",
+          characterCount: 7,
+        },
+      ];
+
+      mockStorage({ "@aios/translations": translations });
+
+      await db.translations.applyRetentionPolicy({
+        maxEntries: 1,
+        maxAgeDays: null,
+        keepFavorites: true,
+      });
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "@aios/translations",
+        JSON.stringify([translations[0]]),
+      );
+    });
+  });
 });
 
 describe("Saved Phrases Database", () => {
@@ -496,6 +587,7 @@ describe("Saved Phrases Database", () => {
         phrase: "Where is the bathroom?",
         sourceLang: "en",
         category: "travel",
+        tags: [],
         usageCount: 5,
         createdAt: new Date().toISOString(),
         lastUsedAt: new Date().toISOString(),
@@ -594,6 +686,7 @@ describe("Saved Phrases Database", () => {
         phrase: "Where is the train station?",
         sourceLang: "en",
         category: "travel",
+        tags: ["transport", "help"],
         usageCount: 3,
         createdAt: new Date().toISOString(),
         lastUsedAt: new Date().toISOString(),
@@ -603,6 +696,7 @@ describe("Saved Phrases Database", () => {
         phrase: "I would like a coffee",
         sourceLang: "en",
         category: "food",
+        tags: ["drink"],
         usageCount: 8,
         createdAt: new Date().toISOString(),
         lastUsedAt: new Date().toISOString(),
@@ -612,6 +706,7 @@ describe("Saved Phrases Database", () => {
         phrase: "How much does it cost?",
         sourceLang: "en",
         category: "shopping",
+        tags: ["money"],
         usageCount: 5,
         createdAt: new Date().toISOString(),
         lastUsedAt: new Date().toISOString(),
@@ -665,6 +760,26 @@ describe("Saved Phrases Database", () => {
       const results = await db.savedPhrases.search("food");
       expect(results).toHaveLength(1);
       expect(results[0].category).toBe("food");
+    });
+
+    test("getByTag filters phrases by tag", async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(mockPhrases),
+      );
+
+      const results = await db.savedPhrases.getByTag("transport");
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe("phrase-1");
+    });
+
+    test("search finds phrases by tag", async () => {
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(mockPhrases),
+      );
+
+      const results = await db.savedPhrases.search("money");
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe("phrase-3");
     });
   });
 

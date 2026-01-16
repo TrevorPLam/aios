@@ -6,6 +6,7 @@ import {
   Task,
   Project,
   CalendarEvent,
+  CalendarReminderTrigger,
   Settings,
   HistoryLogEntry,
   AILimits,
@@ -23,14 +24,18 @@ import {
   Integration,
   AlertHistoryEntry,
   AlertStatistics,
+  AlertTrigger,
   ContactGroup,
   EmailThread,
   EmailMessage,
   Translation,
   SavedPhrase,
   TranslationStatistics,
+  TranslationRetentionPolicy,
   ModuleType,
   TaskPriority,
+  HistoryExportSchedule,
+  HistoryExportFrequency,
 } from "@/models/types";
 import { generateId } from "@/utils/helpers";
 import {
@@ -68,6 +73,8 @@ const KEYS = {
   EMAIL_THREADS: "@aios/email_threads",
   TRANSLATIONS: "@aios/translations",
   SAVED_PHRASES: "@aios/saved_phrases",
+  HISTORY_EXPORT_SCHEDULE: "@aios/history_export_schedule",
+  TRANSLATION_RETENTION: "@aios/translation_retention",
 };
 
 async function getData<T>(key: string, defaultValue: T): Promise<T> {
@@ -94,6 +101,41 @@ async function setData<T>(key: string, value: T): Promise<void> {
  * These utilities support AI-assisted iteration by documenting intent and flow.
  */
 const MESSAGE_PREVIEW_LIMIT = 80;
+const DEFAULT_HISTORY_EXPORT_SCHEDULE: HistoryExportSchedule = {
+  enabled: false,
+  frequency: "weekly",
+  lastExportAt: null,
+  nextExportAt: null,
+  format: "json",
+};
+const DEFAULT_TRANSLATION_RETENTION_POLICY: TranslationRetentionPolicy = {
+  maxEntries: 250,
+  maxAgeDays: 90,
+  keepFavorites: true,
+};
+
+function normalizeTranslationRetentionPolicy(
+  policy: TranslationRetentionPolicy | null,
+): TranslationRetentionPolicy {
+  if (!policy || typeof policy !== "object" || Array.isArray(policy)) {
+    return DEFAULT_TRANSLATION_RETENTION_POLICY;
+  }
+
+  return {
+    maxEntries:
+      Number.isFinite(policy.maxEntries) && policy.maxEntries > 0
+        ? policy.maxEntries
+        : DEFAULT_TRANSLATION_RETENTION_POLICY.maxEntries,
+    maxAgeDays:
+      policy.maxAgeDays === null || Number.isFinite(policy.maxAgeDays)
+        ? policy.maxAgeDays
+        : DEFAULT_TRANSLATION_RETENTION_POLICY.maxAgeDays,
+    keepFavorites:
+      typeof policy.keepFavorites === "boolean"
+        ? policy.keepFavorites
+        : DEFAULT_TRANSLATION_RETENTION_POLICY.keepFavorites,
+  };
+}
 
 function buildMessagePreview(content: string): string {
   const trimmed = content.trim();
@@ -109,6 +151,158 @@ function buildMessageSearchIndex(message: Message): string {
   return [message.content, message.senderName, ...attachmentTokens]
     .join(" ")
     .toLowerCase();
+}
+
+/**
+ * Calendar recurrence helpers
+ *
+ * Centralizes recurring expansion logic for planner-friendly scheduling hooks.
+ * These utilities stay UI-neutral while enabling downstream reminders.
+ */
+const OCCURRENCE_ID_DELIMITER = "::";
+
+function toDateKey(date: Date): string {
+  return date.toISOString().split("T")[0];
+}
+
+function toOccurrenceId(eventId: string, dateKey: string): string {
+  return `${eventId}${OCCURRENCE_ID_DELIMITER}${dateKey}`;
+}
+
+function applyEventOverride(
+  event: CalendarEvent,
+  dateKey: string,
+): CalendarEvent {
+  const override = event.overrides[dateKey];
+  if (!override) return event;
+  return {
+    ...event,
+    ...override,
+  };
+}
+
+function buildRecurringOccurrences(
+  event: CalendarEvent,
+  startDate: Date,
+  endDate: Date,
+): CalendarEvent[] {
+  if (event.recurrenceRule === "none" || event.recurrenceRule === "custom") {
+    return [];
+  }
+
+  const occurrences: CalendarEvent[] = [];
+  const exceptions = event.exceptions || [];
+  const overrides = event.overrides || {};
+  const cursor = new Date(event.startAt);
+  const rangeStart = new Date(startDate);
+  const rangeEnd = new Date(endDate);
+
+  if (cursor > rangeEnd) return [];
+
+  const advanceCursor = (): void => {
+    switch (event.recurrenceRule) {
+      case "daily":
+        cursor.setDate(cursor.getDate() + 1);
+        break;
+      case "weekly":
+        cursor.setDate(cursor.getDate() + 7);
+        break;
+      case "monthly":
+        cursor.setMonth(cursor.getMonth() + 1);
+        break;
+      default:
+        cursor.setDate(cursor.getDate() + 1);
+        break;
+    }
+  };
+
+  while (cursor <= rangeEnd) {
+    if (cursor >= rangeStart) {
+      const dateKey = toDateKey(cursor);
+      if (!exceptions.includes(dateKey)) {
+        const overridden = applyEventOverride({ ...event, overrides }, dateKey);
+        const instanceStart = new Date(overridden.startAt);
+        const instanceEnd = new Date(overridden.endAt);
+        const timeDelta =
+          new Date(overridden.endAt).getTime() -
+          new Date(overridden.startAt).getTime();
+
+        instanceStart.setUTCFullYear(
+          cursor.getUTCFullYear(),
+          cursor.getUTCMonth(),
+          cursor.getUTCDate(),
+        );
+        instanceEnd.setTime(instanceStart.getTime() + timeDelta);
+
+        occurrences.push({
+          ...overridden,
+          id: toOccurrenceId(event.id, dateKey),
+          recurrenceInstanceOf: event.id,
+          startAt: instanceStart.toISOString(),
+          endAt: instanceEnd.toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      }
+    }
+    advanceCursor();
+  }
+
+  return occurrences;
+}
+
+/**
+ * Alert scheduling helpers
+ *
+ * Provides non-UI scheduling hooks for notifications.
+ */
+function getNextAlertTrigger(
+  alert: Alert,
+  after: Date = new Date(),
+): string | null {
+  const baseTime = new Date(alert.time);
+  if (alert.recurrenceRule === "none") {
+    return baseTime > after ? baseTime.toISOString() : null;
+  }
+
+  const candidate = new Date(baseTime);
+
+  while (candidate <= after) {
+    switch (alert.recurrenceRule) {
+      case "daily":
+        candidate.setDate(candidate.getDate() + 1);
+        break;
+      case "weekly":
+        candidate.setDate(candidate.getDate() + 7);
+        break;
+      case "monthly":
+        candidate.setMonth(candidate.getMonth() + 1);
+        break;
+      default:
+        candidate.setDate(candidate.getDate() + 1);
+        break;
+    }
+  }
+
+  return candidate.toISOString();
+}
+
+function buildHistoryExportNextAt(
+  frequency: HistoryExportFrequency,
+  from: Date,
+): Date {
+  const next = new Date(from);
+  switch (frequency) {
+    case "daily":
+      next.setDate(next.getDate() + 1);
+      break;
+    case "weekly":
+      next.setDate(next.getDate() + 7);
+      break;
+    case "monthly":
+      next.setMonth(next.getMonth() + 1);
+      break;
+  }
+  return next;
 }
 
 export const db = {
@@ -1196,6 +1390,72 @@ export const db = {
     },
 
     /**
+     * Expand recurring events into concrete instances within a date range.
+     * Designed as a scheduling hook for reminder pipelines.
+     *
+     * @param {string} startDate - ISO 8601 date string for range start
+     * @param {string} endDate - ISO 8601 date string for range end
+     * @returns {Promise<CalendarEvent[]>} Base events + recurring instances
+     */
+    async getExpandedForDateRange(
+      startDate: string,
+      endDate: string,
+    ): Promise<CalendarEvent[]> {
+      const baseEvents = await this.getForDateRange(startDate, endDate);
+      const nonRecurring = baseEvents.filter(
+        (event) => event.recurrenceRule === "none",
+      );
+      const recurringEvents = await this.getRecurring();
+      const rangeStart = new Date(startDate);
+      const rangeEnd = new Date(endDate);
+
+      const expanded = recurringEvents.flatMap((event) =>
+        buildRecurringOccurrences(event, rangeStart, rangeEnd),
+      );
+
+      return [...nonRecurring, ...expanded].sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
+      );
+    },
+
+    /**
+     * Build reminder triggers for a given event.
+     * Defaults to event.reminderMinutes or an empty array.
+     *
+     * @param {CalendarEvent} event - Event to schedule reminders for
+     * @returns {CalendarReminderTrigger[]} Reminder trigger definitions
+     */
+    getReminderSchedule(event: CalendarEvent): CalendarReminderTrigger[] {
+      const offsets = event.reminderMinutes ?? [];
+
+      return offsets
+        .filter((minutes) => minutes > 0)
+        .map((minutes) => {
+          const reminderAt = new Date(event.startAt);
+          reminderAt.setMinutes(reminderAt.getMinutes() - minutes);
+          return {
+            eventId: event.recurrenceInstanceOf || event.id,
+            reminderAt: reminderAt.toISOString(),
+          };
+        });
+    },
+
+    /**
+     * Collect reminder triggers for all events in a date range.
+     *
+     * @param {string} startDate - ISO 8601 date string for range start
+     * @param {string} endDate - ISO 8601 date string for range end
+     * @returns {Promise<CalendarReminderTrigger[]>} Reminder triggers
+     */
+    async getRemindersForDateRange(
+      startDate: string,
+      endDate: string,
+    ): Promise<CalendarReminderTrigger[]> {
+      const events = await this.getExpandedForDateRange(startDate, endDate);
+      return events.flatMap((event) => this.getReminderSchedule(event));
+    },
+
+    /**
      * Get upcoming events within the next N days
      *
      * @param {number} days - Number of days to look ahead (default: 7)
@@ -2094,6 +2354,65 @@ export const db = {
         alert.tags.forEach((tag) => tagsSet.add(tag));
       });
       return Array.from(tagsSet).sort();
+    },
+
+    /**
+     * Get available alert sound presets
+     *
+     * @returns {Alert["sound"][]} Available sound identifiers
+     */
+    getSoundPresets(): Alert["sound"][] {
+      return ["default", "gentle", "radar", "bells", "chimes", "digital"];
+    },
+
+    /**
+     * Get available alert vibration presets
+     *
+     * @returns {Alert["vibration"][]} Available vibration identifiers
+     */
+    getVibrationPresets(): Alert["vibration"][] {
+      return ["default", "pulse", "double", "long", "none"];
+    },
+
+    /**
+     * Calculate the next trigger time for an alert after a given timestamp.
+     *
+     * @param {Alert} alert - Alert to evaluate
+     * @param {Date} after - Point in time to schedule after
+     * @returns {string | null} ISO timestamp for next trigger or null
+     */
+    getNextTriggerAt(alert: Alert, after: Date = new Date()): string | null {
+      return getNextAlertTrigger(alert, after);
+    },
+
+    /**
+     * Build a schedule of alert triggers within a time window.
+     *
+     * @param {string} startAt - ISO 8601 start time
+     * @param {string} endAt - ISO 8601 end time
+     * @returns {Promise<AlertTrigger[]>} Scheduled alert triggers
+     */
+    async getUpcomingTriggers(
+      startAt: string,
+      endAt: string,
+    ): Promise<AlertTrigger[]> {
+      const all = await this.getAll();
+      const windowStart = new Date(startAt);
+      const windowEnd = new Date(endAt);
+
+      const triggers: AlertTrigger[] = [];
+      all.forEach((alert) => {
+        if (!alert.isEnabled) return;
+        const nextTrigger = getNextAlertTrigger(alert, windowStart);
+        if (nextTrigger && new Date(nextTrigger) <= windowEnd) {
+          triggers.push({ alertId: alert.id, triggerAt: nextTrigger });
+        }
+      });
+
+      return triggers.sort(
+        (a, b) =>
+          new Date(a.triggerAt).getTime() - new Date(b.triggerAt).getTime(),
+      );
     },
 
     /**
@@ -3089,6 +3408,120 @@ export const db = {
     async exportToJSON(): Promise<string> {
       const entries = await this.getAll();
       return JSON.stringify(entries, null, 2);
+    },
+
+    /**
+     * Get the current export schedule for history data.
+     *
+     * @returns {Promise<HistoryExportSchedule>} Export schedule config
+     */
+    async getExportSchedule(): Promise<HistoryExportSchedule> {
+      return getData(
+        KEYS.HISTORY_EXPORT_SCHEDULE,
+        DEFAULT_HISTORY_EXPORT_SCHEDULE,
+      );
+    },
+
+    /**
+     * Update the history export schedule.
+     * Automatically computes nextExportAt when enabling schedules.
+     *
+     * @param {Partial<HistoryExportSchedule>} partial - Schedule overrides
+     * @returns {Promise<HistoryExportSchedule>} Updated schedule
+     */
+    async setExportSchedule(
+      partial: Partial<HistoryExportSchedule>,
+    ): Promise<HistoryExportSchedule> {
+      const current = await this.getExportSchedule();
+      const merged: HistoryExportSchedule = { ...current, ...partial };
+
+      if (merged.enabled && !merged.nextExportAt) {
+        merged.nextExportAt = buildHistoryExportNextAt(
+          merged.frequency,
+          new Date(),
+        ).toISOString();
+      }
+
+      await setData(KEYS.HISTORY_EXPORT_SCHEDULE, merged);
+      return merged;
+    },
+
+    /**
+     * Run the scheduled export if the nextExportAt time has elapsed.
+     * Acts as a background-job hook for systems that poll periodically.
+     *
+     * @param {Date} now - Current time (injectable for tests)
+     * @returns {Promise<string | null>} JSON export payload if executed
+     */
+    async runScheduledExport(now: Date = new Date()): Promise<string | null> {
+      const schedule = await this.getExportSchedule();
+      if (!schedule.enabled || !schedule.nextExportAt) return null;
+
+      const nextExportAt = new Date(schedule.nextExportAt);
+      if (nextExportAt > now) return null;
+
+      const payload = await this.exportToJSON();
+      const updatedSchedule: HistoryExportSchedule = {
+        ...schedule,
+        lastExportAt: now.toISOString(),
+        nextExportAt: buildHistoryExportNextAt(
+          schedule.frequency,
+          now,
+        ).toISOString(),
+      };
+
+      await setData(KEYS.HISTORY_EXPORT_SCHEDULE, updatedSchedule);
+      return payload;
+    },
+
+    /**
+     * Pattern recognition hook for analytics pipelines.
+     * Surfaces time-based clustering without changing UI behavior.
+     *
+     * @returns {Promise<object>} Pattern insight payload
+     */
+    async getPatternInsights(): Promise<{
+      entriesByDay: Record<string, number>;
+      entriesByHour: Record<string, number>;
+      topTypes: Array<{ type: HistoryLogEntry["type"]; count: number }>;
+    }> {
+      const entries = await this.getAll();
+      const entriesByDay: Record<string, number> = {};
+      const entriesByHour: Record<string, number> = {};
+      const typeCounts: Record<HistoryLogEntry["type"], number> = {
+        recommendation: 0,
+        archived: 0,
+        banked: 0,
+        deprecated: 0,
+        system: 0,
+      };
+
+      entries.forEach((entry) => {
+        const timestamp = new Date(entry.timestamp);
+        const dayKey = timestamp.toLocaleDateString("en-US", {
+          weekday: "short",
+          timeZone: "UTC",
+        });
+        const hourKey = `${timestamp.getUTCHours()}:00`;
+
+        entriesByDay[dayKey] = (entriesByDay[dayKey] || 0) + 1;
+        entriesByHour[hourKey] = (entriesByHour[hourKey] || 0) + 1;
+        typeCounts[entry.type] = (typeCounts[entry.type] || 0) + 1;
+      });
+
+      const topTypes = Object.entries(typeCounts)
+        .map(([type, count]) => ({
+          type: type as HistoryLogEntry["type"],
+          count,
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 3);
+
+      return {
+        entriesByDay,
+        entriesByHour,
+        topTypes,
+      };
     },
     async clear(): Promise<void> {
       await setData(KEYS.HISTORY, []);
@@ -4714,6 +5147,35 @@ export const db = {
     },
 
     /**
+     * Get the active translation retention policy.
+     *
+     * @returns {Promise<TranslationRetentionPolicy>} Retention policy
+     */
+    async getRetentionPolicy(): Promise<TranslationRetentionPolicy> {
+      const stored = await getData<TranslationRetentionPolicy | null>(
+        KEYS.TRANSLATION_RETENTION,
+        null,
+      );
+      return normalizeTranslationRetentionPolicy(stored);
+    },
+
+    /**
+     * Update translation retention policy.
+     * Merges with defaults to avoid accidental undefined behavior.
+     *
+     * @param {Partial<TranslationRetentionPolicy>} partial - Policy overrides
+     * @returns {Promise<TranslationRetentionPolicy>} Updated policy
+     */
+    async setRetentionPolicy(
+      partial: Partial<TranslationRetentionPolicy>,
+    ): Promise<TranslationRetentionPolicy> {
+      const current = await this.getRetentionPolicy();
+      const merged = { ...current, ...partial };
+      await setData(KEYS.TRANSLATION_RETENTION, merged);
+      return merged;
+    },
+
+    /**
      * Get a specific translation by ID
      *
      * @param {string} id - Translation ID
@@ -4739,6 +5201,7 @@ export const db = {
         all.push(translation);
       }
       await setData(KEYS.TRANSLATIONS, all);
+      await this.applyRetentionPolicy();
       return translation;
     },
 
@@ -4958,6 +5421,53 @@ export const db = {
       const all = await this.getAll();
       return JSON.stringify(all, null, 2);
     },
+
+    /**
+     * Apply retention policy to translation history.
+     * Keeps favorites if configured, then trims by age and max entries.
+     *
+     * @param {TranslationRetentionPolicy} policyOverride - Optional policy override
+     * @returns {Promise<void>}
+     */
+    async applyRetentionPolicy(
+      policyOverride?: TranslationRetentionPolicy,
+    ): Promise<void> {
+      const policy = policyOverride || (await this.getRetentionPolicy());
+      const all = await this.getAll();
+
+      if (all.length === 0) return;
+
+      const now = new Date();
+      const cutoff = policy.maxAgeDays
+        ? new Date(now.getTime() - policy.maxAgeDays * 24 * 60 * 60 * 1000)
+        : null;
+
+      const favorites = all.filter((t) => t.isFavorite);
+      const nonFavorites = all.filter((t) => !t.isFavorite);
+
+      const filteredNonFavorites = nonFavorites.filter((t) =>
+        cutoff ? new Date(t.createdAt) >= cutoff : true,
+      );
+
+      let retained: Translation[] = [];
+
+      if (policy.keepFavorites) {
+        const maxEntries = policy.maxEntries;
+        const availableSlots = Math.max(maxEntries - favorites.length, 0);
+        retained = [
+          ...favorites,
+          ...filteredNonFavorites.slice(0, availableSlots),
+        ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else {
+        let toRetain = all;
+        if (cutoff) {
+          toRetain = all.filter((t) => new Date(t.createdAt) >= cutoff);
+        }
+        retained = toRetain.slice(0, policy.maxEntries);
+      }
+
+      await setData(KEYS.TRANSLATIONS, retained);
+    },
   },
 
   /**
@@ -4975,6 +5485,19 @@ export const db = {
      */
     async getAll(): Promise<SavedPhrase[]> {
       const all = await getData(KEYS.SAVED_PHRASES, []);
+      const needsMigration = all.some((phrase: SavedPhrase) => !phrase.tags);
+
+      if (needsMigration) {
+        const migrated = all.map((phrase: SavedPhrase) => ({
+          ...phrase,
+          tags: phrase.tags ?? [],
+        }));
+        await setData(KEYS.SAVED_PHRASES, migrated);
+        return migrated.sort(
+          (a: SavedPhrase, b: SavedPhrase) => b.usageCount - a.usageCount,
+        );
+      }
+
       return all.sort(
         (a: SavedPhrase, b: SavedPhrase) => b.usageCount - a.usageCount,
       );
@@ -5061,6 +5584,50 @@ export const db = {
     },
 
     /**
+     * Get phrases by tag
+     *
+     * @param {string} tag - Tag name
+     * @returns {Promise<SavedPhrase[]>} Phrases with that tag
+     */
+    async getByTag(tag: string): Promise<SavedPhrase[]> {
+      const all = await this.getAll();
+      return all.filter((p) => p.tags?.includes(tag));
+    },
+
+    /**
+     * Add tags to a saved phrase
+     *
+     * @param {string} id - Phrase ID
+     * @param {string[]} tags - Tags to add
+     * @returns {Promise<void>}
+     */
+    async addTags(id: string, tags: string[]): Promise<void> {
+      const all = await this.getAll();
+      const phrase = all.find((p) => p.id === id);
+      if (phrase) {
+        const uniqueTags = new Set([...(phrase.tags || []), ...tags]);
+        phrase.tags = Array.from(uniqueTags).sort();
+        await setData(KEYS.SAVED_PHRASES, all);
+      }
+    },
+
+    /**
+     * Remove tags from a saved phrase
+     *
+     * @param {string} id - Phrase ID
+     * @param {string[]} tags - Tags to remove
+     * @returns {Promise<void>}
+     */
+    async removeTags(id: string, tags: string[]): Promise<void> {
+      const all = await this.getAll();
+      const phrase = all.find((p) => p.id === id);
+      if (phrase) {
+        phrase.tags = (phrase.tags || []).filter((tag) => !tags.includes(tag));
+        await setData(KEYS.SAVED_PHRASES, all);
+      }
+    },
+
+    /**
      * Get all unique categories
      *
      * @returns {Promise<string[]>} Array of unique categories
@@ -5075,6 +5642,20 @@ export const db = {
     },
 
     /**
+     * Get all unique tags
+     *
+     * @returns {Promise<string[]>} Array of unique tags
+     */
+    async getAllTags(): Promise<string[]> {
+      const all = await this.getAll();
+      const tags = new Set<string>();
+      all.forEach((p) => {
+        p.tags?.forEach((tag) => tags.add(tag));
+      });
+      return Array.from(tags).sort();
+    },
+
+    /**
      * Search saved phrases
      *
      * @param {string} query - Search query
@@ -5086,7 +5667,8 @@ export const db = {
       return all.filter(
         (p) =>
           p.phrase.toLowerCase().includes(lowerQuery) ||
-          p.category?.toLowerCase().includes(lowerQuery),
+          p.category?.toLowerCase().includes(lowerQuery) ||
+          p.tags?.some((tag) => tag.toLowerCase().includes(lowerQuery)),
       );
     },
 

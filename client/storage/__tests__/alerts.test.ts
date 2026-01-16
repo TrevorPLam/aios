@@ -655,4 +655,41 @@ describe("Database Alerts Storage", () => {
       });
     });
   });
+
+  describe("Scheduling Hooks", () => {
+    it("should expose sound and vibration presets", () => {
+      expect(db.alerts.getSoundPresets()).toContain("gentle");
+      expect(db.alerts.getVibrationPresets()).toContain("pulse");
+    });
+
+    it("should calculate the next trigger time for a recurring alert", () => {
+      const nextTrigger = db.alerts.getNextTriggerAt(
+        mockAlert,
+        new Date("2026-01-15T09:00:00Z"),
+      );
+
+      expect(nextTrigger).toBe("2026-01-16T08:00:00.000Z");
+    });
+
+    it("should build upcoming trigger windows", async () => {
+      const disabledAlert: Alert = {
+        ...mockAlert,
+        id: "alert_disabled",
+        isEnabled: false,
+        time: "2026-01-15T09:00:00Z",
+        recurrenceRule: "none",
+      };
+
+      await db.alerts.save(mockAlert);
+      await db.alerts.save(disabledAlert);
+
+      const triggers = await db.alerts.getUpcomingTriggers(
+        "2026-01-15T07:00:00Z",
+        "2026-01-15T10:00:00Z",
+      );
+
+      expect(triggers).toHaveLength(1);
+      expect(triggers[0].alertId).toBe("alert_1");
+    });
+  });
 });

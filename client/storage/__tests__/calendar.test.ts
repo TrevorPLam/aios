@@ -198,6 +198,60 @@ describe("Calendar Events Database", () => {
     });
   });
 
+  describe("Recurring Expansion & Reminders", () => {
+    it("should expand recurring events within a date range", async () => {
+      const recurringEvent = createTestEvent({
+        id: "event-recurring",
+        startAt: "2024-03-10T09:00:00.000Z",
+        endAt: "2024-03-10T10:00:00.000Z",
+        recurrenceRule: "daily",
+        exceptions: ["2024-03-12"],
+        overrides: {
+          "2024-03-13": { title: "Special Standup" },
+        },
+      });
+
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify([recurringEvent]),
+      );
+
+      const events = await db.events.getExpandedForDateRange(
+        "2024-03-11T00:00:00.000Z",
+        "2024-03-13T23:59:59.000Z",
+      );
+
+      const ids = events.map((event) => event.id);
+      expect(ids).toHaveLength(2);
+      expect(ids.some((id) => id.includes("2024-03-11"))).toBe(true);
+      expect(ids.some((id) => id.includes("2024-03-12"))).toBe(false);
+      expect(
+        events.some((event) => event.title === "Special Standup"),
+      ).toBe(true);
+    });
+
+    it("should build reminder triggers for events in range", async () => {
+      const event = createTestEvent({
+        id: "event-reminder",
+        startAt: "2024-03-20T12:00:00.000Z",
+        endAt: "2024-03-20T13:00:00.000Z",
+        reminderMinutes: [30],
+      });
+
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify([event]),
+      );
+
+      const reminders = await db.events.getRemindersForDateRange(
+        "2024-03-20T00:00:00.000Z",
+        "2024-03-21T00:00:00.000Z",
+      );
+
+      expect(reminders).toHaveLength(1);
+      expect(reminders[0].eventId).toBe("event-reminder");
+      expect(reminders[0].reminderAt).toBe("2024-03-20T11:30:00.000Z");
+    });
+  });
+
   describe("getForWeek", () => {
     it("should return events for a 7-day period", async () => {
       const testEvents = [
