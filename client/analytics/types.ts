@@ -11,7 +11,12 @@ import { ModuleType } from "@/models/types";
 // Module Registry Types
 // ============================================================================
 
-export type ModuleCategory = "productivity" | "communication" | "media" | "utility" | "system";
+export type ModuleCategory =
+  | "productivity"
+  | "communication"
+  | "media"
+  | "utility"
+  | "system";
 
 export interface ModuleMetadata {
   id: ModuleType;
@@ -73,7 +78,12 @@ export type EventName =
 
 export type TextLengthBucket = "0-20" | "21-80" | "81-200" | "201-500" | "501+";
 export type DurationBucket = "<5s" | "5-30s" | "30-120s" | "2-10m" | "10m+";
-export type LatencyBucket = "<100ms" | "100-300ms" | "300ms-1s" | "1-3s" | "3s+";
+export type LatencyBucket =
+  | "<100ms"
+  | "100-300ms"
+  | "300ms-1s"
+  | "1-3s"
+  | "3s+";
 export type AmountBucket = "0-20" | "21-100" | "101-500" | "501-2000" | "2000+";
 export type QueryLengthBucket = "0" | "1-3" | "4-10" | "11-25" | "26+";
 export type ResultsCountBucket = "0" | "1-3" | "4-10" | "11-25" | "26+";
@@ -83,11 +93,23 @@ export type InstallAgeBucket = "0d" | "1-7d" | "8-30d" | "31-90d" | "90d+";
 // Event Property Types
 // ============================================================================
 
-export type NavigationSource = "dock" | "grid" | "ai" | "contextual" | "deeplink";
+export type NavigationSource =
+  | "dock"
+  | "grid"
+  | "ai"
+  | "contextual"
+  | "deeplink";
 export type NetworkState = "online" | "offline" | "unknown";
 export type SelectionState = "none" | "has_selection";
 export type ConfidenceBucket = "low" | "medium" | "high";
-export type DayOfWeek = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+export type DayOfWeek =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
 
 // ============================================================================
 // Event Property Schemas (Per-Event Required/Optional Props)

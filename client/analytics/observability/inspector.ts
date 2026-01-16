@@ -73,7 +73,7 @@ export class EventInspector {
 
 /**
  * TODO: Create React component for Event Inspector UI
- * 
+ *
  * Features:
  * - Real-time event list
  * - Event details modal

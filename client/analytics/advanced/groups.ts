@@ -35,7 +35,7 @@ export class GroupAnalytics {
   async identify(
     groupType: string,
     groupId: string,
-    properties?: Partial<GroupProperties>
+    properties?: Partial<GroupProperties>,
   ): Promise<void> {
     throw new Error("Not implemented");
   }
@@ -46,7 +46,7 @@ export class GroupAnalytics {
   async setProperties(
     groupType: string,
     groupId: string,
-    properties: Partial<GroupProperties>
+    properties: Partial<GroupProperties>,
   ): Promise<void> {
     throw new Error("Not implemented");
   }
@@ -54,14 +54,21 @@ export class GroupAnalytics {
   /**
    * TODO: Get group properties
    */
-  async getProperties(groupType: string, groupId: string): Promise<GroupProperties | null> {
+  async getProperties(
+    groupType: string,
+    groupId: string,
+  ): Promise<GroupProperties | null> {
     throw new Error("Not implemented");
   }
 
   /**
    * TODO: Associate user with group
    */
-  async addUserToGroup(userId: string, groupType: string, groupId: string): Promise<void> {
+  async addUserToGroup(
+    userId: string,
+    groupType: string,
+    groupId: string,
+  ): Promise<void> {
     throw new Error("Not implemented");
   }
 }

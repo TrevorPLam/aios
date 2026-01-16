@@ -58,9 +58,14 @@ export class CircuitBreaker {
 
       case CircuitState.OPEN:
         // Check if timeout has elapsed
-        if (this.lastFailureTime && now - this.lastFailureTime >= this.config.timeout) {
+        if (
+          this.lastFailureTime &&
+          now - this.lastFailureTime >= this.config.timeout
+        ) {
           this.transitionTo(CircuitState.HALF_OPEN);
-          console.log("[CircuitBreaker] Transitioning to HALF_OPEN, attempting recovery");
+          console.log(
+            "[CircuitBreaker] Transitioning to HALF_OPEN, attempting recovery",
+          );
           return true;
         }
         return false;
@@ -126,7 +131,7 @@ export class CircuitBreaker {
     ) {
       this.transitionTo(CircuitState.OPEN);
       console.error(
-        `[CircuitBreaker] Circuit OPENED after ${this.failureCount} failures`
+        `[CircuitBreaker] Circuit OPENED after ${this.failureCount} failures`,
       );
     }
   }

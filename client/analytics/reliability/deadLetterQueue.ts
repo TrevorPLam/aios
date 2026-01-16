@@ -51,7 +51,7 @@ export class DeadLetterQueue {
     event: AnalyticsEvent,
     failureReason: string,
     retryCount: number,
-    lastError?: string
+    lastError?: string,
   ): Promise<void> {
     await this.initialize();
 
@@ -75,7 +75,7 @@ export class DeadLetterQueue {
 
     if (__DEV__) {
       console.warn(
-        `[DLQ] Event added: ${event.event_name} (${failureReason}), DLQ size: ${this.queue.length}`
+        `[DLQ] Event added: ${event.event_name} (${failureReason}), DLQ size: ${this.queue.length}`,
       );
     }
   }

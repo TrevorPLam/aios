@@ -2,7 +2,7 @@
  * IntegrationDetailScreen Module - Enhanced
  *
  * Detailed view and configuration for a specific integration.
- * 
+ *
  * Core Features:
  * - Integration status and connection info with visual indicators
  * - Sync configuration (frequency, data types, two-way sync)
@@ -12,7 +12,7 @@
  * - Connect/disconnect functionality
  * - Last sync information with relative timestamps
  * - Error details and diagnostics if any
- * 
+ *
  * Enhanced Features (NEW):
  * - Sync trigger functionality with duration tracking
  * - Detailed sync statistics (total syncs, data items, duration)
@@ -22,25 +22,25 @@
  * - Advanced sync settings management
  * - Visual feedback for all actions
  * - Comprehensive error handling
- * 
+ *
  * Database Integration:
  * - Uses all 22 integration database methods
  * - Real-time sync status updates
  * - Error tracking and reporting
- * 
+ *
  * AI Features:
  * - Sync optimization recommendations (placeholder)
  * - Error resolution suggestions
  * - Usage pattern insights
- * 
+ *
  * Technical Details:
  * - Performance optimized with useCallback
  * - Full TypeScript type safety
  * - Platform-specific haptic feedback
  * - Comprehensive inline documentation
- * 
+ *
  * Enhanced: 2026-01-16
- * 
+ *
  * @module IntegrationDetailScreen
  */
 
@@ -178,7 +178,8 @@ export default function IntegrationDetailScreen() {
     const syncStartTime = Date.now();
     setTimeout(async () => {
       const syncDuration = Date.now() - syncStartTime;
-      const itemsSynced = Math.floor(Math.random() * MAX_SYNC_ITEMS_RANGE) + MIN_SYNC_ITEMS;
+      const itemsSynced =
+        Math.floor(Math.random() * MAX_SYNC_ITEMS_RANGE) + MIN_SYNC_ITEMS;
 
       // Use new triggerSync method with tracking
       await db.integrations.triggerSync(

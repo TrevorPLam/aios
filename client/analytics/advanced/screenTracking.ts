@@ -32,7 +32,7 @@ export class ScreenTracker {
   trackScreenView(
     screenName: string,
     moduleId?: ModuleType,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ): void {
     throw new Error("Not implemented");
   }

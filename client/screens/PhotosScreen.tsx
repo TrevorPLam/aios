@@ -2,7 +2,7 @@
  * PhotosScreen Module (Enhanced)
  *
  * Advanced photo gallery with comprehensive organization features.
- * 
+ *
  * New Features:
  * - Albums system with cover photos
  * - Advanced filtering (favorites, backup status, date range, tags)
@@ -12,7 +12,7 @@
  * - Sorting options (date, name, size)
  * - Favorites/starring system
  * - Enhanced metadata display
- * 
+ *
  * Original Features:
  * - Grid-based photo layout (configurable size 2x2 to 6x6)
  * - Import from camera roll
@@ -72,11 +72,11 @@ interface PhotoCardProps {
   isSelected?: boolean;
 }
 
-function PhotoCard({ 
-  photo, 
-  onPress, 
-  onLongPress, 
-  index, 
+function PhotoCard({
+  photo,
+  onPress,
+  onLongPress,
+  index,
   gridSize,
   isSelected = false,
 }: PhotoCardProps) {
@@ -98,9 +98,9 @@ function PhotoCard({
             height: itemSize,
             backgroundColor: theme.backgroundDefault,
           },
-          isSelected && { 
-            borderWidth: 3, 
-            borderColor: theme.accent 
+          isSelected && {
+            borderWidth: 3,
+            borderColor: theme.accent,
           },
           pressed && { opacity: 0.8 },
         ]}
@@ -132,10 +132,7 @@ function PhotoCard({
         )}
         {isSelected && (
           <View
-            style={[
-              styles.selectionBadge,
-              { backgroundColor: theme.accent },
-            ]}
+            style={[styles.selectionBadge, { backgroundColor: theme.accent }]}
           >
             <Feather name="check" size={16} color={theme.buttonText} />
           </View>
@@ -267,10 +264,10 @@ export default function PhotosScreen() {
               pressed && { opacity: 0.7 },
             ]}
           >
-            <Feather 
-              name="filter" 
-              size={22} 
-              color={filterType !== "all" ? theme.accent : theme.text} 
+            <Feather
+              name="filter"
+              size={22}
+              color={filterType !== "all" ? theme.accent : theme.text}
             />
           </Pressable>
           {selectionMode && (
@@ -428,7 +425,7 @@ export default function PhotosScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
+
     if (selectionMode) {
       toggleSelection(photoId);
     } else {
@@ -492,41 +489,44 @@ export default function PhotosScreen() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.filterScroll}
             >
-              {["all", "favorites", "backed_up", "not_backed_up"].map((type) => (
-                <Pressable
-                  key={type}
-                  onPress={() => {
-                    if (Platform.OS !== "web") {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    }
-                    setFilterType(type as FilterType);
-                  }}
-                  style={[
-                    styles.filterChip,
-                    {
-                      backgroundColor:
-                        filterType === type
-                          ? theme.accent
-                          : theme.backgroundDefault,
-                    },
-                  ]}
-                >
-                  <ThemedText
-                    type="small"
-                    style={{
-                      color: filterType === type ? theme.buttonText : theme.text,
+              {["all", "favorites", "backed_up", "not_backed_up"].map(
+                (type) => (
+                  <Pressable
+                    key={type}
+                    onPress={() => {
+                      if (Platform.OS !== "web") {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      }
+                      setFilterType(type as FilterType);
                     }}
+                    style={[
+                      styles.filterChip,
+                      {
+                        backgroundColor:
+                          filterType === type
+                            ? theme.accent
+                            : theme.backgroundDefault,
+                      },
+                    ]}
                   >
-                    {type === "all"
-                      ? "All"
-                      : type === "favorites"
-                        ? "Favorites"
-                        : type === "backed_up"
-                          ? "Backed Up"
-                          : "Not Backed Up"}
-                  </ThemedText>
-                </Pressable>
-              ))}
+                    <ThemedText
+                      type="small"
+                      style={{
+                        color:
+                          filterType === type ? theme.buttonText : theme.text,
+                      }}
+                    >
+                      {type === "all"
+                        ? "All"
+                        : type === "favorites"
+                          ? "Favorites"
+                          : type === "backed_up"
+                            ? "Backed Up"
+                            : "Not Backed Up"}
+                    </ThemedText>
+                  </Pressable>
+                ),
+              )}
             </ScrollView>
           </View>
 

@@ -252,7 +252,15 @@ export default function HistoryScreen() {
 
         switch (date) {
           case "today":
-            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            startDate = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              now.getDate(),
+              0,
+              0,
+              0,
+              0,
+            );
             break;
           case "week":
             startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -307,7 +315,9 @@ export default function HistoryScreen() {
             setAllEntries([]);
             setFilteredEntries([]);
             if (Platform.OS !== "web") {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
             }
           },
         },
@@ -402,7 +412,9 @@ export default function HistoryScreen() {
             setSelectedIds(new Set());
             await loadHistory();
             if (Platform.OS !== "web") {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
             }
           },
         },
@@ -530,7 +542,11 @@ export default function HistoryScreen() {
     />
   );
 
-  const renderTypeFilter = (type: TypeFilter, label: string, icon: keyof typeof Feather.glyphMap) => (
+  const renderTypeFilter = (
+    type: TypeFilter,
+    label: string,
+    icon: keyof typeof Feather.glyphMap,
+  ) => (
     <Pressable
       onPress={() => {
         if (Platform.OS !== "web") {
@@ -701,7 +717,10 @@ export default function HistoryScreen() {
 
       {/* Filters */}
       {showFilters && (
-        <Animated.View entering={FadeInDown.springify()} style={styles.filtersContainer}>
+        <Animated.View
+          entering={FadeInDown.springify()}
+          style={styles.filtersContainer}
+        >
           <View style={styles.filterSection}>
             <ThemedText type="small" muted style={styles.filterLabel}>
               Type
@@ -794,10 +813,7 @@ export default function HistoryScreen() {
           onPress={() => setSelectedEntry(null)}
         >
           <Pressable
-            style={[
-              styles.modalContent,
-              { backgroundColor: theme.background },
-            ]}
+            style={[styles.modalContent, { backgroundColor: theme.background }]}
             onPress={(e) => e.stopPropagation()}
           >
             {selectedEntry && (
@@ -861,7 +877,10 @@ export default function HistoryScreen() {
                         >
                           <ThemedText
                             type="small"
-                            style={[styles.metadataText, { fontFamily: "monospace" }]}
+                            style={[
+                              styles.metadataText,
+                              { fontFamily: "monospace" },
+                            ]}
                           >
                             {JSON.stringify(selectedEntry.metadata, null, 2)}
                           </ThemedText>
@@ -905,7 +924,11 @@ export default function HistoryScreen() {
                       pressed && { opacity: 0.8 },
                     ]}
                   >
-                    <Feather name="trash-2" size={18} color={theme.buttonText} />
+                    <Feather
+                      name="trash-2"
+                      size={18}
+                      color={theme.buttonText}
+                    />
                     <ThemedText
                       type="body"
                       style={[

@@ -54,9 +54,9 @@ export default function PhotoDetailScreen() {
               pressed && { opacity: 0.8 },
             ]}
           >
-            <Feather 
-              name={photo?.isFavorite ? "star" : "star"} 
-              size={22} 
+            <Feather
+              name={photo?.isFavorite ? "star" : "star"}
+              size={22}
               color={photo?.isFavorite ? theme.warning : theme.accent}
               fill={photo?.isFavorite ? theme.warning : "none"}
             />
@@ -97,8 +97,8 @@ export default function PhotoDetailScreen() {
     if (photo) {
       await db.photos.toggleFavorite(photo.id);
       await db.history.add({
-        message: photo.isFavorite 
-          ? `Removed ${photo.fileName} from favorites` 
+        message: photo.isFavorite
+          ? `Removed ${photo.fileName} from favorites`
           : `Added ${photo.fileName} to favorites`,
         type: "system",
       });

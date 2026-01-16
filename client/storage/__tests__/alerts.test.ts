@@ -1,9 +1,9 @@
 /**
  * Alerts Database Storage Tests
- * 
+ *
  * Tests the database storage layer for the Alerts module.
  * Validates CRUD operations, sorting, and state management.
- * 
+ *
  * @module alerts.test
  */
 
@@ -363,7 +363,7 @@ describe("Database Alerts Storage", () => {
     describe("Alert History and Statistics", () => {
       it("should add an alert history entry", async () => {
         await db.alerts.save(mockAlert);
-        
+
         const entry = await db.alertHistory.add({
           alertId: "alert_1",
           triggeredAt: "2026-01-15T08:00:00Z",
@@ -598,7 +598,8 @@ describe("Database Alerts Storage", () => {
           wasOnTime: false,
         });
 
-        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
+        const suggestion =
+          await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
         expect(suggestion).toBe(15); // Should suggest 15 minutes
       });
 
@@ -624,12 +625,14 @@ describe("Database Alerts Storage", () => {
           wasOnTime: true,
         });
 
-        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
+        const suggestion =
+          await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
         expect(suggestion).toBe(5); // Shorter duration for disciplined users
       });
 
       it("should default to 10 minutes with no history", async () => {
-        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_new");
+        const suggestion =
+          await db.alertHistory.getSmartSnoozeSuggestion("alert_new");
         expect(suggestion).toBe(10); // Default value
       });
 
@@ -646,7 +649,8 @@ describe("Database Alerts Storage", () => {
           wasOnTime: false,
         });
 
-        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
+        const suggestion =
+          await db.alertHistory.getSmartSnoozeSuggestion("alert_1");
         expect([10, 15]).toContain(suggestion); // Should be closest valid option
       });
     });

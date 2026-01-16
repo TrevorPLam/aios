@@ -58,7 +58,10 @@ const RECURRENCE_OPTIONS: { value: RecurrenceRule; label: string }[] = [
 ];
 
 /** Available sound options */
-const SOUND_OPTIONS: { value: import("@/models/types").AlertSound; label: string }[] = [
+const SOUND_OPTIONS: {
+  value: import("@/models/types").AlertSound;
+  label: string;
+}[] = [
   { value: "default", label: "Default" },
   { value: "gentle", label: "Gentle" },
   { value: "radar", label: "Radar" },
@@ -68,7 +71,10 @@ const SOUND_OPTIONS: { value: import("@/models/types").AlertSound; label: string
 ];
 
 /** Available vibration pattern options */
-const VIBRATION_OPTIONS: { value: import("@/models/types").VibrationPattern; label: string }[] = [
+const VIBRATION_OPTIONS: {
+  value: import("@/models/types").VibrationPattern;
+  label: string;
+}[] = [
   { value: "default", label: "Default" },
   { value: "pulse", label: "Pulse" },
   { value: "double", label: "Double" },
@@ -77,7 +83,10 @@ const VIBRATION_OPTIONS: { value: import("@/models/types").VibrationPattern; lab
 ];
 
 /** Available snooze duration options */
-const SNOOZE_OPTIONS: { value: import("@/models/types").SnoozeDuration; label: string }[] = [
+const SNOOZE_OPTIONS: {
+  value: import("@/models/types").SnoozeDuration;
+  label: string;
+}[] = [
   { value: 5, label: "5 min" },
   { value: 10, label: "10 min" },
   { value: 15, label: "15 min" },
@@ -115,15 +124,20 @@ export default function AlertDetailScreen() {
   const [type, setType] = useState<AlertType>("alarm");
   const [isEnabled, setIsEnabled] = useState(true);
   const [recurrence, setRecurrence] = useState<RecurrenceRule>("none");
-  const [sound, setSound] = useState<import("@/models/types").AlertSound>("default");
-  const [vibration, setVibration] = useState<import("@/models/types").VibrationPattern>("default");
+  const [sound, setSound] =
+    useState<import("@/models/types").AlertSound>("default");
+  const [vibration, setVibration] =
+    useState<import("@/models/types").VibrationPattern>("default");
   const [gradualVolume, setGradualVolume] = useState(false);
-  const [snoozeDuration, setSnoozeDuration] = useState<import("@/models/types").SnoozeDuration>(10);
+  const [snoozeDuration, setSnoozeDuration] =
+    useState<import("@/models/types").SnoozeDuration>(10);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
-  const [smartSnoozeSuggestion, setSmartSnoozeSuggestion] = useState<number | null>(null);
+  const [smartSnoozeSuggestion, setSmartSnoozeSuggestion] = useState<
+    number | null
+  >(null);
 
   // Load existing alert data or set defaults for new alert
   useEffect(() => {
@@ -144,7 +158,8 @@ export default function AlertDetailScreen() {
         setTags(alert.tags || []);
 
         // Load smart snooze suggestion
-        const suggestion = await db.alertHistory.getSmartSnoozeSuggestion(alertId);
+        const suggestion =
+          await db.alertHistory.getSmartSnoozeSuggestion(alertId);
         setSmartSnoozeSuggestion(suggestion);
       }
     };
@@ -299,7 +314,7 @@ export default function AlertDetailScreen() {
    */
   const handleDuplicate = async () => {
     if (!alertId) return;
-    
+
     try {
       const duplicated = await db.alerts.duplicate(alertId);
       if (duplicated) {
@@ -417,8 +432,7 @@ export default function AlertDetailScreen() {
                 <ThemedText
                   type="body"
                   style={{
-                    color:
-                      type === option.value ? theme.accent : theme.text,
+                    color: type === option.value ? theme.accent : theme.text,
                   }}
                 >
                   {option.label}
@@ -450,9 +464,7 @@ export default function AlertDetailScreen() {
                         ? theme.accentDim
                         : theme.backgroundDefault,
                     borderColor:
-                      recurrence === option.value
-                        ? theme.accent
-                        : theme.border,
+                      recurrence === option.value ? theme.accent : theme.border,
                   },
                 ]}
               >
@@ -460,9 +472,7 @@ export default function AlertDetailScreen() {
                   type="body"
                   style={{
                     color:
-                      recurrence === option.value
-                        ? theme.accent
-                        : theme.text,
+                      recurrence === option.value ? theme.accent : theme.text,
                   }}
                 >
                   {option.label}
@@ -532,19 +542,14 @@ export default function AlertDetailScreen() {
                         ? theme.accentDim
                         : theme.backgroundDefault,
                     borderColor:
-                      sound === option.value
-                        ? theme.accent
-                        : theme.border,
+                      sound === option.value ? theme.accent : theme.border,
                   },
                 ]}
               >
                 <ThemedText
                   type="body"
                   style={{
-                    color:
-                      sound === option.value
-                        ? theme.accent
-                        : theme.text,
+                    color: sound === option.value ? theme.accent : theme.text,
                   }}
                 >
                   {option.label}
@@ -576,9 +581,7 @@ export default function AlertDetailScreen() {
                         ? theme.accentDim
                         : theme.backgroundDefault,
                     borderColor:
-                      vibration === option.value
-                        ? theme.accent
-                        : theme.border,
+                      vibration === option.value ? theme.accent : theme.border,
                   },
                 ]}
               >
@@ -586,9 +589,7 @@ export default function AlertDetailScreen() {
                   type="body"
                   style={{
                     color:
-                      vibration === option.value
-                        ? theme.accent
-                        : theme.text,
+                      vibration === option.value ? theme.accent : theme.text,
                   }}
                 >
                   {option.label}
@@ -775,28 +776,48 @@ export default function AlertDetailScreen() {
             <>
               <Button
                 onPress={() => setShowStatistics(true)}
-                style={[styles.actionButton, { backgroundColor: theme.accentDim, borderColor: theme.accent, borderWidth: 1 }]}
+                style={[
+                  styles.actionButton,
+                  {
+                    backgroundColor: theme.accentDim,
+                    borderColor: theme.accent,
+                    borderWidth: 1,
+                  },
+                ]}
               >
                 <View style={styles.buttonContent}>
                   <Feather name="bar-chart-2" size={18} color={theme.accent} />
-                  <ThemedText type="body" style={{ color: theme.accent, marginLeft: Spacing.xs }}>
+                  <ThemedText
+                    type="body"
+                    style={{ color: theme.accent, marginLeft: Spacing.xs }}
+                  >
                     View Statistics
                   </ThemedText>
                 </View>
               </Button>
-              
+
               <Button
                 onPress={handleDuplicate}
-                style={[styles.actionButton, { backgroundColor: theme.accentDim, borderColor: theme.accent, borderWidth: 1 }]}
+                style={[
+                  styles.actionButton,
+                  {
+                    backgroundColor: theme.accentDim,
+                    borderColor: theme.accent,
+                    borderWidth: 1,
+                  },
+                ]}
               >
                 <View style={styles.buttonContent}>
                   <Feather name="copy" size={18} color={theme.accent} />
-                  <ThemedText type="body" style={{ color: theme.accent, marginLeft: Spacing.xs }}>
+                  <ThemedText
+                    type="body"
+                    style={{ color: theme.accent, marginLeft: Spacing.xs }}
+                  >
                     Duplicate Alert
                   </ThemedText>
                 </View>
               </Button>
-              
+
               <Button
                 onPress={handleDelete}
                 style={[styles.deleteButton, { backgroundColor: theme.error }]}

@@ -24,7 +24,11 @@ const PERSONALITIES: {
   description: string;
 }[] = [
   { id: "default", name: "Default", description: "Professional & balanced" },
-  { id: "enthusiastic", name: "Enthusiastic", description: "Energetic & upbeat" },
+  {
+    id: "enthusiastic",
+    name: "Enthusiastic",
+    description: "Energetic & upbeat",
+  },
   { id: "coach", name: "Coach", description: "Motivating & supportive" },
   { id: "witty", name: "Witty", description: "Clever & humorous" },
   { id: "militant", name: "Militant", description: "Direct & decisive" },
@@ -59,18 +63,15 @@ export default function AIPreferencesScreen() {
     setIsEditingName(true);
   }, []);
 
-  const handleSaveName = useCallback(
-    async () => {
-      if (Platform.OS !== "web") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      }
-      if (settings) {
-        await db.settings.update({ aiName });
-      }
-      setIsEditingName(false);
-    },
-    [settings, aiName],
-  );
+  const handleSaveName = useCallback(async () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    if (settings) {
+      await db.settings.update({ aiName });
+    }
+    setIsEditingName(false);
+  }, [settings, aiName]);
 
   const selectPersonality = useCallback(
     async (personality: AIPersonality) => {
@@ -86,14 +87,11 @@ export default function AIPreferencesScreen() {
     [settings],
   );
 
-  const handleSavePrompt = useCallback(
-    async () => {
-      if (settings) {
-        await db.settings.update({ aiCustomPrompt: customPrompt });
-      }
-    },
-    [settings, customPrompt],
-  );
+  const handleSavePrompt = useCallback(async () => {
+    if (settings) {
+      await db.settings.update({ aiCustomPrompt: customPrompt });
+    }
+  }, [settings, customPrompt]);
 
   if (!settings) {
     return (

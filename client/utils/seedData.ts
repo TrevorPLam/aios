@@ -477,33 +477,33 @@ export function generateSeedLists(): List[] {
       category: "grocery",
       color: "#00FF94",
       items: [
-        { 
-          id: generateId(), 
-          text: "Milk", 
+        {
+          id: generateId(),
+          text: "Milk",
           isChecked: true,
           priority: "medium",
         },
-        { 
-          id: generateId(), 
-          text: "Eggs", 
+        {
+          id: generateId(),
+          text: "Eggs",
           isChecked: false,
           priority: "high",
         },
-        { 
-          id: generateId(), 
-          text: "Bread", 
+        {
+          id: generateId(),
+          text: "Bread",
           isChecked: false,
           priority: "low",
         },
-        { 
-          id: generateId(), 
-          text: "Chicken", 
+        {
+          id: generateId(),
+          text: "Chicken",
           isChecked: true,
           priority: "medium",
         },
-        { 
-          id: generateId(), 
-          text: "Vegetables", 
+        {
+          id: generateId(),
+          text: "Vegetables",
           isChecked: false,
           priority: "medium",
           notes: "Carrots, broccoli, and bell peppers",
@@ -519,48 +519,48 @@ export function generateSeedLists(): List[] {
       category: "work",
       color: "#00D9FF",
       items: [
-        { 
-          id: generateId(), 
-          text: "Review requirements", 
+        {
+          id: generateId(),
+          text: "Review requirements",
           isChecked: true,
           priority: "high",
         },
-        { 
-          id: generateId(), 
-          text: "Design mockups", 
+        {
+          id: generateId(),
+          text: "Design mockups",
           isChecked: true,
           priority: "high",
         },
-        { 
-          id: generateId(), 
-          text: "Develop features", 
+        {
+          id: generateId(),
+          text: "Develop features",
           isChecked: true,
           priority: "high",
         },
-        { 
-          id: generateId(), 
-          text: "Write tests", 
+        {
+          id: generateId(),
+          text: "Write tests",
           isChecked: false,
           priority: "high",
           dueDate: daysFromNow(2),
         },
-        { 
-          id: generateId(), 
-          text: "Deploy to staging", 
+        {
+          id: generateId(),
+          text: "Deploy to staging",
           isChecked: false,
           priority: "medium",
           dueDate: daysFromNow(3),
         },
-        { 
-          id: generateId(), 
-          text: "QA testing", 
+        {
+          id: generateId(),
+          text: "QA testing",
           isChecked: false,
           priority: "high",
           dueDate: daysFromNow(4),
         },
-        { 
-          id: generateId(), 
-          text: "Production deploy", 
+        {
+          id: generateId(),
+          text: "Production deploy",
           isChecked: false,
           priority: "high",
           dueDate: daysFromNow(7),
@@ -577,21 +577,21 @@ export function generateSeedLists(): List[] {
       category: "personal",
       color: "#FFB800",
       items: [
-        { 
-          id: generateId(), 
-          text: "Atomic Habits", 
+        {
+          id: generateId(),
+          text: "Atomic Habits",
           isChecked: true,
           priority: "none",
         },
-        { 
-          id: generateId(), 
-          text: "Deep Work", 
+        {
+          id: generateId(),
+          text: "Deep Work",
           isChecked: false,
           priority: "medium",
         },
-        { 
-          id: generateId(), 
-          text: "Thinking, Fast and Slow", 
+        {
+          id: generateId(),
+          text: "Thinking, Fast and Slow",
           isChecked: false,
           priority: "low",
         },
@@ -608,14 +608,54 @@ export function generateSeedLists(): List[] {
       color: "#00FF94",
       isTemplate: true,
       items: [
-        { id: generateId(), text: "Fresh fruits", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Vegetables", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Dairy products", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Meat/Protein", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Bread & Grains", isChecked: false, priority: "low" },
-        { id: generateId(), text: "Snacks", isChecked: false, priority: "none" },
-        { id: generateId(), text: "Beverages", isChecked: false, priority: "low" },
-        { id: generateId(), text: "Household items", isChecked: false, priority: "low" },
+        {
+          id: generateId(),
+          text: "Fresh fruits",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Vegetables",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Dairy products",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Meat/Protein",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Bread & Grains",
+          isChecked: false,
+          priority: "low",
+        },
+        {
+          id: generateId(),
+          text: "Snacks",
+          isChecked: false,
+          priority: "none",
+        },
+        {
+          id: generateId(),
+          text: "Beverages",
+          isChecked: false,
+          priority: "low",
+        },
+        {
+          id: generateId(),
+          text: "Household items",
+          isChecked: false,
+          priority: "low",
+        },
       ],
       createdAt: daysFromNow(-30),
       lastOpenedAt: daysFromNow(-30),
@@ -628,16 +668,66 @@ export function generateSeedLists(): List[] {
       color: "#FF3B5C",
       isTemplate: true,
       items: [
-        { id: generateId(), text: "Passport & ID", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Tickets/Boarding passes", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Phone charger", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Medications", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Clothes (3-5 days)", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Toiletries", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Shoes", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Wallet & cash", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Sunglasses", isChecked: false, priority: "low" },
-        { id: generateId(), text: "Book/Entertainment", isChecked: false, priority: "none" },
+        {
+          id: generateId(),
+          text: "Passport & ID",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Tickets/Boarding passes",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Phone charger",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Medications",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Clothes (3-5 days)",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Toiletries",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Shoes",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Wallet & cash",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Sunglasses",
+          isChecked: false,
+          priority: "low",
+        },
+        {
+          id: generateId(),
+          text: "Book/Entertainment",
+          isChecked: false,
+          priority: "none",
+        },
       ],
       createdAt: daysFromNow(-30),
       lastOpenedAt: daysFromNow(-30),
@@ -650,14 +740,54 @@ export function generateSeedLists(): List[] {
       color: "#9D4EDD",
       isTemplate: true,
       items: [
-        { id: generateId(), text: "Vacuum all rooms", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Mop kitchen & bathroom", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Clean bathroom", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Dust furniture", isChecked: false, priority: "low" },
-        { id: generateId(), text: "Change bed sheets", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Take out trash", isChecked: false, priority: "high" },
-        { id: generateId(), text: "Wipe kitchen counters", isChecked: false, priority: "medium" },
-        { id: generateId(), text: "Clean mirrors", isChecked: false, priority: "low" },
+        {
+          id: generateId(),
+          text: "Vacuum all rooms",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Mop kitchen & bathroom",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Clean bathroom",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Dust furniture",
+          isChecked: false,
+          priority: "low",
+        },
+        {
+          id: generateId(),
+          text: "Change bed sheets",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Take out trash",
+          isChecked: false,
+          priority: "high",
+        },
+        {
+          id: generateId(),
+          text: "Wipe kitchen counters",
+          isChecked: false,
+          priority: "medium",
+        },
+        {
+          id: generateId(),
+          text: "Clean mirrors",
+          isChecked: false,
+          priority: "low",
+        },
       ],
       createdAt: daysFromNow(-30),
       lastOpenedAt: daysFromNow(-30),
@@ -966,7 +1096,9 @@ export function generateSeedConversations(): Conversation[] {
 
 export function generateSeedContacts(): Contact[] {
   const now = new Date().toISOString();
-  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+  const twoWeeksAgo = new Date(
+    Date.now() - 14 * 24 * 60 * 60 * 1000,
+  ).toISOString();
   const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
   const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
@@ -1272,8 +1404,18 @@ export function generateSeedBudget(): Budget {
       name: "Housing",
       isExpanded: true,
       lineItems: [
-        { id: generateId(), name: "Rent/Mortgage", budgeted: 1500, actual: 1500 },
-        { id: generateId(), name: "Property Insurance", budgeted: 100, actual: 100 },
+        {
+          id: generateId(),
+          name: "Rent/Mortgage",
+          budgeted: 1500,
+          actual: 1500,
+        },
+        {
+          id: generateId(),
+          name: "Property Insurance",
+          budgeted: 100,
+          actual: 100,
+        },
         { id: generateId(), name: "HOA Fees", budgeted: 50, actual: 50 },
         { id: generateId(), name: "Maintenance", budgeted: 100, actual: 75 },
       ],
@@ -1285,8 +1427,18 @@ export function generateSeedBudget(): Budget {
       lineItems: [
         { id: generateId(), name: "Car Payment", budgeted: 400, actual: 400 },
         { id: generateId(), name: "Gas", budgeted: 150, actual: 165 },
-        { id: generateId(), name: "Auto Insurance", budgeted: 120, actual: 120 },
-        { id: generateId(), name: "Maintenance & Repairs", budgeted: 50, actual: 0 },
+        {
+          id: generateId(),
+          name: "Auto Insurance",
+          budgeted: 120,
+          actual: 120,
+        },
+        {
+          id: generateId(),
+          name: "Maintenance & Repairs",
+          budgeted: 50,
+          actual: 0,
+        },
         { id: generateId(), name: "Public Transit", budgeted: 50, actual: 40 },
       ],
     },
@@ -1309,7 +1461,12 @@ export function generateSeedBudget(): Budget {
         { id: generateId(), name: "Water", budgeted: 40, actual: 42 },
         { id: generateId(), name: "Internet", budgeted: 60, actual: 60 },
         { id: generateId(), name: "Phone", budgeted: 80, actual: 80 },
-        { id: generateId(), name: "Streaming Services", budgeted: 40, actual: 40 },
+        {
+          id: generateId(),
+          name: "Streaming Services",
+          budgeted: 40,
+          actual: 40,
+        },
       ],
     },
     {
@@ -1317,7 +1474,12 @@ export function generateSeedBudget(): Budget {
       name: "Healthcare",
       isExpanded: false,
       lineItems: [
-        { id: generateId(), name: "Health Insurance", budgeted: 300, actual: 300 },
+        {
+          id: generateId(),
+          name: "Health Insurance",
+          budgeted: 300,
+          actual: 300,
+        },
         { id: generateId(), name: "Prescriptions", budgeted: 50, actual: 45 },
         { id: generateId(), name: "Dental", budgeted: 30, actual: 0 },
         { id: generateId(), name: "Vision", budgeted: 20, actual: 0 },
@@ -1328,9 +1490,24 @@ export function generateSeedBudget(): Budget {
       name: "Savings & Investments",
       isExpanded: false,
       lineItems: [
-        { id: generateId(), name: "Emergency Fund", budgeted: 500, actual: 500 },
-        { id: generateId(), name: "Retirement (401k)", budgeted: 400, actual: 400 },
-        { id: generateId(), name: "Investment Account", budgeted: 200, actual: 200 },
+        {
+          id: generateId(),
+          name: "Emergency Fund",
+          budgeted: 500,
+          actual: 500,
+        },
+        {
+          id: generateId(),
+          name: "Retirement (401k)",
+          budgeted: 400,
+          actual: 400,
+        },
+        {
+          id: generateId(),
+          name: "Investment Account",
+          budgeted: 200,
+          actual: 200,
+        },
       ],
     },
     {

@@ -23,7 +23,12 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { ModuleType, Settings, ModuleViewMode, ModuleArrangement } from "@/models/types";
+import {
+  ModuleType,
+  Settings,
+  ModuleViewMode,
+  ModuleArrangement,
+} from "@/models/types";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -32,7 +37,7 @@ const MODAL_CLOSE_DELAY_MS = 100;
 
 /**
  * ModuleItem interface represents a navigable module in the app.
- * 
+ *
  * Note: Command Center, Settings, and Integrations are intentionally
  * excluded from this list as they have dedicated access points:
  * - Command Center: Accessible via home button in header
@@ -133,7 +138,8 @@ export default function ModuleGridScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [viewMode, setViewMode] = useState<ModuleViewMode>("grid");
-  const [arrangement, setArrangement] = useState<ModuleArrangement>("intuitive");
+  const [arrangement, setArrangement] =
+    useState<ModuleArrangement>("intuitive");
   const [modules, setModules] = useState<ModuleItem[]>([]);
 
   useEffect(() => {
@@ -153,8 +159,8 @@ export default function ModuleGridScreen() {
 
     // Filter based on enabled modules - ensure enabledModules exists
     if (s.enabledModules && Array.isArray(s.enabledModules)) {
-      orderedModules = orderedModules.filter(m => 
-        s.enabledModules.includes(m.id)
+      orderedModules = orderedModules.filter((m) =>
+        s.enabledModules.includes(m.id),
       );
     }
 
@@ -207,7 +213,7 @@ export default function ModuleGridScreen() {
     }
     // Track module usage
     await db.settings.trackModuleUsage(module.id);
-    
+
     navigation.goBack();
     setTimeout(() => {
       navigation.navigate(module.route as any);
@@ -236,7 +242,7 @@ export default function ModuleGridScreen() {
   const handleDragEnd = async ({ data }: { data: ModuleItem[] }) => {
     setModules(data);
     if (settings && arrangement === "static") {
-      const moduleOrder = data.map(m => m.id);
+      const moduleOrder = data.map((m) => m.id);
       const updated = { ...settings, moduleOrder };
       await db.settings.update(updated);
       setSettings(updated);
@@ -264,10 +270,7 @@ export default function ModuleGridScreen() {
       ]}
     >
       <View
-        style={[
-          styles.iconContainer,
-          { backgroundColor: theme.accentDim },
-        ]}
+        style={[styles.iconContainer, { backgroundColor: theme.accentDim }]}
       >
         <Feather
           name={module.icon}
@@ -276,13 +279,20 @@ export default function ModuleGridScreen() {
         />
       </View>
       <View style={viewMode === "list" ? styles.listContent : undefined}>
-        <ThemedText type="h3" style={viewMode === "grid" ? styles.moduleName : styles.listTitle}>
+        <ThemedText
+          type="h3"
+          style={viewMode === "grid" ? styles.moduleName : styles.listTitle}
+        >
           {module.name}
         </ThemedText>
         <ThemedText
           type="caption"
           secondary
-          style={viewMode === "grid" ? styles.moduleDescription : styles.listDescription}
+          style={
+            viewMode === "grid"
+              ? styles.moduleDescription
+              : styles.listDescription
+          }
         >
           {module.description}
         </ThemedText>
@@ -290,7 +300,11 @@ export default function ModuleGridScreen() {
     </Pressable>
   );
 
-  const renderDraggableItem = ({ item, drag, isActive }: RenderItemParams<ModuleItem>) => (
+  const renderDraggableItem = ({
+    item,
+    drag,
+    isActive,
+  }: RenderItemParams<ModuleItem>) => (
     <ScaleDecorator>
       <Pressable
         onLongPress={drag}
@@ -316,17 +330,19 @@ export default function ModuleGridScreen() {
       >
         {/* View mode toggle */}
         <Pressable
-          onPress={() => handleViewModeChange(viewMode === "grid" ? "list" : "grid")}
+          onPress={() =>
+            handleViewModeChange(viewMode === "grid" ? "list" : "grid")
+          }
           style={({ pressed }) => [
             styles.headerButton,
             { backgroundColor: theme.backgroundSecondary },
             pressed && styles.pressed,
           ]}
         >
-          <Feather 
-            name={viewMode === "grid" ? "list" : "grid"} 
-            size={24} 
-            color={theme.accent} 
+          <Feather
+            name={viewMode === "grid" ? "list" : "grid"}
+            size={24}
+            color={theme.accent}
           />
         </Pressable>
 
@@ -334,7 +350,12 @@ export default function ModuleGridScreen() {
         <View style={styles.headerCenter}>
           <Pressable
             onPress={() => {
-              const arrangements: ModuleArrangement[] = ["intuitive", "alphabetical", "most_recent", "static"];
+              const arrangements: ModuleArrangement[] = [
+                "intuitive",
+                "alphabetical",
+                "most_recent",
+                "static",
+              ];
               const currentIndex = arrangements.indexOf(arrangement);
               const nextIndex = (currentIndex + 1) % arrangements.length;
               handleArrangementChange(arrangements[nextIndex]);
@@ -345,21 +366,31 @@ export default function ModuleGridScreen() {
               pressed && styles.pressed,
             ]}
           >
-            <Feather 
+            <Feather
               name={
-                arrangement === "alphabetical" ? "type" :
-                arrangement === "most_recent" ? "clock" :
-                arrangement === "static" ? "move" :
-                "zap"
-              } 
-              size={18} 
-              color={theme.textSecondary} 
+                arrangement === "alphabetical"
+                  ? "type"
+                  : arrangement === "most_recent"
+                    ? "clock"
+                    : arrangement === "static"
+                      ? "move"
+                      : "zap"
+              }
+              size={18}
+              color={theme.textSecondary}
             />
-            <ThemedText type="caption" secondary style={styles.arrangementLabel}>
-              {arrangement === "most_recent" ? "Recent" :
-               arrangement === "intuitive" ? "Smart" :
-               arrangement === "alphabetical" ? "A-Z" :
-               "Custom"}
+            <ThemedText
+              type="caption"
+              secondary
+              style={styles.arrangementLabel}
+            >
+              {arrangement === "most_recent"
+                ? "Recent"
+                : arrangement === "intuitive"
+                  ? "Smart"
+                  : arrangement === "alphabetical"
+                    ? "A-Z"
+                    : "Custom"}
             </ThemedText>
           </Pressable>
         </View>

@@ -263,7 +263,7 @@ export const db = {
       return all.filter(
         (t) =>
           t.title.toLowerCase().includes(lowerQuery) ||
-          (t.userNotes || "").toLowerCase().includes(lowerQuery)
+          (t.userNotes || "").toLowerCase().includes(lowerQuery),
       );
     },
 
@@ -313,7 +313,7 @@ export const db = {
           t.dueDate &&
           t.dueDate < now &&
           t.status !== "completed" &&
-          t.status !== "cancelled"
+          t.status !== "cancelled",
       );
     },
 
@@ -347,7 +347,7 @@ export const db = {
           t.dueDate >= nowISO &&
           t.dueDate <= futureISO &&
           t.status !== "completed" &&
-          t.status !== "cancelled"
+          t.status !== "cancelled",
       );
     },
 
@@ -371,7 +371,7 @@ export const db = {
       const now = new Date().toISOString();
       const today = now.split("T")[0];
       const weekFromNow = new Date(
-        Date.now() + 7 * 24 * 60 * 60 * 1000
+        Date.now() + 7 * 24 * 60 * 60 * 1000,
       ).toISOString();
 
       return {
@@ -384,7 +384,7 @@ export const db = {
             t.dueDate &&
             t.dueDate < now &&
             t.status !== "completed" &&
-            t.status !== "cancelled"
+            t.status !== "cancelled",
         ).length,
         dueToday: all.filter((t) => t.dueDate && t.dueDate.startsWith(today))
           .length,
@@ -394,7 +394,7 @@ export const db = {
             t.dueDate >= now &&
             t.dueDate <= weekFromNow &&
             t.status !== "completed" &&
-            t.status !== "cancelled"
+            t.status !== "cancelled",
         ).length,
         highPriority: all.filter((t) => t.priority === "high").length,
         urgent: all.filter((t) => t.priority === "urgent").length,
@@ -412,7 +412,7 @@ export const db = {
       if (subtasks.length === 0) return 0;
 
       const completedCount = subtasks.filter(
-        (t) => t.status === "completed"
+        (t) => t.status === "completed",
       ).length;
       return Math.round((completedCount / subtasks.length) * 100);
     },
@@ -426,13 +426,13 @@ export const db = {
      */
     async bulkUpdateStatus(
       taskIds: string[],
-      status: TaskStatus
+      status: TaskStatus,
     ): Promise<void> {
       const all = await this.getAll();
       const updated = all.map((t) =>
         taskIds.includes(t.id)
           ? { ...t, status, updatedAt: new Date().toISOString() }
-          : t
+          : t,
       );
       await setData(KEYS.TASKS, updated);
     },
@@ -446,7 +446,8 @@ export const db = {
     async bulkDelete(taskIds: string[]): Promise<void> {
       const all = await this.getAll();
       const filtered = all.filter(
-        (t) => !taskIds.includes(t.id) && !taskIds.includes(t.parentTaskId || "")
+        (t) =>
+          !taskIds.includes(t.id) && !taskIds.includes(t.parentTaskId || ""),
       );
       await setData(KEYS.TASKS, filtered);
     },
@@ -554,8 +555,8 @@ export const db = {
         return eventDate === targetDate;
       });
       // Sort by start time
-      return filtered.sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      return filtered.sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
       );
     },
 
@@ -576,8 +577,8 @@ export const db = {
         return eventDate >= start && eventDate < end;
       });
 
-      return filtered.sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      return filtered.sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
       );
     },
 
@@ -593,13 +594,12 @@ export const db = {
       const filtered = all.filter((e) => {
         const eventDate = new Date(e.startAt);
         return (
-          eventDate.getFullYear() === year &&
-          eventDate.getMonth() + 1 === month
+          eventDate.getFullYear() === year && eventDate.getMonth() + 1 === month
         );
       });
 
-      return filtered.sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      return filtered.sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
       );
     },
 
@@ -610,7 +610,10 @@ export const db = {
      * @param {string} endDate - ISO 8601 date string for range end
      * @returns {Promise<CalendarEvent[]>} Array of events in the date range, sorted by start time
      */
-    async getForDateRange(startDate: string, endDate: string): Promise<CalendarEvent[]> {
+    async getForDateRange(
+      startDate: string,
+      endDate: string,
+    ): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const start = new Date(startDate.split("T")[0]);
       const end = new Date(endDate.split("T")[0]);
@@ -621,8 +624,8 @@ export const db = {
         return eventDate >= start && eventDate < end;
       });
 
-      return filtered.sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      return filtered.sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
       );
     },
 
@@ -643,8 +646,8 @@ export const db = {
         return eventDate >= now && eventDate <= future;
       });
 
-      return filtered.sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+      return filtered.sort(
+        (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
       );
     },
 
@@ -688,14 +691,18 @@ export const db = {
     async search(query: string): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const lowerQuery = query.toLowerCase();
-      
-      return all.filter((e) => 
-        e.title.toLowerCase().includes(lowerQuery) ||
-        e.description.toLowerCase().includes(lowerQuery) ||
-        e.location.toLowerCase().includes(lowerQuery)
-      ).sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
-      );
+
+      return all
+        .filter(
+          (e) =>
+            e.title.toLowerCase().includes(lowerQuery) ||
+            e.description.toLowerCase().includes(lowerQuery) ||
+            e.location.toLowerCase().includes(lowerQuery),
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
+        );
     },
 
     /**
@@ -707,12 +714,13 @@ export const db = {
     async getByLocation(location: string): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const lowerLocation = location.toLowerCase();
-      
-      return all.filter((e) => 
-        e.location.toLowerCase().includes(lowerLocation)
-      ).sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
-      );
+
+      return all
+        .filter((e) => e.location.toLowerCase().includes(lowerLocation))
+        .sort(
+          (a, b) =>
+            new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
+        );
     },
 
     /**
@@ -727,26 +735,29 @@ export const db = {
     async getConflicts(
       startAt: string,
       endAt: string,
-      excludeId?: string
+      excludeId?: string,
     ): Promise<CalendarEvent[]> {
       const all = await this.getAll();
       const newStart = new Date(startAt).getTime();
       const newEnd = new Date(endAt).getTime();
 
-      return all.filter((e) => {
-        if (excludeId && e.id === excludeId) return false;
-        
-        const eventStart = new Date(e.startAt).getTime();
-        const eventEnd = new Date(e.endAt).getTime();
+      return all
+        .filter((e) => {
+          if (excludeId && e.id === excludeId) return false;
 
-        // Check for overlap: events overlap if one starts before the other ends
-        return (
-          (eventStart < newEnd && eventEnd > newStart) ||
-          (newStart < eventEnd && newEnd > eventStart)
+          const eventStart = new Date(e.startAt).getTime();
+          const eventEnd = new Date(e.endAt).getTime();
+
+          // Check for overlap: events overlap if one starts before the other ends
+          return (
+            (eventStart < newEnd && eventEnd > newStart) ||
+            (newStart < eventEnd && newEnd > eventStart)
+          );
+        })
+        .sort(
+          (a, b) =>
+            new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
         );
-      }).sort((a, b) => 
-        new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
-      );
     },
 
     /**
@@ -766,7 +777,7 @@ export const db = {
       const all = await this.getAll();
       const today = new Date();
       const todayStr = today.toISOString().split("T")[0];
-      
+
       // Week range
       const weekStart = new Date(today);
       weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
@@ -780,8 +791,11 @@ export const db = {
       return {
         totalEvents: all.length,
         upcomingEvents: all.filter((e) => new Date(e.startAt) >= today).length,
-        todayEvents: all.filter((e) => e.startAt.split("T")[0] === todayStr).length,
-        recurringEvents: all.filter((e) => e.recurrenceRule && e.recurrenceRule !== "none").length,
+        todayEvents: all.filter((e) => e.startAt.split("T")[0] === todayStr)
+          .length,
+        recurringEvents: all.filter(
+          (e) => e.recurrenceRule && e.recurrenceRule !== "none",
+        ).length,
         allDayEvents: all.filter((e) => e.allDay).length,
         eventsThisWeek: all.filter((e) => {
           const eventDate = new Date(e.startAt);
@@ -909,7 +923,7 @@ export const db = {
     async duplicate(id: string): Promise<List | null> {
       const list = await this.get(id);
       if (!list) return null;
-      
+
       const now = new Date().toISOString();
       const duplicated: List = {
         ...list,
@@ -925,7 +939,7 @@ export const db = {
         lastOpenedAt: now,
         updatedAt: now,
       };
-      
+
       await this.save(duplicated);
       return duplicated;
     },
@@ -968,7 +982,7 @@ export const db = {
       const active = all.filter((l) => !l.isArchived && !l.isTemplate);
       const archived = all.filter((l) => l.isArchived === true);
       const templates = all.filter((l) => l.isTemplate === true);
-      
+
       // Count categories only for active lists
       const byCategory: Record<string, number> = {};
       active.forEach((list) => {
@@ -976,14 +990,14 @@ export const db = {
           byCategory[list.category] = (byCategory[list.category] || 0) + 1;
         }
       });
-      
+
       let totalItems = 0;
       let completedItems = 0;
       all.forEach((list) => {
         totalItems += list.items.length;
         completedItems += list.items.filter((item) => item.isChecked).length;
       });
-      
+
       return {
         total: all.length,
         active: active.length,
@@ -1012,12 +1026,12 @@ export const db = {
      */
     async getAll(): Promise<Alert[]> {
       const alerts = await getData<Alert[]>(KEYS.ALERTS, []);
-      
+
       // Check if any alert needs migration
       const needsMigration = alerts.some(
-        (alert) => !alert.sound || !alert.vibration || alert.tags === undefined
+        (alert) => !alert.sound || !alert.vibration || alert.tags === undefined,
       );
-      
+
       if (needsMigration) {
         // Migrate alerts with default values
         const migratedAlerts = alerts.map((alert) => ({
@@ -1028,12 +1042,12 @@ export const db = {
           snoozeDuration: alert.snoozeDuration || 10,
           tags: alert.tags || [],
         }));
-        
+
         // Persist migrated data
         await setData(KEYS.ALERTS, migratedAlerts);
         return migratedAlerts;
       }
-      
+
       return alerts;
     },
 
@@ -1123,7 +1137,7 @@ export const db = {
       const filtered = all.filter((a) => a.tags.includes(tag));
       // Sort by time ascending
       return filtered.sort(
-        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       );
     },
 
@@ -1151,14 +1165,14 @@ export const db = {
     async toggleMultiple(ids: string[], enabled: boolean): Promise<void> {
       const all = await this.getAll();
       const now = new Date().toISOString();
-      
+
       const updated = all.map((alert) => {
         if (ids.includes(alert.id)) {
           return { ...alert, isEnabled: enabled, updatedAt: now };
         }
         return alert;
       });
-      
+
       await setData(KEYS.ALERTS, updated);
     },
 
@@ -1203,7 +1217,7 @@ export const db = {
      * @returns {Promise<AlertHistoryEntry>} The saved entry with generated id
      */
     async add(
-      entry: Omit<AlertHistoryEntry, "id">
+      entry: Omit<AlertHistoryEntry, "id">,
     ): Promise<AlertHistoryEntry> {
       const all = await this.getAll();
       const newEntry: AlertHistoryEntry = {
@@ -1241,13 +1255,12 @@ export const db = {
       const totalTriggers = entries.length;
       const totalSnoozes = entries.reduce(
         (sum, entry) => sum + entry.snoozeCount,
-        0
+        0,
       );
       const onTimeCount = entries.filter((entry) => entry.wasOnTime).length;
       const lastEntry = entries.sort(
         (a, b) =>
-          new Date(b.triggeredAt).getTime() -
-          new Date(a.triggeredAt).getTime()
+          new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime(),
       )[0];
 
       return {
@@ -1277,26 +1290,26 @@ export const db = {
     /**
      * Get smart snooze duration recommendation based on history
      * Analyzes past snooze patterns to suggest optimal snooze duration
-     * 
+     *
      * Algorithm:
      * 1. If no history: return 10 min (default)
      * 2. If user never snoozes: return 5 min (disciplined user)
      * 3. Otherwise: calculate average snooze duration per instance
      *    - avgTotalDuration = total snooze time / number of snoozed alerts
-     *    - avgCount = total snoozes / number of snoozed alerts  
+     *    - avgCount = total snoozes / number of snoozed alerts
      *    - estimatedOptimal = avgTotalDuration / avgCount
      * 4. Round to nearest valid option (5, 10, 15, 30, 60)
      *
      * @param {string} alertId - The alert ID
      * @returns {Promise<number>} Recommended snooze duration in minutes
-     * 
+     *
      * @example
      * // User consistently snoozes 2x at 15min each = 30min total
      * // Returns: 15 (optimal per-snooze duration)
      */
     async getSmartSnoozeSuggestion(alertId: string): Promise<number> {
       const entries = await this.getByAlert(alertId);
-      
+
       // Default to 10 minutes if no history
       if (entries.length === 0) {
         return 10;
@@ -1304,7 +1317,7 @@ export const db = {
 
       // Filter entries where snoozing occurred
       const snoozedEntries = entries.filter((entry) => entry.snoozeCount > 0);
-      
+
       if (snoozedEntries.length === 0) {
         // If user never snoozes, suggest shorter duration
         return 5;
@@ -1314,7 +1327,7 @@ export const db = {
       const avgTotalSnoozeDuration =
         snoozedEntries.reduce(
           (sum, entry) => sum + entry.totalSnoozeDuration,
-          0
+          0,
         ) / snoozedEntries.length;
 
       // Calculate average snooze count
@@ -1323,16 +1336,15 @@ export const db = {
         snoozedEntries.length;
 
       // Estimate optimal single snooze duration with defensive check
-      const estimatedOptimal = avgSnoozeCount > 0
-        ? avgTotalSnoozeDuration / avgSnoozeCount
-        : 10; // Default fallback if somehow avgSnoozeCount is 0
+      const estimatedOptimal =
+        avgSnoozeCount > 0 ? avgTotalSnoozeDuration / avgSnoozeCount : 10; // Default fallback if somehow avgSnoozeCount is 0
 
       // Round to nearest valid snooze option: 5, 10, 15, 30, or 60 minutes
       const validOptions = [5, 10, 15, 30, 60];
       const closest = validOptions.reduce((prev, curr) =>
         Math.abs(curr - estimatedOptimal) < Math.abs(prev - estimatedOptimal)
           ? curr
-          : prev
+          : prev,
       );
 
       return closest;
@@ -1541,7 +1553,9 @@ export const db = {
     async getUpcomingBirthdays(daysAhead: number = 30): Promise<Contact[]> {
       const all = await this.getAll();
       const now = new Date();
-      const futureDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
+      const futureDate = new Date(
+        now.getTime() + daysAhead * 24 * 60 * 60 * 1000,
+      );
 
       const contactsWithUpcomingBirthdays = all.filter((c) => {
         if (!c.birthday) return false;
@@ -1589,7 +1603,7 @@ export const db = {
     async addNote(id: string, noteText: string): Promise<void> {
       const validatedText = validateNote(noteText);
       if (!validatedText) return; // Invalid note text
-      
+
       const contact = await this.get(id);
       if (contact) {
         const note = {
@@ -1605,10 +1619,14 @@ export const db = {
     },
 
     /** Update a note */
-    async updateNote(contactId: string, noteId: string, newText: string): Promise<void> {
+    async updateNote(
+      contactId: string,
+      noteId: string,
+      newText: string,
+    ): Promise<void> {
       const validatedText = validateNote(newText);
       if (!validatedText) return; // Invalid note text
-      
+
       const contact = await this.get(contactId);
       if (contact && contact.notes) {
         const noteIndex = contact.notes.findIndex((n) => n.id === noteId);
@@ -1635,7 +1653,7 @@ export const db = {
     async addTag(id: string, tag: string): Promise<void> {
       const validatedTag = validateTag(tag);
       if (!validatedTag) return; // Invalid tag
-      
+
       const contact = await this.get(id);
       if (contact) {
         contact.tags = [...new Set([...(contact.tags || []), validatedTag])];
@@ -1658,10 +1676,12 @@ export const db = {
     async addToGroup(id: string, groupName: string): Promise<void> {
       const validatedGroup = validateGroup(groupName);
       if (!validatedGroup) return; // Invalid group name
-      
+
       const contact = await this.get(id);
       if (contact) {
-        contact.groups = [...new Set([...(contact.groups || []), validatedGroup])];
+        contact.groups = [
+          ...new Set([...(contact.groups || []), validatedGroup]),
+        ];
         contact.updatedAt = new Date().toISOString();
         await this.save(contact);
       }
@@ -1709,19 +1729,37 @@ export const db = {
         const duplicate = await this.get(dupId);
         if (duplicate) {
           // Merge phone numbers
-          primary.phoneNumbers = [...new Set([...primary.phoneNumbers, ...duplicate.phoneNumbers])];
+          primary.phoneNumbers = [
+            ...new Set([...primary.phoneNumbers, ...duplicate.phoneNumbers]),
+          ];
           // Merge emails
-          primary.emails = [...new Set([...primary.emails, ...duplicate.emails])];
+          primary.emails = [
+            ...new Set([...primary.emails, ...duplicate.emails]),
+          ];
           // Merge tags
-          primary.tags = [...new Set([...(primary.tags || []), ...(duplicate.tags || [])])];
+          primary.tags = [
+            ...new Set([...(primary.tags || []), ...(duplicate.tags || [])]),
+          ];
           // Merge groups
-          primary.groups = [...new Set([...(primary.groups || []), ...(duplicate.groups || [])])];
+          primary.groups = [
+            ...new Set([
+              ...(primary.groups || []),
+              ...(duplicate.groups || []),
+            ]),
+          ];
           // Merge notes
-          primary.notes = [...(primary.notes || []), ...(duplicate.notes || [])];
+          primary.notes = [
+            ...(primary.notes || []),
+            ...(duplicate.notes || []),
+          ];
           // Merge call history
-          primary.callHistory = [...(primary.callHistory || []), ...(duplicate.callHistory || [])];
+          primary.callHistory = [
+            ...(primary.callHistory || []),
+            ...(duplicate.callHistory || []),
+          ];
           // Update contact frequency
-          primary.contactFrequency = (primary.contactFrequency || 0) + (duplicate.contactFrequency || 0);
+          primary.contactFrequency =
+            (primary.contactFrequency || 0) + (duplicate.contactFrequency || 0);
         }
       }
 
@@ -1860,7 +1898,9 @@ export const db = {
     async removeContacts(groupId: string, contactIds: string[]): Promise<void> {
       const group = await this.get(groupId);
       if (group) {
-        group.contactIds = group.contactIds.filter((id) => !contactIds.includes(id));
+        group.contactIds = group.contactIds.filter(
+          (id) => !contactIds.includes(id),
+        );
         group.updatedAt = new Date().toISOString();
         await this.save(group);
       }
@@ -1884,12 +1924,12 @@ export const db = {
       const current = await this.get();
       const stats = current.moduleUsageStats || {};
       const now = new Date().toISOString();
-      
+
       stats[moduleId] = {
         count: (stats[moduleId]?.count || 0) + 1,
         lastUsed: now,
       };
-      
+
       await this.update({ moduleUsageStats: stats });
     },
   },
@@ -1916,9 +1956,7 @@ export const db = {
       const entries = await getData<HistoryLogEntry[]>(KEYS.HISTORY, []);
       return entries.find((entry) => entry.id === id) || null;
     },
-    async getByType(
-      type: HistoryLogEntry["type"],
-    ): Promise<HistoryLogEntry[]> {
+    async getByType(type: HistoryLogEntry["type"]): Promise<HistoryLogEntry[]> {
       const entries = await this.getAll();
       return entries.filter((entry) => entry.type === type);
     },
@@ -1973,7 +2011,8 @@ export const db = {
       return {
         totalEntries: entries.length,
         entriesByType,
-        oldestEntry: entries.length > 0 ? entries[entries.length - 1].timestamp : null,
+        oldestEntry:
+          entries.length > 0 ? entries[entries.length - 1].timestamp : null,
         newestEntry: entries.length > 0 ? entries[0].timestamp : null,
       };
     },
@@ -2199,7 +2238,7 @@ export const db = {
       const all = await this.getAll();
       const filtered = all.filter((a) => a.id !== id);
       await setData(KEYS.PHOTO_ALBUMS, filtered);
-      
+
       // Remove album reference from photos
       const photos = await db.photos.getByAlbum(id);
       if (photos.length > 0) {
@@ -2296,7 +2335,7 @@ export const db = {
     async search(query: string): Promise<Budget[]> {
       const all = await this.getAll();
       const lowerQuery = query.toLowerCase().trim();
-      
+
       if (!lowerQuery) {
         return all;
       }
@@ -2306,14 +2345,14 @@ export const db = {
         if (budget.name.toLowerCase().includes(lowerQuery)) {
           return true;
         }
-        
+
         // Search in categories and line items
         return budget.categories.some((category) => {
           if (category.name.toLowerCase().includes(lowerQuery)) {
             return true;
           }
           return category.lineItems.some((item) =>
-            item.name.toLowerCase().includes(lowerQuery)
+            item.name.toLowerCase().includes(lowerQuery),
           );
         });
       });
@@ -2328,11 +2367,11 @@ export const db = {
      */
     async getByDateRange(
       startMonth: string,
-      endMonth: string
+      endMonth: string,
     ): Promise<Budget[]> {
       const all = await this.getAll();
       return all.filter(
-        (budget) => budget.month >= startMonth && budget.month <= endMonth
+        (budget) => budget.month >= startMonth && budget.month <= endMonth,
       );
     },
 
@@ -2364,7 +2403,7 @@ export const db = {
       oldestMonth: string | null;
     }> {
       const all = await this.getAll();
-      
+
       if (all.length === 0) {
         return {
           totalBudgets: 0,
@@ -2419,13 +2458,13 @@ export const db = {
      * @returns {Promise<Array>} Array of category totals
      */
     async getCategoryTotals(budgetId: string): Promise<
-      Array<{
+      {
         categoryId: string;
         categoryName: string;
         budgeted: number;
         actual: number;
         difference: number;
-      }>
+      }[]
     > {
       const budget = await this.get(budgetId);
       if (!budget) {
@@ -2435,7 +2474,7 @@ export const db = {
       return budget.categories.map((category) => {
         let budgeted = 0;
         let actual = 0;
-        
+
         category.lineItems.forEach((item) => {
           budgeted += item.budgeted;
           actual += item.actual;
@@ -2460,7 +2499,7 @@ export const db = {
      */
     async compareMonths(
       month1: string,
-      month2: string
+      month2: string,
     ): Promise<{
       month1Budget: Budget;
       month2Budget: Budget;
@@ -2493,7 +2532,7 @@ export const db = {
 
       const budgetedDiff = total2.budgeted - total1.budgeted;
       const actualDiff = total2.actual - total1.actual;
-      
+
       // Calculate percentage change
       // If total1.actual is 0, percentage change is 100% if total2 > 0, 0% if total2 = 0
       const percentageChange =
@@ -2523,7 +2562,7 @@ export const db = {
     async duplicate(
       budgetId: string,
       newMonth: string,
-      newName: string
+      newName: string,
     ): Promise<Budget | null> {
       const budget = await this.get(budgetId);
       if (!budget) {
@@ -2766,10 +2805,7 @@ export const db = {
     }): Promise<Integration[]> {
       const all = await this.getAll();
       return all.filter((integration) => {
-        if (
-          filters.category &&
-          integration.category !== filters.category
-        ) {
+        if (filters.category && integration.category !== filters.category) {
           return false;
         }
         if (filters.status && integration.status !== filters.status) {
@@ -2803,35 +2839,26 @@ export const db = {
       averageSyncDuration: number;
       totalErrors: number;
       categoryCounts: Record<string, number>;
-      recentSyncs: Array<{ id: string; name: string; lastSyncAt: string }>;
+      recentSyncs: { id: string; name: string; lastSyncAt: string }[];
     }> {
       const all = await this.getAll();
 
-      const connectedIntegrations = all.filter(
-        (i) => i.status === "connected",
-      );
+      const connectedIntegrations = all.filter((i) => i.status === "connected");
       const disconnectedIntegrations = all.filter(
         (i) => i.status === "disconnected",
       );
       const errorIntegrations = all.filter((i) => i.status === "error");
-      const syncingIntegrations = all.filter(
-        (i) => i.status === "syncing",
-      );
+      const syncingIntegrations = all.filter((i) => i.status === "syncing");
       const enabledIntegrations = all.filter((i) => i.isEnabled);
 
-      const totalSyncs = all.reduce(
-        (sum, i) => sum + i.stats.totalSyncs,
-        0,
-      );
+      const totalSyncs = all.reduce((sum, i) => sum + i.stats.totalSyncs, 0);
       const totalDataItemsSynced = all.reduce(
         (sum, i) => sum + i.stats.dataItemsSynced,
         0,
       );
 
       // Calculate average sync duration across all integrations
-      const integrationsWithSyncs = all.filter(
-        (i) => i.stats.totalSyncs > 0,
-      );
+      const integrationsWithSyncs = all.filter((i) => i.stats.totalSyncs > 0);
       const averageSyncDuration =
         integrationsWithSyncs.length > 0
           ? integrationsWithSyncs.reduce(
@@ -2840,10 +2867,7 @@ export const db = {
             ) / integrationsWithSyncs.length
           : 0;
 
-      const totalErrors = all.reduce(
-        (sum, i) => sum + i.stats.errorCount,
-        0,
-      );
+      const totalErrors = all.reduce((sum, i) => sum + i.stats.errorCount, 0);
 
       // Count integrations by category
       const categoryCounts: Record<string, number> = {};
@@ -2931,10 +2955,7 @@ export const db = {
      * @param {string[]} ids - Array of integration IDs
      * @param {boolean} enabled - Whether to enable or disable
      */
-    async bulkSetEnabled(
-      ids: string[],
-      enabled: boolean,
-    ): Promise<void> {
+    async bulkSetEnabled(ids: string[], enabled: boolean): Promise<void> {
       const all = await this.getAll();
       const updated = all.map((integration) => {
         if (ids.includes(integration.id)) {
@@ -3035,8 +3056,8 @@ export const db = {
       healthy: boolean;
       warnings: string[];
       recommendations: string[];
-      errorIntegrations: Array<{ id: string; name: string }>;
-      staleIntegrations: Array<{ id: string; name: string; lastSyncAt: string }>;
+      errorIntegrations: { id: string; name: string }[];
+      staleIntegrations: { id: string; name: string; lastSyncAt: string }[];
     }> {
       const all = await this.getAll();
       const warnings: string[] = [];
@@ -3048,9 +3069,7 @@ export const db = {
         .map((i) => ({ id: i.id, name: i.name }));
 
       if (errorIntegrations.length > 0) {
-        warnings.push(
-          `${errorIntegrations.length} integration(s) have errors`,
-        );
+        warnings.push(`${errorIntegrations.length} integration(s) have errors`);
         recommendations.push("Review and reconnect integrations with errors");
       }
 
@@ -3058,11 +3077,7 @@ export const db = {
       const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
       const staleIntegrations = all
         .filter((i) => {
-          if (
-            !i.isEnabled ||
-            i.status !== "connected" ||
-            !i.lastSyncAt
-          ) {
+          if (!i.isEnabled || i.status !== "connected" || !i.lastSyncAt) {
             return false;
           }
           return new Date(i.lastSyncAt).getTime() < sevenDaysAgo;
@@ -3092,11 +3107,12 @@ export const db = {
         warnings.push(
           `${highErrorIntegrations.length} integration(s) have high error rates`,
         );
-        recommendations.push("Check integration configurations and credentials");
+        recommendations.push(
+          "Check integration configurations and credentials",
+        );
       }
 
-      const healthy =
-        warnings.length === 0 && errorIntegrations.length === 0;
+      const healthy = warnings.length === 0 && errorIntegrations.length === 0;
 
       return {
         healthy,
@@ -3241,17 +3257,13 @@ export const db = {
 
         // Search in message bodies
         if (
-          thread.messages.some((m) =>
-            m.body.toLowerCase().includes(lowerQuery),
-          )
+          thread.messages.some((m) => m.body.toLowerCase().includes(lowerQuery))
         ) {
           return true;
         }
 
         // Search in labels
-        if (
-          thread.labels?.some((l) => l.toLowerCase().includes(lowerQuery))
-        ) {
+        if (thread.labels?.some((l) => l.toLowerCase().includes(lowerQuery))) {
           return true;
         }
 
@@ -3569,10 +3581,7 @@ export const db = {
         archived: all.filter((t) => t.isArchived).length,
         important: all.filter((t) => t.isImportant).length,
         drafts: all.filter((t) => t.isDraft).length,
-        totalSize: all.reduce(
-          (sum, t) => sum + (t.totalSize || 0),
-          0,
-        ),
+        totalSize: all.reduce((sum, t) => sum + (t.totalSize || 0), 0),
       };
     },
 

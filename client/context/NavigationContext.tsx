@@ -1,9 +1,9 @@
 /**
  * NavigationContext
- * 
+ *
  * Provides contextual navigation support for the app.
  * Tracks user focus and suggests contextually relevant modules.
- * 
+ *
  * Example: When viewing an email with a date, calendar becomes
  * the contextual next module regardless of usual ordering.
  */
@@ -17,10 +17,14 @@ interface NavigationContextType {
   clearContextualModule: () => void;
 }
 
-const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
+const NavigationContext = createContext<NavigationContextType | undefined>(
+  undefined,
+);
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [contextualModule, setContextualModule] = useState<ModuleType | null>(null);
+  const [contextualModule, setContextualModule] = useState<ModuleType | null>(
+    null,
+  );
 
   const clearContextualModule = () => {
     setContextualModule(null);
@@ -42,7 +46,9 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 export function useNavigationContext() {
   const context = useContext(NavigationContext);
   if (context === undefined) {
-    throw new Error("useNavigationContext must be used within a NavigationProvider");
+    throw new Error(
+      "useNavigationContext must be used within a NavigationProvider",
+    );
   }
   return context;
 }

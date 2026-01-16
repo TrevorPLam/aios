@@ -64,15 +64,15 @@ export class FeatureFlagManager {
 
 /**
  * Usage:
- * 
+ *
  * const flags = new FeatureFlagManager();
- * 
+ *
  * flags.setFlag({
  *   name: "enable_compression",
  *   enabled: true,
  *   rolloutPercentage: 50 // 50% of users
  * });
- * 
+ *
  * if (flags.isEnabled("enable_compression", userId)) {
  *   // Use compression
  * }

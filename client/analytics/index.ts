@@ -59,7 +59,7 @@ function getAnalytics(): AnalyticsClient {
  */
 export async function log<T extends EventName>(
   eventName: T,
-  props: EventPropsMap[T]
+  props: EventPropsMap[T],
 ): Promise<void> {
   await getAnalytics().log(eventName, props);
 }
@@ -117,7 +117,7 @@ export async function shutdown(): Promise<void> {
  */
 export async function trackAppOpened(
   installAgeDays: number,
-  networkState: NetworkState
+  networkState: NetworkState,
 ): Promise<void> {
   await log("app_opened", {
     install_age_bucket: getInstallAgeBucket(installAgeDays),
@@ -155,7 +155,7 @@ export async function trackAppBackgrounded(): Promise<void> {
  */
 export async function trackModuleOpened(
   moduleId: ModuleType,
-  source: NavigationSource
+  source: NavigationSource,
 ): Promise<void> {
   await log("module_opened", { module_id: moduleId, source });
 }
@@ -172,7 +172,7 @@ export async function trackModuleClosed(moduleId: ModuleType): Promise<void> {
  */
 export async function trackModuleSwitch(
   fromModule: ModuleType,
-  toModule: ModuleType
+  toModule: ModuleType,
 ): Promise<void> {
   await log("module_switch", { from_module: fromModule, to_module: toModule });
 }
@@ -182,7 +182,7 @@ export async function trackModuleSwitch(
  */
 export async function trackModuleSearch(
   queryLength: number,
-  resultsCount: number
+  resultsCount: number,
 ): Promise<void> {
   await log("module_search", {
     query_length_bucket: getQueryLengthBucket(queryLength),
@@ -214,7 +214,9 @@ export async function trackModuleReordered(orderHash: string): Promise<void> {
 /**
  * Track module focus start
  */
-export async function trackModuleFocusStart(moduleId: ModuleType): Promise<void> {
+export async function trackModuleFocusStart(
+  moduleId: ModuleType,
+): Promise<void> {
   await log("module_focus_start", { module_id: moduleId });
 }
 
@@ -223,7 +225,7 @@ export async function trackModuleFocusStart(moduleId: ModuleType): Promise<void>
  */
 export async function trackModuleFocusEnd(
   moduleId: ModuleType,
-  durationSeconds: number
+  durationSeconds: number,
 ): Promise<void> {
   await log("module_focus_end", {
     module_id: moduleId,
@@ -240,7 +242,7 @@ export async function trackModuleFocusEnd(
  */
 export async function trackItemCreated(
   moduleId: ModuleType,
-  itemType: string
+  itemType: string,
 ): Promise<void> {
   await log("item_created", { module_id: moduleId, item_type: itemType });
 }
@@ -250,7 +252,7 @@ export async function trackItemCreated(
  */
 export async function trackItemViewed(
   moduleId: ModuleType,
-  itemType: string
+  itemType: string,
 ): Promise<void> {
   await log("item_viewed", { module_id: moduleId, item_type: itemType });
 }
@@ -260,7 +262,7 @@ export async function trackItemViewed(
  */
 export async function trackItemUpdated(
   moduleId: ModuleType,
-  itemType: string
+  itemType: string,
 ): Promise<void> {
   await log("item_updated", { module_id: moduleId, item_type: itemType });
 }
@@ -270,7 +272,7 @@ export async function trackItemUpdated(
  */
 export async function trackItemDeleted(
   moduleId: ModuleType,
-  itemType: string
+  itemType: string,
 ): Promise<void> {
   await log("item_deleted", { module_id: moduleId, item_type: itemType });
 }
@@ -280,7 +282,7 @@ export async function trackItemDeleted(
  */
 export async function trackItemCompleted(
   moduleId: ModuleType,
-  itemType: string
+  itemType: string,
 ): Promise<void> {
   await log("item_completed", { module_id: moduleId, item_type: itemType });
 }
@@ -294,7 +296,7 @@ export async function trackItemCompleted(
  */
 export async function trackAIOpened(
   contextModule: ModuleType,
-  selectionState: SelectionState
+  selectionState: SelectionState,
 ): Promise<void> {
   await log("ai_opened", {
     context_module: contextModule,
@@ -308,7 +310,7 @@ export async function trackAIOpened(
 export async function trackAISuggestionGenerated(
   suggestionType: string,
   confidence: ConfidenceBucket,
-  latencyMs: number
+  latencyMs: number,
 ): Promise<void> {
   await log("ai_suggestion_generated", {
     suggestion_type: suggestionType,
@@ -322,7 +324,7 @@ export async function trackAISuggestionGenerated(
  */
 export async function trackAISuggestionApplied(
   suggestionType: string,
-  confidence: ConfidenceBucket
+  confidence: ConfidenceBucket,
 ): Promise<void> {
   await log("ai_suggestion_applied", {
     suggestion_type: suggestionType,
@@ -333,7 +335,9 @@ export async function trackAISuggestionApplied(
 /**
  * Track AI suggestion rejected
  */
-export async function trackAISuggestionRejected(suggestionType: string): Promise<void> {
+export async function trackAISuggestionRejected(
+  suggestionType: string,
+): Promise<void> {
   await log("ai_suggestion_rejected", { suggestion_type: suggestionType });
 }
 
@@ -342,7 +346,7 @@ export async function trackAISuggestionRejected(suggestionType: string): Promise
  */
 export async function trackAIEditBeforeApply(
   suggestionType: string,
-  editDistance: number
+  editDistance: number,
 ): Promise<void> {
   await log("ai_edit_before_apply", {
     suggestion_type: suggestionType,
@@ -366,7 +370,7 @@ export async function trackAIAutoAction(actionType: string): Promise<void> {
  */
 export async function trackScreenRenderTime(
   moduleId: ModuleType,
-  renderTimeMs: number
+  renderTimeMs: number,
 ): Promise<void> {
   await log("screen_render_time", {
     module_id: moduleId,
@@ -379,7 +383,7 @@ export async function trackScreenRenderTime(
  */
 export async function trackAPILatency(
   endpointKey: string,
-  latencyMs: number
+  latencyMs: number,
 ): Promise<void> {
   await log("api_latency", {
     endpoint_key: endpointKey,
@@ -392,9 +396,12 @@ export async function trackAPILatency(
  */
 export async function trackErrorBoundaryHit(
   errorHash: string,
-  moduleId?: ModuleType
+  moduleId?: ModuleType,
 ): Promise<void> {
-  await log("error_boundary_hit", { error_hash: errorHash, module_id: moduleId });
+  await log("error_boundary_hit", {
+    error_hash: errorHash,
+    module_id: moduleId,
+  });
 }
 
 // ============================================================================
@@ -411,7 +418,9 @@ export async function trackThemeChanged(themeId: string): Promise<void> {
 /**
  * Track accent color changed
  */
-export async function trackAccentColorChanged(accentColor: string): Promise<void> {
+export async function trackAccentColorChanged(
+  accentColor: string,
+): Promise<void> {
   await log("accent_color_changed", { accent_color: accentColor });
 }
 

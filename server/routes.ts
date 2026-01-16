@@ -613,13 +613,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { text, sourceLang, targetLang } = req.body;
 
       if (!text || !sourceLang || !targetLang) {
-        throw new AppError(400, "Missing required fields: text, sourceLang, targetLang");
+        throw new AppError(
+          400,
+          "Missing required fields: text, sourceLang, targetLang",
+        );
       }
 
       // Using LibreTranslate API (free and open source)
       // In production, you might want to use Google Translate API, DeepL, or another service
       const apiUrl = "https://libretranslate.com/translate";
-      
+
       try {
         const response = await fetch(apiUrl, {
           method: "POST",

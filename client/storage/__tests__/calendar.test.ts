@@ -27,7 +27,9 @@ describe("Calendar Events Database", () => {
   });
 
   // Helper function to create a test event
-  const createTestEvent = (overrides?: Partial<CalendarEvent>): CalendarEvent => ({
+  const createTestEvent = (
+    overrides?: Partial<CalendarEvent>,
+  ): CalendarEvent => ({
     id: "event-1",
     title: "Team Meeting",
     description: "Quarterly review meeting",
@@ -56,7 +58,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-1" }),
         createTestEvent({ id: "event-2", title: "Client Call" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getAll();
       expect(events).toHaveLength(2);
@@ -68,7 +72,9 @@ describe("Calendar Events Database", () => {
   describe("get", () => {
     it("should return event by id", async () => {
       const testEvents = [createTestEvent({ id: "event-1" })];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const event = await db.events.get("event-1");
       expect(event).toBeTruthy();
@@ -92,20 +98,25 @@ describe("Calendar Events Database", () => {
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "@aios/events",
-        JSON.stringify([newEvent])
+        JSON.stringify([newEvent]),
       );
     });
 
     it("should update an existing event", async () => {
-      const existingEvent = createTestEvent({ id: "event-1", title: "Old Title" });
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([existingEvent]));
+      const existingEvent = createTestEvent({
+        id: "event-1",
+        title: "Old Title",
+      });
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify([existingEvent]),
+      );
 
       const updatedEvent = { ...existingEvent, title: "New Title" };
       await db.events.save(updatedEvent);
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "@aios/events",
-        JSON.stringify([updatedEvent])
+        JSON.stringify([updatedEvent]),
       );
     });
   });
@@ -116,25 +127,29 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-1" }),
         createTestEvent({ id: "event-2" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       await db.events.delete("event-1");
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "@aios/events",
-        JSON.stringify([testEvents[1]])
+        JSON.stringify([testEvents[1]]),
       );
     });
 
     it("should handle deleting non-existent event gracefully", async () => {
       const testEvents = [createTestEvent({ id: "event-1" })];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       await db.events.delete("nonexistent");
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "@aios/events",
-        JSON.stringify(testEvents)
+        JSON.stringify(testEvents),
       );
     });
   });
@@ -146,7 +161,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2", startAt: "2024-03-15T14:00:00.000Z" }),
         createTestEvent({ id: "event-3", startAt: "2024-03-16T10:00:00.000Z" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getForDate("2024-03-15");
       expect(events).toHaveLength(2);
@@ -159,7 +176,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-1", startAt: "2024-03-15T14:00:00.000Z" }),
         createTestEvent({ id: "event-2", startAt: "2024-03-15T10:00:00.000Z" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getForDate("2024-03-15");
       expect(events[0].id).toBe("event-2"); // Earlier time
@@ -167,8 +186,12 @@ describe("Calendar Events Database", () => {
     });
 
     it("should return empty array if no events on date", async () => {
-      const testEvents = [createTestEvent({ startAt: "2024-03-15T10:00:00.000Z" })];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      const testEvents = [
+        createTestEvent({ startAt: "2024-03-15T10:00:00.000Z" }),
+      ];
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getForDate("2024-03-16");
       expect(events).toEqual([]);
@@ -182,7 +205,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2", startAt: "2024-03-18T10:00:00.000Z" }),
         createTestEvent({ id: "event-3", startAt: "2024-03-22T10:00:00.000Z" }), // Outside week
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getForWeek("2024-03-15");
       expect(events).toHaveLength(2);
@@ -198,7 +223,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2", startAt: "2024-03-25T10:00:00.000Z" }),
         createTestEvent({ id: "event-3", startAt: "2024-04-05T10:00:00.000Z" }), // Different month
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getForMonth(2024, 3);
       expect(events).toHaveLength(2);
@@ -211,7 +238,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-1", startAt: "2024-03-15T10:00:00.000Z" }),
         createTestEvent({ id: "event-2", startAt: "2025-03-15T10:00:00.000Z" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events2024 = await db.events.getForMonth(2024, 3);
       expect(events2024).toHaveLength(1);
@@ -230,9 +259,14 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2", startAt: "2024-03-18T10:00:00.000Z" }),
         createTestEvent({ id: "event-3", startAt: "2024-03-25T10:00:00.000Z" }), // Outside range
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
-      const events = await db.events.getForDateRange("2024-03-15", "2024-03-20");
+      const events = await db.events.getForDateRange(
+        "2024-03-15",
+        "2024-03-20",
+      );
       expect(events).toHaveLength(2);
       expect(events[0].id).toBe("event-1");
       expect(events[1].id).toBe("event-2");
@@ -242,9 +276,14 @@ describe("Calendar Events Database", () => {
       const testEvents = [
         createTestEvent({ id: "event-1", startAt: "2024-03-20T10:00:00.000Z" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
-      const events = await db.events.getForDateRange("2024-03-15", "2024-03-20");
+      const events = await db.events.getForDateRange(
+        "2024-03-15",
+        "2024-03-20",
+      );
       expect(events).toHaveLength(1);
     });
   });
@@ -261,7 +300,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-1", startAt: tomorrow.toISOString() }),
         createTestEvent({ id: "event-2", startAt: nextWeek.toISOString() }), // Beyond 7 days
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getUpcoming(7);
       expect(events).toHaveLength(1);
@@ -276,7 +317,9 @@ describe("Calendar Events Database", () => {
       const testEvents = [
         createTestEvent({ id: "event-1", startAt: inThreeDays.toISOString() }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getUpcoming();
       expect(events).toHaveLength(1);
@@ -290,7 +333,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-1", startAt: `${today}T10:00:00.000Z` }),
         createTestEvent({ id: "event-2", startAt: "2024-03-20T10:00:00.000Z" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getDueToday();
       expect(events).toHaveLength(1);
@@ -301,10 +346,20 @@ describe("Calendar Events Database", () => {
   describe("getAllDayEvents", () => {
     it("should return only all-day events for a date", async () => {
       const testEvents = [
-        createTestEvent({ id: "event-1", startAt: "2024-03-15T10:00:00.000Z", allDay: true }),
-        createTestEvent({ id: "event-2", startAt: "2024-03-15T14:00:00.000Z", allDay: false }),
+        createTestEvent({
+          id: "event-1",
+          startAt: "2024-03-15T10:00:00.000Z",
+          allDay: true,
+        }),
+        createTestEvent({
+          id: "event-2",
+          startAt: "2024-03-15T14:00:00.000Z",
+          allDay: false,
+        }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getAllDayEvents("2024-03-15");
       expect(events).toHaveLength(1);
@@ -319,7 +374,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2", recurrenceRule: "weekly" }),
         createTestEvent({ id: "event-3", recurrenceRule: "none" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getRecurring();
       expect(events).toHaveLength(2);
@@ -331,7 +388,9 @@ describe("Calendar Events Database", () => {
       const testEvents = [
         createTestEvent({ id: "event-1", recurrenceRule: "none" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getRecurring();
       expect(events).toHaveLength(0);
@@ -346,18 +405,26 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-3", location: "Team Room" }),
         createTestEvent({ id: "event-4", title: "Client Call" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.search("team");
       expect(events).toHaveLength(3);
-      expect(events.map(e => e.id).sort()).toEqual(["event-1", "event-2", "event-3"]);
+      expect(events.map((e) => e.id).sort()).toEqual([
+        "event-1",
+        "event-2",
+        "event-3",
+      ]);
     });
 
     it("should be case-insensitive", async () => {
       const testEvents = [
         createTestEvent({ id: "event-1", title: "TEAM MEETING" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.search("team");
       expect(events).toHaveLength(1);
@@ -371,7 +438,9 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2", location: "Conference Room B" }),
         createTestEvent({ id: "event-3", location: "Office 123" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const events = await db.events.getByLocation("Conference");
       expect(events).toHaveLength(2);
@@ -394,11 +463,13 @@ describe("Calendar Events Database", () => {
           endAt: "2024-03-15T11:30:00.000Z",
         }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const conflicts = await db.events.getConflicts(
         "2024-03-15T10:15:00.000Z",
-        "2024-03-15T10:45:00.000Z"
+        "2024-03-15T10:45:00.000Z",
       );
       expect(conflicts).toHaveLength(2);
     });
@@ -411,11 +482,13 @@ describe("Calendar Events Database", () => {
           endAt: "2024-03-15T11:00:00.000Z",
         }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const conflicts = await db.events.getConflicts(
         "2024-03-15T11:30:00.000Z",
-        "2024-03-15T12:00:00.000Z"
+        "2024-03-15T12:00:00.000Z",
       );
       expect(conflicts).toHaveLength(0);
     });
@@ -428,12 +501,14 @@ describe("Calendar Events Database", () => {
           endAt: "2024-03-15T11:00:00.000Z",
         }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const conflicts = await db.events.getConflicts(
         "2024-03-15T10:30:00.000Z",
         "2024-03-15T11:30:00.000Z",
-        "event-1"
+        "event-1",
       );
       expect(conflicts).toHaveLength(0);
     });
@@ -447,11 +522,21 @@ describe("Calendar Events Database", () => {
       tomorrow.setDate(today.getDate() + 1);
 
       const testEvents = [
-        createTestEvent({ id: "event-1", startAt: `${todayStr}T10:00:00.000Z`, allDay: true }),
-        createTestEvent({ id: "event-2", startAt: tomorrow.toISOString(), recurrenceRule: "daily" }),
+        createTestEvent({
+          id: "event-1",
+          startAt: `${todayStr}T10:00:00.000Z`,
+          allDay: true,
+        }),
+        createTestEvent({
+          id: "event-2",
+          startAt: tomorrow.toISOString(),
+          recurrenceRule: "daily",
+        }),
         createTestEvent({ id: "event-3", startAt: "2024-01-15T10:00:00.000Z" }), // Past event
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       const stats = await db.events.getStats();
       expect(stats.totalEvents).toBe(3);
@@ -469,33 +554,42 @@ describe("Calendar Events Database", () => {
         createTestEvent({ id: "event-2" }),
         createTestEvent({ id: "event-3" }),
       ];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       await db.events.bulkDelete(["event-1", "event-3"]);
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "@aios/events",
-        JSON.stringify([testEvents[1]])
+        JSON.stringify([testEvents[1]]),
       );
     });
 
     it("should handle empty array", async () => {
       const testEvents = [createTestEvent({ id: "event-1" })];
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testEvents));
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify(testEvents),
+      );
 
       await db.events.bulkDelete([]);
 
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "@aios/events",
-        JSON.stringify(testEvents)
+        JSON.stringify(testEvents),
       );
     });
   });
 
   describe("duplicate", () => {
     it("should create a copy of an event", async () => {
-      const originalEvent = createTestEvent({ id: "event-1", title: "Original Event" });
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([originalEvent]));
+      const originalEvent = createTestEvent({
+        id: "event-1",
+        title: "Original Event",
+      });
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+        JSON.stringify([originalEvent]),
+      );
 
       const duplicated = await db.events.duplicate("event-1");
 

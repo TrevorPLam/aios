@@ -24,7 +24,14 @@ describe("Settings - New Fields", () => {
     });
 
     it("should support all color theme options", async () => {
-      const themes = ["cyan", "purple", "green", "orange", "pink", "blue"] as const;
+      const themes = [
+        "cyan",
+        "purple",
+        "green",
+        "orange",
+        "pink",
+        "blue",
+      ] as const;
       for (const theme of themes) {
         await db.settings.update({ colorTheme: theme });
         const settings = await db.settings.get();
@@ -46,7 +53,13 @@ describe("Settings - New Fields", () => {
     });
 
     it("should support all personality options", async () => {
-      const personalities = ["default", "enthusiastic", "coach", "witty", "militant"] as const;
+      const personalities = [
+        "default",
+        "enthusiastic",
+        "coach",
+        "witty",
+        "militant",
+      ] as const;
       for (const personality of personalities) {
         await db.settings.update({ aiPersonality: personality });
         const settings = await db.settings.get();
@@ -63,7 +76,8 @@ describe("Settings - New Fields", () => {
     });
 
     it("should update aiCustomPrompt", async () => {
-      const customPrompt = "You are a helpful AI assistant with a unique personality.";
+      const customPrompt =
+        "You are a helpful AI assistant with a unique personality.";
       await db.settings.update({ aiCustomPrompt: customPrompt });
       const settings = await db.settings.get();
       expect(settings.aiCustomPrompt).toBe(customPrompt);

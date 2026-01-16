@@ -102,7 +102,9 @@ export function getModuleMetadata(moduleId: ModuleType): ModuleMetadata {
 /**
  * Get all modules by category
  */
-export function getModulesByCategory(category: ModuleCategory): ModuleMetadata[] {
+export function getModulesByCategory(
+  category: ModuleCategory,
+): ModuleMetadata[] {
   return Object.values(MODULE_REGISTRY).filter((m) => m.category === category);
 }
 

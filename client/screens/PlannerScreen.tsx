@@ -61,10 +61,27 @@ type DueDateFilter = "all" | "overdue" | "today" | "week";
 type SortOption = "priority" | "dueDate" | "alphabetical" | "updated";
 
 // Filter options constants
-const PRIORITY_FILTERS: PriorityFilter[] = ["all", "urgent", "high", "medium", "low"];
-const STATUS_FILTERS: StatusFilter[] = ["all", "pending", "in_progress", "completed", "cancelled"];
+const PRIORITY_FILTERS: PriorityFilter[] = [
+  "all",
+  "urgent",
+  "high",
+  "medium",
+  "low",
+];
+const STATUS_FILTERS: StatusFilter[] = [
+  "all",
+  "pending",
+  "in_progress",
+  "completed",
+  "cancelled",
+];
 const DUE_DATE_FILTERS: DueDateFilter[] = ["all", "overdue", "today", "week"];
-const SORT_OPTIONS: SortOption[] = ["priority", "dueDate", "alphabetical", "updated"];
+const SORT_OPTIONS: SortOption[] = [
+  "priority",
+  "dueDate",
+  "alphabetical",
+  "updated",
+];
 
 function TaskCard({
   task,
@@ -168,7 +185,11 @@ function TaskCard({
             {/* Show progress for parent tasks with subtasks */}
             {hasSubtasks && progress !== undefined && progress !== null ? (
               <View style={styles.metaItem}>
-                <Feather name="check-circle" size={12} color={theme.textMuted} />
+                <Feather
+                  name="check-circle"
+                  size={12}
+                  color={theme.textMuted}
+                />
                 <ThemedText type="small" muted>
                   {progress}%
                 </ThemedText>
@@ -210,7 +231,9 @@ function TaskCard({
               },
             ]}
             hitSlop={8}
-            accessibilityLabel={isCompleted ? "Mark task as incomplete" : "Mark task as complete"}
+            accessibilityLabel={
+              isCompleted ? "Mark task as incomplete" : "Mark task as complete"
+            }
             accessibilityRole="button"
             accessibilityHint={`Double tap to ${isCompleted ? "uncomplete" : "complete"} this task`}
           >
@@ -241,7 +264,7 @@ export default function PlannerScreen() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [dueDateFilter, setDueDateFilter] = useState<DueDateFilter>("all");
   const [sortBy, setSortBy] = useState<SortOption>("priority");
-  
+
   // Statistics state
   const [statistics, setStatistics] = useState({
     total: 0,
@@ -266,18 +289,18 @@ export default function PlannerScreen() {
       topLevel.map(async (task) => {
         const subtasks = buildSubtasksRecursive(task.id);
         let progress = undefined;
-        
+
         // Calculate progress if task has subtasks
         if (subtasks.length > 0) {
           progress = await db.tasks.getSubtaskProgress(task.id);
         }
-        
+
         return {
           ...task,
           subtasks,
           progress,
         };
-      })
+      }),
     );
 
     tasksWithSubtasks.sort((a, b) => {
@@ -292,7 +315,7 @@ export default function PlannerScreen() {
     });
 
     setTasks(tasksWithSubtasks);
-    
+
     // Load statistics for dashboard
     const stats = await db.tasks.getStatistics();
     setStatistics({
@@ -350,7 +373,7 @@ export default function PlannerScreen() {
   // Note: Always reverts to "pending" when uncompleting for simplicity and consistency
   const handleToggleComplete = async (task: Task) => {
     let newStatus: TaskStatus;
-    
+
     if (task.status === "completed") {
       // If completed, revert to pending
       newStatus = "pending";
@@ -358,13 +381,13 @@ export default function PlannerScreen() {
       // If not completed, mark as completed
       newStatus = "completed";
     }
-    
+
     const updatedTask = {
       ...task,
       status: newStatus,
       updatedAt: new Date().toISOString(),
     };
-    
+
     await db.tasks.save(updatedTask);
     await loadData(); // Reload to update progress indicators
   };
@@ -373,12 +396,12 @@ export default function PlannerScreen() {
   const applySearchFilter = useMemo(() => {
     return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
       if (!searchQuery.trim()) return taskList;
-      
+
       const lowerQuery = searchQuery.toLowerCase();
       return taskList.filter(
         (t) =>
           t.title.toLowerCase().includes(lowerQuery) ||
-          (t.userNotes || "").toLowerCase().includes(lowerQuery)
+          (t.userNotes || "").toLowerCase().includes(lowerQuery),
       );
     };
   }, [searchQuery]);
@@ -403,11 +426,13 @@ export default function PlannerScreen() {
   const applyDueDateFilter = useMemo(() => {
     return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
       if (dueDateFilter === "all") return taskList;
-      
+
       const now = new Date().toISOString();
       const today = now.split("T")[0];
-      const weekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      
+      const weekFromNow = new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000,
+      ).toISOString();
+
       switch (dueDateFilter) {
         case "overdue":
           return taskList.filter(
@@ -415,10 +440,12 @@ export default function PlannerScreen() {
               t.dueDate &&
               t.dueDate < now &&
               t.status !== "completed" &&
-              t.status !== "cancelled"
+              t.status !== "cancelled",
           );
         case "today":
-          return taskList.filter((t) => t.dueDate && t.dueDate.startsWith(today));
+          return taskList.filter(
+            (t) => t.dueDate && t.dueDate.startsWith(today),
+          );
         case "week":
           return taskList.filter(
             (t) =>
@@ -426,7 +453,7 @@ export default function PlannerScreen() {
               t.dueDate >= now &&
               t.dueDate <= weekFromNow &&
               t.status !== "completed" &&
-              t.status !== "cancelled"
+              t.status !== "cancelled",
           );
         default:
           return taskList;
@@ -438,7 +465,7 @@ export default function PlannerScreen() {
   const applySorting = useMemo(() => {
     return (taskList: TaskWithSubtasks[]): TaskWithSubtasks[] => {
       const sorted = [...taskList];
-      
+
       switch (sortBy) {
         case "priority":
           sorted.sort((a, b) => {
@@ -447,17 +474,17 @@ export default function PlannerScreen() {
             const bHasSubtasks = b.subtasks.length > 0;
             if (aHasSubtasks && !bHasSubtasks) return -1;
             if (!aHasSubtasks && bHasSubtasks) return 1;
-            
+
             // Then by completion status
             if (a.status === "completed" && b.status !== "completed") return 1;
             if (a.status !== "completed" && b.status === "completed") return -1;
-            
+
             // Finally by priority
             const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
             return priorityOrder[a.priority] - priorityOrder[b.priority];
           });
           break;
-          
+
         case "dueDate":
           sorted.sort((a, b) => {
             // Keep parent tasks at top
@@ -465,7 +492,7 @@ export default function PlannerScreen() {
             const bHasSubtasks = b.subtasks.length > 0;
             if (aHasSubtasks && !bHasSubtasks) return -1;
             if (!aHasSubtasks && bHasSubtasks) return 1;
-            
+
             // Sort by due date
             if (!a.dueDate && !b.dueDate) return 0;
             if (!a.dueDate) return 1;
@@ -473,7 +500,7 @@ export default function PlannerScreen() {
             return a.dueDate.localeCompare(b.dueDate);
           });
           break;
-          
+
         case "alphabetical":
           sorted.sort((a, b) => {
             // Keep parent tasks at top
@@ -481,11 +508,11 @@ export default function PlannerScreen() {
             const bHasSubtasks = b.subtasks.length > 0;
             if (aHasSubtasks && !bHasSubtasks) return -1;
             if (!aHasSubtasks && bHasSubtasks) return 1;
-            
+
             return a.title.localeCompare(b.title);
           });
           break;
-          
+
         case "updated":
           sorted.sort((a, b) => {
             // Keep parent tasks at top
@@ -493,12 +520,12 @@ export default function PlannerScreen() {
             const bHasSubtasks = b.subtasks.length > 0;
             if (aHasSubtasks && !bHasSubtasks) return -1;
             if (!aHasSubtasks && bHasSubtasks) return 1;
-            
+
             return b.updatedAt.localeCompare(a.updatedAt);
           });
           break;
       }
-      
+
       return sorted;
     };
   }, [sortBy]);
@@ -512,7 +539,14 @@ export default function PlannerScreen() {
     result = applyDueDateFilter(result);
     result = applySorting(result);
     return result;
-  }, [tasks, applySearchFilter, applyPriorityFilter, applyStatusFilter, applyDueDateFilter, applySorting]);
+  }, [
+    tasks,
+    applySearchFilter,
+    applyPriorityFilter,
+    applyStatusFilter,
+    applyDueDateFilter,
+    applySorting,
+  ]);
 
   const buildListData = () => {
     const result: {
@@ -578,7 +612,12 @@ export default function PlannerScreen() {
   return (
     <ThemedView style={styles.container}>
       {/* Search bar at the top */}
-      <View style={[styles.searchContainer, { backgroundColor: theme.backgroundDefault }]}>
+      <View
+        style={[
+          styles.searchContainer,
+          { backgroundColor: theme.backgroundDefault },
+        ]}
+      >
         <Feather name="search" size={18} color={theme.textMuted} />
         <TextInput
           style={[styles.searchInput, { color: theme.text }]}
@@ -588,10 +627,7 @@ export default function PlannerScreen() {
           onChangeText={setSearchQuery}
         />
         {searchQuery.length > 0 && (
-          <Pressable
-            onPress={() => setSearchQuery("")}
-            hitSlop={8}
-          >
+          <Pressable onPress={() => setSearchQuery("")} hitSlop={8}>
             <Feather name="x" size={18} color={theme.textMuted} />
           </Pressable>
         )}
@@ -605,7 +641,10 @@ export default function PlannerScreen() {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           }
         }}
-        style={[styles.statsHeader, { backgroundColor: theme.backgroundSecondary }]}
+        style={[
+          styles.statsHeader,
+          { backgroundColor: theme.backgroundSecondary },
+        ]}
       >
         <ThemedText type="body" style={{ fontWeight: "600" }}>
           Statistics
@@ -623,32 +662,67 @@ export default function PlannerScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.statsContainer}
         >
-          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
-            <ThemedText type="small" muted>Total</ThemedText>
+          <View
+            style={[
+              styles.statChip,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
+            <ThemedText type="small" muted>
+              Total
+            </ThemedText>
             <ThemedText type="h3" style={{ color: theme.accent }}>
               {statistics.total}
             </ThemedText>
           </View>
-          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
-            <ThemedText type="small" muted>Completed</ThemedText>
+          <View
+            style={[
+              styles.statChip,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
+            <ThemedText type="small" muted>
+              Completed
+            </ThemedText>
             <ThemedText type="h3" style={{ color: theme.success }}>
               {statistics.completed}
             </ThemedText>
           </View>
-          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
-            <ThemedText type="small" muted>In Progress</ThemedText>
+          <View
+            style={[
+              styles.statChip,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
+            <ThemedText type="small" muted>
+              In Progress
+            </ThemedText>
             <ThemedText type="h3" style={{ color: theme.warning }}>
               {statistics.inProgress}
             </ThemedText>
           </View>
-          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
-            <ThemedText type="small" muted>Overdue</ThemedText>
+          <View
+            style={[
+              styles.statChip,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
+            <ThemedText type="small" muted>
+              Overdue
+            </ThemedText>
             <ThemedText type="h3" style={{ color: theme.error }}>
               {statistics.overdue}
             </ThemedText>
           </View>
-          <View style={[styles.statChip, { backgroundColor: theme.backgroundDefault }]}>
-            <ThemedText type="small" muted>Due Today</ThemedText>
+          <View
+            style={[
+              styles.statChip,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
+            <ThemedText type="small" muted>
+              Due Today
+            </ThemedText>
             <ThemedText type="h3" style={{ color: theme.accent }}>
               {statistics.dueToday}
             </ThemedText>
@@ -678,14 +752,17 @@ export default function PlannerScreen() {
               styles.filterChip,
               {
                 backgroundColor:
-                  priorityFilter === filter ? theme.accent : theme.backgroundSecondary,
+                  priorityFilter === filter
+                    ? theme.accent
+                    : theme.backgroundSecondary,
               },
             ]}
           >
             <ThemedText
               type="small"
               style={{
-                color: priorityFilter === filter ? theme.buttonText : theme.text,
+                color:
+                  priorityFilter === filter ? theme.buttonText : theme.text,
               }}
             >
               {filter.charAt(0).toUpperCase() + filter.slice(1)}
@@ -712,24 +789,28 @@ export default function PlannerScreen() {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               }
             }}
-              style={[
-                styles.filterChip,
-                {
-                  backgroundColor:
-                    statusFilter === filter ? theme.accent : theme.backgroundSecondary,
-                },
-              ]}
+            style={[
+              styles.filterChip,
+              {
+                backgroundColor:
+                  statusFilter === filter
+                    ? theme.accent
+                    : theme.backgroundSecondary,
+              },
+            ]}
+          >
+            <ThemedText
+              type="small"
+              style={{
+                color: statusFilter === filter ? theme.buttonText : theme.text,
+              }}
             >
-              <ThemedText
-                type="small"
-                style={{
-                  color: statusFilter === filter ? theme.buttonText : theme.text,
-                }}
-              >
-                {filter === "in_progress" ? "In Progress" : filter.charAt(0).toUpperCase() + filter.slice(1)}
-              </ThemedText>
-            </Pressable>
-          ))}
+              {filter === "in_progress"
+                ? "In Progress"
+                : filter.charAt(0).toUpperCase() + filter.slice(1)}
+            </ThemedText>
+          </Pressable>
+        ))}
       </ScrollView>
 
       {/* Filter chips - Due Date */}
@@ -754,7 +835,9 @@ export default function PlannerScreen() {
               styles.filterChip,
               {
                 backgroundColor:
-                  dueDateFilter === filter ? theme.accent : theme.backgroundSecondary,
+                  dueDateFilter === filter
+                    ? theme.accent
+                    : theme.backgroundSecondary,
               },
             ]}
           >
@@ -764,7 +847,9 @@ export default function PlannerScreen() {
                 color: dueDateFilter === filter ? theme.buttonText : theme.text,
               }}
             >
-              {filter === "week" ? "This Week" : filter.charAt(0).toUpperCase() + filter.slice(1)}
+              {filter === "week"
+                ? "This Week"
+                : filter.charAt(0).toUpperCase() + filter.slice(1)}
             </ThemedText>
           </Pressable>
         ))}
@@ -805,10 +890,10 @@ export default function PlannerScreen() {
               {option === "dueDate"
                 ? "Due Date"
                 : option === "alphabetical"
-                ? "A-Z"
-                : option === "updated"
-                ? "Recently Updated"
-                : "Priority"}
+                  ? "A-Z"
+                  : option === "updated"
+                    ? "Recently Updated"
+                    : "Priority"}
             </ThemedText>
           </Pressable>
         ))}
@@ -843,12 +928,18 @@ export default function PlannerScreen() {
               resizeMode="contain"
             />
             <ThemedText type="h3" style={styles.emptyTitle}>
-              {searchQuery || priorityFilter !== "all" || statusFilter !== "all" || dueDateFilter !== "all"
+              {searchQuery ||
+              priorityFilter !== "all" ||
+              statusFilter !== "all" ||
+              dueDateFilter !== "all"
                 ? "No Matching Tasks"
                 : "No Tasks Yet"}
             </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
-              {searchQuery || priorityFilter !== "all" || statusFilter !== "all" || dueDateFilter !== "all"
+              {searchQuery ||
+              priorityFilter !== "all" ||
+              statusFilter !== "all" ||
+              dueDateFilter !== "all"
                 ? "Try adjusting your filters or search query"
                 : "Tap + to create your first task. Add subtasks to turn any task into a project."}
             </ThemedText>

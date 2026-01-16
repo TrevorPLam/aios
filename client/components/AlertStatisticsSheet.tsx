@@ -158,7 +158,7 @@ function ProgressBar({
  * InsightCard Component
  *
  * Displays an insight or recommendation based on statistics with color-coded indicators
- * 
+ *
  * @param icon - Feather icon name to display
  * @param title - Main insight title
  * @param description - Detailed insight description
@@ -217,25 +217,25 @@ function InsightCard({
 
 /**
  * Generate insights based on alert statistics
- * 
+ *
  * Insight Types Generated:
  * 1. Response Time (>=80% = success, <50% = warning)
  * 2. Snooze Pattern (>2 avg = warning, 0 with 5+ triggers = success)
  * 3. Recent Trends (improving or declining pattern)
  * 4. New Alert (<3 triggers = info message)
- * 
+ *
  * Pattern Detection:
  * - Uses last 3 entries for recent analysis
  * - Compares recent vs. historical average
  * - 3x worsening factor triggers warning
- * 
+ *
  * @param stats - Aggregated alert statistics
  * @param recentHistory - Sorted history entries (newest first)
  * @returns Array of actionable insights
  */
 function generateInsights(
   stats: AlertStatistics,
-  recentHistory: AlertHistoryEntry[]
+  recentHistory: AlertHistoryEntry[],
 ): AlertInsight[] {
   const insights: AlertInsight[] = [];
 
@@ -268,7 +268,8 @@ function generateInsights(
     insights.push({
       icon: "sunrise",
       title: "No Snoozing",
-      description: "You never snooze this alert. The timing works well for you!",
+      description:
+        "You never snooze this alert. The timing works well for you!",
       type: "success",
     });
   }
@@ -276,9 +277,9 @@ function generateInsights(
   // Recent pattern analysis
   if (recentHistory.length >= RECENT_HISTORY_COUNT) {
     const recentSnoozes = recentHistory
-      .slice(0, RECENT_HISTORY_COUNT)  // Get first N items (most recent, as array is sorted newest-first)
+      .slice(0, RECENT_HISTORY_COUNT) // Get first N items (most recent, as array is sorted newest-first)
       .reduce((sum, entry) => sum + entry.snoozeCount, 0);
-    
+
     if (recentSnoozes === 0 && stats.averageSnoozeCount > 1) {
       insights.push({
         icon: "trending-up",
@@ -339,12 +340,13 @@ export default function AlertStatisticsSheet({
       try {
         const statistics = await db.alertHistory.getStatistics(alertId);
         const history = await db.alertHistory.getByAlert(alertId);
-        
+
         if (isMounted) {
           // Sort by most recent first
           const sortedHistory = history.sort(
             (a, b) =>
-              new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime()
+              new Date(b.triggeredAt).getTime() -
+              new Date(a.triggeredAt).getTime(),
           );
 
           setStats(statistics);
@@ -452,7 +454,7 @@ export default function AlertStatisticsSheet({
                       subtitle={
                         stats.lastTriggeredAt
                           ? `Last: ${new Date(
-                              stats.lastTriggeredAt
+                              stats.lastTriggeredAt,
                             ).toLocaleDateString()}`
                           : undefined
                       }
@@ -483,8 +485,8 @@ export default function AlertStatisticsSheet({
                       stats.onTimeDismissalRate >= 80
                         ? theme.success
                         : stats.onTimeDismissalRate >= 50
-                        ? theme.warning
-                        : theme.error
+                          ? theme.warning
+                          : theme.error
                     }
                   />
                 </View>
@@ -537,7 +539,7 @@ export default function AlertStatisticsSheet({
                                 weekday: "short",
                                 month: "short",
                                 day: "numeric",
-                              }
+                              },
                             )}
                           </ThemedText>
                           <ThemedText type="small" muted>
@@ -546,7 +548,7 @@ export default function AlertStatisticsSheet({
                               : "No snooze"}
                             {entry.dismissedAt &&
                               ` • ${new Date(
-                                entry.dismissedAt
+                                entry.dismissedAt,
                               ).toLocaleTimeString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",

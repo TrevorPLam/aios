@@ -211,7 +211,7 @@ export default function TaskDetailScreen() {
     const date = dateGetter();
     setDueDate(date.toISOString());
     setShowDatePicker(false);
-    
+
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -223,7 +223,7 @@ export default function TaskDetailScreen() {
   const clearDueDate = useCallback(() => {
     setDueDate(null);
     setShowDatePicker(false);
-    
+
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -234,22 +234,22 @@ export default function TaskDetailScreen() {
    */
   const formatDueDate = (dateStr: string | null): string => {
     if (!dateStr) return "No due date";
-    
+
     const date = new Date(dateStr);
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     // Check if it's today
     if (date.toDateString() === today.toDateString()) {
       return "Today";
     }
-    
+
     // Check if it's tomorrow
     if (date.toDateString() === tomorrow.toDateString()) {
       return "Tomorrow";
     }
-    
+
     // Otherwise return formatted date
     return formatDate(dateStr);
   };
@@ -550,10 +550,7 @@ export default function TaskDetailScreen() {
           >
             <View style={styles.modalHeader}>
               <ThemedText type="h3">Set Due Date</ThemedText>
-              <Pressable
-                onPress={() => setShowDatePicker(false)}
-                hitSlop={8}
-              >
+              <Pressable onPress={() => setShowDatePicker(false)} hitSlop={8}>
                 <Feather name="x" size={24} color={theme.text} />
               </Pressable>
             </View>

@@ -1,12 +1,18 @@
 import { db } from "../database";
-import { Integration, IntegrationCategory, IntegrationStatus } from "@/models/types";
+import {
+  Integration,
+  IntegrationCategory,
+  IntegrationStatus,
+} from "@/models/types";
 
 describe("Integrations Storage", () => {
   beforeEach(async () => {
     await db.clearAll();
   });
 
-  const createTestIntegration = (overrides?: Partial<Integration>): Integration => ({
+  const createTestIntegration = (
+    overrides?: Partial<Integration>,
+  ): Integration => ({
     id: "integration_1",
     name: "Google Calendar",
     serviceName: "Google",
@@ -104,7 +110,8 @@ describe("Integrations Storage", () => {
       await db.integrations.save(calendar);
       await db.integrations.save(email);
 
-      const calendarIntegrations = await db.integrations.getByCategory("calendar");
+      const calendarIntegrations =
+        await db.integrations.getByCategory("calendar");
       expect(calendarIntegrations).toHaveLength(1);
       expect(calendarIntegrations[0].category).toBe("calendar");
     });
@@ -124,7 +131,8 @@ describe("Integrations Storage", () => {
       await db.integrations.save(connected);
       await db.integrations.save(disconnected);
 
-      const connectedIntegrations = await db.integrations.getByStatus("connected");
+      const connectedIntegrations =
+        await db.integrations.getByStatus("connected");
       expect(connectedIntegrations).toHaveLength(1);
       expect(connectedIntegrations[0].status).toBe("connected");
     });
@@ -572,7 +580,10 @@ describe("Integrations Storage", () => {
       await db.integrations.save(int1);
       await db.integrations.save(int2);
 
-      await db.integrations.bulkUpdateStatus(["int_1", "int_2"], "disconnected");
+      await db.integrations.bulkUpdateStatus(
+        ["int_1", "int_2"],
+        "disconnected",
+      );
 
       const retrieved1 = await db.integrations.getById("int_1");
       const retrieved2 = await db.integrations.getById("int_2");
@@ -595,9 +606,9 @@ describe("Integrations Storage", () => {
     });
 
     it("should throw error for non-existent integration", async () => {
-      await expect(
-        db.integrations.exportToJSON("nonexistent")
-      ).rejects.toThrow('Integration with ID "nonexistent" not found');
+      await expect(db.integrations.exportToJSON("nonexistent")).rejects.toThrow(
+        'Integration with ID "nonexistent" not found',
+      );
     });
   });
 
@@ -707,7 +718,9 @@ describe("Integrations Storage", () => {
         id: "int_1",
         isEnabled: true,
         status: "connected",
-        lastSyncAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString(), // 8 days ago
+        lastSyncAt: new Date(
+          now.getTime() - 8 * 24 * 60 * 60 * 1000,
+        ).toISOString(), // 8 days ago
       });
 
       await db.integrations.save(stale);

@@ -32,7 +32,11 @@ export class ABTestTracker {
   /**
    * TODO: Track experiment exposure
    */
-  trackExposure(experimentId: string, experimentName: string, variant: string): void {
+  trackExposure(
+    experimentId: string,
+    experimentName: string,
+    variant: string,
+  ): void {
     const experiment: Experiment = {
       id: experimentId,
       name: experimentName,

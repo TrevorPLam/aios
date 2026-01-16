@@ -62,7 +62,7 @@ export class FunnelTracker {
 
 /**
  * Example Funnel Definition:
- * 
+ *
  * funnelTracker.defineFunnel({
  *   name: "onboarding",
  *   steps: [

@@ -467,10 +467,7 @@ export default function NotebookScreen() {
 
       {/* Toolbar */}
       <View
-        style={[
-          styles.toolbar,
-          { backgroundColor: theme.backgroundElevated },
-        ]}
+        style={[styles.toolbar, { backgroundColor: theme.backgroundElevated }]}
       >
         <ScrollView
           horizontal
@@ -492,7 +489,10 @@ export default function NotebookScreen() {
               }
               setShowSortModal(true);
             }}
-            style={[styles.toolbarButton, { backgroundColor: theme.backgroundDefault }]}
+            style={[
+              styles.toolbarButton,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
           >
             <Feather name="sliders" size={16} color={theme.textSecondary} />
             <ThemedText type="small" secondary>
@@ -512,19 +512,24 @@ export default function NotebookScreen() {
               styles.toolbarButton,
               {
                 backgroundColor:
-                  selectedTags.length > 0 ? theme.accentDim : theme.backgroundDefault,
+                  selectedTags.length > 0
+                    ? theme.accentDim
+                    : theme.backgroundDefault,
               },
             ]}
           >
             <Feather
               name="tag"
               size={16}
-              color={selectedTags.length > 0 ? theme.accent : theme.textSecondary}
+              color={
+                selectedTags.length > 0 ? theme.accent : theme.textSecondary
+              }
             />
             <ThemedText
               type="small"
               style={{
-                color: selectedTags.length > 0 ? theme.accent : theme.textSecondary,
+                color:
+                  selectedTags.length > 0 ? theme.accent : theme.textSecondary,
               }}
             >
               {selectedTags.length > 0 ? `${selectedTags.length} tags` : "Tags"}
@@ -684,11 +689,7 @@ export default function NotebookScreen() {
               style={styles.modalOption}
             >
               <View style={styles.modalOptionLeft}>
-                <Feather
-                  name="type"
-                  size={20}
-                  color={theme.textSecondary}
-                />
+                <Feather name="type" size={20} color={theme.textSecondary} />
                 <ThemedText type="body">Alphabetical</ThemedText>
               </View>
               <SortIcon option="alphabetical" />
@@ -809,7 +810,11 @@ export default function NotebookScreen() {
 
             <Pressable onPress={handleBulkPin} style={styles.modalOption}>
               <View style={styles.modalOptionLeft}>
-                <Feather name="bookmark" size={20} color={theme.textSecondary} />
+                <Feather
+                  name="bookmark"
+                  size={20}
+                  color={theme.textSecondary}
+                />
                 <ThemedText type="body">Pin Selected</ThemedText>
               </View>
             </Pressable>

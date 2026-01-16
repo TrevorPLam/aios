@@ -73,7 +73,7 @@ export default function ContactDetailScreen() {
       await db.contacts.removeTag(contact.id, tag);
       await loadContact();
     },
-    [contact, loadContact]
+    [contact, loadContact],
   );
 
   const handleAddGroup = useCallback(async () => {
@@ -95,7 +95,7 @@ export default function ContactDetailScreen() {
       await db.contacts.removeFromGroup(contact.id, group);
       await loadContact();
     },
-    [contact, loadContact]
+    [contact, loadContact],
   );
 
   const handleAddNote = useCallback(async () => {
@@ -126,7 +126,7 @@ export default function ContactDetailScreen() {
         },
       ]);
     },
-    [contact, loadContact]
+    [contact, loadContact],
   );
 
   React.useLayoutEffect(() => {
@@ -339,10 +339,7 @@ export default function ContactDetailScreen() {
 
         {/* Tags Section */}
         <View
-          style={[
-            styles.section,
-            { backgroundColor: theme.backgroundDefault },
-          ]}
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
         >
           <View style={styles.sectionHeader}>
             <Feather name="tag" size={20} color={theme.textSecondary} />
@@ -356,10 +353,7 @@ export default function ContactDetailScreen() {
                 <Pressable
                   key={index}
                   onPress={() => handleRemoveTag(tag)}
-                  style={[
-                    styles.tag,
-                    { backgroundColor: theme.accentDim },
-                  ]}
+                  style={[styles.tag, { backgroundColor: theme.accentDim }]}
                 >
                   <ThemedText
                     type="small"
@@ -406,10 +400,7 @@ export default function ContactDetailScreen() {
 
         {/* Groups Section */}
         <View
-          style={[
-            styles.section,
-            { backgroundColor: theme.backgroundDefault },
-          ]}
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
         >
           <View style={styles.sectionHeader}>
             <Feather name="users" size={20} color={theme.textSecondary} />
@@ -423,10 +414,7 @@ export default function ContactDetailScreen() {
                 <Pressable
                   key={index}
                   onPress={() => handleRemoveGroup(group)}
-                  style={[
-                    styles.tag,
-                    { backgroundColor: theme.accentDim },
-                  ]}
+                  style={[styles.tag, { backgroundColor: theme.accentDim }]}
                 >
                   <ThemedText
                     type="small"
@@ -473,10 +461,7 @@ export default function ContactDetailScreen() {
 
         {/* Notes Section */}
         <View
-          style={[
-            styles.section,
-            { backgroundColor: theme.backgroundDefault },
-          ]}
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
         >
           <View style={styles.sectionHeader}>
             <Feather name="file-text" size={20} color={theme.textSecondary} />

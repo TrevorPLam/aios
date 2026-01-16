@@ -196,8 +196,16 @@ describe("Database Lists Storage", () => {
       });
 
       it("should filter by category", async () => {
-        const groceryList = { ...mockList, id: "list_1", category: "grocery" as const };
-        const workList = { ...mockList, id: "list_2", category: "work" as const };
+        const groceryList = {
+          ...mockList,
+          id: "list_1",
+          category: "grocery" as const,
+        };
+        const workList = {
+          ...mockList,
+          id: "list_2",
+          category: "work" as const,
+        };
 
         await db.lists.save(groceryList);
         await db.lists.save(workList);

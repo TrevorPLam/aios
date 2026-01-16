@@ -6,10 +6,10 @@ export function useTheme() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const { colorTheme } = useThemeContext();
-  
+
   const baseTheme = Colors[colorScheme ?? "light"];
   const themeColors = ColorThemes[colorTheme];
-  
+
   const theme = {
     ...baseTheme,
     accent: themeColors.accent,
