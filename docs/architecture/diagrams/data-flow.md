@@ -223,6 +223,7 @@ flowchart TD
 ## Read vs Write Patterns
 
 ### Read Pattern (Typical)
+
 1. Check AsyncStorage cache
 2. Return cached data if fresh
 3. Fetch from server in background (optional)
@@ -230,6 +231,7 @@ flowchart TD
 5. Re-render if data changed
 
 ### Write Pattern (Typical)
+
 1. Validate input locally
 2. Save to AsyncStorage immediately
 3. Update UI optimistically
@@ -239,12 +241,14 @@ flowchart TD
 ## Performance Optimizations
 
 ### Data Loading
+
 - **Lazy Loading:** Modules load data on-demand
 - **Pagination:** Large lists fetch in chunks
 - **Caching:** React Query caches API responses
 - **Memoization:** Expensive calculations cached
 
 ### Data Persistence
+
 - **Debouncing:** Frequent updates batched
 - **Background Sync:** Non-blocking operations
 - **Compression:** Large data compressed before storage

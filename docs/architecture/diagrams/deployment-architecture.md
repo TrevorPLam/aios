@@ -74,6 +74,7 @@ graph LR
 ```
 
 **Components:**
+
 - **Node.js:** 18+
 - **Expo CLI:** 54
 - **iOS Simulator:** Xcode required (Mac only)
@@ -82,6 +83,7 @@ graph LR
 - **PostgreSQL:** Optional, for testing server features
 
 **Environment Variables:**
+
 ```
 NODE_ENV=development
 EXPO_PUBLIC_DOMAIN=localhost:5000
@@ -116,6 +118,7 @@ graph TB
 ```
 
 **Components:**
+
 - **CI/CD:** GitHub Actions
 - **Build:** Expo EAS Build
 - **Server:** Cloud hosting (e.g., Railway, Render)
@@ -123,6 +126,7 @@ graph TB
 - **Monitoring:** Error tracking, performance monitoring
 
 **Environment Variables:**
+
 ```
 NODE_ENV=staging
 EXPO_PUBLIC_DOMAIN=staging.aios.app
@@ -173,6 +177,7 @@ graph TB
 ```
 
 **Components:**
+
 - **Client Apps:** Distributed via App Store and Google Play
 - **API Server:** High-availability Express cluster
 - **Database:** PostgreSQL with replication
@@ -181,6 +186,7 @@ graph TB
 - **Analytics:** User behavior tracking (privacy-respecting)
 
 **Environment Variables:**
+
 ```
 NODE_ENV=production
 EXPO_PUBLIC_DOMAIN=aios.app
@@ -236,12 +242,14 @@ graph LR
 ```
 
 **What can be updated via OTA:**
+
 - JavaScript code
 - React components
 - Business logic
 - Styling and assets
 
 **What requires native build:**
+
 - Native dependencies
 - Expo SDK version
 - App permissions
@@ -282,6 +290,7 @@ graph LR
 ```
 
 **Build Commands:**
+
 ```bash
 # Development build
 npm run start
@@ -306,6 +315,7 @@ graph LR
 ```
 
 **Build Commands:**
+
 ```bash
 # Build server
 npm run server:build
@@ -332,6 +342,7 @@ graph TB
 ```
 
 **Migration Commands:**
+
 ```bash
 # Generate migration
 npm run db:generate
@@ -366,6 +377,7 @@ sequenceDiagram
 ```
 
 **Monitoring Metrics:**
+
 - **Uptime:** 99.9% target
 - **Response Time:** < 200ms p95
 - **Error Rate:** < 0.1%
@@ -394,6 +406,7 @@ graph TB
 ```
 
 **Security Measures:**
+
 - HTTPS enforced (TLS 1.3)
 - JWT token authentication
 - Rate limiting (100 req/min per IP)
@@ -420,6 +433,7 @@ graph LR
 ```
 
 **Recovery Time Objectives:**
+
 - **RPO (Recovery Point Objective):** < 1 hour
 - **RTO (Recovery Time Objective):** < 4 hours
 - **Backup Retention:** 30 days
@@ -447,22 +461,23 @@ graph TB
 
 ## Environment Comparison
 
-| Aspect | Development | Staging | Production |
-|--------|-------------|---------|------------|
-| Database | Local/Mock | Cloud DB | Replicated DB |
-| Server | localhost:5000 | staging.aios.app | aios.app |
-| Monitoring | Console logs | Basic monitoring | Full observability |
-| Error Tracking | Local only | Sentry staging | Sentry production |
-| Analytics | Disabled | Sample rate 10% | Full tracking |
-| Cache | Memory only | Redis (optional) | Redis + CDN |
-| Backups | None | Daily | Continuous |
-| SSL | Not required | Required | Required |
-| Rate Limiting | Disabled | Relaxed | Enforced |
-| Auto-scaling | No | No | Yes |
+| Aspect          | Development    | Staging            | Production          |
+|-----------------|----------------|--------------------|--------------------|
+| Database        | Local/Mock      | Cloud DB            | Replicated DB       |
+| Server          | localhost:5000  | staging.aios.app    | aios.app            |
+| Monitoring      | Console logs    | Basic monitoring    | Full observability  |
+| Error Tracking  | Local only      | Sentry staging      | Sentry production   |
+| Analytics       | Disabled        | Sample rate 10%     | Full tracking       |
+| Cache           | Memory only     | Redis (optional)    | Redis + CDN         |
+| Backups         | None            | Daily               | Continuous          |
+| SSL             | Not required    | Required            | Required            |
+| Rate Limiting   | Disabled        | Relaxed             | Enforced            |
+| Auto-scaling    | No              | No                  | Yes                 |
 
 ## Deployment Checklist
 
 ### Pre-Deployment
+
 - [ ] All tests passing
 - [ ] Code review approved
 - [ ] Documentation updated
@@ -471,6 +486,7 @@ graph TB
 - [ ] Rollback plan documented
 
 ### Deployment
+
 - [ ] Deploy to staging first
 - [ ] Run smoke tests
 - [ ] Check monitoring dashboards
@@ -478,6 +494,7 @@ graph TB
 - [ ] Load test if major changes
 
 ### Post-Deployment
+
 - [ ] Monitor error rates
 - [ ] Check performance metrics
 - [ ] Verify analytics events

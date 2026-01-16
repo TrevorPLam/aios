@@ -9,6 +9,7 @@ This document establishes the process for collecting, reviewing, and acting on d
 ### 1. GitHub Issues (Primary)
 
 Use the documentation issue template at `.github/ISSUE_TEMPLATE/documentation.yml` to report:
+
 - Incorrect information
 - Unclear explanations
 - Missing documentation
@@ -17,6 +18,7 @@ Use the documentation issue template at `.github/ISSUE_TEMPLATE/documentation.ym
 ### 2. GitHub Discussions
 
 Categories for community engagement:
+
 - **Q&A:** Questions about documentation
 - **Ideas:** Suggestions for new documentation
 - **Show and Tell:** Share how you use the docs
@@ -30,21 +32,23 @@ Each major documentation file includes a feedback section encouraging users to r
 ### Weekly Review Cycle
 
 **Schedule:**
+
 - **Monday 10 AM:** Review all feedback from previous week
 - **Assign:** Distribute to team members
 - **Friday 4 PM:** Check completion status
 
 ### Triage Criteria
 
-| Priority | Criteria | Response Time |
-|----------|----------|---------------|
-| **High** | Blocks understanding, contains errors, security issue | < 2 days |
-| **Medium** | Unclear, missing context, could be improved | < 1 week |
-| **Low** | Enhancement, nice-to-have, minor clarification | < 1 month |
+| Priority   | Criteria                                                 | Response Time |
+|------------|----------------------------------------------------------|---------------|
+| **High**   | Blocks understanding, contains errors, security issue    | < 2 days      |
+| **Medium** | Unclear, missing context, could be improved              | < 1 week      |
+| **Low**    | Enhancement, nice-to-have, minor clarification           | < 1 month     |
 
 ## Feedback Metrics
 
 Track in `DOCUMENTATION_METRICS.md`:
+
 - Issues opened/closed per month
 - Average resolution time
 - Discussion activity
@@ -53,6 +57,7 @@ Track in `DOCUMENTATION_METRICS.md`:
 ## Quarterly Survey
 
 Survey users on:
+
 - Overall documentation quality
 - Ease of finding information
 - Most helpful documentation

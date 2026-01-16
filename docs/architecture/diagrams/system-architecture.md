@@ -65,12 +65,14 @@ graph TB
 ### Client Layer (React Native)
 
 **Technologies:**
+
 - React Native 0.81.5
 - React 19.1.0
 - Expo 54
 - TypeScript 5.9
 
 **Key Components:**
+
 - **Screens:** 40+ screen components (14 modules)
 - **Navigation:** React Navigation (bottom tabs + native stack)
 - **State:** Context API + React Query
@@ -81,12 +83,14 @@ graph TB
 ### Server Layer (Express)
 
 **Technologies:**
+
 - Express 4.21
 - TypeScript
 - JWT for authentication
 - WebSocket support (ws 8.18)
 
 **Responsibilities:**
+
 - API endpoints for data sync
 - Authentication & authorization
 - Business logic processing
@@ -95,12 +99,14 @@ graph TB
 ### Storage Layer
 
 **Local Storage (AsyncStorage):**
+
 - Primary data store (privacy-first)
 - Offline-first architecture
 - Key-value store
 - JSON serialization
 
 **Server Database (PostgreSQL):**
+
 - Drizzle ORM 0.39
 - Optional sync target
 - Backup and cross-device sync
@@ -109,18 +115,21 @@ graph TB
 ## Communication Patterns
 
 ### REST API
+
 - Client → Server: CRUD operations
 - JWT authentication headers
 - JSON data format
 - RESTful endpoints
 
 ### WebSocket
+
 - Server → Client: Real-time updates
 - Bi-directional communication
 - Event-based messaging
 - Configured but optional
 
 ### Local-First
+
 - Data created/modified locally first
 - Background sync when online
 - Conflict resolution strategies
@@ -128,18 +137,18 @@ graph TB
 
 ## Technology Stack Summary
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Client Framework | React Native | 0.81.5 |
-| UI Library | Expo | 54 |
-| Language | TypeScript | 5.9 |
-| Server | Express | 4.21 |
-| Local DB | AsyncStorage | 2.2 |
-| Server DB | PostgreSQL + Drizzle | 0.39 |
-| Auth | JWT | 9.0 |
-| Real-time | WebSocket | 8.18 |
-| State | React Query | 5.90 |
-| Animation | Reanimated | 4.1 |
+| Layer             | Technology             | Version |
+|-------------------|------------------------|---------|
+| Client Framework  | React Native           | 0.81.5  |
+| UI Library        | Expo                   | 54      |
+| Language          | TypeScript             | 5.9     |
+| Server            | Express                | 4.21    |
+| Local DB          | AsyncStorage           | 2.2     |
+| Server DB         | PostgreSQL + Drizzle   | 0.39    |
+| Auth              | JWT                    | 9.0     |
+| Real-time         | WebSocket              | 8.18    |
+| State             | React Query            | 5.90    |
+| Animation         | Reanimated             | 4.1     |
 
 ## Scalability Considerations
 

@@ -20,6 +20,7 @@ All diagrams use Mermaid syntax and render automatically on GitHub. To view loca
 ## Updating Diagrams
 
 When updating diagrams:
+
 1. Edit the Mermaid code directly in the markdown files
 2. Test rendering on [Mermaid Live Editor](https://mermaid.live)
 3. Commit changes - GitHub will auto-render updates

@@ -82,6 +82,7 @@ graph LR
 ```
 
 **Modules Feeding Command Center:**
+
 - Notebook → Recent notes, tags
 - Planner → Active tasks, priorities
 - Calendar → Upcoming events
@@ -160,24 +161,25 @@ graph LR
 
 ## Module Communication Matrix
 
-| From/To | CC | NB | PL | CAL | EM | MSG | LST | AL | CT | TR | PH | HIS | BUD | INT |
-|---------|----|----|----|----|----|----|----|----|----|----|----|----|-----|-----|
-| **Command Center** | - | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
-| **Notebook** | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔗 | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Planner** | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Calendar** | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔗 |
-| **Email** | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | 🔗 | ❌ | ❌ | ❌ | ❌ | 🔗 |
-| **Messages** | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | 🔗 | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Lists** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Alerts** | ❌ | ❌ | 🔗 | 🔗 | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Contacts** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Translator** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ |
-| **Photos** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ |
-| **History** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ |
-| **Budget** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | 🔗 |
-| **Integrations** | ❌ | ❌ | ❌ | 🔗 | 🔗 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔗 | - |
+| From/To         | CC | NB | PL  | CAL | EM  | MSG | LST | AL  | CT  | TR  | PH  | HIS | BUD | INT |
+|-----------------|----|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| **Command Center**   | -  | ✅ | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ❌  | ❌  | ✅  | ✅  | ❌  |
+| **Notebook**         | ❌ | -  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | 🔗  | ❌  | ❌  | ❌  | ❌  | ❌  |
+| **Planner**          | ❌ | ❌ | -   | ❌  | ❌  | ❌  | ❌  | ✅  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
+| **Calendar**         | ❌ | ❌ | ❌  | -   | ❌  | ❌  | ❌  | ✅  | ❌  | ❌  | ❌  | ❌  | ❌  | 🔗  |
+| **Email**            | ❌ | ❌ | ❌  | ❌  | -   | ❌  | ❌  | ❌  | 🔗  | ❌  | ❌  | ❌  | ❌  | 🔗  |
+| **Messages**         | ❌ | ❌ | ❌  | ❌  | ❌  | -   | ❌  | ❌  | 🔗  | ❌  | ❌  | ❌  | ❌  | ❌  |
+| **Lists**            | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
+| **Alerts**           | ❌ | ❌ | 🔗  | 🔗  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
+| **Contacts**         | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  | ❌  |
+| **Translator**       | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  |
+| **Photos**           | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  |
+| **History**          | ❌ | ✅ | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | -   | ✅  | ✅  |
+| **Budget**           | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | 🔗  |
+| **Integrations**     | ❌ | ❌ | ❌  | 🔗  | 🔗  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | 🔗  | -   |
 
 **Legend:**
+
 - ✅ = Reads data from target module
 - 🔗 = References entities in target module
 - ❌ = No direct interaction
@@ -223,6 +225,7 @@ graph TB
 ### Shared Utilities
 
 All modules have access to:
+
 - **Storage API:** Unified AsyncStorage wrapper
 - **Analytics:** Event tracking
 - **Haptics:** Tactile feedback
@@ -252,25 +255,33 @@ graph TB
 ## Module Independence Levels
 
 ### Level 1: Fully Independent
+
 No dependencies on other modules.
+
 - Translator
 - Photos
 - Lists
 
 ### Level 2: Reference Only
+
 References shared resources but doesn't read module data.
+
 - Notebook (references Contacts)
 - Email (references Contacts)
 - Messages (references Contacts)
 - Budget
 
 ### Level 3: Read Dependencies
+
 Reads data from other modules.
+
 - Command Center (reads all)
 - History (tracks all)
 
 ### Level 4: Bidirectional
+
 Creates or modifies data in other modules.
+
 - Planner (creates Alerts)
 - Calendar (creates Alerts)
 - Integrations (syncs with Email, Calendar, Budget)
