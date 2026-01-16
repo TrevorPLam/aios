@@ -31,6 +31,7 @@
 import { ModuleType } from "@/models/types";
 import { eventBus, EVENT_TYPES } from "./eventBus";
 import { moduleRegistry } from "./moduleRegistry";
+import { saveToStorage, loadFromStorage } from "./storage";
 
 /**
  * Onboarding stage
@@ -599,15 +600,51 @@ class OnboardingManager {
    * Helper: Load saved state from storage
    */
   private async loadState(): Promise<void> {
-    // Placeholder - implement with AsyncStorage
-    // For now, start fresh each time
+    try {
+      const saved = await loadFromStorage<{
+        stage: OnboardingStage;
+        unlockedModules: Array<[ModuleType, UnlockedModule]>;
+        tips: Array<[string, ContextualTip]>;
+        usageCount: number;
+        startedAt?: string;
+        completedAt?: string;
+        lastUnlockDate?: string;
+        lastUnlockThreshold?: number;
+      }>('onboarding_state');
+      
+      if (saved) {
+        this.state = {
+          ...saved,
+          unlockedModules: new Map(saved.unlockedModules || []),
+          tips: new Map(saved.tips || []),
+        };
+        this.lastUnlockDate = saved.lastUnlockDate
+          ? new Date(saved.lastUnlockDate)
+          : undefined;
+        this.lastUnlockThreshold = saved.lastUnlockThreshold || 0;
+      }
+    } catch (error) {
+      console.error('Failed to load onboarding state:', error);
+      // Start fresh on error
+    }
   }
 
   /**
    * Helper: Save state to storage
    */
   private async saveState(): Promise<void> {
-    // Placeholder - implement with AsyncStorage
+    try {
+      const serialized = {
+        ...this.state,
+        unlockedModules: Array.from(this.state.unlockedModules.entries()),
+        tips: Array.from(this.state.tips.entries()),
+        lastUnlockDate: this.lastUnlockDate?.toISOString(),
+        lastUnlockThreshold: this.lastUnlockThreshold,
+      };
+      await saveToStorage('onboarding_state', serialized);
+    } catch (error) {
+      console.error('Failed to save onboarding state:', error);
+    }
   }
 
   /**

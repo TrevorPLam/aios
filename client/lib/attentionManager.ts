@@ -32,6 +32,7 @@
 import { ModuleType } from "@/models/types";
 import { eventBus, EVENT_TYPES } from "./eventBus";
 import { contextEngine } from "./contextEngine";
+import { saveToStorage, loadFromStorage } from "./storage";
 
 /**
  * Attention priority levels
@@ -183,6 +184,12 @@ class AttentionManager {
     this.items.clear();
     this.bundles.clear();
     this.listeners.clear();
+    
+    // Reset focus mode
+    this.focusMode = {
+      enabled: false,
+      allowUrgent: true,
+    };
   }
 
   /**
@@ -210,13 +217,18 @@ class AttentionManager {
       this.updateBundle(item);
     }
 
-    // Notify listeners
+    // Notify listeners (synchronous)
     this.notifyListeners();
 
     // Emit event for UI updates  
     eventBus.emit(EVENT_TYPES.USER_ACTION, { 
       action: "attention:item-added",
       item 
+    });
+    
+    // Save to storage (async, but don't wait)
+    this.savePreferences().catch((error) => {
+      console.error('Failed to save attention state:', error);
     });
 
     return true;
@@ -326,7 +338,10 @@ class AttentionManager {
    */
   setFocusMode(mode: Partial<FocusMode>): void {
     this.focusMode = { ...this.focusMode, ...mode };
+    
+    // Notify listeners (synchronous)
     this.notifyListeners();
+    
     eventBus.emit(EVENT_TYPES.USER_ACTION, { 
       action: "attention:focus-mode-changed",
       mode: this.focusMode 
@@ -336,6 +351,11 @@ class AttentionManager {
     if (mode.enabled) {
       this.refilterItems();
     }
+    
+    // Save to storage (async, but don't wait)
+    this.savePreferences().catch((error) => {
+      console.error('Failed to save focus mode:', error);
+    });
   }
 
   /**
@@ -686,8 +706,46 @@ class AttentionManager {
    * Helper: Load saved preferences
    */
   private async loadPreferences(): Promise<void> {
-    // Placeholder - implement with AsyncStorage
-    // Load focus mode settings, dismissed items, user priority overrides
+    try {
+      // Load focus mode settings
+      const focusMode = await loadFromStorage<FocusMode>('attention_focus_mode');
+      if (focusMode) {
+        this.focusMode = focusMode;
+      }
+      
+      // Load items and bundles
+      const data = await loadFromStorage<{
+        items: Array<[string, AttentionItem]>;
+        bundles: Array<[string, AttentionBundle]>;
+      }>('attention_items');
+      
+      if (data) {
+        this.items = new Map(data.items || []);
+        this.bundles = new Map(data.bundles || []);
+      }
+    } catch (error) {
+      console.error('Failed to load attention preferences:', error);
+      // Start fresh on error
+    }
+  }
+  
+  /**
+   * Helper: Save preferences to storage
+   */
+  private async savePreferences(): Promise<void> {
+    try {
+      // Save focus mode settings
+      await saveToStorage('attention_focus_mode', this.focusMode);
+      
+      // Save items and bundles
+      const serialized = {
+        items: Array.from(this.items.entries()),
+        bundles: Array.from(this.bundles.entries()),
+      };
+      await saveToStorage('attention_items', serialized);
+    } catch (error) {
+      console.error('Failed to save attention preferences:', error);
+    }
   }
 
   /**
