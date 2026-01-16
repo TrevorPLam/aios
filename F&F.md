@@ -640,7 +640,7 @@ Third-party service connection management.
 - Budget: YNAB, Mint, Monarch Money
 - Integrations: Zapier, IFTTT
 
-**See COMPETITIVE_ANALYSIS.md for detailed comparisons.**
+**See [docs/analysis/COMPETITIVE_ANALYSIS.md](docs/analysis/COMPETITIVE_ANALYSIS.md) for detailed comparisons.**
 
 ---
 
