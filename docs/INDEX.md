@@ -36,10 +36,17 @@ This index provides direct links to all active documentation in the repository.
 - [CONTEXTUAL_NAVIGATION.md](technical/CONTEXTUAL_NAVIGATION.md) - Navigation patterns
 - [NAVIGATION_IMPROVEMENTS.md](technical/NAVIGATION_IMPROVEMENTS.md) - Navigation enhancements
 - [STYLE_GUIDE.md](STYLE_GUIDE.md) - Documentation style guide
+- [architecture/diagrams/](architecture/diagrams/) - Architecture diagrams (Mermaid-based)
+  - [System Architecture](architecture/diagrams/system-architecture.md)
+  - [Data Flow](architecture/diagrams/data-flow.md)
+  - [Module Relationships](architecture/diagrams/module-relationships.md)
+  - [Deployment Architecture](architecture/diagrams/deployment-architecture.md)
 
 ### Decisions & Governance
 - [decisions/](decisions/) - Architecture decision records
 - [.templates/](.templates/) - Documentation templates
+- [processes/](processes/) - Documentation processes and workflows
+  - [Feedback Loop](processes/feedback-loop.md) - User feedback collection and review process
 
 ### Deployment
 - [replit-deployment.md](technical/replit-deployment.md) - Replit deployment guide
