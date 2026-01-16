@@ -45,6 +45,9 @@ import { formatDateTime } from "@/utils/helpers";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
+/** Maximum historical items to retrieve */
+const MAX_HISTORY_ITEMS = 100;
+
 /**
  * Get icon for recommendation status
  */
@@ -204,7 +207,7 @@ export default function RecommendationHistoryScreen() {
    */
   const loadData = useCallback(async () => {
     const [history, stats] = await Promise.all([
-      db.recommendations.getHistory(100),
+      db.recommendations.getHistory(MAX_HISTORY_ITEMS),
       db.recommendations.getStatistics(),
     ]);
 

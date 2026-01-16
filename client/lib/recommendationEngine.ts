@@ -95,6 +95,57 @@ function hoursFromNow(hours: number): string {
 }
 
 /**
+ * Rule priorities for recommendation generation
+ * Higher values = more urgent/important
+ */
+const RULE_PRIORITIES = {
+  URGENT_DEADLINE: 90,
+  HIGH_FOCUS_TIME: 80,
+  MEDIUM_MEETING_NOTES: 75,
+  MEDIUM_TASK_BREAKDOWN: 70,
+  LOW_REFLECTION: 40,
+  TIP_ORGANIZATION: 30,
+} as const;
+
+/**
+ * Configuration constants for recommendation engine
+ */
+const ENGINE_CONFIG = {
+  /** Minimum recommendations before auto-refresh triggers */
+  MIN_RECOMMENDATIONS_THRESHOLD: 3,
+  /** Maximum historical items to retrieve */
+  MAX_HISTORY_ITEMS: 100,
+  /** Days after which recommendations are considered stale */
+  STALE_TASK_DAYS: 3,
+  /** Days between reflection prompts */
+  REFLECTION_INTERVAL_DAYS: 6,
+  /** Days ahead to check for upcoming deadlines */
+  DEADLINE_WARNING_DAYS: 3,
+  /** Minimum untagged notes before suggesting organization */
+  MIN_UNTAGGED_NOTES: 5,
+} as const;
+
+/**
+ * RECOMMENDATION RULES
+ * Defines all recommendation generation rules
+ */
+
+/**
+ * Helper function to check if a note is a reflection
+ *
+ * @param {Note} note - Note to check
+ * @returns {boolean} True if note is a reflection
+ */
+function isReflectionNote(note: Note): boolean {
+  const lowerTitle = note.title.toLowerCase();
+  return (
+    lowerTitle.includes("reflection") ||
+    lowerTitle.includes("weekly") ||
+    note.tags.some((t) => t.toLowerCase().includes("reflection"))
+  );
+}
+
+/**
  * RECOMMENDATION RULES
  * Defines all recommendation generation rules
  */
@@ -107,7 +158,7 @@ const suggestMeetingNotes: RecommendationRule = {
   id: "meeting_notes",
   module: "notebook",
   type: "note_suggestion",
-  priority: 75,
+  priority: RULE_PRIORITIES.MEDIUM_MEETING_NOTES,
   checkCondition: async (data: AnalysisData) => {
     // Check for calendar events in past 24 hours without corresponding notes
     const yesterday = new Date(data.currentTime);
@@ -169,11 +220,11 @@ const suggestTaskBreakdown: RecommendationRule = {
   id: "task_breakdown",
   module: "planner",
   type: "task_optimization",
-  priority: 70,
+  priority: RULE_PRIORITIES.MEDIUM_TASK_BREAKDOWN,
   checkCondition: async (data: AnalysisData) => {
     // Find tasks that are pending for >3 days with no subtasks
     const threeDaysAgo = new Date(data.currentTime);
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - ENGINE_CONFIG.STALE_TASK_DAYS);
 
     const staleTasks = data.tasks.filter((task) => {
       const createdDate = new Date(task.createdAt);
@@ -188,7 +239,7 @@ const suggestTaskBreakdown: RecommendationRule = {
   },
   generate: async (data: AnalysisData) => {
     const threeDaysAgo = new Date(data.currentTime);
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - ENGINE_CONFIG.STALE_TASK_DAYS);
 
     const staleTasks = data.tasks.filter((task) => {
       const createdDate = new Date(task.createdAt);
@@ -236,7 +287,7 @@ const suggestFocusTime: RecommendationRule = {
   id: "focus_time",
   module: "calendar",
   type: "scheduling_suggestion",
-  priority: 80,
+  priority: RULE_PRIORITIES.HIGH_FOCUS_TIME,
   checkCondition: async (data: AnalysisData) => {
     // Check for high-priority tasks without calendar time allocated
     const highPriorityTasks = data.tasks.filter(
@@ -301,15 +352,11 @@ const suggestWeeklyReflection: RecommendationRule = {
   checkCondition: async (data: AnalysisData) => {
     // Check if last note with "reflection" or "weekly" was >6 days ago
     const sixDaysAgo = new Date(data.currentTime);
-    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+    sixDaysAgo.setDate(sixDaysAgo.getDate() - ENGINE_CONFIG.REFLECTION_INTERVAL_DAYS);
 
     const hasRecentReflection = data.notes.some((note) => {
       const noteDate = new Date(note.updatedAt);
-      const isReflection =
-        note.title.toLowerCase().includes("reflection") ||
-        note.title.toLowerCase().includes("weekly") ||
-        note.tags.some((t) => t.toLowerCase().includes("reflection"));
-      return isReflection && noteDate > sixDaysAgo;
+      return isReflectionNote(note) && noteDate > sixDaysAgo;
     });
 
     // Only suggest on weekends (Friday-Sunday)
@@ -347,7 +394,7 @@ const suggestDueDateReview: RecommendationRule = {
   id: "due_date_review",
   module: "planner",
   type: "deadline_alert",
-  priority: 90,
+  priority: RULE_PRIORITIES.URGENT_DEADLINE,
   checkCondition: async (data: AnalysisData) => {
     // Check for tasks due in next 3 days
     const threeDaysAhead = new Date(data.currentTime);
@@ -404,7 +451,7 @@ const suggestNoteTagging: RecommendationRule = {
   checkCondition: async (data: AnalysisData) => {
     // Check for notes without tags
     const untaggedNotes = data.notes.filter((note) => note.tags.length === 0);
-    return untaggedNotes.length >= 5;
+    return untaggedNotes.length >= ENGINE_CONFIG.MIN_UNTAGGED_NOTES;
   },
   generate: async (data: AnalysisData) => {
     const untaggedNotes = data.notes.filter((note) => note.tags.length === 0);

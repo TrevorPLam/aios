@@ -59,6 +59,8 @@ const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
 const CARD_SPACING = Spacing.lg;
 /** Minimum horizontal swipe distance to trigger accept/decline */
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
+/** Minimum recommendations before auto-refresh triggers */
+const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -268,7 +270,7 @@ export default function CommandCenterScreen() {
     setAiLimits(limits);
 
     // Auto-refresh if we have few or no recommendations
-    if (recs.length < 3) {
+    if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
       await handleRefreshRecommendations();
     }
   }, []);
