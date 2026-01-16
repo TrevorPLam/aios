@@ -43,6 +43,17 @@ const MIN_SNOOZE_WARNING_THRESHOLD = 2;
 /** Multiplier for detecting worsening snooze patterns */
 const SNOOZE_PATTERN_WORSENING_FACTOR = 3;
 
+/** Insight type for alert statistics analysis */
+type InsightType = "success" | "warning" | "info";
+
+/** Interface for alert insight objects */
+interface AlertInsight {
+  icon: keyof typeof Feather.glyphMap;
+  title: string;
+  description: string;
+  type: InsightType;
+}
+
 interface AlertStatisticsSheetProps {
   visible: boolean;
   alertId: string;
@@ -146,7 +157,12 @@ function ProgressBar({
 /**
  * InsightCard Component
  *
- * Displays an insight or recommendation based on statistics
+ * Displays an insight or recommendation based on statistics with color-coded indicators
+ * 
+ * @param icon - Feather icon name to display
+ * @param title - Main insight title
+ * @param description - Detailed insight description
+ * @param type - Insight type determining color scheme (success/warning/info)
  */
 function InsightCard({
   icon,
@@ -157,17 +173,17 @@ function InsightCard({
   icon: keyof typeof Feather.glyphMap;
   title: string;
   description: string;
-  type?: "success" | "warning" | "info";
+  type?: InsightType;
 }) {
   const { theme } = useTheme();
 
-  const colors = {
+  const colors: Record<InsightType, string> = {
     success: theme.success,
     warning: theme.warning,
     info: theme.accent,
   };
 
-  const backgroundColor = {
+  const backgroundColor: Record<InsightType, string> = {
     success: theme.success + "20",
     warning: theme.warning + "20",
     info: theme.accentDim,
@@ -201,22 +217,27 @@ function InsightCard({
 
 /**
  * Generate insights based on alert statistics
+ * 
+ * Insight Types Generated:
+ * 1. Response Time (>=80% = success, <50% = warning)
+ * 2. Snooze Pattern (>2 avg = warning, 0 with 5+ triggers = success)
+ * 3. Recent Trends (improving or declining pattern)
+ * 4. New Alert (<3 triggers = info message)
+ * 
+ * Pattern Detection:
+ * - Uses last 3 entries for recent analysis
+ * - Compares recent vs. historical average
+ * - 3x worsening factor triggers warning
+ * 
+ * @param stats - Aggregated alert statistics
+ * @param recentHistory - Sorted history entries (newest first)
+ * @returns Array of actionable insights
  */
 function generateInsights(
   stats: AlertStatistics,
   recentHistory: AlertHistoryEntry[]
-): Array<{
-  icon: keyof typeof Feather.glyphMap;
-  title: string;
-  description: string;
-  type: "success" | "warning" | "info";
-}> {
-  const insights: Array<{
-    icon: keyof typeof Feather.glyphMap;
-    title: string;
-    description: string;
-    type: "success" | "warning" | "info";
-  }> = [];
+): AlertInsight[] {
+  const insights: AlertInsight[] = [];
 
   // On-time dismissal insights
   if (stats.onTimeDismissalRate >= 80) {
@@ -255,7 +276,7 @@ function generateInsights(
   // Recent pattern analysis
   if (recentHistory.length >= RECENT_HISTORY_COUNT) {
     const recentSnoozes = recentHistory
-      .slice(-RECENT_HISTORY_COUNT)
+      .slice(0, RECENT_HISTORY_COUNT)  // Get first N items (most recent, as array is sorted newest-first)
       .reduce((sum, entry) => sum + entry.snoozeCount, 0);
     
     if (recentSnoozes === 0 && stats.averageSnoozeCount > 1) {
@@ -309,31 +330,46 @@ export default function AlertStatisticsSheet({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (visible && alertId) {
-      loadStatistics();
-    }
+    let isMounted = true;
+
+    const loadStatistics = async () => {
+      if (!visible || !alertId) return;
+
+      setLoading(true);
+      try {
+        const statistics = await db.alertHistory.getStatistics(alertId);
+        const history = await db.alertHistory.getByAlert(alertId);
+        
+        if (isMounted) {
+          // Sort by most recent first
+          const sortedHistory = history.sort(
+            (a, b) =>
+              new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime()
+          );
+
+          setStats(statistics);
+          setRecentHistory(sortedHistory);
+        }
+      } catch (error) {
+        console.error("Failed to load alert statistics:", error);
+        if (isMounted) {
+          // Clear states on error to show empty state
+          setStats(null);
+          setRecentHistory([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadStatistics();
+
+    return () => {
+      isMounted = false;
+    };
   }, [visible, alertId]);
-
-  const loadStatistics = async () => {
-    setLoading(true);
-    try {
-      const statistics = await db.alertHistory.getStatistics(alertId);
-      const history = await db.alertHistory.getByAlert(alertId);
-      
-      // Sort by most recent first
-      const sortedHistory = history.sort(
-        (a, b) =>
-          new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime()
-      );
-
-      setStats(statistics);
-      setRecentHistory(sortedHistory);
-    } catch (error) {
-      console.error("Failed to load alert statistics:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleClose = () => {
     if (Platform.OS !== "web") {

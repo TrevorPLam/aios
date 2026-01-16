@@ -648,7 +648,7 @@ export default function AlertDetailScreen() {
             <ThemedText type="body" style={styles.label}>
               Snooze Duration
             </ThemedText>
-            {smartSnoozeSuggestion &&
+            {smartSnoozeSuggestion !== null &&
               smartSnoozeSuggestion !== snoozeDuration && (
                 <Pressable
                   onPress={() => {

@@ -742,9 +742,22 @@ export const db = {
     /**
      * Get smart snooze duration recommendation based on history
      * Analyzes past snooze patterns to suggest optimal snooze duration
+     * 
+     * Algorithm:
+     * 1. If no history: return 10 min (default)
+     * 2. If user never snoozes: return 5 min (disciplined user)
+     * 3. Otherwise: calculate average snooze duration per instance
+     *    - avgTotalDuration = total snooze time / number of snoozed alerts
+     *    - avgCount = total snoozes / number of snoozed alerts  
+     *    - estimatedOptimal = avgTotalDuration / avgCount
+     * 4. Round to nearest valid option (5, 10, 15, 30, 60)
      *
      * @param {string} alertId - The alert ID
      * @returns {Promise<number>} Recommended snooze duration in minutes
+     * 
+     * @example
+     * // User consistently snoozes 2x at 15min each = 30min total
+     * // Returns: 15 (optimal per-snooze duration)
      */
     async getSmartSnoozeSuggestion(alertId: string): Promise<number> {
       const entries = await this.getByAlert(alertId);
@@ -774,8 +787,10 @@ export const db = {
         snoozedEntries.reduce((sum, entry) => sum + entry.snoozeCount, 0) /
         snoozedEntries.length;
 
-      // Estimate optimal single snooze duration
-      const estimatedOptimal = avgTotalSnoozeDuration / avgSnoozeCount;
+      // Estimate optimal single snooze duration with defensive check
+      const estimatedOptimal = avgSnoozeCount > 0
+        ? avgTotalSnoozeDuration / avgSnoozeCount
+        : 10; // Default fallback if somehow avgSnoozeCount is 0
 
       // Round to nearest valid snooze option: 5, 10, 15, 30, or 60 minutes
       const validOptions = [5, 10, 15, 30, 60];
