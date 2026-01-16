@@ -144,7 +144,7 @@ const suggestMeetingNotes: RecommendationRule = {
       priority: "medium",
       dedupeKey: `meeting_notes_${event.id}`,
       countsAgainstLimit: true,
-      why: `Calendar event "${event.title}" occurred ${daysBetween(new Date(event.startAt), data.currentTime)} hours ago. Research shows documenting meetings within 24 hours increases retention by 65%.`,
+      why: `Calendar event "${event.title}" occurred ${daysBetween(new Date(event.startAt), data.currentTime)} days ago. Research shows documenting meetings within 24 hours increases retention by 65%.`,
       evidenceTimestamps: [event.startAt],
     };
   },
