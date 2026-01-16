@@ -504,38 +504,43 @@ export class RecommendationEngine {
   static async generateRecommendations(
     maxRecommendations: number = 5,
   ): Promise<Recommendation[]> {
-    // Gather data from all modules
-    const data = await this.gatherAnalysisData();
+    try {
+      // Gather data from all modules
+      const data = await this.gatherAnalysisData();
 
-    // Get existing recommendations to avoid duplication
-    const existing = await db.recommendations.getAll();
-    const existingDedupeKeys = new Set(existing.map((r) => r.dedupeKey));
+      // Get existing recommendations to avoid duplication
+      const existing = await db.recommendations.getAll();
+      const existingDedupeKeys = new Set(existing.map((r) => r.dedupeKey));
 
-    const recommendations: Recommendation[] = [];
+      const recommendations: Recommendation[] = [];
 
-    // Evaluate each rule
-    for (const rule of ALL_RULES) {
-      if (recommendations.length >= maxRecommendations) break;
+      // Evaluate each rule
+      for (const rule of ALL_RULES) {
+        if (recommendations.length >= maxRecommendations) break;
 
-      try {
-        // Check if condition is met
-        const conditionMet = await rule.checkCondition(data);
-        if (!conditionMet) continue;
+        try {
+          // Check if condition is met
+          const conditionMet = await rule.checkCondition(data);
+          if (!conditionMet) continue;
 
-        // Generate recommendation
-        const rec = await rule.generate(data);
-        if (!rec) continue;
+          // Generate recommendation
+          const rec = await rule.generate(data);
+          if (!rec) continue;
 
-        // Check for duplication
-        if (existingDedupeKeys.has(rec.dedupeKey)) continue;
+          // Check for duplication
+          if (existingDedupeKeys.has(rec.dedupeKey)) continue;
 
-        recommendations.push(rec);
-      } catch (error) {
-        console.error(`Error evaluating rule ${rule.id}:`, error);
+          recommendations.push(rec);
+        } catch (error) {
+          console.error(`Error evaluating rule ${rule.id}:`, error);
+        }
       }
-    }
 
-    return recommendations;
+      return recommendations;
+    } catch (error) {
+      console.error('Error generating recommendations:', error);
+      return [];
+    }
   }
 
   /**
@@ -544,11 +549,24 @@ export class RecommendationEngine {
    * @returns {Promise<AnalysisData>} Aggregated data from all modules
    */
   private static async gatherAnalysisData(): Promise<AnalysisData> {
+    // Gather data with error handling for each module
     const [notes, tasks, events, decisions] = await Promise.all([
-      db.notes.getAll(),
-      db.tasks.getAll(),
-      db.events.getAll(),
-      db.decisions.getAll(),
+      db.notes.getAll().catch((error) => {
+        console.error('Error fetching notes:', error);
+        return [];
+      }),
+      db.tasks.getAll().catch((error) => {
+        console.error('Error fetching tasks:', error);
+        return [];
+      }),
+      db.events.getAll().catch((error) => {
+        console.error('Error fetching events:', error);
+        return [];
+      }),
+      db.decisions.getAll().catch((error) => {
+        console.error('Error fetching decisions:', error);
+        return [];
+      }),
     ]);
 
     return {

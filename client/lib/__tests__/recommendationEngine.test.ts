@@ -39,6 +39,39 @@ jest.mock("@/storage/database", () => ({
   },
 }));
 
+/**
+ * Test Utilities
+ */
+let RealDate: typeof Date;
+
+/**
+ * Mock Date to return a specific date
+ */
+function mockDateTo(targetDate: Date): void {
+  RealDate = Date;
+  global.Date = class extends RealDate {
+    constructor(...args: any[]) {
+      if (args.length === 0) {
+        super(targetDate.getTime());
+      } else {
+        super(...args);
+      }
+    }
+    static now() {
+      return targetDate.getTime();
+    }
+  } as any;
+}
+
+/**
+ * Restore the original Date implementation
+ */
+function restoreDate(): void {
+  if (RealDate) {
+    global.Date = RealDate;
+  }
+}
+
 describe("RecommendationEngine", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -49,9 +82,16 @@ describe("RecommendationEngine", () => {
     (db.decisions.getAll as jest.Mock).mockResolvedValue([]);
     (db.recommendations.getAll as jest.Mock).mockResolvedValue([]);
   });
+  
+  afterEach(() => {
+    restoreDate();
+  });
 
   describe("generateRecommendations", () => {
     it("should return empty array when no conditions are met", async () => {
+      // Mock current date to be a Tuesday (weekday, not weekend)
+      mockDateTo(new Date("2024-01-16T10:00:00Z"));
+      
       const recommendations = await RecommendationEngine.generateRecommendations();
       expect(recommendations).toEqual([]);
     });
@@ -262,8 +302,7 @@ describe("RecommendationEngine", () => {
 
     it("should generate weekly reflection on weekends", async () => {
       // Mock current date to be a Saturday
-      const saturday = new Date("2024-01-20T10:00:00Z"); // Saturday
-      jest.spyOn(global, "Date").mockImplementation(() => saturday as any);
+      mockDateTo(new Date("2024-01-20T10:00:00Z"));
 
       (db.notes.getAll as jest.Mock).mockResolvedValue([]);
 
@@ -274,8 +313,6 @@ describe("RecommendationEngine", () => {
       );
       expect(reflectionRec).toBeDefined();
       expect(reflectionRec?.module).toBe("notebook");
-
-      jest.restoreAllMocks();
     });
 
     it("should generate deadline alert for upcoming tasks", async () => {
@@ -540,6 +577,9 @@ describe("RecommendationEngine", () => {
 
   describe("Error handling", () => {
     it("should handle database errors gracefully", async () => {
+      // Mock current date to be a Tuesday (weekday, not weekend)
+      mockDateTo(new Date("2024-01-16T10:00:00Z"));
+      
       (db.notes.getAll as jest.Mock).mockRejectedValue(
         new Error("Database error"),
       );
