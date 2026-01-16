@@ -1,16 +1,22 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { Button } from "../Button";
+import { ThemeProvider } from "@/context/ThemeContext";
+
+// Wrapper component to provide theme context
+function renderWithTheme(component: React.ReactElement) {
+  return render(<ThemeProvider>{component}</ThemeProvider>);
+}
 
 describe("Button", () => {
   it("renders with children text", () => {
-    const { getByText } = render(<Button>Click me</Button>);
+    const { getByText } = renderWithTheme(<Button>Click me</Button>);
     expect(getByText("Click me")).toBeTruthy();
   });
 
   it("calls onPress when pressed", () => {
     const mockOnPress = jest.fn();
-    const { getByText } = render(
+    const { getByText } = renderWithTheme(
       <Button onPress={mockOnPress}>Press me</Button>,
     );
 
@@ -20,7 +26,7 @@ describe("Button", () => {
 
   it("does not call onPress when disabled", () => {
     const mockOnPress = jest.fn();
-    const { getByText } = render(
+    const { getByText } = renderWithTheme(
       <Button onPress={mockOnPress} disabled>
         Disabled Button
       </Button>,
@@ -31,7 +37,7 @@ describe("Button", () => {
   });
 
   it("applies disabled styling when disabled", () => {
-    const { getByText } = render(<Button disabled>Disabled</Button>);
+    const { getByText } = renderWithTheme(<Button disabled>Disabled</Button>);
 
     // Just verify the button is rendered with disabled prop
     const buttonText = getByText("Disabled");
@@ -40,7 +46,7 @@ describe("Button", () => {
 
   it("renders with custom style", () => {
     const customStyle = { width: 200 };
-    const { getByText } = render(
+    const { getByText } = renderWithTheme(
       <Button style={customStyle}>Custom Style</Button>,
     );
 

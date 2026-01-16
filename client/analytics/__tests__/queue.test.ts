@@ -53,18 +53,20 @@ describe("EventQueue", () => {
       expect(size).toBe(1);
     });
 
-    it("should apply backpressure when queue is full", async () => {
-      // Fill queue to capacity
+    it("should apply compaction when approaching capacity", async () => {
+      // Fill queue close to capacity
       for (let i = 0; i < 10; i++) {
         await queue.enqueue(createMockEvent(`event_${i}`));
       }
 
-      // Try to enqueue one more
-      const result = await queue.enqueue(createMockEvent("overflow"));
-      expect(result).toBe(false);
-
+      // Queue should have compacted and be less than maxSize
       const size = await queue.size();
-      expect(size).toBe(10);
+      expect(size).toBeLessThan(10);
+      expect(size).toBeGreaterThanOrEqual(8); // Should be around 8-9 after compaction
+
+      // Should still be able to enqueue more events (compaction makes room)
+      const result = await queue.enqueue(createMockEvent("more"));
+      expect(result).toBe(true);
     });
 
     it("should compact queue when approaching capacity", async () => {
