@@ -55,10 +55,10 @@ export default function App() {
   }, []);
 
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <SafeAreaProvider>
-          <ThemeProvider>
+    <ThemeProvider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <SafeAreaProvider>
             <NavigationProvider>
               <GestureHandlerRootView style={styles.root}>
                 <KeyboardProvider>
@@ -69,10 +69,10 @@ export default function App() {
                 </KeyboardProvider>
               </GestureHandlerRootView>
             </NavigationProvider>
-          </ThemeProvider>
-        </SafeAreaProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+          </SafeAreaProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
 
