@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { storage } from "./storage";
 import { authenticate, generateToken } from "./middleware/auth";
 import { asyncHandler, AppError } from "./middleware/errorHandler";
-import { validate, validateParams } from "./middleware/validation";
+import { validate, validateParams, validateQuery } from "./middleware/validation";
 import {
   insertUserSchema,
   loginSchema,
@@ -26,6 +26,12 @@ import { z } from "zod";
 
 const idParamSchema = z.object({
   id: z.string().uuid("Invalid ID format"),
+});
+
+const messageSearchQuerySchema = z.object({
+  q: z.string().min(1, "Search query is required"),
+  conversationId: z.string().uuid().optional(),
+  limit: z.coerce.number().int().positive().max(200).optional(),
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -532,6 +538,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Message routes
+  // Search endpoint to support message lookups without UI changes.
+app.get(
+    "/api/messages/search",
+    authenticate,
+    validateQuery(messageSearchQuerySchema),
+    asyncHandler(async (req, res) => {
+      // req.query is already validated and typed by validateQuery middleware
+      const { q, conversationId, limit } = req.query;
+      const results = await storage.searchMessages(q, req.user!.userId, {
+        conversationId,
+        limit,
+      });
+      res.json(results);
+    }),
+  );
+    "/api/messages/search",
+    authenticate,
+    validateQuery(messageSearchQuerySchema),
+    asyncHandler(async (req, res) => {
+      const { q, conversationId, limit } = messageSearchQuerySchema.parse(
+        req.query,
+      );
+      const results = await storage.searchMessages(q, req.user!.userId, {
+        conversationId,
+        limit,
+      });
+      res.json(results);
+    }),
+  );
+
   app.get(
     "/api/conversations/:id/messages",
     authenticate,
