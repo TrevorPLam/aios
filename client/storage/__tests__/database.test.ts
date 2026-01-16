@@ -69,6 +69,188 @@ describe("Database Storage Layer", () => {
       expect(all).toHaveLength(1);
       expect(all[0].title).toBe("Updated Title");
     });
+
+    it("should get recommendation history", async () => {
+      const acceptedRec = {
+        ...mockRecommendation,
+        id: "rec_2",
+        status: "accepted" as const,
+        createdAt: "2026-01-15T00:00:00Z",
+      };
+      const declinedRec = {
+        ...mockRecommendation,
+        id: "rec_3",
+        status: "declined" as const,
+        createdAt: "2026-01-16T00:00:00Z",
+      };
+
+      await db.recommendations.save(mockRecommendation); // active
+      await db.recommendations.save(acceptedRec);
+      await db.recommendations.save(declinedRec);
+
+      const history = await db.recommendations.getHistory();
+
+      expect(history).toHaveLength(2);
+      expect(history[0].id).toBe("rec_3"); // Most recent first
+      expect(history[1].id).toBe("rec_2");
+    });
+
+    it("should limit recommendation history results", async () => {
+      for (let i = 0; i < 10; i++) {
+        await db.recommendations.save({
+          ...mockRecommendation,
+          id: `rec_${i}`,
+          status: "accepted",
+        });
+      }
+
+      const history = await db.recommendations.getHistory(5);
+      expect(history).toHaveLength(5);
+    });
+
+    it("should get recommendations by module", async () => {
+      const plannerRec = {
+        ...mockRecommendation,
+        id: "rec_2",
+        module: "planner" as const,
+      };
+
+      await db.recommendations.save(mockRecommendation); // command module
+      await db.recommendations.save(plannerRec);
+
+      const commandRecs = await db.recommendations.getByModule("command");
+      const plannerRecs = await db.recommendations.getByModule("planner");
+
+      expect(commandRecs).toHaveLength(1);
+      expect(plannerRecs).toHaveLength(1);
+      expect(commandRecs[0].module).toBe("command");
+    });
+
+    it("should get recommendations by status", async () => {
+      const acceptedRec = {
+        ...mockRecommendation,
+        id: "rec_2",
+        status: "accepted" as const,
+      };
+      const declinedRec = {
+        ...mockRecommendation,
+        id: "rec_3",
+        status: "declined" as const,
+      };
+
+      await db.recommendations.save(mockRecommendation); // active
+      await db.recommendations.save(acceptedRec);
+      await db.recommendations.save(declinedRec);
+
+      const active = await db.recommendations.getByStatus("active");
+      const accepted = await db.recommendations.getByStatus("accepted");
+      const declined = await db.recommendations.getByStatus("declined");
+
+      expect(active).toHaveLength(1);
+      expect(accepted).toHaveLength(1);
+      expect(declined).toHaveLength(1);
+    });
+
+    it("should get recommendation statistics", async () => {
+      const acceptedRec = {
+        ...mockRecommendation,
+        id: "rec_2",
+        status: "accepted" as const,
+        module: "planner" as const,
+        priority: "medium" as const,
+      };
+      const declinedRec = {
+        ...mockRecommendation,
+        id: "rec_3",
+        status: "declined" as const,
+        priority: "low" as const,
+      };
+      const expiredRec = {
+        ...mockRecommendation,
+        id: "rec_4",
+        status: "expired" as const,
+      };
+
+      await db.recommendations.save(mockRecommendation); // active
+      await db.recommendations.save(acceptedRec);
+      await db.recommendations.save(declinedRec);
+      await db.recommendations.save(expiredRec);
+
+      const stats = await db.recommendations.getStatistics();
+
+      expect(stats.total).toBe(4);
+      expect(stats.active).toBe(1);
+      expect(stats.accepted).toBe(1);
+      expect(stats.declined).toBe(1);
+      expect(stats.expired).toBe(1);
+      expect(stats.acceptanceRate).toBe(50); // 1 accepted out of 2 decided
+      expect(stats.byModule.command).toBe(3);
+      expect(stats.byModule.planner).toBe(1);
+      expect(stats.byPriority.high).toBe(3);
+      expect(stats.byPriority.medium).toBe(1);
+      expect(stats.byPriority.low).toBe(1);
+    });
+
+    it("should calculate 0% acceptance rate when no decisions made", async () => {
+      await db.recommendations.save(mockRecommendation); // active
+
+      const stats = await db.recommendations.getStatistics();
+
+      expect(stats.acceptanceRate).toBe(0);
+    });
+
+    it("should delete old recommendations", async () => {
+      const oldRec1 = {
+        ...mockRecommendation,
+        id: "rec_old_1",
+        status: "accepted" as const,
+        createdAt: "2025-01-01T00:00:00Z",
+      };
+      const oldRec2 = {
+        ...mockRecommendation,
+        id: "rec_old_2",
+        status: "declined" as const,
+        createdAt: "2025-06-01T00:00:00Z",
+      };
+      const recentRec = {
+        ...mockRecommendation,
+        id: "rec_recent",
+        status: "accepted" as const,
+        createdAt: new Date().toISOString(),
+      };
+
+      await db.recommendations.save(oldRec1);
+      await db.recommendations.save(oldRec2);
+      await db.recommendations.save(recentRec);
+      await db.recommendations.save(mockRecommendation); // active
+
+      const deletedCount = await db.recommendations.deleteOld(30);
+
+      const remaining = await db.recommendations.getAll();
+
+      expect(deletedCount).toBeGreaterThan(0);
+      expect(remaining.length).toBeLessThan(4);
+      // Active recommendations should never be deleted
+      expect(remaining.find((r) => r.id === "rec_1")).toBeDefined();
+      expect(remaining.find((r) => r.id === "rec_recent")).toBeDefined();
+    });
+
+    it("should not delete active recommendations even if old", async () => {
+      const oldActiveRec = {
+        ...mockRecommendation,
+        id: "rec_old_active",
+        status: "active" as const,
+        createdAt: "2020-01-01T00:00:00Z",
+      };
+
+      await db.recommendations.save(oldActiveRec);
+
+      await db.recommendations.deleteOld(30);
+
+      const all = await db.recommendations.getAll();
+      expect(all).toHaveLength(1);
+      expect(all[0].id).toBe("rec_old_active");
+    });
   });
 
   describe("notes", () => {
