@@ -2451,6 +2451,7 @@ export const db = {
     /**
      * Search integrations by query (name, service name, or description)
      * Performs case-insensitive search across multiple fields
+     * Returns all integrations when query is empty or whitespace only
      *
      * @param {string} query - Search query string
      * @returns {Promise<Integration[]>} Array of matching integrations
@@ -2696,11 +2697,12 @@ export const db = {
      *
      * @param {string} id - Integration ID
      * @returns {Promise<string>} JSON string of the integration
+     * @throws {Error} When integration with specified ID is not found
      */
     async exportToJSON(id: string): Promise<string> {
       const integration = await this.getById(id);
       if (!integration) {
-        throw new Error("Integration not found");
+        throw new Error(`Integration with ID "${id}" not found`);
       }
       return JSON.stringify(integration, null, 2);
     },

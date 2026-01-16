@@ -254,15 +254,33 @@ export default function IntegrationsScreen() {
   /**
    * Load integrations and statistics
    * Uses enhanced database methods for comprehensive data
+   * Includes error handling for statistics loading
    */
   const loadIntegrations = useCallback(async () => {
-    // Load sorted integrations for display
-    const data = await db.integrations.getAllSorted();
-    setIntegrations(data);
+    try {
+      // Load sorted integrations for display
+      const data = await db.integrations.getAllSorted();
+      setIntegrations(data);
 
-    // Load comprehensive statistics using new method
-    const stats = await db.integrations.getStatistics();
-    setStatistics(stats);
+      // Load comprehensive statistics using new method
+      const stats = await db.integrations.getStatistics();
+      setStatistics(stats);
+    } catch (error) {
+      console.error("Error loading integrations:", error);
+      // Set empty statistics on error to prevent UI issues
+      setStatistics({
+        totalIntegrations: 0,
+        connectedCount: 0,
+        disconnectedCount: 0,
+        errorCount: 0,
+        syncingCount: 0,
+        enabledCount: 0,
+        totalSyncs: 0,
+        totalDataItemsSynced: 0,
+        averageSyncDuration: 0,
+        totalErrors: 0,
+      });
+    }
   }, []);
 
   useFocusEffect(

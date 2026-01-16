@@ -74,6 +74,11 @@ type IntegrationDetailRouteProp = RouteProp<
   "IntegrationDetail"
 >;
 
+// Sync simulation constants
+const MIN_SYNC_ITEMS = 10;
+const MAX_SYNC_ITEMS_RANGE = 50;
+const SYNC_DURATION_MS = 2000;
+
 export default function IntegrationDetailScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -173,7 +178,7 @@ export default function IntegrationDetailScreen() {
     const syncStartTime = Date.now();
     setTimeout(async () => {
       const syncDuration = Date.now() - syncStartTime;
-      const itemsSynced = Math.floor(Math.random() * 50) + 10; // Random 10-60 items
+      const itemsSynced = Math.floor(Math.random() * MAX_SYNC_ITEMS_RANGE) + MIN_SYNC_ITEMS;
 
       // Use new triggerSync method with tracking
       await db.integrations.triggerSync(
@@ -186,7 +191,7 @@ export default function IntegrationDetailScreen() {
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-    }, 2000);
+    }, SYNC_DURATION_MS);
   };
 
   const handleDisconnect = () => {

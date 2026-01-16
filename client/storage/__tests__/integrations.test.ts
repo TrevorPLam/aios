@@ -597,7 +597,7 @@ describe("Integrations Storage", () => {
     it("should throw error for non-existent integration", async () => {
       await expect(
         db.integrations.exportToJSON("nonexistent")
-      ).rejects.toThrow("Integration not found");
+      ).rejects.toThrow('Integration with ID "nonexistent" not found');
     });
   });
 
