@@ -18,30 +18,47 @@
 - **Message editing support** with edited flag, updated timestamps, and conversation preview refresh.
 - **Conversation preview sync** when the latest message is deleted.
 
+### History (Data Layer)
+- **Scheduled export job hook** with frequency tracking, next-run scheduling, and export payload generation.
+- **Pattern recognition analytics hook** for day/hour clustering and top activity types.
+
+### Calendar (Data Layer)
+- **Recurring event expansion** into concrete instances for scheduling.
+- **Reminder scheduling hooks** driven by event-level offsets.
+
+### Alerts (Data Layer)
+- **Notification scheduling hooks** that compute upcoming trigger windows.
+- **Sound/vibration presets** exposed via centralized helpers.
+
+### Translator (Data Layer)
+- **Translation retention policies** for max entries, age windows, and favorites preservation.
+- **Phrasebook tagging** support for saved phrases, including tag search and tagging helpers.
+
 ---
 
 ## Quality Assurance Review
 
-- **Completeness:** Search, edit, and delete flows now update conversation metadata consistently.
-- **Deduplication:** Centralized message preview + search index helpers avoid repeated logic.
-- **Streamlining:** Scoped search + optional limits reduce payload size for downstream consumers.
-- **Safety:** Edits update conversation preview without reordering threads (preserves UX assumptions).
+- **Completeness:** Scheduling hooks now cover history exports, alerts, and calendar reminders without UI coupling.
+- **Deduplication:** Shared recurrence helpers centralize expansion logic for reminders and scheduling.
+- **Streamlining:** Retention policies ensure translation storage remains bounded without manual cleanup.
+- **Safety:** Hooks are read/write scoped to storage, avoiding UI regressions during refactors.
 
 ---
 
 ## High-Level Observations
 
 - **Messaging now has data-layer parity** with planned features (search/edit/delete), reducing future UI workload.
-- **Conversation metadata consistency** was a hidden risk; the new sync logic reduces stale preview artifacts.
-- **E2E coverage** for core server flows is still limited to auth + notes; expanding coverage across modules remains a priority.
+- **Scheduling primitives** are now present for alerts, calendar, and history, enabling future background services.
+- **Retention governance** is established for translations, reducing data bloat in long-running sessions.
+- **E2E coverage** now includes a cross-module data-layer pipeline for quick win verification.
 
 ---
 
 ## Recommendations
 
-1. **Add API endpoints** for message search and edit to align server capabilities with storage upgrades.
-2. **Expand E2E coverage** to include planner tasks, calendar events, and messaging flows.
-3. **Introduce export schedulers** for History and Budget modules (background job + API trigger only).
+1. **Add API endpoints** for message search/edit and alert scheduling to align server parity.
+2. **Extend scheduler wiring** to background workers for history exports and event reminders.
+3. **Expose retention controls** in settings UI when the refactor stabilizes.
 4. **Document storage/API parity** in module docs to keep refactor tracking accurate.
 
 ---
@@ -49,3 +66,4 @@
 ## Change Log
 
 - **2026-03-09:** Added quick win implementation summary, QA review, and recommendations.
+- **2026-03-10:** Expanded quick win coverage to scheduling hooks, retention policies, and phrasebook tagging.

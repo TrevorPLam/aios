@@ -14,14 +14,6 @@
 import { db } from "../database";
 import { HistoryLogEntry } from "@/models/types";
 
-// Mock AsyncStorage
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-}));
-
 describe("History Module", () => {
   beforeEach(async () => {
     // Clear history before each test
@@ -356,6 +348,52 @@ describe("History Module", () => {
       const parsed = JSON.parse(json);
 
       expect(parsed[0].metadata).toEqual(metadata);
+    });
+  });
+
+  describe("Export Scheduling", () => {
+    it("should initialize with default export schedule", async () => {
+      const schedule = await db.history.getExportSchedule();
+      expect(schedule.enabled).toBe(false);
+      expect(schedule.frequency).toBe("weekly");
+    });
+
+    it("should set next export time when enabling schedule", async () => {
+      const schedule = await db.history.setExportSchedule({
+        enabled: true,
+        frequency: "daily",
+      });
+
+      expect(schedule.enabled).toBe(true);
+      expect(schedule.nextExportAt).toBeTruthy();
+    });
+
+    it("should run scheduled export when due", async () => {
+      await db.history.add({ message: "Export me", type: "system" });
+
+      await db.history.setExportSchedule({
+        enabled: true,
+        frequency: "daily",
+        nextExportAt: "2026-01-01T00:00:00.000Z",
+      });
+
+      const payload = await db.history.runScheduledExport(
+        new Date("2026-01-02T00:00:00.000Z"),
+      );
+
+      expect(payload).toContain("Export me");
+    });
+  });
+
+  describe("Pattern Insights", () => {
+    it("should return day/hour clustering and top types", async () => {
+      await db.history.add({ message: "Rec", type: "recommendation" });
+      await db.history.add({ message: "System", type: "system" });
+
+      const insights = await db.history.getPatternInsights();
+      expect(Object.keys(insights.entriesByDay).length).toBeGreaterThan(0);
+      expect(Object.keys(insights.entriesByHour).length).toBeGreaterThan(0);
+      expect(insights.topTypes.length).toBeGreaterThan(0);
     });
   });
 });

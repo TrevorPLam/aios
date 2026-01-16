@@ -46,6 +46,25 @@ export type TaskPriority = "low" | "medium" | "high" | "urgent";
 
 export type RecurrenceRule = "none" | "daily" | "weekly" | "monthly" | "custom";
 
+/**
+ * History Export Frequency
+ *
+ * Defines how often the History export job should run.
+ */
+export type HistoryExportFrequency = "daily" | "weekly" | "monthly";
+
+/**
+ * Translation Retention Policy
+ *
+ * Controls how translation history is retained over time.
+ * Policies are storage-only and UI-neutral (safe during refactors).
+ */
+export interface TranslationRetentionPolicy {
+  maxEntries: number;
+  maxAgeDays: number | null;
+  keepFavorites: boolean;
+}
+
 export type AILimitTier = 0 | 1 | 2 | 3;
 
 /**
@@ -158,6 +177,8 @@ export interface Project {
  * @property {RecurrenceRule} recurrenceRule - How often the event repeats
  * @property {string[]} exceptions - Array of ISO 8601 dates to exclude from recurrence
  * @property {Record<string, Partial<CalendarEvent>>} overrides - Date-specific overrides for recurring events
+ * @property {number[]} reminderMinutes - Optional reminder offsets in minutes
+ * @property {string} recurrenceInstanceOf - Optional parent event ID for expanded instances
  * @property {string} createdAt - ISO 8601 timestamp of creation
  * @property {string} updatedAt - ISO 8601 timestamp of last update
  * @property {"LOCAL"} source - Event source (currently only LOCAL supported)
@@ -174,9 +195,24 @@ export interface CalendarEvent {
   recurrenceRule: RecurrenceRule;
   exceptions: string[];
   overrides: Record<string, Partial<CalendarEvent>>;
+  reminderMinutes?: number[];
+  recurrenceInstanceOf?: string;
   createdAt: string;
   updatedAt: string;
   source: "LOCAL";
+}
+
+/**
+ * Calendar Reminder Trigger Interface
+ *
+ * Represents a derived reminder time for an event.
+ *
+ * @property {string} eventId - Parent event ID
+ * @property {string} reminderAt - ISO 8601 timestamp when reminder should fire
+ */
+export interface CalendarReminderTrigger {
+  eventId: string;
+  reminderAt: string;
 }
 
 /**
@@ -377,6 +413,19 @@ export interface Alert {
   tags: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+/**
+ * Alert Trigger Interface
+ *
+ * Represents a scheduled alert trigger derived from recurrence rules.
+ *
+ * @property {string} alertId - Parent alert ID
+ * @property {string} triggerAt - ISO 8601 timestamp of trigger
+ */
+export interface AlertTrigger {
+  alertId: string;
+  triggerAt: string;
 }
 
 export interface Photo {
@@ -865,6 +914,7 @@ export interface Translation {
  * @property {string} phrase - The saved phrase text
  * @property {string} sourceLang - Language code of the phrase
  * @property {string} category - Category/group for organization
+ * @property {string[]} tags - Optional tags for phrasebook organization
  * @property {number} usageCount - How many times this phrase has been used
  * @property {string} createdAt - ISO 8601 timestamp of creation
  * @property {string} lastUsedAt - ISO 8601 timestamp of last use
@@ -874,9 +924,29 @@ export interface SavedPhrase {
   phrase: string;
   sourceLang: string;
   category?: string;
+  tags?: string[];
   usageCount: number;
   createdAt: string;
   lastUsedAt: string;
+}
+
+/**
+ * History Export Schedule Interface
+ *
+ * Defines export cadence and runtime metadata for scheduled history exports.
+ *
+ * @property {boolean} enabled - Whether scheduled exports are active
+ * @property {HistoryExportFrequency} frequency - Export cadence
+ * @property {string | null} lastExportAt - ISO timestamp of last export
+ * @property {string | null} nextExportAt - ISO timestamp of next planned export
+ * @property {"json"} format - Export format
+ */
+export interface HistoryExportSchedule {
+  enabled: boolean;
+  frequency: HistoryExportFrequency;
+  lastExportAt: string | null;
+  nextExportAt: string | null;
+  format: "json";
 }
 
 /**
