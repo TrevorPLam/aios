@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, AppState } from "react-native";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -14,6 +14,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { NavigationProvider } from "@/context/NavigationContext";
 import { Colors } from "@/constants/theme";
+import analytics from "@/analytics";
 
 const AIOSTheme = {
   ...DarkTheme,
@@ -29,6 +30,30 @@ const AIOSTheme = {
 };
 
 export default function App() {
+  useEffect(() => {
+    // Initialize analytics on app start
+    const initAnalytics = async () => {
+      await analytics.initialize();
+      await analytics.trackAppOpened(0, "unknown");
+      await analytics.trackSessionStart();
+    };
+
+    initAnalytics();
+
+    // Track app backgrounded/foregrounded
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "background" || nextAppState === "inactive") {
+        analytics.trackAppBackgrounded();
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      subscription.remove();
+      analytics.shutdown();
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>

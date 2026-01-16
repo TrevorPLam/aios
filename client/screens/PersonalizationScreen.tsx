@@ -16,18 +16,23 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { db } from "@/storage/database";
 import { Settings } from "@/models/types";
+import analytics from "@/analytics";
 
 export default function PersonalizationScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [privacyModeEnabled, setPrivacyModeEnabled] = useState(false);
 
   const loadSettings = useCallback(async () => {
     const data = await db.settings.get();
     if (data) {
       setSettings(data);
     }
+    // Load privacy mode state
+    const privacyMode = analytics.isPrivacyModeEnabled();
+    setPrivacyModeEnabled(privacyMode);
   }, []);
 
   useEffect(() => {
@@ -53,6 +58,20 @@ export default function PersonalizationScreen() {
     [settings],
   );
 
+  const togglePrivacyMode = useCallback(async () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+
+    if (privacyModeEnabled) {
+      await analytics.disablePrivacyMode();
+      setPrivacyModeEnabled(false);
+    } else {
+      await analytics.enablePrivacyMode();
+      setPrivacyModeEnabled(true);
+    }
+  }, [privacyModeEnabled]);
+
   if (!settings) {
     return (
       <ThemedView style={styles.container}>
@@ -73,6 +92,38 @@ export default function PersonalizationScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        <ThemedText type="caption" secondary style={styles.sectionTitle}>
+          ANALYTICS PRIVACY
+        </ThemedText>
+        <View
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
+        >
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Feather name="shield" size={20} color={theme.textSecondary} />
+              <View style={{ flex: 1 }}>
+                <ThemedText type="body">Privacy-Respecting Analytics</ThemedText>
+                <ThemedText type="caption" muted style={{ marginTop: 4 }}>
+                  Premium feature: Collect de-identified telemetry only
+                </ThemedText>
+              </View>
+            </View>
+            <Switch
+              value={privacyModeEnabled}
+              onValueChange={togglePrivacyMode}
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                privacyModeEnabled
+                  ? theme.accent
+                  : theme.textSecondary
+              }
+            />
+          </View>
+        </View>
+
         <ThemedText type="caption" secondary style={styles.sectionTitle}>
           CONTACT SHARING
         </ThemedText>

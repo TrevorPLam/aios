@@ -22,6 +22,7 @@ import { db } from "@/storage/database";
 import { Note } from "@/models/types";
 import { generateId, parseTags, parseLinks } from "@/utils/helpers";
 import AIAssistSheet from "@/components/AIAssistSheet";
+import analytics from "@/analytics";
 
 type RouteProps = RouteProp<AppStackParamList, "NoteEditor">;
 
@@ -89,6 +90,14 @@ export default function NoteEditorScreen() {
     };
 
     await db.notes.save(note);
+
+    // Track analytics
+    if (isNew) {
+      analytics.trackItemCreated("notebook", "note");
+    } else {
+      analytics.trackItemUpdated("notebook", "note");
+    }
+
     setIsNew(false);
   }, [noteId, title, body, isNew, isPinned, isArchived]);
 

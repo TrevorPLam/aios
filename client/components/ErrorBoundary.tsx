@@ -1,5 +1,20 @@
 import React, { Component, ComponentType, PropsWithChildren } from "react";
 import { ErrorFallback, ErrorFallbackProps } from "@/components/ErrorFallback";
+import analytics from "@/analytics";
+
+/**
+ * Simple hash function for error messages
+ */
+function hashError(error: Error): string {
+  const str = `${error.name}:${error.message}`;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36);
+}
 
 export type ErrorBoundaryProps = PropsWithChildren<{
   FallbackComponent?: ComponentType<ErrorFallbackProps>;
@@ -30,6 +45,10 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, info: { componentStack: string }): void {
+    // Track error in analytics
+    const errorHash = hashError(error);
+    analytics.trackErrorBoundaryHit(errorHash);
+
     if (typeof this.props.onError === "function") {
       this.props.onError(error, info.componentStack);
     }
