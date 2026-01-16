@@ -523,6 +523,19 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## 📚 Documentation
+
+### Core Documentation
+- **[F&F.md](./F&F.md)** - Features & Functionality overview (main reference)
+- **[MODULE_DETAILS.md](./MODULE_DETAILS.md)** - Technical implementation details
+- **[COMPETITIVE_ANALYSIS.md](./COMPETITIVE_ANALYSIS.md)** - Market positioning & competitive landscape
+
+### Additional Resources
+- **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** - API endpoints and usage
+- **[MISSING_FEATURES.md](./MISSING_FEATURES.md)** - Known limitations and roadmap
+- **[design_guidelines.md](./design_guidelines.md)** - UI/UX design specifications
+- **Module-specific docs** - See individual `*_MODULE_COMPLETION_SUMMARY.md` files
+
 ## 📄 License
 
 This project is available as open source under the terms of your chosen license.
@@ -531,8 +544,9 @@ This project is available as open source under the terms of your chosen license.
 
 For questions or issues:
 - Open an issue on GitHub
-- Check [MISSING_FEATURES.md](./MISSING_FEATURES.md) for known limitations
-- Review [design_guidelines.md](./design_guidelines.md) for design specifications
+- Check [F&F.md](./F&F.md) for feature status
+- Review [MISSING_FEATURES.md](./MISSING_FEATURES.md) for known limitations
+- See [design_guidelines.md](./design_guidelines.md) for design specifications
 
 ## 🙏 Acknowledgments
 
