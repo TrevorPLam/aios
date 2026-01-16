@@ -4,8 +4,8 @@
  * Tracks navigation events automatically using React Navigation
  */
 
-import { useEffect, useRef } from "react";
-import { useNavigationState } from "@react-navigation/native";
+import { useCallback, useEffect, useRef } from "react";
+import { useNavigationContainerRef } from "@react-navigation/native";
 import analytics from "@/analytics";
 import { ModuleType } from "@/models/types";
 import { MODULE_REGISTRY } from "@/analytics/registry";
@@ -32,46 +32,60 @@ const ROUTE_TO_MODULE: Record<string, ModuleType> = {
  * Automatically logs module_opened and module_switch events
  */
 export function useAnalyticsNavigation() {
+  const navigationRef = useNavigationContainerRef();
   const previousRouteRef = useRef<string | null>(null);
   const focusStartTimeRef = useRef<number | null>(null);
+  const currentModuleRef = useRef<ModuleType | null>(null);
 
-  const routeName = useNavigationState((state) => {
-    if (!state || state.routes.length === 0) return null;
-    const route = state.routes[state.index];
-    return route?.name || null;
-  });
+  const trackRouteChange = useCallback(
+    (routeName: string | null) => {
+      if (!routeName || previousRouteRef.current === routeName) return;
+
+      const moduleId = ROUTE_TO_MODULE[routeName];
+      if (!moduleId) return;
+
+      if (currentModuleRef.current && focusStartTimeRef.current) {
+        const durationSeconds = (Date.now() - focusStartTimeRef.current) / 1000;
+        analytics.trackModuleFocusEnd(currentModuleRef.current, durationSeconds);
+      }
+
+      if (previousRouteRef.current && previousRouteRef.current !== routeName) {
+        const previousModuleId = ROUTE_TO_MODULE[previousRouteRef.current];
+        if (previousModuleId) {
+          analytics.trackModuleSwitch(previousModuleId, moduleId);
+        }
+      }
+
+      analytics.trackModuleOpened(moduleId, "contextual");
+      focusStartTimeRef.current = Date.now();
+      analytics.trackModuleFocusStart(moduleId);
+
+      previousRouteRef.current = routeName;
+      currentModuleRef.current = moduleId;
+    },
+    []
+  );
+
+  const handleNavigationReady = useCallback(() => {
+    trackRouteChange(navigationRef.getCurrentRoute()?.name ?? null);
+  }, [navigationRef, trackRouteChange]);
+
+  const handleNavigationStateChange = useCallback(() => {
+    trackRouteChange(navigationRef.getCurrentRoute()?.name ?? null);
+  }, [navigationRef, trackRouteChange]);
 
   useEffect(() => {
-    if (!routeName) return;
-
-    const moduleId = ROUTE_TO_MODULE[routeName];
-    if (!moduleId) return;
-
-    // Track module_opened
-    // Note: source defaults to "contextual" as we track navigation within the app
-    // For deeplinks or external navigation, this would need to be enhanced
-    analytics.trackModuleOpened(moduleId, "contextual");
-
-    // Track module_switch if we have a previous route
-    if (previousRouteRef.current && previousRouteRef.current !== routeName) {
-      const previousModuleId = ROUTE_TO_MODULE[previousRouteRef.current];
-      if (previousModuleId) {
-        analytics.trackModuleSwitch(previousModuleId, moduleId);
-      }
-    }
-
-    // Track module_focus_start
-    focusStartTimeRef.current = Date.now();
-    analytics.trackModuleFocusStart(moduleId);
-
-    previousRouteRef.current = routeName;
-
-    // Cleanup: track module_focus_end when component unmounts or route changes
     return () => {
-      if (focusStartTimeRef.current && moduleId) {
+      if (currentModuleRef.current && focusStartTimeRef.current) {
         const durationSeconds = (Date.now() - focusStartTimeRef.current) / 1000;
-        analytics.trackModuleFocusEnd(moduleId, durationSeconds);
+        analytics.trackModuleFocusEnd(currentModuleRef.current, durationSeconds);
       }
     };
-  }, [routeName]);
+  }, []);
+
+  return {
+    navigationRef,
+    handleNavigationReady,
+    handleNavigationStateChange,
+  };
 }
