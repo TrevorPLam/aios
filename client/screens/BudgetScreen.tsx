@@ -2,7 +2,7 @@
  * BudgetScreen Module - Enhanced
  *
  * Professional budget management system with advanced features and analytics.
- * 
+ *
  * Core Features:
  * - Monthly budget tracking with categories and line items
  * - Real-time calculation of budgeted vs actual amounts
@@ -10,7 +10,7 @@
  * - Expandable/collapsible categories
  * - Add/delete categories and line items
  * - Summary totals showing budget health (under/over budget)
- * 
+ *
  * Enhanced Features (NEW):
  * - Month/year picker for historical budget browsing
  * - Real-time search across budgets, categories, and line items
@@ -21,24 +21,24 @@
  * - Visual indicators for over/under budget items
  * - Enhanced empty states with context-aware messaging
  * - Smooth animations and haptic feedback throughout
- * 
+ *
  * Database Integration:
  * - 15 database methods for complete budget management
  * - Search, filter, statistics, comparison, export
  * - Bulk operations support
- * 
+ *
  * AI Features:
  * - Budget suggestions and recommendations (placeholder)
  * - Category optimization hints
- * 
+ *
  * Technical Details:
  * - Performance optimized with useMemo and useCallback
  * - Full TypeScript type safety
  * - Platform-specific features (iOS/Android haptics)
  * - Comprehensive inline documentation
- * 
+ *
  * Enhanced: 2026-01-16
- * 
+ *
  * @module BudgetScreen
  */
 
@@ -123,72 +123,77 @@ export default function BudgetScreen() {
     value: string;
   } | null>(null);
 
-/**
- * Trigger haptic feedback on supported platforms
- * Provides tactile response for user interactions
- * 
- * @param {Haptics.ImpactFeedbackStyle} style - Feedback intensity (Light, Medium, Heavy)
- */
-const triggerHaptic = useCallback(
-  (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(style);
-    }
-  },
-  []
-);
-
-/**
- * Load current month's budget or most recent budget
- * Also loads all budgets for month picker and statistics
- * Falls back to most recent budget if no current month budget exists
- * 
- * @throws Will log error but continue gracefully on database failures
- */
-const loadBudget = useCallback(async () => {
-  try {
-    let data = await db.budgets.getCurrent();
-    if (!data) {
-      // If no current budget exists, get the most recent one
-      const allBudgets = await db.budgets.getAllSorted();
-      if (allBudgets.length > 0) {
-        data = allBudgets[0];
+  /**
+   * Trigger haptic feedback on supported platforms
+   * Provides tactile response for user interactions
+   *
+   * @param {Haptics.ImpactFeedbackStyle} style - Feedback intensity (Light, Medium, Heavy)
+   */
+  const triggerHaptic = useCallback(
+    (
+      style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
+    ) => {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(style);
       }
+    },
+    [],
+  );
+
+  /**
+   * Load current month's budget or most recent budget
+   * Also loads all budgets for month picker and statistics
+   * Falls back to most recent budget if no current month budget exists
+   *
+   * @throws Will log error but continue gracefully on database failures
+   */
+  const loadBudget = useCallback(async () => {
+    try {
+      let data = await db.budgets.getCurrent();
+      if (!data) {
+        // If no current budget exists, get the most recent one
+        const allBudgets = await db.budgets.getAllSorted();
+        if (allBudgets.length > 0) {
+          data = allBudgets[0];
+        }
+      }
+      if (data) {
+        setBudget(data);
+      }
+
+      // Load all budgets for enhanced features
+      const sorted = await db.budgets.getAllSorted();
+      setAllBudgets(sorted);
+
+      // Load statistics
+      const stats = await db.budgets.getStatistics();
+      setStatistics(stats);
+    } catch (error) {
+      console.error("Error loading budget:", error);
+      // Continue gracefully - user can still create new budget
     }
-    if (data) {
-      setBudget(data);
-    }
-    
-    // Load all budgets for enhanced features
-    const sorted = await db.budgets.getAllSorted();
-    setAllBudgets(sorted);
-    
-    // Load statistics
-    const stats = await db.budgets.getStatistics();
-    setStatistics(stats);
-  } catch (error) {
-    console.error("Error loading budget:", error);
-    // Continue gracefully - user can still create new budget
-  }
-}, []);
+  }, []);
 
   /**
    * Load a specific budget by ID
    * Used when selecting from month picker
-   * 
+   *
    * @param {string} budgetId - The budget ID to load
    */
-  const loadSpecificBudget = useCallback(async (budgetId: string) => {
-    try {
-      const data = await db.budgets.get(budgetId);
-      if (data) {
-        setBudget(data);
-        triggerHaptic();
+  const loadSpecificBudget = useCallback(
+    async (budgetId: string) => {
+      try {
+        const data = await db.budgets.get(budgetId);
+        if (data) {
+          setBudget(data);
+          triggerHaptic();
+        }
+      } catch (error) {
+        console.error("Error loading specific budget:", error);
       }
-    } catch (error) {
-      console.error("Error loading specific budget:", error);
-    }
-  }, [triggerHaptic]);
+    },
+    [triggerHaptic],
+  );
 
   // Load budget on mount
   useEffect(() => {
@@ -199,7 +204,7 @@ const loadBudget = useCallback(async () => {
   useFocusEffect(
     useCallback(() => {
       loadBudget();
-    }, [loadBudget])
+    }, [loadBudget]),
   );
 
   // Configure navigation header
@@ -480,14 +485,14 @@ const loadBudget = useCallback(async () => {
    */
   const handleDuplicateBudget = async () => {
     if (!budget) return;
-    
+
     triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
     // Calculate next month
     const currentDate = new Date(budget.month + "-01");
     currentDate.setMonth(currentDate.getMonth() + 1);
     const nextMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
-    
+
     // Check if next month budget already exists
     const existing = allBudgets.find((b) => b.month === nextMonth);
     if (existing) {
@@ -505,11 +510,14 @@ const loadBudget = useCallback(async () => {
                 await performDuplication(nextMonth);
               } catch (error) {
                 console.error("Error overwriting budget:", error);
-                Alert.alert("Error", "Failed to overwrite budget. Please try again.");
+                Alert.alert(
+                  "Error",
+                  "Failed to overwrite budget. Please try again.",
+                );
               }
             },
           },
-        ]
+        ],
       );
     } else {
       await performDuplication(nextMonth);
@@ -518,24 +526,24 @@ const loadBudget = useCallback(async () => {
 
   /**
    * Perform the actual duplication
-   * 
+   *
    * @param {string} newMonth - The month for the new budget
    */
   const performDuplication = async (newMonth: string) => {
     if (!budget) return;
-    
+
     try {
       const monthName = new Date(newMonth + "-01").toLocaleDateString("en-US", {
         month: "long",
         year: "numeric",
       });
-      
+
       const duplicated = await db.budgets.duplicate(
         budget.id,
         newMonth,
-        `${monthName} Budget`
+        `${monthName} Budget`,
       );
-      
+
       if (duplicated) {
         await loadBudget();
         Alert.alert("Success", `Budget template created for ${monthName}!`);
@@ -544,7 +552,10 @@ const loadBudget = useCallback(async () => {
       }
     } catch (error) {
       console.error("Error duplicating budget:", error);
-      Alert.alert("Error", "Failed to create budget template. Please try again.");
+      Alert.alert(
+        "Error",
+        "Failed to create budget template. Please try again.",
+      );
     }
   };
 
@@ -554,7 +565,7 @@ const loadBudget = useCallback(async () => {
    */
   const handleExportBudget = async () => {
     if (!budget) return;
-    
+
     triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
     const json = await db.budgets.exportToJSON(budget.id);
@@ -567,7 +578,7 @@ const loadBudget = useCallback(async () => {
       const a = document.createElement("a");
       a.href = url;
       a.download = `budget-${budget.month}.json`;
-      
+
       try {
         document.body.appendChild(a);
         a.click();
@@ -587,7 +598,7 @@ const loadBudget = useCallback(async () => {
         console.error("Error sharing budget:", error);
       }
     }
-    
+
     setShowExportMenu(false);
   };
 
@@ -606,7 +617,7 @@ const loadBudget = useCallback(async () => {
         const a = document.createElement("a");
         a.href = url;
         a.download = `all-budgets-${new Date().toISOString().split("T")[0]}.json`;
-        
+
         try {
           document.body.appendChild(a);
           a.click();
@@ -625,7 +636,7 @@ const loadBudget = useCallback(async () => {
       console.error("Error exporting budgets:", error);
       Alert.alert("Error", "Failed to export budgets. Please try again.");
     }
-    
+
     setShowExportMenu(false);
   };
 
@@ -646,7 +657,7 @@ const loadBudget = useCallback(async () => {
       }
       // Check line item names
       return category.lineItems.some((item) =>
-        item.name.toLowerCase().includes(lowerQuery)
+        item.name.toLowerCase().includes(lowerQuery),
       );
     });
   }, [budget, searchQuery]);
@@ -663,23 +674,26 @@ const loadBudget = useCallback(async () => {
   /**
    * Calculate category totals for all categories
    * Memoized to avoid recalculation on every render
-   * 
+   *
    * @returns {Map} Map of category IDs to totals
    */
   const categoryTotals = useMemo(() => {
-    const totals = new Map<string, { budgeted: number; actual: number; diff: number; isOverBudget: boolean }>();
-    
+    const totals = new Map<
+      string,
+      { budgeted: number; actual: number; diff: number; isOverBudget: boolean }
+    >();
+
     filteredCategories.forEach((category) => {
       const catBudgeted = category.lineItems.reduce(
         (sum, item) => sum + item.budgeted,
-        0
+        0,
       );
       const catActual = category.lineItems.reduce(
         (sum, item) => sum + item.actual,
-        0
+        0,
       );
       const catDiff = catBudgeted - catActual;
-      
+
       totals.set(category.id, {
         budgeted: catBudgeted,
         actual: catActual,
@@ -687,7 +701,7 @@ const loadBudget = useCallback(async () => {
         isOverBudget: catDiff < 0,
       });
     });
-    
+
     return totals;
   }, [filteredCategories]);
 
@@ -831,7 +845,7 @@ const loadBudget = useCallback(async () => {
                 {difference >= 0 ? "under" : "over"}
               </ThemedText>
             </View>
-            
+
             {/* Progress Bar */}
             <View
               style={[
@@ -885,7 +899,10 @@ const loadBudget = useCallback(async () => {
 
         {/* Search Bar */}
         <View
-          style={[styles.searchContainer, { backgroundColor: theme.backgroundDefault }]}
+          style={[
+            styles.searchContainer,
+            { backgroundColor: theme.backgroundDefault },
+          ]}
         >
           <Feather name="search" size={18} color={theme.textMuted} />
           <TextInput
@@ -948,7 +965,9 @@ const loadBudget = useCallback(async () => {
           return (
             <Animated.View
               key={category.id}
-              entering={FadeInDown.delay(catIndex * ANIMATION_DELAY_PER_ITEM).springify()}
+              entering={FadeInDown.delay(
+                catIndex * ANIMATION_DELAY_PER_ITEM,
+              ).springify()}
             >
               <View
                 style={[
@@ -1180,17 +1199,20 @@ const loadBudget = useCallback(async () => {
               {allBudgets.map((b) => {
                 const monthName = new Date(b.month + "-01").toLocaleDateString(
                   "en-US",
-                  { month: "long", year: "numeric" }
+                  { month: "long", year: "numeric" },
                 );
                 const isSelected = b.id === budget?.id;
-                
+
                 return (
                   <Pressable
                     key={b.id}
                     style={({ pressed }) => [
                       styles.monthItem,
                       { backgroundColor: theme.backgroundDefault },
-                      isSelected && { borderColor: theme.accent, borderWidth: 2 },
+                      isSelected && {
+                        borderColor: theme.accent,
+                        borderWidth: 2,
+                      },
                       pressed && { opacity: 0.7 },
                     ]}
                     onPress={() => {

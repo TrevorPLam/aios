@@ -1,6 +1,6 @@
 /**
  * Photos Module - Comprehensive Test Suite
- * 
+ *
  * Tests all photo storage operations including:
  * - Basic CRUD operations
  * - Favorites management
@@ -585,7 +585,7 @@ describe("Database Photos Storage", () => {
       await db.photoAlbums.save(mockAlbum);
 
       const originalTimestamp = new Date(mockAlbum.updatedAt).getTime();
-      
+
       // Wait to ensure timestamp difference
       // Using a promise-based delay for deterministic testing
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -594,7 +594,7 @@ describe("Database Photos Storage", () => {
 
       const album = await db.photoAlbums.get("album_1");
       const updatedTimestamp = new Date(album!.updatedAt).getTime();
-      
+
       // Verify timestamp was updated
       expect(updatedTimestamp).toBeGreaterThan(originalTimestamp);
     });
