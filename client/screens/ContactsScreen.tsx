@@ -41,7 +41,6 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import * as Contacts from "expo-contacts";
 import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -307,11 +306,11 @@ export default function ContactsScreen() {
         const fileUri = `${FileSystem.documentDirectory}${fileName}`;
         await FileSystem.writeAsStringAsync(fileUri, jsonData);
         
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(fileUri);
-        } else {
-          Alert.alert("Success", `Contacts exported to ${fileUri}`);
-        }
+        await Share.share({
+          title: "Contacts Export",
+          message: "Exported contacts JSON.",
+          url: fileUri,
+        });
       }
       
       if (Platform.OS !== "web") {
