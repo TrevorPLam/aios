@@ -25,6 +25,16 @@
 
 ## TIER 1: SUPER APP ESSENTIAL MODULES (Must-Have)
 
+## Assessment Notes (from completed modules)
+To anchor new modules on proven patterns, the most mature modules emphasize:
+- **Complete CRUD + search + filtering + sorting** patterns modeled in Lists, Notebook, Calendar, Planner, and Budget.
+- **Statistics dashboards** with 6–12 metrics for at-a-glance health and insights.
+- **Bulk operations** (archive, delete, tag/category management) to reduce friction at scale.
+- **Cross-module integration hooks** (Command Center, History, Alerts, Calendar) for AI-driven recommendations.
+- **Module headers and consistent UX** patterns for discoverability and standardization.
+
+These scaffolds below mirror those patterns to keep new modules aligned with existing production-ready modules.
+
 ### 1. 💳 Wallet & Payments
 **Why Revolutionary:** Integrated payments unlock everything
 **Features:**
@@ -38,6 +48,26 @@
 - Cryptocurrency support (future)
 **Integration:** Messages (split bills), Budget (auto-categorize), Calendar (bill reminders)
 **Innovation:** AI predicts upcoming expenses, suggests payment timing
+
+**Scaffolding Stub**
+- **Purpose:** Unified wallet for P2P, merchant payments, and bill management.
+- **MVP Feature Set:**
+  - Wallet balance display + linked payment methods
+  - P2P transfer requests and history
+  - Bill split flow (integration with Messages)
+  - Transaction list with categories and search
+- **Data Model Draft:**
+  - `WalletAccount`, `PaymentMethod`, `Transaction`, `SplitRequest`, `Merchant`
+- **Core Screens:**
+  - Wallet overview, transaction detail, split bill modal, payment method manager
+- **Integration Hooks:**
+  - Budget (auto-categorize transactions), Calendar (bill reminders), Messages (splits)
+- **Analytics & Telemetry:**
+  - Payment success rate, transfer volume, recurring bills detected
+- **Security & Compliance:**
+  - KYC placeholder, encryption at rest, PCI/PCI-like considerations (stub)
+- **Open Questions:**
+  - Which payment processor? Offline balance behavior?
 
 ### 2. 🏪 Marketplace & Commerce
 **Why Revolutionary:** User-to-user marketplace + business directory
@@ -64,6 +94,26 @@
 - Real-time traffic/transit alerts
 **Integration:** Calendar (auto-add travel time), Contacts (location sharing), Marketplace (nearby items)
 **Innovation:** AI suggests departure time based on Calendar + traffic patterns
+
+**Scaffolding Stub**
+- **Purpose:** Location intelligence for navigation, discovery, and safety.
+- **MVP Feature Set:**
+  - Basic map view + saved places
+  - Route planning (start/end + ETA)
+  - Location sharing toggle with contacts
+  - Nearby discovery list (placeholder data)
+- **Data Model Draft:**
+  - `Place`, `Route`, `Trip`, `SavedLocation`, `SharedLocation`
+- **Core Screens:**
+  - Map overview, route planner, place detail, location sharing sheet
+- **Integration Hooks:**
+  - Calendar (travel time buffers), Contacts (share), Marketplace (nearby)
+- **Analytics & Telemetry:**
+  - Navigation starts, route completion, saved place usage
+- **Security & Privacy:**
+  - Explicit location permission flow, time-bound sharing tokens
+- **Open Questions:**
+  - Map provider (Mapbox/Google/OSM)? Offline map caching?
 
 ### 4. 🎫 Events & Ticketing
 **Why Revolutionary:** Discover, book, coordinate all in one place
@@ -122,6 +172,26 @@
 **Integration:** Calendar (appointments), Alerts (medication), Contacts (doctors), Budget (medical expenses)
 **Innovation:** AI detects patterns between lifestyle and health metrics, suggests interventions
 
+**Scaffolding Stub**
+- **Purpose:** Central hub for health tracking, reminders, and records.
+- **MVP Feature Set:**
+  - Health dashboard (sleep, steps, mood)
+  - Medication schedule + reminders
+  - Appointment list + notes
+  - Medical record vault (metadata only)
+- **Data Model Draft:**
+  - `HealthMetric`, `Medication`, `Appointment`, `MedicalRecord`, `WellnessGoal`
+- **Core Screens:**
+  - Health dashboard, medication tracker, appointment detail, record vault
+- **Integration Hooks:**
+  - Calendar (appointments), Alerts (med reminders), Budget (medical costs)
+- **Analytics & Telemetry:**
+  - Adherence rates, trend detection, appointment follow-through
+- **Security & Privacy:**
+  - Encrypted storage, access controls, PHI handling policy placeholder
+- **Open Questions:**
+  - HealthKit/Google Fit integration scope? Export formats?
+
 ### 8. 🎓 Learning & Education
 **Why Revolutionary:** Personalized learning across all subjects
 **Features:**
@@ -135,6 +205,24 @@
 - Learning path recommendations
 **Integration:** Notebook (study notes), Planner (study schedule), Calendar (class times), Wallet (course payments)
 **Innovation:** AI creates personalized study plans, identifies knowledge gaps, suggests resources
+
+**Scaffolding Stub**
+- **Purpose:** Learning hub with planning, progress, and study tools.
+- **MVP Feature Set:**
+  - Course list + enrollment status
+  - Study planner with weekly goals
+  - Flashcards + spaced repetition scheduling
+  - Progress dashboard (hours, modules completed)
+- **Data Model Draft:**
+  - `Course`, `Lesson`, `StudySession`, `Flashcard`, `Credential`
+- **Core Screens:**
+  - Learning dashboard, course detail, flashcard review, study planner
+- **Integration Hooks:**
+  - Notebook (lesson notes), Planner (tasks), Calendar (classes)
+- **Analytics & Telemetry:**
+  - Streaks, time spent, retention scores
+- **Open Questions:**
+  - Content ingestion source? Standard for credential storage?
 
 ### 9. 💼 Professional Services Hub
 **Why Revolutionary:** On-demand professional help
@@ -161,6 +249,24 @@
 - Utility bill tracking
 **Integration:** Calendar (maintenance), Contacts (service providers), Photos (documentation), Budget (expenses), Alerts (reminders)
 **Innovation:** AI predicts maintenance needs, suggests improvements, finds best local service providers
+
+**Scaffolding Stub**
+- **Purpose:** Organize home tasks, assets, warranties, and providers.
+- **MVP Feature Set:**
+  - Maintenance schedule + reminders
+  - Home inventory with photos
+  - Service provider directory
+  - Warranty tracker
+- **Data Model Draft:**
+  - `HomeAsset`, `MaintenanceTask`, `ServiceProvider`, `Warranty`
+- **Core Screens:**
+  - Home dashboard, asset detail, maintenance calendar, provider list
+- **Integration Hooks:**
+  - Calendar (maintenance), Contacts (providers), Photos (inventory), Budget (expenses)
+- **Analytics & Telemetry:**
+  - Maintenance completion rate, asset replacement cycles
+- **Open Questions:**
+  - Smart home device support? Import flow for receipts?
 
 ### 11. 🎬 Entertainment Hub
 **Why Revolutionary:** Unified entertainment discovery and tracking
@@ -206,6 +312,26 @@
 **Integration:** ALL modules (captures data from everything)
 **Innovation:** AI creates a searchable index of your life, helps recall forgotten details, surfaces relevant memories contextually
 
+**Scaffolding Stub**
+- **Purpose:** Unified, searchable life log across modules.
+- **MVP Feature Set:**
+  - Timeline view (day/week)
+  - Memory search (keyword + module filters)
+  - "On this day" highlights
+  - Manual memory capture entry
+- **Data Model Draft:**
+  - `MemoryItem`, `MemorySource`, `MemoryTag`, `TimelineEntry`
+- **Core Screens:**
+  - Memory timeline, memory detail, search results, capture sheet
+- **Integration Hooks:**
+  - History (activity), Photos, Calendar, Messages, Notebook
+- **Analytics & Telemetry:**
+  - Recall usage, search success, memory resurfacing CTR
+- **Security & Privacy:**
+  - Opt-in capture settings, retention controls, encryption
+- **Open Questions:**
+  - What default capture sources are safest to enable?
+
 ### 14. 🤝 Relationship Manager
 **Why Revolutionary:** CRM for personal relationships
 **Features:**
@@ -219,6 +345,24 @@
 - "Reach out" reminders
 **Integration:** Contacts (people), Messages (frequency), Calendar (events), Photos (memories), History (interactions)
 **Innovation:** AI analyzes communication patterns, suggests when to reach out, reminds you of shared interests, helps maintain relationships
+
+**Scaffolding Stub**
+- **Purpose:** Strengthen relationships with reminders and shared context.
+- **MVP Feature Set:**
+  - Relationship dashboard (health score + last contact)
+  - Important dates tracking
+  - "Reach out" reminders
+  - Shared memory highlights
+- **Data Model Draft:**
+  - `Relationship`, `Interaction`, `ImportantDate`, `SharedMemory`
+- **Core Screens:**
+  - Relationship list, person detail, reminder scheduler
+- **Integration Hooks:**
+  - Contacts, Messages, Calendar, Photos, History
+- **Analytics & Telemetry:**
+  - Outreach cadence, response rates, reminder effectiveness
+- **Open Questions:**
+  - Scoring logic? Manual vs automated interaction logging?
 
 ### 15. 🎯 Life Goals & Vision
 **Why Revolutionary:** Long-term goal achievement system
@@ -234,6 +378,24 @@
 **Integration:** Planner (tasks), Calendar (milestones), Notebook (reflections), Budget (financial goals), Health (wellness goals)
 **Innovation:** AI breaks down audacious goals into achievable steps, identifies conflicting goals, suggests daily actions aligned with long-term vision
 
+**Scaffolding Stub**
+- **Purpose:** Long-term goal planning with measurable milestones.
+- **MVP Feature Set:**
+  - Vision board + goal list
+  - Milestone breakdown with timelines
+  - Habit tracker tied to goals
+  - Reflection prompts
+- **Data Model Draft:**
+  - `Goal`, `Milestone`, `Habit`, `Reflection`
+- **Core Screens:**
+  - Goals dashboard, goal detail, habit tracker, reflection log
+- **Integration Hooks:**
+  - Planner, Calendar, Notebook, Budget, Health
+- **Analytics & Telemetry:**
+  - Goal progress %, habit adherence, milestone slippage
+- **Open Questions:**
+  - OKR vs personal goal model? Goal alignment engine depth?
+
 ### 16. 🌊 Context Zones
 **Why Revolutionary:** Automatic context switching
 **Features:**
@@ -246,6 +408,24 @@
 - Context usage analytics
 **Integration:** ALL modules (filters everything)
 **Innovation:** The app interface changes based on your current life context - work mode shows different modules than weekend mode
+
+**Scaffolding Stub**
+- **Purpose:** Context-based UI, notifications, and AI behavior.
+- **MVP Feature Set:**
+  - Context profiles (Work, Personal, Family, etc.)
+  - Manual context switcher
+  - Context-filtered home modules
+  - Context-specific notification rules
+- **Data Model Draft:**
+  - `ContextProfile`, `ContextRule`, `ContextTrigger`, `ContextPreference`
+- **Core Screens:**
+  - Context manager, context rule editor, quick switcher
+- **Integration Hooks:**
+  - Command Center, Notifications, Module Grid, Alerts
+- **Analytics & Telemetry:**
+  - Context switch frequency, module usage by context
+- **Open Questions:**
+  - Trigger precedence? Multi-context blending rules?
 
 ### 17. 🔮 Future Predictor
 **Why Revolutionary:** Probabilistic life forecasting
@@ -300,6 +480,26 @@
 - Selective disclosure controls
 **Integration:** Marketplace (trust), Professional Services (credentials), Wallet (KYC), Messages (verification)
 **Innovation:** Privacy-preserving identity verification using zero-knowledge proofs
+
+**Scaffolding Stub**
+- **Purpose:** Identity wallet + verification layer for trusted transactions.
+- **MVP Feature Set:**
+  - ID document vault (metadata only)
+  - Verification badges (self-verified vs partner-verified)
+  - Consent-based sharing logs
+  - Basic biometric lock (device-provided)
+- **Data Model Draft:**
+  - `IdentityDocument`, `VerificationRecord`, `ConsentGrant`, `TrustScore`
+- **Core Screens:**
+  - ID vault, verification status, sharing history
+- **Integration Hooks:**
+  - Marketplace, Professional Services, Wallet, Messages
+- **Analytics & Telemetry:**
+  - Verification completion rate, trust badge usage
+- **Security & Privacy:**
+  - Selective disclosure, audit logs, encryption by default
+- **Open Questions:**
+  - Verification partners? Data residency requirements?
 
 ---
 
@@ -406,4 +606,3 @@ Context Zones → filters ALL modules based on current life context
 4. Create module development SDK
 5. Beta test with power users
 6. Iterative rollout with feedback loops
-
