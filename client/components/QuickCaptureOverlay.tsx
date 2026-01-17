@@ -297,13 +297,13 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   menuTitle: {
-    fontSize: Typography.sizes.h1,
+    fontSize: Typography.h1.fontSize,
     fontWeight: '700',
     color: Colors.electricBlue,
     marginBottom: 4,
   },
   menuSubtitle: {
-    fontSize: Typography.sizes.caption,
+    fontSize: Typography.caption.fontSize,
     color: Colors.textSecondary,
   },
   actionsGrid: {
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xs,
   },
   actionLabel: {
-    fontSize: Typography.sizes.caption,
+    fontSize: Typography.caption.fontSize,
     color: Colors.textPrimary,
     fontWeight: '500',
     textAlign: 'center',
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     marginTop: Spacing.sm,
   },
   closeButtonText: {
-    fontSize: Typography.sizes.body,
+    fontSize: Typography.body.fontSize,
     color: Colors.textSecondary,
     fontWeight: '500',
   },

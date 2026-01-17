@@ -39,6 +39,7 @@ export const Colors = {
     text: "#FFFFFF",
     textSecondary: "#8B93A7",
     textMuted: "#4A5568",
+    textPrimary: "#FFFFFF",
     buttonText: "#0A0E1A",
     tabIconDefault: "#4A5568",
     tabIconSelected: "#00D9FF",
@@ -60,11 +61,17 @@ export const Colors = {
     lowConfidence: "#6366F1",
     border: "rgba(255, 255, 255, 0.08)",
     overlay: "rgba(10, 14, 26, 0.9)",
+    // Additional colors for consistency
+    electric: "#00D9FF",
+    electricBlue: "#00D9FF",
+    deepSpace: "#0A0E1A",
+    slatePanel: "#252A3A",
   },
   dark: {
     text: "#FFFFFF",
     textSecondary: "#8B93A7",
     textMuted: "#4A5568",
+    textPrimary: "#FFFFFF",
     buttonText: "#0A0E1A",
     tabIconDefault: "#4A5568",
     tabIconSelected: "#00D9FF",
@@ -86,6 +93,11 @@ export const Colors = {
     lowConfidence: "#6366F1",
     border: "rgba(255, 255, 255, 0.08)",
     overlay: "rgba(10, 14, 26, 0.9)",
+    // Additional colors for consistency
+    electric: "#00D9FF",
+    electricBlue: "#00D9FF",
+    deepSpace: "#0A0E1A",
+    slatePanel: "#252A3A",
   },
 };
 

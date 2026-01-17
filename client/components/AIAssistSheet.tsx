@@ -201,17 +201,6 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       icon: "tag",
       title: "Tag Suggestions",
       description: "AI-powered tagging",
-      id: "suggest",
-      icon: "bell",
-      title: "Suggest Alerts",
-      description: "Create from schedule",
-      description: "Create helpful reminders",
-    },
-    {
-      id: "optimize",
-      icon: "clock",
-      title: "Optimize Timing",
-      description: "Suggest better times",
     },
   ],
   messages: [
@@ -244,8 +233,6 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       icon: "archive",
       title: "Archive Old Chats",
       description: "Archive 14+ day old",
-      title: "Optimize Times",
-      description: "Adjust alert times",
     },
   ],
   contacts: [
