@@ -17,16 +17,10 @@
 - [x] Hardcoded dark mode only (ignored system preference)
 
 ### Remaining Bugs
-- [x] **Attention Center Info Theme Property Missing** - FIXED
-  - File: AttentionCenterScreen.tsx:62, OnboardingWelcomeScreen.tsx
+- [x] **Attention Center Info Theme Property Missing** - FIXED (commit b832e21)
+  - Files: AttentionCenterScreen.tsx, OnboardingWelcomeScreen.tsx
   - Code referenced `theme.info` which didn't exist in Colors
   - Fix: Added `info: "#3B82F6"` color to both light and dark themes
-
-- [ ] **AttentionCenter Screen Not in Navigation** - CRITICAL
-  - File: AttentionCenterScreen.tsx exists but NOT registered in AppNavigator
-  - Impact: Entire attention management system inaccessible to users
-  - Fix: Add `<Stack.Screen name="AttentionCenter" component={AttentionCenterScreen} />` to AppNavigator.tsx
-  - Also need: Add navigation button/icon to access AttentionCenter
 
 - [ ] **Time Picker Component Missing** (AlertDetailScreen.tsx:277)
   - Current: Placeholder TODO comment
@@ -158,6 +152,15 @@
   - **Action**: Add first-launch detection
   - **Action**: Set initialRouteName to "OnboardingWelcome" for new users
   - **Action**: Add "skip onboarding" option with explanation
+
+- [ ] **Attention Center Not Easily Accessible**
+  - Screen: AttentionCenterScreen (registered in navigation at line 407)
+  - Issue: No clear navigation path for users to access it
+  - Missing: Header icon with badge count, settings link, or CommandCenter card
+  - Fix: Add AttentionCenter button/icon to header or add to Settings menu
+  - Fix: Show notification badge count when attention items exist
+  - **Action**: Add "Attention" icon to header with badge count
+  - **Action**: Add link from Settings or CommandCenter
 
 - [ ] **No Way to Access Module Grid**
   - Screen: ModuleGridScreen (shows all 38+ modules)
