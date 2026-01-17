@@ -86,7 +86,7 @@ export function Card({
       ]}
     >
       {title ? (
-        <ThemedText type="h4" style={styles.cardTitle}>
+        <ThemedText type="h3" style={styles.cardTitle}>
           {title}
         </ThemedText>
       ) : null}
