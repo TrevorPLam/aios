@@ -81,7 +81,7 @@ This roadmap shows what we're building over the next 6-12 months. It's a living 
 1. **User Impact** - Will this significantly improve UX?
 2. **Business Value** - Does this drive key metrics?
 3. **Technical Debt** - Does this reduce maintenance burden?
-4. **Dependencies** - What blocksother features?
+4. **Dependencies** - What blocks other features?
 5. **Effort vs. Impact** - Is ROI favorable?
 
 ## Related
