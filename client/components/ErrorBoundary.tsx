@@ -1,6 +1,7 @@
 import React, { Component, ComponentType, PropsWithChildren } from "react";
 import { ErrorFallback, ErrorFallbackProps } from "@/components/ErrorFallback";
 import analytics from "@/analytics";
+import { errorReporting } from "@/utils/errorReporting";
 
 /**
  * Simple hash function for error messages
@@ -48,6 +49,9 @@ export class ErrorBoundary extends Component<
     // Track error in analytics
     const errorHash = hashError(error);
     analytics.trackErrorBoundaryHit(errorHash);
+
+    // NEW: Report to error tracking system
+    errorReporting.trackGlobalError(error);
 
     if (typeof this.props.onError === "function") {
       this.props.onError(error, info.componentStack);

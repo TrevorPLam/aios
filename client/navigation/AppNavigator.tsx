@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
 import { db } from "@/storage/database";
+import { ScreenErrorBoundary } from "@/components/ScreenErrorBoundary";
 import {
   generateSeedRecommendations,
   generateSeedNotes,
@@ -205,217 +206,389 @@ export default function AppNavigator() {
     >
       <Stack.Screen
         name="CommandCenter"
-        component={CommandCenterScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="CommandCenter">
+            <CommandCenterScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ModuleGrid"
-        component={ModuleGridScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ModuleGrid">
+            <ModuleGridScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Modules", presentation: "modal" }}
       />
       <Stack.Screen
         name="Notebook"
-        component={NotebookScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Notebook">
+            <NotebookScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Notebook" }}
       />
       <Stack.Screen
         name="NoteEditor"
-        component={NoteEditorScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="NoteEditor">
+            <NoteEditorScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Note" }}
       />
       <Stack.Screen
         name="Planner"
-        component={PlannerScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Planner">
+            <PlannerScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Planner" }}
       />
       <Stack.Screen
         name="TaskDetail"
-        component={TaskDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="TaskDetail">
+            <TaskDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Task" }}
       />
       <Stack.Screen
         name="ProjectDetail"
-        component={ProjectDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ProjectDetail">
+            <ProjectDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Project" }}
       />
       <Stack.Screen
         name="Calendar"
-        component={CalendarScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Calendar">
+            <CalendarScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Calendar" }}
       />
       <Stack.Screen
         name="EventDetail"
-        component={EventDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="EventDetail">
+            <EventDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Event" }}
       />
       <Stack.Screen
         name="Email"
-        component={EmailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Email">
+            <EmailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Email" }}
       />
       <Stack.Screen
         name="ThreadDetail"
-        component={ThreadDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ThreadDetail">
+            <ThreadDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Thread" }}
       />
       <Stack.Screen
         name="Settings"
-        component={SettingsMenuScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Settings">
+            <SettingsMenuScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Settings" }}
       />
       <Stack.Screen
         name="GeneralSettings"
-        component={GeneralSettingsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="GeneralSettings">
+            <GeneralSettingsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "General" }}
       />
       <Stack.Screen
         name="AIPreferences"
-        component={AIPreferencesScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="AIPreferences">
+            <AIPreferencesScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "AI Preferences" }}
       />
       <Stack.Screen
         name="Personalization"
-        component={PersonalizationScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Personalization">
+            <PersonalizationScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Personalization" }}
       />
       <Stack.Screen
         name="Integrations"
-        component={IntegrationsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Integrations">
+            <IntegrationsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Integrations" }}
       />
       <Stack.Screen
         name="IntegrationDetail"
-        component={IntegrationDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="IntegrationDetail">
+            <IntegrationDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Integration Details" }}
       />
       <Stack.Screen
         name="System"
-        component={SystemScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="System">
+            <SystemScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "System" }}
       />
       <Stack.Screen
         name="History"
-        component={HistoryScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="History">
+            <HistoryScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "History" }}
       />
       <Stack.Screen
         name="RecommendationDetail"
-        component={RecommendationDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="RecommendationDetail">
+            <RecommendationDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Recommendation", presentation: "modal" }}
       />
       <Stack.Screen
         name="RecommendationHistory"
-        component={RecommendationHistoryScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="RecommendationHistory">
+            <RecommendationHistoryScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Recommendation History" }}
       />
       <Stack.Screen
         name="Lists"
-        component={ListsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Lists">
+            <ListsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Lists" }}
       />
       <Stack.Screen
         name="ListEditor"
-        component={ListEditorScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ListEditor">
+            <ListEditorScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "List" }}
       />
       <Stack.Screen
         name="Alerts"
-        component={AlertsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Alerts">
+            <AlertsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Alerts" }}
       />
       <Stack.Screen
         name="AlertDetail"
-        component={AlertDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="AlertDetail">
+            <AlertDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Alert" }}
       />
       <Stack.Screen
         name="Photos"
-        component={PhotosScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Photos">
+            <PhotosScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Photos" }}
       />
       <Stack.Screen
         name="Albums"
-        component={AlbumsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Albums">
+            <AlbumsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Albums" }}
       />
       <Stack.Screen
         name="PhotoDetail"
-        component={PhotoDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="PhotoDetail">
+            <PhotoDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Photo" }}
       />
       <Stack.Screen
         name="PhotoEditor"
-        component={PhotoEditorScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="PhotoEditor">
+            <PhotoEditorScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Edit Photo" }}
       />
       <Stack.Screen
         name="Messages"
-        component={MessagesScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Messages">
+            <MessagesScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Messages" }}
       />
       <Stack.Screen
         name="ConversationDetail"
-        component={ConversationDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ConversationDetail">
+            <ConversationDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Chat" }}
       />
       <Stack.Screen
         name="Contacts"
-        component={ContactsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Contacts">
+            <ContactsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Contacts" }}
       />
       <Stack.Screen
         name="ContactDetail"
-        component={ContactDetailScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ContactDetail">
+            <ContactDetailScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Contact" }}
       />
       <Stack.Screen
         name="Translator"
-        component={TranslatorScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Translator">
+            <TranslatorScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Translator" }}
       />
       <Stack.Screen
         name="Budget"
-        component={BudgetScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Budget">
+            <BudgetScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Budget" }}
       />
       <Stack.Screen
         name="NotebookSettings"
-        component={NotebookSettingsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="NotebookSettings">
+            <NotebookSettingsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Notebook Settings" }}
       />
       <Stack.Screen
         name="PlannerSettings"
-        component={PlannerSettingsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="PlannerSettings">
+            <PlannerSettingsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Planner Settings" }}
       />
       <Stack.Screen
         name="CalendarSettings"
-        component={CalendarSettingsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="CalendarSettings">
+            <CalendarSettingsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Calendar Settings" }}
       />
       <Stack.Screen
         name="EmailSettings"
-        component={EmailSettingsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="EmailSettings">
+            <EmailSettingsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Email Settings" }}
       />
       <Stack.Screen
         name="ContactsSettings"
-        component={ContactsSettingsScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="ContactsSettings">
+            <ContactsSettingsScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Contacts Settings" }}
       />
       <Stack.Screen
         name="AttentionCenter"
-        component={AttentionCenterScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="AttentionCenter">
+            <AttentionCenterScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerTitle: "Attention Center", headerShown: false }}
       />
       <Stack.Screen
         name="OnboardingWelcome"
-        component={OnboardingWelcomeScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="OnboardingWelcome">
+            <OnboardingWelcomeScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="OnboardingModuleSelection"
-        component={OnboardingModuleSelectionScreen}
+        component={(props) => (
+          <ScreenErrorBoundary screenName="OnboardingModuleSelection">
+            <OnboardingModuleSelectionScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
