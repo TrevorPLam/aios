@@ -22,6 +22,8 @@ describe("Quick Win Data-Layer E2E", () => {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     // Use tomorrow.toISOString() for test data
+  it("validates data-layer quick wins without UI dependencies", async () => {
+    // History: verify scheduled export execution updates schedule metadata.
     await db.history.add({ message: "Pipeline start", type: "system" });
     await db.history.setExportSchedule({
       enabled: true,
@@ -34,6 +36,7 @@ describe("Quick Win Data-Layer E2E", () => {
     );
     expect(payload).toContain("Pipeline start");
 
+    // Translator: retention keeps favorites while trimming history.
     await db.translations.setRetentionPolicy({
       maxEntries: 1,
       maxAgeDays: null,
@@ -68,6 +71,7 @@ describe("Quick Win Data-Layer E2E", () => {
     expect(retained).toHaveLength(1);
     expect(retained[0].id).toBe("trans-fav");
 
+    // Calendar: recurring expansion drives reminder scheduling hooks.
     const recurringEvent: CalendarEvent = {
       id: "event-quick",
       title: "Daily Sync",
@@ -95,6 +99,7 @@ describe("Quick Win Data-Layer E2E", () => {
     expect(reminders).toHaveLength(1);
     expect(reminders[0].reminderAt).toBe("2026-01-01T09:45:00.000Z");
 
+    // Alerts: scheduling hooks surface upcoming triggers for system services.
     const alert: Alert = {
       id: "alert-quick",
       title: "Daily Alert",

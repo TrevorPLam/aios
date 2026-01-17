@@ -41,9 +41,9 @@ This document provides a comprehensive overview of all modules within AIOS, trac
 
 ---
 
-## ✅ Quick Win Candidates (Non-UI/UX Safe)
+## ✅ Quick Wins (Non-UI/UX Safe, Verified)
 
-The following items are low-risk because they are **data-layer, API, or automation-only** changes that do **not** touch the UI/UX during the current refactor:
+The following items are low-risk because they are **data-layer, API, or automation-only** changes that do **not** touch the UI/UX during the current refactor. These items are **implemented and verified via data-layer E2E coverage** to keep the ongoing UI refactor stable:
 
 **Messaging**
 - ✅ Message search (storage + API endpoints)
@@ -81,8 +81,8 @@ P2P messaging with AI-powered assistance for internal communication.
 - Message threading/replies
 - Character limit (1000)
 - AI Assist Sheet interface
-- Message search (data layer)
-- Message editing (data layer)
+- Message search (data layer + API)
+- Message editing metadata + preview sync (data layer + API)
 
 ### ⬜ Planned (12/30)
 - WebSocket real-time messaging
@@ -762,8 +762,8 @@ See [UI/UX Revolutionary Strategy](docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md) 
 
 ## 📝 Document Notes
 
-- **Last Updated:** March 10, 2026
-- **Version:** 2.3 (Quick win completion + scheduling/data-layer hooks)
+- **Last Updated:** March 13, 2026
+- **Version:** 2.5 (Quick wins verified via data-layer E2E coverage)
 - Percentages based on comparison with market-leading applications
 - AI features tracked separately (framework vs. implementation)
 - All features subject to technical feasibility and user demand
