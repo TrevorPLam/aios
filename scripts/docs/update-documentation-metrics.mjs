@@ -133,6 +133,67 @@ const getGitHubMetrics = async () => {
   }
 };
 
+const getWorkflowMetrics = async () => {
+  const repository = process.env.GITHUB_REPOSITORY;
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  if (!repository || !token) {
+    return {};
+  }
+
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    Authorization: `Bearer ${token}`,
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+
+  try {
+    const runsUrl = new URL(
+      `https://api.github.com/repos/${repository}/actions/workflows/docs-quality.yml/runs`
+    );
+    runsUrl.searchParams.set('per_page', '20');
+    const runsResponse = await fetch(runsUrl, { headers });
+    if (!runsResponse.ok) {
+      throw new Error(`Workflow runs fetch failed: ${runsResponse.status}`);
+    }
+
+    const runsData = await runsResponse.json();
+    const runs = runsData.workflow_runs ?? [];
+    const totalRuns = runs.length;
+    const successfulRuns = runs.filter((run) => run.conclusion === 'success').length;
+    const ciPassRate = totalRuns
+      ? `${((successfulRuns / totalRuns) * 100).toFixed(1)}%`
+      : 'N/A';
+
+    let brokenLinks = 'TBD';
+    const latestRun = runs[0];
+    if (latestRun?.id) {
+      const jobsUrl = new URL(
+        `https://api.github.com/repos/${repository}/actions/runs/${latestRun.id}/jobs`
+      );
+      jobsUrl.searchParams.set('per_page', '100');
+      const jobsResponse = await fetch(jobsUrl, { headers });
+      if (jobsResponse.ok) {
+        const jobsData = await jobsResponse.json();
+        const jobs = jobsData.jobs ?? [];
+        const linkJob = jobs.find((job) => job.name === 'link-check');
+        if (linkJob?.conclusion === 'success') {
+          brokenLinks = '0';
+        } else if (linkJob?.conclusion) {
+          brokenLinks = 'Failing';
+        }
+      }
+    }
+
+    return {
+      'CI pass rate': ciPassRate,
+      'Broken links': brokenLinks,
+    };
+  } catch (error) {
+    console.warn(`Unable to fetch workflow metrics: ${error.message}`);
+    return {};
+  }
+};
+
 const updateMetricsFile = async () => {
   const files = listMarkdownFiles();
   const metrics = {
@@ -143,6 +204,9 @@ const updateMetricsFile = async () => {
 
   const githubMetrics = await getGitHubMetrics();
   Object.assign(metrics, githubMetrics);
+
+  const workflowMetrics = await getWorkflowMetrics();
+  Object.assign(metrics, workflowMetrics);
 
   const raw = fs.readFileSync(metricsPath, 'utf8');
   const lines = raw.split('\n');
