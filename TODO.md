@@ -32,11 +32,6 @@
   - Impact: Missing native mobile navigation pattern
   - Fix: Implement PanResponder for left edge swipe detection
 
-- [ ] **Attention Center Info Theme Property Missing**
-  - File: AttentionCenterScreen.tsx:62
-  - Code references `theme.info` which doesn't exist in Colors
-  - Fix: Add `info` color to theme.ts or use `accent` instead
-
 - [ ] **Module Navigation Silent Failures**
   - BottomNav component assumes all module routes exist
   - No error handling when navigating to unregistered screens
