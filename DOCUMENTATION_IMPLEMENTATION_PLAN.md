@@ -273,10 +273,10 @@ Create `.github/workflows/markdown-link-check-config.json`:
 ```
 
 **Validation:**
-- [ ] CI runs on all PRs with markdown changes
-- [ ] Broken links cause build failure
-- [ ] Configuration excludes localhost links
-- [ ] False positives handled
+- [x] CI runs on all PRs with markdown changes
+- [x] Broken links cause build failure
+- [x] Configuration excludes localhost links
+- [x] False positives handled
 
 #### Task 2.2: Add Markdown Linting (Completed)
 
@@ -314,10 +314,10 @@ Create `.markdownlint.json`:
 ```
 
 **Validation:**
-- [ ] Consistent markdown formatting
-- [ ] Heading styles enforced
-- [ ] Line length warnings (not errors)
-- [ ] HTML allowed where needed
+- [x] Consistent markdown formatting
+- [x] Heading styles enforced
+- [x] Line length warnings (not errors)
+- [x] HTML allowed where needed
 
 #### Task 2.3: Add Spell Checking (Completed)
 
@@ -367,10 +367,10 @@ Create `.cspell.json`:
 ```
 
 **Validation:**
-- [ ] Technical terms in dictionary
-- [ ] Archive excluded
-- [ ] Warnings, not errors
-- [ ] Easy to add new terms
+- [x] Technical terms in dictionary
+- [x] Archive excluded
+- [x] Warnings, not errors
+- [x] Easy to add new terms
 
 ---
 

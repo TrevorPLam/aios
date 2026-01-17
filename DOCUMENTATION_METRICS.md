@@ -12,8 +12,8 @@
 
 | Metric | Definition | Target | Current | Notes |
 | --- | --- | --- | --- | --- |
-| Active docs | Number of non-archived Markdown files | +10% QoQ | 69 | Run monthly count script |
-| Broken links | Failed link checks in CI | 0 | TBD | Tracked in CI |
+| Active docs | Number of non-archived Markdown files | +10% QoQ | 70 | Run monthly count script |
+| Broken links | Failed link checks in CI | 0 | TBD | Auto-updated from docs-quality workflow |
 | Average doc age | Days since last update | < 90 days | 0.2 days | Use git log |
 | TODO count | TODO tags in docs | < 10 | 0 | Use rg "TODO" |
 
@@ -21,7 +21,7 @@
 
 | Metric | Definition | Target | Current | Notes |
 | --- | --- | --- | --- | --- |
-| CI pass rate | Docs-quality workflow success | 95%+ | TBD | Track via GitHub Actions |
+| CI pass rate | Docs-quality workflow success | 95%+ | TBD | Auto-updated from last 20 runs |
 | Review cycle time | Time from PR open to merge | < 5 days | TBD | GitHub insights |
 | Issue resolution time | Time to close doc issues | < 14 days | TBD | GitHub insights |
 | User satisfaction | Survey rating | 4/5+ | TBD | Quarterly survey |
