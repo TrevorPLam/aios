@@ -122,9 +122,10 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 **Issue:** Various type mismatches in server code.
 
 **Examples:**
-- server/routes.ts: Settings object missing required fields
-- server/storage.ts: Duplicate/malformed code
-- server/index.ts: Implicit any types
+- server/routes.ts: Settings object missing required fields ✅ FIXED
+- server/routes.ts: Query parameter type assertions instead of proper validation
+- server/storage.ts: Duplicate/malformed code ✅ FIXED
+- server/index.ts: Implicit any types ✅ FIXED
 
 **Impact:**
 - Server may crash on certain requests
@@ -132,11 +133,12 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 - Harder to maintain server code
 
 **Solution:**
-1. Fix Settings creation to include all required fields
-2. Remove duplicate code blocks
-3. Add explicit types to all function parameters
+1. Fix Settings creation to include all required fields ✅ DONE
+2. Remove duplicate code blocks ✅ DONE
+3. Add explicit types to all function parameters ✅ DONE
+4. Replace type assertions with Zod validators for query parameters
 
-**Effort:** 1 day
+**Effort:** 1 day (0.5 days remaining)
 **Risk:** Low (already partially fixed)
 
 ## Enforcement Strategy
@@ -145,12 +147,14 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 - Use `// @ts-expect-error` with explanatory comments for known issues
 - Use type assertions (`as`) only when type is correct but TS can't infer it
 - Document all suppressions in this file
+- **Note:** Code review flagged type assertions in server/routes.ts - plan to replace with Zod validation
 
 ### Long Term (Next Quarter)
 1. Enable strict mode incrementally per directory
 2. Add ESLint rules to catch anti-patterns
 3. Pre-commit hooks enforce no new suppressions
 4. CI fails on any new `@ts-expect-error` without this file being updated
+5. Replace all type assertions with proper type guards or validation
 
 ## Metrics
 
@@ -170,3 +174,9 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 - FORENSIC_ANALYSIS_V2.md - Security and code quality audit
 - .github/workflows/ci.yml - CI enforcement of type checking
 - eslint.config.js - Linting rules
+
+## Code Review Feedback (Nitpicks for Future)
+1. **database export alias** - Document migration path in code comments
+2. **server/routes.ts type assertions** - Replace with Zod validators
+3. **textTertiary naming** - Consider renaming to textPlaceholder
+4. **ESLint scope** - Verify .eslintignore covers build artifacts
