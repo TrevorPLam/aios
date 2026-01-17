@@ -1,15 +1,21 @@
 # Documentation metrics dashboard
 
-**Last updated:** 2026-01-16
+**Last updated:** 2026-01-17
+
+## Automation status
+
+- ✅ Scheduled metrics updater workflow (monthly + on demand)
+- ✅ Documentation issue auto-labeling and triage workflow
+- ✅ Stale documentation issue management workflow
 
 ## Health metrics
 
 | Metric | Definition | Target | Current | Notes |
 | --- | --- | --- | --- | --- |
-| Active docs | Number of non-archived Markdown files | +10% QoQ | TBD | Run monthly count script |
+| Active docs | Number of non-archived Markdown files | +10% QoQ | 69 | Run monthly count script |
 | Broken links | Failed link checks in CI | 0 | TBD | Tracked in CI |
-| Average doc age | Days since last update | < 90 days | TBD | Use git log |
-| TODO count | TODO tags in docs | < 10 | TBD | Use rg "TODO" |
+| Average doc age | Days since last update | < 90 days | 0.2 days | Use git log |
+| TODO count | TODO tags in docs | < 10 | 0 | Use rg "TODO" |
 
 ## Quality metrics
 
