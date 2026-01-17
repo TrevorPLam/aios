@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   handle: {
     width: 36,
     height: 4,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 2,
     alignSelf: "center",
     marginBottom: Spacing.md,

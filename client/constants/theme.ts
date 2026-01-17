@@ -39,7 +39,7 @@ export const Colors = {
     text: "#1A1F2E",
     textSecondary: "#4A5568",
     textMuted: "#8B93A7",
-    textPrimary: "#1A1F2E",
+    textPrimary: "#1A1F2E", // Alias for 'text' - for backwards compatibility
     buttonText: "#FFFFFF",
     tabIconDefault: "#8B93A7",
     tabIconSelected: "#00D9FF",
@@ -61,17 +61,17 @@ export const Colors = {
     lowConfidence: "#6366F1",
     border: "rgba(0, 0, 0, 0.08)",
     overlay: "rgba(255, 255, 255, 0.95)",
-    // Additional colors for consistency
-    electric: "#00D9FF",
-    electricBlue: "#00D9FF",
-    deepSpace: "#FFFFFF",
-    slatePanel: "#E5E9F0",
+    // Additional colors for consistency with existing component code
+    electric: "#00D9FF", // Alias for 'accent'
+    electricBlue: "#00D9FF", // Alias for 'accent'
+    deepSpace: "#FFFFFF", // Alias for 'backgroundRoot' in light mode
+    slatePanel: "#E5E9F0", // Alias for 'backgroundSecondary'
   },
   dark: {
     text: "#FFFFFF",
     textSecondary: "#8B93A7",
     textMuted: "#4A5568",
-    textPrimary: "#FFFFFF",
+    textPrimary: "#FFFFFF", // Alias for 'text' - for backwards compatibility
     buttonText: "#0A0E1A",
     tabIconDefault: "#4A5568",
     tabIconSelected: "#00D9FF",
@@ -93,11 +93,11 @@ export const Colors = {
     lowConfidence: "#6366F1",
     border: "rgba(255, 255, 255, 0.08)",
     overlay: "rgba(10, 14, 26, 0.9)",
-    // Additional colors for consistency
-    electric: "#00D9FF",
-    electricBlue: "#00D9FF",
-    deepSpace: "#0A0E1A",
-    slatePanel: "#252A3A",
+    // Additional colors for consistency with existing component code
+    electric: "#00D9FF", // Alias for 'accent'
+    electricBlue: "#00D9FF", // Alias for 'accent'
+    deepSpace: "#0A0E1A", // Alias for 'backgroundRoot' in dark mode
+    slatePanel: "#252A3A", // Alias for 'backgroundSecondary'
   },
 };
 
