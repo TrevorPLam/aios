@@ -17,6 +17,17 @@
 - [x] Hardcoded dark mode only (ignored system preference)
 
 ### Remaining Bugs
+- [x] **Attention Center Info Theme Property Missing** - FIXED
+  - File: AttentionCenterScreen.tsx:62, OnboardingWelcomeScreen.tsx
+  - Code referenced `theme.info` which didn't exist in Colors
+  - Fix: Added `info: "#3B82F6"` color to both light and dark themes
+
+- [ ] **AttentionCenter Screen Not in Navigation** - CRITICAL
+  - File: AttentionCenterScreen.tsx exists but NOT registered in AppNavigator
+  - Impact: Entire attention management system inaccessible to users
+  - Fix: Add `<Stack.Screen name="AttentionCenter" component={AttentionCenterScreen} />` to AppNavigator.tsx
+  - Also need: Add navigation button/icon to access AttentionCenter
+
 - [ ] **Time Picker Component Missing** (AlertDetailScreen.tsx:277)
   - Current: Placeholder TODO comment
   - Impact: Poor UX for setting alert times
