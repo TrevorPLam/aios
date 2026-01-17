@@ -32,7 +32,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ModuleType } from '@/models/types';
-import { eventBus } from './eventBus';
+import { eventBus, EVENT_TYPES, NoteEventPayload, TaskEventPayload, CalendarEventPayload } from './eventBus';
 
 /**
  * Indexed Item
@@ -156,7 +156,7 @@ class SearchIndex {
         id: data.task.id,
         moduleType: 'planner',
         title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.description || ''}`,
+        searchableText: `${data.task.title} ${data.task.notes || ''}`,
         timestamp: new Date(data.task.createdAt).getTime(),
         metadata: { status: data.task.status, priority: data.task.priority },
       });

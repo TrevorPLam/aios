@@ -72,6 +72,45 @@ export enum EVENT_TYPES {
 }
 
 /**
+ * Specific Event Payload Types
+ * 
+ * Define specific payload types for each event category to enable type-safe event handling.
+ */
+
+// Import types from models
+import type { Note, Task, CalendarEvent } from '@/models/types';
+
+// Note event payloads
+export interface NoteEventPayload extends EventPayload {
+  eventType: EVENT_TYPES.NOTE_CREATED | EVENT_TYPES.NOTE_UPDATED | EVENT_TYPES.NOTE_DELETED;
+  data: {
+    note?: Note;
+    noteId?: string;
+  };
+}
+
+// Task event payloads
+export interface TaskEventPayload extends EventPayload {
+  eventType: EVENT_TYPES.TASK_CREATED | EVENT_TYPES.TASK_UPDATED | EVENT_TYPES.TASK_DELETED | EVENT_TYPES.TASK_COMPLETED;
+  data: {
+    task?: Task;
+    taskId?: string;
+  };
+}
+
+// Calendar event payloads
+export interface CalendarEventPayload extends EventPayload {
+  eventType: EVENT_TYPES.CALENDAR_EVENT_CREATED | EVENT_TYPES.CALENDAR_EVENT_UPDATED | EVENT_TYPES.CALENDAR_EVENT_DELETED;
+  data: {
+    event?: CalendarEvent;
+    eventId?: string;
+  };
+}
+
+// Union type for all specific payloads
+export type TypedEventPayload = NoteEventPayload | TaskEventPayload | CalendarEventPayload | EventPayload;
+
+/**
  * Event Payload Type
  * 
  * Generic structure for all events. Specific event types can extend this.
