@@ -431,9 +431,9 @@ class PrefetchEngine {
           reason: 'Morning: People often review tasks in the morning',
         },
         {
-          moduleId: 'email',
+          moduleId: 'notebook',
           probability: 0.2,
-          reason: 'Morning: People often check email in the morning',
+          reason: 'Morning: People often review notes in the morning',
         }
       );
     }

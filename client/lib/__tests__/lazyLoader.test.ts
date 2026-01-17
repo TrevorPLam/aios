@@ -43,8 +43,6 @@ describe('LazyLoader', () => {
         'translator',
         'photos',
         'budget',
-        'history',
-        'integrations',
       ];
 
       coreModules.forEach((moduleId) => {

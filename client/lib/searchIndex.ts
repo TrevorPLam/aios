@@ -511,9 +511,10 @@ class SearchIndex {
       moduleBreakdown[item.moduleType] = (moduleBreakdown[item.moduleType] || 0) + 1;
     });
 
-    // Estimate index size
+    // Estimate index size (React Native compatible)
     const indexJson = JSON.stringify(Array.from(this.invertedIndex.values()));
-    const indexSizeKB = new Blob([indexJson]).size / 1024;
+    // Use string length as approximation (UTF-8 characters ~ 1-4 bytes each)
+    const indexSizeKB = (indexJson.length * 1.5) / 1024; // Conservative estimate
 
     return {
       totalItems: this.items.size,

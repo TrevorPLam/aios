@@ -168,18 +168,6 @@ class LazyLoader {
         preload: false,
         priority: 'low',
       },
-      {
-        moduleId: 'history',
-        path: 'HistoryScreen',
-        preload: false,
-        priority: 'low',
-      },
-      {
-        moduleId: 'integrations',
-        path: 'IntegrationsScreen',
-        preload: false,
-        priority: 'low',
-      },
     ];
 
     configs.forEach((config) => {
@@ -286,10 +274,6 @@ class LazyLoader {
         return import('@/screens/PhotosScreen');
       case 'BudgetScreen':
         return import('@/screens/BudgetScreen');
-      case 'HistoryScreen':
-        return import('@/screens/HistoryScreen');
-      case 'IntegrationsScreen':
-        return import('@/screens/IntegrationsScreen');
       default:
         throw new Error(`Unknown module path: ${path}`);
     }
