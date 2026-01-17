@@ -69,6 +69,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         enabledModules: ["command", "notebook", "planner", "calendar", "email"],
         aiLimitTier: 1,
         darkMode: true,
+        colorTheme: "cyan",
+        aiPersonality: "default",
+        aiCustomPrompt: "",
       });
 
       // Generate token
@@ -546,9 +549,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     asyncHandler(async (req, res) => {
       // req.query is already validated and typed by validateQuery middleware
       const { q, conversationId, limit } = req.query;
-      const results = await storage.searchMessages(q, req.user!.userId, {
-        conversationId,
-        limit,
+      const results = await storage.searchMessages(q as string, req.user!.userId, {
+        conversationId: conversationId as string | undefined,
+        limit: limit as number | undefined,
       });
       res.json(results);
     }),
