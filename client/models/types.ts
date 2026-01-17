@@ -12,7 +12,8 @@ export type ModuleType =
   | "messages"
   | "contacts"
   | "translator"
-  | "budget";
+  | "budget"
+  | "history";
 
 export type ModuleViewMode = "grid" | "list";
 

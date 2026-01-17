@@ -4,6 +4,7 @@ import {
   RecommendationDecision,
   Note,
   Task,
+  TaskStatus,
   Project,
   CalendarEvent,
   CalendarReminderTrigger,
@@ -5695,3 +5696,6 @@ export const db = {
     await AsyncStorage.multiRemove(Object.values(KEYS));
   },
 };
+
+// Export as named export for backwards compatibility
+export { db as database };

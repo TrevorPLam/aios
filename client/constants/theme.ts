@@ -40,15 +40,21 @@ export const Colors = {
     textSecondary: "#4A5568",
     textMuted: "#8B93A7",
     textPrimary: "#1A1F2E", // Alias for 'text' - for backwards compatibility
+    textTertiary: "#A0AEC0", // Lighter gray for placeholders
     buttonText: "#FFFFFF",
     tabIconDefault: "#8B93A7",
     tabIconSelected: "#00D9FF",
     link: "#00D9FF",
+    background: "#FFFFFF", // Alias for backgroundRoot
     backgroundRoot: "#FFFFFF",
     backgroundDefault: "#F7F9FC",
     backgroundSecondary: "#E5E9F0",
     backgroundTertiary: "#D8DEE9",
     backgroundBlack: "#FFFFFF",
+    backgroundMuted: "#EDF2F7", // Muted background
+    backgroundElevated: "#FFFFFF", // Elevated surfaces
+    cardBackground: "#FFFFFF", // Card background
+    primary: "#00D9FF", // Alias for accent
     accent: "#00D9FF",
     accentDim: "rgba(0, 217, 255, 0.15)",
     accentGlow: "rgba(0, 217, 255, 0.3)",
@@ -73,15 +79,21 @@ export const Colors = {
     textSecondary: "#8B93A7",
     textMuted: "#4A5568",
     textPrimary: "#FFFFFF", // Alias for 'text' - for backwards compatibility
+    textTertiary: "#4A5568", // Darker gray for placeholders
     buttonText: "#0A0E1A",
     tabIconDefault: "#4A5568",
     tabIconSelected: "#00D9FF",
     link: "#00D9FF",
+    background: "#0A0E1A", // Alias for backgroundRoot
     backgroundRoot: "#0A0E1A",
     backgroundDefault: "#1A1F2E",
     backgroundSecondary: "#252A3A",
     backgroundTertiary: "#303646",
     backgroundBlack: "#000000",
+    backgroundMuted: "#141824", // Muted background
+    backgroundElevated: "#252A3A", // Elevated surfaces
+    cardBackground: "#1A1F2E", // Card background
+    primary: "#00D9FF", // Alias for accent
     accent: "#00D9FF",
     accentDim: "rgba(0, 217, 255, 0.15)",
     accentGlow: "rgba(0, 217, 255, 0.3)",
@@ -128,6 +140,15 @@ export const BorderRadius = {
 };
 
 export const Typography = {
+  sizes: {
+    hero: 32,
+    h1: 24,
+    h2: 20,
+    h3: 18,
+    body: 16,
+    caption: 14,
+    small: 12,
+  },
   hero: {
     fontSize: 32,
     fontWeight: "700" as const,
@@ -183,6 +204,34 @@ export const Shadows = {
     shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 6,
+  },
+  sm: {
+    shadowColor: "#00D9FF",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  small: {
+    shadowColor: "#00D9FF",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  lg: {
+    shadowColor: "#00D9FF",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  modal: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 24,
+    elevation: 12,
   },
 };
 

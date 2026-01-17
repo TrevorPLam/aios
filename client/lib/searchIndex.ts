@@ -32,7 +32,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ModuleType } from '@/models/types';
-import { eventBus } from './eventBus';
+import { eventBus, EVENT_TYPES, NoteEventPayload, TaskEventPayload, CalendarEventPayload } from './eventBus';
 
 /**
  * Indexed Item
@@ -146,7 +146,7 @@ class SearchIndex {
         id: data.note.id,
         moduleType: 'notebook',
         title: data.note.title,
-        searchableText: `${data.note.title} ${data.note.body} ${data.note.tags.join(' ')}`,
+        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(' ')}`,
         timestamp: new Date(data.note.createdAt).getTime(),
       });
     });
@@ -156,7 +156,7 @@ class SearchIndex {
         id: data.task.id,
         moduleType: 'planner',
         title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.description || ''}`,
+        searchableText: `${data.task.title} ${data.task.userNotes || ''}`,
         timestamp: new Date(data.task.createdAt).getTime(),
         metadata: { status: data.task.status, priority: data.task.priority },
       });
@@ -178,7 +178,7 @@ class SearchIndex {
         id: data.note.id,
         moduleType: 'notebook',
         title: data.note.title,
-        searchableText: `${data.note.title} ${data.note.body} ${data.note.tags.join(' ')}`,
+        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(' ')}`,
         timestamp: new Date(data.note.updatedAt).getTime(),
       });
     });
@@ -188,7 +188,7 @@ class SearchIndex {
         id: data.task.id,
         moduleType: 'planner',
         title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.description || ''}`,
+        searchableText: `${data.task.title} ${data.task.userNotes || ''}`,
         timestamp: new Date(data.task.updatedAt).getTime(),
         metadata: { status: data.task.status, priority: data.task.priority },
       });
