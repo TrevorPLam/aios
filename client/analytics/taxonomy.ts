@@ -173,7 +173,7 @@ export const EVENT_TAXONOMY: Record<EventName, EventDefinition> = {
   ai_opened: {
     name: "ai_opened",
     description: "User opened AI assistant",
-    requiredProps: ["context_module", "selection_state"],
+    requiredProps: ["source_module", "selection_state"],
     optionalProps: [],
   },
   ai_suggestion_generated: {

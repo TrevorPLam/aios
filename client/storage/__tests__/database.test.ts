@@ -186,7 +186,7 @@ describe("Database Storage Layer", () => {
       expect(stats.acceptanceRate).toBe(50); // 1 accepted out of 2 decided
       expect(stats.byModule.command).toBe(3);
       expect(stats.byModule.planner).toBe(1);
-      expect(stats.byPriority.high).toBe(3);
+      expect(stats.byPriority.high).toBe(2); // mockRecommendation and expiredRec
       expect(stats.byPriority.medium).toBe(1);
       expect(stats.byPriority.low).toBe(1);
     });

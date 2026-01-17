@@ -80,7 +80,7 @@ describe("Taxonomy", () => {
       expect(EVENT_TAXONOMY.item_created.requiredProps).toContain("item_type");
 
       expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain(
-        "context_module",
+        "source_module",
       );
       expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain(
         "selection_state",
@@ -152,7 +152,7 @@ describe("Taxonomy", () => {
           );
 
           if (hasForbiddenPattern) {
-            fail(
+            throw new Error(
               `Event "${eventName}" has forbidden field pattern in prop "${prop}". ` +
                 `This could lead to sensitive data being logged.`,
             );
