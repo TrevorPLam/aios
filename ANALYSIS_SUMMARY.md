@@ -40,7 +40,7 @@ The analysis covered all 9 mandatory categories:
 
 ## 📖 Document Structure
 
-### Main Document: `FORENSIC_ANALYSIS.md`
+### Main Document: `docs/archive/analysis/FORENSIC_ANALYSIS.md`
 
 Each of the 60 issues follows the mandated format:
 
@@ -140,7 +140,7 @@ The document includes complete CI/CD pipeline configuration and pre-commit hook 
 
 ## 📁 Files Delivered
 
-1. **FORENSIC_ANALYSIS.md** (2,881 lines)
+1. **docs/archive/analysis/FORENSIC_ANALYSIS.md** (2,881 lines)
    - Complete forensic analysis
    - All 60 issues documented
    - Remediation steps with code examples
@@ -176,7 +176,7 @@ With 2-4 weeks of focused work on the critical issues, this application can beco
 
 ## 📞 Questions?
 
-The main document (`FORENSIC_ANALYSIS.md`) contains exhaustive detail on every issue. Use it as:
+The main document (`docs/archive/analysis/FORENSIC_ANALYSIS.md`) contains exhaustive detail on every issue. Use it as:
 - A prioritized backlog for fixing issues
 - A reference during code reviews
 - A checklist for production readiness
