@@ -14,7 +14,7 @@ jobs:
       issues: write
     steps:
       - name: Label documentation issues
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const issue = context.payload.issue;
@@ -65,7 +65,7 @@ jobs:
       issues: write
     steps:
       - name: Mark documentation issues as triaged
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const issue = context.payload.issue;

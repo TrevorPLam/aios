@@ -101,7 +101,7 @@ jobs:
 
       - name: Create issue for critical vulnerabilities (scheduled)
         if: steps.check-critical.outputs.critical == 'true' && github.event_name == 'schedule'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
