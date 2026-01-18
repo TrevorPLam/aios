@@ -81,7 +81,14 @@
     "Apress",
     "writethedocs",
     "hemingwayapp",
-    "bikeshedding"
+    "bikeshedding",
+    "Nygard's",
+    "Spolsky's",
+    "anonymization",
+    "Metabase",
+    "lycheeignore",
+    "Mixpanel",
+    "Grafana"
   ],
   "ignorePaths": [
     "node_modules/**",
