@@ -569,7 +569,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add tests for analytics functionality
   - [ ] Document analytics API usage
   - [ ] Integrate with backend analytics service
-- **References**: TYPESCRIPT_REMEDIATION_PLAN.md, client/analytics/*
+- **References**: docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md, client/analytics/*
 - **Dependencies**: T-028
 - **Effort**: L (multiple weeks)
 
@@ -711,7 +711,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Show integration examples with UI components
   - [ ] Document public APIs and expected usage patterns
   - [ ] Add examples to documentation site
-- **References**: client/lib/*.ts, DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 
@@ -729,7 +729,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add Storybook or similar for component showcase
   - [ ] Include accessibility guidelines per component
   - [ ] Add to documentation site
-- **References**: client/components/*.tsx, DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: L
 
@@ -747,7 +747,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Document state management patterns
   - [ ] Map data flow between screens and lib modules
   - [ ] Add diagrams to documentation site
-- **References**: DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 
@@ -769,7 +769,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Make EventBus.on() type-safe
   - [ ] Update emit() to enforce payload types
   - [ ] Fix all event-related TypeScript errors
-- **References**: client/lib/eventBus.ts, TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: client/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 
@@ -787,7 +787,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Migrate miniMode components to useTheme
   - [ ] Migrate screen components to useTheme
   - [ ] Remove static imports from components
-- **References**: client/hooks/useTheme.ts, TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: L
 
@@ -806,7 +806,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add missing properties or rename incorrect ones
   - [ ] Fix all callers with incorrect property access
   - [ ] Test all data operations
-- **References**: client/models/types.ts, TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: client/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 
@@ -824,7 +824,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add conditional logic for safe navigation
   - [ ] Test navigation with all module types
   - [ ] Document navigation patterns
-- **References**: All navigation code, TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: All navigation code, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 
@@ -842,7 +842,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Fix ThemedText type union (add "title" or remove usage)
   - [ ] Fix AIAssistSheet props (add `context` or remove)
   - [ ] Test all component prop usage
-- **References**: client/components/*.tsx, TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: S
 
@@ -860,7 +860,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Enable strict mode in tsconfig.json
   - [ ] Fix any new errors revealed by strict mode
   - [ ] Update CI to enforce strict mode
-- **References**: tsconfig.json, TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: tsconfig.json, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: T-039, T-040, T-041, T-042, T-043
 - **Effort**: M
 
@@ -884,7 +884,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Archive 45+ historical documents to appropriate folders
   - [ ] Move active documentation to proper directories
   - [ ] Reduce root files from 72 to <10
-- **References**: DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 1
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 1
 - **Dependencies**: None
 - **Effort**: M
 
@@ -902,7 +902,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Create proper GitHub SECURITY.md in root
   - [ ] Link root to detailed docs
   - [ ] Archive original files
-- **References**: DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.1
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.1
 - **Dependencies**: T-045
 - **Effort**: M
 
@@ -920,7 +920,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Merge EMAIL_CODE_QUALITY_ANALYSIS.md into main file
   - [ ] Move to docs/analysis/
   - [ ] Archive originals
-- **References**: DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.2-2.3
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.2-2.3
 - **Dependencies**: T-045
 - **Effort**: S
 
@@ -938,7 +938,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Document all major changes by version/date
   - [ ] Set up process for updating changelog
   - [ ] Add to root directory
-- **References**: DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
+- **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
 - **Dependencies**: None
 - **Effort**: S
 
@@ -956,7 +956,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Rename replit.md to docs/technical/replit-deployment.md
   - [ ] Establish and document naming conventions
   - [ ] Update DOCUMENTATION_GUIDE.md
-- **References**: DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.1
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.1
 - **Dependencies**: T-045
 - **Effort**: S
 
@@ -975,7 +975,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Create enhancement proposal template
   - [ ] Add templates to docs/.templates/
   - [ ] Document template usage in CONTRIBUTING.md
-- **References**: DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.4
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.4
 - **Dependencies**: T-045
 - **Effort**: S
 
@@ -995,7 +995,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Include installation, first run, basic usage
   - [ ] Add screenshots and expected output
   - [ ] Test with 3 new users, average <30 min completion
-- **References**: DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.1
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.1
 - **Dependencies**: None
 - **Effort**: M
 
@@ -1014,7 +1014,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Create "How to Deploy to Production"
   - [ ] Create "How to Write Tests"
   - [ ] Create "How to Contribute Documentation"
-- **References**: DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
+- **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
 - **Dependencies**: None
 - **Effort**: L
 
@@ -1032,7 +1032,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Capture 5 key workflow sequences
   - [ ] Capture 10 feature highlights
   - [ ] Optimize and organize in docs/screenshots/
-- **References**: DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 4.2
+- **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 4.2
 - **Dependencies**: None
 - **Effort**: M
 
@@ -1100,7 +1100,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - This file was reorganized on 2025-01-18 to consolidate all tasks from:
   - Previous TODO.md (lines 43-564)
   - Code TODO comments (AlertDetailScreen, PersistentSidebar, lib files, analytics, errorHandler)
-  - Planning documents (TYPESCRIPT_REMEDIATION_PLAN.md, DOCUMENTATION_IMPLEMENTATION_PLAN.md, DOCUMENTATION_CONSOLIDATION_PLAN.md)
+  - Planning documents (docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md)
 
 ---
 
