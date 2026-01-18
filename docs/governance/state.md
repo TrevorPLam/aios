@@ -157,7 +157,7 @@ Cross-cutting improvements in progress:
 
 **Description:** Implementing constitution, Copilot instructions, traceability, and exception system
 
-**Status:** 🟡 In Progress (Phase B/H complete)
+**Status:** 🟡 In Progress (Phases A-H Complete)
 
 **Phases:**
 - [x] A: Copilot instruction layer

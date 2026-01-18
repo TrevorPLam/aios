@@ -96,8 +96,9 @@ function extractSections(constitutionContent) {
     } else if (currentSection) {
       // We're inside a tagged section
       // Check if we've hit another ## heading that's not a COPILOT marker
-      if (line.match(/^##\s+[^C]/) && !line.includes('COPILOT:')) {
-        // End of current section
+      // End section only if we hit ## followed by something other than COPILOT:
+      if (line.match(/^##\s+(?!COPILOT:)/)) {
+        // End of current section (found a non-COPILOT ## heading)
         sections[currentSection].push(...sectionContent);
         currentSection = null;
         sectionContent = [];

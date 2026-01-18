@@ -31,7 +31,7 @@ jobs:
         
       - name: Report results
         run: |
-          if [ ${{ steps.traceability.outcome }} == 'success' ]; then
+          if [ "${{ steps.traceability.outcome }}" == "success" ]; then
             echo "✅ Traceability checks passed"
           else
             echo "⚠️ Traceability issues detected"

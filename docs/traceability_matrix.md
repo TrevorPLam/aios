@@ -101,11 +101,11 @@ grep "Traceability" docs/governance/state.md
 # Count total rows
 grep "^\|" docs/traceability_matrix.md | grep -v "Feature/Capability" | grep -v "\-\-\-" | wc -l
 
-# Count TODOs
+# Count TODOs (automated check provides accurate count)
 grep -o "TODO" docs/traceability_matrix.md | wc -l
 
-# Calculate completion %
-# Completeness = (Total cells - TODOs) / Total cells * 100
+# Run automated traceability checker for current status
+npm run check:traceability
 ```
 
 **Run traceability checker:**
