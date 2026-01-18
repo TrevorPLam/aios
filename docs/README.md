@@ -23,8 +23,10 @@ This is the central hub for all documentation in the AIOS (AI Operating System) 
 | Understand what AIOS is | [Project README](../README.md) |
 | Set up the development environment | [Getting Started Tutorial](./diataxis/tutorials/getting-started.md) *(TODO)* |
 | Contribute code or docs | [CONTRIBUTING.md](../CONTRIBUTING.md) |
+| Understand governance & constitution | [Governance Constitution](./governance/constitution.md) ⭐ **NEW** |
+| Review governance implementation | [Governance Implementation Report](./governance_implementation_report.md) ⭐ **NEW** |
 | Find a specific API | [API Reference](./apis/README.md) |
-| Understand architecture decisions | [ADR Index](./adr/README.md) |
+| Understand architecture decisions | [ADR Index](./decisions/README.md) |
 | Learn about a module | [Module Documentation](./modules/README.md) *(TODO)* |
 | Fix a production issue | [Operations Runbooks](./operations/runbooks/README.md) |
 | Report a security issue | [SECURITY.md](../SECURITY.md) |
