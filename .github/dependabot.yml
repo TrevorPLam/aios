@@ -11,10 +11,12 @@ updates:
       time: "09:00"
       timezone: "UTC"
     open-pull-requests-limit: 10
-    reviewers:
-      - "yourusername"  # Replace with actual username(s)
-    assignees:
-      - "yourusername"  # Replace with actual username(s)
+    # TODO: Add reviewers when team structure is defined
+    # For now, CODEOWNERS will handle review assignments
+    # reviewers:
+    #   - "TrevorPowellLam"
+    # assignees:
+    #   - "TrevorPowellLam"
     labels:
       - "dependencies"
       - "npm"
@@ -54,8 +56,9 @@ updates:
       time: "09:00"
       timezone: "UTC"
     open-pull-requests-limit: 5
-    reviewers:
-      - "yourusername"  # Replace with actual username(s)
+    # TODO: Add reviewers when team structure is defined
+    # reviewers:
+    #   - "TrevorPowellLam"
     labels:
       - "dependencies"
       - "github-actions"
@@ -80,8 +83,9 @@ updates:
       time: "09:00"
       timezone: "UTC"
     open-pull-requests-limit: 3
-    reviewers:
-      - "yourusername"  # Replace with actual username(s)
+    # TODO: Add reviewers when team structure is defined
+    # reviewers:
+    #   - "TrevorPowellLam"
     labels:
       - "dependencies"
       - "docker"
