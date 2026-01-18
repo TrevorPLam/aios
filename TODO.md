@@ -341,13 +341,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Users see blank screens or stale data
   - Poor perceived performance
 - **Acceptance Criteria**:
-  - [ ] Add loading states to all data-dependent screens
-  - [ ] Use skeleton screens for better UX
-  - [ ] Add pull-to-refresh where appropriate
-  - [ ] Test loading states across all modules
+  - [ ] Phase 1: Create LoadingState component with skeleton variants
+  - [ ] Phase 2: Add loading states to high-traffic screens (CommandCenter, Calendar, Notebook, Planner)
+  - [ ] Phase 3: Add loading states to remaining module screens
+  - [ ] Phase 4: Implement pull-to-refresh on list-based screens
+  - [ ] Phase 5: Test loading states and measure performance improvement
 - **References**: client/screens/*.tsx
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-018**
 - **Priority**: P2
@@ -377,13 +378,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Can lead to data corruption or crashes
   - Poor user experience with invalid data
 - **Acceptance Criteria**:
-  - [ ] Add comprehensive input validation to all forms
-  - [ ] Show clear error messages
-  - [ ] Prevent submission of invalid data
-  - [ ] Test validation across all editor screens
+  - [ ] Create validation utility functions (required, min/max length, email, etc.)
+  - [ ] Add validation to form screens: NoteEditor, TaskDetail, EventDetail
+  - [ ] Add validation to form screens: ContactDetail, ListEditor, other editors
+  - [ ] Implement error message display and inline validation feedback
+  - [ ] Test validation with edge cases (empty, invalid, boundary values)
 - **References**: client/screens/NoteEditor.tsx, client/screens/TaskDetail.tsx, etc.
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 ---
 
@@ -470,13 +472,15 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Some elements lack accessibilityHint
   - Some images lack accessibilityLabel
 - **Acceptance Criteria**:
-  - [ ] Audit all interactive elements
-  - [ ] Add missing accessibility attributes
-  - [ ] Test with screen readers (VoiceOver, TalkBack)
-  - [ ] Add accessibility documentation
+  - [ ] Audit and fix accessibility in core components (Button, Card, ThemedText)
+  - [ ] Audit and fix accessibility in screen components (interactive elements)
+  - [ ] Audit and fix accessibility in navigation components (BottomNav, PersistentSidebar)
+  - [ ] Test with VoiceOver (iOS) and verify navigation flow
+  - [ ] Test with TalkBack (Android) and fix any issues
+  - [ ] Document accessibility requirements and create guidelines
 - **References**: All component files
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-025**
 - **Priority**: P3
@@ -565,13 +569,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - 86 TODOs across 40 files to implement
   - Features: group analytics, A/B testing, screen tracking, feature flags, funnels, metrics, monitoring, validation, sampling, destinations, consent, data deletion, retention
 - **Acceptance Criteria**:
-  - [ ] Implement all analytics TODOs per implementation plan
-  - [ ] Add tests for analytics functionality
-  - [ ] Document analytics API usage
-  - [ ] Integrate with backend analytics service
+  - [ ] Phase 1: Implement core analytics (event tracking, user identification)
+  - [ ] Phase 2: Implement advanced features (groups, funnels, A/B tests)
+  - [ ] Phase 3: Implement production features (feature flags, monitoring, SLOs)
+  - [ ] Phase 4: Implement privacy features (consent, deletion, retention)
+  - [ ] Phase 5: Add tests, documentation, and backend integration
 - **References**: docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md, client/analytics/*
 - **Dependencies**: T-028
-- **Effort**: L (multiple weeks)
+- **Effort**: L (multiple weeks - requires phased approach)
 
 **T-030**
 - **Priority**: P1
@@ -629,13 +634,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - No tests for complex components
   - Low test coverage overall
 - **Acceptance Criteria**:
-  - [ ] Add tests for all atomic components (Card, ThemedText, etc.)
-  - [ ] Add tests for complex components (MiniModeContainer, etc.)
-  - [ ] Aim for 80%+ component test coverage
-  - [ ] Add component test examples to documentation
+  - [ ] Phase 1: Set up testing infrastructure and examples for atomic components
+  - [ ] Phase 2: Add tests for atomic components (Card, ThemedText, Typography components)
+  - [ ] Phase 3: Add tests for form components (Input, Select, Checkbox, etc.)
+  - [ ] Phase 4: Add tests for complex components (MiniModeContainer, QuickCapture, AIAssist)
+  - [ ] Phase 5: Measure coverage, document testing patterns, aim for 80%+ coverage
 - **References**: client/components/*.tsx
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-033**
 - **Priority**: P2
@@ -647,14 +653,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Navigation between screens not tested
   - Data persistence not validated
 - **Acceptance Criteria**:
-  - [ ] Test onboarding flow end-to-end
-  - [ ] Test recommendation accept/decline flow
-  - [ ] Test mini-mode workflows
-  - [ ] Test module navigation flow
-  - [ ] Test data persistence across app restarts
+  - [ ] Set up E2E testing framework (Detox or similar)
+  - [ ] Test onboarding flow: welcome → module selection → first use
+  - [ ] Test recommendation flow: view → accept/decline → verify action
+  - [ ] Test mini-mode workflows: open → input → save → verify
+  - [ ] Test module navigation and data persistence across app restarts
 - **References**: All workflow-related code
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-034**
 - **Priority**: P3
@@ -725,13 +731,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Props, usage, and examples not documented
   - No component showcase
 - **Acceptance Criteria**:
-  - [ ] Document all components with props, usage, examples
-  - [ ] Add Storybook or similar for component showcase
-  - [ ] Include accessibility guidelines per component
-  - [ ] Add to documentation site
+  - [ ] Document atomic components: Button, Card, ThemedText (props, usage, examples)
+  - [ ] Document form components: inputs, selects, validation (with examples)
+  - [ ] Document complex components: MiniMode, QuickCapture, AIAssist
+  - [ ] Add Storybook or create component showcase page
+  - [ ] Include accessibility guidelines for each component
 - **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-038**
 - **Priority**: P2
@@ -783,13 +790,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Many TypeScript errors from static imports
   - Need migration to useTheme hook
 - **Acceptance Criteria**:
-  - [ ] Extend useTheme hook to return all required properties
-  - [ ] Migrate miniMode components to useTheme
-  - [ ] Migrate screen components to useTheme
-  - [ ] Remove static imports from components
+  - [ ] Phase 1: Extend useTheme hook to return all required properties
+  - [ ] Phase 2: Create migration guide with code examples
+  - [ ] Phase 3: Migrate miniMode components (5-8 components)
+  - [ ] Phase 4: Migrate screen components (high-priority screens first)
+  - [ ] Phase 5: Remove static imports, verify no TypeScript errors remain
 - **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-041**
 - **Priority**: P2
@@ -1009,14 +1017,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Developers don't know how to add modules, debug, deploy
   - Knowledge not documented
 - **Acceptance Criteria**:
-  - [ ] Create "How to Add a New Module"
-  - [ ] Create "How to Debug Mobile Issues"
-  - [ ] Create "How to Deploy to Production"
-  - [ ] Create "How to Write Tests"
-  - [ ] Create "How to Contribute Documentation"
-- **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
+  - [ ] Create "How to Add a New Module" guide
+  - [ ] Create "How to Debug Mobile Issues" guide
+  - [ ] Create "How to Deploy to Production" guide
+  - [ ] Create "How to Write Tests" guide
+  - [ ] Create "How to Contribute Documentation" guide
+- **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
 - **Dependencies**: None
-- **Effort**: L
+- **Effort**: M (broken down from L)
 
 **T-053**
 - **Priority**: P3
@@ -1101,6 +1109,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Previous TODO.md (lines 43-564)
   - Code TODO comments (AlertDetailScreen, PersistentSidebar, lib files, analytics, errorHandler)
   - Planning documents (docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md)
+- Updated 2026-01-18: Broke down 8 large tasks (T-017, T-019, T-024, T-032, T-033, T-037, T-040, T-052) into phased subtasks for better execution. Only T-029 (Analytics) remains large due to its multi-week nature requiring phased approach.
 
 ---
 
@@ -1130,6 +1139,11 @@ If another document disagrees, the task record in this file wins (unless the Con
 **By Status**:
 - READY: 53 tasks
 - BLOCKED: 3 tasks (T-028, T-029, T-030 - analytics decision chain)
+
+**By Effort**:
+- Small (S): 14 tasks
+- Medium (M): 41 tasks
+- Large (L): 1 task (T-029 - Analytics, requires phased multi-week approach)
 
 **Critical Path**:
 1. Fix critical bugs (T-001, T-002, T-003)
