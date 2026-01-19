@@ -40,11 +40,27 @@
 
 **Type Scale**:
 - Hero/Large Title: 32px, Bold
-- Screen Title: 24px, Semibold
-- Card Title: 18px, Semibold
+- H1 (Screen Title): 24px, Semibold
+- H2 (Section Header): 20px, Semibold
+- H3 (Card Title): 18px, Semibold
+- H4 (Subsection): 16px, Semibold
+- H5 (Small Header): 14px, Semibold
+- H6 (Micro Header): 12px, Semibold
 - Body: 16px, Regular
 - Caption/Metadata: 14px, Regular
 - Small Label: 12px, Medium
+
+**Usage Guidelines**:
+- Use hero for splash screens and major landing pages
+- Use h1 for main screen titles
+- Use h2 for major sections within a screen
+- Use h3 for card titles and important subsections
+- Use h4 for regular subsections and emphasized text
+- Use h5 for small headers in compact layouts
+- Use h6 for micro headers in dense information displays
+- Use body for all standard text content
+- Use caption for metadata and supplementary information
+- Use small for labels and compact UI elements
 
 ---
 

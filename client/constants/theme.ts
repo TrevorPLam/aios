@@ -145,6 +145,9 @@ export const Typography = {
     h1: 24,
     h2: 20,
     h3: 18,
+    h4: 16,
+    h5: 14,
+    h6: 12,
     body: 16,
     caption: 14,
     small: 12,
@@ -163,6 +166,18 @@ export const Typography = {
   },
   h3: {
     fontSize: 18,
+    fontWeight: "600" as const,
+  },
+  h4: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+  },
+  h5: {
+    fontSize: 14,
+    fontWeight: "600" as const,
+  },
+  h6: {
+    fontSize: 12,
     fontWeight: "600" as const,
   },
   body: {
