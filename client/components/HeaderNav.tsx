@@ -37,17 +37,38 @@ export function HeaderLeftNav() {
   );
 }
 
-export function HeaderRightNav() {
+export interface HeaderRightNavProps {
+  /**
+   * Optional route to navigate to instead of main Settings
+   * @example "NotebookSettings" for Notebook module settings
+   */
+  settingsRoute?: keyof AppStackParamList;
+}
+
+export function HeaderRightNav({ settingsRoute }: HeaderRightNavProps = {}) {
   const { theme } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
+  const handlePress = () => {
+    if (settingsRoute) {
+      // Type-safe navigation - settingsRoute is keyof AppStackParamList
+      navigation.navigate(settingsRoute, undefined);
+    } else {
+      navigation.navigate("Settings");
+    }
+  };
+
   return (
     <Pressable
-      onPress={() => navigation.navigate("Settings")}
+      onPress={handlePress}
       style={({ pressed }) => [
         styles.iconButton,
         { opacity: pressed ? 0.7 : 1 },
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={
+        settingsRoute ? "Open module settings" : "Open settings"
+      }
     >
       <Feather name="settings" size={24} color={theme.text} />
     </Pressable>

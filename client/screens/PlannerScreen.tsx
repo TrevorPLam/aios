@@ -339,7 +339,7 @@ export default function PlannerScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => <HeaderRightNav settingsRoute="PlannerSettings" />,
     });
   }, [navigation, theme]);
 

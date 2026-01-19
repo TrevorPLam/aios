@@ -385,7 +385,7 @@ export default function EmailScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => <HeaderRightNav settingsRoute="EmailSettings" />,
     });
   }, [navigation, theme]);
 

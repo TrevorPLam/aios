@@ -426,7 +426,7 @@ export default function ContactsScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => <HeaderRightNav settingsRoute="ContactsSettings" />,
     });
   }, [navigation, theme]);
 
