@@ -137,15 +137,15 @@ type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
  * - medium: 2 segments (moderate confidence, reasonable to accept)
  * - high: 3 segments (high confidence, AI is very certain)
  *
- * @param {Object} props - Component props
- * @param {"low" | "medium" | "high"} props.confidence - AI confidence level
- * @returns {JSX.Element} The confidence meter component
+ * @param props - Component props
+ * @param props.confidence - AI confidence level
+ * @returns The confidence meter component
  */
-function ConfidenceMeter({
-  confidence,
-}: {
+interface ConfidenceMeterProps {
   confidence: "low" | "medium" | "high";
-}) {
+}
+
+function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
   const { theme } = useTheme();
   const filledSegments = confidence === "high" ? 3 : confidence === "medium" ? 2 : 1;
 
@@ -190,24 +190,26 @@ function ConfidenceMeter({
  * - Gesture.Exclusive ensures tap doesn't interfere with swipe
  * - Active offsets prevent accidental swipes during scrolling
  *
- * @param {Object} props - Component props
- * @param {Recommendation} props.recommendation - The recommendation data to display
- * @param {Function} props.onAccept - Callback when card is swiped right/accepted
- * @param {Function} props.onDecline - Callback when card is swiped left/declined
- * @param {Function} props.onPress - Callback when card is tapped
- * @returns {JSX.Element} The recommendation card component
+ * @param props - Component props
+ * @param props.recommendation - The recommendation data to display
+ * @param props.onAccept - Callback when card is swiped right/accepted
+ * @param props.onDecline - Callback when card is swiped left/declined
+ * @param props.onPress - Callback when card is tapped
+ * @returns The recommendation card component
  */
+interface RecommendationCardProps {
+  recommendation: Recommendation;
+  onAccept: () => void;
+  onDecline: () => void;
+  onPress: () => void;
+}
+
 function RecommendationCard({
   recommendation,
   onAccept,
   onDecline,
   onPress,
-}: {
-  recommendation: Recommendation;
-  onAccept: () => void;
-  onDecline: () => void;
-  onPress: () => void;
-}) {
+}: RecommendationCardProps) {
   const { theme } = useTheme();
   const translateX = useSharedValue(0);
   
@@ -392,10 +394,9 @@ export default function CommandCenterScreen() {
    * - Database errors are caught by outer error boundaries (ScreenErrorBoundary)
    * - Individual errors are logged for debugging but don't block UI
    * 
-   * @param {boolean} shouldAutoRefresh - Whether to trigger auto-refresh if count is low
    * @returns {Promise<number>} Number of recommendations loaded
    */
-  const loadDataCore = useCallback(async (shouldAutoRefresh: boolean = false): Promise<number> => {
+  const loadDataCore = useCallback(async (): Promise<number> => {
     try {
       const recs = await db.recommendations.getActive();
       setRecommendations(recs);
@@ -421,15 +422,17 @@ export default function CommandCenterScreen() {
    * 
    * Performance Note:
    * - Auto-refresh only triggers on initial load, not on subsequent refreshes
-   * - Prevents infinite refresh loops
+   * - Prevents infinite refresh loops via isRefreshing flag
+   * - handleRefreshRecommendations is intentionally NOT in deps to avoid circular dependency
    */
   const loadData = useCallback(async () => {
-    const count = await loadDataCore(false);
+    const count = await loadDataCore();
     
     // Maintain minimum recommendations for better UX (only on initial load)
     if (count < MIN_RECOMMENDATIONS_THRESHOLD && !isRefreshing) {
       handleRefreshRecommendations();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadDataCore, isRefreshing]);
 
   /**
@@ -456,7 +459,7 @@ export default function CommandCenterScreen() {
       const count = await RecommendationEngine.refreshRecommendations();
       
       if (count > 0) {
-        await loadDataCore(false); // Load without auto-refresh to prevent loops
+        await loadDataCore(); // Reload data to show new recommendations
         
         // Haptic feedback for successful refresh (skip on web)
         if (Platform.OS !== "web") {
@@ -590,12 +593,27 @@ export default function CommandCenterScreen() {
     ? formatTimeRemaining(aiLimits.nextRefreshAt)
     : "--";
 
-  // Scroll handler to hide/show secondary nav
+  /**
+   * Scroll handler to hide/show secondary nav based on scroll direction and position.
+   * 
+   * Behavior:
+   * - Shows nav when at top of page (scrollY < SCROLL_TOP_THRESHOLD)
+   * - Hides nav when scrolling down significantly (delta > SCROLL_DOWN_THRESHOLD)
+   * - Shows nav when scrolling up significantly (delta < SCROLL_UP_THRESHOLD)
+   * - Prevents animation overlap using isAnimating flag
+   * 
+   * Performance:
+   * - Uses shared values for smooth 60fps animations
+   * - Throttled via scrollEventThrottle={16} on FlatList
+   * - Animation state checks prevent redundant updates
+   * 
+   * @param event - Native scroll event containing contentOffset
+   */
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     const delta = currentScrollY - lastScrollY.value;
 
-    // Prevent overlapping animations
+    // Prevent overlapping animations for smooth performance
     if (isAnimating.value) {
       lastScrollY.value = currentScrollY;
       return;
@@ -626,7 +644,14 @@ export default function CommandCenterScreen() {
     lastScrollY.value = currentScrollY;
   };
 
-  // Animated style for secondary nav
+  /**
+   * Animated style for secondary navigation bar.
+   * Applies vertical translation (translateY) to hide/show the nav bar on scroll.
+   * 
+   * Values:
+   * - 0: Nav bar visible (default position)
+   * - SECONDARY_NAV_HIDE_OFFSET (-80): Nav bar hidden (moved up off screen)
+   */
   const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: secondaryNavTranslateY.value }],
@@ -1020,14 +1045,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
-  },
-  bottomNav: {
-    display: "none",
-  },
-  aiButton: {
-    display: "none",
-  },
-  navButton: {
-    display: "none",
   },
 });
