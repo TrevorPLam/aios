@@ -270,11 +270,11 @@ function RecommendationCard({
         style={[
           styles.card,
           { backgroundColor: theme.backgroundDefault },
-          // Add white glow for unopened cards
+          // Add accent glow for unopened cards (visible on all backgrounds)
           isUnopened && {
-            shadowColor: "#FFFFFF",
+            shadowColor: theme.accent,
             shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.4,
+            shadowOpacity: 0.6,
             shadowRadius: 16,
             elevation: 8,
           },
@@ -783,7 +783,9 @@ export default function CommandCenterScreen() {
               </ThemedText>
             </View>
           </View>
+        </View>
 
+        <View style={styles.bottomNavContainer}>
           <BottomNav onAiPress={() => setShowAISheet(true)} />
         </View>
       </View>
@@ -882,12 +884,12 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
     overflow: "hidden",
-    // Soft white glow around cards
-    shadowColor: "#FFFFFF",
+    // Soft accent glow around cards (base shadow)
+    shadowColor: "#00D9FF",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 6,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
   },
   cardGlow: {
     position: "absolute",
@@ -962,7 +964,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0, // Remove horizontal padding to extend to edges
   },
   footerContent: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.lg, // Only apply padding to limits container
+  },
+  bottomNavContainer: {
+    paddingHorizontal: 0, // No padding - BottomNav handles its own padding
   },
   limitsContainer: {
     flexDirection: "row",

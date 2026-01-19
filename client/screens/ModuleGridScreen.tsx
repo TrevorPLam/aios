@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: Spacing.md,
+    gap: Spacing.sm, // Reduced from md (12px) to sm (8px) for tighter spacing
   },
   gridItem: {
     width: "48%",
