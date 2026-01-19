@@ -212,7 +212,7 @@ export default function CalendarScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => <HeaderRightNav settingsRoute="CalendarSettings" />,
     });
   }, [navigation, theme]);
 

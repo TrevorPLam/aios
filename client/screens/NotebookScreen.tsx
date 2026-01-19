@@ -206,7 +206,7 @@ export default function NotebookScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderLeftNav />,
-      headerRight: () => <HeaderRightNav />,
+      headerRight: () => <HeaderRightNav settingsRoute="NotebookSettings" />,
     });
   }, [navigation, theme]);
 
