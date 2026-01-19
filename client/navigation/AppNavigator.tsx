@@ -62,10 +62,12 @@ import ContactsSettingsScreen from "@/screens/ContactsSettingsScreen";
 import AttentionCenterScreen from "@/screens/AttentionCenterScreen";
 import OnboardingWelcomeScreen from "@/screens/OnboardingWelcomeScreen";
 import OnboardingModuleSelectionScreen from "@/screens/OnboardingModuleSelectionScreen";
+import OmnisearchModalScreen from "@/screens/OmnisearchModalScreen";
 
 export type AppStackParamList = {
   CommandCenter: undefined;
   ModuleGrid: undefined;
+  Omnisearch: undefined;
   Notebook: undefined;
   NoteEditor: { noteId?: string };
   Planner: undefined;
@@ -230,6 +232,15 @@ export default function AppNavigator() {
           </ScreenErrorBoundary>
         )}
         options={{ headerTitle: "Modules", presentation: "modal" }}
+      />
+      <Stack.Screen
+        name="Omnisearch"
+        component={(props) => (
+          <ScreenErrorBoundary screenName="Omnisearch">
+            <OmnisearchModalScreen {...props} />
+          </ScreenErrorBoundary>
+        )}
+        options={{ headerTitle: "Search", presentation: "modal" }}
       />
       <Stack.Screen
         name="Notebook"

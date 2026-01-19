@@ -410,6 +410,8 @@ export default function CommandCenterScreen() {
             styles.headerButton,
             pressed && styles.pressed,
           ]}
+          accessibilityRole="button"
+          accessibilityLabel="View all modules"
         >
           <Feather name="grid" size={24} color={theme.text} />
         </Pressable>
@@ -420,11 +422,24 @@ export default function CommandCenterScreen() {
 
         <View style={styles.headerActions}>
           <Pressable
+            onPress={() => navigation.navigate("Omnisearch")}
+            style={({ pressed }) => [
+              styles.headerButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Open search"
+          >
+            <Feather name="search" size={24} color={theme.text} />
+          </Pressable>
+          <Pressable
             onPress={() => navigation.navigate("AttentionCenter")}
             style={({ pressed }) => [
               styles.headerButton,
               pressed && styles.pressed,
             ]}
+            accessibilityRole="button"
+            accessibilityLabel={`Attention center, ${attentionCount} items`}
           >
             <View>
               <Feather name="bell" size={24} color={theme.text} />
@@ -445,6 +460,8 @@ export default function CommandCenterScreen() {
               styles.headerButton,
               pressed && styles.pressed,
             ]}
+            accessibilityRole="button"
+            accessibilityLabel="View recommendation history"
           >
             <Feather name="clock" size={24} color={theme.text} />
           </Pressable>
