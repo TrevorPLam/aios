@@ -50,17 +50,16 @@ import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "./ThemedText";
-import { ThemedView } from "./ThemedView";
 import { useTheme } from "@/hooks/useTheme";
-import { Colors, Spacing, BorderRadius } from "@/constants/theme";
+import { Spacing, BorderRadius } from "@/constants/theme";
 import { moduleRegistry, ModuleDefinition } from "@/lib/moduleRegistry";
 import { contextEngine, ContextZone } from "@/lib/contextEngine";
 import { eventBus, EVENT_TYPES } from "@/lib/eventBus";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SIDEBAR_WIDTH = 280;
 const COLLAPSED_WIDTH = 60;
 const EDGE_SWIPE_WIDTH = 30; // Distance from edge to detect swipe gesture
+const MINIMUM_GESTURE_THRESHOLD = 2; // Minimum movement in pixels to activate gesture
 
 export interface PersistentSidebarProps {
   currentModuleId?: string;
@@ -80,7 +79,6 @@ export function PersistentSidebar({
   const insets = useSafeAreaInsets();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [modules, setModules] = useState<ModuleDefinition[]>([]);
   const [contextZone, setContextZone] = useState<ContextZone>(ContextZone.AUTO);
 
@@ -89,13 +87,33 @@ export function PersistentSidebar({
   /**
    * PanResponder for Edge Swipe Gesture
    *
-   * Detects left edge swipe to open sidebar.
-   * Listens for touch starting within EDGE_SWIPE_WIDTH from left edge,
-   * then tracks gesture to determine if user is swiping right to open.
+   * Detects left edge swipe to open sidebar with touch gesture.
+   * Implements iOS/Android-style edge swipe navigation pattern.
+   *
+   * Gesture Recognition:
+   * - Touch must start within EDGE_SWIPE_WIDTH (30px) from left edge
+   * - Minimum movement threshold prevents accidental taps
+   * - Velocity threshold (0.5) or distance threshold (30% of width) triggers open
+   *
+   * State Machine:
+   * 1. onStartShouldSetPanResponder: Check if touch is in activation zone
+   * 2. onMoveShouldSetPanResponder: Activate on rightward swipe
+   * 3. onPanResponderMove: Track finger position, update animation
+   * 4. onPanResponderRelease: Determine final state (open/closed) based on velocity/distance
+   * 5. onPanResponderTerminate: Handle interruption, snap back to closed
+   *
+   * Accessibility:
+   * - Button alternative always available for non-gesture users
+   * - Gesture won't interfere with other touch interactions
+   *
+   * @see openSidebar - Called when gesture completes successfully
    */
   const panResponder = useRef(
     PanResponder.create({
-      // Only respond to gestures starting near the left edge
+      /**
+       * Determine if this responder should begin capturing gestures.
+       * Only activates for touches near the left edge with minimum movement.
+       */
       onStartShouldSetPanResponder: (evt, gestureState) => {
         // Don't capture if sidebar is already open
         if (isOpen) return false;
@@ -105,23 +123,31 @@ export function PersistentSidebar({
         const { dx, dy } = gestureState;
 
         // Add minimum movement threshold to avoid capturing small taps
-        const hasMinimumMovement = Math.abs(dx) > 2 || Math.abs(dy) > 2;
+        const hasMinimumMovement =
+          Math.abs(dx) > MINIMUM_GESTURE_THRESHOLD ||
+          Math.abs(dy) > MINIMUM_GESTURE_THRESHOLD;
 
         return pageX <= EDGE_SWIPE_WIDTH && hasMinimumMovement;
       },
 
-      // Set PanResponder after movement starts
+      /**
+       * Alternative capture point for ongoing gestures.
+       * Activates when movement clearly indicates rightward swipe intent.
+       */
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         if (isOpen) return false;
 
         const { pageX } = evt.nativeEvent;
         const { dx } = gestureState;
 
-        // Only respond if swipe started near edge and moving right
+        // Only respond if swipe started near edge and moving right (dx > 5)
         return pageX <= EDGE_SWIPE_WIDTH && dx > 5;
       },
 
-      // Handle the gesture move
+      /**
+       * Handle continuous gesture movement.
+       * Updates sidebar position to follow finger, clamped to valid range.
+       */
       onPanResponderMove: (evt, gestureState) => {
         const { dx } = gestureState;
 
@@ -133,17 +159,21 @@ export function PersistentSidebar({
         translateX.value = newTranslateX;
       },
 
-      // Handle gesture release
+      /**
+       * Handle gesture release (finger lifted).
+       * Determines final state based on swipe distance and velocity.
+       */
       onPanResponderRelease: (evt, gestureState) => {
         const { dx, vx } = gestureState;
 
         // Determine if swipe velocity or distance is sufficient to open
+        // Distance: > 30% of sidebar width OR Velocity: > 0.5 units/ms
         const shouldOpen = dx > SIDEBAR_WIDTH * 0.3 || vx > 0.5;
 
         if (shouldOpen) {
           runOnJS(openSidebar)();
         } else {
-          // Snap back closed
+          // Snap back closed with spring animation
           translateX.value = withSpring(-SIDEBAR_WIDTH, {
             damping: 20,
             stiffness: 90,
@@ -151,7 +181,10 @@ export function PersistentSidebar({
         }
       },
 
-      // Handle gesture termination (e.g., another gesture took over)
+      /**
+       * Handle gesture termination (interrupted by another gesture).
+       * Always snaps back to closed state for safety.
+       */
       onPanResponderTerminate: () => {
         // Snap back closed
         translateX.value = withSpring(-SIDEBAR_WIDTH, {

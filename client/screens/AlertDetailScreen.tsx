@@ -276,8 +276,17 @@ export default function AlertDetailScreen() {
   };
 
   /**
-   * Handle time picker interaction
-   * Opens the native date/time picker for user to select alert time
+   * Handle time picker interaction.
+   * Opens the native date/time picker for user to select alert time.
+   * Handles platform-specific dismissal logic for iOS and Android.
+   *
+   * @param event - DateTimePicker event containing type and timestamp
+   * @param selectedDate - The date/time selected by user (optional)
+   *
+   * Platform Behavior:
+   * - Android: Picker auto-closes after selection
+   * - iOS: Manual dismissal on 'set' or 'dismissed' events
+   * - Web: Not applicable (picker not shown)
    */
   const handleTimeChange = (
     event: DateTimePickerEvent,
@@ -309,7 +318,12 @@ export default function AlertDetailScreen() {
   };
 
   /**
-   * Show the time picker modal
+   * Show the time picker modal.
+   * Displays native date/time picker and provides haptic feedback.
+   *
+   * @remarks
+   * On iOS, displays a spinner-style picker.
+   * On Android, displays the default system time picker dialog.
    */
   const openTimePicker = () => {
     setShowTimePicker(true);

@@ -1,3 +1,50 @@
+/**
+ * BottomNav Component
+ *
+ * Purpose (Plain English):
+ * Navigation bar at bottom of screen that cycles through enabled modules.
+ * Left/right arrows navigate to previous/next module. Center AI button opens
+ * AI assistance. Module order adapts based on usage frequency.
+ *
+ * Features:
+ * - Circular navigation through enabled modules
+ * - Usage-based intelligent module ordering
+ * - Contextual module suggestions (via NavigationContext)
+ * - Route validation before navigation
+ * - Error handling with user-friendly alerts
+ * - Haptic feedback on navigation
+ * - Accessibility support with proper labels
+ *
+ * Technical Implementation:
+ * - Uses React Navigation for routing
+ * - Queries database for module usage statistics
+ * - Validates routes against navigator state
+ * - Filters modules by enabled status in settings
+ * - Sorts by usage count for intuitive ordering
+ *
+ * Data Flow:
+ * 1. Load settings.enabledModules from database
+ * 2. Filter ALL_MODULES by enabled status
+ * 3. Sort by settings.moduleUsageStats[moduleId].count
+ * 4. Calculate prev/next based on current route
+ * 5. Validate route exists before navigation
+ * 6. Track usage on successful navigation
+ *
+ * Safe AI Extension Points:
+ * - Add module badges for notifications
+ * - Add smart module suggestions based on time/context
+ * - Add module search/filter
+ * - Add module pinning
+ *
+ * Fragile Logic Warnings:
+ * - Module order changes affect prev/next calculation
+ * - Route validation depends on navigator state timing
+ * - Circular navigation wraps at array boundaries
+ * - ContextualModule takes precedence over ordered next
+ *
+ * @module BottomNav
+ */
+
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Pressable, Alert } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -109,21 +156,72 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const next = getNextModule();
 
   /**
-   * Validates if a route exists in the navigation stack
-   * @param routeName - The route name to validate
-   * @returns true if route exists, false otherwise
+   * Shows a user-friendly navigation error alert.
+   *
+   * @param moduleName - Optional module name to include in error message
+   */
+  const showNavigationError = (moduleName?: string) => {
+    Alert.alert(
+      "Navigation Error",
+      moduleName
+        ? `The ${moduleName} module is not available. Please ensure all modules are properly configured.`
+        : "Unable to navigate to the selected module. Please try again.",
+      [{ text: "OK" }],
+    );
+  };
+
+  /**
+   * Logs a navigation error with structured metadata for debugging.
+   *
+   * @param context - Description of what operation failed
+   * @param error - The error object or message
+   * @param metadata - Additional context data
+   */
+  const logNavigationError = (
+    context: string,
+    error: unknown,
+    metadata: Record<string, unknown>,
+  ) => {
+    console.error(`[BottomNav] ${context}:`, error, {
+      ...metadata,
+      timestamp: new Date().toISOString(),
+    });
+  };
+
+  /**
+   * Validates if a route exists in the navigation stack.
+   * Prevents navigation errors by checking navigator state before attempting navigation.
+   *
+   * @param routeName - The route name to validate against registered routes
+   * @returns true if route exists in navigator, false otherwise
+   *
+   * @example
+   * if (isValidRoute("Notebook")) {
+   *   navigation.navigate("Notebook");
+   * }
    */
   const isValidRoute = (routeName: keyof AppStackParamList): boolean => {
-    // Get the navigator state to check if route exists
     const state = navigation.getState();
     const routeExists = state.routeNames.includes(routeName);
     return routeExists;
   };
 
   /**
-   * Handles navigation with route validation
-   * Validates route exists before attempting navigation
-   * Shows error message and logs if route is invalid
+   * Handles navigation to a module with comprehensive validation and error handling.
+   *
+   * Flow:
+   * 1. Validate route exists in navigation stack
+   * 2. Track module usage in database
+   * 3. Clear contextual module if present
+   * 4. Navigate to module
+   * 5. Handle any errors with user alerts and logging
+   *
+   * @param module - The module to navigate to
+   *
+   * @throws Will show alert to user and log error if navigation fails
+   *
+   * @example
+   * await handleNavigation({ id: "notebook", name: "Notebook", route: "Notebook", icon: "book-open" });
    */
   const handleNavigation = async (module: ModuleItem) => {
     // Validate that the route exists in the navigation stack
@@ -131,19 +229,14 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       const errorMessage = `Cannot navigate to ${module.name}. Route "${module.route}" is not registered.`;
 
       // Log error for debugging
-      console.error("[BottomNav] Navigation Error:", errorMessage, {
+      logNavigationError("Navigation Error", errorMessage, {
         moduleId: module.id,
         moduleName: module.name,
         route: module.route,
-        timestamp: new Date().toISOString(),
       });
 
       // Show user-friendly error message
-      Alert.alert(
-        "Navigation Error",
-        `The ${module.name} module is not available. Please ensure all modules are properly configured.`,
-        [{ text: "OK" }],
-      );
+      showNavigationError(module.name);
 
       return;
     }
@@ -157,18 +250,13 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       navigation.navigate(module.route as any);
     } catch (error) {
       // Log any navigation errors
-      console.error("[BottomNav] Navigation failed:", error, {
+      logNavigationError("Navigation failed", error, {
         moduleId: module.id,
         moduleName: module.name,
         route: module.route,
-        timestamp: new Date().toISOString(),
       });
 
-      Alert.alert(
-        "Navigation Error",
-        "Unable to navigate to the selected module. Please try again.",
-        [{ text: "OK" }],
-      );
+      showNavigationError();
     }
   };
 

@@ -194,10 +194,8 @@ export default function AppNavigator() {
         // First launch - show onboarding
         setInitialRoute("OnboardingWelcome");
       } else {
-        // Check if onboarding was completed before
-        const settings = await db.settings.get();
-        // For now, if app is initialized, we skip onboarding
-        // In the future, can add a settings.onboardingCompleted flag
+        // Returning user - skip onboarding
+        // TODO: Add settings.onboardingCompleted flag for more control
         setInitialRoute("CommandCenter");
       }
       setIsReady(true);
