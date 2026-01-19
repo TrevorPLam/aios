@@ -70,7 +70,7 @@ jobs:
           echo "📊 **View detailed results in Security > Code scanning alerts**" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload scorecard results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: scorecard-results-${{ github.sha }}
           path: results.sarif
