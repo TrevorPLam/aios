@@ -346,24 +346,22 @@ export default function CommandCenterScreen() {
 
   /**
    * Load recommendations, AI limits, and attention counts from database.
-   * Also triggers automatic refresh if recommendations are below threshold.
+   * Core data loading function without auto-refresh logic.
    * 
    * Data Flow:
    * 1. Fetch active (non-expired, status="active") recommendations
    * 2. Load AI usage limits (total, used, nextRefreshAt)
    * 3. Calculate attention count (urgent + attention priority items)
-   * 4. Auto-refresh if recommendation count < MIN_RECOMMENDATIONS_THRESHOLD
    * 
    * Error Handling:
    * - Attention counts default to 0 if manager returns undefined/null
    * - Database errors are caught by outer error boundaries (ScreenErrorBoundary)
    * - Individual errors are logged for debugging but don't block UI
    * 
-   * Performance Note:
-   * - Wrapped in useCallback with proper dependencies to prevent unnecessary re-renders
-   * - Auto-refresh only triggers once per load when count is low
+   * @param {boolean} shouldAutoRefresh - Whether to trigger auto-refresh if count is low
+   * @returns {Promise<number>} Number of recommendations loaded
    */
-  const loadData = useCallback(async () => {
+  const loadDataCore = useCallback(async (shouldAutoRefresh: boolean = false): Promise<number> => {
     try {
       const recs = await db.recommendations.getActive();
       setRecommendations(recs);
@@ -376,23 +374,29 @@ export default function CommandCenterScreen() {
       const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
       setAttentionCount(totalCount);
 
-      // Maintain minimum recommendations for better UX
-      if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
-        await handleRefreshRecommendations();
-      }
+      return recs.length;
     } catch (error) {
       console.error("Failed to load CommandCenter data:", error);
+      return 0;
     }
-  }, [handleRefreshRecommendations]);
+  }, []);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", loadData);
-    return unsubscribe;
-  }, [navigation, loadData]);
+  /**
+   * Load data with auto-refresh logic.
+   * Wraps loadDataCore and triggers refresh if recommendations are below threshold.
+   * 
+   * Performance Note:
+   * - Auto-refresh only triggers on initial load, not on subsequent refreshes
+   * - Prevents infinite refresh loops
+   */
+  const loadData = useCallback(async () => {
+    const count = await loadDataCore(false);
+    
+    // Maintain minimum recommendations for better UX (only on initial load)
+    if (count < MIN_RECOMMENDATIONS_THRESHOLD && !isRefreshing) {
+      handleRefreshRecommendations();
+    }
+  }, [loadDataCore, isRefreshing]);
 
   /**
    * Manually refresh recommendations using the AI recommendation engine.
@@ -418,7 +422,7 @@ export default function CommandCenterScreen() {
       const count = await RecommendationEngine.refreshRecommendations();
       
       if (count > 0) {
-        await loadData();
+        await loadDataCore(false); // Load without auto-refresh to prevent loops
         
         // Haptic feedback for successful refresh (skip on web)
         if (Platform.OS !== "web") {
@@ -430,7 +434,18 @@ export default function CommandCenterScreen() {
     } finally {
       setIsRefreshing(false);
     }
-  }, [isRefreshing, loadData]);
+  }, [isRefreshing, loadDataCore]);
+
+  // Load data on component mount
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Reload data when screen comes into focus
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", loadData);
+    return unsubscribe;
+  }, [navigation, loadData]);
 
   /**
    * Helper function to handle recommendation decision (accept or decline).
