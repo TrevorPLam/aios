@@ -131,6 +131,7 @@ function RecommendationCard({
 }) {
   const { theme } = useTheme();
   const translateX = useSharedValue(0);
+  const isUnopened = !recommendation.openedAt;
 
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
@@ -195,6 +196,14 @@ function RecommendationCard({
         style={[
           styles.card,
           { backgroundColor: theme.backgroundDefault },
+          // Add white glow for unopened cards
+          isUnopened && {
+            shadowColor: "#FFFFFF",
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.4,
+            shadowRadius: 16,
+            elevation: 8,
+          },
           animatedStyle,
         ]}
       >
@@ -381,7 +390,9 @@ export default function CommandCenterScreen() {
   );
 
   const handleCardPress = useCallback(
-    (rec: Recommendation) => {
+    async (rec: Recommendation) => {
+      // Mark as opened when tapped
+      await db.recommendations.markAsOpened(rec.id);
       navigation.navigate("RecommendationDetail", { recommendationId: rec.id });
     },
     [navigation],
@@ -404,6 +415,7 @@ export default function CommandCenterScreen() {
           },
         ]}
       >
+        <View style={styles.headerContent}>
         <Pressable
           onPress={() => navigation.navigate("ModuleGrid")}
           style={({ pressed }) => [
@@ -473,6 +485,78 @@ export default function CommandCenterScreen() {
             ]}
           >
             <Feather name="settings" size={24} color={theme.text} />
+          </Pressable>
+        </View>
+        </View>
+      </View>
+
+      {/* Secondary Navigation Bar - Oval, transparent, module-specific actions */}
+      <View style={[styles.secondaryNav, { backgroundColor: "transparent" }]}>
+        <View
+          style={[
+            styles.secondaryNavContent,
+            {
+              backgroundColor: theme.backgroundDefault,
+              opacity: 0.8,
+            },
+          ]}
+        >
+          <Pressable
+            onPress={() => navigation.navigate("Omnisearch")}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Search"
+          >
+            <Feather name="search" size={20} color={theme.text} />
+            <ThemedText type="small">Search</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate("AttentionCenter")}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Attention Center"
+          >
+            <View>
+              <Feather name="bell" size={20} color={theme.text} />
+              {attentionCount > 0 && (
+                <View
+                  style={[
+                    styles.secondaryBadge,
+                    { backgroundColor: theme.error },
+                  ]}
+                >
+                  <ThemedText
+                    style={[
+                      styles.secondaryBadgeText,
+                      { color: theme.backgroundRoot },
+                    ]}
+                  >
+                    {attentionCount > 9 ? "9+" : attentionCount}
+                  </ThemedText>
+                </View>
+              )}
+            </View>
+            <ThemedText type="small">Attention</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate("RecommendationHistory")}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Command History"
+          >
+            <Feather name="clock" size={20} color={theme.text} />
+            <ThemedText type="small">History</ThemedText>
           </Pressable>
         </View>
       </View>
@@ -570,8 +654,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: 0, // Remove horizontal padding to extend to edges
     paddingBottom: Spacing.md,
+  },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing.lg,
+    width: "100%",
   },
   headerButton: {
     width: 44,
@@ -584,6 +675,40 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: Spacing.xs,
   },
+  secondaryNav: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+  },
+  secondaryNavContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xl,
+    borderRadius: BorderRadius.full, // Oval/pill shape
+  },
+  secondaryNavButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+    minWidth: 60,
+  },
+  secondaryBadge: {
+    position: "absolute",
+    top: -2,
+    right: -2,
+    minWidth: 14,
+    height: 14,
+    borderRadius: 7,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 3,
+  },
+  secondaryBadgeText: {
+    fontSize: 9,
+    fontWeight: "bold",
+    lineHeight: 11,
+  },
   pressed: {
     opacity: 0.7,
   },
@@ -595,7 +720,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    height: Spacing.xs,
+    height: 2, // Very minimal spacing - cards almost stacked
   },
   cardContainer: {
     width: CARD_WIDTH,

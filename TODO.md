@@ -42,6 +42,28 @@ For new features requiring multi-platform support, use sequential tasks:
 
 ### 🔴 Critical Bugs
 
+**T-003A**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: IN-PROGRESS
+- **Context**:
+  - Secondary navigation bar (oval, transparent) added to Command Center
+  - Houses module-specific actions: Search, Attention Center, Command History
+  - Need to replicate this pattern in other modules (Notebook, Lists, etc.)
+  - Reduces navigation clutter and provides consistent UX
+- **Acceptance Criteria**:
+  - [x] Add secondary navigation to Command Center
+  - [ ] Add secondary navigation to Notebook module
+  - [ ] Add secondary navigation to Lists module
+  - [ ] Add secondary navigation to Planner module
+  - [ ] Add secondary navigation to Calendar module
+  - [ ] Test navigation consistency across modules
+- **References**: client/screens/CommandCenterScreen.tsx:494-559
+- **Dependencies**: None
+- **Effort**: M
+
 **T-001A**
 - **Priority**: P0
 - **Type**: BUG

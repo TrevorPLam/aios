@@ -383,6 +383,21 @@ export const db = {
     },
 
     /**
+     * Mark a recommendation as opened/viewed
+     *
+     * @param {string} id - The recommendation ID
+     * @returns {Promise<void>}
+     */
+    async markAsOpened(id: string): Promise<void> {
+      const all = await this.getAll();
+      const rec = all.find((r) => r.id === id);
+      if (rec && !rec.openedAt) {
+        rec.openedAt = new Date().toISOString();
+        await setData(KEYS.RECOMMENDATIONS, all);
+      }
+    },
+
+    /**
      * Get recommendation history (accepted, declined, expired)
      * Sorted by most recent first
      *

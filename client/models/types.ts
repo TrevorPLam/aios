@@ -88,6 +88,7 @@ export type AILimitTier = 0 | 1 | 2 | 3;
  * @property {boolean} countsAgainstLimit - Whether this counts against AI usage limits
  * @property {string} why - Explanation of why AI made this recommendation
  * @property {string[]} evidenceTimestamps - Array of ISO timestamps showing evidence
+ * @property {string | null} openedAt - ISO 8601 timestamp when recommendation was first opened/viewed
  */
 export interface Recommendation {
   id: string;
@@ -104,6 +105,7 @@ export interface Recommendation {
   countsAgainstLimit: boolean;
   why: string;
   evidenceTimestamps: string[];
+  openedAt?: string | null;
 }
 
 /**
