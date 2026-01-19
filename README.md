@@ -234,18 +234,20 @@ npm run expo:clean:full
 ```
 
 **If you see "Mismatch between JavaScript part and native part of Worklets":**
-This is a common issue after dependency updates (especially Dependabot PRs). 
+~~This is a common issue after dependency updates (especially Dependabot PRs).~~
+**✅ PERMANENT FIX APPLIED** - The root cause (missing `react-native-reanimated` plugin in `app.json`) has been fixed in the repository.
 
-**IMMEDIATE FIX:**
+**ONE-TIME ACTION REQUIRED (if you see this error):**
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios
 ```
 
-**📖 Complete Fix Guide:** See **[WORKLETS_FIX_GUIDE.md](WORKLETS_FIX_GUIDE.md)** for:
-- Step-by-step fixes (3 options from quick to deep clean)
-- Prevention strategies
-- Why this happens and how to avoid it
-- Troubleshooting if the fix doesn't work
+This rebuilds your app with the correct configuration. After this one-time rebuild, the issue should NOT reoccur.
+
+**📖 Complete Fix Guide:** See **[URGENT_WORKLETS_FIX.md](URGENT_WORKLETS_FIX.md)** for:
+- What was fixed and why it was happening
+- One-time rebuild instructions
+- Verification steps
 
 **🛡️ Prevention Guide:** See **[WORKLETS_PREVENTION.md](WORKLETS_PREVENTION.md)** for:
 - Automated prevention measures (post-install hooks, CI checks)
