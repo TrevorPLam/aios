@@ -1296,7 +1296,7 @@ export default function BudgetScreen() {
       <AIAssistSheet
         visible={showAISheet}
         onClose={() => setShowAISheet(false)}
-        context="budget"
+        module="budget"
       />
     </ThemedView>
   );
