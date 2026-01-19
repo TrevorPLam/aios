@@ -1,17 +1,41 @@
 /**
  * CommandCenterScreen Module
  *
- * AI-powered recommendation hub with swipeable card interface.
- * Features:
- * - Swipeable recommendation cards (left to decline, right to accept)
- * - Confidence meter showing AI certainty level
- * - Evidence-based recommendations
- * - Expiry countdown for time-sensitive suggestions
- * - AI usage limits tracking
- * - History logging of decisions
- * - Empty state prompts for AI generation
- * - Haptic feedback for interactions
- * - Attention Center access with badge count
+ * Purpose:
+ * Central hub for AI-powered recommendations with intuitive swipe gestures.
+ * Primary interface for users to review, accept, or decline AI suggestions.
+ *
+ * Key Features:
+ * - Swipeable recommendation cards (swipe right to accept, left to decline)
+ * - Visual glow indicator for unread recommendations (white shadow)
+ * - Confidence meter showing AI certainty level (low/medium/high)
+ * - Real-time AI usage limits tracking with countdown
+ * - Secondary navigation bar for quick access (Search, Attention, History)
+ * - Attention Center integration with badge count
+ * - History logging of all user decisions
+ * - Auto-refresh when recommendations fall below threshold (3)
+ * - Haptic feedback for all interactions (iOS/Android)
+ * - Empty state with visual prompt for AI generation
+ *
+ * Data Flow:
+ * 1. Load active recommendations from database on mount and focus
+ * 2. Display cards in FlatList with minimal 2px spacing (stacked appearance)
+ * 3. User swipes or taps card → triggers accept/decline/view actions
+ * 4. Mark card as opened on tap (fire-and-forget pattern)
+ * 5. Update recommendation status and log to history
+ * 6. Reload data to reflect changes
+ *
+ * Architecture Decisions:
+ * - Fire-and-forget pattern for markAsOpened: prevents blocking navigation
+ * - Separate constants for magic numbers: improves maintainability
+ * - Bottom footer extends edge-to-edge: modern mobile app pattern
+ * - Secondary nav with smaller badge threshold (9+ vs 99+): space constraints
+ *
+ * Performance Considerations:
+ * - FlatList for efficient rendering of recommendation cards
+ * - Memoized callbacks to prevent unnecessary re-renders
+ * - Auto-refresh only when count falls below MIN_RECOMMENDATIONS_THRESHOLD
+ * - Attention counts calculated once per load
  *
  * @module CommandCenterScreen
  */
@@ -58,24 +82,48 @@ import { attentionManager } from "@/lib/attentionManager";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
-/** Minimum horizontal swipe distance to trigger accept/decline */
+
+// Gesture Constants
+/** Minimum horizontal swipe distance (30% of screen width) to trigger accept/decline action */
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
-/** Minimum recommendations before auto-refresh triggers */
+
+/** Animation duration in milliseconds for card swipe completion */
+const SWIPE_ANIMATION_DURATION = 200;
+
+/** Rotation angle range for card tilt during swipe gesture (±15 degrees) */
+const CARD_ROTATION_ANGLE = 15;
+
+// UI Constants
+/** Minimum recommendations before auto-refresh triggers to maintain card availability */
 const MIN_RECOMMENDATIONS_THRESHOLD = 3;
-/** Opacity for secondary navigation bar */
+
+/** Opacity for secondary navigation bar (semi-transparent for modern iOS aesthetic) */
 const SECONDARY_NAV_OPACITY = 0.8;
-/** Minimum card spacing in pixels */
+
+/** Minimum card spacing in pixels (near-stacked appearance as per design spec) */
 const CARD_SPACING = 2;
+
+/** Badge count threshold for secondary nav (smaller due to reduced badge size) */
+const SECONDARY_NAV_BADGE_THRESHOLD = 9;
+
+/** Badge count threshold for primary nav */
+const PRIMARY_NAV_BADGE_THRESHOLD = 99;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
 /**
  * ConfidenceMeter Component
  *
- * Visual indicator of AI confidence level with 3 segments.
- * Shows 1-3 filled segments based on confidence level.
+ * Visual indicator of AI confidence level using 1-3 filled segments.
+ * Color-coded based on confidence level for quick visual scanning.
  *
- * @param {"low" | "medium" | "high"} confidence - AI confidence level
+ * Confidence Mapping:
+ * - low: 1 segment (indicates uncertainty, use with caution)
+ * - medium: 2 segments (moderate confidence, reasonable to accept)
+ * - high: 3 segments (high confidence, AI is very certain)
+ *
+ * @param {Object} props - Component props
+ * @param {"low" | "medium" | "high"} props.confidence - AI confidence level
  * @returns {JSX.Element} The confidence meter component
  */
 function ConfidenceMeter({
@@ -84,18 +132,18 @@ function ConfidenceMeter({
   confidence: "low" | "medium" | "high";
 }) {
   const { theme } = useTheme();
-  const levels = confidence === "high" ? 3 : confidence === "medium" ? 2 : 1;
+  const filledSegments = confidence === "high" ? 3 : confidence === "medium" ? 2 : 1;
 
   return (
     <View style={styles.confidenceMeter}>
-      {[1, 2, 3].map((level) => (
+      {[1, 2, 3].map((segmentNumber) => (
         <View
-          key={level}
+          key={segmentNumber}
           style={[
             styles.confidenceSegment,
             {
               backgroundColor:
-                level <= levels
+                segmentNumber <= filledSegments
                   ? getConfidenceColor(confidence, theme)
                   : theme.border,
             },
@@ -109,17 +157,29 @@ function ConfidenceMeter({
 /**
  * RecommendationCard Component
  *
- * Swipeable card displaying AI recommendation with details and actions.
- * Supports:
- * - Swipe right to accept (> 30% screen width)
- * - Swipe left to decline (> 30% screen width)
- * - Tap to view details
- * - Visual feedback during swipe (color/opacity changes)
+ * Interactive swipeable card displaying AI recommendation with rich visual feedback.
  *
- * @param {Recommendation} recommendation - The recommendation data to display
- * @param {Function} onAccept - Callback when card is swiped right/accepted
- * @param {Function} onDecline - Callback when card is swiped left/declined
- * @param {Function} onPress - Callback when card is tapped
+ * Interaction Patterns:
+ * - Swipe right (>30% screen width): Accept recommendation
+ * - Swipe left (>30% screen width): Decline recommendation
+ * - Tap: Navigate to detailed view
+ * - During swipe: Card rotates ±15° and shows colored glow (green=accept, red=decline)
+ *
+ * Visual States:
+ * - Unopened: White glow (shadowOpacity 0.4, radius 16px) to draw attention
+ * - Opened: Standard card appearance without glow
+ * - Swiping: Animated rotation and edge glow based on swipe direction/distance
+ *
+ * Performance:
+ * - Uses Reanimated for 60fps animations on UI thread
+ * - Gesture.Exclusive ensures tap doesn't interfere with swipe
+ * - Active offsets prevent accidental swipes during scrolling
+ *
+ * @param {Object} props - Component props
+ * @param {Recommendation} props.recommendation - The recommendation data to display
+ * @param {Function} props.onAccept - Callback when card is swiped right/accepted
+ * @param {Function} props.onDecline - Callback when card is swiped left/declined
+ * @param {Function} props.onPress - Callback when card is tapped
  * @returns {JSX.Element} The recommendation card component
  */
 function RecommendationCard({
@@ -135,40 +195,48 @@ function RecommendationCard({
 }) {
   const { theme } = useTheme();
   const translateX = useSharedValue(0);
+  
+  // Determine if card is unopened (shows white glow to indicate newness)
   const isUnopened = !recommendation.openedAt;
 
+  // Pan gesture for swipe-to-accept/decline interaction
   const panGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
-    .failOffsetY([-10, 10])
+    .activeOffsetX([-10, 10]) // Require 10px horizontal movement before activating
+    .failOffsetY([-10, 10])   // Cancel if vertical movement exceeds 10px (prevents interference with scroll)
     .onUpdate((e) => {
-      // Only allow horizontal swiping (not vertical)
       translateX.value = e.translationX;
     })
     .onEnd((e) => {
-      if (Math.abs(e.translationX) > SWIPE_THRESHOLD) {
-        translateX.value = withTiming(
-          e.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH,
-          { duration: 200 },
-          () => {
-            runOnJS(e.translationX > 0 ? onAccept : onDecline)();
-          },
-        );
+      const isSwipeThresholdMet = Math.abs(e.translationX) > SWIPE_THRESHOLD;
+      
+      if (isSwipeThresholdMet) {
+        // Animate card off screen and trigger callback
+        const targetX = e.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH;
+        const callback = e.translationX > 0 ? onAccept : onDecline;
+        
+        translateX.value = withTiming(targetX, { duration: SWIPE_ANIMATION_DURATION }, () => {
+          runOnJS(callback)();
+        });
       } else {
+        // Spring back to center if swipe threshold not met
         translateX.value = withSpring(0);
       }
     });
 
+  // Tap gesture for navigation to detail view
   const tapGesture = Gesture.Tap().onEnd(() => {
     runOnJS(onPress)();
   });
 
+  // Exclusive gesture: tap only triggers if not swiping
   const gesture = Gesture.Exclusive(panGesture, tapGesture);
 
+  // Animated card position and rotation based on swipe distance
   const animatedStyle = useAnimatedStyle(() => {
     const rotate = interpolate(
       translateX.value,
       [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
-      [-15, 0, 15],
+      [-CARD_ROTATION_ANGLE, 0, CARD_ROTATION_ANGLE],
     );
 
     return {
@@ -176,6 +244,7 @@ function RecommendationCard({
     };
   });
 
+  // Green glow intensity increases as user swipes right (accept direction)
   const acceptGlowStyle = useAnimatedStyle(() => {
     const glowOpacity = interpolate(
       translateX.value,
@@ -185,6 +254,7 @@ function RecommendationCard({
     return { opacity: Math.max(0, glowOpacity) };
   });
 
+  // Red glow intensity increases as user swipes left (decline direction)
   const declineGlowStyle = useAnimatedStyle(() => {
     const glowOpacity = interpolate(
       translateX.value,
@@ -279,35 +349,39 @@ export default function CommandCenterScreen() {
    * Also triggers automatic refresh if recommendations are below threshold.
    * 
    * Data Flow:
-   * 1. Load active recommendations from database
-   * 2. Load AI usage limits
+   * 1. Fetch active (non-expired, status="active") recommendations
+   * 2. Load AI usage limits (total, used, nextRefreshAt)
    * 3. Calculate attention count (urgent + attention priority items)
-   * 4. Auto-refresh recommendations if below threshold
+   * 4. Auto-refresh if recommendation count < MIN_RECOMMENDATIONS_THRESHOLD
    * 
    * Error Handling:
    * - Attention counts default to 0 if manager returns undefined/null
-   * - Database errors are caught by outer error boundaries
+   * - Database errors are caught by outer error boundaries (ScreenErrorBoundary)
+   * - Individual errors are logged for debugging but don't block UI
+   * 
+   * Performance Note:
+   * - Wrapped in useCallback with proper dependencies to prevent unnecessary re-renders
+   * - Auto-refresh only triggers once per load when count is low
    */
   const loadData = useCallback(async () => {
     try {
       const recs = await db.recommendations.getActive();
       setRecommendations(recs);
+      
       const limits = await db.aiLimits.get();
       setAiLimits(limits);
 
-      // Load attention counts - sum urgent and attention priority items
-      // Handle potential undefined values with fallback to 0
+      // Sum urgent and attention priority items for badge count
       const counts = attentionManager.getCounts();
       const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
       setAttentionCount(totalCount);
 
-      // Auto-refresh if we have few or no recommendations
+      // Maintain minimum recommendations for better UX
       if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
         await handleRefreshRecommendations();
       }
     } catch (error) {
       console.error("Failed to load CommandCenter data:", error);
-      // Error boundaries will handle this - just log for debugging
     }
   }, [handleRefreshRecommendations]);
 
@@ -321,17 +395,32 @@ export default function CommandCenterScreen() {
   }, [navigation, loadData]);
 
   /**
-   * Manually refresh recommendations using the AI engine
-   * Generates new recommendations based on user data across modules
+   * Manually refresh recommendations using the AI recommendation engine.
+   * Generates new recommendations based on user data across all modules.
+   * 
+   * Process:
+   * 1. Check if refresh already in progress (prevents duplicate requests)
+   * 2. Call RecommendationEngine to analyze user data and generate recommendations
+   * 3. Reload data if new recommendations were created (count > 0)
+   * 4. Provide haptic feedback on success (iOS/Android only)
+   * 
+   * Error Handling:
+   * - Errors are logged but don't crash the app
+   * - isRefreshing flag is reset in finally block to ensure UI recovers
+   * 
+   * @returns {Promise<void>}
    */
   const handleRefreshRecommendations = useCallback(async () => {
-    if (isRefreshing) return;
+    if (isRefreshing) return; // Prevent concurrent refresh requests
 
     setIsRefreshing(true);
     try {
       const count = await RecommendationEngine.refreshRecommendations();
+      
       if (count > 0) {
         await loadData();
+        
+        // Haptic feedback for successful refresh (skip on web)
         if (Platform.OS !== "web") {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         }
@@ -343,62 +432,104 @@ export default function CommandCenterScreen() {
     }
   }, [isRefreshing, loadData]);
 
+  /**
+   * Helper function to handle recommendation decision (accept or decline).
+   * Reduces code duplication between handleAccept and handleDecline.
+   * 
+   * Process:
+   * 1. Provide haptic feedback based on decision type
+   * 2. Update recommendation status in database
+   * 3. Increment AI usage counter if recommendation counts against limit
+   * 4. Save decision to decisions table for AI learning
+   * 5. Log to history for user audit trail
+   * 6. Reload data to reflect changes in UI
+   * 
+   * @param {Recommendation} rec - The recommendation being decided on
+   * @param {"accepted" | "declined"} decision - The user's decision
+   * @returns {Promise<void>}
+   */
+  const handleRecommendationDecision = useCallback(
+    async (rec: Recommendation, decision: "accepted" | "declined") => {
+      // Haptic feedback based on decision type
+      if (Platform.OS !== "web") {
+        const feedbackType = decision === "accepted"
+          ? Haptics.NotificationFeedbackType.Success
+          : Haptics.NotificationFeedbackType.Warning;
+        Haptics.notificationAsync(feedbackType);
+      }
+
+      // Update recommendation status
+      await db.recommendations.updateStatus(rec.id, decision);
+
+      // Increment AI usage counter if this recommendation counts
+      if (rec.countsAgainstLimit) {
+        await db.aiLimits.incrementUsed();
+      }
+
+      // Save decision for AI learning
+      await db.decisions.save({
+        id: `decision_${Date.now()}`,
+        recommendationId: rec.id,
+        decision,
+        decidedAt: new Date().toISOString(),
+      });
+
+      // Log to history for audit trail
+      await db.history.add({
+        message: `AI generated card option: "${rec.title}". User ${decision}.`,
+        type: "recommendation",
+        metadata: { recommendationId: rec.id, decision },
+      });
+
+      // Refresh UI to show updated state
+      loadData();
+    },
+    [loadData],
+  );
+
+  /**
+   * Handle user accepting a recommendation.
+   * Wrapper around handleRecommendationDecision for cleaner component API.
+   */
   const handleAccept = useCallback(
     async (rec: Recommendation) => {
-      if (Platform.OS !== "web") {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }
-      await db.recommendations.updateStatus(rec.id, "accepted");
-      if (rec.countsAgainstLimit) {
-        await db.aiLimits.incrementUsed();
-      }
-      await db.decisions.save({
-        id: `decision_${Date.now()}`,
-        recommendationId: rec.id,
-        decision: "accepted",
-        decidedAt: new Date().toISOString(),
-      });
-      await db.history.add({
-        message: `AI generated card option: "${rec.title}". User accepted.`,
-        type: "recommendation",
-        metadata: { recommendationId: rec.id, decision: "accepted" },
-      });
-      loadData();
+      await handleRecommendationDecision(rec, "accepted");
     },
-    [loadData],
+    [handleRecommendationDecision],
   );
 
+  /**
+   * Handle user declining a recommendation.
+   * Wrapper around handleRecommendationDecision for cleaner component API.
+   */
   const handleDecline = useCallback(
     async (rec: Recommendation) => {
-      if (Platform.OS !== "web") {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-      }
-      await db.recommendations.updateStatus(rec.id, "declined");
-      if (rec.countsAgainstLimit) {
-        await db.aiLimits.incrementUsed();
-      }
-      await db.decisions.save({
-        id: `decision_${Date.now()}`,
-        recommendationId: rec.id,
-        decision: "declined",
-        decidedAt: new Date().toISOString(),
-      });
-      await db.history.add({
-        message: `AI generated card option: "${rec.title}". User declined.`,
-        type: "recommendation",
-        metadata: { recommendationId: rec.id, decision: "declined" },
-      });
-      loadData();
+      await handleRecommendationDecision(rec, "declined");
     },
-    [loadData],
+    [handleRecommendationDecision],
   );
 
+  /**
+   * Handle user tapping a recommendation card to view details.
+   * Marks the card as "opened" to remove the white glow indicator.
+   * 
+   * Implementation Notes:
+   * - Uses fire-and-forget pattern: navigation happens immediately
+   * - markAsOpened failure won't block navigation (better UX)
+   * - If marking fails, card will keep glowing until next successful open
+   * - Error is logged for debugging but doesn't impact user experience
+   * 
+   * @param {Recommendation} rec - The recommendation to view
+   * @returns {Promise<void>}
+   */
   const handleCardPress = useCallback(
     async (rec: Recommendation) => {
-      // Mark as opened when tapped (fire and forget - don't block navigation)
+      // Mark as opened (fire-and-forget: don't block navigation on DB write)
       db.recommendations.markAsOpened(rec.id).catch((error) => {
         console.error("Failed to mark recommendation as opened:", error);
       });
+      
+      // Navigate immediately without waiting for DB write
       navigation.navigate("RecommendationDetail", { recommendationId: rec.id });
     },
     [navigation],
@@ -465,7 +596,9 @@ export default function CommandCenterScreen() {
                   <ThemedText
                     style={[styles.badgeText, { color: theme.backgroundRoot }]}
                   >
-                    {attentionCount > 99 ? "99+" : attentionCount}
+                    {attentionCount > PRIMARY_NAV_BADGE_THRESHOLD 
+                      ? `${PRIMARY_NAV_BADGE_THRESHOLD}+` 
+                      : attentionCount}
                   </ThemedText>
                 </View>
               )}
@@ -542,8 +675,10 @@ export default function CommandCenterScreen() {
                       { color: theme.backgroundRoot },
                     ]}
                   >
-                    {/* Lower threshold (9+) due to smaller badge size */}
-                    {attentionCount > 9 ? "9+" : attentionCount}
+                    {/* Lower threshold due to smaller badge size (14px vs 18px height) */}
+                    {attentionCount > SECONDARY_NAV_BADGE_THRESHOLD 
+                      ? `${SECONDARY_NAV_BADGE_THRESHOLD}+` 
+                      : attentionCount}
                   </ThemedText>
                 </View>
               )}
