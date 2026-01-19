@@ -300,7 +300,8 @@ function checkPorts() {
   }
   
   console.log('\n   To kill processes on a port (Mac/Linux):');
-  console.log('      lsof -ti:8081 | xargs kill -9\n');
+  console.log('      lsof -ti:<PORT> | xargs kill -9');
+  console.log('   Replace <PORT> with the actual port number (e.g., 8081, 19000)\n');
 }
 
 /**

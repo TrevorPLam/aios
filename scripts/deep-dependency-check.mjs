@@ -82,11 +82,14 @@ function checkReactNativeEcosystem() {
     console.log(`   React Native Worklets: ${workletsVersion}`);
     
     // Check if versions are compatible
-    const reanimatedMajor = extractVersion(reanimatedVersion);
-    const workletsMajor = extractVersion(workletsVersion);
+    const reanimatedClean = reanimatedVersion.replace(/^[\^~>=<]+/, '');
+    const workletsClean = workletsVersion.replace(/^[\^~>=<]+/, '');
+    const reanimatedMajor = parseInt(reanimatedClean.split('.')[0]);
+    const workletsMajorMinor = workletsClean.split('.').slice(0, 2).join('.');
     
-    if (reanimatedMajor === '4' && workletsMajor !== '0.7') {
-      console.log('   ⚠️  Reanimated 4.x typically requires Worklets 0.7.x');
+    // Reanimated 4.x requires Worklets 0.7.x or higher
+    if (reanimatedMajor === 4 && !workletsMajorMinor.startsWith('0.7') && !workletsMajorMinor.startsWith('0.8') && !workletsMajorMinor.startsWith('0.9')) {
+      console.log('   ⚠️  Reanimated 4.x typically requires Worklets 0.7.x or higher');
       issues.push('Reanimated/Worklets version mismatch');
     }
   }
