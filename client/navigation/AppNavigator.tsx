@@ -60,8 +60,6 @@ import CalendarSettingsScreen from "@/screens/CalendarSettingsScreen";
 import EmailSettingsScreen from "@/screens/EmailSettingsScreen";
 import ContactsSettingsScreen from "@/screens/ContactsSettingsScreen";
 import AttentionCenterScreen from "@/screens/AttentionCenterScreen";
-import OnboardingWelcomeScreen from "@/screens/OnboardingWelcomeScreen";
-import OnboardingModuleSelectionScreen from "@/screens/OnboardingModuleSelectionScreen";
 import OmnisearchModalScreen from "@/screens/OmnisearchModalScreen";
 
 export type AppStackParamList = {
@@ -107,8 +105,6 @@ export type AppStackParamList = {
   EmailSettings: undefined;
   ContactsSettings: undefined;
   AttentionCenter: undefined;
-  OnboardingWelcome: undefined;
-  OnboardingModuleSelection: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -193,11 +189,10 @@ export default function AppNavigator() {
 
         await db.setInitialized();
 
-        // First launch - show onboarding
-        setInitialRoute("OnboardingWelcome");
+        // All users start at CommandCenter
+        setInitialRoute("CommandCenter");
       } else {
-        // Returning user - skip onboarding
-        // TODO: Add settings.onboardingCompleted flag for more control
+        // Returning user
         setInitialRoute("CommandCenter");
       }
       setIsReady(true);
@@ -592,24 +587,6 @@ export default function AppNavigator() {
           </ScreenErrorBoundary>
         )}
         options={{ headerTitle: "Attention Center", headerShown: false }}
-      />
-      <Stack.Screen
-        name="OnboardingWelcome"
-        component={(props) => (
-          <ScreenErrorBoundary screenName="OnboardingWelcome">
-            <OnboardingWelcomeScreen {...props} />
-          </ScreenErrorBoundary>
-        )}
-        options={{ headerShown: false, gestureEnabled: false }}
-      />
-      <Stack.Screen
-        name="OnboardingModuleSelection"
-        component={(props) => (
-          <ScreenErrorBoundary screenName="OnboardingModuleSelection">
-            <OnboardingModuleSelectionScreen {...props} />
-          </ScreenErrorBoundary>
-        )}
-        options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
   );

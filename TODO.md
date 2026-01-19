@@ -300,35 +300,29 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Effort**: S
 - **Completion Notes**: ModuleGrid accessible via grid icon in CommandCenter header and "All Modules" button in PersistentSidebar. Modal presentation configured.
 
-**T-009** ✅ COMPLETED (2026-01-19)
+**T-009** ❌ REVERTED (2026-01-19)
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: GitHub Agent (Primary)
 - **Platform**: iOS
-- **Status**: READY
-- **Owner**: AGENT
-- **Status**: COMPLETE
+- **Status**: REVERTED
 - **Context**:
-  - Onboarding flow fully implemented and activated
-  - First-launch detection working correctly
-  - New users get guided onboarding experience
+  - Module-selection onboarding was implemented and activated
+  - User requested removal: "I do not like the onboarding process. Strip it."
+  - Old approach: Progressive disclosure starting with 3 modules
+  - New approach: Will ask about AI behavior preferences instead (see T-057)
 - **Acceptance Criteria**:
-  - [ ] Add first-launch detection
-  - [ ] Set initialRouteName to "OnboardingWelcome" for new users
-  - [ ] Add "skip onboarding" option with explanation
-  - [ ] Test complete onboarding flow on iOS
-- **References**: client/screens/OnboardingWelcomeScreen.tsx, client/screens/OnboardingModuleSelectionScreen.tsx
-- **Dependencies**: None
-- **Effort**: S
-- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
   - [x] Add first-launch detection (implemented in AppNavigator.tsx:194-199)
   - [x] Set initialRouteName to "OnboardingWelcome" for new users (implemented)
   - [x] Add "skip onboarding" option with explanation (implemented in OnboardingWelcomeScreen.tsx:203-207)
   - [x] Test complete onboarding flow (verified working)
-- **References**: client/navigation/AppNavigator.tsx:194-199, client/screens/OnboardingWelcomeScreen.tsx:101-107, 203-207
+- **References**: 
+  - REMOVED: client/screens/OnboardingWelcomeScreen.tsx
+  - REMOVED: client/screens/OnboardingModuleSelectionScreen.tsx
+  - REMOVED: client/lib/onboardingManager.ts
 - **Dependencies**: None
 - **Effort**: S
-- **Completion Notes**: Onboarding system is production-ready with first-launch detection, skip option with clear messaging, and state persistence via onboardingManager.
+- **Completion Notes**: Onboarding system removed per user request. Future onboarding will focus on AI personality/behavior configuration (T-057), not module selection.
 
 **T-010**
 - **Priority**: P2
@@ -409,6 +403,32 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
+
+**T-057**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Current module-selection onboarding removed (T-009 reverted)
+  - Future onboarding should focus on AI personality and behavior preferences
+  - Goal: Understand how users want AIOS to act, not which modules they want
+  - This is about configuring the AI assistant's behavior, not feature selection
+- **Acceptance Criteria**:
+  - [ ] Design onboarding flow asking about AI behavior preferences
+  - [ ] Questions about: communication style (formal/casual), proactivity level (low/high), notification preferences
+  - [ ] Questions about: learning style, decision support level, automation preferences
+  - [ ] Store preferences in user profile/context engine
+  - [ ] Use preferences to configure AI behavior across all modules
+  - [ ] Skip option that uses sensible defaults
+- **References**: 
+  - Previous onboarding: client/screens/OnboardingWelcomeScreen.tsx (removed)
+  - AI preferences: client/screens/AIPreferencesScreen.tsx
+  - Context engine: client/lib/contextEngine.ts
+- **Dependencies**: None
+- **Effort**: L
+- **Note**: This is a complete redesign of onboarding from module selection to AI personality configuration. Platform-agnostic questionnaire. Codex Agent can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -1373,24 +1393,26 @@ For new features requiring multi-platform support, use sequential tasks:
 - Updated 2026-01-19: Completed 5 tasks (T-001, T-008, T-009, T-022, T-043). 3 tasks verified as already complete, 2 tasks implemented with fixes. See TASK_COMPLETION_REPORT.md and HIGH_LEVEL_ANALYSIS.md for details.
 - Updated 2026-01-19 (Session 2): Completed 4 additional tasks (T-002A, T-003, T-004, T-014, T-031). 3 tasks verified as already complete from previous work (T-002A, T-003, T-031), 2 tasks implemented with new features (T-004 Omnisearch, T-014 Module Settings Navigation).
 - Updated 2026-01-19 (Session 3): Completed 3 additional tasks (T-005, T-006, T-015). All 3 implemented with new features: Settings menu enhancement with History and AttentionCenter, and Context Zone selector UI in AIPreferences.
+- Updated 2026-01-19 (Session 4): Reverted T-009 (module-selection onboarding removed per user request). Added T-057 for future AI personality-based onboarding.
 
 ---
 
 ## Summary
 
-**Total Tasks**: 56
-**Completed**: 12 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-009, T-014, T-015, T-022, T-031, T-043)
-**Remaining**: 44 tasks
+**Total Tasks**: 57 (added T-057)
+**Completed**: 11 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-031, T-043)
+**Reverted**: 1 task (T-009)
+**Remaining**: 45 tasks
 
 **By Priority**:
 - P0 (Critical): 2 tasks (2 complete: T-002A, T-003)
-- P1 (High): 10 tasks (5 complete: T-004, T-005, T-006, T-008, T-009)
+- P1 (High): 11 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057)
 - P2 (Medium): 25 tasks (4 complete: T-014, T-015, T-022, T-031)
 - P3 (Low): 14 tasks (1 complete: T-043)
 
 **By Type**:
 - BUG: 2 (2 complete: T-002A, T-003)
-- FEATURE: 16 (7 complete: T-004, T-005, T-006, T-008, T-009, T-014, T-015, T-031)
+- FEATURE: 17 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 1 new: T-057)
 - QUALITY: 14 (2 complete: T-022, T-043)
 - DOCS: 12
 - CHORE: 7
