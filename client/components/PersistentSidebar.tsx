@@ -1,26 +1,26 @@
 /**
  * Persistent Sidebar Component
- * 
+ *
  * Purpose (Plain English):
  * Always-accessible navigation drawer that shows your most-used modules.
  * Swipe from left edge to open, tap outside to close. Shows top 10 modules
  * with "More" button to see all. Adapts to context (work/personal mode).
- * 
+ *
  * What it interacts with:
  * - Module Registry (to get modules to display)
  * - Context Engine (to filter modules by context)
  * - Navigation (to navigate to modules)
  * - Analytics (to track module opens)
- * 
+ *
  * Technical Implementation:
  * Uses React Native's PanResponder for edge swipe gesture, Animated API for
  * smooth drawer animation. Collapsible state shows icons only vs full names.
- * 
+ *
  * Safe AI Extension Points:
  * - Add module badges/notifications
  * - Add module search within sidebar
  * - Add quick actions per module
- * 
+ *
  * Fragile Logic Warnings:
  * - Edge swipe detection must not conflict with other gestures
  * - Animation must be smooth (use native driver)
@@ -28,7 +28,7 @@
  * - Overlay tap must dismiss sidebar reliably
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -37,32 +37,30 @@ import {
   Dimensions,
   PanResponder,
   Platform,
-} from 'react-native';
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
   runOnJS,
-} from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Feather } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Colors, Spacing, BorderRadius } from '@/constants/theme';
-import { moduleRegistry, ModuleDefinition } from '@/lib/moduleRegistry';
-import { contextEngine, ContextZone } from '@/lib/contextEngine';
-import { eventBus, EVENT_TYPES } from '@/lib/eventBus';
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Colors, Spacing, BorderRadius } from "@/constants/theme";
+import { moduleRegistry, ModuleDefinition } from "@/lib/moduleRegistry";
+import { contextEngine, ContextZone } from "@/lib/contextEngine";
+import { eventBus, EVENT_TYPES } from "@/lib/eventBus";
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SIDEBAR_WIDTH = 280;
 const COLLAPSED_WIDTH = 60;
-// TODO: Implement PanResponder for edge swipe gesture detection
-// For now, using button alternative for accessibility
-const EDGE_SWIPE_WIDTH = 30; // Distance from edge to detect swipe (not yet implemented)
+const EDGE_SWIPE_WIDTH = 30; // Distance from edge to detect swipe gesture
 
 export interface PersistentSidebarProps {
   currentModuleId?: string;
@@ -80,17 +78,88 @@ export function PersistentSidebar({
 }: PersistentSidebarProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [modules, setModules] = useState<ModuleDefinition[]>([]);
   const [contextZone, setContextZone] = useState<ContextZone>(ContextZone.AUTO);
-  
+
   const translateX = useSharedValue(-SIDEBAR_WIDTH);
 
   /**
+   * PanResponder for Edge Swipe Gesture
+   *
+   * Detects left edge swipe to open sidebar.
+   * Listens for touch starting within EDGE_SWIPE_WIDTH from left edge,
+   * then tracks gesture to determine if user is swiping right to open.
+   */
+  const panResponder = useRef(
+    PanResponder.create({
+      // Only respond to gestures starting near the left edge
+      onStartShouldSetPanResponder: (evt, gestureState) => {
+        // Don't capture if sidebar is already open
+        if (isOpen) return false;
+
+        // Check if touch started near left edge
+        const { pageX } = evt.nativeEvent;
+        return pageX <= EDGE_SWIPE_WIDTH;
+      },
+
+      // Set PanResponder after movement starts
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        if (isOpen) return false;
+
+        const { pageX } = evt.nativeEvent;
+        const { dx } = gestureState;
+
+        // Only respond if swipe started near edge and moving right
+        return pageX <= EDGE_SWIPE_WIDTH && dx > 5;
+      },
+
+      // Handle the gesture move
+      onPanResponderMove: (evt, gestureState) => {
+        const { dx } = gestureState;
+
+        // Limit translation to 0 (fully open) and -SIDEBAR_WIDTH (fully closed)
+        const newTranslateX = Math.max(
+          -SIDEBAR_WIDTH,
+          Math.min(0, -SIDEBAR_WIDTH + dx),
+        );
+        translateX.value = newTranslateX;
+      },
+
+      // Handle gesture release
+      onPanResponderRelease: (evt, gestureState) => {
+        const { dx, vx } = gestureState;
+
+        // Determine if swipe velocity or distance is sufficient to open
+        const shouldOpen = dx > SIDEBAR_WIDTH * 0.3 || vx > 0.5;
+
+        if (shouldOpen) {
+          runOnJS(openSidebar)();
+        } else {
+          // Snap back closed
+          translateX.value = withSpring(-SIDEBAR_WIDTH, {
+            damping: 20,
+            stiffness: 90,
+          });
+        }
+      },
+
+      // Handle gesture termination (e.g., another gesture took over)
+      onPanResponderTerminate: () => {
+        // Snap back closed
+        translateX.value = withSpring(-SIDEBAR_WIDTH, {
+          damping: 20,
+          stiffness: 90,
+        });
+      },
+    }),
+  ).current;
+
+  /**
    * Load Modules
-   * 
+   *
    * Gets modules to display from registry, filtered by context.
    */
   useEffect(() => {
@@ -119,13 +188,13 @@ export function PersistentSidebar({
       damping: 20,
       stiffness: 90,
     });
-    
-    if (Platform.OS !== 'web') {
+
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
+
     eventBus.emit(EVENT_TYPES.USER_ACTION, {
-      action: 'sidebar_opened',
+      action: "sidebar_opened",
     });
   };
 
@@ -138,13 +207,13 @@ export function PersistentSidebar({
       damping: 20,
       stiffness: 90,
     });
-    
-    if (Platform.OS !== 'web') {
+
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
+
     eventBus.emit(EVENT_TYPES.USER_ACTION, {
-      action: 'sidebar_closed',
+      action: "sidebar_closed",
     });
   };
 
@@ -152,22 +221,22 @@ export function PersistentSidebar({
    * Handle Module Press
    */
   const handleModulePress = (module: ModuleDefinition) => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
-    
+
     // Record usage
     moduleRegistry.recordModuleOpen(module.id);
-    
+
     // Emit event
     eventBus.emit(EVENT_TYPES.MODULE_OPENED, {
       moduleId: module.id,
       routeName: module.routeName,
     });
-    
+
     // Navigate
     onModuleSelect(module.id, module.routeName);
-    
+
     // Close sidebar
     closeSidebar();
   };
@@ -216,19 +285,23 @@ export function PersistentSidebar({
             color={isActive ? theme.accent : theme.textSecondary}
           />
         </View>
-        
+
         {!isCollapsed && (
           <ThemedText
             style={[
               styles.moduleText,
-              isActive && { color: theme.accent, fontWeight: '600' },
+              isActive && { color: theme.accent, fontWeight: "600" },
             ]}
           >
             {module.name}
           </ThemedText>
         )}
-        
-        {isActive && <View style={[styles.activeIndicator, { backgroundColor: theme.accent }]} />}
+
+        {isActive && (
+          <View
+            style={[styles.activeIndicator, { backgroundColor: theme.accent }]}
+          />
+        )}
       </Pressable>
     );
   };
@@ -240,7 +313,7 @@ export function PersistentSidebar({
         <Animated.View
           style={[
             styles.overlay,
-            { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+            { backgroundColor: "rgba(0, 0, 0, 0.5)" },
             overlayAnimatedStyle,
           ]}
         >
@@ -284,26 +357,31 @@ export function PersistentSidebar({
 
         {/* Context Indicator */}
         {!isCollapsed && contextZone !== ContextZone.AUTO && (
-          <View style={[styles.contextBadge, { backgroundColor: theme.accentDim }]}>
+          <View
+            style={[styles.contextBadge, { backgroundColor: theme.accentDim }]}
+          >
             <ThemedText style={[styles.contextText, { color: theme.accent }]}>
-              {contextZone === ContextZone.WORK && '💼 Work Mode'}
-              {contextZone === ContextZone.PERSONAL && '🏡 Personal Mode'}
-              {contextZone === ContextZone.FOCUS && '🎯 Focus Mode'}
-              {contextZone === ContextZone.EVENING && '🌙 Evening Mode'}
-              {contextZone === ContextZone.WEEKEND && '🎉 Weekend Mode'}
+              {contextZone === ContextZone.WORK && "💼 Work Mode"}
+              {contextZone === ContextZone.PERSONAL && "🏡 Personal Mode"}
+              {contextZone === ContextZone.FOCUS && "🎯 Focus Mode"}
+              {contextZone === ContextZone.EVENING && "🌙 Evening Mode"}
+              {contextZone === ContextZone.WEEKEND && "🎉 Weekend Mode"}
             </ThemedText>
           </View>
         )}
 
         {/* Module List */}
-        <ScrollView style={styles.moduleList} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.moduleList}
+          showsVerticalScrollIndicator={false}
+        >
           {modules.map(renderModuleItem)}
         </ScrollView>
 
         {/* All Modules Button */}
         <Pressable
           onPress={() => {
-            if (Platform.OS !== 'web') {
+            if (Platform.OS !== "web") {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
             onAllModulesPress();
@@ -319,7 +397,9 @@ export function PersistentSidebar({
         >
           <Feather name="grid" size={20} color={theme.accent} />
           {!isCollapsed && (
-            <ThemedText style={[styles.allModulesText, { color: theme.accent }]}>
+            <ThemedText
+              style={[styles.allModulesText, { color: theme.accent }]}
+            >
               All Modules
             </ThemedText>
           )}
@@ -344,13 +424,25 @@ export function PersistentSidebar({
           <Feather name="menu" size={20} color={theme.accent} />
         </Pressable>
       )}
+
+      {/* Edge Swipe Gesture Zone */}
+      {!isOpen && (
+        <View
+          {...panResponder.panHandlers}
+          style={[
+            styles.edgeSwipeZone,
+            { top: insets.top, bottom: insets.bottom },
+          ]}
+          pointerEvents="box-none"
+        />
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -358,7 +450,7 @@ const styles = StyleSheet.create({
     zIndex: 998,
   },
   sidebar: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
@@ -367,15 +459,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.sm,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: Spacing.sm,
     marginBottom: Spacing.md,
   },
   headerText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   closeButton: {
     padding: Spacing.xs,
@@ -389,22 +481,22 @@ const styles = StyleSheet.create({
   },
   contextText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   moduleList: {
     flex: 1,
   },
   moduleItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.md,
     marginBottom: Spacing.xs,
-    position: 'relative',
+    position: "relative",
   },
   moduleItemActive: {
-    backgroundColor: 'rgba(0, 217, 255, 0.1)',
+    backgroundColor: "rgba(0, 217, 255, 0.1)",
   },
   moduleItemPressed: {
     opacity: 0.7,
@@ -413,18 +505,18 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: BorderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   moduleIconActive: {
-    backgroundColor: 'rgba(0, 217, 255, 0.15)',
+    backgroundColor: "rgba(0, 217, 255, 0.15)",
   },
   moduleText: {
     marginLeft: Spacing.sm,
     fontSize: 15,
   },
   activeIndicator: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
     bottom: 0,
@@ -433,9 +525,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 2,
   },
   allModulesButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.md,
     marginTop: Spacing.md,
@@ -443,18 +535,24 @@ const styles = StyleSheet.create({
   allModulesText: {
     marginLeft: Spacing.sm,
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   edgeButton: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     width: 40,
     height: 40,
     borderTopRightRadius: BorderRadius.lg,
     borderBottomRightRadius: BorderRadius.lg,
     borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 997,
+  },
+  edgeSwipeZone: {
+    position: "absolute",
+    left: 0,
+    width: EDGE_SWIPE_WIDTH,
+    zIndex: 996,
   },
 });
