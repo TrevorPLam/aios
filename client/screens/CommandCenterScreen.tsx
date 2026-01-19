@@ -7,7 +7,7 @@
  *
  * Key Features:
  * - Swipeable recommendation cards (swipe right to accept, left to decline)
- * - Visual glow indicator for unread recommendations (white shadow)
+ * - Visual glow indicator for unread recommendations (accent color border)
  * - Confidence meter showing AI certainty level (low/medium/high)
  * - Real-time AI usage limits tracking with countdown
  * - Secondary navigation bar for quick access (Search, Attention, History)
@@ -163,8 +163,8 @@ function ConfidenceMeter({
  * - During swipe: Card rotates ±15° and shows colored glow (green=accept, red=decline)
  *
  * Visual States:
- * - Unopened: White glow (shadowOpacity 0.4, radius 16px) to draw attention
- * - Opened: Standard card appearance without glow
+ * - Unopened: Accent color border glow (3px, 60% opacity) to draw attention - works cross-platform
+ * - Opened: Standard card appearance without border glow
  * - Swiping: Animated rotation and edge glow based on swipe direction/distance
  *
  * Performance:
@@ -266,19 +266,45 @@ function RecommendationCard({
       <Animated.View
         style={[
           styles.card,
-          { 
-            backgroundColor: theme.backgroundDefault,
-            shadowColor: theme.accent, // Base glow uses theme accent
-          },
-          // Add stronger accent glow for unopened cards (visible on all backgrounds)
-          isUnopened && {
-            shadowOpacity: 0.6,
-            shadowRadius: 16,
-            elevation: 8,
-          },
+          { backgroundColor: theme.backgroundDefault },
           animatedStyle,
         ]}
       >
+        {/* Unopened glow - visible border glow for new cards */}
+        {isUnopened && (
+          <>
+            <View
+              style={[
+                styles.unopenedGlow,
+                styles.unopenedGlowTop,
+                { backgroundColor: theme.accent },
+              ]}
+            />
+            <View
+              style={[
+                styles.unopenedGlow,
+                styles.unopenedGlowBottom,
+                { backgroundColor: theme.accent },
+              ]}
+            />
+            <View
+              style={[
+                styles.unopenedGlow,
+                styles.unopenedGlowLeft,
+                { backgroundColor: theme.accent },
+              ]}
+            />
+            <View
+              style={[
+                styles.unopenedGlow,
+                styles.unopenedGlowRight,
+                { backgroundColor: theme.accent },
+              ]}
+            />
+          </>
+        )}
+        
+        {/* Swipe feedback glows */}
         <Animated.View
           style={[
             styles.cardGlow,
@@ -850,6 +876,35 @@ const styles = StyleSheet.create({
   },
   declineGlow: {
     left: 0,
+  },
+  // Unopened glow - 4-sided border glow for new cards (cross-platform compatible)
+  unopenedGlow: {
+    position: "absolute",
+    opacity: 0.6,
+  },
+  unopenedGlowTop: {
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+  },
+  unopenedGlowBottom: {
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+  },
+  unopenedGlowLeft: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 3,
+  },
+  unopenedGlowRight: {
+    top: 0,
+    bottom: 0,
+    right: 0,
+    width: 3,
   },
   cardHeader: {
     flexDirection: "row",
