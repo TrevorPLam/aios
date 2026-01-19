@@ -156,18 +156,25 @@ export default function AIPreferencesScreen() {
     // Get current context zone
     const zone = contextEngine.getCurrentZone();
     setCurrentContextZone(zone);
+  }, []); // contextEngine is singleton, stable across renders
+
+  /**
+   * Handle context change notifications
+   * 
+   * Wrapped in useCallback to prevent unnecessary re-subscriptions
+   */
+  const handleContextChange = useCallback((detection: any) => {
+    setCurrentContextZone(detection.zone);
   }, []);
 
   useEffect(() => {
     loadSettings();
 
     // Listen for context changes
-    const unsubscribe = contextEngine.onChange((detection) => {
-      setCurrentContextZone(detection.zone);
-    });
+    const unsubscribe = contextEngine.onChange(handleContextChange);
 
     return unsubscribe;
-  }, [loadSettings]);
+  }, [loadSettings, handleContextChange]);
 
   const handleEditName = useCallback(() => {
     if (Platform.OS !== "web") {
@@ -211,6 +218,9 @@ export default function AIPreferencesScreen() {
    * 
    * Plain English: When user picks a context mode, update the context engine
    * and show relevant modules in the sidebar.
+   * 
+   * Note: contextEngine is a singleton instance, so it's stable across renders.
+   * No need to include in dependency array.
    */
   const selectContextZone = useCallback(
     (zone: ContextZone) => {
@@ -222,7 +232,7 @@ export default function AIPreferencesScreen() {
       contextEngine.setUserOverride(zone === ContextZone.AUTO ? null : zone);
       setCurrentContextZone(zone);
     },
-    [],
+    [], // contextEngine is singleton, stable across renders
   );
 
   if (!settings) {
