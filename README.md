@@ -247,6 +247,11 @@ npm run expo:clean:native && npm run expo:rebuild:ios
 - Why this happens and how to avoid it
 - Troubleshooting if the fix doesn't work
 
+**🛡️ Prevention Guide:** See **[WORKLETS_PREVENTION.md](WORKLETS_PREVENTION.md)** for:
+- Automated prevention measures (post-install hooks, CI checks)
+- Best practices to avoid future issues
+- Monitoring and alert setup
+
 Also see [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch) for detailed troubleshooting.
 
 **Seeing a web version instead of native iOS?**

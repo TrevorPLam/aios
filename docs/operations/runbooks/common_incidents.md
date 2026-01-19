@@ -512,6 +512,7 @@ npx expo run:ios  # or npx expo run:android
 - [ ] Animations and gestures work correctly
 - [ ] React Native Reanimated features work
 - [ ] `npm run check:worklets` shows: ✅ Versions match
+- [ ] `app.json` includes `"react-native-reanimated"` in plugins array
 
 ### Root Cause
 This error occurs when:
@@ -520,8 +521,9 @@ This error occurs when:
 - Native builds cached old version (e.g., 0.5.1) while JS bundle updated to new version (e.g., 0.7.2)
 - Expo development builds not rebuilt after dependency changes
 - Branch switching with different dependency versions
+- **Missing Expo config plugin:** The `react-native-reanimated` plugin is not configured in `app.json`
 
-**Key insight:** JavaScript updates instantly via Metro bundler, but native iOS/Android code requires a complete rebuild.
+**Key insight:** JavaScript updates instantly via Metro bundler, but native iOS/Android code requires a complete rebuild. Additionally, Expo requires the `react-native-reanimated` plugin in `app.json` to properly integrate native dependencies during prebuild.
 
 ### Prevention
 **After any of these events, ALWAYS run: `npm run expo:rebuild:ios`**
@@ -557,6 +559,7 @@ This error occurs when:
 
 ### Related Documentation
 - **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
+- **[WORKLETS_PREVENTION.md](../../../WORKLETS_PREVENTION.md)** - Prevention strategies and automation
 - [react-native-worklets troubleshooting](https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting) - Official docs
 - [Expo prebuild](https://docs.expo.dev/workflow/prebuild/) - Understanding native builds
 - [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation) - Reanimated setup

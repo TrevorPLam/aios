@@ -69,8 +69,44 @@ function checkWorklets() {
   }
 }
 
+// Check 2: Expo configuration
+function checkExpoConfig() {
+  try {
+    const appJsonPath = join(rootDir, 'app.json');
+    const appJson = JSON.parse(readFileSync(appJsonPath, 'utf8'));
+    
+    const plugins = appJson.expo?.plugins || [];
+    
+    // Check for react-native-reanimated plugin
+    const hasReanimatedPlugin = plugins.some(plugin => {
+      if (typeof plugin === 'string') {
+        return plugin === 'react-native-reanimated';
+      } else if (Array.isArray(plugin)) {
+        return plugin[0] === 'react-native-reanimated';
+      }
+      return false;
+    });
+
+    if (!hasReanimatedPlugin) {
+      console.log('🚨 IMPORTANT: Missing react-native-reanimated plugin in app.json!\n');
+      console.log('   This plugin is required for proper worklets support.\n');
+      console.log('   🔧 Add to app.json: "react-native-reanimated" in plugins array');
+      console.log('   📖 See WORKLETS_FIX_GUIDE.md for details\n');
+      return false;
+    }
+
+    console.log('✅ Expo config: OK (reanimated plugin present)');
+    return true;
+
+  } catch (error) {
+    console.log('⚠️  Could not check Expo configuration:', error.message);
+    return true; // Don't block on check errors
+  }
+}
+
 // Run checks
 const workletsOk = checkWorklets();
+const expoConfigOk = checkExpoConfig();
 
 console.log('\n' + '='.repeat(60));
 console.log('📱 Native Build Reminder:');
@@ -79,8 +115,8 @@ console.log('\nIf you just updated dependencies (especially Dependabot updates):
 console.log('  • Always rebuild native iOS/Android after animation library updates');
 console.log('  • Run: npm run expo:rebuild:ios (or :android)\n');
 
-if (!workletsOk) {
-  console.log('⚠️  ACTION REQUIRED: Fix the worklets version mismatch above!\n');
+if (!workletsOk || !expoConfigOk) {
+  console.log('⚠️  ACTION REQUIRED: Fix the issues detected above!\n');
 }
 
 console.log('ℹ️  To check worklets version anytime: npm run check:worklets\n');

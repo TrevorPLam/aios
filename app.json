@@ -43,7 +43,8 @@
         {
           "contactsPermission": "Allow AIOS to access your contacts."
         }
-      ]
+      ],
+      "react-native-reanimated"
     ],
     "experiments": {
       "reactCompiler": true

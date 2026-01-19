@@ -19,6 +19,8 @@ This will:
 
 After your Dependabot updates today, your JavaScript code updated to `react-native-worklets` 0.7.2, but your native iOS build still has the old cached version 0.5.1. React Native requires these versions to match EXACTLY.
 
+**Additional issue:** The `react-native-reanimated` Expo config plugin was missing from `app.json`. This plugin is required for Expo to properly configure native dependencies during the prebuild process. This has now been added to prevent future occurrences.
+
 **Why rollbacks didn't help:** Rollbacks fixed the JavaScript side but didn't rebuild the native code, so the mismatch persisted.
 
 ## If That Command Doesn't Work
