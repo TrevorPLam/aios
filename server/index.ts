@@ -65,6 +65,9 @@ function setupBodyParsing(app: express.Application) {
   app.use(express.urlencoded({ extended: false }));
 }
 
+/** Maximum length for response data in logs to prevent excessive log size */
+const MAX_RESPONSE_LOG_LENGTH = 100;
+
 function setupRequestLogging(app: express.Application) {
   app.use((req, res, next) => {
     const start = Date.now();
@@ -89,7 +92,10 @@ function setupRequestLogging(app: express.Application) {
         statusCode: res.statusCode,
         duration: `${duration}ms`,
         response: capturedJsonResponse
-          ? JSON.stringify(capturedJsonResponse).substring(0, 100)
+          ? JSON.stringify(capturedJsonResponse).substring(
+              0,
+              MAX_RESPONSE_LOG_LENGTH,
+            )
           : undefined,
       });
     });

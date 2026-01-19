@@ -273,8 +273,9 @@ export default function CommandCenterScreen() {
     setAiLimits(limits);
 
     // Load attention counts - sum urgent and attention priority items
+    // Handle potential undefined values with fallback to 0
     const counts = attentionManager.getCounts();
-    const totalCount = counts.urgent + counts.attention;
+    const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
     setAttentionCount(totalCount);
 
     // Auto-refresh if we have few or no recommendations
