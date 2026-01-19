@@ -100,14 +100,22 @@ const CARD_ROTATION_ANGLE = 15;
 const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 
 /** Minimum card spacing in pixels (small spacing between cards for visual separation) */
-const CARD_SPACING = Spacing.sm; // 8px for subtle card separation
+const CARD_SPACING = Spacing.sm; // Using theme spacing for consistency
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 
 // Scroll Animation Constants
-/** Secondary nav bar hide offset in pixels when scrolling down (must hide completely including padding) */
-const SECONDARY_NAV_HIDE_OFFSET = -100; // Increased to fully hide the oval and buttons
+/** 
+ * Secondary nav bar hide offset in pixels when scrolling down.
+ * This value must be large enough to hide the entire secondary nav including:
+ * - secondaryNav paddingVertical (Spacing.xs = 4px) * 2 = 8px
+ * - secondaryNavContent paddingVertical (Spacing.sm = 8px) * 2 = 16px
+ * - secondaryNavContent height (icon 20px + text ~12px + gap Spacing.xs 4px) = ~36px
+ * - Additional buffer for complete hiding = ~40px
+ * Total: approximately -100px ensures complete hiding
+ */
+const SECONDARY_NAV_HIDE_OFFSET = -100;
 
 /** Animation duration in milliseconds for secondary nav show/hide transitions */
 const SECONDARY_NAV_ANIMATION_DURATION = 200;
