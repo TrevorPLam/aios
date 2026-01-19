@@ -55,14 +55,19 @@
 - Use h1 for main screen titles
 - Use h2 for major sections within a screen
 - Use h3 for card titles and important subsections
-- Use h4 for regular subsections and emphasized text (same size as body but semibold weight)
+- Use h4 for subsections and emphasized content within body text
 - Use h5 for small headers in compact layouts
 - Use h6 for micro headers in dense information displays
 - Use body for all standard text content
 - Use caption for metadata and supplementary information
 - Use small for labels and compact UI elements
 
-**Note on h4**: While h4 shares the same font size as body text (16px), it uses a semibold weight (600) vs regular (400) to provide clear visual distinction for emphasized content without creating too many size variations in the hierarchy.
+**Note on Size Overlaps**: 
+The heading variants h4-h6 intentionally share sizes with body text (h4=body=16px, h5=caption=14px, h6=small=12px) but use semibold weight (600) instead of regular/medium weight. This design decision:
+- Provides clear visual distinction through weight rather than size
+- Maintains consistent vertical rhythm across the UI
+- Reduces the number of font sizes, improving design system simplicity
+- Allows semantic markup without disrupting text flow
 
 ---
 

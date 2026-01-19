@@ -145,9 +145,9 @@ export const Typography = {
     h1: 24,
     h2: 20,
     h3: 18,
-    h4: 16,
-    h5: 14,
-    h6: 12,
+    h4: 16, // Same size as body, but semibold weight for emphasis
+    h5: 14, // Same size as caption, but semibold weight for headers
+    h6: 12, // Same size as small, but semibold weight for micro headers
     body: 16,
     caption: 14,
     small: 12,
