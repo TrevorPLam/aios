@@ -56,6 +56,9 @@ function checkWorkletsVersion() {
 
       if (installedVersion === cleanExpectedVersion) {
         console.log('\n✅ Versions match! Everything looks good.\n');
+        console.log('📱 Note: If you still see runtime version mismatch errors,');
+        console.log('   the native iOS/Android build may have a cached old version.');
+        console.log('   Run: npm run expo:rebuild:ios (or :android)\n');
         return true;
       } else {
         console.log('\n⚠️  Version mismatch detected!\n');
@@ -63,14 +66,15 @@ function checkWorkletsVersion() {
         console.log(
           '  "Mismatch between JavaScript part and native part of Worklets"\n'
         );
-        console.log('💡 Recommended fix:\n');
-        console.log('  1. Clean caches: npm run expo:clean:native');
-        console.log('  2. Rebuild native: npm run expo:rebuild:ios\n');
+        console.log('💡 IMMEDIATE FIX:\n');
+        console.log('  npm run expo:clean:native && npm run expo:rebuild:ios\n');
+        console.log('📖 For detailed fix guide, see: WORKLETS_FIX_GUIDE.md\n');
         return false;
       }
     } catch (error) {
       console.log('⚠️  node_modules not found or react-native-worklets not installed\n');
       console.log('💡 Run: npm install\n');
+      console.log('   Then run this check again: npm run check:worklets\n');
       return false;
     }
   } catch (error) {
@@ -80,16 +84,27 @@ function checkWorkletsVersion() {
 }
 
 // Check for native build version mismatch warning
-console.log('📱 Native Build Check:');
-console.log(
-  'If you see runtime errors about version mismatch, the native iOS/Android'
-);
-console.log('build may have a cached old version.\n');
-console.log('Solution:');
-console.log('  • For development builds: npm run expo:rebuild:ios');
-console.log('  • For Expo Go: npm run expo:clean:native && npx expo start --clear\n');
-console.log('---\n');
+console.log('📱 React Native Worklets Version Check\n');
+console.log('='.repeat(50));
+console.log('\nℹ️  This script checks if your JavaScript and native builds');
+console.log('   have matching worklets versions.\n');
+console.log('🚨 Common after: Dependabot updates, branch switches,');
+console.log('   dependency version changes\n');
+console.log('='.repeat(50));
+console.log();
 
 const result = checkWorkletsVersion();
+
+if (!result) {
+  console.log('='.repeat(50));
+  console.log('🔧 QUICK FIX COMMANDS:\n');
+  console.log('  Option 1 (Most Common):');
+  console.log('  npm run expo:clean:native && npm run expo:rebuild:ios\n');
+  console.log('  Option 2 (If Option 1 fails):');
+  console.log('  npm run expo:clean:full && npm run expo:rebuild:ios\n');
+  console.log('  Option 3 (Nuclear option):');
+  console.log('  See WORKLETS_FIX_GUIDE.md for complete manual cleanup\n');
+  console.log('='.repeat(50));
+}
 
 process.exit(result ? 0 : 1);
