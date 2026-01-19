@@ -106,9 +106,6 @@ const CARD_SPACING = 2;
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 
-/** Badge count threshold for primary nav */
-const PRIMARY_NAV_BADGE_THRESHOLD = 99;
-
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
 /**
@@ -583,63 +580,17 @@ export default function CommandCenterScreen() {
           <ThemedText type="h2">Command Center</ThemedText>
         </Animated.View>
 
-        <View style={styles.headerActions}>
-          <Pressable
-            onPress={() => navigation.navigate("Omnisearch")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel="Open search"
-          >
-            <Feather name="search" size={24} color={theme.text} />
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("AttentionCenter")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel={`Attention center, ${attentionCount} items`}
-          >
-            <View>
-              <Feather name="bell" size={24} color={theme.text} />
-              {attentionCount > 0 && (
-                <View style={[styles.badge, { backgroundColor: theme.error }]}>
-                  <ThemedText
-                    style={[styles.badgeText, { color: theme.backgroundRoot }]}
-                  >
-                    {attentionCount > PRIMARY_NAV_BADGE_THRESHOLD 
-                      ? `${PRIMARY_NAV_BADGE_THRESHOLD}+` 
-                      : attentionCount}
-                  </ThemedText>
-                </View>
-              )}
-            </View>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("RecommendationHistory")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel="View recommendation history"
-          >
-            <Feather name="clock" size={24} color={theme.text} />
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("Settings")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Feather name="settings" size={24} color={theme.text} />
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={() => navigation.navigate("Settings")}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && styles.pressed,
+          ]}
+          accessibilityRole="button"
+          accessibilityLabel="Open settings"
+        >
+          <Feather name="settings" size={24} color={theme.text} />
+        </Pressable>
       </View>
 
       {/* Secondary Navigation Bar - Oval, transparent, module-specific actions */}
@@ -823,10 +774,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: BorderRadius.sm,
   },
-  headerActions: {
-    flexDirection: "row",
-    gap: Spacing.xs,
-  },
   secondaryNav: {
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
@@ -982,22 +929,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
-  },
-  badge: {
-    position: "absolute",
-    top: -4,
-    right: -4,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 4,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: "bold",
-    lineHeight: 12,
   },
   bottomNav: {
     display: "none",
