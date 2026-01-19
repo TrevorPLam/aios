@@ -25,7 +25,6 @@
       "package": "com.aios.app"
     },
     "plugins": [
-      "react-native-reanimated",
       [
         "expo-splash-screen",
         {
