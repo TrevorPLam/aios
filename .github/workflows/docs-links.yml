@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Lychee (PR - changed files only)
         if: github.event_name == 'pull_request'
-        uses: lycheeverse/lychee-action@v2.0.2
+        uses: lycheeverse/lychee-action@v2.7.0
         with:
           # Check changed files only in PRs for faster feedback
           args: --cache --max-cache-age 1d --verbose --no-progress --exclude-path node_modules --exclude-path .git 'docs/**/*.md' '*.md'
@@ -49,7 +49,7 @@ jobs:
 
       - name: Run Lychee (Push/Schedule - all files)
         if: github.event_name != 'pull_request'
-        uses: lycheeverse/lychee-action@v2.0.2
+        uses: lycheeverse/lychee-action@v2.7.0
         with:
           # Check all files on main branch and scheduled runs
           args: --cache --max-cache-age 7d --verbose --no-progress --exclude-path node_modules --exclude-path .git '**/*.md'
