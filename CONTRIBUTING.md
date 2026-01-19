@@ -467,7 +467,7 @@ Check out these areas where we especially need help:
 ### Low Priority
 - [ ] Additional themes
 - [ ] Animations and transitions
-- [ ] Onboarding flow
+- [ ] AI personality onboarding (see TODO.md T-057)
 - [ ] Settings enhancements
 
 ## Questions?
