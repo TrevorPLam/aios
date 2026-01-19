@@ -7,6 +7,12 @@
 
 import analytics from "@/analytics";
 
+// Type declarations for React Native's ErrorUtils
+declare const ErrorUtils: {
+  setGlobalHandler: (handler: (error: Error, isFatal?: boolean) => void) => void;
+  getGlobalHandler: () => ((error: Error, isFatal?: boolean) => void) | undefined;
+} | undefined;
+
 class ErrorReporting {
   /**
    * Track unhandled promise rejections
@@ -61,13 +67,14 @@ class ErrorReporting {
 
 export const errorReporting = new ErrorReporting();
 
-// Install global error handlers for browser/React Native environment
-if (typeof window !== "undefined") {
-  window.addEventListener("unhandledrejection", (event) => {
-    errorReporting.trackUnhandledRejection(event.reason, event.promise);
-  });
-
-  window.addEventListener("error", (event) => {
-    errorReporting.trackGlobalError(event.error);
+// Install global error handlers for React Native environment
+if (typeof ErrorUtils !== "undefined") {
+  // React Native error handler
+  const originalHandler = ErrorUtils.getGlobalHandler();
+  ErrorUtils.setGlobalHandler((error: Error, isFatal?: boolean) => {
+    errorReporting.trackGlobalError(error);
+    if (originalHandler) {
+      originalHandler(error, isFatal);
+    }
   });
 }
