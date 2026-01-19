@@ -448,7 +448,7 @@ npm run expo:clean:native
 npm run expo:clean:full
 
 # 3. Start fresh Metro bundler
-npm start -- --clear
+npx expo start --clear
 
 # 4. If using development build, rebuild the app
 npx expo prebuild --clean
