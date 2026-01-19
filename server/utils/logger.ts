@@ -38,6 +38,11 @@
  * - LOG_LEVEL environment variable controls minimum log level
  * - NODE_ENV determines output format (json for production, console for dev)
  *
+ * Security Considerations:
+ * - Never log sensitive data (passwords, tokens, API keys)
+ * - Sanitize user inputs before logging
+ * - Truncate large payloads to prevent log flooding
+ *
  * @module logger
  * @author AIOS Development Team
  * @version 1.0.0
@@ -65,9 +70,10 @@ const consoleFormat = winston.format.combine(
   winston.format.printf(({ timestamp, level, message, ...meta }) => {
     let log = `${timestamp} [${level}]: ${message}`;
 
-    // Append metadata if present
-    if (Object.keys(meta).length > 0) {
-      log += ` ${JSON.stringify(meta, null, 2)}`;
+    // Append metadata if present (excluding service metadata)
+    const { service, ...logMeta } = meta;
+    if (Object.keys(logMeta).length > 0) {
+      log += ` ${JSON.stringify(logMeta, null, 2)}`;
     }
 
     return log;
@@ -87,6 +93,16 @@ const jsonFormat = winston.format.combine(
 /**
  * Winston logger instance
  * Configured based on environment (development vs production)
+ *
+ * Log Levels (in order of severity):
+ * - error: Error conditions that need immediate attention
+ * - warn: Warning conditions that should be investigated
+ * - info: Informational messages for tracking application flow
+ * - debug: Detailed debugging information (verbose)
+ *
+ * @example
+ * logger.error('Database connection failed', { dbHost: 'localhost', error });
+ * logger.info('Server started', { port: 5000, host: '0.0.0.0' });
  */
 export const logger = winston.createLogger({
   level: logLevel,

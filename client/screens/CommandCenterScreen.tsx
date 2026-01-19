@@ -58,7 +58,6 @@ import { attentionManager } from "@/lib/attentionManager";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
-const CARD_SPACING = Spacing.lg;
 /** Minimum horizontal swipe distance to trigger accept/decline */
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 /** Minimum recommendations before auto-refresh triggers */
@@ -263,26 +262,41 @@ export default function CommandCenterScreen() {
   const [attentionCount, setAttentionCount] = useState(0);
 
   /**
-   * Load recommendations and AI limits from database
-   * Also triggers automatic refresh if needed
+   * Load recommendations, AI limits, and attention counts from database.
+   * Also triggers automatic refresh if recommendations are below threshold.
+   * 
+   * Data Flow:
+   * 1. Load active recommendations from database
+   * 2. Load AI usage limits
+   * 3. Calculate attention count (urgent + attention priority items)
+   * 4. Auto-refresh recommendations if below threshold
+   * 
+   * Error Handling:
+   * - Attention counts default to 0 if manager returns undefined/null
+   * - Database errors are caught by outer error boundaries
    */
   const loadData = useCallback(async () => {
-    const recs = await db.recommendations.getActive();
-    setRecommendations(recs);
-    const limits = await db.aiLimits.get();
-    setAiLimits(limits);
+    try {
+      const recs = await db.recommendations.getActive();
+      setRecommendations(recs);
+      const limits = await db.aiLimits.get();
+      setAiLimits(limits);
 
-    // Load attention counts - sum urgent and attention priority items
-    // Handle potential undefined values with fallback to 0
-    const counts = attentionManager.getCounts();
-    const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
-    setAttentionCount(totalCount);
+      // Load attention counts - sum urgent and attention priority items
+      // Handle potential undefined values with fallback to 0
+      const counts = attentionManager.getCounts();
+      const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
+      setAttentionCount(totalCount);
 
-    // Auto-refresh if we have few or no recommendations
-    if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
-      await handleRefreshRecommendations();
+      // Auto-refresh if we have few or no recommendations
+      if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
+        await handleRefreshRecommendations();
+      }
+    } catch (error) {
+      console.error("Failed to load CommandCenter data:", error);
+      // Error boundaries will handle this - just log for debugging
     }
-  }, []);
+  }, [handleRefreshRecommendations]);
 
   useEffect(() => {
     loadData();
