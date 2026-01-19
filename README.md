@@ -2,7 +2,9 @@
 
 **Vision:** The American WeChat - Global, Innovative, Revolutionary
 
-A mobile-first iOS/Android super app built with React Native and Expo, featuring a futuristic "HUD/control panel" aesthetic. AIOS is evolving from an AI-powered productivity hub into a comprehensive life operating system - **the one app to rule them all**.
+An iOS-native super app with Android/Web compatibility, built with React Native and Expo, featuring a futuristic "HUD/control panel" aesthetic. AIOS is evolving from an AI-powered productivity hub into a comprehensive life operating system - **the one app to rule them all**.
+
+**Development Model:** Primary-Secondary Agent Architecture - GitHub Copilot builds all original features for iOS, Codex Agent adapts for Android/Web compatibility.
 
 ## 🌟 What is AIOS?
 
@@ -147,6 +149,37 @@ AIOS has successfully completed **Phase 3** of the revolutionary UX system with 
    export EXPO_PUBLIC_DOMAIN=your-domain.repl.co:5000
    ```
 
+## 🤖 Development Model: Primary-Secondary Agent Architecture
+
+AIOS uses a **Primary-Secondary Agent Model** for platform development:
+
+### GitHub Copilot (Primary Agent)
+- **Role:** Builds ALL original features, screens, and components
+- **Platform:** iOS exclusively
+- **Responsibilities:**
+  - Owns all architectural decisions
+  - Develops iOS-native implementations
+  - Creates follow-up tasks for cross-platform adaptation
+  - Tests on iOS simulator/device
+
+### Codex Agent (Secondary Agent)
+- **Role:** Adapts iOS implementations for Android/Web compatibility
+- **Platform:** Android and Web only
+- **Responsibilities:**
+  - Adds platform-specific adaptations (Material Design, web layouts)
+  - Preserves iOS functionality while adding compatibility
+  - References Copilot's completed work (PR/commit)
+  - Tests on Android/Web platforms
+
+### Workflow
+1. GitHub Copilot builds feature for iOS
+2. Copilot merges PR and marks task complete
+3. Copilot creates follow-up task: "Adapt [feature] for Android/Web"
+4. Codex Agent adapts implementation with platform-specific code
+5. Codex Agent tests on Android/Web platforms
+
+**See [docs/governance/constitution.md](docs/governance/constitution.md) and [docs/ai/ai_contribution_policy.md](docs/ai/ai_contribution_policy.md) for complete details.**
+
 ## 🚀 Running the Application
 
 ### Development Mode
@@ -155,7 +188,7 @@ AIOS has successfully completed **Phase 3** of the revolutionary UX system with 
 ```bash
 npm run expo:dev
 ```
-> **Note:** This starts Expo in iOS-first mode for mobile development. The app is configured for iOS/Android only - web platform is disabled.
+> **Note:** This starts Expo in iOS mode for mobile development. The app is built iOS-first with Android compatibility via adaptation layer - web platform is disabled.
 
 **Start the backend server:**
 ```bash
@@ -489,7 +522,7 @@ The Email module has been transformed from a basic UI mockup into a professional
 - Full backward compatibility with existing email data
 - 0 security vulnerabilities (CodeQL verified)
 - Performance optimized with useMemo and useCallback
-- Platform-specific features (iOS/Android haptics, graceful web degradation)
+- Platform-specific features (iOS-native development, Android compatibility adaptations)
 - 1,050+ lines of production-ready code (3.3x increase from original)
 
 See [EMAIL_MODULE_ENHANCEMENTS.md](./EMAIL_MODULE_ENHANCEMENTS.md) for complete documentation.

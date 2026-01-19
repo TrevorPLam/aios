@@ -1,7 +1,7 @@
 # TODO.md 
 
 Document Type: Workflow
-Last Updated: 2025-01-18
+Last Updated: 2026-01-19
 Task Truth Source: **TODO.md**
 
 This file is the single source of truth for actionable work.
@@ -11,7 +11,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **ID**: `T-###` (unique)
 - **Priority**: `P0 | P1 | P2 | P3`
 - **Type**: `SECURITY | RELEASE | DEPENDENCY | DOCS | QUALITY | BUG | FEATURE | CHORE`
-- **Owner**: `AGENT | Trevor`
+- **Owner**: `GitHub Agent (Primary) | Codex Agent (Secondary) | Trevor`
+- **Platform**: `iOS | Android | Web | Platform-Agnostic` (when applicable)
 - **Status**: `READY | BLOCKED | IN-PROGRESS | IN-REVIEW`
 - **Context**: why the task exists (1–5 bullets)
 - **Acceptance Criteria**: verifiable checklist
@@ -26,8 +27,14 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **P3**: backlog/tech debt; do when convenient
 
 ### Ownership rule
-- **Owner: AGENT** means the task can be executed by a coding agent in-repo.
-- **Owner: Trevor** means it requires external actions (provider dashboards, DNS, billing, approvals).
+- **Owner: GitHub Agent (Primary)** = Builds all original features, screens, components. iOS-only development. Owns architectural decisions.
+- **Owner: Codex Agent (Secondary)** = Adapts Copilot's completed iOS implementations for Android/Web compatibility only. Must reference Copilot's work. Cannot perform original development.
+- **Owner: Trevor** = Requires external actions (provider dashboards, DNS, billing, approvals).
+
+### Task Pattern for Features
+For new features requiring multi-platform support, use sequential tasks:
+- **Part A**: GitHub Agent (Primary) builds iOS implementation
+- **Part B**: Codex Agent (Secondary) adapts for Android/Web (depends on Part A)
 
 ---
 
@@ -35,6 +42,12 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 🔴 Critical Bugs
 
+**T-001A**
+- **Priority**: P0
+- **Type**: BUG
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
 **T-001** ✅ COMPLETED (2026-01-19)
 - **Priority**: P0
 - **Type**: BUG
@@ -45,6 +58,11 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Uses @react-native-community/datetimepicker
   - Platform-specific handling for iOS and Android
 - **Acceptance Criteria**:
+  - [ ] Install @react-native-community/datetimepicker
+  - [ ] Implement proper time picker in AlertDetailScreen.tsx for iOS
+  - [ ] Test time selection on iOS
+  - [ ] Remove TODO comment at line 277
+- **References**: client/screens/AlertDetailScreen.tsx:277
   - [x] Install @react-native-community/datetimepicker (already installed)
   - [x] Implement proper time picker in AlertDetailScreen.tsx (already implemented)
   - [x] Test time selection on both iOS and Android (implemented with platform logic)
@@ -54,29 +72,67 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: S
 - **Completion Notes**: Time picker was already fully implemented in previous work. Verified functionality includes handleTimeChange, openTimePicker, and DateTimePicker component integration with haptic feedback.
 
-**T-002**
+**T-001B**
 - **Priority**: P0
 - **Type**: BUG
-- **Owner**: AGENT
+- **Owner**: Codex Agent (Secondary)
+- **Platform**: Android, Web
+- **Status**: BLOCKED
+- **Context**:
+  - Adapt T-001A iOS time picker implementation for Android/Web compatibility
+  - Note: Existing Android-specific code at line ~285 can remain as-is
+- **Acceptance Criteria**:
+  - [ ] Verify time picker works on Android
+  - [ ] Add web-compatible time picker if needed
+  - [ ] Preserve iOS functionality
+  - [ ] Test on Android and Web platforms
+- **References**: client/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
+- **Dependencies**: T-001A
+- **Effort**: S
+
+**T-002A**
+- **Priority**: P0
+- **Type**: BUG
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - PersistentSidebar missing edge swipe gesture
   - Only button alternative exists
   - Native mobile navigation pattern expected by users
 - **Acceptance Criteria**:
-  - [ ] Implement PanResponder for left edge swipe detection
+  - [ ] Implement PanResponder for left edge swipe detection (iOS)
   - [ ] Handle swipe-to-open sidebar gesture
-  - [ ] Test gesture on both iOS and Android
+  - [ ] Test gesture on iOS
   - [ ] Maintain button alternative for accessibility
   - [ ] Remove TODO comment at line 63
 - **References**: client/components/PersistentSidebar.tsx:63
 - **Dependencies**: None
 - **Effort**: M
 
+**T-002B**
+- **Priority**: P0
+- **Type**: BUG
+- **Owner**: Codex Agent (Secondary)
+- **Platform**: Android, Web
+- **Status**: BLOCKED
+- **Context**:
+  - Adapt T-002A iOS swipe gesture for Android/Web compatibility
+  - Ensure gesture works across all platforms
+- **Acceptance Criteria**:
+  - [ ] Test swipe gesture on Android
+  - [ ] Add web-compatible swipe gesture if needed
+  - [ ] Preserve iOS functionality
+  - [ ] Verify button alternative works on all platforms
+- **References**: client/components/PersistentSidebar.tsx:63, T-002A PR/commit
+- **Dependencies**: T-002A
+- **Effort**: S
+
 **T-003**
 - **Priority**: P0
 - **Type**: BUG
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - BottomNav assumes all module routes exist
@@ -86,10 +142,11 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add route validation before navigation in BottomNav
   - [ ] Show error message if route doesn't exist
   - [ ] Log navigation errors for debugging
-  - [ ] Test with disabled modules
+  - [ ] Test with disabled modules on iOS
 - **References**: client/components/BottomNav.tsx
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation logic. Codex Agent can verify Android/Web compatibility in follow-up if needed.
 
 ---
 
@@ -98,7 +155,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-004**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Omnisearch component exists but not accessible
@@ -107,16 +165,18 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Add Omnisearch to navigation stack with modal presentation
   - [ ] Add search icon to header or CommandCenter
-  - [ ] Implement keyboard shortcut (Cmd+K / Ctrl+K)
-  - [ ] Test search across all modules
+  - [ ] Implement keyboard shortcut (Cmd+K / Ctrl+K) for iOS
+  - [ ] Test search across all modules on iOS
 - **References**: client/components/OmnisearchScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Codex Agent can add Android/Web keyboard shortcuts in follow-up if needed.
 
 **T-005**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - AttentionCenter screen exists but not accessible
@@ -126,15 +186,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add AttentionCenter to navigation stack
   - [ ] Add attention icon to header with badge count
   - [ ] Show attention indicators on BottomNav module buttons
-  - [ ] Test attention item display and dismissal
+  - [ ] Test attention item display and dismissal on iOS
 - **References**: client/lib/attentionManager.ts, client/screens/AttentionCenterScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic implementation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-006**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Context engine has Work/Personal/Focus/Social/Wellness modes
@@ -144,16 +206,18 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add context zone selector in Settings or CommandCenter
   - [ ] Add manual context override UI
   - [ ] Show current context indicator in UI
-  - [ ] Test automatic context switching based on time/location
+  - [ ] Test automatic context switching based on time/location on iOS
   - [ ] Address TODOs at contextEngine.ts:165, 172, 331
 - **References**: client/lib/contextEngine.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-007**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Recommendation engine exists with cross-module analysis
@@ -163,14 +227,18 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add "Refresh Recommendations" button in CommandCenter
   - [ ] Add recommendation settings in AIPreferences screen
   - [ ] Show evidence/reasoning in recommendation cards
-  - [ ] Wire up RecommendationHistoryScreen to navigation
+  - [ ] Wire up RecommendationHistoryScreen to navigation on iOS
 - **References**: client/lib/recommendationEngine.ts, client/screens/RecommendationHistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-008**
 - **Priority**: P1
 - **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
 - **Owner**: AGENT
 - **Status**: COMPLETE
 - **Context**:
@@ -178,6 +246,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Multiple UI access points implemented
   - Users can discover all available modules
 - **Acceptance Criteria**:
+  - [ ] Add "All Modules" button in BottomNav or Settings
+  - [ ] Add module grid access from sidebar "More" button
+  - [ ] Consider adding to CommandCenter as a card
+  - [ ] Test module grid display and navigation on iOS
+- **References**: client/screens/ModuleGridScreen.tsx
+- **Dependencies**: None
+- **Effort**: S
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
   - [x] Add "All Modules" button in BottomNav or Settings (implemented in CommandCenter and PersistentSidebar)
   - [x] Add module grid access from sidebar "More" button (implemented)
   - [x] Consider adding to CommandCenter as a card (grid icon in header)
@@ -190,6 +266,9 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-009** ✅ COMPLETED (2026-01-19)
 - **Priority**: P1
 - **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
 - **Owner**: AGENT
 - **Status**: COMPLETE
 - **Context**:
@@ -197,6 +276,14 @@ If another document disagrees, the task record in this file wins (unless the Con
   - First-launch detection working correctly
   - New users get guided onboarding experience
 - **Acceptance Criteria**:
+  - [ ] Add first-launch detection
+  - [ ] Set initialRouteName to "OnboardingWelcome" for new users
+  - [ ] Add "skip onboarding" option with explanation
+  - [ ] Test complete onboarding flow on iOS
+- **References**: client/screens/OnboardingWelcomeScreen.tsx, client/screens/OnboardingModuleSelectionScreen.tsx
+- **Dependencies**: None
+- **Effort**: S
+- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
   - [x] Add first-launch detection (implemented in AppNavigator.tsx:194-199)
   - [x] Set initialRouteName to "OnboardingWelcome" for new users (implemented)
   - [x] Add "skip onboarding" option with explanation (implemented in OnboardingWelcomeScreen.tsx:203-207)
@@ -209,7 +296,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-010**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Lazy loader exists for code splitting
@@ -219,15 +307,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Implement lazy loading for heavy screens (Photos, PhotoEditor)
   - [ ] Lazy load mini-mode components
   - [ ] Add loading indicators for lazy-loaded content
-  - [ ] Measure bundle size improvement
+  - [ ] Measure bundle size improvement on iOS
 - **References**: client/lib/lazyLoader.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic optimization. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-011**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Prefetch engine exists but not wired up
@@ -241,11 +331,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/lib/prefetchEngine.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic optimization. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-012**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Memory manager exists but not connected
@@ -255,15 +347,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Connect memory manager to app lifecycle events
   - [ ] Add memory usage monitoring
   - [ ] Implement automatic cleanup on low memory warnings
-  - [ ] Test memory cleanup behavior
+  - [ ] Test memory cleanup behavior on iOS
 - **References**: client/lib/memoryManager.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic memory management. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-013**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Module handoff system exists with contextual transitions
@@ -272,11 +366,12 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Clarify handoff system documentation
   - [ ] Add visual indicators for handoff-enabled modules
-  - [ ] Test handoff workflows (e.g., Calendar → Maps)
+  - [ ] Test handoff workflows (e.g., Calendar → Maps) on iOS
   - [ ] Add handoff history or back navigation
 - **References**: client/lib/moduleHandoff.ts
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -285,7 +380,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-014**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Settings screens exist for modules but no clear path
@@ -295,15 +391,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add settings icon to module headers
   - [ ] Ensure all module settings screens have meaningful content
   - [ ] Add "Module Settings" section in main Settings
-  - [ ] Test settings navigation flow
+  - [ ] Test settings navigation flow on iOS
 - **References**: client/screens/*Settings.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-015**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - HistoryScreen exists but no navigation path
@@ -311,15 +409,17 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Add History to System screen or Settings menu
   - [ ] Consider adding history access from CommandCenter
-  - [ ] Test history display and filtering
+  - [ ] Test history display and filtering on iOS
 - **References**: client/screens/HistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-016**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Only app-level ErrorBoundary exists
@@ -328,16 +428,18 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Wrap each Stack.Screen with ErrorBoundary
   - [ ] Add recovery options (reload screen, go back, go home)
-  - [ ] Test error boundary behavior with intentional errors
+  - [ ] Test error boundary behavior with intentional errors on iOS
   - [ ] Add error logging for debugging
 - **References**: client/components/ErrorBoundary.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic error handling. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-017**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Screens don't show loading indicators during data load
@@ -348,15 +450,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Phase 2: Add loading states to high-traffic screens (CommandCenter, Calendar, Notebook, Planner)
   - [ ] Phase 3: Add loading states to remaining module screens
   - [ ] Phase 4: Implement pull-to-refresh on list-based screens
-  - [ ] Phase 5: Test loading states and measure performance improvement
+  - [ ] Phase 5: Test loading states and measure performance improvement on iOS
 - **References**: client/screens/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic UI patterns. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-018**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - App doesn't show offline status or handle network errors
@@ -366,15 +470,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add network status indicator
   - [ ] Show offline mode banner
   - [ ] Cache data for offline viewing
-  - [ ] Test offline behavior for all modules
+  - [ ] Test offline behavior for all modules on iOS
 - **References**: All network-dependent code
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic network handling. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-019**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Input validation may be missing in editor screens
@@ -385,10 +491,11 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add validation to form screens: NoteEditor, TaskDetail, EventDetail
   - [ ] Add validation to form screens: ContactDetail, ListEditor, other editors
   - [ ] Implement error message display and inline validation feedback
-  - [ ] Test validation with edge cases (empty, invalid, boundary values)
+  - [ ] Test validation with edge cases (empty, invalid, boundary values) on iOS
 - **References**: client/screens/NoteEditor.tsx, client/screens/TaskDetail.tsx, etc.
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic validation logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -397,7 +504,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-020**
 - **Priority**: P3
 - **Type**: CHORE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Multiple components use hardcoded rgba() and hex values
@@ -412,11 +520,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: QuickCaptureOverlay.tsx, HandoffBreadcrumb.tsx, AIAssistSheet.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Theme refactoring. Codex Agent can verify Android/Web theme compatibility in follow-up.
 
 **T-021**
 - **Priority**: P3
 - **Type**: CHORE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Mix of relative (`../`, `./`) and alias (`@/`) imports
@@ -433,6 +543,9 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-022** ✅ COMPLETED (2026-01-19)
 - **Priority**: P3
 - **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
+- **Status**: READY
 - **Owner**: AGENT
 - **Status**: COMPLETE
 - **Context**:
@@ -446,12 +559,14 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/constants/theme.ts, client/components/ThemedText.tsx, docs/technical/design_guidelines.md
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic design system enhancement. Codex Agent can verify Android/Web compatibility in follow-up.
 - **Completion Notes**: Added h4 (16px/600), h5 (14px/600), h6 (12px/600) to Typography. Updated ThemedText component with new types. Documented usage guidelines with examples.
 
 **T-023**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Light mode implemented but needs refinement
@@ -465,11 +580,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/constants/theme.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic theme refinement. Codex Agent can verify Android/Web contrast compatibility in follow-up.
 
 **T-024**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Some Pressable components lack accessibilityRole
@@ -485,11 +602,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All component files
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic accessibility audit. Codex Agent can verify Android/Web accessibility features in follow-up.
 
 **T-025**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Touch-first interface with limited keyboard support
@@ -503,11 +622,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All interactive components
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic keyboard support. Codex Agent can verify Android/Web keyboard navigation in follow-up.
 
 **T-026**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Complex animations may drop frames on older devices
@@ -521,11 +642,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: MiniModeContainer.tsx, QuickCaptureOverlay.tsx, CommandCenter.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic animation optimization. Codex Agent can verify Android/Web animation performance in follow-up.
 
 **T-027**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Progressive image loading not implemented
@@ -539,6 +662,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: PhotosScreen.tsx, AlbumsScreen.tsx, PhotoDetailScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic image optimization. Codex Agent can verify Android/Web image caching in follow-up.
 
 ---
 
@@ -566,7 +690,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-029**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
   - Execute if T-028 decides to complete analytics
@@ -581,11 +706,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md, client/analytics/*
 - **Dependencies**: T-028
 - **Effort**: L (multiple weeks - requires phased approach)
+- **Note**: Platform-agnostic analytics implementation. Codex Agent can verify Android/Web analytics in follow-up.
 
 **T-030**
 - **Priority**: P1
 - **Type**: CHORE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
   - Execute if T-028 decides to remove analytics
@@ -600,6 +727,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/analytics/*
 - **Dependencies**: T-028
 - **Effort**: M
+- **Note**: Platform-agnostic analytics cleanup. Codex Agent can verify Android/Web dependencies in follow-up.
 
 ---
 
@@ -608,7 +736,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-031**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Server uses console.error for logging
@@ -623,6 +752,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: server/middleware/errorHandler.ts:28-30
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic server logging. Codex Agent can verify Android/Web client logging in follow-up.
 
 ---
 
@@ -631,7 +761,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-032**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Only Button component has tests
@@ -646,11 +777,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/components/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic testing infrastructure. Codex Agent can verify Android/Web test compatibility in follow-up.
 
 **T-033**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No end-to-end tests for critical workflows
@@ -665,11 +798,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All workflow-related code
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic end-to-end testing. Codex Agent can verify Android/Web workflow testing in follow-up.
 
 **T-034**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No visual regression testing
@@ -683,11 +818,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All screen components
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic visual regression testing. Codex Agent can verify Android/Web screenshot comparison in follow-up.
 
 **T-035**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No performance monitoring
@@ -702,6 +839,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All performance-critical code
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic performance monitoring. Codex Agent can verify Android/Web performance metrics in follow-up.
 
 ---
 
@@ -710,7 +848,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-036**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Each lib file needs usage examples
@@ -724,11 +863,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic library documentation. Codex Agent can verify Android/Web integration examples in follow-up.
 
 **T-037**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - UI components lack documentation
@@ -743,11 +884,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic component documentation. Codex Agent can verify Android/Web component compatibility in follow-up.
 
 **T-038**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No visual diagrams for workflows
@@ -761,6 +904,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic workflow diagrams. Codex Agent can verify Android/Web workflow coverage in follow-up.
 
 ---
 
@@ -769,7 +913,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-039**
 - **Priority**: P1
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - 277 TypeScript errors remaining
@@ -783,11 +928,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic event type system. Codex Agent can verify Android/Web event handling in follow-up.
 
 **T-040**
 - **Priority**: P1
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Components directly import Colors, Typography, Shadows
@@ -802,11 +949,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic theme hook migration. Codex Agent can verify Android/Web theme consistency in follow-up.
 
 **T-041**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Model interfaces don't match actual usage
@@ -821,11 +970,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic model interface audit. Codex Agent can verify Android/Web data model compatibility in follow-up.
 
 **T-042**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Dynamic navigation.navigate() calls cause TypeScript errors
@@ -839,10 +990,14 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All navigation code, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic navigation patterns. Codex Agent can verify Android/Web navigation type safety in follow-up.
 
 **T-043**
 - **Priority**: P2
 - **Type**: QUALITY
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
+- **Status**: READY
 - **Owner**: AGENT
 - **Status**: COMPLETE
 - **Context**:
@@ -857,12 +1012,14 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/screens/AlertsScreen.tsx:76, client/screens/BudgetScreen.tsx:1299
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic component prop validation. Codex Agent can verify Android/Web component props in follow-up.
 - **Completion Notes**: Fixed ThemedText type="title" to "hero" in AlertsScreen. Changed AIAssistSheet context prop to module in BudgetScreen. Button interface confirmed correct.
 
 **T-044**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - TypeScript strict mode not enabled
@@ -876,6 +1033,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: tsconfig.json, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: T-039, T-040, T-041, T-042, T-043
 - **Effort**: M
+- **Note**: Platform-agnostic TypeScript strict mode. Codex Agent can verify Android/Web type safety in follow-up.
 
 ---
 
@@ -886,7 +1044,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-045**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - 79 markdown files, 72 in root
@@ -900,11 +1059,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 1
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic documentation consolidation. Codex Agent can verify Android/Web documentation coverage in follow-up.
 
 **T-046**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - 11 separate security files
@@ -918,11 +1079,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.1
 - **Dependencies**: T-045
 - **Effort**: M
+- **Note**: Platform-agnostic security documentation. Codex Agent can verify Android/Web security practices in follow-up.
 
 **T-047**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Duplicate competitive analysis docs
@@ -936,11 +1099,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.2-2.3
 - **Dependencies**: T-045
 - **Effort**: S
+- **Note**: Platform-agnostic analysis documentation consolidation. Codex Agent can verify Android/Web analysis coverage in follow-up.
 
 **T-048**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No CHANGELOG.md exists
@@ -954,11 +1119,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic changelog. Codex Agent can verify Android/Web release notes in follow-up.
 
 **T-049**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - File naming inconsistent
@@ -972,11 +1139,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.1
 - **Dependencies**: T-045
 - **Effort**: S
+- **Note**: Platform-agnostic file naming conventions. Codex Agent can verify Android/Web file naming consistency in follow-up.
 
 **T-050**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No documentation templates
@@ -991,13 +1160,15 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.4
 - **Dependencies**: T-045
 - **Effort**: S
+- **Note**: Platform-agnostic documentation templates. Codex Agent can verify Android/Web template usage in follow-up.
 
 ### Documentation Quality & Automation
 
 **T-051**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Missing Getting Started tutorial
@@ -1011,11 +1182,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.1
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic getting started guide. Codex Agent can verify Android/Web setup instructions in follow-up.
 
 **T-052**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No how-to guides for common tasks
@@ -1030,11 +1203,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic how-to guides. Codex Agent can verify Android/Web task documentation in follow-up.
 
 **T-053**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No UI flow screenshots
@@ -1048,13 +1223,15 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 4.2
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic UI screenshots. Codex Agent can verify Android/Web UI screenshots in follow-up.
 
 ### Edge Cases & Testing Scenarios
 
 **T-054**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Empty states not designed or tested
@@ -1068,11 +1245,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: All screen components
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic empty state design. Codex Agent can verify Android/Web empty states in follow-up.
 
 **T-055**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Performance with large datasets not tested
@@ -1086,11 +1265,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: List-based screens
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic large dataset testing. Codex Agent can verify Android/Web performance at scale in follow-up.
 
 **T-056**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Permission denials not handled gracefully
@@ -1104,6 +1285,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: Permission-requiring features
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic permission error handling. Codex Agent can verify Android/Web permission flows in follow-up.
 
 ---
 

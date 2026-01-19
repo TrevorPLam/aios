@@ -25,6 +25,7 @@ Control when automated checks transition from warn-only to fail-on-violation:
 | **Constitution Sync** | `FAIL` | ✅ Yes | Active. Copilot instructions must match constitution. See: `.github/workflows/constitution-sync.yml` |
 | **Documentation Quality** | `FAIL` | ✅ Yes | Active. Vale, markdownlint, link checks enforced. See: `.github/workflows/docs-*.yml` |
 | **Security Scanning** | `FAIL` | ✅ Yes | Active. CodeQL, Trivy, SBOM required. See: `.github/workflows/codeql.yml`, `trivy.yml` |
+| **Agent Platform Separation** | `WARN` | ❌ No (not yet enforced) | Primary-Secondary model documented but not yet enforced via CI. Toggle to `FAIL` when enforcement script ready. |
 
 **How to toggle:**
 
@@ -89,6 +90,33 @@ Current in-progress migrations and temporary states:
 2. Replace placeholders with actual GitHub handles
 3. Enable CODEOWNERS requirement in branch protection settings
 4. Announce to team
+
+**Owner:** @TrevorPowellLam  
+**Tracking Issue:** TODO (create issue #XXX)
+
+#### 3. Primary-Secondary Agent Model Implementation (2026-01-19 → 2026-02-19)
+
+**Status:** 🟡 In Progress (Phase 1 Complete)
+
+**Goal:** Implement Primary-Secondary Agent Architecture where GitHub Copilot builds all original features (iOS-only) and Codex Agent adapts for Android/Web compatibility
+
+**Current State:**
+- Constitution updated with agent responsibility model
+- TODO.md restructured with new ownership schema
+- All existing tasks retroactively updated to reflect Primary/Secondary pattern
+- Enforcement mode: `WARN` (not yet enforced via CI)
+
+**Agent Responsibilities:**
+- **GitHub Copilot (Primary):** Builds ALL original features, screens, components. iOS-only development. Owns architectural decisions.
+- **Codex Agent (Secondary):** Adapts Copilot's completed iOS implementations for Android/Web compatibility only. Cannot perform original work.
+
+**Next Steps:**
+1. Update docs/ai/ai_contribution_policy.md with Primary/Secondary rules (week of 2026-01-26)
+2. Update README.md and other active documentation (week of 2026-01-26)
+3. Run `npm run compile:constitution` to update Copilot instructions (week of 2026-01-26)
+4. Create enforcement check script: `scripts/tools/check-agent-platform.mjs` (week of 2026-02-02)
+5. Add CI workflow: `.github/workflows/agent-platform-check.yml` (week of 2026-02-09)
+6. Toggle enforcement to `FAIL` (2026-02-16)
 
 **Owner:** @TrevorPowellLam  
 **Tracking Issue:** TODO (create issue #XXX)
