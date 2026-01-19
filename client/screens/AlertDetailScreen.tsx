@@ -29,6 +29,9 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -138,6 +141,7 @@ export default function AlertDetailScreen() {
   const [smartSnoozeSuggestion, setSmartSnoozeSuggestion] = useState<
     number | null
   >(null);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   // Load existing alert data or set defaults for new alert
   useEffect(() => {
@@ -273,18 +277,39 @@ export default function AlertDetailScreen() {
 
   /**
    * Handle time picker interaction
-   *
-   * TODO: Replace with a proper time picker component (e.g., @react-native-community/datetimepicker)
-   * Current implementation sets a sample time 1 hour from now
-   * 
-   * Missing Features: See MISSING_FEATURES.md (Alerts Module - Time Picker Implementation)
+   * Opens the native date/time picker for user to select alert time
    */
-  const handleTimeChange = () => {
-    const now = new Date();
-    now.setHours(now.getHours() + 1);
-    now.setMinutes(0);
-    now.setSeconds(0);
-    setTime(now.toISOString());
+  const handleTimeChange = (
+    event: DateTimePickerEvent,
+    selectedDate?: Date,
+  ) => {
+    // On Android, the picker closes automatically after selection
+    if (Platform.OS === "android") {
+      setShowTimePicker(false);
+    }
+
+    // If user cancelled or no date selected, return early
+    if (event.type === "dismissed" || !selectedDate) {
+      return;
+    }
+
+    // Update the time state with the selected date
+    setTime(selectedDate.toISOString());
+
+    // Provide haptic feedback
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
+
+  /**
+   * Show the time picker modal
+   */
+  const openTimePicker = () => {
+    setShowTimePicker(true);
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
   };
 
   /**
@@ -389,7 +414,7 @@ export default function AlertDetailScreen() {
             Time
           </ThemedText>
           <Pressable
-            onPress={handleTimeChange}
+            onPress={openTimePicker}
             style={[
               styles.picker,
               {
@@ -403,6 +428,15 @@ export default function AlertDetailScreen() {
             </ThemedText>
             <Feather name="clock" size={20} color={theme.textMuted} />
           </Pressable>
+          {showTimePicker && (
+            <DateTimePicker
+              value={time ? new Date(time) : new Date()}
+              mode="time"
+              is24Hour={false}
+              onChange={handleTimeChange}
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+            />
+          )}
         </View>
 
         <View style={styles.section}>
