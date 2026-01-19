@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Alert } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -108,13 +108,68 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const prev = getPrevModule();
   const next = getNextModule();
 
+  /**
+   * Validates if a route exists in the navigation stack
+   * @param routeName - The route name to validate
+   * @returns true if route exists, false otherwise
+   */
+  const isValidRoute = (routeName: keyof AppStackParamList): boolean => {
+    // Get the navigator state to check if route exists
+    const state = navigation.getState();
+    const routeExists = state.routeNames.includes(routeName);
+    return routeExists;
+  };
+
+  /**
+   * Handles navigation with route validation
+   * Validates route exists before attempting navigation
+   * Shows error message and logs if route is invalid
+   */
   const handleNavigation = async (module: ModuleItem) => {
-    await db.settings.trackModuleUsage(module.id);
-    // Clear contextual module after navigation
-    if (contextualModule) {
-      clearContextualModule();
+    // Validate that the route exists in the navigation stack
+    if (!isValidRoute(module.route)) {
+      const errorMessage = `Cannot navigate to ${module.name}. Route "${module.route}" is not registered.`;
+
+      // Log error for debugging
+      console.error("[BottomNav] Navigation Error:", errorMessage, {
+        moduleId: module.id,
+        moduleName: module.name,
+        route: module.route,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Show user-friendly error message
+      Alert.alert(
+        "Navigation Error",
+        `The ${module.name} module is not available. Please ensure all modules are properly configured.`,
+        [{ text: "OK" }],
+      );
+
+      return;
     }
-    navigation.navigate(module.route as any);
+
+    try {
+      await db.settings.trackModuleUsage(module.id);
+      // Clear contextual module after navigation
+      if (contextualModule) {
+        clearContextualModule();
+      }
+      navigation.navigate(module.route as any);
+    } catch (error) {
+      // Log any navigation errors
+      console.error("[BottomNav] Navigation failed:", error, {
+        moduleId: module.id,
+        moduleName: module.name,
+        route: module.route,
+        timestamp: new Date().toISOString(),
+      });
+
+      Alert.alert(
+        "Navigation Error",
+        "Unable to navigate to the selected module. Please try again.",
+        [{ text: "OK" }],
+      );
+    }
   };
 
   return (
