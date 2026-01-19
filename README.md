@@ -206,6 +206,17 @@ npm run expo:clean
 ```
 This removes all cache files and restarts Expo with a fresh bundle.
 
+**Native dependency issues (e.g., WorkletsError version mismatch)?**
+Clean native module caches and reinstall:
+```bash
+npm run expo:clean:native
+```
+For severe issues with native dependencies:
+```bash
+npm run expo:clean:full
+```
+See [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch) for detailed troubleshooting.
+
 **Seeing a web version instead of native iOS?**
 - Ensure you're using `npm run expo:dev` (which forces iOS mode)
 - Press `i` in the Expo CLI to explicitly open iOS simulator
