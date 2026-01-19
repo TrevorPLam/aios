@@ -28,7 +28,8 @@
     "check:exceptions": "node scripts/tools/check-exceptions.mjs",
     "check:traceability": "node scripts/tools/check-traceability.mjs",
     "check:agent-platform": "node scripts/tools/check-agent-platform.mjs",
-    "check:worklets": "node scripts/check-worklets-version.mjs"
+    "check:worklets": "node scripts/check-worklets-version.mjs",
+    "check:postinstall": "node scripts/post-install-check.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

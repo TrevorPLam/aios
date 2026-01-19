@@ -432,34 +432,58 @@ redis-cli LLEN "bull:jobs:waiting"
 
 ## React Native Worklets Version Mismatch
 
+**🚨 IMMEDIATE ACTION REQUIRED:** If you're experiencing this issue right now, run this command first:
+
+```bash
+npm run expo:clean:native && npm run expo:rebuild:ios
+```
+
+**📖 Complete fix guide with 3 options:** See **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)**
+
+---
+
 ### Symptoms
 - App crashes on startup with `WorkletsError` 
 - Error message: "Mismatch between JavaScript part and native part of Worklets (X.X.X vs Y.Y.Y)"
+  - Example: "Mismatch between JavaScript part and native part of Worklets (0.7.2 vs 0.5.1)"
 - iOS/Android app fails to load
 - Metro bundler shows worklets-related errors
+- Commonly occurs after Dependabot updates or manual dependency upgrades
 
 ### Quick Fix
+
+**Option 1: Standard Fix (Works 80% of the time)**
 
 ```bash
 # 1. Clean all caches and reinstall dependencies
 npm run expo:clean:native
 
-# 2. If that doesn't work, do a full clean
-npm run expo:clean:full
-
-# 3. Rebuild the native app (REQUIRED for development builds)
+# 2. Rebuild the native app (REQUIRED for development builds)
 # For iOS:
 npm run expo:rebuild:ios
 
 # For Android:
 npm run expo:rebuild:android
 
-# 4. Or start fresh Metro bundler (if using Expo Go)
-npx expo start --clear
-
-# 5. Verify
+# 3. Verify
+npm run check:worklets
 # App should start without WorkletsError
 ```
+
+**Option 2: Deep Clean (If Option 1 doesn't work)**
+
+```bash
+# 1. Full clean including node_modules
+npm run expo:clean:full
+
+# 2. Rebuild the native app
+npm run expo:rebuild:ios  # or :android
+
+# 3. Verify
+npm run check:worklets
+```
+
+**Option 3: Manual Nuclear Option (Last resort - see WORKLETS_FIX_GUIDE.md)**
 
 ### Manual Steps (if scripts fail)
 
@@ -487,31 +511,62 @@ npx expo run:ios  # or npx expo run:android
 - [ ] No version mismatch warnings in logs
 - [ ] Animations and gestures work correctly
 - [ ] React Native Reanimated features work
+- [ ] `npm run check:worklets` shows: ✅ Versions match
 
 ### Root Cause
 This error occurs when:
 - The JavaScript bundle has a different version of `react-native-worklets` than the native iOS/Android code
-- Common after updating `react-native-reanimated` or `react-native-worklets`
-- Native builds cached old version while JS updated
+- **Most common trigger:** Dependabot updates that change `react-native-reanimated` or `react-native-worklets` versions
+- Native builds cached old version (e.g., 0.5.1) while JS bundle updated to new version (e.g., 0.7.2)
 - Expo development builds not rebuilt after dependency changes
+- Branch switching with different dependency versions
+
+**Key insight:** JavaScript updates instantly via Metro bundler, but native iOS/Android code requires a complete rebuild.
 
 ### Prevention
-- Always run `npm run expo:clean:native` after updating animation-related dependencies
-- For Expo development builds, rebuild native code when updating:
-  - `react-native-reanimated`
-  - `react-native-worklets`
-  - `react-native-gesture-handler`
-  - `react-native-draggable-flatlist`
-- Use `expo:clean:full` when switching branches with different dependency versions
+**After any of these events, ALWAYS run: `npm run expo:rebuild:ios`**
+
+1. **After Dependabot/dependency updates** involving:
+   - `react-native-reanimated`
+   - `react-native-worklets`
+   - `react-native-gesture-handler`
+   - `react-native-draggable-flatlist`
+   - `react-native-keyboard-controller`
+
+2. **After merging PRs** that update animation dependencies
+
+3. **When switching branches** with different dependency versions:
+   ```bash
+   npm run expo:clean:full && npm run expo:rebuild:ios
+   ```
+
+4. **Before starting work** (proactive check):
+   ```bash
+   npm run check:worklets
+   ```
+
+5. **Add to your workflow:**
+   ```bash
+   # After pulling main
+   git pull origin main
+   npm install
+   npm run check:worklets  # Check for mismatches
+   # If mismatch detected, run:
+   npm run expo:rebuild:ios
+   ```
 
 ### Related Documentation
-- react-native-worklets troubleshooting: https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting
-- Expo prebuild: https://docs.expo.dev/workflow/prebuild/
-- React Native Reanimated installation: https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation
+- **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
+- [react-native-worklets troubleshooting](https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting) - Official docs
+- [Expo prebuild](https://docs.expo.dev/workflow/prebuild/) - Understanding native builds
+- [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation) - Reanimated setup
 
 ### Automation Candidate
-- **Priority:** Low (manual intervention required for native builds)
-- **Approach:** Pre-commit hook to detect dependency version changes
+- **Priority:** Medium (can automate detection and warnings)
+- **Approach:** 
+  - Post-install hook that runs `check:worklets` automatically
+  - Pre-commit hook to detect dependency version changes
+  - CI check to verify versions match before merging PRs
 - **Ticket:** [Create ticket if needed]
 
 ---
