@@ -215,6 +215,17 @@ For severe issues with native dependencies:
 ```bash
 npm run expo:clean:full
 ```
+
+**If you see "Mismatch between JavaScript part and native part of Worklets":**
+This means the native iOS/Android build has an outdated version. Rebuild the native app:
+```bash
+# For iOS
+npm run expo:rebuild:ios
+
+# For Android  
+npm run expo:rebuild:android
+```
+
 See [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch) for detailed troubleshooting.
 
 **Seeing a web version instead of native iOS?**

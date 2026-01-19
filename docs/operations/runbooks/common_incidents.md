@@ -447,12 +447,15 @@ npm run expo:clean:native
 # 2. If that doesn't work, do a full clean
 npm run expo:clean:full
 
-# 3. Start fresh Metro bundler
-npx expo start --clear
+# 3. Rebuild the native app (REQUIRED for development builds)
+# For iOS:
+npm run expo:rebuild:ios
 
-# 4. If using development build, rebuild the app
-npx expo prebuild --clean
-npx expo run:ios  # or npx expo run:android
+# For Android:
+npm run expo:rebuild:android
+
+# 4. Or start fresh Metro bundler (if using Expo Go)
+npx expo start --clear
 
 # 5. Verify
 # App should start without WorkletsError
