@@ -84,8 +84,10 @@ function checkReactNativeEcosystem() {
     // Check if versions are compatible
     const reanimatedClean = reanimatedVersion.replace(/^[\^~>=<]+/, '');
     const workletsClean = workletsVersion.replace(/^[\^~>=<]+/, '');
-    const reanimatedMajor = parseInt(reanimatedClean.split('.')[0]);
-    const [workletsMajor, workletsMinor] = workletsClean.split('.').map(Number);
+    const reanimatedMajor = parseInt(reanimatedClean.split('.')[0]) || 0;
+    const workletsParts = workletsClean.split('.');
+    const workletsMajor = parseInt(workletsParts[0]) || 0;
+    const workletsMinor = parseInt(workletsParts[1]) || 0;
     
     // Reanimated 4.x requires Worklets 0.7.0 or higher
     if (reanimatedMajor === 4 && (workletsMajor !== 0 || workletsMinor < 7)) {
@@ -97,14 +99,6 @@ function checkReactNativeEcosystem() {
 
   console.log();
   return issues;
-}
-
-/**
- * Extract major.minor version
- */
-function extractVersion(versionString) {
-  const match = versionString.match(/(\d+)\.(\d+)/);
-  return match ? `${match[1]}.${match[2]}` : versionString;
 }
 
 /**
