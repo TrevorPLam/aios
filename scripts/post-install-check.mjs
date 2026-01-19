@@ -2,7 +2,7 @@
 
 /**
  * Post-install check script
- * 
+ *
  * Runs after npm install to check for common issues and provide helpful guidance.
  * This is especially useful after Dependabot updates or branch switches.
  */
