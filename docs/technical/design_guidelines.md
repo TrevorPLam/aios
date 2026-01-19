@@ -39,12 +39,35 @@
 **Font Family**: Use **Inter** or **Space Grotesk** (modern humanist sans-serif)
 
 **Type Scale**:
-- Hero/Large Title: 32px, Bold
-- Screen Title: 24px, Semibold
-- Card Title: 18px, Semibold
-- Body: 16px, Regular
-- Caption/Metadata: 14px, Regular
-- Small Label: 12px, Medium
+- Hero/Large Title: 32px, Bold (700)
+- H1 (Screen Title): 24px, Semibold (600)
+- H2 (Section Header): 20px, Semibold (600)
+- H3 (Card Title): 18px, Semibold (600)
+- H4 (Subsection): 16px, Semibold (600)
+- H5 (Small Header): 14px, Semibold (600)
+- H6 (Micro Header): 12px, Semibold (600)
+- Body: 16px, Regular (400)
+- Caption/Metadata: 14px, Regular (400)
+- Small Label: 12px, Medium (500)
+
+**Usage Guidelines**:
+- Use hero for splash screens and major landing pages
+- Use h1 for main screen titles
+- Use h2 for major sections within a screen
+- Use h3 for card titles and important subsections
+- Use h4 for subsections and emphasized content within body text
+- Use h5 for small headers in compact layouts
+- Use h6 for micro headers in dense information displays
+- Use body for all standard text content
+- Use caption for metadata and supplementary information
+- Use small for labels and compact UI elements
+
+**Note on Size Overlaps**: 
+The heading variants h4-h6 intentionally share sizes with body text (h4=body=16px, h5=caption=14px, h6=small=12px) but use semibold weight (600) instead of regular/medium weight. This design decision:
+- Provides clear visual distinction through weight rather than size
+- Maintains consistent vertical rhythm across the UI
+- Reduces the number of font sizes, improving design system simplicity
+- Allows semantic markup without disrupting text flow
 
 ---
 

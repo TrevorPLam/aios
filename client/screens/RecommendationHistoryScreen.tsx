@@ -179,7 +179,7 @@ function HistoryCard({
         </View>
       </View>
 
-      <ThemedText type="body" style={styles.cardTitle}>
+      <ThemedText type="h4" style={styles.cardTitle}>
         {recommendation.title}
       </ThemedText>
 

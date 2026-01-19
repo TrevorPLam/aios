@@ -234,7 +234,7 @@ export default function SettingsMenuScreen() {
           ))}
         </View>
         <View style={styles.sectionHeader}>
-          <ThemedText type="caption" muted>
+          <ThemedText type="h5" muted>
             Module Settings
           </ThemedText>
         </View>

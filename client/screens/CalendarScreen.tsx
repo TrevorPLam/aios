@@ -465,24 +465,24 @@ export default function CalendarScreen() {
                 <ThemedText type="h3" style={{ color: theme.accent }}>
                   {eventStats.total}
                 </ThemedText>
-                <ThemedText type="small" muted>
-                  Total Events
+                <ThemedText type="h6" muted>
+                  TOTAL EVENTS
                 </ThemedText>
               </View>
               <View style={styles.statItem}>
                 <ThemedText type="h3" style={{ color: theme.success }}>
                   {eventStats.today}
                 </ThemedText>
-                <ThemedText type="small" muted>
-                  Today
+                <ThemedText type="h6" muted>
+                  TODAY
                 </ThemedText>
               </View>
               <View style={styles.statItem}>
                 <ThemedText type="h3" style={{ color: theme.warning }}>
                   {eventStats.upcoming}
                 </ThemedText>
-                <ThemedText type="small" muted>
-                  Upcoming
+                <ThemedText type="h6" muted>
+                  UPCOMING
                 </ThemedText>
               </View>
             </View>
@@ -491,24 +491,24 @@ export default function CalendarScreen() {
                 <ThemedText type="h3" style={{ color: theme.error }}>
                   {eventStats.recurring}
                 </ThemedText>
-                <ThemedText type="small" muted>
-                  Recurring
+                <ThemedText type="h6" muted>
+                  RECURRING
                 </ThemedText>
               </View>
               <View style={styles.statItem}>
                 <ThemedText type="h3" style={{ color: theme.textSecondary }}>
                   {eventStats.allDay}
                 </ThemedText>
-                <ThemedText type="small" muted>
-                  All-Day
+                <ThemedText type="h6" muted>
+                  ALL-DAY
                 </ThemedText>
               </View>
               <View style={styles.statItem}>
                 <ThemedText type="h3" style={{ color: theme.text }}>
                   {viewEvents.length}
                 </ThemedText>
-                <ThemedText type="small" muted>
-                  In View
+                <ThemedText type="h6" muted>
+                  IN VIEW
                 </ThemedText>
               </View>
             </View>
