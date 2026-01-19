@@ -49,6 +49,13 @@ interface ModuleSettingsItem {
 
 const SETTINGS_MENU: SettingsMenuItem[] = [
   {
+    id: "modules",
+    name: "All Modules",
+    icon: "grid",
+    route: "ModuleGrid",
+    description: "View and organize all modules",
+  },
+  {
     id: "general",
     name: "General",
     icon: "sliders",

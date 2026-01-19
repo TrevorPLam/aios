@@ -114,6 +114,8 @@ const Stack = createNativeStackNavigator<AppStackParamList>();
 export default function AppNavigator() {
   const screenOptions = useScreenOptions();
   const [isReady, setIsReady] = useState(false);
+  const [initialRoute, setInitialRoute] =
+    useState<keyof AppStackParamList>("CommandCenter");
 
   useEffect(() => {
     async function initializeData() {
@@ -188,6 +190,13 @@ export default function AppNavigator() {
         });
 
         await db.setInitialized();
+
+        // First launch - show onboarding
+        setInitialRoute("OnboardingWelcome");
+      } else {
+        // Returning user - skip onboarding
+        // TODO: Add settings.onboardingCompleted flag for more control
+        setInitialRoute("CommandCenter");
       }
       setIsReady(true);
     }
@@ -202,7 +211,7 @@ export default function AppNavigator() {
   return (
     <Stack.Navigator
       screenOptions={screenOptions}
-      initialRouteName="CommandCenter"
+      initialRouteName={initialRoute}
     >
       <Stack.Screen
         name="CommandCenter"
