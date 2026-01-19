@@ -376,6 +376,7 @@ export default function CommandCenterScreen() {
   // Scroll animation for secondary nav
   const lastScrollY = useSharedValue(0);
   const secondaryNavTranslateY = useSharedValue(0);
+  const isAnimating = useSharedValue(false);
 
   /**
    * Load recommendations, AI limits, and attention counts from database.
@@ -594,17 +595,32 @@ export default function CommandCenterScreen() {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     const delta = currentScrollY - lastScrollY.value;
 
+    // Prevent overlapping animations
+    if (isAnimating.value) {
+      lastScrollY.value = currentScrollY;
+      return;
+    }
+
     // Show nav when at top (scrollY < SCROLL_TOP_THRESHOLD)
-    if (currentScrollY < SCROLL_TOP_THRESHOLD) {
-      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION });
+    if (currentScrollY < SCROLL_TOP_THRESHOLD && secondaryNavTranslateY.value !== 0) {
+      isAnimating.value = true;
+      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
+        isAnimating.value = false;
+      });
     }
     // Hide nav when scrolling down (delta > SCROLL_DOWN_THRESHOLD)
-    else if (delta > SCROLL_DOWN_THRESHOLD) {
-      secondaryNavTranslateY.value = withTiming(SECONDARY_NAV_HIDE_OFFSET, { duration: SECONDARY_NAV_ANIMATION_DURATION });
+    else if (delta > SCROLL_DOWN_THRESHOLD && secondaryNavTranslateY.value !== SECONDARY_NAV_HIDE_OFFSET) {
+      isAnimating.value = true;
+      secondaryNavTranslateY.value = withTiming(SECONDARY_NAV_HIDE_OFFSET, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
+        isAnimating.value = false;
+      });
     }
     // Show nav when scrolling up (delta < SCROLL_UP_THRESHOLD)
-    else if (delta < SCROLL_UP_THRESHOLD) {
-      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION });
+    else if (delta < SCROLL_UP_THRESHOLD && secondaryNavTranslateY.value !== 0) {
+      isAnimating.value = true;
+      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
+        isAnimating.value = false;
+      });
     }
 
     lastScrollY.value = currentScrollY;
@@ -980,7 +996,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 0, // Remove horizontal padding to extend to edges
-    paddingBottom: Spacing.md, // Minimal bottom padding for limits container
   },
   footerContent: {
     paddingHorizontal: Spacing.lg, // Only apply padding to limits container
