@@ -268,7 +268,8 @@ function RecommendationCard({
         style={[
           styles.cardShadowWrapper,
           { 
-            shadowColor: theme.accent,
+            shadowColor: "#FFFFFF",
+            backgroundColor: theme.backgroundDefault,
           },
           // Stronger shadow for unopened cards
           isUnopened ? {
@@ -843,6 +844,7 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     borderRadius: BorderRadius.lg,
     // Shadow properties (no overflow hidden so shadow renders)
+    // backgroundColor required for iOS shadow rendering (even if transparent)
     shadowOffset: { width: 0, height: 0 },
   },
   card: {

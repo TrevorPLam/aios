@@ -267,6 +267,8 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
         {
           backgroundColor: theme.backgroundBlack,
           paddingBottom: insets.bottom + Spacing.xs,
+          paddingLeft: Math.max(insets.left, Spacing.sm),
+          paddingRight: Math.max(insets.right, Spacing.sm),
         },
       ]}
     >
@@ -325,10 +327,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: 0, // Changed from Spacing.lg to allow edge-to-edge stretch
     paddingTop: Spacing.xs,
-    // IMPORTANT: These constraints ensure the bar fills to screen edges
-    // Do not change width or minHeight without updating this comment
+    // Container extends edge-to-edge; buttons maintain spacing via justifyContent
     width: "100%",
     minHeight: 80,
   },
