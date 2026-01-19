@@ -5,6 +5,9 @@
  * Features:
  * - Module enable/disable toggles
  * - AI personality customization
+ * - Context zone selection (work/personal/focus modes)
+ * - Attention Center access
+ * - History log access
  * - Color theme selection
  * - Display preferences (photo grid size, etc.)
  * - Contact sharing defaults
@@ -12,6 +15,11 @@
  * - Navigation to module-specific settings
  * - Dark mode toggle
  * - App information and version
+ *
+ * Recent Updates:
+ * - Added Attention Center to main settings menu (T-005)
+ * - Added History to main settings menu for better discoverability (T-015)
+ * - Improved settings organization and navigation
  *
  * @module SettingsMenuScreen
  */
@@ -70,6 +78,13 @@ const SETTINGS_MENU: SettingsMenuItem[] = [
     description: "AI configuration",
   },
   {
+    id: "attention",
+    name: "Attention Center",
+    icon: "bell",
+    route: "AttentionCenter",
+    description: "Notifications & focus mode",
+  },
+  {
     id: "personalization",
     name: "Personalization",
     icon: "user",
@@ -84,11 +99,18 @@ const SETTINGS_MENU: SettingsMenuItem[] = [
     description: "Connected services",
   },
   {
+    id: "history",
+    name: "History",
+    icon: "clock",
+    route: "History",
+    description: "Activity log & timeline",
+  },
+  {
     id: "system",
     name: "System",
     icon: "info",
     route: "System",
-    description: "About & history",
+    description: "About & diagnostics",
   },
 ];
 
