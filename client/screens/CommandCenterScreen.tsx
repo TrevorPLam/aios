@@ -421,7 +421,6 @@ export default function CommandCenterScreen() {
           },
         ]}
       >
-        <View style={styles.headerContent}>
         <Pressable
           onPress={() => navigation.navigate("ModuleGrid")}
           style={({ pressed }) => [
@@ -492,7 +491,6 @@ export default function CommandCenterScreen() {
           >
             <Feather name="settings" size={24} color={theme.text} />
           </Pressable>
-        </View>
         </View>
       </View>
 
@@ -610,32 +608,34 @@ export default function CommandCenterScreen() {
       <View
         style={[styles.footer, { paddingBottom: insets.bottom + Spacing.lg }]}
       >
-        <View style={styles.limitsContainer}>
-          <View
-            style={[
-              styles.limitBadge,
-              { backgroundColor: theme.backgroundDefault },
-            ]}
-          >
-            <Feather name="zap" size={14} color={theme.accent} />
-            <ThemedText type="small" style={{ color: theme.accent }}>
-              AI Cards: {remaining}/{total}
-            </ThemedText>
+        <View style={styles.footerContent}>
+          <View style={styles.limitsContainer}>
+            <View
+              style={[
+                styles.limitBadge,
+                { backgroundColor: theme.backgroundDefault },
+              ]}
+            >
+              <Feather name="zap" size={14} color={theme.accent} />
+              <ThemedText type="small" style={{ color: theme.accent }}>
+                AI Cards: {remaining}/{total}
+              </ThemedText>
+            </View>
+            <View
+              style={[
+                styles.limitBadge,
+                { backgroundColor: theme.backgroundDefault },
+              ]}
+            >
+              <Feather name="refresh-cw" size={14} color={theme.textMuted} />
+              <ThemedText type="small" muted>
+                Refreshes in {refreshTime}
+              </ThemedText>
+            </View>
           </View>
-          <View
-            style={[
-              styles.limitBadge,
-              { backgroundColor: theme.backgroundDefault },
-            ]}
-          >
-            <Feather name="refresh-cw" size={14} color={theme.textMuted} />
-            <ThemedText type="small" muted>
-              Refreshes in {refreshTime}
-            </ThemedText>
-          </View>
-        </View>
 
-        <BottomNav onAiPress={() => setShowAISheet(true)} />
+          <BottomNav onAiPress={() => setShowAISheet(true)} />
+        </View>
       </View>
 
       <AIAssistSheet
@@ -661,15 +661,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 0, // Remove horizontal padding to extend to edges
-    paddingBottom: Spacing.md,
-  },
-  headerContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
-    width: "100%",
+    paddingBottom: Spacing.md,
   },
   headerButton: {
     width: 44,
@@ -816,6 +809,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   footer: {
+    paddingHorizontal: 0, // Remove horizontal padding to extend to edges
+  },
+  footerContent: {
     paddingHorizontal: Spacing.lg,
   },
   limitsContainer: {
