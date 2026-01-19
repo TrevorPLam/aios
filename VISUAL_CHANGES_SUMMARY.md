@@ -31,13 +31,14 @@
 **Visual Effect**: Unread cards stand out with a gentle white halo, drawing attention to new recommendations
 
 ### 3. Navigation Bar Edge-to-Edge
-**Before**: Navigation bar had horizontal padding (Spacing.lg = 16px) creating margins  
+**Before**: Bottom footer/navigation bar had horizontal padding (Spacing.lg = 16px) creating margins  
 **After**: 
-- Header background extends to screen edges (0px horizontal padding)
-- Content is wrapped in `headerContent` div with proper padding
+- Footer background extends to screen edges (0px horizontal padding)
+- Content is wrapped in `footerContent` div with proper padding
 - Background color fills full width of screen
+- Top header maintains original padding (Spacing.lg)
 
-**Visual Effect**: Navigation bar feels more integrated with the app shell, matching modern mobile app patterns
+**Visual Effect**: Bottom navigation bar feels more integrated with the app shell, matching modern mobile app patterns
 
 ### 4. Secondary Navigation Bar
 **New Component**: Module-specific navigation positioned below main header
@@ -90,14 +91,15 @@ cardSeparator: {
   height: 2, // Very minimal spacing
 },
 
-// New styles
-headerContent: {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  paddingHorizontal: Spacing.lg,
-  width: "100%",
+// Footer extends to edges
+footer: {
+  paddingHorizontal: 0, // Remove horizontal padding to extend to edges
 },
+footerContent: {
+  paddingHorizontal: Spacing.lg,
+},
+
+// New styles
 secondaryNav: {
   paddingHorizontal: Spacing.lg,
   paddingVertical: Spacing.sm,
@@ -136,7 +138,7 @@ This will provide consistent UX and reduce navigation clutter across the entire 
 2. Confirm white glow appears on new recommendations
 3. Confirm white glow disappears after tapping a card
 4. Test secondary navigation buttons (Search, Attention, History)
-5. Verify navigation bar extends to screen edges
+5. Verify bottom footer/navigation bar extends to screen edges
 6. Test in both light and dark themes
 7. Verify attention badge count displays correctly
 
@@ -150,11 +152,11 @@ This will provide consistent UX and reduce navigation clutter across the entire 
 ### Before
 - [ ] Card spacing (wide gaps)
 - [ ] All cards look identical (no glow)
-- [ ] Navigation bar with margins
+- [ ] Bottom navigation bar with margins
 - [ ] Cluttered header with many icons
 
 ### After
 - [ ] Card spacing (minimal 2px gaps)
 - [ ] Unread cards with white glow
-- [ ] Edge-to-edge navigation bar
+- [ ] Edge-to-edge bottom navigation bar
 - [ ] Secondary navigation bar with key actions
