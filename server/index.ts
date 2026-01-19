@@ -2,11 +2,11 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
+import { logger } from "./utils/logger";
 import * as fs from "fs";
 import * as path from "path";
 
 const app = express();
-const log = console.log;
 
 declare module "http" {
   interface IncomingMessage {
@@ -82,16 +82,14 @@ function setupRequestLogging(app: express.Application) {
 
       const duration = Date.now() - start;
 
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
+      // Log API request with structured metadata
+      logger.info('API request', {
+        method: req.method,
+        path,
+        statusCode: res.statusCode,
+        duration: `${duration}ms`,
+        response: capturedJsonResponse ? JSON.stringify(capturedJsonResponse).substring(0, 100) : undefined,
+      });
     });
 
     next();
@@ -149,8 +147,7 @@ function serveLandingPage({
   const baseUrl = `${protocol}://${host}`;
   const expsUrl = `${host}`;
 
-  log(`baseUrl`, baseUrl);
-  log(`expsUrl`, expsUrl);
+  logger.debug('URL configuration', { baseUrl, expsUrl });
 
   const html = landingPageTemplate
     .replace(/BASE_URL_PLACEHOLDER/g, baseUrl)
@@ -171,7 +168,7 @@ function configureExpoAndLanding(app: express.Application) {
   const landingPageTemplate = fs.readFileSync(templatePath, "utf-8");
   const appName = getAppName();
 
-  log("Serving static Expo files with dynamic manifest routing");
+  logger.info("Serving static Expo files with dynamic manifest routing");
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.path.startsWith("/api")) {
@@ -202,7 +199,7 @@ function configureExpoAndLanding(app: express.Application) {
   app.use("/assets", express.static(path.resolve(process.cwd(), "assets")));
   app.use(express.static(path.resolve(process.cwd(), "static-build")));
 
-  log("Expo routing: Checking expo-platform header on / and /manifest");
+  logger.info("Expo routing: Checking expo-platform header on / and /manifest");
 }
 
 function setupErrorHandler(app: express.Application) {
@@ -229,7 +226,7 @@ function setupErrorHandler(app: express.Application) {
       reusePort: true,
     },
     () => {
-      log(`express server serving on port ${port}`);
+      logger.info('Server started', { port, host: '0.0.0.0' });
     },
   );
 })();
