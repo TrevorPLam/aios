@@ -139,6 +139,36 @@ export const BorderRadius = {
   full: 9999,
 };
 
+/**
+ * Typography system with semantic sizing and weight variants.
+ *
+ * Provides a consistent type scale from hero (32px) to small (12px).
+ * Heading variants (h4-h6) intentionally match body text sizes but use
+ * semibold weight (600) for visual distinction without size proliferation.
+ *
+ * Size Hierarchy:
+ * - hero (32px/700): Splash screens, major landing pages
+ * - h1 (24px/600): Main screen titles
+ * - h2 (20px/600): Major sections within a screen
+ * - h3 (18px/600): Card titles, important subsections
+ * - h4 (16px/600): Subsections, emphasized content (matches body size)
+ * - h5 (14px/600): Small headers in compact layouts (matches caption size)
+ * - h6 (12px/600): Micro headers in dense displays (matches small size)
+ * - body (16px/400): Standard content text
+ * - caption (14px/400): Metadata, supplementary information
+ * - small (12px/500): Labels, compact UI elements
+ *
+ * @example
+ * // Use with ThemedText component:
+ * <ThemedText type="h4">Subsection Title</ThemedText>
+ *
+ * // Or directly in styles:
+ * const styles = StyleSheet.create({
+ *   heading: Typography.h5,
+ * });
+ *
+ * @see docs/technical/design_guidelines.md for complete usage guidelines
+ */
 export const Typography = {
   sizes: {
     hero: 32,
