@@ -1,7 +1,7 @@
 # TODO.md 
 
 Document Type: Workflow
-Last Updated: 2025-01-18
+Last Updated: 2026-01-19
 Task Truth Source: **TODO.md**
 
 This file is the single source of truth for actionable work.
@@ -11,7 +11,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **ID**: `T-###` (unique)
 - **Priority**: `P0 | P1 | P2 | P3`
 - **Type**: `SECURITY | RELEASE | DEPENDENCY | DOCS | QUALITY | BUG | FEATURE | CHORE`
-- **Owner**: `AGENT | Trevor`
+- **Owner**: `GitHub Agent (Primary) | Codex Agent (Secondary) | Trevor`
+- **Platform**: `iOS | Android | Web | Platform-Agnostic` (when applicable)
 - **Status**: `READY | BLOCKED | IN-PROGRESS | IN-REVIEW`
 - **Context**: why the task exists (1–5 bullets)
 - **Acceptance Criteria**: verifiable checklist
@@ -26,8 +27,14 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **P3**: backlog/tech debt; do when convenient
 
 ### Ownership rule
-- **Owner: AGENT** means the task can be executed by a coding agent in-repo.
-- **Owner: Trevor** means it requires external actions (provider dashboards, DNS, billing, approvals).
+- **Owner: GitHub Agent (Primary)** = Builds all original features, screens, components. iOS-only development. Owns architectural decisions.
+- **Owner: Codex Agent (Secondary)** = Adapts Copilot's completed iOS implementations for Android/Web compatibility only. Must reference Copilot's work. Cannot perform original development.
+- **Owner: Trevor** = Requires external actions (provider dashboards, DNS, billing, approvals).
+
+### Task Pattern for Features
+For new features requiring multi-platform support, use sequential tasks:
+- **Part A**: GitHub Agent (Primary) builds iOS implementation
+- **Part B**: Codex Agent (Secondary) adapts for Android/Web (depends on Part A)
 
 ---
 
@@ -35,10 +42,11 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 🔴 Critical Bugs
 
-**T-001**
+**T-001A**
 - **Priority**: P0
 - **Type**: BUG
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - AlertDetailScreen uses placeholder for time picker
@@ -46,36 +54,74 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Component referenced but not implemented
 - **Acceptance Criteria**:
   - [ ] Install @react-native-community/datetimepicker
-  - [ ] Implement proper time picker in AlertDetailScreen.tsx
-  - [ ] Test time selection on both iOS and Android
+  - [ ] Implement proper time picker in AlertDetailScreen.tsx for iOS
+  - [ ] Test time selection on iOS
   - [ ] Remove TODO comment at line 277
 - **References**: client/screens/AlertDetailScreen.tsx:277
 - **Dependencies**: None
 - **Effort**: S
 
-**T-002**
+**T-001B**
 - **Priority**: P0
 - **Type**: BUG
-- **Owner**: AGENT
+- **Owner**: Codex Agent (Secondary)
+- **Platform**: Android, Web
+- **Status**: BLOCKED
+- **Context**:
+  - Adapt T-001A iOS time picker implementation for Android/Web compatibility
+  - Note: Existing Android-specific code at line ~285 can remain as-is
+- **Acceptance Criteria**:
+  - [ ] Verify time picker works on Android
+  - [ ] Add web-compatible time picker if needed
+  - [ ] Preserve iOS functionality
+  - [ ] Test on Android and Web platforms
+- **References**: client/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
+- **Dependencies**: T-001A
+- **Effort**: S
+
+**T-002A**
+- **Priority**: P0
+- **Type**: BUG
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - PersistentSidebar missing edge swipe gesture
   - Only button alternative exists
   - Native mobile navigation pattern expected by users
 - **Acceptance Criteria**:
-  - [ ] Implement PanResponder for left edge swipe detection
+  - [ ] Implement PanResponder for left edge swipe detection (iOS)
   - [ ] Handle swipe-to-open sidebar gesture
-  - [ ] Test gesture on both iOS and Android
+  - [ ] Test gesture on iOS
   - [ ] Maintain button alternative for accessibility
   - [ ] Remove TODO comment at line 63
 - **References**: client/components/PersistentSidebar.tsx:63
 - **Dependencies**: None
 - **Effort**: M
 
+**T-002B**
+- **Priority**: P0
+- **Type**: BUG
+- **Owner**: Codex Agent (Secondary)
+- **Platform**: Android, Web
+- **Status**: BLOCKED
+- **Context**:
+  - Adapt T-002A iOS swipe gesture for Android/Web compatibility
+  - Ensure gesture works across all platforms
+- **Acceptance Criteria**:
+  - [ ] Test swipe gesture on Android
+  - [ ] Add web-compatible swipe gesture if needed
+  - [ ] Preserve iOS functionality
+  - [ ] Verify button alternative works on all platforms
+- **References**: client/components/PersistentSidebar.tsx:63, T-002A PR/commit
+- **Dependencies**: T-002A
+- **Effort**: S
+
 **T-003**
 - **Priority**: P0
 - **Type**: BUG
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - BottomNav assumes all module routes exist
@@ -85,10 +131,11 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add route validation before navigation in BottomNav
   - [ ] Show error message if route doesn't exist
   - [ ] Log navigation errors for debugging
-  - [ ] Test with disabled modules
+  - [ ] Test with disabled modules on iOS
 - **References**: client/components/BottomNav.tsx
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation logic. Codex Agent can verify Android/Web compatibility in follow-up if needed.
 
 ---
 
@@ -97,7 +144,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-004**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Omnisearch component exists but not accessible
@@ -106,16 +154,18 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Add Omnisearch to navigation stack with modal presentation
   - [ ] Add search icon to header or CommandCenter
-  - [ ] Implement keyboard shortcut (Cmd+K / Ctrl+K)
-  - [ ] Test search across all modules
+  - [ ] Implement keyboard shortcut (Cmd+K / Ctrl+K) for iOS
+  - [ ] Test search across all modules on iOS
 - **References**: client/components/OmnisearchScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Codex Agent can add Android/Web keyboard shortcuts in follow-up if needed.
 
 **T-005**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - AttentionCenter screen exists but not accessible
@@ -125,15 +175,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add AttentionCenter to navigation stack
   - [ ] Add attention icon to header with badge count
   - [ ] Show attention indicators on BottomNav module buttons
-  - [ ] Test attention item display and dismissal
+  - [ ] Test attention item display and dismissal on iOS
 - **References**: client/lib/attentionManager.ts, client/screens/AttentionCenterScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic implementation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-006**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Context engine has Work/Personal/Focus/Social/Wellness modes
@@ -143,16 +195,18 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add context zone selector in Settings or CommandCenter
   - [ ] Add manual context override UI
   - [ ] Show current context indicator in UI
-  - [ ] Test automatic context switching based on time/location
+  - [ ] Test automatic context switching based on time/location on iOS
   - [ ] Address TODOs at contextEngine.ts:165, 172, 331
 - **References**: client/lib/contextEngine.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-007**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Recommendation engine exists with cross-module analysis
@@ -162,15 +216,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add "Refresh Recommendations" button in CommandCenter
   - [ ] Add recommendation settings in AIPreferences screen
   - [ ] Show evidence/reasoning in recommendation cards
-  - [ ] Wire up RecommendationHistoryScreen to navigation
+  - [ ] Wire up RecommendationHistoryScreen to navigation on iOS
 - **References**: client/lib/recommendationEngine.ts, client/screens/RecommendationHistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-008**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - ModuleGridScreen shows all 38+ modules
@@ -180,15 +236,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add "All Modules" button in BottomNav or Settings
   - [ ] Add module grid access from sidebar "More" button
   - [ ] Consider adding to CommandCenter as a card
-  - [ ] Test module grid display and navigation
+  - [ ] Test module grid display and navigation on iOS
 - **References**: client/screens/ModuleGridScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-009**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Onboarding screens exist but are skipped
@@ -198,15 +256,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add first-launch detection
   - [ ] Set initialRouteName to "OnboardingWelcome" for new users
   - [ ] Add "skip onboarding" option with explanation
-  - [ ] Test complete onboarding flow
+  - [ ] Test complete onboarding flow on iOS
 - **References**: client/screens/OnboardingWelcomeScreen.tsx, client/screens/OnboardingModuleSelectionScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-010**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Lazy loader exists for code splitting
@@ -216,15 +276,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Implement lazy loading for heavy screens (Photos, PhotoEditor)
   - [ ] Lazy load mini-mode components
   - [ ] Add loading indicators for lazy-loaded content
-  - [ ] Measure bundle size improvement
+  - [ ] Measure bundle size improvement on iOS
 - **References**: client/lib/lazyLoader.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic optimization. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-011**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Prefetch engine exists but not wired up
@@ -238,11 +300,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: client/lib/prefetchEngine.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic optimization. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-012**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Memory manager exists but not connected
@@ -252,15 +316,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Connect memory manager to app lifecycle events
   - [ ] Add memory usage monitoring
   - [ ] Implement automatic cleanup on low memory warnings
-  - [ ] Test memory cleanup behavior
+  - [ ] Test memory cleanup behavior on iOS
 - **References**: client/lib/memoryManager.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic memory management. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-013**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Module handoff system exists with contextual transitions
@@ -269,11 +335,12 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Clarify handoff system documentation
   - [ ] Add visual indicators for handoff-enabled modules
-  - [ ] Test handoff workflows (e.g., Calendar → Maps)
+  - [ ] Test handoff workflows (e.g., Calendar → Maps) on iOS
   - [ ] Add handoff history or back navigation
 - **References**: client/lib/moduleHandoff.ts
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -282,7 +349,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-014**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Settings screens exist for modules but no clear path
@@ -292,15 +360,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add settings icon to module headers
   - [ ] Ensure all module settings screens have meaningful content
   - [ ] Add "Module Settings" section in main Settings
-  - [ ] Test settings navigation flow
+  - [ ] Test settings navigation flow on iOS
 - **References**: client/screens/*Settings.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-015**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - HistoryScreen exists but no navigation path
@@ -308,15 +378,17 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Add History to System screen or Settings menu
   - [ ] Consider adding history access from CommandCenter
-  - [ ] Test history display and filtering
+  - [ ] Test history display and filtering on iOS
 - **References**: client/screens/HistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-016**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Only app-level ErrorBoundary exists
@@ -325,16 +397,18 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Acceptance Criteria**:
   - [ ] Wrap each Stack.Screen with ErrorBoundary
   - [ ] Add recovery options (reload screen, go back, go home)
-  - [ ] Test error boundary behavior with intentional errors
+  - [ ] Test error boundary behavior with intentional errors on iOS
   - [ ] Add error logging for debugging
 - **References**: client/components/ErrorBoundary.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic error handling. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-017**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Screens don't show loading indicators during data load
@@ -345,15 +419,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Phase 2: Add loading states to high-traffic screens (CommandCenter, Calendar, Notebook, Planner)
   - [ ] Phase 3: Add loading states to remaining module screens
   - [ ] Phase 4: Implement pull-to-refresh on list-based screens
-  - [ ] Phase 5: Test loading states and measure performance improvement
+  - [ ] Phase 5: Test loading states and measure performance improvement on iOS
 - **References**: client/screens/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic UI patterns. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-018**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - App doesn't show offline status or handle network errors
@@ -363,15 +439,17 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add network status indicator
   - [ ] Show offline mode banner
   - [ ] Cache data for offline viewing
-  - [ ] Test offline behavior for all modules
+  - [ ] Test offline behavior for all modules on iOS
 - **References**: All network-dependent code
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic network handling. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-019**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
 - **Status**: READY
 - **Context**:
   - Input validation may be missing in editor screens
@@ -382,10 +460,11 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add validation to form screens: NoteEditor, TaskDetail, EventDetail
   - [ ] Add validation to form screens: ContactDetail, ListEditor, other editors
   - [ ] Implement error message display and inline validation feedback
-  - [ ] Test validation with edge cases (empty, invalid, boundary values)
+  - [ ] Test validation with edge cases (empty, invalid, boundary values) on iOS
 - **References**: client/screens/NoteEditor.tsx, client/screens/TaskDetail.tsx, etc.
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic validation logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -394,7 +473,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 **T-020**
 - **Priority**: P3
 - **Type**: CHORE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Multiple components use hardcoded rgba() and hex values
@@ -409,11 +489,13 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**: QuickCaptureOverlay.tsx, HandoffBreadcrumb.tsx, AIAssistSheet.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Theme refactoring. Codex Agent can verify Android/Web theme compatibility in follow-up.
 
 **T-021**
 - **Priority**: P3
 - **Type**: CHORE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Mix of relative (`../`, `./`) and alias (`@/`) imports

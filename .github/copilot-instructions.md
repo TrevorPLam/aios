@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: docs/governance/constitution.md -->
-<!-- Generated: 2026-01-18 -->
+<!-- Generated: 2026-01-19 -->
 <!-- To update: edit constitution.md and run `npm run compile:constitution` -->
 
 # Global Copilot Instructions
@@ -57,9 +57,36 @@
 - Operations: `docs/operations/`
 - Architecture: `docs/architecture/`, `docs/decisions/`
 
+**6. Agent Responsibility Model: Primary-Secondary Architecture**
+
+**GitHub Copilot (Primary Agent):**
+- Builds ALL original features, screens, components, and business logic
+- Targets iOS platform exclusively
+- Owns all architectural decisions
+- Cannot add Android or Web-specific code
+- Must not include `Platform.OS === 'android'` or `Platform.OS === 'web'` checks
+- Must use iOS-native components and patterns
+- Creates follow-up tasks for Codex Agent when Android/Web compatibility is needed
+
+**Codex Agent (Secondary Agent):**
+- Adapts Copilot's completed iOS implementations for Android/Web compatibility ONLY
+- Cannot create original features, screens, or components
+- Cannot make architectural decisions
+- Only adds platform-specific adaptations (Material Design for Android, web responsive layouts, etc.)
+- Must reference Copilot's completed work (commit hash or PR number) in all contributions
+- Must preserve iOS functionality while adding Android/Web support
+- Cannot modify core business logic, only add platform adaptations
+
+**Handoff Protocol:**
+1. GitHub Copilot builds feature for iOS
+2. Copilot merges PR and marks task complete
+3. Copilot creates follow-up task for Codex Agent: "Adapt [feature] for Android/Web compatibility"
+4. Codex Agent picks up task and references Copilot's PR/commit
+5. Codex Agent adapts and tests on Android/Web platforms
+
 
 ---
 
 **Source:** `docs/governance/constitution.md`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-18T23:12:39.958Z
+**Last Generated:** 2026-01-19T04:22:30.641Z
