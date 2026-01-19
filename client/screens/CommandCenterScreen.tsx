@@ -49,6 +49,8 @@ import {
   Dimensions,
   Platform,
   FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -105,6 +107,22 @@ const CARD_SPACING = 0;
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
+
+// Scroll Animation Constants
+/** Secondary nav bar hide offset in pixels when scrolling down */
+const SECONDARY_NAV_HIDE_OFFSET = -80;
+
+/** Animation duration in milliseconds for secondary nav show/hide transitions */
+const SECONDARY_NAV_ANIMATION_DURATION = 200;
+
+/** Scroll position threshold to show nav when near top of page */
+const SCROLL_TOP_THRESHOLD = 10;
+
+/** Scroll delta threshold to hide nav when scrolling down */
+const SCROLL_DOWN_THRESHOLD = 5;
+
+/** Scroll delta threshold to show nav when scrolling up (negative value) */
+const SCROLL_UP_THRESHOLD = -5;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -573,21 +591,21 @@ export default function CommandCenterScreen() {
     : "--";
 
   // Scroll handler to hide/show secondary nav
-  const handleScroll = (event: any) => {
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     const delta = currentScrollY - lastScrollY.value;
 
-    // Show nav when at top (scrollY < 10)
-    if (currentScrollY < 10) {
-      secondaryNavTranslateY.value = withTiming(0, { duration: 200 });
+    // Show nav when at top (scrollY < SCROLL_TOP_THRESHOLD)
+    if (currentScrollY < SCROLL_TOP_THRESHOLD) {
+      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION });
     }
-    // Hide nav when scrolling down (delta > 5)
-    else if (delta > 5) {
-      secondaryNavTranslateY.value = withTiming(-80, { duration: 200 });
+    // Hide nav when scrolling down (delta > SCROLL_DOWN_THRESHOLD)
+    else if (delta > SCROLL_DOWN_THRESHOLD) {
+      secondaryNavTranslateY.value = withTiming(SECONDARY_NAV_HIDE_OFFSET, { duration: SECONDARY_NAV_ANIMATION_DURATION });
     }
-    // Show nav when scrolling up (delta < -5)
-    else if (delta < -5) {
-      secondaryNavTranslateY.value = withTiming(0, { duration: 200 });
+    // Show nav when scrolling up (delta < SCROLL_UP_THRESHOLD)
+    else if (delta < SCROLL_UP_THRESHOLD) {
+      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION });
     }
 
     lastScrollY.value = currentScrollY;
