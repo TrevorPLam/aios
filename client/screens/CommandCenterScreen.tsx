@@ -99,11 +99,8 @@ const CARD_ROTATION_ANGLE = 15;
 /** Minimum recommendations before auto-refresh triggers to maintain card availability */
 const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 
-/** Opacity for secondary navigation bar (semi-transparent for modern iOS aesthetic) */
-const SECONDARY_NAV_OPACITY = 0.8;
-
 /** Minimum card spacing in pixels (small spacing between cards for visual separation) */
-const CARD_SPACING = 8; // Spacing.sm for subtle card separation
+const CARD_SPACING = Spacing.sm; // 8px for subtle card separation
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
