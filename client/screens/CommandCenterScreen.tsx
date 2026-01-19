@@ -935,7 +935,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     width: CARD_WIDTH,
     alignSelf: "center",
-    minHeight: 300,
   },
   cardShadowWrapper: {
     width: CARD_WIDTH,
