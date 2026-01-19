@@ -29,7 +29,9 @@
     "check:traceability": "node scripts/tools/check-traceability.mjs",
     "check:agent-platform": "node scripts/tools/check-agent-platform.mjs",
     "check:worklets": "node scripts/check-worklets-version.mjs",
-    "check:postinstall": "node scripts/post-install-check.mjs"
+    "check:postinstall": "node scripts/post-install-check.mjs",
+    "check:deps": "node scripts/deep-dependency-check.mjs",
+    "check:startup": "node scripts/check-startup-blockers.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
