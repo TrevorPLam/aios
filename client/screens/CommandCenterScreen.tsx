@@ -19,7 +19,7 @@
  *
  * Data Flow:
  * 1. Load active recommendations from database on mount and focus
- * 2. Display cards in FlatList with minimal 2px spacing (stacked appearance)
+ * 2. Display cards in FlatList with minimal spacing (stacked appearance)
  * 3. User swipes or taps card → triggers accept/decline/view actions
  * 4. Mark card as opened on tap (fire-and-forget pattern)
  * 5. Update recommendation status and log to history
@@ -374,7 +374,6 @@ export default function CommandCenterScreen() {
   const [attentionCount, setAttentionCount] = useState(0);
 
   // Scroll animation for secondary nav
-  const scrollY = useSharedValue(0);
   const lastScrollY = useSharedValue(0);
   const secondaryNavTranslateY = useSharedValue(0);
 
@@ -609,7 +608,6 @@ export default function CommandCenterScreen() {
     }
 
     lastScrollY.value = currentScrollY;
-    scrollY.value = currentScrollY;
   };
 
   // Animated style for secondary nav
