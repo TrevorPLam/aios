@@ -266,11 +266,12 @@ function RecommendationCard({
       <Animated.View
         style={[
           styles.card,
-          { backgroundColor: theme.backgroundDefault },
-          // Add accent glow for unopened cards (visible on all backgrounds)
+          { 
+            backgroundColor: theme.backgroundDefault,
+            shadowColor: theme.accent, // Base glow uses theme accent
+          },
+          // Add stronger accent glow for unopened cards (visible on all backgrounds)
           isUnopened && {
-            shadowColor: theme.accent,
-            shadowOffset: { width: 0, height: 0 },
             shadowOpacity: 0.6,
             shadowRadius: 16,
             elevation: 8,
@@ -831,8 +832,7 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
     overflow: "hidden",
-    // Soft accent glow around cards (base shadow)
-    shadowColor: "#00D9FF",
+    // Soft accent glow around cards (shadowColor applied dynamically via theme)
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
