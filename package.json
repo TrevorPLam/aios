@@ -8,6 +8,8 @@
     "expo:clean": "rm -rf node_modules/.cache .expo .metro-cache && npx expo start --clear",
     "expo:clean:full": "rm -rf .expo .metro-cache node_modules package-lock.json && npm install",
     "expo:clean:native": "rm -rf node_modules/.cache .expo .metro-cache && watchman watch-del-all 2>/dev/null || true && npm install",
+    "expo:rebuild:ios": "npx expo prebuild --clean && npx expo run:ios",
+    "expo:rebuild:android": "npx expo prebuild --clean && npx expo run:android",
     "server:dev": "NODE_ENV=development tsx server/index.ts",
     "expo:start:static:build": "npx expo start --no-dev --minify --localhost",
     "expo:static:build": "node scripts/build.js",
@@ -25,7 +27,8 @@
     "compile:constitution": "node scripts/tools/compile-constitution.mjs",
     "check:exceptions": "node scripts/tools/check-exceptions.mjs",
     "check:traceability": "node scripts/tools/check-traceability.mjs",
-    "check:agent-platform": "node scripts/tools/check-agent-platform.mjs"
+    "check:agent-platform": "node scripts/tools/check-agent-platform.mjs",
+    "check:worklets": "node scripts/check-worklets-version.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

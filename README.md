@@ -215,6 +215,17 @@ For severe issues with native dependencies:
 ```bash
 npm run expo:clean:full
 ```
+
+**If you see "Mismatch between JavaScript part and native part of Worklets":**
+This means the native iOS/Android build has an outdated version. Rebuild the native app:
+```bash
+# For iOS
+npm run expo:rebuild:ios
+
+# For Android  
+npm run expo:rebuild:android
+```
+
 See [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch) for detailed troubleshooting.
 
 **Seeing a web version instead of native iOS?**
@@ -352,6 +363,16 @@ Using system fonts with the following scale:
 - `npm run check:types` - TypeScript type checking
 - `npm run check:format` - Check code formatting
 - `npm run format` - Format code with Prettier
+
+### Maintenance & Cleanup
+- `npm run expo:clean` - Clear Metro bundler cache
+- `npm run expo:clean:native` - Clean native module caches and reinstall
+- `npm run expo:clean:full` - Full clean (remove node_modules and reinstall)
+- `npm run expo:rebuild:ios` - Rebuild iOS native app from scratch
+- `npm run expo:rebuild:android` - Rebuild Android native app from scratch
+
+### Diagnostics
+- `npm run check:worklets` - Check react-native-worklets version consistency
 
 ## 🗄️ Data Models
 
