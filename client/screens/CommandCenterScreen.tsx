@@ -102,15 +102,15 @@ const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 /** Opacity for secondary navigation bar (semi-transparent for modern iOS aesthetic) */
 const SECONDARY_NAV_OPACITY = 0.8;
 
-/** Minimum card spacing in pixels (near-stacked appearance as per design spec) */
-const CARD_SPACING = 0;
+/** Minimum card spacing in pixels (small spacing between cards for visual separation) */
+const CARD_SPACING = 8; // Spacing.sm for subtle card separation
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 
 // Scroll Animation Constants
-/** Secondary nav bar hide offset in pixels when scrolling down */
-const SECONDARY_NAV_HIDE_OFFSET = -80;
+/** Secondary nav bar hide offset in pixels when scrolling down (must hide completely including padding) */
+const SECONDARY_NAV_HIDE_OFFSET = -100; // Increased to fully hide the oval and buttons
 
 /** Animation duration in milliseconds for secondary nav show/hide transitions */
 const SECONDARY_NAV_ANIMATION_DURATION = 200;
@@ -711,7 +711,6 @@ export default function CommandCenterScreen() {
             styles.secondaryNavContent,
             {
               backgroundColor: theme.backgroundDefault,
-              opacity: SECONDARY_NAV_OPACITY,
             },
           ]}
         >
@@ -876,25 +875,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
-    paddingBottom: Spacing.md,
+    paddingBottom: Spacing.xs, // Reduced from Spacing.md to make header thinner
   },
   headerButton: {
-    width: 44,
-    height: 44,
+    width: 40, // Reduced from 44 to make header thinner
+    height: 40, // Reduced from 44 to make header thinner
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.sm,
   },
   secondaryNav: {
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.xs, // Reduced from Spacing.sm to make nav thinner
   },
   secondaryNavContent: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm, // Reduced from Spacing.md to make nav thinner
+    paddingHorizontal: Spacing.lg, // Reduced from Spacing.xl to make nav thinner
     borderRadius: BorderRadius.full, // Oval/pill shape
   },
   secondaryNavButton: {

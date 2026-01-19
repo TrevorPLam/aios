@@ -298,7 +298,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       >
         <MaterialCommunityIcons
           name="brain"
-          size={28}
+          size={24}
           color={theme.backgroundRoot}
         />
       </Pressable>
@@ -331,12 +331,12 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.xs,
     // Container extends edge-to-edge; buttons maintain spacing via justifyContent
     width: "100%",
-    minHeight: 80,
+    minHeight: 68, // Reduced from 80 to make nav thinner
   },
   navButton: {
-    // FIXED SIZE: Do not change without updating constraint comment
-    width: 56,
-    height: 56,
+    // FIXED SIZE: Reduced to make nav bar thinner
+    width: 48, // Reduced from 56
+    height: 48, // Reduced from 56
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.lg,
@@ -357,9 +357,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   aiButton: {
-    // FIXED SIZE: AI button centered between arrows
-    width: 64,
-    height: 64,
+    // FIXED SIZE: AI button centered between arrows (reduced to make nav thinner)
+    width: 56, // Reduced from 64
+    height: 56, // Reduced from 64
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.full,
