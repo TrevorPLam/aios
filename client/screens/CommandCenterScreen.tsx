@@ -7,7 +7,7 @@
  *
  * Key Features:
  * - Swipeable recommendation cards (swipe right to accept, left to decline)
- * - Visual glow indicator for unread recommendations (accent color border)
+ * - Visual glow indicator for unread recommendations (accent-colored shadow on iOS)
  * - Confidence meter showing AI certainty level (low/medium/high)
  * - Real-time AI usage limits tracking with countdown
  * - Secondary navigation bar for quick access (Search, Attention, History)
@@ -163,8 +163,8 @@ function ConfidenceMeter({
  * - During swipe: Card rotates ±15° and shows colored glow (green=accept, red=decline)
  *
  * Visual States:
- * - Unopened: Accent color border glow (3px, 60% opacity) to draw attention - works cross-platform
- * - Opened: Standard card appearance without border glow
+ * - Unopened: Accent-colored shadow glow (iOS: shadowOpacity 0.6, radius 16px) to draw attention
+ * - Opened: Subtle shadow (iOS: shadowOpacity 0.15, radius 8px)
  * - Swiping: Animated rotation and edge glow based on swipe direction/distance
  *
  * Performance:
@@ -263,94 +263,80 @@ function RecommendationCard({
 
   return (
     <GestureDetector gesture={gesture}>
+      {/* Shadow wrapper - allows shadow to render (no overflow hidden) */}
       <Animated.View
         style={[
-          styles.card,
-          { backgroundColor: theme.backgroundDefault },
+          styles.cardShadowWrapper,
+          { 
+            shadowColor: theme.accent,
+          },
+          // Stronger shadow for unopened cards
+          isUnopened ? {
+            shadowOpacity: 0.6,
+            shadowRadius: 16,
+            elevation: 8,
+          } : {
+            shadowOpacity: 0.15,
+            shadowRadius: 8,
+            elevation: 4,
+          },
           animatedStyle,
         ]}
       >
-        {/* Unopened glow - visible border glow for new cards */}
-        {isUnopened && (
-          <>
-            <View
-              style={[
-                styles.unopenedGlow,
-                styles.unopenedGlowTop,
-                { backgroundColor: theme.accent },
-              ]}
-            />
-            <View
-              style={[
-                styles.unopenedGlow,
-                styles.unopenedGlowBottom,
-                { backgroundColor: theme.accent },
-              ]}
-            />
-            <View
-              style={[
-                styles.unopenedGlow,
-                styles.unopenedGlowLeft,
-                { backgroundColor: theme.accent },
-              ]}
-            />
-            <View
-              style={[
-                styles.unopenedGlow,
-                styles.unopenedGlowRight,
-                { backgroundColor: theme.accent },
-              ]}
-            />
-          </>
-        )}
-        
-        {/* Swipe feedback glows */}
-        <Animated.View
+        {/* Card content - has overflow hidden to clip glow indicators */}
+        <View
           style={[
-            styles.cardGlow,
-            styles.acceptGlow,
-            { backgroundColor: theme.success },
-            acceptGlowStyle,
+            styles.card,
+            { backgroundColor: theme.backgroundDefault },
           ]}
-        />
-        <Animated.View
-          style={[
-            styles.cardGlow,
-            styles.declineGlow,
-            { backgroundColor: theme.error },
-            declineGlowStyle,
-          ]}
-        />
+        >
+          <Animated.View
+            style={[
+              styles.cardGlow,
+              styles.acceptGlow,
+              { backgroundColor: theme.success },
+              acceptGlowStyle,
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.cardGlow,
+              styles.declineGlow,
+              { backgroundColor: theme.error },
+              declineGlowStyle,
+            ]}
+          />
 
-        <View style={styles.cardHeader}>
-          <View
-            style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}
-          >
-            <ThemedText type="small" style={{ color: theme.accent }}>
-              {recommendation.module.toUpperCase()}
-            </ThemedText>
+          <View style={styles.cardHeader}>
+            <View
+              style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}
+            >
+              <ThemedText type="small" style={{ color: theme.accent }}>
+                {recommendation.module.toUpperCase()}
+              </ThemedText>
+            </View>
+            <ConfidenceMeter confidence={recommendation.confidence} />
           </View>
-          <ConfidenceMeter confidence={recommendation.confidence} />
-        </View>
 
-        <ThemedText type="h3" style={styles.cardTitle}>
-          {recommendation.title}
-        </ThemedText>
-
-        <ThemedText type="body" secondary style={styles.cardSummary}>
-          {recommendation.summary}
-        </ThemedText>
-
-        <View style={styles.cardFooter}>
-          <View style={styles.expiryContainer}>
-            <Feather name="clock" size={14} color={theme.textMuted} />
-            <ThemedText type="small" muted style={styles.expiryText}>
-              {formatTimeRemaining(recommendation.expiresAt)}
-            </ThemedText>
-          </View>
-          <ThemedText type="small" style={{ color: theme.accent }}>
-            Tap for details
+          <ThemedText type="h3" style={styles.cardTitle}>
+            {recommendation.title}
           </ThemedText>
+
+          <ThemedText type="body" secondary style={styles.cardSummary}>
+            {recommendation.summary}
+          </ThemedText>
+
+          <View style={styles.cardFooter}>
+            <View style={styles.expiryContainer}>
+              <Feather name="clock" size={14} color={theme.textMuted} />
+              <ThemedText type="small" muted style={styles.expiryText}>
+                {formatTimeRemaining(recommendation.expiresAt)}
+              </ThemedText>
+            </View>
+            <ThemedText type="small" style={{ color: theme.accent }}>
+              Tap for details
+            </ThemedText>
+          </View>
         </View>
       </Animated.View>
     </GestureDetector>
@@ -853,16 +839,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     minHeight: 300,
   },
+  cardShadowWrapper: {
+    width: CARD_WIDTH,
+    borderRadius: BorderRadius.lg,
+    // Shadow properties (no overflow hidden so shadow renders)
+    shadowOffset: { width: 0, height: 0 },
+  },
   card: {
     width: CARD_WIDTH,
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
-    overflow: "hidden",
-    // Soft accent glow around cards (shadowColor applied dynamically via theme)
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
+    overflow: "hidden", // Clips glow indicators to card bounds
   },
   cardGlow: {
     position: "absolute",
@@ -876,35 +863,6 @@ const styles = StyleSheet.create({
   },
   declineGlow: {
     left: 0,
-  },
-  // Unopened glow - 4-sided border glow for new cards (cross-platform compatible)
-  unopenedGlow: {
-    position: "absolute",
-    opacity: 0.6,
-  },
-  unopenedGlowTop: {
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-  },
-  unopenedGlowBottom: {
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-  },
-  unopenedGlowLeft: {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: 3,
-  },
-  unopenedGlowRight: {
-    top: 0,
-    bottom: 0,
-    right: 0,
-    width: 3,
   },
   cardHeader: {
     flexDirection: "row",
