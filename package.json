@@ -22,7 +22,8 @@
     "format": "prettier --write \"**/*.{js,ts,tsx,css,json}\"",
     "compile:constitution": "node scripts/tools/compile-constitution.mjs",
     "check:exceptions": "node scripts/tools/check-exceptions.mjs",
-    "check:traceability": "node scripts/tools/check-traceability.mjs"
+    "check:traceability": "node scripts/tools/check-traceability.mjs",
+    "check:agent-platform": "node scripts/tools/check-agent-platform.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

@@ -512,7 +512,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-022**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Only h1, h2, h3 defined in Typography
@@ -525,11 +526,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/constants/theme.ts
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic design system enhancement. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-023**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Light mode implemented but needs refinement
@@ -543,11 +546,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/constants/theme.ts
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic theme refinement. Codex Agent can verify Android/Web contrast compatibility in follow-up.
 
 **T-024**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Some Pressable components lack accessibilityRole
@@ -563,11 +568,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All component files
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic accessibility audit. Codex Agent can verify Android/Web accessibility features in follow-up.
 
 **T-025**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Touch-first interface with limited keyboard support
@@ -581,11 +588,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All interactive components
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic keyboard support. Codex Agent can verify Android/Web keyboard navigation in follow-up.
 
 **T-026**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Complex animations may drop frames on older devices
@@ -599,11 +608,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: MiniModeContainer.tsx, QuickCaptureOverlay.tsx, CommandCenter.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic animation optimization. Codex Agent can verify Android/Web animation performance in follow-up.
 
 **T-027**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Progressive image loading not implemented
@@ -617,6 +628,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: PhotosScreen.tsx, AlbumsScreen.tsx, PhotoDetailScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic image optimization. Codex Agent can verify Android/Web image caching in follow-up.
 
 ---
 
@@ -644,7 +656,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-029**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
   - Execute if T-028 decides to complete analytics
@@ -659,11 +672,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md, client/analytics/*
 - **Dependencies**: T-028
 - **Effort**: L (multiple weeks - requires phased approach)
+- **Note**: Platform-agnostic analytics implementation. Codex Agent can verify Android/Web analytics in follow-up.
 
 **T-030**
 - **Priority**: P1
 - **Type**: CHORE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
   - Execute if T-028 decides to remove analytics
@@ -678,6 +693,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/analytics/*
 - **Dependencies**: T-028
 - **Effort**: M
+- **Note**: Platform-agnostic analytics cleanup. Codex Agent can verify Android/Web dependencies in follow-up.
 
 ---
 
@@ -686,7 +702,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-031**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Server uses console.error for logging
@@ -701,6 +718,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: server/middleware/errorHandler.ts:28-30
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic server logging. Codex Agent can verify Android/Web client logging in follow-up.
 
 ---
 
@@ -709,7 +727,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-032**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Only Button component has tests
@@ -724,11 +743,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/components/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic testing infrastructure. Codex Agent can verify Android/Web test compatibility in follow-up.
 
 **T-033**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No end-to-end tests for critical workflows
@@ -743,11 +764,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All workflow-related code
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic end-to-end testing. Codex Agent can verify Android/Web workflow testing in follow-up.
 
 **T-034**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No visual regression testing
@@ -761,11 +784,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All screen components
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic visual regression testing. Codex Agent can verify Android/Web screenshot comparison in follow-up.
 
 **T-035**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No performance monitoring
@@ -780,6 +805,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All performance-critical code
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic performance monitoring. Codex Agent can verify Android/Web performance metrics in follow-up.
 
 ---
 
@@ -788,7 +814,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-036**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Each lib file needs usage examples
@@ -802,11 +829,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic library documentation. Codex Agent can verify Android/Web integration examples in follow-up.
 
 **T-037**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - UI components lack documentation
@@ -821,11 +850,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic component documentation. Codex Agent can verify Android/Web component compatibility in follow-up.
 
 **T-038**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No visual diagrams for workflows
@@ -839,6 +870,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic workflow diagrams. Codex Agent can verify Android/Web workflow coverage in follow-up.
 
 ---
 
@@ -847,7 +879,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-039**
 - **Priority**: P1
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - 277 TypeScript errors remaining
@@ -861,11 +894,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic event type system. Codex Agent can verify Android/Web event handling in follow-up.
 
 **T-040**
 - **Priority**: P1
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Components directly import Colors, Typography, Shadows
@@ -880,11 +915,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic theme hook migration. Codex Agent can verify Android/Web theme consistency in follow-up.
 
 **T-041**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Model interfaces don't match actual usage
@@ -899,11 +936,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic model interface audit. Codex Agent can verify Android/Web data model compatibility in follow-up.
 
 **T-042**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Dynamic navigation.navigate() calls cause TypeScript errors
@@ -917,11 +956,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All navigation code, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic navigation patterns. Codex Agent can verify Android/Web navigation type safety in follow-up.
 
 **T-043**
 - **Priority**: P2
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Button missing `label` prop
@@ -935,11 +976,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic component prop validation. Codex Agent can verify Android/Web component props in follow-up.
 
 **T-044**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - TypeScript strict mode not enabled
@@ -953,6 +996,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: tsconfig.json, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: T-039, T-040, T-041, T-042, T-043
 - **Effort**: M
+- **Note**: Platform-agnostic TypeScript strict mode. Codex Agent can verify Android/Web type safety in follow-up.
 
 ---
 
@@ -963,7 +1007,8 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-045**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - 79 markdown files, 72 in root
@@ -977,11 +1022,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 1
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic documentation consolidation. Codex Agent can verify Android/Web documentation coverage in follow-up.
 
 **T-046**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - 11 separate security files
@@ -995,11 +1042,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.1
 - **Dependencies**: T-045
 - **Effort**: M
+- **Note**: Platform-agnostic security documentation. Codex Agent can verify Android/Web security practices in follow-up.
 
 **T-047**
 - **Priority**: P2
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Duplicate competitive analysis docs
@@ -1013,11 +1062,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.2-2.3
 - **Dependencies**: T-045
 - **Effort**: S
+- **Note**: Platform-agnostic analysis documentation consolidation. Codex Agent can verify Android/Web analysis coverage in follow-up.
 
 **T-048**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No CHANGELOG.md exists
@@ -1031,11 +1082,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
 - **Dependencies**: None
 - **Effort**: S
+- **Note**: Platform-agnostic changelog. Codex Agent can verify Android/Web release notes in follow-up.
 
 **T-049**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - File naming inconsistent
@@ -1049,11 +1102,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.1
 - **Dependencies**: T-045
 - **Effort**: S
+- **Note**: Platform-agnostic file naming conventions. Codex Agent can verify Android/Web file naming consistency in follow-up.
 
 **T-050**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No documentation templates
@@ -1068,13 +1123,15 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.4
 - **Dependencies**: T-045
 - **Effort**: S
+- **Note**: Platform-agnostic documentation templates. Codex Agent can verify Android/Web template usage in follow-up.
 
 ### Documentation Quality & Automation
 
 **T-051**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Missing Getting Started tutorial
@@ -1088,11 +1145,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.1
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic getting started guide. Codex Agent can verify Android/Web setup instructions in follow-up.
 
 **T-052**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No how-to guides for common tasks
@@ -1107,11 +1166,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
+- **Note**: Platform-agnostic how-to guides. Codex Agent can verify Android/Web task documentation in follow-up.
 
 **T-053**
 - **Priority**: P3
 - **Type**: DOCS
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - No UI flow screenshots
@@ -1125,13 +1186,15 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 4.2
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic UI screenshots. Codex Agent can verify Android/Web UI screenshots in follow-up.
 
 ### Edge Cases & Testing Scenarios
 
 **T-054**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Empty states not designed or tested
@@ -1145,11 +1208,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All screen components
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic empty state design. Codex Agent can verify Android/Web empty states in follow-up.
 
 **T-055**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Performance with large datasets not tested
@@ -1163,11 +1228,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: List-based screens
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic large dataset testing. Codex Agent can verify Android/Web performance at scale in follow-up.
 
 **T-056**
 - **Priority**: P3
 - **Type**: QUALITY
-- **Owner**: AGENT
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
   - Permission denials not handled gracefully
@@ -1181,6 +1248,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: Permission-requiring features
 - **Dependencies**: None
 - **Effort**: M
+- **Note**: Platform-agnostic permission error handling. Codex Agent can verify Android/Web permission flows in follow-up.
 
 ---
 
