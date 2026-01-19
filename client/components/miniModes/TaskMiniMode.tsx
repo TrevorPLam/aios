@@ -1,28 +1,28 @@
 /**
  * Planner (Task) Mini-Mode Component
- * 
+ *
  * Purpose (Plain English):
  * A compact task creator that can be embedded in other screens. Allows users
  * to quickly create tasks without navigating away from their current context.
- * 
+ *
  * What it interacts with:
  * - Task Database: Creates tasks
  * - Event Bus: Emits TaskCreated event after saving
  * - Mini-Mode Registry: Returns result via onComplete callback
- * 
+ *
  * Safe AI extension points:
  * - Add smart priority suggestions based on title
  * - Add project selection
  * - Add AI-powered task breakdown for complex tasks
  * - Pre-fill due date based on context (e.g., meeting time from calendar)
- * 
+ *
  * Warnings:
  * - Keep form simple - advanced features belong in full screen editor
  * - Validate all inputs before saving
  * - Handle database errors gracefully
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -31,31 +31,31 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
-} from 'react-native';
-import * as Haptics from 'expo-haptics';
+} from "react-native";
+import * as Haptics from "expo-haptics";
 
-import { MiniModeComponentProps, MiniModeResult } from '../../lib/miniMode';
-import { eventBus } from '../../lib/eventBus';
-import { database } from '../../storage/database';
-import { ThemedText } from '../ThemedText';
-import { Button } from '../Button';
-import { Colors, Spacing, Typography } from '../../constants/theme';
-import type { Task } from '../../models/types';
+import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
+import { eventBus } from "../../lib/eventBus";
+import { database } from "../../storage/database";
+import { ThemedText } from "../ThemedText";
+import { Button } from "../Button";
+import { Colors, Spacing, Typography } from "../../constants/theme";
+import type { Task } from "../../models/types";
 
 interface TaskMiniModeData {
   title?: string;
   description?: string;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  priority?: "low" | "medium" | "high" | "urgent";
   dueDate?: Date;
 }
 
 /**
  * Task Mini-Mode Component
- * 
+ *
  * Plain English:
  * Quick form to create a task. Shows title, priority, and optional due date.
  * Designed for speed - create a task in under 10 seconds.
- * 
+ *
  * Technical:
  * Controlled form with local state, validates on submit, creates task via database,
  * emits event to event bus, returns result via onComplete callback.
@@ -66,28 +66,28 @@ export function TaskMiniMode({
   onDismiss,
   source,
 }: MiniModeComponentProps<TaskMiniModeData>) {
-  const [title, setTitle] = useState(initialData?.title || '');
+  const [title, setTitle] = useState(initialData?.title || "");
   const [description, setDescription] = useState(
-    initialData?.description || ''
+    initialData?.description || "",
   );
-  const [priority, setPriority] = useState<Task['priority']>(
-    initialData?.priority || 'medium'
+  const [priority, setPriority] = useState<Task["priority"]>(
+    initialData?.priority || "medium",
   );
   const [saving, setSaving] = useState(false);
 
   /**
    * Handle form submission
-   * 
+   *
    * Plain English: Validate inputs, create task, notify caller
    * Technical: Async database operation with error handling
    */
   const handleSave = async () => {
     // Validation
     if (!title.trim()) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      Alert.alert('Required Field', 'Please enter a task title');
+      Alert.alert("Required Field", "Please enter a task title");
       return;
     }
 
@@ -99,7 +99,7 @@ export function TaskMiniMode({
         title: title.trim(),
         description: description.trim() || undefined,
         priority,
-        status: 'todo',
+        status: "todo",
         dueDate: initialData?.dueDate?.toISOString(),
         projectId: null,
         subtasks: [],
@@ -112,10 +112,10 @@ export function TaskMiniMode({
 
       // Emit event to event bus for cross-module coordination
       eventBus.emit({
-        type: 'TaskCreated',
+        type: "TaskCreated",
         payload: {
           task: createdTask,
-          source: source || 'mini_mode',
+          source: source || "mini_mode",
         },
         metadata: {
           timestamp: new Date().toISOString(),
@@ -123,30 +123,28 @@ export function TaskMiniMode({
       });
 
       // Haptic feedback on success
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
       // Notify caller with result
       const result: MiniModeResult<Task> = {
-        action: 'created',
+        action: "created",
         data: createdTask,
-        module: 'planner',
+        module: "planner",
       };
 
       onComplete(result);
     } catch (error) {
-      console.error('[TaskMiniMode] Error creating task:', error);
+      console.error("[TaskMiniMode] Error creating task:", error);
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
 
-      Alert.alert(
-        'Error',
-        'Failed to create task. Please try again.',
-        [{ text: 'OK' }]
-      );
+      Alert.alert("Error", "Failed to create task. Please try again.", [
+        { text: "OK" },
+      ]);
 
       setSaving(false);
     }
@@ -154,19 +152,19 @@ export function TaskMiniMode({
 
   /**
    * Get priority color
-   * 
+   *
    * Plain English: Each priority level has a distinct color
    * Technical: Maps priority enum to color constant
    */
-  const getPriorityColor = (p: Task['priority']): string => {
+  const getPriorityColor = (p: Task["priority"]): string => {
     switch (p) {
-      case 'urgent':
+      case "urgent":
         return Colors.error;
-      case 'high':
+      case "high":
         return Colors.warning;
-      case 'medium':
+      case "medium":
         return Colors.electricBlue;
-      case 'low':
+      case "low":
         return Colors.success;
       default:
         return Colors.textSecondary;
@@ -175,15 +173,15 @@ export function TaskMiniMode({
 
   /**
    * Priority selector component
-   * 
+   *
    * Plain English: Four buttons to choose task priority
    * Technical: TouchableOpacity array with selected state styling
    */
-  const priorityOptions: Task['priority'][] = [
-    'low',
-    'medium',
-    'high',
-    'urgent',
+  const priorityOptions: Task["priority"][] = [
+    "low",
+    "medium",
+    "high",
+    "urgent",
   ];
 
   return (
@@ -192,9 +190,7 @@ export function TaskMiniMode({
       <View style={styles.header}>
         <View style={styles.handleBar} />
         <ThemedText style={styles.headerTitle}>Quick Task</ThemedText>
-        <ThemedText style={styles.headerSubtitle}>
-          Create a new task
-        </ThemedText>
+        <ThemedText style={styles.headerSubtitle}>Create a new task</ThemedText>
       </View>
 
       {/* Form */}
@@ -236,7 +232,7 @@ export function TaskMiniMode({
                 ]}
                 onPress={() => {
                   setPriority(p);
-                  if (Platform.OS !== 'web') {
+                  if (Platform.OS !== "web") {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   }
                 }}
@@ -250,7 +246,7 @@ export function TaskMiniMode({
                     styles.priorityText,
                     priority === p && {
                       color: getPriorityColor(p),
-                      fontWeight: '600',
+                      fontWeight: "600",
                     },
                   ]}
                 >
@@ -292,7 +288,7 @@ export function TaskMiniMode({
           accessibilityLabel="Cancel task creation"
         />
         <Button
-          label={saving ? 'Saving...' : 'Create Task'}
+          label={saving ? "Saving..." : "Create Task"}
           onPress={handleSave}
           variant="primary"
           style={styles.actionButton}
@@ -306,10 +302,10 @@ export function TaskMiniMode({
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: '100%',
+    maxHeight: "100%",
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: Spacing.sm,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
@@ -324,7 +320,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: Typography.sizes.h2,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.electricBlue,
   },
   headerSubtitle: {
@@ -341,7 +337,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: Typography.sizes.body,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.textPrimary,
     marginBottom: Spacing.xs,
   },
@@ -358,10 +354,10 @@ const styles = StyleSheet.create({
   textArea: {
     paddingTop: Spacing.sm,
     minHeight: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   priorityRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.xs,
   },
   priorityButton: {
@@ -372,7 +368,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
     backgroundColor: Colors.deepSpace,
-    alignItems: 'center',
+    alignItems: "center",
   },
   priorityText: {
     fontSize: Typography.sizes.caption,
@@ -382,7 +378,7 @@ const styles = StyleSheet.create({
     height: Spacing.lg,
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.sm,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.xs,

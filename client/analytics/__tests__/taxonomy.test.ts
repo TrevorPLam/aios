@@ -79,9 +79,7 @@ describe("Taxonomy", () => {
       expect(EVENT_TAXONOMY.item_created.requiredProps).toContain("module_id");
       expect(EVENT_TAXONOMY.item_created.requiredProps).toContain("item_type");
 
-      expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain(
-        "source_module",
-      );
+      expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain("source_module");
       expect(EVENT_TAXONOMY.ai_opened.requiredProps).toContain(
         "selection_state",
       );

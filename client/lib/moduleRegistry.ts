@@ -1,67 +1,67 @@
 /**
  * Module Registry
- * 
+ *
  * Purpose (Plain English):
  * Central catalog of all modules in the app. Defines what modules exist, their icons,
  * colors, and metadata. Used by Sidebar, Command Center, Module Grid, and everywhere
  * that needs to display or navigate to modules.
- * 
+ *
  * What it interacts with:
  * - Navigation system (to navigate to modules)
  * - Sidebar (to display available modules)
  * - Command Center (to show module recommendations)
  * - Context Engine (to filter modules by context)
  * - Analytics (to track module usage)
- * 
+ *
  * Technical Implementation:
  * Single source of truth for module configuration. Adding a new module means
  * adding one entry here - everything else picks it up automatically.
- * 
+ *
  * Safe AI Extension Points:
  * - Add new modules to MODULES array
  * - Add new module tiers
  * - Add module dependencies
- * 
+ *
  * Fragile Logic Warnings:
  * - Module IDs must match navigation route names EXACTLY
  * - Changing module IDs breaks saved user preferences
  * - Icon names must match Feather icon set
  */
 
-import { ModuleType } from '@/models/types';
-import type { AppStackParamList } from '@/navigation/AppNavigator';
+import { ModuleType } from "@/models/types";
+import type { AppStackParamList } from "@/navigation/AppNavigator";
 
 /**
  * Module Tier
- * 
+ *
  * Plain English: Which "wave" of modules this belongs to.
  * - Core: Always available (14 existing modules)
  * - Tier1: Super app essentials (Wallet, Maps, etc.)
  * - Tier2: Life management (Health, Education, etc.)
  * - Tier3: Innovation edge (Memory Bank, Future Predictor, etc.)
  */
-export type ModuleTier = 'core' | 'tier1' | 'tier2' | 'tier3';
+export type ModuleTier = "core" | "tier1" | "tier2" | "tier3";
 
 /**
  * Module Category
- * 
+ *
  * Plain English: What type of thing is this module?
  */
 export type ModuleCategory =
-  | 'productivity'
-  | 'communication'
-  | 'organization'
-  | 'finance'
-  | 'lifestyle'
-  | 'utilities'
-  | 'commerce'
-  | 'health'
-  | 'education'
-  | 'innovation';
+  | "productivity"
+  | "communication"
+  | "organization"
+  | "finance"
+  | "lifestyle"
+  | "utilities"
+  | "commerce"
+  | "health"
+  | "education"
+  | "innovation";
 
 /**
  * Module Definition
- * 
+ *
  * Complete metadata for a module.
  */
 export interface ModuleDefinition {
@@ -91,167 +91,167 @@ export interface ModuleUsage {
 
 /**
  * All Modules
- * 
+ *
  * SINGLE SOURCE OF TRUTH for module definitions.
  * Add new modules here.
  */
 const MODULES: ModuleDefinition[] = [
   // Core Modules (14 production-ready)
   {
-    id: 'command',
-    name: 'Command Center',
-    description: 'AI-powered recommendation hub',
-    icon: 'zap',
-    color: '#00D9FF',
-    routeName: 'CommandCenter',
-    tier: 'core',
-    category: 'productivity',
+    id: "command",
+    name: "Command Center",
+    description: "AI-powered recommendation hub",
+    icon: "zap",
+    color: "#00D9FF",
+    routeName: "CommandCenter",
+    tier: "core",
+    category: "productivity",
     isCore: true,
     requiresOnboarding: true,
-    tags: ['ai', 'recommendations', 'home', 'dashboard'],
+    tags: ["ai", "recommendations", "home", "dashboard"],
   },
   {
-    id: 'notebook',
-    name: 'Notebook',
-    description: 'Notes with tags and links',
-    icon: 'book',
-    color: '#00D9FF',
-    routeName: 'Notebook',
-    tier: 'core',
-    category: 'productivity',
+    id: "notebook",
+    name: "Notebook",
+    description: "Notes with tags and links",
+    icon: "book",
+    color: "#00D9FF",
+    routeName: "Notebook",
+    tier: "core",
+    category: "productivity",
     isCore: true,
     requiresOnboarding: true,
-    tags: ['notes', 'markdown', 'writing', 'documents'],
+    tags: ["notes", "markdown", "writing", "documents"],
   },
   {
-    id: 'planner',
-    name: 'Planner',
-    description: 'Tasks and project management',
-    icon: 'check-square',
-    color: '#00D9FF',
-    routeName: 'Planner',
-    tier: 'core',
-    category: 'productivity',
+    id: "planner",
+    name: "Planner",
+    description: "Tasks and project management",
+    icon: "check-square",
+    color: "#00D9FF",
+    routeName: "Planner",
+    tier: "core",
+    category: "productivity",
     isCore: true,
     requiresOnboarding: true,
-    tags: ['tasks', 'todos', 'projects', 'gtd'],
+    tags: ["tasks", "todos", "projects", "gtd"],
   },
   {
-    id: 'calendar',
-    name: 'Calendar',
-    description: 'Event scheduling and management',
-    icon: 'calendar',
-    color: '#00D9FF',
-    routeName: 'Calendar',
-    tier: 'core',
-    category: 'organization',
+    id: "calendar",
+    name: "Calendar",
+    description: "Event scheduling and management",
+    icon: "calendar",
+    color: "#00D9FF",
+    routeName: "Calendar",
+    tier: "core",
+    category: "organization",
     isCore: true,
     requiresOnboarding: true,
-    tags: ['events', 'schedule', 'appointments', 'meetings'],
+    tags: ["events", "schedule", "appointments", "meetings"],
   },
   {
-    id: 'email',
-    name: 'Email',
-    description: 'Professional email management',
-    icon: 'mail',
-    color: '#00D9FF',
-    routeName: 'Email',
-    tier: 'core',
-    category: 'communication',
+    id: "email",
+    name: "Email",
+    description: "Professional email management",
+    icon: "mail",
+    color: "#00D9FF",
+    routeName: "Email",
+    tier: "core",
+    category: "communication",
     isCore: true,
     requiresOnboarding: true,
-    tags: ['email', 'inbox', 'messages', 'threads'],
+    tags: ["email", "inbox", "messages", "threads"],
   },
   {
-    id: 'messages',
-    name: 'Messages',
-    description: 'P2P messaging and group chat',
-    icon: 'message-circle',
-    color: '#00D9FF',
-    routeName: 'Messages',
-    tier: 'core',
-    category: 'communication',
+    id: "messages",
+    name: "Messages",
+    description: "P2P messaging and group chat",
+    icon: "message-circle",
+    color: "#00D9FF",
+    routeName: "Messages",
+    tier: "core",
+    category: "communication",
     isCore: true,
     requiresOnboarding: true,
-    tags: ['chat', 'messaging', 'conversations', 'dm'],
+    tags: ["chat", "messaging", "conversations", "dm"],
   },
   {
-    id: 'lists',
-    name: 'Lists',
-    description: 'Checklists and to-do lists',
-    icon: 'list',
-    color: '#00D9FF',
-    routeName: 'Lists',
-    tier: 'core',
-    category: 'organization',
+    id: "lists",
+    name: "Lists",
+    description: "Checklists and to-do lists",
+    icon: "list",
+    color: "#00D9FF",
+    routeName: "Lists",
+    tier: "core",
+    category: "organization",
     isCore: true,
     requiresOnboarding: false,
-    tags: ['lists', 'checklists', 'todos', 'shopping'],
+    tags: ["lists", "checklists", "todos", "shopping"],
   },
   {
-    id: 'alerts',
-    name: 'Alerts',
-    description: 'Smart reminders and alarms',
-    icon: 'bell',
-    color: '#00D9FF',
-    routeName: 'Alerts',
-    tier: 'core',
-    category: 'utilities',
+    id: "alerts",
+    name: "Alerts",
+    description: "Smart reminders and alarms",
+    icon: "bell",
+    color: "#00D9FF",
+    routeName: "Alerts",
+    tier: "core",
+    category: "utilities",
     isCore: true,
     requiresOnboarding: false,
-    tags: ['reminders', 'alarms', 'notifications', 'alerts'],
+    tags: ["reminders", "alarms", "notifications", "alerts"],
   },
   {
-    id: 'contacts',
-    name: 'Contacts',
-    description: 'Contact management',
-    icon: 'users',
-    color: '#00D9FF',
-    routeName: 'Contacts',
-    tier: 'core',
-    category: 'communication',
+    id: "contacts",
+    name: "Contacts",
+    description: "Contact management",
+    icon: "users",
+    color: "#00D9FF",
+    routeName: "Contacts",
+    tier: "core",
+    category: "communication",
     isCore: true,
     requiresOnboarding: false,
-    tags: ['contacts', 'people', 'address book', 'phonebook'],
+    tags: ["contacts", "people", "address book", "phonebook"],
   },
   {
-    id: 'translator',
-    name: 'Translator',
-    description: 'Real-time language translation',
-    icon: 'globe',
-    color: '#00D9FF',
-    routeName: 'Translator',
-    tier: 'core',
-    category: 'utilities',
+    id: "translator",
+    name: "Translator",
+    description: "Real-time language translation",
+    icon: "globe",
+    color: "#00D9FF",
+    routeName: "Translator",
+    tier: "core",
+    category: "utilities",
     isCore: true,
     requiresOnboarding: false,
-    tags: ['translation', 'languages', 'international', 'speech'],
+    tags: ["translation", "languages", "international", "speech"],
   },
   {
-    id: 'photos',
-    name: 'Photos',
-    description: 'Photo gallery and management',
-    icon: 'image',
-    color: '#00D9FF',
-    routeName: 'Photos',
-    tier: 'core',
-    category: 'lifestyle',
+    id: "photos",
+    name: "Photos",
+    description: "Photo gallery and management",
+    icon: "image",
+    color: "#00D9FF",
+    routeName: "Photos",
+    tier: "core",
+    category: "lifestyle",
     isCore: true,
     requiresOnboarding: false,
-    tags: ['photos', 'images', 'gallery', 'pictures'],
+    tags: ["photos", "images", "gallery", "pictures"],
   },
   {
-    id: 'budget',
-    name: 'Budget',
-    description: 'Personal finance tracking',
-    icon: 'dollar-sign',
-    color: '#00D9FF',
-    routeName: 'Budget',
-    tier: 'core',
-    category: 'finance',
+    id: "budget",
+    name: "Budget",
+    description: "Personal finance tracking",
+    icon: "dollar-sign",
+    color: "#00D9FF",
+    routeName: "Budget",
+    tier: "core",
+    category: "finance",
     isCore: true,
     requiresOnboarding: false,
-    tags: ['budget', 'finance', 'money', 'expenses', 'spending'],
+    tags: ["budget", "finance", "money", "expenses", "spending"],
   },
 ];
 
@@ -269,7 +269,7 @@ class ModuleRegistry {
 
   /**
    * Get All Modules
-   * 
+   *
    * @param tier - Optional tier filter
    * @returns Array of module definitions
    */
@@ -282,9 +282,9 @@ class ModuleRegistry {
 
   /**
    * Get Core Modules
-   * 
+   *
    * Plain English: "Get the 14 production-ready modules"
-   * 
+   *
    * @returns Array of core modules
    */
   getCoreModules(): ModuleDefinition[] {
@@ -293,10 +293,10 @@ class ModuleRegistry {
 
   /**
    * Get Modules For Onboarding
-   * 
+   *
    * Plain English: "Get modules to show when user first starts"
    * These are modules suitable for initial selection (3 modules to start).
-   * 
+   *
    * @returns Array of modules for onboarding
    */
   getOnboardingModules(): ModuleDefinition[] {
@@ -305,7 +305,7 @@ class ModuleRegistry {
 
   /**
    * Get Module By ID
-   * 
+   *
    * @param id - Module ID
    * @returns Module definition or undefined
    */
@@ -315,7 +315,7 @@ class ModuleRegistry {
 
   /**
    * Get Modules By Category
-   * 
+   *
    * @param category - Module category
    * @returns Array of modules in category
    */
@@ -325,15 +325,15 @@ class ModuleRegistry {
 
   /**
    * Search Modules
-   * 
+   *
    * Plain English: "Find modules by name, description, or tags"
-   * 
+   *
    * @param query - Search query
    * @returns Matching modules
    */
   searchModules(query: string): ModuleDefinition[] {
     const lowerQuery = query.toLowerCase();
-    
+
     return this.modules.filter((m) => {
       return (
         m.name.toLowerCase().includes(lowerQuery) ||
@@ -345,7 +345,7 @@ class ModuleRegistry {
 
   /**
    * Get Module Usage
-   * 
+   *
    * @param moduleId - Module ID
    * @returns Usage stats or undefined
    */
@@ -355,15 +355,15 @@ class ModuleRegistry {
 
   /**
    * Record Module Open
-   * 
+   *
    * Plain English: "Track that user opened this module"
    * Used for usage-based sorting and analytics.
-   * 
+   *
    * @param moduleId - Module ID
    */
   recordModuleOpen(moduleId: ModuleType): void {
     const existing = this.usageCache.get(moduleId);
-    
+
     if (existing) {
       this.usageCache.set(moduleId, {
         ...existing,
@@ -383,17 +383,17 @@ class ModuleRegistry {
 
   /**
    * Get Most Used Modules
-   * 
+   *
    * Plain English: "Get modules sorted by how often user opens them"
    * Used for sidebar ordering.
-   * 
+   *
    * @param limit - Max number of modules to return
    * @returns Array of most-used modules
    */
   getMostUsedModules(limit: number = 10): ModuleDefinition[] {
     const usageArray = Array.from(this.usageCache.values());
     usageArray.sort((a, b) => b.openCount - a.openCount);
-    
+
     const topIds = usageArray.slice(0, limit).map((u) => u.moduleId);
     return topIds
       .map((id) => this.getModule(id))
@@ -402,18 +402,20 @@ class ModuleRegistry {
 
   /**
    * Get Recently Used Modules
-   * 
+   *
    * Plain English: "Get modules user opened recently"
-   * 
+   *
    * @param limit - Max number of modules to return
    * @returns Array of recently used modules
    */
   getRecentlyUsedModules(limit: number = 5): ModuleDefinition[] {
     const usageArray = Array.from(this.usageCache.values());
     usageArray.sort((a, b) => {
-      return new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime();
+      return (
+        new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime()
+      );
     });
-    
+
     const recentIds = usageArray.slice(0, limit).map((u) => u.moduleId);
     return recentIds
       .map((id) => this.getModule(id))
@@ -422,13 +424,13 @@ class ModuleRegistry {
 
   /**
    * Toggle Favorite
-   * 
+   *
    * @param moduleId - Module ID
    * @returns New favorited state
    */
   toggleFavorite(moduleId: ModuleType): boolean {
     const usage = this.usageCache.get(moduleId);
-    
+
     if (usage) {
       const newState = !usage.favorited;
       this.usageCache.set(moduleId, {
@@ -437,7 +439,7 @@ class ModuleRegistry {
       });
       return newState;
     }
-    
+
     // Create new usage entry
     this.usageCache.set(moduleId, {
       moduleId,
@@ -451,14 +453,14 @@ class ModuleRegistry {
 
   /**
    * Get Favorite Modules
-   * 
+   *
    * @returns Array of favorited modules
    */
   getFavoriteModules(): ModuleDefinition[] {
     const favoriteIds = Array.from(this.usageCache.values())
       .filter((u) => u.favorited)
       .map((u) => u.moduleId);
-    
+
     return favoriteIds
       .map((id) => this.getModule(id))
       .filter((m): m is ModuleDefinition => m !== undefined);
@@ -466,38 +468,38 @@ class ModuleRegistry {
 
   /**
    * Get Modules for Sidebar
-   * 
+   *
    * Plain English: "Get the top 10 modules to show in sidebar"
    * Uses combination of:
    * - Favorites (always included)
    * - Most used
    * - Recently used
    * - Command center (always first)
-   * 
+   *
    * @returns Array of modules for sidebar
    */
   getModulesForSidebar(): ModuleDefinition[] {
-    const commandCenter = this.getModule('command');
+    const commandCenter = this.getModule("command");
     const favorites = this.getFavoriteModules();
     const mostUsed = this.getMostUsedModules(8);
-    
+
     // Combine and deduplicate
     const modules = new Map<ModuleType, ModuleDefinition>();
-    
+
     // Command center always first
     if (commandCenter) {
-      modules.set('command', commandCenter);
+      modules.set("command", commandCenter);
     }
-    
+
     // Add favorites
     favorites.forEach((m) => modules.set(m.id, m));
-    
+
     // Add most used up to limit of 10
     for (const m of mostUsed) {
       if (modules.size >= 10) break;
       modules.set(m.id, m);
     }
-    
+
     // If still room, add core modules
     if (modules.size < 10) {
       const coreModules = this.getCoreModules();
@@ -508,7 +510,7 @@ class ModuleRegistry {
         }
       }
     }
-    
+
     return Array.from(modules.values());
   }
 }

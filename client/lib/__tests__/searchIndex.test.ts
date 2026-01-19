@@ -1,21 +1,21 @@
 /**
  * Tests for Search Index
- * 
+ *
  * Validates inverted index and incremental indexing.
  */
 
-import { searchIndex } from '../searchIndex';
-import { ModuleType } from '@/models/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { searchIndex } from "../searchIndex";
+import { ModuleType } from "@/models/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Mock AsyncStorage
-jest.mock('@react-native-async-storage/async-storage', () => ({
+jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
   multiRemove: jest.fn(),
 }));
 
-describe('SearchIndex', () => {
+describe("SearchIndex", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
@@ -23,24 +23,24 @@ describe('SearchIndex', () => {
     await searchIndex.initialize();
   });
 
-  describe('Initialization', () => {
-    it('should initialize without errors', async () => {
+  describe("Initialization", () => {
+    it("should initialize without errors", async () => {
       await expect(searchIndex.initialize()).resolves.not.toThrow();
     });
 
-    it('should load saved index from storage', async () => {
+    it("should load saved index from storage", async () => {
       const items = [
         {
-          id: '1',
-          moduleType: 'notebook' as ModuleType,
-          title: 'Test Note',
-          searchableText: 'test note content',
+          id: "1",
+          moduleType: "notebook" as ModuleType,
+          title: "Test Note",
+          searchableText: "test note content",
           timestamp: Date.now(),
         },
       ];
 
       (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-        if (key === '@searchIndex:items') {
+        if (key === "@searchIndex:items") {
           return Promise.resolve(JSON.stringify(items));
         }
         return Promise.resolve(null);
@@ -54,13 +54,13 @@ describe('SearchIndex', () => {
     });
   });
 
-  describe('Adding Items', () => {
-    it('should add item to index', () => {
+  describe("Adding Items", () => {
+    it("should add item to index", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Test Note',
-        searchableText: 'test note content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Test Note",
+        searchableText: "test note content",
         timestamp: Date.now(),
       });
 
@@ -68,12 +68,12 @@ describe('SearchIndex', () => {
       expect(stats.totalItems).toBe(1);
     });
 
-    it('should tokenize searchable text', () => {
+    it("should tokenize searchable text", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Meeting Notes',
-        searchableText: 'important meeting notes about project',
+        id: "1",
+        moduleType: "notebook",
+        title: "Meeting Notes",
+        searchableText: "important meeting notes about project",
         timestamp: Date.now(),
       });
 
@@ -81,35 +81,35 @@ describe('SearchIndex', () => {
       expect(stats.totalWords).toBeGreaterThan(0);
     });
 
-    it('should handle items with metadata', () => {
+    it("should handle items with metadata", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'planner',
-        title: 'Buy groceries',
-        searchableText: 'buy milk eggs bread',
+        id: "1",
+        moduleType: "planner",
+        title: "Buy groceries",
+        searchableText: "buy milk eggs bread",
         timestamp: Date.now(),
-        metadata: { status: 'pending', priority: 'high' },
+        metadata: { status: "pending", priority: "high" },
       });
 
-      const item = searchIndex.getItem('1');
+      const item = searchIndex.getItem("1");
       expect(item).toBeDefined();
-      expect(item!.metadata).toHaveProperty('status');
+      expect(item!.metadata).toHaveProperty("status");
     });
 
-    it('should add multiple items', () => {
+    it("should add multiple items", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note 1',
-        searchableText: 'first note',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note 1",
+        searchableText: "first note",
         timestamp: Date.now(),
       });
 
       searchIndex.addItem({
-        id: '2',
-        moduleType: 'notebook',
-        title: 'Note 2',
-        searchableText: 'second note',
+        id: "2",
+        moduleType: "notebook",
+        title: "Note 2",
+        searchableText: "second note",
         timestamp: Date.now(),
       });
 
@@ -118,234 +118,236 @@ describe('SearchIndex', () => {
     });
   });
 
-  describe('Updating Items', () => {
-    it('should update existing item', () => {
+  describe("Updating Items", () => {
+    it("should update existing item", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Original Title',
-        searchableText: 'original content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Original Title",
+        searchableText: "original content",
         timestamp: Date.now(),
       });
 
       searchIndex.updateItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Updated Title',
-        searchableText: 'updated content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Updated Title",
+        searchableText: "updated content",
         timestamp: Date.now(),
       });
 
-      const item = searchIndex.getItem('1');
-      expect(item!.title).toBe('Updated Title');
+      const item = searchIndex.getItem("1");
+      expect(item!.title).toBe("Updated Title");
     });
 
-    it('should reindex content on update', () => {
+    it("should reindex content on update", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'old keywords here',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "old keywords here",
         timestamp: Date.now(),
       });
 
       searchIndex.updateItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'new keywords there',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "new keywords there",
         timestamp: Date.now(),
       });
 
       // Search for old keywords should not find item
-      const oldResults = searchIndex.search('old keywords');
+      const oldResults = searchIndex.search("old keywords");
       expect(oldResults.length).toBe(0);
 
       // Search for new keywords should find item
-      const newResults = searchIndex.search('new keywords');
+      const newResults = searchIndex.search("new keywords");
       expect(newResults.length).toBe(1);
     });
   });
 
-  describe('Removing Items', () => {
-    it('should remove item from index', () => {
+  describe("Removing Items", () => {
+    it("should remove item from index", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "content",
         timestamp: Date.now(),
       });
 
-      searchIndex.removeItem('1');
+      searchIndex.removeItem("1");
 
-      const item = searchIndex.getItem('1');
+      const item = searchIndex.getItem("1");
       expect(item).toBeUndefined();
     });
 
-    it('should handle removal of non-existent item', () => {
+    it("should handle removal of non-existent item", () => {
       expect(() => {
-        searchIndex.removeItem('nonexistent');
+        searchIndex.removeItem("nonexistent");
       }).not.toThrow();
     });
 
-    it('should clean up index entries on removal', () => {
+    it("should clean up index entries on removal", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Unique Word',
-        searchableText: 'xyzabc123',
+        id: "1",
+        moduleType: "notebook",
+        title: "Unique Word",
+        searchableText: "xyzabc123",
         timestamp: Date.now(),
       });
 
-      searchIndex.removeItem('1');
+      searchIndex.removeItem("1");
 
-      const results = searchIndex.search('xyzabc123');
+      const results = searchIndex.search("xyzabc123");
       expect(results.length).toBe(0);
     });
   });
 
-  describe('Searching', () => {
+  describe("Searching", () => {
     beforeEach(() => {
       // Add some test items
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Meeting Notes',
-        searchableText: 'important project meeting discussion',
+        id: "1",
+        moduleType: "notebook",
+        title: "Meeting Notes",
+        searchableText: "important project meeting discussion",
         timestamp: Date.now(),
       });
 
       searchIndex.addItem({
-        id: '2',
-        moduleType: 'planner',
-        title: 'Project Task',
-        searchableText: 'complete project documentation',
+        id: "2",
+        moduleType: "planner",
+        title: "Project Task",
+        searchableText: "complete project documentation",
         timestamp: Date.now(),
       });
 
       searchIndex.addItem({
-        id: '3',
-        moduleType: 'calendar',
-        title: 'Team Meeting',
-        searchableText: 'weekly team meeting',
+        id: "3",
+        moduleType: "calendar",
+        title: "Team Meeting",
+        searchableText: "weekly team meeting",
         timestamp: Date.now(),
       });
     });
 
-    it('should find items by single word', () => {
-      const results = searchIndex.search('project');
+    it("should find items by single word", () => {
+      const results = searchIndex.search("project");
       expect(results.length).toBeGreaterThan(0);
-      expect(results.some((r) => r.itemId === '1' || r.itemId === '2')).toBe(true);
+      expect(results.some((r) => r.itemId === "1" || r.itemId === "2")).toBe(
+        true,
+      );
     });
 
-    it('should find items by multiple words', () => {
-      const results = searchIndex.search('project meeting');
+    it("should find items by multiple words", () => {
+      const results = searchIndex.search("project meeting");
       expect(results.length).toBeGreaterThan(0);
     });
 
-    it('should return empty array for no matches', () => {
-      const results = searchIndex.search('nonexistent keyword');
+    it("should return empty array for no matches", () => {
+      const results = searchIndex.search("nonexistent keyword");
       expect(results.length).toBe(0);
     });
 
-    it('should handle empty query', () => {
-      const results = searchIndex.search('');
+    it("should handle empty query", () => {
+      const results = searchIndex.search("");
       expect(results.length).toBe(0);
     });
 
-    it('should score results', () => {
-      const results = searchIndex.search('meeting');
-      
+    it("should score results", () => {
+      const results = searchIndex.search("meeting");
+
       results.forEach((result) => {
-        expect(result).toHaveProperty('score');
-        expect(typeof result.score).toBe('number');
+        expect(result).toHaveProperty("score");
+        expect(typeof result.score).toBe("number");
         expect(result.score).toBeGreaterThan(0);
       });
     });
 
-    it('should sort results by score', () => {
-      const results = searchIndex.search('meeting');
-      
+    it("should sort results by score", () => {
+      const results = searchIndex.search("meeting");
+
       for (let i = 1; i < results.length; i++) {
         expect(results[i - 1].score).toBeGreaterThanOrEqual(results[i].score);
       }
     });
 
-    it('should respect maxResults limit', () => {
-      const results = searchIndex.search('meeting', { maxResults: 1 });
+    it("should respect maxResults limit", () => {
+      const results = searchIndex.search("meeting", { maxResults: 1 });
       expect(results.length).toBeLessThanOrEqual(1);
     });
 
-    it('should filter by module types', () => {
-      const results = searchIndex.search('meeting', {
-        moduleTypes: ['calendar'],
+    it("should filter by module types", () => {
+      const results = searchIndex.search("meeting", {
+        moduleTypes: ["calendar"],
       });
 
       results.forEach((result) => {
-        expect(result.item.moduleType).toBe('calendar');
+        expect(result.item.moduleType).toBe("calendar");
       });
     });
 
-    it('should boost title matches', () => {
+    it("should boost title matches", () => {
       // Add item with keyword in title
       searchIndex.addItem({
-        id: '4',
-        moduleType: 'notebook',
-        title: 'Important Keyword',
-        searchableText: 'other content',
+        id: "4",
+        moduleType: "notebook",
+        title: "Important Keyword",
+        searchableText: "other content",
         timestamp: Date.now(),
       });
 
       // Add item with keyword in content only
       searchIndex.addItem({
-        id: '5',
-        moduleType: 'notebook',
-        title: 'Other Title',
-        searchableText: 'keyword in content',
+        id: "5",
+        moduleType: "notebook",
+        title: "Other Title",
+        searchableText: "keyword in content",
         timestamp: Date.now(),
       });
 
-      const results = searchIndex.search('keyword');
-      
+      const results = searchIndex.search("keyword");
+
       // Title match should score higher
-      expect(results[0].itemId).toBe('4');
+      expect(results[0].itemId).toBe("4");
     });
   });
 
-  describe('Statistics', () => {
-    it('should provide index statistics', () => {
+  describe("Statistics", () => {
+    it("should provide index statistics", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "content",
         timestamp: Date.now(),
       });
 
       const stats = searchIndex.getStatistics();
-      
-      expect(stats).toHaveProperty('totalItems');
-      expect(stats).toHaveProperty('totalWords');
-      expect(stats).toHaveProperty('indexSizeKB');
-      expect(stats).toHaveProperty('moduleBreakdown');
+
+      expect(stats).toHaveProperty("totalItems");
+      expect(stats).toHaveProperty("totalWords");
+      expect(stats).toHaveProperty("indexSizeKB");
+      expect(stats).toHaveProperty("moduleBreakdown");
       expect(stats.totalItems).toBe(1);
     });
 
-    it('should track module breakdown', () => {
+    it("should track module breakdown", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "content",
         timestamp: Date.now(),
       });
 
       searchIndex.addItem({
-        id: '2',
-        moduleType: 'planner',
-        title: 'Task',
-        searchableText: 'task content',
+        id: "2",
+        moduleType: "planner",
+        title: "Task",
+        searchableText: "task content",
         timestamp: Date.now(),
       });
 
@@ -355,13 +357,13 @@ describe('SearchIndex', () => {
     });
   });
 
-  describe('Tokenization', () => {
-    it('should ignore stopwords', () => {
+  describe("Tokenization", () => {
+    it("should ignore stopwords", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'The Quick Note',
-        searchableText: 'the quick brown fox',
+        id: "1",
+        moduleType: "notebook",
+        title: "The Quick Note",
+        searchableText: "the quick brown fox",
         timestamp: Date.now(),
       });
 
@@ -371,48 +373,48 @@ describe('SearchIndex', () => {
       expect(stats.totalWords).toBeGreaterThan(0);
     });
 
-    it('should ignore short words', () => {
+    it("should ignore short words", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'a b c longer words here',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "a b c longer words here",
         timestamp: Date.now(),
       });
 
-      const results = searchIndex.search('longer');
+      const results = searchIndex.search("longer");
       expect(results.length).toBeGreaterThan(0);
     });
 
-    it('should handle special characters', () => {
+    it("should handle special characters", () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Email',
-        searchableText: 'user@example.com',
+        id: "1",
+        moduleType: "notebook",
+        title: "Email",
+        searchableText: "user@example.com",
         timestamp: Date.now(),
       });
 
-      const results = searchIndex.search('user example com');
+      const results = searchIndex.search("user example com");
       expect(results.length).toBeGreaterThan(0);
     });
   });
 
-  describe('Rebuild Index', () => {
-    it('should rebuild entire index', async () => {
+  describe("Rebuild Index", () => {
+    it("should rebuild entire index", async () => {
       const items = [
         {
-          id: '1',
-          moduleType: 'notebook' as ModuleType,
-          title: 'Note 1',
-          searchableText: 'content 1',
+          id: "1",
+          moduleType: "notebook" as ModuleType,
+          title: "Note 1",
+          searchableText: "content 1",
           timestamp: Date.now(),
         },
         {
-          id: '2',
-          moduleType: 'planner' as ModuleType,
-          title: 'Task 1',
-          searchableText: 'task content',
+          id: "2",
+          moduleType: "planner" as ModuleType,
+          title: "Task 1",
+          searchableText: "task content",
           timestamp: Date.now(),
         },
       ];
@@ -424,8 +426,8 @@ describe('SearchIndex', () => {
     });
   });
 
-  describe('Configuration', () => {
-    it('should update configuration', () => {
+  describe("Configuration", () => {
+    it("should update configuration", () => {
       searchIndex.updateConfig({
         maxWordsPerItem: 100,
         minWordLength: 3,
@@ -433,22 +435,22 @@ describe('SearchIndex', () => {
 
       // Just verify it doesn't crash
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'ab abc abcd',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "ab abc abcd",
         timestamp: Date.now(),
       });
     });
   });
 
-  describe('Data Persistence', () => {
-    it('should save to storage', async () => {
+  describe("Data Persistence", () => {
+    it("should save to storage", async () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "content",
         timestamp: Date.now(),
       });
 
@@ -458,12 +460,12 @@ describe('SearchIndex', () => {
       expect(AsyncStorage.setItem).toHaveBeenCalled();
     });
 
-    it('should clear all data', async () => {
+    it("should clear all data", async () => {
       searchIndex.addItem({
-        id: '1',
-        moduleType: 'notebook',
-        title: 'Note',
-        searchableText: 'content',
+        id: "1",
+        moduleType: "notebook",
+        title: "Note",
+        searchableText: "content",
         timestamp: Date.now(),
       });
 
@@ -474,12 +476,12 @@ describe('SearchIndex', () => {
     });
   });
 
-  describe('Performance', () => {
-    it('should handle many items', () => {
+  describe("Performance", () => {
+    it("should handle many items", () => {
       for (let i = 0; i < 100; i++) {
         searchIndex.addItem({
           id: `${i}`,
-          moduleType: 'notebook',
+          moduleType: "notebook",
           title: `Note ${i}`,
           searchableText: `content for note number ${i}`,
           timestamp: Date.now(),
@@ -490,12 +492,12 @@ describe('SearchIndex', () => {
       expect(stats.totalItems).toBe(100);
     });
 
-    it('should search quickly with many items', () => {
+    it("should search quickly with many items", () => {
       // Add 100 items
       for (let i = 0; i < 100; i++) {
         searchIndex.addItem({
           id: `${i}`,
-          moduleType: 'notebook',
+          moduleType: "notebook",
           title: `Note ${i}`,
           searchableText: `content ${i} with common keyword`,
           timestamp: Date.now(),
@@ -503,7 +505,7 @@ describe('SearchIndex', () => {
       }
 
       const startTime = performance.now();
-      const results = searchIndex.search('keyword');
+      const results = searchIndex.search("keyword");
       const endTime = performance.now();
 
       expect(results.length).toBeGreaterThan(0);
@@ -511,26 +513,26 @@ describe('SearchIndex', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle storage errors gracefully', async () => {
+  describe("Error Handling", () => {
+    it("should handle storage errors gracefully", async () => {
       (AsyncStorage.setItem as jest.Mock).mockRejectedValue(
-        new Error('Storage error')
+        new Error("Storage error"),
       );
 
       expect(() => {
         searchIndex.addItem({
-          id: '1',
-          moduleType: 'notebook',
-          title: 'Note',
-          searchableText: 'content',
+          id: "1",
+          moduleType: "notebook",
+          title: "Note",
+          searchableText: "content",
           timestamp: Date.now(),
         });
       }).not.toThrow();
     });
 
-    it('should handle initialization errors', async () => {
+    it("should handle initialization errors", async () => {
       (AsyncStorage.getItem as jest.Mock).mockRejectedValue(
-        new Error('Storage error')
+        new Error("Storage error"),
       );
 
       await expect(searchIndex.initialize()).resolves.not.toThrow();

@@ -1,6 +1,6 @@
 /**
  * Storage Helper
- * 
+ *
  * Provides a consistent interface to AsyncStorage that works in both
  * production and test environments.
  */
@@ -15,18 +15,21 @@ export async function getAsyncStorage() {
   if (AsyncStorage) {
     return AsyncStorage;
   }
-  
+
   try {
     // Only load AsyncStorage in React Native environment
-    if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
-      const module = await import('@react-native-async-storage/async-storage');
+    if (
+      typeof navigator !== "undefined" &&
+      navigator.product === "ReactNative"
+    ) {
+      const module = await import("@react-native-async-storage/async-storage");
       AsyncStorage = module.default;
       return AsyncStorage;
     }
   } catch (error) {
-    console.warn('AsyncStorage not available:', error);
+    console.warn("AsyncStorage not available:", error);
   }
-  
+
   return null;
 }
 
@@ -39,7 +42,7 @@ export async function saveToStorage(key: string, data: any): Promise<void> {
     // In test mode or when AsyncStorage unavailable, just skip
     return;
   }
-  
+
   try {
     await storage.setItem(key, JSON.stringify(data));
   } catch (error) {
@@ -56,7 +59,7 @@ export async function loadFromStorage<T>(key: string): Promise<T | null> {
     // In test mode or when AsyncStorage unavailable, return null
     return null;
   }
-  
+
   try {
     const value = await storage.getItem(key);
     if (value) {
@@ -65,6 +68,6 @@ export async function loadFromStorage<T>(key: string): Promise<T | null> {
   } catch (error) {
     console.error(`Failed to load from storage (key: ${key}):`, error);
   }
-  
+
   return null;
 }

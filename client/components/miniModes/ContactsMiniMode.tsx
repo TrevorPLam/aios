@@ -1,22 +1,22 @@
 /**
  * Contacts Mini-Mode Component (iOS-optimized)
- * 
+ *
  * Purpose (Plain English):
  * A compact contact selector that can be embedded in other screens.
  * Allows users to quickly select a contact without leaving their current
  * context (e.g., from Messages to start a chat, or from Calendar to add attendees).
- * 
+ *
  * What it interacts with:
  * - Contacts Database: Fetches contacts list
  * - Event Bus: Emits ContactSelected event after choosing
  * - Mini-Mode Registry: Returns result via onComplete callback
- * 
+ *
  * Safe AI extension points:
  * - Add smart suggestions based on context (frequent contacts, recent)
  * - Add filtering by group/category
  * - Enhance search with fuzzy matching
  * - Add iOS Contacts app integration
- * 
+ *
  * Warnings:
  * - Performance: Handle large contact lists (virtualization)
  * - iOS keyboard should show search immediately
@@ -24,7 +24,7 @@
  * - Always provide haptic feedback on iOS
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -33,17 +33,17 @@ import {
   TouchableOpacity,
   Platform,
   ActivityIndicator,
-} from 'react-native';
-import * as Haptics from 'expo-haptics';
-import { Feather } from '@expo/vector-icons';
+} from "react-native";
+import * as Haptics from "expo-haptics";
+import { Feather } from "@expo/vector-icons";
 
-import { MiniModeComponentProps, MiniModeResult } from '../../lib/miniMode';
-import { eventBus, EVENT_TYPES } from '../../lib/eventBus';
-import { database } from '../../storage/database';
-import { ThemedText } from '../ThemedText';
-import { Button } from '../Button';
-import { Colors, Spacing, Typography } from '../../constants/theme';
-import type { Contact } from '../../models/types';
+import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
+import { eventBus, EVENT_TYPES } from "../../lib/eventBus";
+import { database } from "../../storage/database";
+import { ThemedText } from "../ThemedText";
+import { Button } from "../Button";
+import { Colors, Spacing, Typography } from "../../constants/theme";
+import type { Contact } from "../../models/types";
 
 interface ContactsMiniModeData {
   purpose?: string; // What is the contact being selected for?
@@ -53,11 +53,11 @@ interface ContactsMiniModeData {
 
 /**
  * Contacts Mini-Mode Component
- * 
+ *
  * Plain English:
  * Searchable contact list for quick selection. Shows recent/frequent contacts
  * first, with search to filter. iOS-optimized with native feel.
- * 
+ *
  * Technical:
  * Loads contacts from database, provides search filtering, returns selected
  * contact(s) via onComplete callback. Uses FlatList for performance.
@@ -70,7 +70,7 @@ export function ContactsMiniMode({
 }: MiniModeComponentProps<ContactsMiniModeData>) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [filteredContacts, setFilteredContacts] = useState<Contact[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -78,7 +78,7 @@ export function ContactsMiniMode({
 
   /**
    * Load contacts on mount
-   * 
+   *
    * Plain English: Fetch all contacts and filter out excluded ones
    * Technical: Async database query with error handling
    */
@@ -89,7 +89,7 @@ export function ContactsMiniMode({
   const loadContacts = async () => {
     try {
       const allContacts = await database.contacts.getAll();
-      
+
       // Filter out excluded contacts
       const filtered = initialData?.excludeIds
         ? allContacts.filter((c) => !initialData.excludeIds!.includes(c.id))
@@ -98,7 +98,7 @@ export function ContactsMiniMode({
       setContacts(filtered);
       setFilteredContacts(filtered);
     } catch (error) {
-      console.error('[ContactsMiniMode] Error loading contacts:', error);
+      console.error("[ContactsMiniMode] Error loading contacts:", error);
     } finally {
       setLoading(false);
     }
@@ -106,7 +106,7 @@ export function ContactsMiniMode({
 
   /**
    * Handle search query changes
-   * 
+   *
    * Plain English: Filter contacts by name, email, or phone
    * Technical: Case-insensitive substring matching
    */
@@ -118,14 +118,12 @@ export function ContactsMiniMode({
 
     const query = searchQuery.toLowerCase();
     const filtered = contacts.filter((contact) => {
-      const name = contact.name?.toLowerCase() || '';
-      const email = contact.email?.toLowerCase() || '';
-      const phone = contact.phone?.toLowerCase() || '';
+      const name = contact.name?.toLowerCase() || "";
+      const email = contact.email?.toLowerCase() || "";
+      const phone = contact.phone?.toLowerCase() || "";
 
       return (
-        name.includes(query) ||
-        email.includes(query) ||
-        phone.includes(query)
+        name.includes(query) || email.includes(query) || phone.includes(query)
       );
     });
 
@@ -134,12 +132,12 @@ export function ContactsMiniMode({
 
   /**
    * Handle contact selection
-   * 
+   *
    * Plain English: Select a contact (or toggle if multi-select)
    * Technical: Updates selection state with haptic feedback
    */
   const handleSelectContact = (contact: Contact) => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
@@ -148,7 +146,7 @@ export function ContactsMiniMode({
       setSelectedIds((current) =>
         current.includes(contact.id)
           ? current.filter((id) => id !== contact.id)
-          : [...current, contact.id]
+          : [...current, contact.id],
       );
     } else {
       // Single select - complete immediately
@@ -158,7 +156,7 @@ export function ContactsMiniMode({
 
   /**
    * Complete selection and return results
-   * 
+   *
    * Plain English: Return selected contact(s) to caller
    * Technical: Emits event and invokes onComplete callback
    */
@@ -171,14 +169,14 @@ export function ContactsMiniMode({
     });
 
     // Success haptic on iOS
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
 
     // Return result
     const result: MiniModeResult<Contact | Contact[]> = {
-      action: 'selected',
-      module: 'contacts',
+      action: "selected",
+      module: "contacts",
       data: allowMultiple ? selectedContacts : selectedContacts[0],
     };
 
@@ -189,9 +187,7 @@ export function ContactsMiniMode({
    * Handle done button (multi-select mode)
    */
   const handleDone = () => {
-    const selectedContacts = contacts.filter((c) =>
-      selectedIds.includes(c.id)
-    );
+    const selectedContacts = contacts.filter((c) => selectedIds.includes(c.id));
     completeSelection(selectedContacts);
   };
 
@@ -212,14 +208,14 @@ export function ContactsMiniMode({
         {/* Avatar (iOS-style circle) */}
         <View style={styles.avatar}>
           <ThemedText style={styles.avatarText}>
-            {item.name?.charAt(0).toUpperCase() || '?'}
+            {item.name?.charAt(0).toUpperCase() || "?"}
           </ThemedText>
         </View>
 
         {/* Contact Info */}
         <View style={styles.contactInfo}>
           <ThemedText style={styles.contactName} numberOfLines={1}>
-            {item.name || 'Unknown'}
+            {item.name || "Unknown"}
           </ThemedText>
           {item.email && (
             <ThemedText style={styles.contactDetail} numberOfLines={1}>
@@ -231,10 +227,7 @@ export function ContactsMiniMode({
         {/* Selection Indicator */}
         {allowMultiple && (
           <View
-            style={[
-              styles.checkbox,
-              isSelected && styles.checkboxSelected,
-            ]}
+            style={[styles.checkbox, isSelected && styles.checkboxSelected]}
           >
             {isSelected && (
               <Feather name="check" size={16} color={Colors.deepSpace} />
@@ -244,7 +237,11 @@ export function ContactsMiniMode({
 
         {/* Chevron (single select) */}
         {!allowMultiple && (
-          <Feather name="chevron-right" size={20} color={Colors.textSecondary} />
+          <Feather
+            name="chevron-right"
+            size={20}
+            color={Colors.textSecondary}
+          />
         )}
       </TouchableOpacity>
     );
@@ -294,16 +291,12 @@ export function ContactsMiniMode({
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity
-            onPress={() => setSearchQuery('')}
+            onPress={() => setSearchQuery("")}
             style={styles.clearButton}
             accessibilityRole="button"
             accessibilityLabel="Clear search"
           >
-            <Feather
-              name="x-circle"
-              size={18}
-              color={Colors.textSecondary}
-            />
+            <Feather name="x-circle" size={18} color={Colors.textSecondary} />
           </TouchableOpacity>
         )}
       </View>
@@ -312,13 +305,15 @@ export function ContactsMiniMode({
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.electric} />
-          <ThemedText style={styles.loadingText}>Loading contacts...</ThemedText>
+          <ThemedText style={styles.loadingText}>
+            Loading contacts...
+          </ThemedText>
         </View>
       ) : filteredContacts.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Feather name="users" size={48} color={Colors.textSecondary} />
           <ThemedText style={styles.emptyText}>
-            {searchQuery ? 'No matching contacts' : 'No contacts found'}
+            {searchQuery ? "No matching contacts" : "No contacts found"}
           </ThemedText>
           {searchQuery && (
             <ThemedText style={styles.emptyHint}>
@@ -347,7 +342,7 @@ export function ContactsMiniMode({
             style={styles.button}
           />
           <Button
-            label={`Done${selectedIds.length > 0 ? ` (${selectedIds.length})` : ''}`}
+            label={`Done${selectedIds.length > 0 ? ` (${selectedIds.length})` : ""}`}
             onPress={handleDone}
             disabled={selectedIds.length === 0}
             style={[styles.button, styles.buttonPrimary]}
@@ -361,12 +356,12 @@ export function ContactsMiniMode({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    maxHeight: '85%',
+    maxHeight: "85%",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.sm,
@@ -376,7 +371,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Typography.fontSize.h2,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: Spacing.xs,
   },
   subtitle: {
@@ -388,8 +383,8 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.sm,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.deepSpace,
     borderRadius: 12,
     marginHorizontal: Spacing.md,
@@ -405,7 +400,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: Typography.fontSize.body,
     color: Colors.text,
-    paddingVertical: Platform.OS === 'ios' ? Spacing.md : Spacing.sm,
+    paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
   },
   clearButton: {
     padding: Spacing.xs,
@@ -415,28 +410,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contactItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.border,
   },
   contactItemSelected: {
-    backgroundColor: 'rgba(0, 217, 255, 0.1)', // Electric with opacity
+    backgroundColor: "rgba(0, 217, 255, 0.1)", // Electric with opacity
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: Colors.electric,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: Spacing.md,
   },
   avatarText: {
     fontSize: Typography.fontSize.h3,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.deepSpace,
   },
   contactInfo: {
@@ -445,7 +440,7 @@ const styles = StyleSheet.create({
   },
   contactName: {
     fontSize: Typography.fontSize.body,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 2,
   },
   contactDetail: {
@@ -458,8 +453,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     borderColor: Colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginLeft: Spacing.sm,
   },
   checkboxSelected: {
@@ -468,8 +463,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: Spacing.xxl,
   },
   loadingText: {
@@ -478,28 +473,28 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: Spacing.xxl,
     paddingHorizontal: Spacing.xl,
   },
   emptyText: {
     fontSize: Typography.fontSize.h3,
-    fontWeight: '500',
+    fontWeight: "500",
     marginTop: Spacing.md,
-    textAlign: 'center',
+    textAlign: "center",
   },
   emptyHint: {
     fontSize: Typography.fontSize.small,
     color: Colors.textSecondary,
     marginTop: Spacing.xs,
-    textAlign: 'center',
+    textAlign: "center",
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.sm,
     padding: Spacing.md,
-    paddingBottom: Platform.OS === 'ios' ? Spacing.lg : Spacing.md,
+    paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
   },

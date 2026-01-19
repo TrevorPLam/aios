@@ -224,9 +224,9 @@ describe("Calendar Events Database", () => {
       expect(ids).toHaveLength(2);
       expect(ids.some((id) => id.includes("2024-03-11"))).toBe(true);
       expect(ids.some((id) => id.includes("2024-03-12"))).toBe(false);
-      expect(
-        events.some((event) => event.title === "Special Standup"),
-      ).toBe(true);
+      expect(events.some((event) => event.title === "Special Standup")).toBe(
+        true,
+      );
     });
 
     it("should build reminder triggers for events in range", async () => {

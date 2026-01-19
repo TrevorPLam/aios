@@ -2,51 +2,51 @@
 
 /**
  * Constitution Compiler
- * 
+ *
  * Reads docs/governance/constitution.md and extracts tagged sections
  * to generate Copilot instruction files.
- * 
+ *
  * Tagged sections use markers:
  * - ## COPILOT:GLOBAL → .github/copilot-instructions.md
  * - ## COPILOT:DOCS → .github/instructions/docs.instructions.md
  * - ## COPILOT:CLIENT → .github/instructions/client.instructions.md
  * - ## COPILOT:SERVER → .github/instructions/server.instructions.md
- * 
+ *
  * Generated files include a header indicating they are auto-generated.
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { readFileSync, writeFileSync, existsSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const REPO_ROOT = join(__dirname, '../..');
-const CONSTITUTION_PATH = join(REPO_ROOT, 'docs/governance/constitution.md');
-const OUTPUT_DIR = join(REPO_ROOT, '.github');
+const REPO_ROOT = join(__dirname, "../..");
+const CONSTITUTION_PATH = join(REPO_ROOT, "docs/governance/constitution.md");
+const OUTPUT_DIR = join(REPO_ROOT, ".github");
 
 const TARGETS = {
-  'COPILOT:GLOBAL': {
-    path: join(OUTPUT_DIR, 'copilot-instructions.md'),
-    name: 'Global Copilot Instructions',
+  "COPILOT:GLOBAL": {
+    path: join(OUTPUT_DIR, "copilot-instructions.md"),
+    name: "Global Copilot Instructions",
   },
-  'COPILOT:DOCS': {
-    path: join(OUTPUT_DIR, 'instructions/docs.instructions.md'),
-    name: 'Documentation Path Instructions',
+  "COPILOT:DOCS": {
+    path: join(OUTPUT_DIR, "instructions/docs.instructions.md"),
+    name: "Documentation Path Instructions",
   },
-  'COPILOT:CLIENT': {
-    path: join(OUTPUT_DIR, 'instructions/client.instructions.md'),
-    name: 'Client/Frontend Path Instructions',
+  "COPILOT:CLIENT": {
+    path: join(OUTPUT_DIR, "instructions/client.instructions.md"),
+    name: "Client/Frontend Path Instructions",
   },
-  'COPILOT:SERVER': {
-    path: join(OUTPUT_DIR, 'instructions/server.instructions.md'),
-    name: 'Server/Backend Path Instructions',
+  "COPILOT:SERVER": {
+    path: join(OUTPUT_DIR, "instructions/server.instructions.md"),
+    name: "Server/Backend Path Instructions",
   },
 };
 
 function generateHeader(targetName) {
-  const timestamp = new Date().toISOString().split('T')[0];
+  const timestamp = new Date().toISOString().split("T")[0];
   return `<!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: docs/governance/constitution.md -->
 <!-- Generated: ${timestamp} -->
@@ -70,26 +70,26 @@ function generateHeader(targetName) {
 
 function extractSections(constitutionContent) {
   const sections = {
-    'COPILOT:GLOBAL': [],
-    'COPILOT:DOCS': [],
-    'COPILOT:CLIENT': [],
-    'COPILOT:SERVER': [],
+    "COPILOT:GLOBAL": [],
+    "COPILOT:DOCS": [],
+    "COPILOT:CLIENT": [],
+    "COPILOT:SERVER": [],
   };
 
-  const lines = constitutionContent.split('\n');
+  const lines = constitutionContent.split("\n");
   let currentSection = null;
   let sectionContent = [];
 
   for (const line of lines) {
     // Check if this line is a section marker
     const markerMatch = line.match(/^##\s+(COPILOT:\w+)/);
-    
+
     if (markerMatch) {
       // Save previous section if any
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection].push(...sectionContent);
       }
-      
+
       // Start new section
       currentSection = markerMatch[1];
       sectionContent = [];
@@ -129,8 +129,8 @@ function generateFooter() {
 }
 
 function compileConstitution() {
-  console.log('📜 Constitution Compiler');
-  console.log('========================\n');
+  console.log("📜 Constitution Compiler");
+  console.log("========================\n");
 
   // Check if constitution exists
   if (!existsSync(CONSTITUTION_PATH)) {
@@ -140,10 +140,10 @@ function compileConstitution() {
 
   // Read constitution
   console.log(`📖 Reading constitution from: ${CONSTITUTION_PATH}`);
-  const constitutionContent = readFileSync(CONSTITUTION_PATH, 'utf-8');
+  const constitutionContent = readFileSync(CONSTITUTION_PATH, "utf-8");
 
   // Extract tagged sections
-  console.log('🔍 Extracting tagged sections...');
+  console.log("🔍 Extracting tagged sections...");
   const sections = extractSections(constitutionContent);
 
   let generatedCount = 0;
@@ -152,7 +152,7 @@ function compileConstitution() {
   // Generate each target file
   for (const [tag, target] of Object.entries(TARGETS)) {
     const sectionContent = sections[tag];
-    
+
     if (sectionContent.length === 0) {
       console.warn(`⚠️  No content found for ${tag} - skipping ${target.name}`);
       emptyCount++;
@@ -161,35 +161,37 @@ function compileConstitution() {
 
     const header = generateHeader(target.name);
     const footer = generateFooter();
-    const content = header + sectionContent.join('\n') + footer;
+    const content = header + sectionContent.join("\n") + footer;
 
     // Write file
-    writeFileSync(target.path, content, 'utf-8');
+    writeFileSync(target.path, content, "utf-8");
     console.log(`✅ Generated: ${target.path}`);
     generatedCount++;
   }
 
-  console.log('\n📊 Summary:');
+  console.log("\n📊 Summary:");
   console.log(`   Generated: ${generatedCount} files`);
   console.log(`   Skipped: ${emptyCount} files (no content)`);
 
   if (generatedCount === 0) {
-    console.error('\n❌ No files were generated. Check your constitution.md for COPILOT: tags.');
+    console.error(
+      "\n❌ No files were generated. Check your constitution.md for COPILOT: tags.",
+    );
     process.exit(1);
   }
 
-  console.log('\n✨ Constitution compiled successfully!');
-  console.log('\n📝 Next steps:');
-  console.log('   1. Review generated files');
-  console.log('   2. Commit changes: git add .github/ docs/governance/');
-  console.log('   3. Push to repository');
+  console.log("\n✨ Constitution compiled successfully!");
+  console.log("\n📝 Next steps:");
+  console.log("   1. Review generated files");
+  console.log("   2. Commit changes: git add .github/ docs/governance/");
+  console.log("   3. Push to repository");
 }
 
 // Run compiler
 try {
   compileConstitution();
 } catch (error) {
-  console.error('\n❌ Error compiling constitution:');
+  console.error("\n❌ Error compiling constitution:");
   console.error(error.message);
   console.error(error.stack);
   process.exit(1);

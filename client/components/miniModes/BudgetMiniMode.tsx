@@ -1,22 +1,22 @@
 /**
  * Budget Mini-Mode Component (iOS-optimized)
- * 
+ *
  * Purpose (Plain English):
  * A compact expense/income tracker that can be embedded in other screens.
  * Allows users to quickly log transactions without leaving their current
  * context (e.g., from Messages after splitting a bill, or Food after ordering).
- * 
+ *
  * What it interacts with:
  * - Budget Database: Creates budget entries
  * - Event Bus: Emits BudgetTransactionCreated event after saving
  * - Mini-Mode Registry: Returns result via onComplete callback
- * 
+ *
  * Safe AI extension points:
  * - Add smart category detection from description
  * - Add receipt photo capture (iOS camera)
  * - Add split transaction support
  * - Enhance with iOS-native number pad
- * 
+ *
  * Warnings:
  * - Keep form simple - quick entry is the goal
  * - iOS keyboard should show numeric pad for amount
@@ -24,7 +24,7 @@
  * - Always provide haptic feedback on iOS
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -33,42 +33,42 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
-} from 'react-native';
-import * as Haptics from 'expo-haptics';
-import { Feather } from '@expo/vector-icons';
+} from "react-native";
+import * as Haptics from "expo-haptics";
+import { Feather } from "@expo/vector-icons";
 
-import { MiniModeComponentProps, MiniModeResult } from '../../lib/miniMode';
-import { eventBus, EVENT_TYPES } from '../../lib/eventBus';
-import { database } from '../../storage/database';
-import { ThemedText } from '../ThemedText';
-import { Button } from '../Button';
-import { Colors, Spacing, Typography } from '../../constants/theme';
-import type { BudgetEntry } from '../../models/types';
+import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
+import { eventBus, EVENT_TYPES } from "../../lib/eventBus";
+import { database } from "../../storage/database";
+import { ThemedText } from "../ThemedText";
+import { Button } from "../Button";
+import { Colors, Spacing, Typography } from "../../constants/theme";
+import type { BudgetEntry } from "../../models/types";
 
 interface BudgetMiniModeData {
   description?: string;
   amount?: number;
   category?: string;
-  type?: 'expense' | 'income';
+  type?: "expense" | "income";
 }
 
 // Common expense categories (iOS-style quick select)
 const EXPENSE_CATEGORIES = [
-  { id: 'food', label: 'Food', icon: 'coffee' },
-  { id: 'transport', label: 'Transport', icon: 'navigation' },
-  { id: 'shopping', label: 'Shopping', icon: 'shopping-bag' },
-  { id: 'entertainment', label: 'Entertainment', icon: 'film' },
-  { id: 'bills', label: 'Bills', icon: 'file-text' },
-  { id: 'other', label: 'Other', icon: 'more-horizontal' },
+  { id: "food", label: "Food", icon: "coffee" },
+  { id: "transport", label: "Transport", icon: "navigation" },
+  { id: "shopping", label: "Shopping", icon: "shopping-bag" },
+  { id: "entertainment", label: "Entertainment", icon: "film" },
+  { id: "bills", label: "Bills", icon: "file-text" },
+  { id: "other", label: "Other", icon: "more-horizontal" },
 ];
 
 /**
  * Budget Mini-Mode Component
- * 
+ *
  * Plain English:
  * Quick form to log an expense or income. Shows amount, description, category,
  * and type toggle. Optimized for iOS with native haptics and number pad.
- * 
+ *
  * Technical:
  * Controlled form with local state, validates on submit, creates budget entry via
  * database, emits event to event bus, returns result via onComplete callback.
@@ -80,41 +80,39 @@ export function BudgetMiniMode({
   source,
 }: MiniModeComponentProps<BudgetMiniModeData>) {
   const [description, setDescription] = useState(
-    initialData?.description || ''
+    initialData?.description || "",
   );
   const [amount, setAmount] = useState(
-    initialData?.amount ? initialData.amount.toString() : ''
+    initialData?.amount ? initialData.amount.toString() : "",
   );
-  const [category, setCategory] = useState(
-    initialData?.category || 'other'
-  );
-  const [type, setType] = useState<'expense' | 'income'>(
-    initialData?.type || 'expense'
+  const [category, setCategory] = useState(initialData?.category || "other");
+  const [type, setType] = useState<"expense" | "income">(
+    initialData?.type || "expense",
   );
   const [saving, setSaving] = useState(false);
 
   /**
    * Handle form submission
-   * 
+   *
    * Plain English: Validate inputs, create budget entry, notify caller
    * Technical: Async database operation with error handling
    */
   const handleSave = async () => {
     // Validation
     if (!description.trim()) {
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === "ios") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      Alert.alert('Required Field', 'Please enter a description');
+      Alert.alert("Required Field", "Please enter a description");
       return;
     }
 
     const amountNum = parseFloat(amount);
     if (isNaN(amountNum) || amountNum <= 0) {
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === "ios") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      Alert.alert('Invalid Amount', 'Please enter a valid positive amount');
+      Alert.alert("Invalid Amount", "Please enter a valid positive amount");
       return;
     }
 
@@ -124,7 +122,7 @@ export function BudgetMiniMode({
       // Create budget entry
       const budgetEntry: Partial<BudgetEntry> = {
         description: description.trim(),
-        amount: type === 'expense' ? -Math.abs(amountNum) : Math.abs(amountNum),
+        amount: type === "expense" ? -Math.abs(amountNum) : Math.abs(amountNum),
         category,
         date: new Date().toISOString(),
         notes: source ? `Created from ${source}` : undefined,
@@ -139,29 +137,26 @@ export function BudgetMiniMode({
       });
 
       // Success haptic on iOS
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === "ios") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
       // Return result
       const result: MiniModeResult<BudgetEntry> = {
-        action: 'created',
-        module: 'budget',
+        action: "created",
+        module: "budget",
         data: { id: entryId, ...budgetEntry } as BudgetEntry,
       };
 
       onComplete(result);
     } catch (error) {
-      console.error('[BudgetMiniMode] Error creating entry:', error);
+      console.error("[BudgetMiniMode] Error creating entry:", error);
 
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === "ios") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
 
-      Alert.alert(
-        'Error',
-        'Failed to create budget entry. Please try again.'
-      );
+      Alert.alert("Error", "Failed to create budget entry. Please try again.");
 
       setSaving(false);
     }
@@ -169,22 +164,22 @@ export function BudgetMiniMode({
 
   /**
    * Toggle transaction type (expense/income)
-   * 
+   *
    * Plain English: Switch between logging money spent vs money received
    * Technical: Updates state with haptic feedback on iOS
    */
   const toggleType = () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    setType((current) => (current === 'expense' ? 'income' : 'expense'));
+    setType((current) => (current === "expense" ? "income" : "expense"));
   };
 
   /**
    * Select category with haptic feedback
    */
   const selectCategory = (categoryId: string) => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     setCategory(categoryId);
@@ -197,7 +192,7 @@ export function BudgetMiniMode({
         <View style={styles.headerContent}>
           <ThemedText style={styles.title}>Quick Transaction</ThemedText>
           <ThemedText style={styles.subtitle}>
-            Log {type === 'expense' ? 'an expense' : 'income'} quickly
+            Log {type === "expense" ? "an expense" : "income"} quickly
           </ThemedText>
         </View>
         <TouchableOpacity
@@ -220,7 +215,7 @@ export function BudgetMiniMode({
           <TouchableOpacity
             style={[
               styles.typeToggle,
-              type === 'expense' && styles.typeToggleActive,
+              type === "expense" && styles.typeToggleActive,
             ]}
             onPress={toggleType}
             accessibilityRole="button"
@@ -229,12 +224,14 @@ export function BudgetMiniMode({
             <Feather
               name="arrow-down-left"
               size={18}
-              color={type === 'expense' ? Colors.electric : Colors.textSecondary}
+              color={
+                type === "expense" ? Colors.electric : Colors.textSecondary
+              }
             />
             <ThemedText
               style={[
                 styles.typeToggleText,
-                type === 'expense' && styles.typeToggleTextActive,
+                type === "expense" && styles.typeToggleTextActive,
               ]}
             >
               Expense
@@ -244,7 +241,7 @@ export function BudgetMiniMode({
           <TouchableOpacity
             style={[
               styles.typeToggle,
-              type === 'income' && styles.typeToggleActive,
+              type === "income" && styles.typeToggleActive,
             ]}
             onPress={toggleType}
             accessibilityRole="button"
@@ -253,12 +250,12 @@ export function BudgetMiniMode({
             <Feather
               name="arrow-up-right"
               size={18}
-              color={type === 'income' ? Colors.success : Colors.textSecondary}
+              color={type === "income" ? Colors.success : Colors.textSecondary}
             />
             <ThemedText
               style={[
                 styles.typeToggleText,
-                type === 'income' && styles.typeToggleTextActive,
+                type === "income" && styles.typeToggleTextActive,
               ]}
             >
               Income
@@ -321,9 +318,7 @@ export function BudgetMiniMode({
                   name={cat.icon as any}
                   size={20}
                   color={
-                    category === cat.id
-                      ? Colors.electric
-                      : Colors.textSecondary
+                    category === cat.id ? Colors.electric : Colors.textSecondary
                   }
                 />
                 <ThemedText
@@ -353,7 +348,7 @@ export function BudgetMiniMode({
           accessibilityHint="Discard this transaction"
         />
         <Button
-          label={saving ? 'Saving...' : 'Save Transaction'}
+          label={saving ? "Saving..." : "Save Transaction"}
           onPress={handleSave}
           disabled={saving}
           style={[styles.button, styles.buttonPrimary]}
@@ -367,12 +362,12 @@ export function BudgetMiniMode({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    maxHeight: '85%',
+    maxHeight: "85%",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.sm,
@@ -382,7 +377,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Typography.fontSize.h2,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: Spacing.xs,
   },
   subtitle: {
@@ -402,14 +397,14 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: Typography.fontSize.small,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.textSecondary,
     marginBottom: Spacing.xs,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   typeToggleContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: Colors.deepSpace,
     borderRadius: 12,
     padding: 4,
@@ -417,9 +412,9 @@ const styles = StyleSheet.create({
   },
   typeToggle: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderRadius: 8,
@@ -434,11 +429,11 @@ const styles = StyleSheet.create({
   },
   typeToggleTextActive: {
     color: Colors.text,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   amountInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.deepSpace,
     borderRadius: 12,
     paddingHorizontal: Spacing.md,
@@ -447,35 +442,35 @@ const styles = StyleSheet.create({
   },
   currencySymbol: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.textSecondary,
     marginRight: Spacing.xs,
   },
   amountInput: {
     flex: 1,
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text,
-    paddingVertical: Platform.OS === 'ios' ? Spacing.md : Spacing.sm,
+    paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
   },
   input: {
     backgroundColor: Colors.deepSpace,
     borderRadius: 12,
     paddingHorizontal: Spacing.md,
-    paddingVertical: Platform.OS === 'ios' ? Spacing.md : Spacing.sm,
+    paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
     fontSize: Typography.fontSize.body,
     color: Colors.text,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.sm,
   },
   categoryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderRadius: 20, // iOS-style pill shape
@@ -494,16 +489,16 @@ const styles = StyleSheet.create({
   },
   categoryButtonTextActive: {
     color: Colors.electric,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   spacer: {
     height: Spacing.xxl * 2, // Extra space for keyboard
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.sm,
     padding: Spacing.md,
-    paddingBottom: Platform.OS === 'ios' ? Spacing.lg : Spacing.md,
+    paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
   },

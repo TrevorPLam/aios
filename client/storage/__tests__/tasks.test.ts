@@ -335,10 +335,10 @@ describe("Task Database Operations", () => {
       const now = new Date();
       const yesterday = new Date(now);
       yesterday.setDate(yesterday.getDate() - 1); // Yesterday - definitely overdue
-      
+
       const today = new Date(now);
       today.setHours(23, 59, 0, 0); // End of today - not overdue yet
-      
+
       const nextWeek = new Date(now);
       nextWeek.setDate(nextWeek.getDate() + 5); // 5 days from now
 
@@ -351,8 +351,12 @@ describe("Task Database Operations", () => {
       await db.tasks.save(
         createTask({ status: "pending", dueDate: yesterday.toISOString() }),
       ); // overdue
-      await db.tasks.save(createTask({ status: "pending", dueDate: today.toISOString() })); // due today
-      await db.tasks.save(createTask({ status: "pending", dueDate: nextWeek.toISOString() })); // due this week
+      await db.tasks.save(
+        createTask({ status: "pending", dueDate: today.toISOString() }),
+      ); // due today
+      await db.tasks.save(
+        createTask({ status: "pending", dueDate: nextWeek.toISOString() }),
+      ); // due this week
 
       const stats = await db.tasks.getStatistics();
 

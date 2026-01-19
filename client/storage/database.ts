@@ -1845,7 +1845,7 @@ export const db = {
     async search(query: string): Promise<List[]> {
       const all = await this.getAll();
       const lowerQuery = query.toLowerCase().trim();
-      
+
       if (!lowerQuery) {
         return all;
       }
@@ -1855,11 +1855,12 @@ export const db = {
         if (list.title.toLowerCase().includes(lowerQuery)) {
           return true;
         }
-        
+
         // Search in items
-        return list.items.some((item) =>
-          item.text.toLowerCase().includes(lowerQuery) ||
-          (item.notes && item.notes.toLowerCase().includes(lowerQuery))
+        return list.items.some(
+          (item) =>
+            item.text.toLowerCase().includes(lowerQuery) ||
+            (item.notes && item.notes.toLowerCase().includes(lowerQuery)),
         );
       });
     },
@@ -1871,37 +1872,42 @@ export const db = {
      * @returns Promise<List[]> - Sorted lists
      */
     async sort(
-      sortBy: "recent" | "alphabetical" | "priority" | "completion" | "itemCount",
-      direction: "asc" | "desc" = "desc"
+      sortBy:
+        | "recent"
+        | "alphabetical"
+        | "priority"
+        | "completion"
+        | "itemCount",
+      direction: "asc" | "desc" = "desc",
     ): Promise<List[]> {
       const all = await this.getAll();
 
       return all.sort((a, b) => {
         let comparison = 0;
-        
+
         switch (sortBy) {
           case "recent":
-            comparison = 
-              new Date(b.lastOpenedAt).getTime() - 
+            comparison =
+              new Date(b.lastOpenedAt).getTime() -
               new Date(a.lastOpenedAt).getTime();
             break;
-          
+
           case "alphabetical":
             comparison = a.title.localeCompare(b.title);
             break;
-          
+
           case "priority": {
             // Count high priority items
             const aHighPriority = a.items.filter(
-              (item) => item.priority === "high" && !item.isChecked
+              (item) => item.priority === "high" && !item.isChecked,
             ).length;
             const bHighPriority = b.items.filter(
-              (item) => item.priority === "high" && !item.isChecked
+              (item) => item.priority === "high" && !item.isChecked,
             ).length;
             comparison = bHighPriority - aHighPriority;
             break;
           }
-          
+
           case "completion": {
             // Calculate completion percentage
             const aTotal = a.items.length;
@@ -1913,15 +1919,15 @@ export const db = {
             comparison = bPercent - aPercent;
             break;
           }
-          
+
           case "itemCount":
             comparison = b.items.length - a.items.length;
             break;
-          
+
           default:
             comparison = 0;
         }
-        
+
         // For alphabetical, default is ascending, so reverse for desc
         // For others, default is descending, so reverse for asc
         if (sortBy === "alphabetical") {
@@ -1958,7 +1964,7 @@ export const db = {
         // Filter by priority (at least one item with this priority)
         if (filters.priority) {
           const hasPriority = list.items.some(
-            (item) => item.priority === filters.priority && !item.isChecked
+            (item) => item.priority === filters.priority && !item.isChecked,
           );
           if (!hasPriority) return false;
         }
@@ -1975,7 +1981,7 @@ export const db = {
         // Filter by items with notes
         if (filters.hasNotes) {
           const hasNotesItem = list.items.some(
-            (item) => item.notes && item.notes.trim().length > 0
+            (item) => item.notes && item.notes.trim().length > 0,
           );
           if (!hasNotesItem) return false;
         }
@@ -1987,12 +1993,18 @@ export const db = {
         }
 
         // Filter by minimum items
-        if (filters.minItems !== undefined && list.items.length < filters.minItems) {
+        if (
+          filters.minItems !== undefined &&
+          list.items.length < filters.minItems
+        ) {
           return false;
         }
 
         // Filter by maximum items
-        if (filters.maxItems !== undefined && list.items.length > filters.maxItems) {
+        if (
+          filters.maxItems !== undefined &&
+          list.items.length > filters.maxItems
+        ) {
           return false;
         }
 
@@ -2022,10 +2034,10 @@ export const db = {
      */
     async getWithHighPriorityItems(): Promise<List[]> {
       const all = await this.getAll();
-      
+
       return all.filter((list) => {
         return list.items.some(
-          (item) => item.priority === "high" && !item.isChecked
+          (item) => item.priority === "high" && !item.isChecked,
         );
       });
     },
@@ -2037,7 +2049,7 @@ export const db = {
     async bulkArchive(ids: string[]): Promise<void> {
       const all = await this.getAll();
       const now = new Date().toISOString();
-      
+
       all.forEach((list) => {
         if (ids.includes(list.id)) {
           list.isArchived = true;
@@ -2055,7 +2067,7 @@ export const db = {
     async bulkUnarchive(ids: string[]): Promise<void> {
       const all = await this.getAll();
       const now = new Date().toISOString();
-      
+
       all.forEach((list) => {
         if (ids.includes(list.id)) {
           list.isArchived = false;
@@ -2118,23 +2130,23 @@ export const db = {
       all.forEach((list) => {
         list.items.forEach((item) => {
           totalItems++;
-          
+
           if (item.isChecked) {
             completedItems++;
           } else {
             pendingItems++;
-            
+
             // Count high priority unchecked items
             if (item.priority === "high") {
               highPriorityItems++;
             }
-            
+
             // Count overdue unchecked items
             if (item.dueDate && new Date(item.dueDate) < now) {
               overdueItems++;
             }
           }
-          
+
           // Count items with notes
           if (item.notes && item.notes.trim().length > 0) {
             itemsWithNotes++;
@@ -2142,9 +2154,8 @@ export const db = {
         });
       });
 
-      const completionRate = totalItems > 0 
-        ? Math.round((completedItems / totalItems) * 100) 
-        : 0;
+      const completionRate =
+        totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
       return {
         total: all.length,
@@ -2169,7 +2180,7 @@ export const db = {
     async clearCompleted(id: string): Promise<void> {
       const all = await this.getAll();
       const list = all.find((l) => l.id === id);
-      
+
       if (list) {
         list.items = list.items.filter((item) => !item.isChecked);
         list.updatedAt = new Date().toISOString();
@@ -2184,7 +2195,7 @@ export const db = {
     async completeAll(id: string): Promise<void> {
       const all = await this.getAll();
       const list = all.find((l) => l.id === id);
-      
+
       if (list) {
         list.items.forEach((item) => {
           item.isChecked = true;
@@ -2201,7 +2212,7 @@ export const db = {
     async uncompleteAll(id: string): Promise<void> {
       const all = await this.getAll();
       const list = all.find((l) => l.id === id);
-      
+
       if (list) {
         list.items.forEach((item) => {
           item.isChecked = false;
@@ -3484,7 +3495,7 @@ export const db = {
     async getPatternInsights(): Promise<{
       entriesByDay: Record<string, number>;
       entriesByHour: Record<string, number>;
-      topTypes: Array<{ type: HistoryLogEntry["type"]; count: number }>;
+      topTypes: { type: HistoryLogEntry["type"]; count: number }[];
     }> {
       const entries = await this.getAll();
       const entriesByDay: Record<string, number> = {};
@@ -5458,7 +5469,10 @@ export const db = {
         retained = [
           ...favorites,
           ...filteredNonFavorites.slice(0, availableSlots),
-        ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        ].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
       } else {
         let toRetain = all;
         if (cutoff) {

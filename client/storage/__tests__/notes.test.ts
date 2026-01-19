@@ -23,10 +23,7 @@ describe("Database Notes Storage", () => {
     isArchived: false,
   };
 
-  const createMockNote = (
-    id: string,
-    overrides: Partial<Note> = {},
-  ): Note => ({
+  const createMockNote = (id: string, overrides: Partial<Note> = {}): Note => ({
     id,
     title: `Note ${id}`,
     bodyMarkdown: `Content for note ${id}`,
@@ -453,11 +450,7 @@ describe("Database Notes Storage", () => {
 
       const sorted = await db.notes.getSorted();
 
-      expect(sorted.map((n) => n.id)).toEqual([
-        "note_2",
-        "note_3",
-        "note_1",
-      ]);
+      expect(sorted.map((n) => n.id)).toEqual(["note_2", "note_3", "note_1"]);
     });
 
     it("should sort alphabetically", async () => {
@@ -485,11 +478,7 @@ describe("Database Notes Storage", () => {
 
       const sorted = await db.notes.getSorted("tags");
 
-      expect(sorted.map((n) => n.id)).toEqual([
-        "note_2",
-        "note_3",
-        "note_1",
-      ]);
+      expect(sorted.map((n) => n.id)).toEqual(["note_2", "note_3", "note_1"]);
     });
 
     it("should sort by word count", async () => {
@@ -505,11 +494,7 @@ describe("Database Notes Storage", () => {
 
       const sorted = await db.notes.getSorted("wordCount");
 
-      expect(sorted.map((n) => n.id)).toEqual([
-        "note_2",
-        "note_3",
-        "note_1",
-      ]);
+      expect(sorted.map((n) => n.id)).toEqual(["note_2", "note_3", "note_1"]);
     });
 
     it("should always place pinned notes first", async () => {

@@ -1,28 +1,28 @@
 /**
  * Predictive Prefetch Engine
- * 
+ *
  * Purpose (Plain English):
  * Predicts which modules user will open next and loads them in the background.
  * Like a smart assistant who prepares things before you ask - if you open Calendar,
  * it might pre-load Maps (for directions to events) and Contacts (for inviting people).
- * 
+ *
  * What it interacts with:
  * - Lazy loader (to actually load modules)
  * - Module registry (to track usage patterns)
  * - Analytics (to learn from user behavior)
  * - Storage (to persist learned patterns)
- * 
+ *
  * Technical Implementation:
  * Tracks module transitions (Calendar → Maps) and builds a probability model.
  * Uses time of day, day of week, and recent history to predict next modules.
  * Prefetches top 2-3 predicted modules when system is idle.
- * 
+ *
  * Safe AI Extension Points:
  * - Improve prediction algorithm (ML model, time-based patterns)
  * - Add context awareness (location, time of day)
  * - Personalized learning per user
  * - A/B test different strategies
- * 
+ *
  * Fragile Logic Warnings:
  * - Must not impact app performance (background only)
  * - Must respect battery/memory constraints
@@ -30,13 +30,13 @@
  * - Prefetch must be cancellable
  */
 
-import { ModuleType } from '@/models/types';
-import { lazyLoader } from './lazyLoader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ModuleType } from "@/models/types";
+import { lazyLoader } from "./lazyLoader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Module Transition
- * 
+ *
  * Records that user went from one module to another.
  */
 interface ModuleTransition {
@@ -48,7 +48,7 @@ interface ModuleTransition {
 
 /**
  * Transition Pattern
- * 
+ *
  * Statistical pattern of module transitions.
  */
 interface TransitionPattern {
@@ -83,15 +83,15 @@ interface PrefetchStrategy {
  * Storage Keys
  */
 const STORAGE_KEYS = {
-  TRANSITIONS: '@prefetch:transitions',
-  PATTERNS: '@prefetch:patterns',
-  LAST_MODULE: '@prefetch:lastModule',
-  MODULE_ENTER_TIME: '@prefetch:enterTime',
+  TRANSITIONS: "@prefetch:transitions",
+  PATTERNS: "@prefetch:patterns",
+  LAST_MODULE: "@prefetch:lastModule",
+  MODULE_ENTER_TIME: "@prefetch:enterTime",
 };
 
 /**
  * Predictive Prefetch Engine
- * 
+ *
  * Learns from user behavior to predict and preload next modules.
  */
 class PrefetchEngine {
@@ -110,7 +110,7 @@ class PrefetchEngine {
     this.moduleEnterTime = null;
     this.prefetchTimeout = null;
     this.initialized = false;
-    
+
     // Default strategy (iOS-optimized)
     this.strategy = {
       maxPrefetch: 3,
@@ -123,7 +123,7 @@ class PrefetchEngine {
 
   /**
    * Initialize Engine
-   * 
+   *
    * Plain English: "Load saved patterns from storage"
    * Must be called before using the engine.
    */
@@ -134,7 +134,9 @@ class PrefetchEngine {
 
     try {
       // Load transitions
-      const transitionsJson = await AsyncStorage.getItem(STORAGE_KEYS.TRANSITIONS);
+      const transitionsJson = await AsyncStorage.getItem(
+        STORAGE_KEYS.TRANSITIONS,
+      );
       if (transitionsJson) {
         this.transitions = JSON.parse(transitionsJson);
       }
@@ -156,19 +158,23 @@ class PrefetchEngine {
       }
 
       this.initialized = true;
-      console.log('[PrefetchEngine] Initialized with', this.patterns.size, 'patterns');
+      console.log(
+        "[PrefetchEngine] Initialized with",
+        this.patterns.size,
+        "patterns",
+      );
     } catch (error) {
-      console.error('[PrefetchEngine] Initialization error:', error);
+      console.error("[PrefetchEngine] Initialization error:", error);
       this.initialized = true; // Continue anyway
     }
   }
 
   /**
    * Record Module Enter
-   * 
+   *
    * Plain English: "User just opened a module"
    * Records timestamp and triggers prefetch predictions.
-   * 
+   *
    * @param moduleId - Module user entered
    */
   async onModuleEnter(moduleId: ModuleType): Promise<void> {
@@ -180,7 +186,7 @@ class PrefetchEngine {
     // If we had a previous module, record the transition
     if (previousModule && this.moduleEnterTime) {
       const timeSpent = (now.getTime() - this.moduleEnterTime.getTime()) / 1000;
-      
+
       const transition: ModuleTransition = {
         from: previousModule,
         to: moduleId,
@@ -197,7 +203,10 @@ class PrefetchEngine {
 
     // Save current module
     await AsyncStorage.setItem(STORAGE_KEYS.LAST_MODULE, moduleId);
-    await AsyncStorage.setItem(STORAGE_KEYS.MODULE_ENTER_TIME, now.toISOString());
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.MODULE_ENTER_TIME,
+      now.toISOString(),
+    );
 
     // Trigger prefetch predictions (with delay)
     this.schedulePrefetch(moduleId);
@@ -205,10 +214,10 @@ class PrefetchEngine {
 
   /**
    * Record Transition
-   * 
+   *
    * Plain English: "Remember that user went from A to B"
    * Updates transition history and patterns.
-   * 
+   *
    * @param transition - Transition to record
    */
   private async recordTransition(transition: ModuleTransition): Promise<void> {
@@ -229,12 +238,12 @@ class PrefetchEngine {
 
   /**
    * Update Patterns
-   * 
+   *
    * Plain English: "Update probability that A leads to B"
-   * 
+   *
    * Technical: Calculates transition probabilities based on historical data.
    * Uses exponential moving average for time spent.
-   * 
+   *
    * @param transition - New transition to learn from
    */
   private updatePatterns(transition: ModuleTransition): void {
@@ -244,8 +253,10 @@ class PrefetchEngine {
     if (existing) {
       // Update existing pattern
       const newCount = existing.count + 1;
-      const newAvgTime = (existing.averageTimeSpent * existing.count + transition.timeSpent) / newCount;
-      
+      const newAvgTime =
+        (existing.averageTimeSpent * existing.count + transition.timeSpent) /
+        newCount;
+
       this.patterns.set(key, {
         ...existing,
         count: newCount,
@@ -268,15 +279,16 @@ class PrefetchEngine {
 
   /**
    * Recalculate Probabilities
-   * 
+   *
    * Plain English: "Update % chance of going to each module from current module"
-   * 
+   *
    * @param fromModule - Module to recalculate for
    */
   private recalculateProbabilities(fromModule: ModuleType): void {
     // Get all patterns from this module
-    const fromPatterns = Array.from(this.patterns.values())
-      .filter((p) => p.from === fromModule);
+    const fromPatterns = Array.from(this.patterns.values()).filter(
+      (p) => p.from === fromModule,
+    );
 
     const totalCount = fromPatterns.reduce((sum, p) => sum + p.count, 0);
 
@@ -284,7 +296,7 @@ class PrefetchEngine {
     fromPatterns.forEach((pattern) => {
       const key = this.getPatternKey(pattern.from, pattern.to);
       const probability = totalCount > 0 ? pattern.count / totalCount : 0;
-      
+
       this.patterns.set(key, {
         ...pattern,
         probability,
@@ -294,7 +306,7 @@ class PrefetchEngine {
 
   /**
    * Get Pattern Key
-   * 
+   *
    * @param from - From module
    * @param to - To module
    * @returns Unique key for this transition
@@ -305,10 +317,10 @@ class PrefetchEngine {
 
   /**
    * Schedule Prefetch
-   * 
+   *
    * Plain English: "Plan to load predicted modules in a moment"
    * Uses delay to avoid interfering with current module load.
-   * 
+   *
    * @param currentModule - Module user is currently in
    */
   private schedulePrefetch(currentModule: ModuleType): void {
@@ -325,15 +337,15 @@ class PrefetchEngine {
 
   /**
    * Execute Prefetch
-   * 
+   *
    * Plain English: "Actually load the predicted modules now"
-   * 
+   *
    * @param currentModule - Module user is in
    */
   private async executePrefetch(currentModule: ModuleType): Promise<void> {
     // Check constraints
     if (!this.shouldPrefetch()) {
-      console.log('[PrefetchEngine] Skipping prefetch due to constraints');
+      console.log("[PrefetchEngine] Skipping prefetch due to constraints");
       return;
     }
 
@@ -341,7 +353,7 @@ class PrefetchEngine {
     const predictions = this.predictNextModules(currentModule);
 
     if (predictions.length === 0) {
-      console.log('[PrefetchEngine] No predictions for', currentModule);
+      console.log("[PrefetchEngine] No predictions for", currentModule);
       return;
     }
 
@@ -355,20 +367,20 @@ class PrefetchEngine {
       return;
     }
 
-    console.log('[PrefetchEngine] Prefetching:', toPrefetch);
+    console.log("[PrefetchEngine] Prefetching:", toPrefetch);
 
     // Trigger prefetch
-    lazyLoader.preloadModules(toPrefetch, 'prefetch');
+    lazyLoader.preloadModules(toPrefetch, "prefetch");
   }
 
   /**
    * Predict Next Modules
-   * 
+   *
    * Plain English: "Guess which modules user will open next"
-   * 
+   *
    * Technical: Uses learned patterns plus time-of-day heuristics.
    * Returns top predictions sorted by probability.
-   * 
+   *
    * @param currentModule - Module user is currently in
    * @returns Predicted next modules with probabilities
    */
@@ -405,11 +417,11 @@ class PrefetchEngine {
 
   /**
    * Get Time-Based Predictions
-   * 
+   *
    * Plain English: "Predict modules based on time of day"
-   * 
+   *
    * Example: Morning = Calendar, Planner. Evening = Messages, Budget.
-   * 
+   *
    * @returns Time-based predictions
    */
   private getTimeBasedPredictions(): Prediction[] {
@@ -421,20 +433,20 @@ class PrefetchEngine {
     if (hour >= 6 && hour < 12) {
       predictions.push(
         {
-          moduleId: 'calendar',
+          moduleId: "calendar",
           probability: 0.3,
-          reason: 'Morning: People often check Calendar in the morning',
+          reason: "Morning: People often check Calendar in the morning",
         },
         {
-          moduleId: 'planner',
+          moduleId: "planner",
           probability: 0.25,
-          reason: 'Morning: People often review tasks in the morning',
+          reason: "Morning: People often review tasks in the morning",
         },
         {
-          moduleId: 'notebook',
+          moduleId: "notebook",
           probability: 0.2,
-          reason: 'Morning: People often review notes in the morning',
-        }
+          reason: "Morning: People often review notes in the morning",
+        },
       );
     }
 
@@ -442,15 +454,15 @@ class PrefetchEngine {
     if (hour >= 12 && hour < 18) {
       predictions.push(
         {
-          moduleId: 'messages',
+          moduleId: "messages",
           probability: 0.25,
-          reason: 'Afternoon: Peak messaging time',
+          reason: "Afternoon: Peak messaging time",
         },
         {
-          moduleId: 'calendar',
+          moduleId: "calendar",
           probability: 0.2,
-          reason: 'Afternoon: Checking upcoming meetings',
-        }
+          reason: "Afternoon: Checking upcoming meetings",
+        },
       );
     }
 
@@ -458,15 +470,15 @@ class PrefetchEngine {
     if (hour >= 18 || hour < 6) {
       predictions.push(
         {
-          moduleId: 'budget',
+          moduleId: "budget",
           probability: 0.2,
-          reason: 'Evening: People often review finances at night',
+          reason: "Evening: People often review finances at night",
         },
         {
-          moduleId: 'messages',
+          moduleId: "messages",
           probability: 0.25,
-          reason: 'Evening: Personal messaging time',
-        }
+          reason: "Evening: Personal messaging time",
+        },
       );
     }
 
@@ -475,10 +487,10 @@ class PrefetchEngine {
 
   /**
    * Should Prefetch
-   * 
+   *
    * Plain English: "Is it a good time to load modules in background?"
    * Checks battery, memory, and other constraints.
-   * 
+   *
    * @returns True if should prefetch
    */
   private shouldPrefetch(): boolean {
@@ -503,7 +515,7 @@ class PrefetchEngine {
 
   /**
    * Save Transitions to Storage
-   * 
+   *
    * Debounced save to avoid too many writes.
    */
   private saveTimeout: NodeJS.Timeout | null = null;
@@ -517,28 +529,28 @@ class PrefetchEngine {
         // Save transitions
         await AsyncStorage.setItem(
           STORAGE_KEYS.TRANSITIONS,
-          JSON.stringify(this.transitions)
+          JSON.stringify(this.transitions),
         );
 
         // Save patterns
         const patternsArray = Array.from(this.patterns.values());
         await AsyncStorage.setItem(
           STORAGE_KEYS.PATTERNS,
-          JSON.stringify(patternsArray)
+          JSON.stringify(patternsArray),
         );
 
-        console.log('[PrefetchEngine] Saved', this.patterns.size, 'patterns');
+        console.log("[PrefetchEngine] Saved", this.patterns.size, "patterns");
       } catch (error) {
-        console.error('[PrefetchEngine] Save error:', error);
+        console.error("[PrefetchEngine] Save error:", error);
       }
     }, 2000); // 2 second debounce
   }
 
   /**
    * Get Statistics
-   * 
+   *
    * Plain English: "Show me what the engine has learned"
-   * 
+   *
    * @returns Statistics about learned patterns
    */
   getStatistics(): {
@@ -547,8 +559,9 @@ class PrefetchEngine {
     topPatterns: TransitionPattern[];
     initialized: boolean;
   } {
-    const sortedPatterns = Array.from(this.patterns.values())
-      .sort((a, b) => b.probability - a.probability);
+    const sortedPatterns = Array.from(this.patterns.values()).sort(
+      (a, b) => b.probability - a.probability,
+    );
 
     return {
       totalTransitions: this.transitions.length,
@@ -560,7 +573,7 @@ class PrefetchEngine {
 
   /**
    * Clear All Data
-   * 
+   *
    * Plain English: "Forget everything learned, start fresh"
    * Used for testing or user reset.
    */
@@ -577,12 +590,12 @@ class PrefetchEngine {
       STORAGE_KEYS.MODULE_ENTER_TIME,
     ]);
 
-    console.log('[PrefetchEngine] Cleared all data');
+    console.log("[PrefetchEngine] Cleared all data");
   }
 
   /**
    * Update Strategy
-   * 
+   *
    * @param strategy - New strategy settings
    */
   updateStrategy(strategy: Partial<PrefetchStrategy>): void {
@@ -594,7 +607,7 @@ class PrefetchEngine {
 
   /**
    * Get Current Strategy
-   * 
+   *
    * @returns Current prefetch strategy
    */
   getStrategy(): PrefetchStrategy {

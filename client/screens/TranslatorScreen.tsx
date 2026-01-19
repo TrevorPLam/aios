@@ -402,9 +402,11 @@ export default function TranslatorScreen() {
 
     try {
       const sourceLangName =
-        LANGUAGES.find((l) => l.code === sourceLanguage)?.name || sourceLanguage;
+        LANGUAGES.find((l) => l.code === sourceLanguage)?.name ||
+        sourceLanguage;
       const targetLangName =
-        LANGUAGES.find((l) => l.code === targetLanguage)?.name || targetLanguage;
+        LANGUAGES.find((l) => l.code === targetLanguage)?.name ||
+        targetLanguage;
 
       await Share.share({
         message: `Translation:\n[${sourceLangName}]: ${sourceText}\n[${targetLangName}]: ${targetText}`,
@@ -681,7 +683,12 @@ export default function TranslatorScreen() {
           </View>
 
           {/* Search bar */}
-          <View style={[styles.searchBar, { backgroundColor: theme.backgroundSecondary }]}>
+          <View
+            style={[
+              styles.searchBar,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
+          >
             <Feather name="search" size={20} color={theme.textMuted} />
             <TextInput
               style={[styles.searchInput, { color: theme.text }]}
@@ -724,7 +731,9 @@ export default function TranslatorScreen() {
             <View style={styles.emptyState}>
               <Feather name="clock" size={48} color={theme.textMuted} />
               <ThemedText type="body" muted style={{ marginTop: Spacing.md }}>
-                {searchQuery ? "No matching translations" : "No translation history yet"}
+                {searchQuery
+                  ? "No matching translations"
+                  : "No translation history yet"}
               </ThemedText>
             </View>
           ) : (
@@ -735,12 +744,19 @@ export default function TranslatorScreen() {
                 <Animated.View entering={FadeInDown}>
                   <Pressable
                     onPress={() => handleUseTranslation(item)}
-                    style={[styles.translationItem, { backgroundColor: theme.backgroundSecondary }]}
+                    style={[
+                      styles.translationItem,
+                      { backgroundColor: theme.backgroundSecondary },
+                    ]}
                   >
                     <View style={styles.translationContent}>
                       <View style={styles.translationTexts}>
                         <ThemedText type="small" muted>
-                          {LANGUAGES.find((l) => l.code === item.sourceLang)?.name || item.sourceLang} → {LANGUAGES.find((l) => l.code === item.targetLang)?.name || item.targetLang}
+                          {LANGUAGES.find((l) => l.code === item.sourceLang)
+                            ?.name || item.sourceLang}{" "}
+                          →{" "}
+                          {LANGUAGES.find((l) => l.code === item.targetLang)
+                            ?.name || item.targetLang}
                         </ThemedText>
                         <ThemedText type="body" numberOfLines={2}>
                           {item.sourceText}
@@ -749,7 +765,8 @@ export default function TranslatorScreen() {
                           {item.targetText}
                         </ThemedText>
                         <ThemedText type="caption" muted>
-                          {formatRelativeDate(item.createdAt)} • {item.characterCount} chars
+                          {formatRelativeDate(item.createdAt)} •{" "}
+                          {item.characterCount} chars
                         </ThemedText>
                       </View>
                       <View style={styles.translationActions}>
@@ -763,7 +780,9 @@ export default function TranslatorScreen() {
                           <Feather
                             name={item.isFavorite ? "star" : "star"}
                             size={20}
-                            color={item.isFavorite ? theme.warning : theme.textMuted}
+                            color={
+                              item.isFavorite ? theme.warning : theme.textMuted
+                            }
                             fill={item.isFavorite ? theme.warning : "none"}
                           />
                         </Pressable>
@@ -771,7 +790,11 @@ export default function TranslatorScreen() {
                           onPress={() => handleDeleteTranslation(item.id)}
                           style={styles.iconButton}
                         >
-                          <Feather name="trash-2" size={18} color={theme.error} />
+                          <Feather
+                            name="trash-2"
+                            size={18}
+                            color={theme.error}
+                          />
                         </Pressable>
                       </View>
                     </View>
@@ -817,7 +840,11 @@ export default function TranslatorScreen() {
               <ThemedText type="body" muted style={{ marginTop: Spacing.md }}>
                 No favorite translations yet
               </ThemedText>
-              <ThemedText type="small" muted style={{ marginTop: Spacing.sm, textAlign: "center" }}>
+              <ThemedText
+                type="small"
+                muted
+                style={{ marginTop: Spacing.sm, textAlign: "center" }}
+              >
                 Tap the star icon on any translation to add it here
               </ThemedText>
             </View>
@@ -829,12 +856,23 @@ export default function TranslatorScreen() {
                 <Animated.View entering={FadeInDown}>
                   <Pressable
                     onPress={() => handleUseTranslation(item)}
-                    style={[styles.translationItem, { backgroundColor: theme.backgroundSecondary }]}
+                    style={[
+                      styles.translationItem,
+                      { backgroundColor: theme.backgroundSecondary },
+                    ]}
                   >
                     <View style={styles.translationContent}>
                       <View style={styles.translationTexts}>
                         <ThemedText type="small" muted>
-                          {LANGUAGES.find((l) => l.code === item.sourceLang)?.name} → {LANGUAGES.find((l) => l.code === item.targetLang)?.name}
+                          {
+                            LANGUAGES.find((l) => l.code === item.sourceLang)
+                              ?.name
+                          }{" "}
+                          →{" "}
+                          {
+                            LANGUAGES.find((l) => l.code === item.targetLang)
+                              ?.name
+                          }
                         </ThemedText>
                         <ThemedText type="body" numberOfLines={2}>
                           {item.sourceText}
@@ -854,13 +892,22 @@ export default function TranslatorScreen() {
                           }}
                           style={styles.iconButton}
                         >
-                          <Feather name="star" size={20} color={theme.warning} fill={theme.warning} />
+                          <Feather
+                            name="star"
+                            size={20}
+                            color={theme.warning}
+                            fill={theme.warning}
+                          />
                         </Pressable>
                         <Pressable
                           onPress={() => handleDeleteTranslation(item.id)}
                           style={styles.iconButton}
                         >
-                          <Feather name="trash-2" size={18} color={theme.error} />
+                          <Feather
+                            name="trash-2"
+                            size={18}
+                            color={theme.error}
+                          />
                         </Pressable>
                       </View>
                     </View>
@@ -880,7 +927,9 @@ export default function TranslatorScreen() {
    * Shows reusable phrases grouped by category
    */
   const renderPhrasesModal = () => {
-    const categories = [...new Set(savedPhrases.map((p) => p.category || "General"))];
+    const categories = [
+      ...new Set(savedPhrases.map((p) => p.category || "General")),
+    ];
 
     return (
       <Modal
@@ -906,29 +955,46 @@ export default function TranslatorScreen() {
               <ThemedText type="body" muted style={{ marginTop: Spacing.md }}>
                 No saved phrases yet
               </ThemedText>
-              <ThemedText type="small" muted style={{ marginTop: Spacing.sm, textAlign: "center" }}>
+              <ThemedText
+                type="small"
+                muted
+                style={{ marginTop: Spacing.sm, textAlign: "center" }}
+              >
                 Save frequently used phrases for quick access
               </ThemedText>
             </View>
           ) : (
             <ScrollView contentContainerStyle={styles.listContent}>
               {categories.map((category) => {
-                const phrases = savedPhrases.filter((p) => (p.category || "General") === category);
+                const phrases = savedPhrases.filter(
+                  (p) => (p.category || "General") === category,
+                );
                 return (
                   <View key={category} style={styles.categorySection}>
-                    <ThemedText type="body" style={{ marginBottom: Spacing.sm, fontWeight: "600" }}>
+                    <ThemedText
+                      type="body"
+                      style={{ marginBottom: Spacing.sm, fontWeight: "600" }}
+                    >
                       {category}
                     </ThemedText>
                     {phrases.map((phrase) => (
                       <Animated.View key={phrase.id} entering={FadeInDown}>
                         <Pressable
                           onPress={() => handleUsePhrase(phrase)}
-                          style={[styles.phraseItem, { backgroundColor: theme.backgroundSecondary }]}
+                          style={[
+                            styles.phraseItem,
+                            { backgroundColor: theme.backgroundSecondary },
+                          ]}
                         >
                           <View style={{ flex: 1 }}>
                             <ThemedText type="body">{phrase.phrase}</ThemedText>
                             <ThemedText type="caption" muted>
-                              {LANGUAGES.find((l) => l.code === phrase.sourceLang)?.name} • Used {phrase.usageCount} times
+                              {
+                                LANGUAGES.find(
+                                  (l) => l.code === phrase.sourceLang,
+                                )?.name
+                              }{" "}
+                              • Used {phrase.usageCount} times
                             </ThemedText>
                           </View>
                           <Pressable
@@ -938,7 +1004,11 @@ export default function TranslatorScreen() {
                             }}
                             style={styles.iconButton}
                           >
-                            <Feather name="trash-2" size={18} color={theme.error} />
+                            <Feather
+                              name="trash-2"
+                              size={18}
+                              color={theme.error}
+                            />
                           </Pressable>
                         </Pressable>
                       </Animated.View>
@@ -1026,34 +1096,66 @@ export default function TranslatorScreen() {
             </View>
 
             {/* Most used languages */}
-            <Animated.View entering={FadeInDown.delay(300)} style={styles.statsSection}>
-              <ThemedText type="body" style={{ marginBottom: Spacing.sm, fontWeight: "600" }}>
+            <Animated.View
+              entering={FadeInDown.delay(300)}
+              style={styles.statsSection}
+            >
+              <ThemedText
+                type="body"
+                style={{ marginBottom: Spacing.sm, fontWeight: "600" }}
+              >
                 Most Used Languages
               </ThemedText>
-              <View style={[styles.statsItem, { backgroundColor: theme.backgroundSecondary }]}>
-                <ThemedText type="small" muted>Source</ThemedText>
+              <View
+                style={[
+                  styles.statsItem,
+                  { backgroundColor: theme.backgroundSecondary },
+                ]}
+              >
+                <ThemedText type="small" muted>
+                  Source
+                </ThemedText>
                 <ThemedText type="body">
-                  {LANGUAGES.find((l) => l.code === statistics.mostUsedSourceLang)?.name || statistics.mostUsedSourceLang}
+                  {LANGUAGES.find(
+                    (l) => l.code === statistics.mostUsedSourceLang,
+                  )?.name || statistics.mostUsedSourceLang}
                 </ThemedText>
               </View>
-              <View style={[styles.statsItem, { backgroundColor: theme.backgroundSecondary }]}>
-                <ThemedText type="small" muted>Target</ThemedText>
+              <View
+                style={[
+                  styles.statsItem,
+                  { backgroundColor: theme.backgroundSecondary },
+                ]}
+              >
+                <ThemedText type="small" muted>
+                  Target
+                </ThemedText>
                 <ThemedText type="body">
-                  {LANGUAGES.find((l) => l.code === statistics.mostUsedTargetLang)?.name || statistics.mostUsedTargetLang}
+                  {LANGUAGES.find(
+                    (l) => l.code === statistics.mostUsedTargetLang,
+                  )?.name || statistics.mostUsedTargetLang}
                 </ThemedText>
               </View>
             </Animated.View>
 
             {/* Top language pairs */}
             {topLanguagePairs.length > 0 && (
-              <Animated.View entering={FadeInDown.delay(400)} style={styles.statsSection}>
-                <ThemedText type="body" style={{ marginBottom: Spacing.sm, fontWeight: "600" }}>
+              <Animated.View
+                entering={FadeInDown.delay(400)}
+                style={styles.statsSection}
+              >
+                <ThemedText
+                  type="body"
+                  style={{ marginBottom: Spacing.sm, fontWeight: "600" }}
+                >
                   Top Language Pairs
                 </ThemedText>
                 {topLanguagePairs.map(([pair, count], index) => {
                   const [source, target] = pair.split("-");
-                  const sourceName = LANGUAGES.find((l) => l.code === source)?.name || source;
-                  const targetName = LANGUAGES.find((l) => l.code === target)?.name || target;
+                  const sourceName =
+                    LANGUAGES.find((l) => l.code === source)?.name || source;
+                  const targetName =
+                    LANGUAGES.find((l) => l.code === target)?.name || target;
                   const maxCount = topLanguagePairs[0][1];
                   const percentage = (count / maxCount) * 100;
 
@@ -1067,11 +1169,19 @@ export default function TranslatorScreen() {
                           {count}
                         </ThemedText>
                       </View>
-                      <View style={[styles.barChartTrack, { backgroundColor: theme.backgroundSecondary }]}>
+                      <View
+                        style={[
+                          styles.barChartTrack,
+                          { backgroundColor: theme.backgroundSecondary },
+                        ]}
+                      >
                         <View
                           style={[
                             styles.barChartFill,
-                            { backgroundColor: theme.accent, width: `${percentage}%` },
+                            {
+                              backgroundColor: theme.accent,
+                              width: `${percentage}%`,
+                            },
                           ]}
                         />
                       </View>
@@ -1108,13 +1218,19 @@ export default function TranslatorScreen() {
               }
               setShowHistoryModal(true);
             }}
-            style={[styles.toolbarButton, { backgroundColor: theme.backgroundSecondary }]}
+            style={[
+              styles.toolbarButton,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
           >
             <Feather name="clock" size={18} color={theme.accent} />
             <ThemedText type="small">History</ThemedText>
             {translations.length > 0 && (
               <View style={[styles.badge, { backgroundColor: theme.accent }]}>
-                <ThemedText type="caption" style={{ color: theme.backgroundDefault, fontSize: 10 }}>
+                <ThemedText
+                  type="caption"
+                  style={{ color: theme.backgroundDefault, fontSize: 10 }}
+                >
                   {translations.length}
                 </ThemedText>
               </View>
@@ -1128,13 +1244,19 @@ export default function TranslatorScreen() {
               }
               setShowFavoritesModal(true);
             }}
-            style={[styles.toolbarButton, { backgroundColor: theme.backgroundSecondary }]}
+            style={[
+              styles.toolbarButton,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
           >
             <Feather name="star" size={18} color={theme.warning} />
             <ThemedText type="small">Favorites</ThemedText>
             {statistics && statistics.favoriteCount > 0 && (
               <View style={[styles.badge, { backgroundColor: theme.warning }]}>
-                <ThemedText type="caption" style={{ color: theme.backgroundDefault, fontSize: 10 }}>
+                <ThemedText
+                  type="caption"
+                  style={{ color: theme.backgroundDefault, fontSize: 10 }}
+                >
                   {statistics.favoriteCount}
                 </ThemedText>
               </View>
@@ -1148,7 +1270,10 @@ export default function TranslatorScreen() {
               }
               setShowPhrasesModal(true);
             }}
-            style={[styles.toolbarButton, { backgroundColor: theme.backgroundSecondary }]}
+            style={[
+              styles.toolbarButton,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
           >
             <Feather name="bookmark" size={18} color={theme.success} />
             <ThemedText type="small">Phrases</ThemedText>
@@ -1161,7 +1286,10 @@ export default function TranslatorScreen() {
               }
               setShowStatsModal(true);
             }}
-            style={[styles.toolbarButton, { backgroundColor: theme.backgroundSecondary }]}
+            style={[
+              styles.toolbarButton,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
           >
             <Feather name="bar-chart-2" size={18} color={theme.accent} />
             <ThemedText type="small">Stats</ThemedText>
@@ -1225,7 +1353,8 @@ export default function TranslatorScreen() {
             {sourceText.length > 0 && (
               <View style={styles.textStats}>
                 <ThemedText type="caption" muted>
-                  {getTextStats().charCount} chars • {getTextStats().wordCount} words
+                  {getTextStats().charCount} chars • {getTextStats().wordCount}{" "}
+                  words
                 </ThemedText>
               </View>
             )}
@@ -1270,7 +1399,10 @@ export default function TranslatorScreen() {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     }
                   }}
-                  style={[styles.recentPairChip, { backgroundColor: theme.accentDim }]}
+                  style={[
+                    styles.recentPairChip,
+                    { backgroundColor: theme.accentDim },
+                  ]}
                 >
                   <ThemedText type="caption" style={{ color: theme.accent }}>
                     {source.toUpperCase()} → {target.toUpperCase()}
@@ -1402,7 +1534,10 @@ export default function TranslatorScreen() {
                 <View style={styles.translationActions}>
                   <Pressable
                     onPress={handleToggleFavorite}
-                    style={[styles.translationActionButton, { backgroundColor: theme.warningDim }]}
+                    style={[
+                      styles.translationActionButton,
+                      { backgroundColor: theme.warningDim },
+                    ]}
                   >
                     <Feather name="star" size={16} color={theme.warning} />
                     <ThemedText type="small" style={{ color: theme.warning }}>
@@ -1411,7 +1546,10 @@ export default function TranslatorScreen() {
                   </Pressable>
                   <Pressable
                     onPress={handleSaveAsPhrase}
-                    style={[styles.translationActionButton, { backgroundColor: theme.successDim }]}
+                    style={[
+                      styles.translationActionButton,
+                      { backgroundColor: theme.successDim },
+                    ]}
                   >
                     <Feather name="bookmark" size={16} color={theme.success} />
                     <ThemedText type="small" style={{ color: theme.success }}>

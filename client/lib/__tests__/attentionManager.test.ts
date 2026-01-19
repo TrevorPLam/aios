@@ -97,7 +97,10 @@ describe("AttentionManager", () => {
       };
 
       const unsubscribe = eventBus.on(EVENT_TYPES.USER_ACTION, (payload) => {
-        if (payload.data.action === "attention:item-added" && payload.data.item.id === "test-4") {
+        if (
+          payload.data.action === "attention:item-added" &&
+          payload.data.item.id === "test-4"
+        ) {
           unsubscribe();
           done();
         }
@@ -151,14 +154,20 @@ describe("AttentionManager", () => {
 
     it("should filter by priority", () => {
       const urgentItems = attentionManager.getItems("urgent");
-      expect(urgentItems.every((item) => item.priority === "urgent")).toBe(true);
+      expect(urgentItems.every((item) => item.priority === "urgent")).toBe(
+        true,
+      );
       expect(urgentItems.length).toBeGreaterThanOrEqual(1);
     });
 
     it("should sort by priority (urgent first)", () => {
       const items = attentionManager.getItems();
-      const firstUrgentIndex = items.findIndex((item) => item.priority === "urgent");
-      const firstAttentionIndex = items.findIndex((item) => item.priority === "attention");
+      const firstUrgentIndex = items.findIndex(
+        (item) => item.priority === "urgent",
+      );
+      const firstAttentionIndex = items.findIndex(
+        (item) => item.priority === "attention",
+      );
       const firstFyiIndex = items.findIndex((item) => item.priority === "fyi");
 
       if (firstUrgentIndex !== -1 && firstAttentionIndex !== -1) {
@@ -254,7 +263,10 @@ describe("AttentionManager", () => {
       attentionManager.addItem(item);
 
       const unsubscribe = eventBus.on(EVENT_TYPES.USER_ACTION, (payload) => {
-        if (payload.data.action === "attention:item-dismissed" && payload.data.itemId === "dismiss-2") {
+        if (
+          payload.data.action === "attention:item-dismissed" &&
+          payload.data.itemId === "dismiss-2"
+        ) {
           unsubscribe();
           done();
         }
@@ -330,9 +342,9 @@ describe("AttentionManager", () => {
 
     it("should filter non-urgent items in focus mode", () => {
       const beforeCount = attentionManager.getItems().length;
-      
+
       attentionManager.setFocusMode({ enabled: true, allowUrgent: true });
-      
+
       // Add new item in focus mode
       const added = attentionManager.addItem({
         id: "focus-new-fyi",
@@ -400,7 +412,10 @@ describe("AttentionManager", () => {
 
     it("should emit event when focus mode changes", (done) => {
       const unsubscribe = eventBus.on(EVENT_TYPES.USER_ACTION, (payload) => {
-        if (payload.data.action === "attention:focus-mode-changed" && payload.data.mode.enabled === true) {
+        if (
+          payload.data.action === "attention:focus-mode-changed" &&
+          payload.data.mode.enabled === true
+        ) {
           unsubscribe();
           done();
         }
@@ -439,7 +454,7 @@ describe("AttentionManager", () => {
 
       const bundles = attentionManager.getBundles();
       expect(bundles.length).toBeGreaterThanOrEqual(1);
-      
+
       const messagesBundle = bundles.find((b) =>
         b.items.some((i) => i.module === "messages"),
       );
@@ -450,7 +465,7 @@ describe("AttentionManager", () => {
 
     it("should dismiss entire bundle", (done) => {
       const now = Date.now();
-      
+
       attentionManager.addItem({
         id: "bundle-dismiss-1",
         module: "messages",
@@ -556,7 +571,7 @@ describe("AttentionManager", () => {
   describe("event handlers", () => {
     it("should handle task:created event", () => {
       const initialCount = attentionManager.getItems().length;
-      
+
       eventBus.emit(EVENT_TYPES.TASK_CREATED, {
         id: "task-123",
         title: "New Task",
@@ -566,14 +581,14 @@ describe("AttentionManager", () => {
 
       // Event handler is async, give it a moment
       const items = attentionManager.getItems();
-      
+
       // Should have added an item (or failed gracefully)
       expect(items.length).toBeGreaterThanOrEqual(initialCount);
     });
 
     it("should handle calendar event created", () => {
       const initialCount = attentionManager.getItems().length;
-      
+
       eventBus.emit(EVENT_TYPES.CALENDAR_EVENT_CREATED, {
         id: "event-123",
         title: "Meeting",
@@ -586,7 +601,7 @@ describe("AttentionManager", () => {
 
     it("should handle message received", () => {
       const initialCount = attentionManager.getItems().length;
-      
+
       eventBus.emit(EVENT_TYPES.MESSAGE_RECEIVED, {
         id: "msg-123",
         from: "John",

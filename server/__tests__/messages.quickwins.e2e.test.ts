@@ -63,9 +63,13 @@ describe("Messaging quick wins (server)", () => {
     expect(convoAfterCreate?.lastMessageId).toBe(message.id);
     expect(convoAfterCreate?.lastMessagePreview).toBe("Hello world");
 
-    const updated = await storage.updateMessage(message.id, conversation.userId, {
-      content: "Edited message",
-    });
+    const updated = await storage.updateMessage(
+      message.id,
+      conversation.userId,
+      {
+        content: "Edited message",
+      },
+    );
 
     expect(updated?.isEdited).toBe(true);
 
@@ -109,7 +113,8 @@ describe("Messaging quick wins (server)", () => {
 
   it("searches messages with user scoping and optional filters", async () => {
     const storage = new MemStorage();
-    const conversationOne = await storage.createConversation(baseConversation());
+    const conversationOne =
+      await storage.createConversation(baseConversation());
     const conversationTwo = await storage.createConversation(
       baseConversation({ userId: "user_2", name: "Other Conversation" }),
     );

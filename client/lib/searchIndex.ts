@@ -1,28 +1,28 @@
 /**
  * Search Index System
- * 
+ *
  * Purpose (Plain English):
- * Makes search super fast by building an "inverted index" - like the index at the 
+ * Makes search super fast by building an "inverted index" - like the index at the
  * back of a book. Instead of searching through every note/task/event, we look up
  * words in the index to instantly find matching items.
- * 
+ *
  * What it interacts with:
  * - Omnisearch engine (provides indexed results)
  * - All module databases (to build index)
  * - Storage (to persist index)
  * - Event bus (to update index when items change)
- * 
+ *
  * Technical Implementation:
  * Builds an inverted index: word → [item IDs]. Supports incremental updates
  * (add/remove single items without rebuilding entire index). Uses stemming and
  * stopword removal for better matching. Debounces writes to storage.
- * 
+ *
  * Safe AI Extension Points:
  * - Add fuzzy matching (typo tolerance)
  * - Add synonym expansion
  * - Add phrase matching
  * - Add relevance learning from clicks
- * 
+ *
  * Fragile Logic Warnings:
  * - Index can grow large with 20+ modules (need size limits)
  * - Must stay in sync with actual data (listen to change events)
@@ -30,13 +30,19 @@
  * - Memory usage grows with number of indexed items
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ModuleType } from '@/models/types';
-import { eventBus, EVENT_TYPES, NoteEventPayload, TaskEventPayload, CalendarEventPayload } from './eventBus';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ModuleType } from "@/models/types";
+import {
+  eventBus,
+  EVENT_TYPES,
+  NoteEventPayload,
+  TaskEventPayload,
+  CalendarEventPayload,
+} from "./eventBus";
 
 /**
  * Indexed Item
- * 
+ *
  * Minimal info stored in index for fast lookup.
  */
 interface IndexedItem {
@@ -50,7 +56,7 @@ interface IndexedItem {
 
 /**
  * Inverted Index Entry
- * 
+ *
  * Maps a word to items that contain it.
  */
 interface InvertedIndexEntry {
@@ -84,28 +90,62 @@ interface SearchIndexConfig {
 
 /**
  * English Stopwords
- * 
+ *
  * Common words to ignore during indexing.
  */
 const STOPWORDS = new Set([
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from',
-  'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the',
-  'to', 'was', 'will', 'with', 'you', 'your', 'this', 'have', 'had',
-  'but', 'not', 'or', 'if', 'can', 'all', 'what', 'who', 'when',
+  "a",
+  "an",
+  "and",
+  "are",
+  "as",
+  "at",
+  "be",
+  "by",
+  "for",
+  "from",
+  "has",
+  "he",
+  "in",
+  "is",
+  "it",
+  "its",
+  "of",
+  "on",
+  "that",
+  "the",
+  "to",
+  "was",
+  "will",
+  "with",
+  "you",
+  "your",
+  "this",
+  "have",
+  "had",
+  "but",
+  "not",
+  "or",
+  "if",
+  "can",
+  "all",
+  "what",
+  "who",
+  "when",
 ]);
 
 /**
  * Storage Keys
  */
 const STORAGE_KEYS = {
-  INDEX: '@searchIndex:index',
-  ITEMS: '@searchIndex:items',
-  STATS: '@searchIndex:stats',
+  INDEX: "@searchIndex:index",
+  ITEMS: "@searchIndex:items",
+  STATS: "@searchIndex:stats",
 };
 
 /**
  * Search Index Class
- * 
+ *
  * Manages inverted index for fast searching.
  */
 class SearchIndex {
@@ -136,81 +176,81 @@ class SearchIndex {
 
   /**
    * Setup Event Listeners
-   * 
+   *
    * Plain English: "Listen for changes to items so we can update the index"
    */
   private setupEventListeners(): void {
     // Listen for item created events
-    eventBus.on('NOTE_CREATED', (data) => {
+    eventBus.on("NOTE_CREATED", (data) => {
       this.addItem({
         id: data.note.id,
-        moduleType: 'notebook',
+        moduleType: "notebook",
         title: data.note.title,
-        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(' ')}`,
+        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(" ")}`,
         timestamp: new Date(data.note.createdAt).getTime(),
       });
     });
 
-    eventBus.on('TASK_CREATED', (data) => {
+    eventBus.on("TASK_CREATED", (data) => {
       this.addItem({
         id: data.task.id,
-        moduleType: 'planner',
+        moduleType: "planner",
         title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.userNotes || ''}`,
+        searchableText: `${data.task.title} ${data.task.userNotes || ""}`,
         timestamp: new Date(data.task.createdAt).getTime(),
         metadata: { status: data.task.status, priority: data.task.priority },
       });
     });
 
-    eventBus.on('EVENT_CREATED', (data) => {
+    eventBus.on("EVENT_CREATED", (data) => {
       this.addItem({
         id: data.event.id,
-        moduleType: 'calendar',
+        moduleType: "calendar",
         title: data.event.title,
-        searchableText: `${data.event.title} ${data.event.description || ''} ${data.event.location || ''}`,
+        searchableText: `${data.event.title} ${data.event.description || ""} ${data.event.location || ""}`,
         timestamp: new Date(data.event.startAt).getTime(),
       });
     });
 
     // Listen for item updated events
-    eventBus.on('NOTE_UPDATED', (data) => {
+    eventBus.on("NOTE_UPDATED", (data) => {
       this.updateItem({
         id: data.note.id,
-        moduleType: 'notebook',
+        moduleType: "notebook",
         title: data.note.title,
-        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(' ')}`,
+        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(" ")}`,
         timestamp: new Date(data.note.updatedAt).getTime(),
       });
     });
 
-    eventBus.on('TASK_UPDATED', (data) => {
+    eventBus.on("TASK_UPDATED", (data) => {
       this.updateItem({
         id: data.task.id,
-        moduleType: 'planner',
+        moduleType: "planner",
         title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.userNotes || ''}`,
+        searchableText: `${data.task.title} ${data.task.userNotes || ""}`,
         timestamp: new Date(data.task.updatedAt).getTime(),
         metadata: { status: data.task.status, priority: data.task.priority },
       });
     });
 
     // Listen for item deleted events
-    eventBus.on('NOTE_DELETED', (data) => {
+    eventBus.on("NOTE_DELETED", (data) => {
       this.removeItem(data.noteId);
     });
 
-    eventBus.on('TASK_DELETED', (data) => {
+    eventBus.on("TASK_DELETED", (data) => {
       this.removeItem(data.taskId);
     });
 
-    eventBus.on('EVENT_DELETED', (data) => {
+    eventBus.on("EVENT_DELETED", (data) => {
       this.removeItem(data.eventId);
     });
   }
 
   /**
    * Initialize Index
-   * 
+   *
    * Plain English: "Load the saved index from storage"
    * Must be called before using the index.
    */
@@ -220,7 +260,7 @@ class SearchIndex {
     }
 
     try {
-      console.log('[SearchIndex] Initializing...');
+      console.log("[SearchIndex] Initializing...");
 
       // Load items
       const itemsJson = await AsyncStorage.getItem(STORAGE_KEYS.ITEMS);
@@ -239,24 +279,26 @@ class SearchIndex {
         entriesArray.forEach((entry) => {
           this.invertedIndex.set(entry.word, entry);
         });
-        console.log(`[SearchIndex] Loaded ${entriesArray.length} index entries`);
+        console.log(
+          `[SearchIndex] Loaded ${entriesArray.length} index entries`,
+        );
       }
 
       this.initialized = true;
     } catch (error) {
-      console.error('[SearchIndex] Initialization error:', error);
+      console.error("[SearchIndex] Initialization error:", error);
       this.initialized = true; // Continue anyway
     }
   }
 
   /**
    * Tokenize Text
-   * 
+   *
    * Plain English: "Break text into searchable words"
-   * 
+   *
    * Technical: Converts to lowercase, splits on whitespace/punctuation,
    * removes stopwords, filters by length.
-   * 
+   *
    * @param text - Text to tokenize
    * @returns Array of tokens
    */
@@ -277,9 +319,9 @@ class SearchIndex {
 
   /**
    * Add Item to Index
-   * 
+   *
    * Plain English: "Index a new item so it shows up in searches"
-   * 
+   *
    * @param item - Item to add
    */
   addItem(item: IndexedItem): void {
@@ -312,7 +354,9 @@ class SearchIndex {
       }
     });
 
-    console.log(`[SearchIndex] Added item ${item.id} (${wordsToIndex.length} words)`);
+    console.log(
+      `[SearchIndex] Added item ${item.id} (${wordsToIndex.length} words)`,
+    );
 
     // Schedule save
     this.scheduleSave();
@@ -320,9 +364,9 @@ class SearchIndex {
 
   /**
    * Update Item in Index
-   * 
+   *
    * Plain English: "Item changed, update its index entry"
-   * 
+   *
    * @param item - Updated item
    */
   updateItem(item: IndexedItem): void {
@@ -335,9 +379,9 @@ class SearchIndex {
 
   /**
    * Remove Item from Index
-   * 
+   *
    * Plain English: "Item deleted, remove from index"
-   * 
+   *
    * @param itemId - Item ID to remove
    */
   removeItem(itemId: string): void {
@@ -372,12 +416,12 @@ class SearchIndex {
 
   /**
    * Search Index
-   * 
+   *
    * Plain English: "Find items matching search query"
-   * 
+   *
    * Technical: Tokenizes query, looks up each word in inverted index,
    * intersects result sets, scores by relevance.
-   * 
+   *
    * @param query - Search query
    * @param options - Search options
    * @returns Matching item IDs with scores
@@ -387,8 +431,8 @@ class SearchIndex {
     options: {
       maxResults?: number;
       moduleTypes?: ModuleType[];
-    } = {}
-  ): Array<{ itemId: string; item: IndexedItem; score: number }> {
+    } = {},
+  ): { itemId: string; item: IndexedItem; score: number }[] {
     const { maxResults = 100, moduleTypes } = options;
 
     // Tokenize query
@@ -411,7 +455,7 @@ class SearchIndex {
     } else {
       // Items that appear in all word results
       matchingItemIds = wordResults[0].filter((itemId) =>
-        wordResults.every((results) => results.includes(itemId))
+        wordResults.every((results) => results.includes(itemId)),
       );
     }
 
@@ -435,7 +479,7 @@ class SearchIndex {
         // Title match bonus
         const titleWords = this.tokenize(item.title);
         const titleMatchCount = queryWords.filter((word) =>
-          titleWords.includes(word)
+          titleWords.includes(word),
         ).length;
         score += titleMatchCount * 30;
 
@@ -451,8 +495,11 @@ class SearchIndex {
 
         return { itemId, item, score };
       })
-      .filter((result): result is { itemId: string; item: IndexedItem; score: number } => 
-        result !== null
+      .filter(
+        (
+          result,
+        ): result is { itemId: string; item: IndexedItem; score: number } =>
+          result !== null,
       );
 
     // Sort by score descending
@@ -464,7 +511,7 @@ class SearchIndex {
 
   /**
    * Schedule Save
-   * 
+   *
    * Debounced save to avoid too many writes.
    */
   private scheduleSave(): void {
@@ -484,31 +531,40 @@ class SearchIndex {
     try {
       // Convert items to array
       const itemsArray = Array.from(this.items.values());
-      await AsyncStorage.setItem(STORAGE_KEYS.ITEMS, JSON.stringify(itemsArray));
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.ITEMS,
+        JSON.stringify(itemsArray),
+      );
 
       // Convert index to array
       const entriesArray = Array.from(this.invertedIndex.values());
-      await AsyncStorage.setItem(STORAGE_KEYS.INDEX, JSON.stringify(entriesArray));
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.INDEX,
+        JSON.stringify(entriesArray),
+      );
 
       // Save stats
       const stats = this.getStatistics();
       await AsyncStorage.setItem(STORAGE_KEYS.STATS, JSON.stringify(stats));
 
-      console.log(`[SearchIndex] Saved (${stats.totalItems} items, ${stats.totalWords} words)`);
+      console.log(
+        `[SearchIndex] Saved (${stats.totalItems} items, ${stats.totalWords} words)`,
+      );
     } catch (error) {
-      console.error('[SearchIndex] Save error:', error);
+      console.error("[SearchIndex] Save error:", error);
     }
   }
 
   /**
    * Get Statistics
-   * 
+   *
    * @returns Index statistics
    */
   getStatistics(): IndexStatistics {
     const moduleBreakdown: Record<string, number> = {};
     Array.from(this.items.values()).forEach((item) => {
-      moduleBreakdown[item.moduleType] = (moduleBreakdown[item.moduleType] || 0) + 1;
+      moduleBreakdown[item.moduleType] =
+        (moduleBreakdown[item.moduleType] || 0) + 1;
     });
 
     // Estimate index size (React Native compatible)
@@ -527,10 +583,10 @@ class SearchIndex {
 
   /**
    * Rebuild Entire Index
-   * 
+   *
    * Plain English: "Throw away old index and rebuild from scratch"
    * Expensive operation, use sparingly.
-   * 
+   *
    * @param items - All items to index
    */
   async rebuildIndex(items: IndexedItem[]): Promise<void> {
@@ -548,12 +604,12 @@ class SearchIndex {
     // Save immediately
     await this.save();
 
-    console.log('[SearchIndex] Rebuild complete');
+    console.log("[SearchIndex] Rebuild complete");
   }
 
   /**
    * Clear All Data
-   * 
+   *
    * @returns Promise
    */
   async clearAllData(): Promise<void> {
@@ -566,12 +622,12 @@ class SearchIndex {
       STORAGE_KEYS.STATS,
     ]);
 
-    console.log('[SearchIndex] Cleared all data');
+    console.log("[SearchIndex] Cleared all data");
   }
 
   /**
    * Get Item by ID
-   * 
+   *
    * @param itemId - Item ID
    * @returns Item or undefined
    */
@@ -581,7 +637,7 @@ class SearchIndex {
 
   /**
    * Update Configuration
-   * 
+   *
    * @param config - New configuration
    */
   updateConfig(config: Partial<SearchIndexConfig>): void {
@@ -589,7 +645,7 @@ class SearchIndex {
       ...this.config,
       ...config,
     };
-    console.log('[SearchIndex] Updated config:', this.config);
+    console.log("[SearchIndex] Updated config:", this.config);
   }
 }
 

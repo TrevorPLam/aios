@@ -82,7 +82,7 @@ describe("RecommendationEngine", () => {
     (db.decisions.getAll as jest.Mock).mockResolvedValue([]);
     (db.recommendations.getAll as jest.Mock).mockResolvedValue([]);
   });
-  
+
   afterEach(() => {
     restoreDate();
   });
@@ -91,8 +91,9 @@ describe("RecommendationEngine", () => {
     it("should return empty array when no conditions are met", async () => {
       // Mock current date to be a Tuesday (weekday, not weekend)
       mockDateTo(new Date("2024-01-16T10:00:00Z"));
-      
-      const recommendations = await RecommendationEngine.generateRecommendations();
+
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
       expect(recommendations).toEqual([]);
     });
 
@@ -116,7 +117,8 @@ describe("RecommendationEngine", () => {
       (db.events.getAll as jest.Mock).mockResolvedValue([mockEvent]);
       (db.notes.getAll as jest.Mock).mockResolvedValue([]);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       expect(recommendations.length).toBeGreaterThan(0);
       const meetingNoteRec = recommendations.find((r) =>
@@ -157,7 +159,8 @@ describe("RecommendationEngine", () => {
       (db.events.getAll as jest.Mock).mockResolvedValue([mockEvent]);
       (db.notes.getAll as jest.Mock).mockResolvedValue([mockNote]);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       const meetingNoteRec = recommendations.find((r) =>
         r.title.includes("Team Standup"),
@@ -186,7 +189,8 @@ describe("RecommendationEngine", () => {
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue([mockTask]);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       expect(recommendations.length).toBeGreaterThan(0);
       const breakdownRec = recommendations.find((r) =>
@@ -231,7 +235,8 @@ describe("RecommendationEngine", () => {
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue(mockTasks);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       const focusTimeRec = recommendations.find((r) =>
         r.title.includes("focus time"),
@@ -292,7 +297,8 @@ describe("RecommendationEngine", () => {
       (db.tasks.getAll as jest.Mock).mockResolvedValue(mockTasks);
       (db.events.getAll as jest.Mock).mockResolvedValue([mockEvent]);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       const focusTimeRec = recommendations.find((r) =>
         r.title.includes("focus time"),
@@ -306,7 +312,8 @@ describe("RecommendationEngine", () => {
 
       (db.notes.getAll as jest.Mock).mockResolvedValue([]);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       const reflectionRec = recommendations.find((r) =>
         r.title.includes("Weekly reflection"),
@@ -366,7 +373,8 @@ describe("RecommendationEngine", () => {
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue(mockTasks);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       const deadlineRec = recommendations.find((r) =>
         r.title.includes("deadline"),
@@ -389,11 +397,10 @@ describe("RecommendationEngine", () => {
 
       (db.notes.getAll as jest.Mock).mockResolvedValue(mockNotes);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
-      const taggingRec = recommendations.find((r) =>
-        r.title.includes("tags"),
-      );
+      const taggingRec = recommendations.find((r) => r.title.includes("tags"));
       expect(taggingRec).toBeDefined();
       expect(taggingRec?.module).toBe("notebook");
       expect(taggingRec?.countsAgainstLimit).toBe(false);
@@ -448,7 +455,8 @@ describe("RecommendationEngine", () => {
       (db.tasks.getAll as jest.Mock).mockResolvedValue(mockTasks);
       (db.notes.getAll as jest.Mock).mockResolvedValue(mockNotes);
 
-      const recommendations = await RecommendationEngine.generateRecommendations(2);
+      const recommendations =
+        await RecommendationEngine.generateRecommendations(2);
 
       expect(recommendations.length).toBeLessThanOrEqual(2);
     });
@@ -482,7 +490,8 @@ describe("RecommendationEngine", () => {
         },
       ]);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       const breakdownRec = recommendations.find(
         (r) => r.dedupeKey === `task_breakdown_task1`,
@@ -579,12 +588,13 @@ describe("RecommendationEngine", () => {
     it("should handle database errors gracefully", async () => {
       // Mock current date to be a Tuesday (weekday, not weekend)
       mockDateTo(new Date("2024-01-16T10:00:00Z"));
-      
+
       (db.notes.getAll as jest.Mock).mockRejectedValue(
         new Error("Database error"),
       );
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       // Should return empty array instead of throwing
       expect(recommendations).toEqual([]);
@@ -606,12 +616,11 @@ describe("RecommendationEngine", () => {
       );
       (db.notes.getAll as jest.Mock).mockResolvedValue(mockNotes);
 
-      const recommendations = await RecommendationEngine.generateRecommendations();
+      const recommendations =
+        await RecommendationEngine.generateRecommendations();
 
       // Should still generate note-based recommendations
-      const taggingRec = recommendations.find((r) =>
-        r.title.includes("tags"),
-      );
+      const taggingRec = recommendations.find((r) => r.title.includes("tags"));
       expect(taggingRec).toBeDefined();
     });
   });

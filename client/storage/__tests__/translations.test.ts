@@ -285,7 +285,9 @@ describe("Translations Database", () => {
 
       const results = await db.translations.getByLanguagePair("en", "es");
       expect(results).toHaveLength(2);
-      expect(results.every((t) => t.sourceLang === "en" && t.targetLang === "es")).toBe(true);
+      expect(
+        results.every((t) => t.sourceLang === "en" && t.targetLang === "es"),
+      ).toBe(true);
     });
 
     test("getBySourceLanguage filters by source language", async () => {

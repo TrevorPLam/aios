@@ -384,7 +384,12 @@ describe("Database Lists Storage", () => {
           id: "list_2",
           title: "List Two",
           items: [
-            { id: "i3", text: "Call client", isChecked: false, priority: "none" },
+            {
+              id: "i3",
+              text: "Call client",
+              isChecked: false,
+              priority: "none",
+            },
           ],
         };
 
@@ -401,12 +406,12 @@ describe("Database Lists Storage", () => {
           ...mockList,
           id: "list_1",
           items: [
-            { 
-              id: "i1", 
-              text: "Task", 
-              isChecked: false, 
+            {
+              id: "i1",
+              text: "Task",
+              isChecked: false,
               priority: "none",
-              notes: "This is urgent project work"
+              notes: "This is urgent project work",
             },
           ],
         };
@@ -448,9 +453,21 @@ describe("Database Lists Storage", () => {
       });
 
       it("should sort lists by recent (descending)", async () => {
-        const list1 = { ...mockList, id: "list_1", lastOpenedAt: "2026-01-14T10:00:00Z" };
-        const list2 = { ...mockList, id: "list_2", lastOpenedAt: "2026-01-14T12:00:00Z" };
-        const list3 = { ...mockList, id: "list_3", lastOpenedAt: "2026-01-14T11:00:00Z" };
+        const list1 = {
+          ...mockList,
+          id: "list_1",
+          lastOpenedAt: "2026-01-14T10:00:00Z",
+        };
+        const list2 = {
+          ...mockList,
+          id: "list_2",
+          lastOpenedAt: "2026-01-14T12:00:00Z",
+        };
+        const list3 = {
+          ...mockList,
+          id: "list_3",
+          lastOpenedAt: "2026-01-14T11:00:00Z",
+        };
 
         await db.lists.save(list1);
         await db.lists.save(list2);
@@ -546,29 +563,29 @@ describe("Database Lists Storage", () => {
       });
 
       it("should sort lists by item count", async () => {
-        const list1: List = { 
-          ...mockList, 
-          id: "list_1", 
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
           items: [
-            { id: "i1", text: "Item", isChecked: false, priority: "none" }
-          ] 
+            { id: "i1", text: "Item", isChecked: false, priority: "none" },
+          ],
         };
-        const list2: List = { 
-          ...mockList, 
-          id: "list_2", 
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
           items: [
             { id: "i2", text: "Item", isChecked: false, priority: "none" },
             { id: "i3", text: "Item", isChecked: false, priority: "none" },
-            { id: "i4", text: "Item", isChecked: false, priority: "none" }
-          ] 
+            { id: "i4", text: "Item", isChecked: false, priority: "none" },
+          ],
         };
-        const list3: List = { 
-          ...mockList, 
-          id: "list_3", 
+        const list3: List = {
+          ...mockList,
+          id: "list_3",
           items: [
             { id: "i5", text: "Item", isChecked: false, priority: "none" },
-            { id: "i6", text: "Item", isChecked: false, priority: "none" }
-          ] 
+            { id: "i6", text: "Item", isChecked: false, priority: "none" },
+          ],
         };
 
         await db.lists.save(list1);
@@ -582,9 +599,17 @@ describe("Database Lists Storage", () => {
       });
 
       it("should filter lists by category", async () => {
-        const list1 = { ...mockList, id: "list_1", category: "grocery" as const };
+        const list1 = {
+          ...mockList,
+          id: "list_1",
+          category: "grocery" as const,
+        };
         const list2 = { ...mockList, id: "list_2", category: "work" as const };
-        const list3 = { ...mockList, id: "list_3", category: "grocery" as const };
+        const list3 = {
+          ...mockList,
+          id: "list_3",
+          category: "grocery" as const,
+        };
 
         await db.lists.save(list1);
         await db.lists.save(list2);
@@ -626,12 +651,12 @@ describe("Database Lists Storage", () => {
           ...mockList,
           id: "list_1",
           items: [
-            { 
-              id: "i1", 
-              text: "Item", 
-              isChecked: false, 
+            {
+              id: "i1",
+              text: "Item",
+              isChecked: false,
               priority: "none",
-              dueDate: pastDate
+              dueDate: pastDate,
             },
           ],
         };
@@ -639,12 +664,12 @@ describe("Database Lists Storage", () => {
           ...mockList,
           id: "list_2",
           items: [
-            { 
-              id: "i2", 
-              text: "Item", 
-              isChecked: false, 
+            {
+              id: "i2",
+              text: "Item",
+              isChecked: false,
               priority: "none",
-              dueDate: futureDate
+              dueDate: futureDate,
             },
           ],
         };
@@ -662,12 +687,12 @@ describe("Database Lists Storage", () => {
           ...mockList,
           id: "list_1",
           items: [
-            { 
-              id: "i1", 
-              text: "Item", 
-              isChecked: false, 
+            {
+              id: "i1",
+              text: "Item",
+              isChecked: false,
               priority: "none",
-              notes: "Important note"
+              notes: "Important note",
             },
           ],
         };
@@ -712,16 +737,26 @@ describe("Database Lists Storage", () => {
       });
 
       it("should filter by min/max items", async () => {
-        const list1: List = { ...mockList, id: "list_1", items: [mockListItem] };
-        const list2: List = { 
-          ...mockList, 
-          id: "list_2", 
-          items: [mockListItem, mockListItem, mockListItem, mockListItem, mockListItem]
+        const list1: List = {
+          ...mockList,
+          id: "list_1",
+          items: [mockListItem],
         };
-        const list3: List = { 
-          ...mockList, 
-          id: "list_3", 
-          items: [mockListItem, mockListItem, mockListItem]
+        const list2: List = {
+          ...mockList,
+          id: "list_2",
+          items: [
+            mockListItem,
+            mockListItem,
+            mockListItem,
+            mockListItem,
+            mockListItem,
+          ],
+        };
+        const list3: List = {
+          ...mockList,
+          id: "list_3",
+          items: [mockListItem, mockListItem, mockListItem],
         };
 
         await db.lists.save(list1);
@@ -739,12 +774,12 @@ describe("Database Lists Storage", () => {
           ...mockList,
           id: "list_1",
           items: [
-            { 
-              id: "i1", 
-              text: "Item", 
-              isChecked: false, 
+            {
+              id: "i1",
+              text: "Item",
+              isChecked: false,
               priority: "none",
-              dueDate: pastDate
+              dueDate: pastDate,
             },
           ],
         };
@@ -834,25 +869,25 @@ describe("Database Lists Storage", () => {
 
       it("should get enhanced statistics", async () => {
         const pastDate = "2026-01-01T10:00:00Z";
-        
+
         const list1: List = {
           ...mockList,
           id: "list_1",
           category: "grocery",
           items: [
-            { 
-              id: "i1", 
-              text: "Item", 
-              isChecked: true, 
+            {
+              id: "i1",
+              text: "Item",
+              isChecked: true,
               priority: "none",
-              notes: "Note 1"
+              notes: "Note 1",
             },
-            { 
-              id: "i2", 
-              text: "Item", 
-              isChecked: false, 
+            {
+              id: "i2",
+              text: "Item",
+              isChecked: false,
               priority: "high",
-              dueDate: pastDate
+              dueDate: pastDate,
             },
           ],
         };
@@ -937,4 +972,3 @@ describe("Database Lists Storage", () => {
     });
   });
 });
-

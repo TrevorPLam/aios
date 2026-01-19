@@ -9,7 +9,7 @@
  * - Granular consent per event type
  * - Consent change tracking
  * - Integration with privacy regulations
- * 
+ *
  * Documentation: See docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
  * Missing Features: See MISSING_FEATURES.md (Analytics section)
  */

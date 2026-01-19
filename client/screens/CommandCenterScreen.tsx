@@ -11,6 +11,7 @@
  * - History logging of decisions
  * - Empty state prompts for AI generation
  * - Haptic feedback for interactions
+ * - Attention Center access with badge count
  *
  * @module CommandCenterScreen
  */
@@ -53,10 +54,10 @@ import { formatTimeRemaining, getConfidenceColor } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { RecommendationEngine } from "@/lib/recommendationEngine";
+import { attentionManager } from "@/lib/attentionManager";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
-const CARD_SPACING = Spacing.lg;
 /** Minimum horizontal swipe distance to trigger accept/decline */
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 /** Minimum recommendations before auto-refresh triggers */
@@ -258,22 +259,44 @@ export default function CommandCenterScreen() {
   const [aiLimits, setAiLimits] = useState<AILimits | null>(null);
   const [showAISheet, setShowAISheet] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [attentionCount, setAttentionCount] = useState(0);
 
   /**
-   * Load recommendations and AI limits from database
-   * Also triggers automatic refresh if needed
+   * Load recommendations, AI limits, and attention counts from database.
+   * Also triggers automatic refresh if recommendations are below threshold.
+   * 
+   * Data Flow:
+   * 1. Load active recommendations from database
+   * 2. Load AI usage limits
+   * 3. Calculate attention count (urgent + attention priority items)
+   * 4. Auto-refresh recommendations if below threshold
+   * 
+   * Error Handling:
+   * - Attention counts default to 0 if manager returns undefined/null
+   * - Database errors are caught by outer error boundaries
    */
   const loadData = useCallback(async () => {
-    const recs = await db.recommendations.getActive();
-    setRecommendations(recs);
-    const limits = await db.aiLimits.get();
-    setAiLimits(limits);
+    try {
+      const recs = await db.recommendations.getActive();
+      setRecommendations(recs);
+      const limits = await db.aiLimits.get();
+      setAiLimits(limits);
 
-    // Auto-refresh if we have few or no recommendations
-    if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
-      await handleRefreshRecommendations();
+      // Load attention counts - sum urgent and attention priority items
+      // Handle potential undefined values with fallback to 0
+      const counts = attentionManager.getCounts();
+      const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
+      setAttentionCount(totalCount);
+
+      // Auto-refresh if we have few or no recommendations
+      if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
+        await handleRefreshRecommendations();
+      }
+    } catch (error) {
+      console.error("Failed to load CommandCenter data:", error);
+      // Error boundaries will handle this - just log for debugging
     }
-  }, []);
+  }, [handleRefreshRecommendations]);
 
   useEffect(() => {
     loadData();
@@ -396,6 +419,26 @@ export default function CommandCenterScreen() {
         </Animated.View>
 
         <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => navigation.navigate("AttentionCenter")}
+            style={({ pressed }) => [
+              styles.headerButton,
+              pressed && styles.pressed,
+            ]}
+          >
+            <View>
+              <Feather name="bell" size={24} color={theme.text} />
+              {attentionCount > 0 && (
+                <View style={[styles.badge, { backgroundColor: theme.error }]}>
+                  <ThemedText
+                    style={[styles.badgeText, { color: theme.backgroundRoot }]}
+                  >
+                    {attentionCount > 99 ? "99+" : attentionCount}
+                  </ThemedText>
+                </View>
+              )}
+            </View>
+          </Pressable>
           <Pressable
             onPress={() => navigation.navigate("RecommendationHistory")}
             style={({ pressed }) => [
@@ -639,6 +682,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
+  },
+  badge: {
+    position: "absolute",
+    top: -4,
+    right: -4,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: "bold",
+    lineHeight: 12,
   },
   bottomNav: {
     display: "none",

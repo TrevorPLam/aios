@@ -1,28 +1,28 @@
 /**
  * Omnisearch Engine
- * 
+ *
  * Purpose (Plain English):
  * Search everything in the app from one place. Type "doctor" and see results from
  * Calendar (appointments), Contacts (doctors you know), Notes (medical notes),
  * Budget (medical expenses), etc. No need to remember which module has what.
- * 
+ *
  * What it interacts with:
  * - All module databases (Notes, Tasks, Events, Contacts, etc.)
  * - Search UI component
  * - Recent searches storage
  * - Usage analytics
- * 
+ *
  * Technical Implementation:
  * Queries all module storage layers in parallel, groups and ranks results.
  * Uses simple text matching with relevance scoring based on field importance
  * and recency. Future: could add fuzzy matching, synonyms, AI relevance.
- * 
+ *
  * Safe AI Extension Points:
  * - Add new searchable modules
  * - Improve ranking algorithm
  * - Add search filters
  * - Add search suggestions
- * 
+ *
  * Fragile Logic Warnings:
  * - Must query all modules efficiently (parallel, timeout)
  * - Ranking must feel intuitive (exact matches > partial matches)
@@ -30,12 +30,12 @@
  * - Search must be fast (<500ms) or show progress
  */
 
-import { db } from '@/storage/database';
-import { ModuleType } from '@/models/types';
+import { db } from "@/storage/database";
+import { ModuleType } from "@/models/types";
 
 /**
  * Search Result Item
- * 
+ *
  * Represents a single search result from any module.
  */
 export interface SearchResultItem {
@@ -52,7 +52,7 @@ export interface SearchResultItem {
 
 /**
  * Grouped Search Results
- * 
+ *
  * Results grouped by module for easy scanning.
  */
 export interface GroupedSearchResults {
@@ -64,7 +64,7 @@ export interface GroupedSearchResults {
 
 /**
  * Search Result Group
- * 
+ *
  * Results from one module.
  */
 export interface SearchResultGroup {
@@ -95,12 +95,12 @@ export interface RecentSearch {
 
 /**
  * Module Search Function Type
- * 
+ *
  * Each module implements its own search logic.
  */
 type ModuleSearchFunction = (
   query: string,
-  maxResults: number
+  maxResults: number,
 ) => Promise<SearchResultItem[]>;
 
 /**
@@ -112,20 +112,20 @@ class OmnisearchEngine {
 
   /**
    * Calculate Relevance Score
-   * 
+   *
    * Plain English: "How well does this match the search?"
-   * 
+   *
    * Technical: Simple text matching with boosting for:
    * - Exact matches (highest)
    * - Title matches (high)
    * - Starts-with matches (medium)
    * - Contains matches (lower)
    * - Recent items (slight boost)
-   * 
+   *
    * Why it exists: Users expect most relevant results first.
-   * 
+   *
    * Failure modes: Very long text can slow down matching.
-   * 
+   *
    * @param text - Text to search in
    * @param query - Search query
    * @param field - Field type (title, content, etc.) for boosting
@@ -135,8 +135,8 @@ class OmnisearchEngine {
   private calculateRelevance(
     text: string,
     query: string,
-    field: 'title' | 'content' | 'metadata' = 'content',
-    recencyBoost: number = 0
+    field: "title" | "content" | "metadata" = "content",
+    recencyBoost: number = 0,
   ): number {
     const lowerText = text.toLowerCase();
     const lowerQuery = query.toLowerCase();
@@ -159,7 +159,7 @@ class OmnisearchEngine {
     else {
       const queryWords = lowerQuery.split(/\s+/);
       const matchedWords = queryWords.filter((word) =>
-        lowerText.includes(word)
+        lowerText.includes(word),
       );
       if (matchedWords.length > 0) {
         score = (matchedWords.length / queryWords.length) * 40;
@@ -167,9 +167,9 @@ class OmnisearchEngine {
     }
 
     // Field-based boosting
-    if (field === 'title') {
+    if (field === "title") {
       score *= 1.5; // Title matches are 50% more relevant
-    } else if (field === 'metadata') {
+    } else if (field === "metadata") {
       score *= 0.8; // Metadata matches are 20% less relevant
     }
 
@@ -181,9 +181,9 @@ class OmnisearchEngine {
 
   /**
    * Calculate Recency Boost
-   * 
+   *
    * Plain English: "Newer items get a small bump in ranking"
-   * 
+   *
    * @param date - ISO date string
    * @returns Boost value (0-10)
    */
@@ -192,7 +192,8 @@ class OmnisearchEngine {
 
     const now = new Date();
     const itemDate = new Date(date);
-    const daysOld = (now.getTime() - itemDate.getTime()) / (1000 * 60 * 60 * 24);
+    const daysOld =
+      (now.getTime() - itemDate.getTime()) / (1000 * 60 * 60 * 24);
 
     // Items from today: +10 points
     if (daysOld < 1) return 10;
@@ -209,7 +210,7 @@ class OmnisearchEngine {
    */
   private async searchNotes(
     query: string,
-    maxResults: number
+    maxResults: number,
   ): Promise<SearchResultItem[]> {
     try {
       const allNotes = await db.notes.getAll();
@@ -219,10 +220,14 @@ class OmnisearchEngine {
         // Skip archived notes
         if (note.isArchived) continue;
 
-        const titleScore = this.calculateRelevance(note.title, query, 'title');
-        const contentScore = this.calculateRelevance(note.body, query, 'content');
+        const titleScore = this.calculateRelevance(note.title, query, "title");
+        const contentScore = this.calculateRelevance(
+          note.body,
+          query,
+          "content",
+        );
         const tagsScore = note.tags
-          .map((tag) => this.calculateRelevance(tag, query, 'metadata'))
+          .map((tag) => this.calculateRelevance(tag, query, "metadata"))
           .reduce((max, score) => Math.max(max, score), 0);
 
         const maxScore = Math.max(titleScore, contentScore, tagsScore);
@@ -232,7 +237,7 @@ class OmnisearchEngine {
         if (relevanceScore > 0) {
           results.push({
             id: note.id,
-            moduleType: 'notebook',
+            moduleType: "notebook",
             title: note.title,
             preview: note.body.substring(0, 100),
             relevanceScore,
@@ -247,7 +252,7 @@ class OmnisearchEngine {
         .sort((a, b) => b.relevanceScore - a.relevanceScore)
         .slice(0, maxResults);
     } catch (error) {
-      console.error('Error searching notes:', error);
+      console.error("Error searching notes:", error);
       return [];
     }
   }
@@ -257,7 +262,7 @@ class OmnisearchEngine {
    */
   private async searchTasks(
     query: string,
-    maxResults: number
+    maxResults: number,
   ): Promise<SearchResultItem[]> {
     try {
       const allTasks = await db.tasks.getAll();
@@ -265,11 +270,12 @@ class OmnisearchEngine {
 
       for (const task of allTasks) {
         // Skip completed/cancelled tasks
-        if (task.status === 'completed' || task.status === 'cancelled') continue;
+        if (task.status === "completed" || task.status === "cancelled")
+          continue;
 
-        const titleScore = this.calculateRelevance(task.title, query, 'title');
+        const titleScore = this.calculateRelevance(task.title, query, "title");
         const descScore = task.description
-          ? this.calculateRelevance(task.description, query, 'content')
+          ? this.calculateRelevance(task.description, query, "content")
           : 0;
 
         const maxScore = Math.max(titleScore, descScore);
@@ -279,9 +285,9 @@ class OmnisearchEngine {
         if (relevanceScore > 0) {
           results.push({
             id: task.id,
-            moduleType: 'planner',
+            moduleType: "planner",
             title: task.title,
-            subtitle: task.projectId ? 'Project Task' : undefined,
+            subtitle: task.projectId ? "Project Task" : undefined,
             preview: task.description,
             relevanceScore,
             createdAt: task.createdAt,
@@ -295,7 +301,7 @@ class OmnisearchEngine {
         .sort((a, b) => b.relevanceScore - a.relevanceScore)
         .slice(0, maxResults);
     } catch (error) {
-      console.error('Error searching tasks:', error);
+      console.error("Error searching tasks:", error);
       return [];
     }
   }
@@ -305,19 +311,19 @@ class OmnisearchEngine {
    */
   private async searchEvents(
     query: string,
-    maxResults: number
+    maxResults: number,
   ): Promise<SearchResultItem[]> {
     try {
       const allEvents = await db.events.getAll();
       const results: SearchResultItem[] = [];
 
       for (const event of allEvents) {
-        const titleScore = this.calculateRelevance(event.title, query, 'title');
+        const titleScore = this.calculateRelevance(event.title, query, "title");
         const descScore = event.description
-          ? this.calculateRelevance(event.description, query, 'content')
+          ? this.calculateRelevance(event.description, query, "content")
           : 0;
         const locationScore = event.location
-          ? this.calculateRelevance(event.location, query, 'metadata')
+          ? this.calculateRelevance(event.location, query, "metadata")
           : 0;
 
         const maxScore = Math.max(titleScore, descScore, locationScore);
@@ -328,7 +334,7 @@ class OmnisearchEngine {
           const startDate = new Date(event.startDate);
           results.push({
             id: event.id,
-            moduleType: 'calendar',
+            moduleType: "calendar",
             title: event.title,
             subtitle: `${startDate.toLocaleDateString()} ${startDate.toLocaleTimeString()}`,
             preview: event.description,
@@ -343,7 +349,7 @@ class OmnisearchEngine {
         .sort((a, b) => b.relevanceScore - a.relevanceScore)
         .slice(0, maxResults);
     } catch (error) {
-      console.error('Error searching events:', error);
+      console.error("Error searching events:", error);
       return [];
     }
   }
@@ -353,19 +359,19 @@ class OmnisearchEngine {
    */
   private async searchContacts(
     query: string,
-    maxResults: number
+    maxResults: number,
   ): Promise<SearchResultItem[]> {
     try {
       const allContacts = await db.contacts.getAll();
       const results: SearchResultItem[] = [];
 
       for (const contact of allContacts) {
-        const nameScore = this.calculateRelevance(contact.name, query, 'title');
+        const nameScore = this.calculateRelevance(contact.name, query, "title");
         const emailScore = contact.email
-          ? this.calculateRelevance(contact.email, query, 'metadata')
+          ? this.calculateRelevance(contact.email, query, "metadata")
           : 0;
         const phoneScore = contact.phone
-          ? this.calculateRelevance(contact.phone, query, 'metadata')
+          ? this.calculateRelevance(contact.phone, query, "metadata")
           : 0;
 
         const maxScore = Math.max(nameScore, emailScore, phoneScore);
@@ -374,7 +380,7 @@ class OmnisearchEngine {
         if (relevanceScore > 0) {
           results.push({
             id: contact.id,
-            moduleType: 'contacts',
+            moduleType: "contacts",
             title: contact.name,
             subtitle: contact.email || contact.phone,
             relevanceScore,
@@ -387,7 +393,7 @@ class OmnisearchEngine {
         .sort((a, b) => b.relevanceScore - a.relevanceScore)
         .slice(0, maxResults);
     } catch (error) {
-      console.error('Error searching contacts:', error);
+      console.error("Error searching contacts:", error);
       return [];
     }
   }
@@ -397,19 +403,19 @@ class OmnisearchEngine {
    */
   private async searchLists(
     query: string,
-    maxResults: number
+    maxResults: number,
   ): Promise<SearchResultItem[]> {
     try {
       const allLists = await db.lists.getAll();
       const results: SearchResultItem[] = [];
 
       for (const list of allLists) {
-        const titleScore = this.calculateRelevance(list.title, query, 'title');
-        
+        const titleScore = this.calculateRelevance(list.title, query, "title");
+
         // Search in list items too
         let itemScore = 0;
         for (const item of list.items) {
-          const score = this.calculateRelevance(item.text, query, 'content');
+          const score = this.calculateRelevance(item.text, query, "content");
           itemScore = Math.max(itemScore, score);
         }
 
@@ -420,7 +426,7 @@ class OmnisearchEngine {
         if (relevanceScore > 0) {
           results.push({
             id: list.id,
-            moduleType: 'lists',
+            moduleType: "lists",
             title: list.title,
             subtitle: `${list.items.length} items`,
             relevanceScore,
@@ -435,50 +441,50 @@ class OmnisearchEngine {
         .sort((a, b) => b.relevanceScore - a.relevanceScore)
         .slice(0, maxResults);
     } catch (error) {
-      console.error('Error searching lists:', error);
+      console.error("Error searching lists:", error);
       return [];
     }
   }
 
   /**
    * Get Module Search Functions
-   * 
+   *
    * Maps module types to their search functions.
    */
   private getModuleSearchFunctions(): Map<ModuleType, ModuleSearchFunction> {
     return new Map([
-      ['notebook', this.searchNotes.bind(this)],
-      ['planner', this.searchTasks.bind(this)],
-      ['calendar', this.searchEvents.bind(this)],
-      ['contacts', this.searchContacts.bind(this)],
-      ['lists', this.searchLists.bind(this)],
+      ["notebook", this.searchNotes.bind(this)],
+      ["planner", this.searchTasks.bind(this)],
+      ["calendar", this.searchEvents.bind(this)],
+      ["contacts", this.searchContacts.bind(this)],
+      ["lists", this.searchLists.bind(this)],
       // Add more modules as needed
     ]);
   }
 
   /**
    * Search All Modules
-   * 
+   *
    * Plain English: "Search everything and group results by type"
-   * 
+   *
    * Technical: Queries all registered modules in parallel, groups and ranks results.
    * Returns grouped results for UI to display by module.
-   * 
+   *
    * Why it exists: Users shouldn't need to know which module has their data.
-   * 
+   *
    * Failure modes: If one module fails, others still return results.
    * Very long queries or huge datasets could be slow.
-   * 
+   *
    * @param query - Search query
    * @param options - Search options
    * @returns Grouped search results
    */
   async search(
     query: string,
-    options: SearchOptions = {}
+    options: SearchOptions = {},
   ): Promise<GroupedSearchResults> {
     const startTime = Date.now();
-    
+
     const {
       maxResultsPerModule = 5,
       includeModules,
@@ -488,7 +494,7 @@ class OmnisearchEngine {
 
     // Get all search functions
     const searchFunctions = this.getModuleSearchFunctions();
-    
+
     // Filter based on options
     const modulesToSearch = Array.from(searchFunctions.entries()).filter(
       ([moduleType]) => {
@@ -499,19 +505,21 @@ class OmnisearchEngine {
           return false;
         }
         return true;
-      }
+      },
     );
 
     // Search all modules in parallel
-    const searchPromises = modulesToSearch.map(async ([moduleType, searchFn]) => {
-      try {
-        const results = await searchFn(query, maxResultsPerModule);
-        return { moduleType, results };
-      } catch (error) {
-        console.error(`Error searching ${moduleType}:`, error);
-        return { moduleType, results: [] };
-      }
-    });
+    const searchPromises = modulesToSearch.map(
+      async ([moduleType, searchFn]) => {
+        try {
+          const results = await searchFn(query, maxResultsPerModule);
+          return { moduleType, results };
+        } catch (error) {
+          console.error(`Error searching ${moduleType}:`, error);
+          return { moduleType, results: [] };
+        }
+      },
+    );
 
     const moduleResults = await Promise.all(searchPromises);
 
@@ -519,7 +527,7 @@ class OmnisearchEngine {
     const groups: SearchResultGroup[] = moduleResults
       .map(({ moduleType, results }) => {
         const filteredResults = results.filter(
-          (r) => r.relevanceScore >= minRelevanceScore
+          (r) => r.relevanceScore >= minRelevanceScore,
         );
 
         return {
@@ -541,7 +549,11 @@ class OmnisearchEngine {
     const searchTime = Date.now() - startTime;
 
     // Save to recent searches
-    this.addRecentSearch({ query, resultCount: totalResults, timestamp: new Date().toISOString() });
+    this.addRecentSearch({
+      query,
+      resultCount: totalResults,
+      timestamp: new Date().toISOString(),
+    });
 
     return {
       query,
@@ -553,23 +565,23 @@ class OmnisearchEngine {
 
   /**
    * Get Module Name
-   * 
+   *
    * Plain English: "Convert module ID to friendly name"
    */
   private getModuleName(moduleType: ModuleType): string {
     const names: Record<ModuleType, string> = {
-      command: 'Command Center',
-      notebook: 'Notebook',
-      planner: 'Planner',
-      calendar: 'Calendar',
-      email: 'Email',
-      lists: 'Lists',
-      alerts: 'Alerts',
-      photos: 'Photos',
-      messages: 'Messages',
-      contacts: 'Contacts',
-      translator: 'Translator',
-      budget: 'Budget',
+      command: "Command Center",
+      notebook: "Notebook",
+      planner: "Planner",
+      calendar: "Calendar",
+      email: "Email",
+      lists: "Lists",
+      alerts: "Alerts",
+      photos: "Photos",
+      messages: "Messages",
+      contacts: "Contacts",
+      translator: "Translator",
+      budget: "Budget",
     };
     return names[moduleType] || moduleType;
   }
@@ -580,15 +592,18 @@ class OmnisearchEngine {
   private addRecentSearch(search: RecentSearch): void {
     // Remove duplicates
     this.recentSearches = this.recentSearches.filter(
-      (s) => s.query.toLowerCase() !== search.query.toLowerCase()
+      (s) => s.query.toLowerCase() !== search.query.toLowerCase(),
     );
-    
+
     // Add to front
     this.recentSearches.unshift(search);
-    
+
     // Limit size
     if (this.recentSearches.length > this.MAX_RECENT_SEARCHES) {
-      this.recentSearches = this.recentSearches.slice(0, this.MAX_RECENT_SEARCHES);
+      this.recentSearches = this.recentSearches.slice(
+        0,
+        this.MAX_RECENT_SEARCHES,
+      );
     }
   }
 

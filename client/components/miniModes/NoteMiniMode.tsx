@@ -1,26 +1,26 @@
 /**
  * Notebook Mini-Mode Component
- * 
+ *
  * Purpose (Plain English):
  * Quick note capture that can be embedded in other screens. Perfect for jotting
  * down ideas, meeting notes, or quick thoughts without leaving your current context.
- * 
+ *
  * What it interacts with:
  * - Notes Database: Creates notes
  * - Event Bus: Emits NoteCreated event after saving
  * - Mini-Mode Registry: Returns result via onComplete callback
- * 
+ *
  * Safe AI extension points:
  * - Add smart tag suggestions based on content
  * - Add template selection for common note types
  * - Auto-link to related notes
- * 
+ *
  * Warnings:
  * - Keep it fast - this is for quick capture, not full editing
  * - Don't auto-save - user must explicitly save
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -28,16 +28,16 @@ import {
   ScrollView,
   Platform,
   Alert,
-} from 'react-native';
-import * as Haptics from 'expo-haptics';
+} from "react-native";
+import * as Haptics from "expo-haptics";
 
-import { MiniModeComponentProps, MiniModeResult } from '../../lib/miniMode';
-import { eventBus } from '../../lib/eventBus';
-import { database } from '../../storage/database';
-import { ThemedText } from '../ThemedText';
-import { Button } from '../Button';
-import { Colors, Spacing, Typography } from '../../constants/theme';
-import type { Note } from '../../models/types';
+import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
+import { eventBus } from "../../lib/eventBus";
+import { database } from "../../storage/database";
+import { ThemedText } from "../ThemedText";
+import { Button } from "../Button";
+import { Colors, Spacing, Typography } from "../../constants/theme";
+import type { Note } from "../../models/types";
 
 interface NoteMiniModeData {
   title?: string;
@@ -51,16 +51,16 @@ export function NoteMiniMode({
   onDismiss,
   source,
 }: MiniModeComponentProps<NoteMiniModeData>) {
-  const [title, setTitle] = useState(initialData?.title || '');
-  const [body, setBody] = useState(initialData?.body || '');
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [body, setBody] = useState(initialData?.body || "");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
     if (!title.trim() && !body.trim()) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      Alert.alert('Empty Note', 'Please enter a title or note content');
+      Alert.alert("Empty Note", "Please enter a title or note content");
       return;
     }
 
@@ -68,7 +68,7 @@ export function NoteMiniMode({
 
     try {
       const newNote: Partial<Note> = {
-        title: title.trim() || 'Quick Note',
+        title: title.trim() || "Quick Note",
         body: body.trim(),
         tags: initialData?.tags || [],
         links: [],
@@ -81,30 +81,30 @@ export function NoteMiniMode({
       const createdNote = await database.notes.createNote(newNote);
 
       eventBus.emit({
-        type: 'NoteCreated',
-        payload: { note: createdNote, source: source || 'mini_mode' },
+        type: "NoteCreated",
+        payload: { note: createdNote, source: source || "mini_mode" },
         metadata: { timestamp: new Date().toISOString() },
       });
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
       const result: MiniModeResult<Note> = {
-        action: 'created',
+        action: "created",
         data: createdNote,
-        module: 'notebook',
+        module: "notebook",
       };
 
       onComplete(result);
     } catch (error) {
-      console.error('[NoteMiniMode] Error creating note:', error);
+      console.error("[NoteMiniMode] Error creating note:", error);
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
 
-      Alert.alert('Error', 'Failed to create note. Please try again.');
+      Alert.alert("Error", "Failed to create note. Please try again.");
       setSaving(false);
     }
   };
@@ -166,7 +166,7 @@ export function NoteMiniMode({
           disabled={saving}
         />
         <Button
-          label={saving ? 'Saving...' : 'Save Note'}
+          label={saving ? "Saving..." : "Save Note"}
           onPress={handleSave}
           variant="primary"
           style={styles.actionButton}
@@ -179,10 +179,10 @@ export function NoteMiniMode({
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: '100%',
+    maxHeight: "100%",
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: Spacing.sm,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: Typography.sizes.h2,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.electricBlue,
   },
   headerSubtitle: {
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: Typography.sizes.body,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.textPrimary,
     marginBottom: Spacing.xs,
   },
@@ -231,13 +231,13 @@ const styles = StyleSheet.create({
   textArea: {
     paddingTop: Spacing.sm,
     minHeight: 150,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   spacer: {
     height: Spacing.lg,
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.sm,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.xs,

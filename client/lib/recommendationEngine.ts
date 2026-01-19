@@ -56,7 +56,7 @@ interface AnalysisData {
   tasks: Task[];
   events: CalendarEvent[];
   currentTime: Date;
-  recentDecisions: Array<{ recommendationId: string; decision: string }>;
+  recentDecisions: { recommendationId: string; decision: string }[];
 }
 
 /**
@@ -224,7 +224,9 @@ const suggestTaskBreakdown: RecommendationRule = {
   checkCondition: async (data: AnalysisData) => {
     // Find tasks that are pending for >3 days with no subtasks
     const threeDaysAgo = new Date(data.currentTime);
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - ENGINE_CONFIG.STALE_TASK_DAYS);
+    threeDaysAgo.setDate(
+      threeDaysAgo.getDate() - ENGINE_CONFIG.STALE_TASK_DAYS,
+    );
 
     const staleTasks = data.tasks.filter((task) => {
       const createdDate = new Date(task.createdAt);
@@ -239,7 +241,9 @@ const suggestTaskBreakdown: RecommendationRule = {
   },
   generate: async (data: AnalysisData) => {
     const threeDaysAgo = new Date(data.currentTime);
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - ENGINE_CONFIG.STALE_TASK_DAYS);
+    threeDaysAgo.setDate(
+      threeDaysAgo.getDate() - ENGINE_CONFIG.STALE_TASK_DAYS,
+    );
 
     const staleTasks = data.tasks.filter((task) => {
       const createdDate = new Date(task.createdAt);
@@ -352,7 +356,9 @@ const suggestWeeklyReflection: RecommendationRule = {
   checkCondition: async (data: AnalysisData) => {
     // Check if last note with "reflection" or "weekly" was >6 days ago
     const sixDaysAgo = new Date(data.currentTime);
-    sixDaysAgo.setDate(sixDaysAgo.getDate() - ENGINE_CONFIG.REFLECTION_INTERVAL_DAYS);
+    sixDaysAgo.setDate(
+      sixDaysAgo.getDate() - ENGINE_CONFIG.REFLECTION_INTERVAL_DAYS,
+    );
 
     const hasRecentReflection = data.notes.some((note) => {
       const noteDate = new Date(note.updatedAt);
@@ -538,7 +544,7 @@ export class RecommendationEngine {
 
       return recommendations;
     } catch (error) {
-      console.error('Error generating recommendations:', error);
+      console.error("Error generating recommendations:", error);
       return [];
     }
   }
@@ -552,19 +558,19 @@ export class RecommendationEngine {
     // Gather data with error handling for each module
     const [notes, tasks, events, decisions] = await Promise.all([
       db.notes.getAll().catch((error) => {
-        console.error('Error fetching notes:', error);
+        console.error("Error fetching notes:", error);
         return [];
       }),
       db.tasks.getAll().catch((error) => {
-        console.error('Error fetching tasks:', error);
+        console.error("Error fetching tasks:", error);
         return [];
       }),
       db.events.getAll().catch((error) => {
-        console.error('Error fetching events:', error);
+        console.error("Error fetching events:", error);
         return [];
       }),
       db.decisions.getAll().catch((error) => {
-        console.error('Error fetching decisions:', error);
+        console.error("Error fetching decisions:", error);
         return [];
       }),
     ]);
