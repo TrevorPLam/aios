@@ -147,7 +147,6 @@ jobs:
       
       - name: Check Expo configuration
         run: npm run check:expo-config
-        continue-on-error: false
 
   build-client:
     name: Build Client (Expo)
