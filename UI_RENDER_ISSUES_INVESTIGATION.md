@@ -1,16 +1,19 @@
 # UI Render Issues Investigation Report
 **Date**: 2026-01-19  
 **Related PRs**: #151, #152  
-**Branch**: copilot/investigate-ui-render-issues
+**Branch**: copilot/investigate-ui-render-issues  
+**Status**: ✅ COMPLETED - All issues investigated and fixed
 
 ## Executive Summary
 
 Investigation of three UI rendering issues in CommandCenterScreen and BottomNav:
-1. **Card Spacing** - Working but invisible (transparent 2px gap)
-2. **Card Glow** - Broken due to missing backgroundColor on shadow-casting element
-3. **Bottom Nav Stretch** - Broken due to internal component padding
+1. **Card Spacing** - Working but invisible (transparent 2px gap) - ✅ Working as designed
+2. **Card Glow** - Broken due to missing backgroundColor on shadow-casting element - ✅ FIXED
+3. **Bottom Nav Stretch** - Broken due to internal component padding - ✅ FIXED
 
 **Critical Finding**: The card glow has **never worked on iOS** because the shadow-casting Animated.View lacks a backgroundColor, which iOS requires for shadow rendering.
+
+**Implementation**: All issues fixed in commit 3c42beb
 
 ---
 
@@ -193,25 +196,29 @@ Actual implementation:
 
 ### Fixes Required
 
-**Fix 1: Add backgroundColor to cardShadowWrapper**
+**Fix 1: Add backgroundColor to cardShadowWrapper** ✅ IMPLEMENTED (commit 3c42beb)
 ```typescript
-// In styles.cardShadowWrapper
-cardShadowWrapper: {
-  width: CARD_WIDTH,
-  borderRadius: BorderRadius.lg,
-  backgroundColor: 'transparent',  // ← ADD THIS! Can be transparent
-  shadowOffset: { width: 0, height: 0 },
-},
+// In RecommendationCard component, line 272
+<Animated.View
+  style={[
+    styles.cardShadowWrapper,
+    { 
+      shadowColor: "#FFFFFF",
+      backgroundColor: theme.backgroundDefault,  // ← ADDED
+    },
+    // ... rest of styles
+  ]}
+>
 ```
 
-**Fix 2: Change shadowColor to white**
+**Fix 2: Change shadowColor to white** ✅ IMPLEMENTED (commit 3c42beb)
 ```typescript
 // In RecommendationCard component, line 271
 <Animated.View
   style={[
     styles.cardShadowWrapper,
     { 
-      shadowColor: "#FFFFFF",  // ← CHANGE from theme.accent
+      shadowColor: "#FFFFFF",  // ← CHANGED from theme.accent
     },
     // ... rest of styles
   ]}
@@ -313,23 +320,42 @@ container: {
 
 ### Fix Required
 
-**Remove internal padding from BottomNav.container**:
+**Remove internal padding from BottomNav.container** ✅ IMPLEMENTED (commit 3c42beb):
 ```typescript
-// In client/components/BottomNav.tsx, lines 324-334
+// In client/components/BottomNav.tsx, line 328
 container: {
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
-  paddingHorizontal: 0,  // ← CHANGE from Spacing.lg
+  paddingHorizontal: 0,  // ← CHANGED from Spacing.lg
   paddingTop: Spacing.xs,
-  // UPDATED: Container now extends edge-to-edge
-  // Buttons maintain spacing via their own fixed dimensions
+  // Container extends edge-to-edge; buttons maintain spacing via justifyContent
   width: "100%",
   minHeight: 80,
 },
 ```
 
-**Note**: Buttons (navButton, aiButton) have fixed dimensions (56x56, 64x64) and will maintain their spacing naturally via `justifyContent: "space-between"` on the container.
+**Additional Enhancement** ✅ IMPLEMENTED (commit 3c42beb):
+Added dynamic padding using safe area insets to ensure buttons don't touch screen edges:
+```typescript
+// In BottomNav component render, lines 270-271
+<View
+  style={[
+    styles.container,
+    {
+      backgroundColor: theme.backgroundBlack,
+      paddingBottom: insets.bottom + Spacing.xs,
+      paddingLeft: Math.max(insets.left, Spacing.sm),   // ← ADDED
+      paddingRight: Math.max(insets.right, Spacing.sm), // ← ADDED
+    },
+  ]}
+>
+```
+
+**Benefits**:
+- Background extends edge-to-edge ✅
+- Buttons maintain proper spacing (min 8px) ✅
+- Handles devices with notches/rounded corners ✅
 
 ---
 
