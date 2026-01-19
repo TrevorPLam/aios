@@ -62,6 +62,10 @@ const CARD_WIDTH = SCREEN_WIDTH - Spacing["2xl"] * 2;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 /** Minimum recommendations before auto-refresh triggers */
 const MIN_RECOMMENDATIONS_THRESHOLD = 3;
+/** Opacity for secondary navigation bar */
+const SECONDARY_NAV_OPACITY = 0.8;
+/** Minimum card spacing in pixels */
+const CARD_SPACING = 2;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -391,8 +395,10 @@ export default function CommandCenterScreen() {
 
   const handleCardPress = useCallback(
     async (rec: Recommendation) => {
-      // Mark as opened when tapped
-      await db.recommendations.markAsOpened(rec.id);
+      // Mark as opened when tapped (fire and forget - don't block navigation)
+      db.recommendations.markAsOpened(rec.id).catch((error) => {
+        console.error("Failed to mark recommendation as opened:", error);
+      });
       navigation.navigate("RecommendationDetail", { recommendationId: rec.id });
     },
     [navigation],
@@ -497,7 +503,7 @@ export default function CommandCenterScreen() {
             styles.secondaryNavContent,
             {
               backgroundColor: theme.backgroundDefault,
-              opacity: 0.8,
+              opacity: SECONDARY_NAV_OPACITY,
             },
           ]}
         >
@@ -720,7 +726,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.lg,
   },
   cardSeparator: {
-    height: 2, // Very minimal spacing - cards almost stacked
+    height: CARD_SPACING, // Very minimal spacing - cards almost stacked
   },
   cardContainer: {
     width: CARD_WIDTH,
