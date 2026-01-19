@@ -102,7 +102,12 @@ export function PersistentSidebar({
 
         // Check if touch started near left edge
         const { pageX } = evt.nativeEvent;
-        return pageX <= EDGE_SWIPE_WIDTH;
+        const { dx, dy } = gestureState;
+
+        // Add minimum movement threshold to avoid capturing small taps
+        const hasMinimumMovement = Math.abs(dx) > 2 || Math.abs(dy) > 2;
+
+        return pageX <= EDGE_SWIPE_WIDTH && hasMinimumMovement;
       },
 
       // Set PanResponder after movement starts

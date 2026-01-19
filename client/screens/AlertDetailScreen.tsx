@@ -284,7 +284,13 @@ export default function AlertDetailScreen() {
     selectedDate?: Date,
   ) => {
     // On Android, the picker closes automatically after selection
-    if (Platform.OS === "android") {
+    // On iOS, we need to close it manually after the user confirms
+    const shouldClosePicker =
+      Platform.OS === "android" ||
+      event.type === "set" ||
+      event.type === "dismissed";
+
+    if (shouldClosePicker) {
       setShowTimePicker(false);
     }
 
