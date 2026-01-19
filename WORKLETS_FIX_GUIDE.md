@@ -80,8 +80,9 @@ This error occurs when:
 - The JavaScript bundle gets the new version (0.7.2)
 - The native iOS/Android build still has the old version cached (0.5.1)
 - The native code and JavaScript code versions must match exactly
+- **Missing Expo config plugin:** The `react-native-reanimated` plugin is not configured in `app.json`, causing the native build to use incorrect versions
 
-**Key insight:** JavaScript can be updated instantly via Metro bundler, but native iOS/Android code requires a complete rebuild.
+**Key insight:** JavaScript can be updated instantly via Metro bundler, but native iOS/Android code requires a complete rebuild. Additionally, Expo requires the `react-native-reanimated` plugin in `app.json` to properly configure native dependencies.
 
 ## Prevention Strategy
 
@@ -144,7 +145,23 @@ Here's what each command does:
 
 If the error persists after all fixes:
 
-1. **Check iOS Simulator:**
+1. **Check app.json configuration:**
+   ```bash
+   # Verify react-native-reanimated plugin is present
+   grep -A 5 '"plugins"' app.json | grep "react-native-reanimated"
+   ```
+   If missing, add to `app.json`:
+   ```json
+   {
+     "expo": {
+       "plugins": [
+         "react-native-reanimated"
+       ]
+     }
+   }
+   ```
+
+2. **Check iOS Simulator:**
    - Quit the iOS Simulator app completely
    - In Simulator menu: Device → Erase All Content and Settings
    - Restart the simulator
