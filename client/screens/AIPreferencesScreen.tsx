@@ -1,3 +1,39 @@
+/**
+ * AI Preferences Screen
+ *
+ * Purpose (Plain English):
+ * Configure how your AI assistant behaves and which modules appear based on your context.
+ * 
+ * Features:
+ * - AI assistant name customization
+ * - Personality selection (default, enthusiastic, coach, witty, militant)
+ * - Context zone selection (work, personal, focus, social, wellness, evening, weekend, auto)
+ * - Custom personality traits/prompts
+ * 
+ * Context Zones:
+ * Context zones automatically show/hide relevant modules based on your current activity:
+ * - AUTO: AI decides based on time and context
+ * - WORK: Shows email, calendar, planner, notebook (9am-5pm weekdays)
+ * - PERSONAL: Shows messages, photos, lists, budget
+ * - FOCUS: Minimal distractions, only essential modules
+ * - SOCIAL: Messages, contacts, photos for social time
+ * - WELLNESS: Health, breaks, mindfulness reminders
+ * - EVENING: Winding down after 6pm (messages, photos, lists)
+ * - WEEKEND: Leisure and personal projects
+ * 
+ * Technical Implementation:
+ * - Uses contextEngine from @/lib/contextEngine for zone management
+ * - Listens to context changes via contextEngine.onChange()
+ * - Updates user override via contextEngine.setUserOverride()
+ * - Integrates with PersistentSidebar for module visibility
+ * 
+ * Recent Updates:
+ * - Added context zone selector UI (T-006)
+ * - Added real-time context change detection
+ * - Added manual override capability
+ * 
+ * @module AIPreferencesScreen
+ */
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -17,6 +53,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { db } from "@/storage/database";
 import { Settings, AIPersonality } from "@/models/types";
+import { contextEngine, ContextZone } from "@/lib/contextEngine";
 
 const PERSONALITIES: {
   id: AIPersonality;
@@ -34,6 +71,68 @@ const PERSONALITIES: {
   { id: "militant", name: "Militant", description: "Direct & decisive" },
 ];
 
+/**
+ * Context Zones for adaptive interface
+ * 
+ * Plain English: Different "modes" the app can be in, which automatically
+ * show/hide relevant modules based on your current activity.
+ */
+const CONTEXT_ZONES: {
+  id: ContextZone;
+  name: string;
+  description: string;
+  icon: keyof typeof Feather.glyphMap;
+}[] = [
+  {
+    id: ContextZone.AUTO,
+    name: "Auto",
+    description: "Let AI decide based on time & context",
+    icon: "cpu",
+  },
+  {
+    id: ContextZone.WORK,
+    name: "Work",
+    description: "Email, calendar, planner, notebook",
+    icon: "briefcase",
+  },
+  {
+    id: ContextZone.PERSONAL,
+    name: "Personal",
+    description: "Messages, photos, lists, budget",
+    icon: "home",
+  },
+  {
+    id: ContextZone.FOCUS,
+    name: "Focus",
+    description: "Deep work, minimal distractions",
+    icon: "target",
+  },
+  {
+    id: ContextZone.SOCIAL,
+    name: "Social",
+    description: "Messages, contacts, photos",
+    icon: "users",
+  },
+  {
+    id: ContextZone.WELLNESS,
+    name: "Wellness",
+    description: "Health, breaks, mindfulness",
+    icon: "heart",
+  },
+  {
+    id: ContextZone.EVENING,
+    name: "Evening",
+    description: "Winding down, entertainment",
+    icon: "moon",
+  },
+  {
+    id: ContextZone.WEEKEND,
+    name: "Weekend",
+    description: "Leisure, personal projects",
+    icon: "calendar",
+  },
+];
+
 export default function AIPreferencesScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -42,6 +141,9 @@ export default function AIPreferencesScreen() {
   const [aiName, setAiName] = useState("AIOS");
   const [isEditingName, setIsEditingName] = useState(false);
   const [customPrompt, setCustomPrompt] = useState("");
+  const [currentContextZone, setCurrentContextZone] = useState<ContextZone>(
+    ContextZone.AUTO,
+  );
 
   const loadSettings = useCallback(async () => {
     const data = await db.settings.get();
@@ -50,10 +152,21 @@ export default function AIPreferencesScreen() {
       setAiName(data.aiName || "AIOS");
       setCustomPrompt(data.aiCustomPrompt || "");
     }
+
+    // Get current context zone
+    const zone = contextEngine.getCurrentZone();
+    setCurrentContextZone(zone);
   }, []);
 
   useEffect(() => {
     loadSettings();
+
+    // Listen for context changes
+    const unsubscribe = contextEngine.onChange((detection) => {
+      setCurrentContextZone(detection.zone);
+    });
+
+    return unsubscribe;
   }, [loadSettings]);
 
   const handleEditName = useCallback(() => {
@@ -92,6 +205,25 @@ export default function AIPreferencesScreen() {
       await db.settings.update({ aiCustomPrompt: customPrompt });
     }
   }, [settings, customPrompt]);
+
+  /**
+   * Handle context zone selection
+   * 
+   * Plain English: When user picks a context mode, update the context engine
+   * and show relevant modules in the sidebar.
+   */
+  const selectContextZone = useCallback(
+    (zone: ContextZone) => {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+
+      // Set user override (null means AUTO mode)
+      contextEngine.setUserOverride(zone === ContextZone.AUTO ? null : zone);
+      setCurrentContextZone(zone);
+    },
+    [],
+  );
 
   if (!settings) {
     return (
@@ -204,6 +336,67 @@ export default function AIPreferencesScreen() {
         </View>
 
         <ThemedText type="caption" secondary style={styles.sectionTitle}>
+          CONTEXT MODE
+        </ThemedText>
+        <View
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
+        >
+          <View style={styles.contextInfo}>
+            <Feather name="info" size={16} color={theme.textSecondary} />
+            <ThemedText type="small" muted>
+              Control which modules appear based on your current activity
+            </ThemedText>
+          </View>
+          {CONTEXT_ZONES.map((zone, index) => (
+            <Pressable
+              key={zone.id}
+              onPress={() => selectContextZone(zone.id)}
+              style={[
+                styles.contextRow,
+                {
+                  borderBottomWidth:
+                    index < CONTEXT_ZONES.length - 1 ? 1 : 0,
+                  borderBottomColor: theme.border,
+                },
+              ]}
+            >
+              <View style={styles.contextLeft}>
+                <View
+                  style={[
+                    styles.contextIcon,
+                    {
+                      backgroundColor:
+                        currentContextZone === zone.id
+                          ? theme.accentDim
+                          : theme.backgroundSecondary,
+                    },
+                  ]}
+                >
+                  <Feather
+                    name={zone.icon}
+                    size={18}
+                    color={
+                      currentContextZone === zone.id
+                        ? theme.accent
+                        : theme.textSecondary
+                    }
+                  />
+                </View>
+                <View style={styles.contextText}>
+                  <ThemedText type="body">{zone.name}</ThemedText>
+                  <ThemedText type="small" muted>
+                    {zone.description}
+                  </ThemedText>
+                </View>
+              </View>
+              {currentContextZone === zone.id && (
+                <Feather name="check" size={20} color={theme.accent} />
+              )}
+            </Pressable>
+          ))}
+        </View>
+
+        <ThemedText type="caption" secondary style={styles.sectionTitle}>
           PERSONALITY TRAITS
         </ThemedText>
         <View
@@ -301,6 +494,36 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
   },
   personalityInfo: {
+    flex: 1,
+    gap: Spacing.xs,
+  },
+  contextInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    padding: Spacing.md,
+    paddingBottom: Spacing.sm,
+  },
+  contextRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: Spacing.md,
+  },
+  contextLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+    flex: 1,
+  },
+  contextIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: BorderRadius.sm,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  contextText: {
     flex: 1,
     gap: Spacing.xs,
   },
