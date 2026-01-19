@@ -73,7 +73,7 @@ function DigitalClock() {
   return (
     <View style={styles.clockContainer}>
       <View style={styles.timeDisplay}>
-        <ThemedText type="title" style={styles.clockText}>
+        <ThemedText type="hero" style={styles.clockText}>
           {hours}:{minutes}
         </ThemedText>
         <ThemedText
