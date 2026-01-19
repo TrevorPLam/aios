@@ -85,12 +85,13 @@ function checkReactNativeEcosystem() {
     const reanimatedClean = reanimatedVersion.replace(/^[\^~>=<]+/, '');
     const workletsClean = workletsVersion.replace(/^[\^~>=<]+/, '');
     const reanimatedMajor = parseInt(reanimatedClean.split('.')[0]);
-    const workletsMajorMinor = workletsClean.split('.').slice(0, 2).join('.');
+    const [workletsMajor, workletsMinor] = workletsClean.split('.').map(Number);
     
-    // Reanimated 4.x requires Worklets 0.7.x or higher
-    if (reanimatedMajor === 4 && !workletsMajorMinor.startsWith('0.7') && !workletsMajorMinor.startsWith('0.8') && !workletsMajorMinor.startsWith('0.9')) {
-      console.log('   ⚠️  Reanimated 4.x typically requires Worklets 0.7.x or higher');
-      issues.push('Reanimated/Worklets version mismatch');
+    // Reanimated 4.x requires Worklets 0.7.0 or higher
+    if (reanimatedMajor === 4 && (workletsMajor !== 0 || workletsMinor < 7)) {
+      console.log('   ⚠️  Reanimated 4.x requires Worklets >= 0.7.0');
+      console.log(`      You have: ${workletsClean}`);
+      issues.push('Reanimated/Worklets version incompatible');
     }
   }
 
