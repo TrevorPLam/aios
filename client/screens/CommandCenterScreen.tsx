@@ -101,7 +101,7 @@ const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 const SECONDARY_NAV_OPACITY = 0.8;
 
 /** Minimum card spacing in pixels (near-stacked appearance as per design spec) */
-const CARD_SPACING = 2;
+const CARD_SPACING = 0;
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
@@ -355,6 +355,11 @@ export default function CommandCenterScreen() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [attentionCount, setAttentionCount] = useState(0);
 
+  // Scroll animation for secondary nav
+  const scrollY = useSharedValue(0);
+  const lastScrollY = useSharedValue(0);
+  const secondaryNavTranslateY = useSharedValue(0);
+
   /**
    * Load recommendations, AI limits, and attention counts from database.
    * Core data loading function without auto-refresh logic.
@@ -567,6 +572,35 @@ export default function CommandCenterScreen() {
     ? formatTimeRemaining(aiLimits.nextRefreshAt)
     : "--";
 
+  // Scroll handler to hide/show secondary nav
+  const handleScroll = (event: any) => {
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+    const delta = currentScrollY - lastScrollY.value;
+
+    // Show nav when at top (scrollY < 10)
+    if (currentScrollY < 10) {
+      secondaryNavTranslateY.value = withTiming(0, { duration: 200 });
+    }
+    // Hide nav when scrolling down (delta > 5)
+    else if (delta > 5) {
+      secondaryNavTranslateY.value = withTiming(-80, { duration: 200 });
+    }
+    // Show nav when scrolling up (delta < -5)
+    else if (delta < -5) {
+      secondaryNavTranslateY.value = withTiming(0, { duration: 200 });
+    }
+
+    lastScrollY.value = currentScrollY;
+    scrollY.value = currentScrollY;
+  };
+
+  // Animated style for secondary nav
+  const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: secondaryNavTranslateY.value }],
+    };
+  });
+
   return (
     <ThemedView style={styles.container}>
       <View
@@ -608,7 +642,13 @@ export default function CommandCenterScreen() {
       </View>
 
       {/* Secondary Navigation Bar - Oval, transparent, module-specific actions */}
-      <View style={[styles.secondaryNav, { backgroundColor: "transparent" }]}>
+      <Animated.View 
+        style={[
+          styles.secondaryNav, 
+          { backgroundColor: "transparent" },
+          secondaryNavAnimatedStyle
+        ]}
+      >
         <View
           style={[
             styles.secondaryNavContent,
@@ -679,7 +719,7 @@ export default function CommandCenterScreen() {
             <ThemedText type="small">History</ThemedText>
           </Pressable>
         </View>
-      </View>
+      </Animated.View>
 
       <View style={styles.content}>
         {recommendations.length > 0 ? (
@@ -687,6 +727,8 @@ export default function CommandCenterScreen() {
             data={recommendations}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
             renderItem={({ item }) => (
               <View style={styles.cardContainer}>
                 <RecommendationCard
@@ -720,9 +762,7 @@ export default function CommandCenterScreen() {
         )}
       </View>
 
-      <View
-        style={[styles.footer, { paddingBottom: insets.bottom + Spacing.lg }]}
-      >
+      <View style={styles.footer}>
         <View style={styles.footerContent}>
           <View style={styles.limitsContainer}>
             <View
@@ -749,10 +789,10 @@ export default function CommandCenterScreen() {
             </View>
           </View>
         </View>
+      </View>
 
-        <View style={styles.bottomNavContainer}>
-          <BottomNav onAiPress={() => setShowAISheet(true)} />
-        </View>
+      <View style={styles.bottomNavContainer}>
+        <BottomNav onAiPress={() => setShowAISheet(true)} />
       </View>
 
       <AIAssistSheet
@@ -830,7 +870,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: Spacing["2xl"],
-    paddingVertical: Spacing.lg,
+    paddingVertical: Spacing.sm, // Reduced from Spacing.lg for tighter card spacing
   },
   cardSeparator: {
     height: CARD_SPACING, // Very minimal spacing - cards almost stacked
@@ -924,12 +964,17 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 0, // Remove horizontal padding to extend to edges
+    paddingBottom: Spacing.md, // Minimal bottom padding for limits container
   },
   footerContent: {
     paddingHorizontal: Spacing.lg, // Only apply padding to limits container
   },
   bottomNavContainer: {
-    paddingHorizontal: 0, // No padding - BottomNav handles its own padding
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
   limitsContainer: {
     flexDirection: "row",
