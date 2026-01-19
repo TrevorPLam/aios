@@ -544,6 +544,7 @@ export default function CommandCenterScreen() {
                       { color: theme.backgroundRoot },
                     ]}
                   >
+                    {/* Lower threshold (9+) due to smaller badge size */}
                     {attentionCount > 9 ? "9+" : attentionCount}
                   </ThemedText>
                 </View>
