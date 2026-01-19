@@ -22,7 +22,13 @@ function checkWorkletsVersion() {
     // Read package.json
     const packageJsonPath = join(rootDir, 'package.json');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-    const expectedVersion = packageJson.dependencies['react-native-worklets'];
+    const expectedVersion = packageJson.dependencies?.['react-native-worklets'];
+
+    if (!expectedVersion) {
+      console.log('❌ react-native-worklets not found in package.json dependencies\n');
+      console.log('💡 This package should be listed in dependencies.\n');
+      return false;
+    }
 
     console.log(`📦 Expected version (package.json): ${expectedVersion}`);
 
@@ -41,7 +47,10 @@ function checkWorkletsVersion() {
 
       console.log(`📲 Installed version: ${installedVersion}`);
 
-      if (installedVersion === expectedVersion.replace(/[\^~]/, '')) {
+      // Remove version range prefix (^, ~, >=, etc.) for comparison
+      const cleanExpectedVersion = expectedVersion.replace(/^[\^~>=<]+/, '');
+
+      if (installedVersion === cleanExpectedVersion) {
         console.log('\n✅ Versions match! Everything looks good.\n');
         return true;
       } else {
