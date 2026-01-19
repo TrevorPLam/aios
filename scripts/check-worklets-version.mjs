@@ -50,6 +50,8 @@ function checkWorkletsVersion() {
       console.log(`📲 Installed version: ${installedVersion}`);
 
       // Remove version range prefix (^, ~, >=, etc.) for comparison
+      // Note: This handles simple version ranges. Complex ranges like ">=1.2.0 <2.0.0"
+      // are not expected for react-native-worklets and would require semver parsing.
       const cleanExpectedVersion = expectedVersion.replace(/^[\^~>=<]+/, '');
 
       if (installedVersion === cleanExpectedVersion) {
