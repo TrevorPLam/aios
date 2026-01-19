@@ -197,6 +197,23 @@ npm run server:dev
 
 **Run both concurrently:** Open two terminal windows and run each command in a separate window.
 
+---
+
+### 🚨 Urgent Issues?
+
+**If you see this error:** `WorkletsError: Mismatch between JavaScript part and native part of Worklets`
+
+**Quick Fix:**
+```bash
+npm run expo:clean:native && npm run expo:rebuild:ios
+```
+
+**📖 See [URGENT_WORKLETS_FIX.md](./URGENT_WORKLETS_FIX.md) for detailed instructions**
+
+This is common after Dependabot updates. The fix takes 5-10 minutes and rebuilds your native iOS app with matching dependency versions.
+
+---
+
 ### Troubleshooting
 
 **Changes not appearing in Expo?** 
