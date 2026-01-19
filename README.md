@@ -364,6 +364,16 @@ Using system fonts with the following scale:
 - `npm run check:format` - Check code formatting
 - `npm run format` - Format code with Prettier
 
+### Maintenance & Cleanup
+- `npm run expo:clean` - Clear Metro bundler cache
+- `npm run expo:clean:native` - Clean native module caches and reinstall
+- `npm run expo:clean:full` - Full clean (remove node_modules and reinstall)
+- `npm run expo:rebuild:ios` - Rebuild iOS native app from scratch
+- `npm run expo:rebuild:android` - Rebuild Android native app from scratch
+
+### Diagnostics
+- `npm run check:worklets` - Check react-native-worklets version consistency
+
 ## 🗄️ Data Models
 
 The app uses AsyncStorage for local persistence with the following models:
