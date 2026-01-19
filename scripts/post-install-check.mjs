@@ -29,7 +29,7 @@ function checkWorklets() {
       packageJson.devDependencies?.['react-native-worklets'];
 
     if (!expectedVersion) {
-      return; // Not using worklets
+      return true; // Not using worklets - no issue
     }
 
     const installedPackagePath = join(
@@ -41,7 +41,7 @@ function checkWorklets() {
 
     if (!existsSync(installedPackagePath)) {
       console.log('⚠️  react-native-worklets not found in node_modules');
-      return;
+      return false; // Package expected but not found
     }
 
     const installedPackage = JSON.parse(
@@ -65,7 +65,7 @@ function checkWorklets() {
     }
   } catch (error) {
     console.log('⚠️  Could not check worklets version:', error.message);
-    return true;
+    return true; // Don't block on check errors
   }
 }
 

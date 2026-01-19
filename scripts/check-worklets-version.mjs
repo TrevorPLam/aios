@@ -85,18 +85,18 @@ function checkWorkletsVersion() {
 
 // Check for native build version mismatch warning
 console.log('📱 React Native Worklets Version Check\n');
-console.log('=' .repeat(50));
+console.log('='.repeat(50));
 console.log('\nℹ️  This script checks if your JavaScript and native builds');
 console.log('   have matching worklets versions.\n');
 console.log('🚨 Common after: Dependabot updates, branch switches,');
 console.log('   dependency version changes\n');
-console.log('=' .repeat(50));
+console.log('='.repeat(50));
 console.log();
 
 const result = checkWorkletsVersion();
 
 if (!result) {
-  console.log('=' .repeat(50));
+  console.log('='.repeat(50));
   console.log('🔧 QUICK FIX COMMANDS:\n');
   console.log('  Option 1 (Most Common):');
   console.log('  npm run expo:clean:native && npm run expo:rebuild:ios\n');
@@ -104,7 +104,7 @@ if (!result) {
   console.log('  npm run expo:clean:full && npm run expo:rebuild:ios\n');
   console.log('  Option 3 (Nuclear option):');
   console.log('  See WORKLETS_FIX_GUIDE.md for complete manual cleanup\n');
-  console.log('=' .repeat(50));
+  console.log('='.repeat(50));
 }
 
 process.exit(result ? 0 : 1);
