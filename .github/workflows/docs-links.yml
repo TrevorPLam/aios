@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload link check results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: lychee-report
           path: lychee-report.md
