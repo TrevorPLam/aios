@@ -97,7 +97,7 @@ export interface OnboardingState {
 
 /**
  * Unlock criteria configuration
- * 
+ *
  * Why these values:
  * - Research shows users need 5-7 sessions to form habits
  * - Unlocking every 3 uses prevents overwhelm while maintaining momentum
@@ -154,7 +154,7 @@ class OnboardingManager {
   };
   private config: UnlockConfig = DEFAULT_CONFIG;
   private listeners: Set<() => void> = new Set();
-  private eventUnsubscribers: Array<() => void> = [];
+  private eventUnsubscribers: (() => void)[] = [];
   private lastUnlockDate?: Date;
   private lastUnlockThreshold = 0; // Track when we last unlocked to avoid modulo issues
 
@@ -167,7 +167,7 @@ class OnboardingManager {
 
     // Subscribe to events
     this.eventUnsubscribers.push(
-      eventBus.on(EVENT_TYPES.MODULE_OPENED, this.handleModuleOpened)
+      eventBus.on(EVENT_TYPES.MODULE_OPENED, this.handleModuleOpened),
     );
 
     // Ensure command center is always unlocked
@@ -183,7 +183,7 @@ class OnboardingManager {
     this.eventUnsubscribers.forEach((unsub) => unsub());
     this.eventUnsubscribers = [];
     this.listeners.clear();
-    
+
     // Reset state to initial values
     this.state = {
       stage: "not_started",
@@ -215,7 +215,7 @@ class OnboardingManager {
   getUnlockedModules(): UnlockedModule[] {
     return Array.from(this.state.unlockedModules.values()).sort(
       (a, b) =>
-        new Date(a.unlockedAt).getTime() - new Date(b.unlockedAt).getTime()
+        new Date(a.unlockedAt).getTime() - new Date(b.unlockedAt).getTime(),
     );
   }
 
@@ -235,7 +235,7 @@ class OnboardingManager {
   async startOnboarding(selectedModules: ModuleType[]): Promise<void> {
     if (selectedModules.length !== this.config.initialModuleCount) {
       throw new Error(
-        `Must select exactly ${this.config.initialModuleCount} modules`
+        `Must select exactly ${this.config.initialModuleCount} modules`,
       );
     }
 
@@ -324,7 +324,7 @@ class OnboardingManager {
       })
       .sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
   }
 
@@ -470,7 +470,7 @@ class OnboardingManager {
 
     // Check usage threshold
     const shouldUnlock =
-      this.state.usageCount %this.config.usageCountPerUnlock === 0 &&
+      this.state.usageCount % this.config.usageCountPerUnlock === 0 &&
       this.state.usageCount > 0;
 
     if (!shouldUnlock) {
@@ -480,7 +480,7 @@ class OnboardingManager {
     // Check daily limit
     if (this.lastUnlockDate && this.isToday(this.lastUnlockDate)) {
       const unlocksToday = Array.from(
-        this.state.unlockedModules.values()
+        this.state.unlockedModules.values(),
       ).filter((u) => this.isToday(new Date(u.unlockedAt))).length;
 
       if (unlocksToday >= this.config.maxAutoUnlocksPerDay) {
@@ -504,9 +504,7 @@ class OnboardingManager {
     }
 
     // Check if we should suggest completing onboarding
-    if (
-      this.state.unlockedModules.size >= this.config.completionModuleCount
-    ) {
+    if (this.state.unlockedModules.size >= this.config.completionModuleCount) {
       this.createCompletionTip();
     }
   }
@@ -538,8 +536,8 @@ class OnboardingManager {
    */
   private createCompletionTip(): void {
     // Only create if tip doesn't already exist
-    const existingTip = Array.from(this.state.tips.values()).find(
-      (t) => t.id.startsWith("completion-")
+    const existingTip = Array.from(this.state.tips.values()).find((t) =>
+      t.id.startsWith("completion-"),
     );
 
     if (existingTip && !existingTip.dismissed) {
@@ -603,15 +601,15 @@ class OnboardingManager {
     try {
       const saved = await loadFromStorage<{
         stage: OnboardingStage;
-        unlockedModules: Array<[ModuleType, UnlockedModule]>;
-        tips: Array<[string, ContextualTip]>;
+        unlockedModules: [ModuleType, UnlockedModule][];
+        tips: [string, ContextualTip][];
         usageCount: number;
         startedAt?: string;
         completedAt?: string;
         lastUnlockDate?: string;
         lastUnlockThreshold?: number;
-      }>('onboarding_state');
-      
+      }>("onboarding_state");
+
       if (saved) {
         this.state = {
           ...saved,
@@ -624,7 +622,7 @@ class OnboardingManager {
         this.lastUnlockThreshold = saved.lastUnlockThreshold || 0;
       }
     } catch (error) {
-      console.error('Failed to load onboarding state:', error);
+      console.error("Failed to load onboarding state:", error);
       // Start fresh on error
     }
   }
@@ -641,9 +639,9 @@ class OnboardingManager {
         lastUnlockDate: this.lastUnlockDate?.toISOString(),
         lastUnlockThreshold: this.lastUnlockThreshold,
       };
-      await saveToStorage('onboarding_state', serialized);
+      await saveToStorage("onboarding_state", serialized);
     } catch (error) {
-      console.error('Failed to save onboarding state:', error);
+      console.error("Failed to save onboarding state:", error);
     }
   }
 

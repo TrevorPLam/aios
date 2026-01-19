@@ -43,17 +43,17 @@
  * @version 1.0.0
  */
 
-import * as winston from 'winston';
+import * as winston from "winston";
 
 /**
  * Determine log level from environment variable, defaulting to 'info'
  */
-const logLevel = process.env.LOG_LEVEL || 'info';
+const logLevel = process.env.LOG_LEVEL || "info";
 
 /**
  * Determine if we're in production environment
  */
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 
 /**
  * Custom format for console output in development
@@ -61,17 +61,17 @@ const isProduction = process.env.NODE_ENV === 'production';
  */
 const consoleFormat = winston.format.combine(
   winston.format.colorize(),
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   winston.format.printf(({ timestamp, level, message, ...meta }) => {
     let log = `${timestamp} [${level}]: ${message}`;
-    
+
     // Append metadata if present
     if (Object.keys(meta).length > 0) {
       log += ` ${JSON.stringify(meta, null, 2)}`;
     }
-    
+
     return log;
-  })
+  }),
 );
 
 /**
@@ -81,7 +81,7 @@ const consoleFormat = winston.format.combine(
 const jsonFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.errors({ stack: true }),
-  winston.format.json()
+  winston.format.json(),
 );
 
 /**
@@ -92,11 +92,9 @@ export const logger = winston.createLogger({
   level: logLevel,
   format: isProduction ? jsonFormat : consoleFormat,
   defaultMeta: {
-    service: 'aios-server',
+    service: "aios-server",
   },
-  transports: [
-    new winston.transports.Console(),
-  ],
+  transports: [new winston.transports.Console()],
 });
 
 /**

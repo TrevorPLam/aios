@@ -1,22 +1,22 @@
 /**
  * Mini-Mode System
- * 
+ *
  * Purpose (Plain English):
  * Allows modules to be displayed in a compact "mini" form inline within another module,
  * enabling users to complete cross-module workflows without leaving their current context.
  * For example, creating a calendar event from within the messages screen.
- * 
+ *
  * What it interacts with:
  * - Module Registry: Determines which modules support mini-mode
  * - Navigation: Does NOT use navigation - renders inline as overlay/modal
  * - Context Engine: Mini-mode respects current context zone
- * 
+ *
  * Safe AI extension points:
  * - Add new mini-mode implementations for additional modules
  * - Enhance mini-mode data passing (currently supports JSON-serializable data)
  * - Add animation customization options
  * - Extend mini-mode result handling
- * 
+ *
  * Warnings:
  * - Mini-mode components must be self-contained and not depend on navigation context
  * - State must be preserved when mini-mode closes without action
@@ -24,7 +24,7 @@
  * - Performance: Keep mini-mode components lightweight (<50KB bundle)
  */
 
-import React from 'react';
+import React from "react";
 
 /**
  * Plain English: Data passed to a mini-mode component when opening
@@ -49,7 +49,7 @@ export interface MiniModeConfig<T = any> {
  */
 export interface MiniModeResult<T = any> {
   /** Action performed (e.g., 'created', 'updated', 'selected') */
-  action: 'created' | 'updated' | 'selected' | 'cancelled';
+  action: "created" | "updated" | "selected" | "cancelled";
   /** The data created or selected */
   data?: T;
   /** The module that generated this result */
@@ -88,11 +88,11 @@ export interface MiniModeComponentProps<T = any> {
 
 /**
  * Mini-Mode Registry
- * 
+ *
  * Plain English:
  * Central registry of all mini-mode implementations. Modules register their
  * mini-mode components here, and other modules can request to open them.
- * 
+ *
  * Technical:
  * Singleton registry pattern with type-safe module lookup. Uses Map for O(1) access.
  */
@@ -102,11 +102,11 @@ class MiniModeRegistry {
     config: MiniModeConfig;
     provider: MiniModeProvider;
   } | null = null;
-  private eventListeners: Array<(event: string, data: any) => void> = [];
+  private eventListeners: ((event: string, data: any) => void)[] = [];
 
   /**
    * Subscribe to mini-mode events
-   * 
+   *
    * Plain English: Listen for mini-mode state changes (open, close, complete)
    * Technical: Simple observer pattern for UI updates
    */
@@ -115,14 +115,14 @@ class MiniModeRegistry {
       try {
         listener(event, data);
       } catch (error) {
-        console.error('[MiniMode] Error in event listener:', error);
+        console.error("[MiniMode] Error in event listener:", error);
       }
     });
   }
 
   /**
    * Subscribe to mini-mode events
-   * 
+   *
    * Plain English: Register a function to be called when mini-mode events occur
    * Technical: Returns unsubscribe function
    */
@@ -138,10 +138,10 @@ class MiniModeRegistry {
 
   /**
    * Register a mini-mode implementation
-   * 
+   *
    * Plain English:
    * Tells the system "this module can be used in mini-mode, here's how"
-   * 
+   *
    * Technical:
    * Adds provider to registry. Does not emit events - registration is
    * a setup operation that happens at app initialization.
@@ -149,7 +149,7 @@ class MiniModeRegistry {
   register(provider: MiniModeProvider): void {
     if (this.providers.has(provider.id)) {
       console.warn(
-        `[MiniMode] Provider '${provider.id}' already registered, overwriting`
+        `[MiniMode] Provider '${provider.id}' already registered, overwriting`,
       );
     }
 
@@ -158,7 +158,7 @@ class MiniModeRegistry {
 
   /**
    * Unregister a mini-mode implementation
-   * 
+   *
    * Plain English: Remove a mini-mode provider (rarely needed)
    * Technical: Removes from Map, safe if not exists
    */
@@ -168,7 +168,7 @@ class MiniModeRegistry {
 
   /**
    * Get a mini-mode provider by module ID
-   * 
+   *
    * Plain English: Look up how to render a module in mini-mode
    * Technical: Map lookup with undefined return if not found
    */
@@ -178,7 +178,7 @@ class MiniModeRegistry {
 
   /**
    * Get all registered mini-mode providers
-   * 
+   *
    * Plain English: List all modules that support mini-mode
    * Technical: Returns array from Map values
    */
@@ -188,7 +188,7 @@ class MiniModeRegistry {
 
   /**
    * Check if a module supports mini-mode
-   * 
+   *
    * Plain English: Can this module be used inline?
    * Technical: Simple Map.has() check
    */
@@ -198,15 +198,15 @@ class MiniModeRegistry {
 
   /**
    * Open a module in mini-mode
-   * 
+   *
    * Plain English:
    * Show a compact version of a module as an overlay. Other modules call this
    * to embed functionality without navigation.
-   * 
+   *
    * Technical:
    * Validates provider exists, stores current config, notifies UI listeners.
    * The UI layer (MiniModeContainer) subscribes to mini-mode events.
-   * 
+   *
    * Failure Modes:
    * - Returns false if provider not found (module doesn't support mini-mode)
    * - Returns false if another mini-mode is already open (prevents nesting)
@@ -215,7 +215,7 @@ class MiniModeRegistry {
     // Prevent nesting mini-modes
     if (this.currentMiniMode) {
       console.warn(
-        '[MiniMode] Another mini-mode is already open, cannot nest mini-modes'
+        "[MiniMode] Another mini-mode is already open, cannot nest mini-modes",
       );
       return false;
     }
@@ -223,7 +223,7 @@ class MiniModeRegistry {
     const provider = this.providers.get(config.module);
     if (!provider) {
       console.warn(
-        `[MiniMode] No provider registered for module '${config.module}'`
+        `[MiniMode] No provider registered for module '${config.module}'`,
       );
       return false;
     }
@@ -231,7 +231,7 @@ class MiniModeRegistry {
     this.currentMiniMode = { config, provider };
 
     // Notify UI listeners
-    this.notifyListeners('mini_mode_open', {
+    this.notifyListeners("mini_mode_open", {
       module: config.module,
       source: config.source,
       hasInitialData: !!config.initialData,
@@ -242,7 +242,7 @@ class MiniModeRegistry {
 
   /**
    * Close the current mini-mode
-   * 
+   *
    * Plain English: Dismiss the mini-mode overlay
    * Technical: Clears current state, notifies listeners, invokes onDismiss if provided
    */
@@ -258,14 +258,14 @@ class MiniModeRegistry {
       try {
         config.onDismiss();
       } catch (error) {
-        console.error('[MiniMode] Error in onDismiss callback:', error);
+        console.error("[MiniMode] Error in onDismiss callback:", error);
       }
     }
 
     // Notify listeners
-    this.notifyListeners('mini_mode_close', {
+    this.notifyListeners("mini_mode_close", {
       module: config.module,
-      reason: 'dismissed',
+      reason: "dismissed",
     });
 
     this.currentMiniMode = null;
@@ -273,18 +273,18 @@ class MiniModeRegistry {
 
   /**
    * Complete a mini-mode action
-   * 
+   *
    * Plain English:
    * User completed the mini-mode action (e.g., saved event, created task).
    * Close the mini-mode and notify the caller with results.
-   * 
+   *
    * Technical:
    * Invokes onComplete callback with result, notifies listeners, clears state.
    * Safe error handling ensures mini-mode always closes even if callback fails.
    */
   complete<T = any>(result: MiniModeResult<T>): void {
     if (!this.currentMiniMode) {
-      console.warn('[MiniMode] No mini-mode currently open to complete');
+      console.warn("[MiniMode] No mini-mode currently open to complete");
       return;
     }
 
@@ -295,12 +295,12 @@ class MiniModeRegistry {
       try {
         config.onComplete(result);
       } catch (error) {
-        console.error('[MiniMode] Error in onComplete callback:', error);
+        console.error("[MiniMode] Error in onComplete callback:", error);
       }
     }
 
     // Notify listeners
-    this.notifyListeners('mini_mode_complete', {
+    this.notifyListeners("mini_mode_complete", {
       module: config.module,
       action: result.action,
       source: config.source,
@@ -311,7 +311,7 @@ class MiniModeRegistry {
 
   /**
    * Get current mini-mode state
-   * 
+   *
    * Plain English: What mini-mode is currently open (if any)?
    * Technical: Returns current config and provider, or null
    */
@@ -325,7 +325,7 @@ export const miniModeRegistry = new MiniModeRegistry();
 
 /**
  * React hook for mini-mode interaction
- * 
+ *
  * Plain English: Easy way for React components to open mini-modes
  * Technical: Returns helper functions that wrap registry methods
  */

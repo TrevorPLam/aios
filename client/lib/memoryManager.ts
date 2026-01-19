@@ -1,28 +1,28 @@
 /**
  * Memory Manager
- * 
+ *
  * Purpose (Plain English):
- * Keeps the app's memory usage under control when running 20+ modules. Like a 
+ * Keeps the app's memory usage under control when running 20+ modules. Like a
  * librarian who removes old books from the reading room when space runs out.
  * Unloads modules that haven't been used recently to free up memory.
- * 
+ *
  * What it interacts with:
  * - React Navigation (to know which screens are mounted)
  * - Module registry (to track usage)
  * - Performance monitoring (to detect memory pressure)
  * - Event bus (to notify about memory events)
- * 
+ *
  * Technical Implementation:
  * Monitors memory usage on iOS using performance APIs. When memory pressure
  * is detected, unmounts least-recently-used modules. Uses a soft limit
  * (trigger cleanup) and hard limit (aggressive cleanup).
- * 
+ *
  * Safe AI Extension Points:
  * - Tune memory thresholds for different iOS devices
  * - Improve module importance scoring
  * - Add predictive cleanup before memory issues
  * - Customize cleanup strategies per module type
- * 
+ *
  * Fragile Logic Warnings:
  * - Must not unmount the currently active module
  * - Must preserve critical state before unmounting
@@ -30,26 +30,26 @@
  * - Aggressive cleanup can impact user experience
  */
 
-import { Platform } from 'react-native';
-import { ModuleType } from '@/models/types';
-import { eventBus } from './eventBus';
+import { Platform } from "react-native";
+import { ModuleType } from "@/models/types";
+import { eventBus } from "./eventBus";
 
 /**
  * Memory Usage Info
- * 
+ *
  * Information about current memory state.
  */
 export interface MemoryUsageInfo {
   usedMemoryMB: number; // Currently used memory in MB
   totalMemoryMB: number; // Total available memory in MB
   percentUsed: number; // 0-100
-  pressure: 'none' | 'low' | 'medium' | 'high' | 'critical';
+  pressure: "none" | "low" | "medium" | "high" | "critical";
   timestamp: string;
 }
 
 /**
  * Module Memory Info
- * 
+ *
  * Tracks memory usage per module.
  */
 interface ModuleMemoryInfo {
@@ -63,7 +63,7 @@ interface ModuleMemoryInfo {
 
 /**
  * Memory Strategy
- * 
+ *
  * Configuration for memory management.
  */
 interface MemoryStrategy {
@@ -77,11 +77,11 @@ interface MemoryStrategy {
 /**
  * Memory Event
  */
-type MemoryEvent = 'warning' | 'cleanup' | 'critical';
+type MemoryEvent = "warning" | "cleanup" | "critical";
 
 /**
  * Memory Manager Class
- * 
+ *
  * Manages app memory by unmounting unused modules.
  */
 class MemoryManager {
@@ -107,22 +107,22 @@ class MemoryManager {
       cleanupBatchSize: 2, // Unmount 2 modules per cleanup
     };
 
-    console.log('[MemoryManager] Initialized with strategy:', this.strategy);
+    console.log("[MemoryManager] Initialized with strategy:", this.strategy);
   }
 
   /**
    * Start Monitoring
-   * 
+   *
    * Plain English: "Begin watching memory usage"
    * Starts periodic memory checks. Call this on app startup.
    */
   startMonitoring(): void {
     if (this.monitoringInterval) {
-      console.log('[MemoryManager] Already monitoring');
+      console.log("[MemoryManager] Already monitoring");
       return;
     }
 
-    console.log('[MemoryManager] Starting memory monitoring');
+    console.log("[MemoryManager] Starting memory monitoring");
 
     this.monitoringInterval = setInterval(() => {
       this.checkMemoryAndCleanup();
@@ -134,28 +134,31 @@ class MemoryManager {
 
   /**
    * Stop Monitoring
-   * 
+   *
    * Plain English: "Stop watching memory usage"
    */
   stopMonitoring(): void {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
-      console.log('[MemoryManager] Stopped monitoring');
+      console.log("[MemoryManager] Stopped monitoring");
     }
   }
 
   /**
    * Register Module Mount
-   * 
+   *
    * Plain English: "Remember that this module was loaded into memory"
-   * 
+   *
    * @param moduleId - Module that was mounted
    * @param estimatedMemoryMB - Estimated memory usage
    */
-  registerModuleMount(moduleId: ModuleType, estimatedMemoryMB: number = 5): void {
+  registerModuleMount(
+    moduleId: ModuleType,
+    estimatedMemoryMB: number = 5,
+  ): void {
     const now = new Date();
-    
+
     const existing = this.moduleMemoryInfo.get(moduleId);
     if (existing) {
       // Update existing
@@ -177,20 +180,22 @@ class MemoryManager {
       });
     }
 
-    console.log(`[MemoryManager] Registered ${moduleId} (${estimatedMemoryMB}MB)`);
+    console.log(
+      `[MemoryManager] Registered ${moduleId} (${estimatedMemoryMB}MB)`,
+    );
   }
 
   /**
    * Register Module Access
-   * 
+   *
    * Plain English: "User is currently using this module"
    * Updates last accessed time for LRU tracking.
-   * 
+   *
    * @param moduleId - Module being accessed
    */
   registerModuleAccess(moduleId: ModuleType): void {
     this.currentModule = moduleId;
-    
+
     const info = this.moduleMemoryInfo.get(moduleId);
     if (info) {
       this.moduleMemoryInfo.set(moduleId, {
@@ -203,9 +208,9 @@ class MemoryManager {
 
   /**
    * Register Module Unmount
-   * 
+   *
    * Plain English: "This module was removed from memory"
-   * 
+   *
    * @param moduleId - Module that was unmounted
    */
   registerModuleUnmount(moduleId: ModuleType): void {
@@ -215,10 +220,10 @@ class MemoryManager {
 
   /**
    * Pin Module
-   * 
+   *
    * Plain English: "Never unmount this module, it's critical"
    * Used for Command Center and other essential modules.
-   * 
+   *
    * @param moduleId - Module to pin
    */
   pinModule(moduleId: ModuleType): void {
@@ -234,7 +239,7 @@ class MemoryManager {
 
   /**
    * Unpin Module
-   * 
+   *
    * @param moduleId - Module to unpin
    */
   unpinModule(moduleId: ModuleType): void {
@@ -250,12 +255,12 @@ class MemoryManager {
 
   /**
    * Get Current Memory Usage
-   * 
+   *
    * Plain English: "How much memory is the app using right now?"
-   * 
+   *
    * Technical: Uses performance.memory API on web, estimates on React Native.
    * iOS doesn't expose direct memory usage, so we estimate based on mounted modules.
-   * 
+   *
    * @returns Memory usage info
    */
   getCurrentMemoryUsage(): MemoryUsageInfo {
@@ -266,14 +271,14 @@ class MemoryManager {
     const mountedModules = Array.from(this.moduleMemoryInfo.values());
     const estimatedUsageMB = mountedModules.reduce(
       (sum, info) => sum + info.estimatedMemoryMB,
-      0
+      0,
     );
 
     // Add base app overhead (50MB)
     usedMemoryMB = estimatedUsageMB + 50;
 
     // On web, use actual memory API if available
-    if (Platform.OS === 'web' && typeof performance !== 'undefined') {
+    if (Platform.OS === "web" && typeof performance !== "undefined") {
       const memory = (performance as any).memory;
       if (memory && memory.usedJSHeapSize) {
         usedMemoryMB = memory.usedJSHeapSize / (1024 * 1024);
@@ -284,15 +289,15 @@ class MemoryManager {
     const percentUsed = (usedMemoryMB / totalMemoryMB) * 100;
 
     // Determine pressure level
-    let pressure: MemoryUsageInfo['pressure'] = 'none';
+    let pressure: MemoryUsageInfo["pressure"] = "none";
     if (usedMemoryMB >= this.strategy.hardLimitMB) {
-      pressure = 'critical';
+      pressure = "critical";
     } else if (usedMemoryMB >= this.strategy.softLimitMB) {
-      pressure = 'high';
+      pressure = "high";
     } else if (usedMemoryMB >= this.strategy.softLimitMB * 0.8) {
-      pressure = 'medium';
+      pressure = "medium";
     } else if (usedMemoryMB >= this.strategy.softLimitMB * 0.6) {
-      pressure = 'low';
+      pressure = "low";
     }
 
     return {
@@ -306,7 +311,7 @@ class MemoryManager {
 
   /**
    * Check Memory and Cleanup
-   * 
+   *
    * Plain English: "Check if we're using too much memory and clean up if needed"
    * Called periodically by monitoring interval.
    */
@@ -315,12 +320,12 @@ class MemoryManager {
     this.lastMemoryCheck = memoryInfo;
 
     console.log(
-      `[MemoryManager] Memory: ${memoryInfo.usedMemoryMB.toFixed(1)}MB / ${memoryInfo.totalMemoryMB}MB (${memoryInfo.percentUsed.toFixed(1)}%) - Pressure: ${memoryInfo.pressure}`
+      `[MemoryManager] Memory: ${memoryInfo.usedMemoryMB.toFixed(1)}MB / ${memoryInfo.totalMemoryMB}MB (${memoryInfo.percentUsed.toFixed(1)}%) - Pressure: ${memoryInfo.pressure}`,
     );
 
     // Emit memory event based on pressure
-    if (memoryInfo.pressure === 'critical' || memoryInfo.pressure === 'high') {
-      eventBus.emit('MEMORY_PRESSURE', {
+    if (memoryInfo.pressure === "critical" || memoryInfo.pressure === "high") {
+      eventBus.emit("MEMORY_PRESSURE", {
         level: memoryInfo.pressure,
         usedMB: memoryInfo.usedMemoryMB,
         timestamp: new Date().toISOString(),
@@ -334,10 +339,10 @@ class MemoryManager {
     if (memoryInfo.usedMemoryMB >= this.strategy.hardLimitMB) {
       shouldCleanup = true;
       isAggressive = true;
-      console.log('[MemoryManager] CRITICAL: Aggressive cleanup needed');
+      console.log("[MemoryManager] CRITICAL: Aggressive cleanup needed");
     } else if (memoryInfo.usedMemoryMB >= this.strategy.softLimitMB) {
       shouldCleanup = true;
-      console.log('[MemoryManager] WARNING: Cleanup needed');
+      console.log("[MemoryManager] WARNING: Cleanup needed");
     }
 
     if (shouldCleanup) {
@@ -347,12 +352,12 @@ class MemoryManager {
 
   /**
    * Perform Cleanup
-   * 
+   *
    * Plain English: "Unload some modules to free up memory"
-   * 
+   *
    * Technical: Identifies least-recently-used modules that aren't pinned
    * and aren't currently active. Unmounts them to free memory.
-   * 
+   *
    * @param aggressive - If true, unmount more modules
    */
   private async performCleanup(aggressive: boolean): Promise<void> {
@@ -360,7 +365,7 @@ class MemoryManager {
     const candidates = this.getCleanupCandidates();
 
     if (candidates.length === 0) {
-      console.log('[MemoryManager] No cleanup candidates available');
+      console.log("[MemoryManager] No cleanup candidates available");
       return;
     }
 
@@ -371,10 +376,10 @@ class MemoryManager {
 
     const toCleanup = candidates.slice(0, batchSize);
 
-    console.log('[MemoryManager] Cleaning up modules:', toCleanup);
+    console.log("[MemoryManager] Cleaning up modules:", toCleanup);
 
     // Emit cleanup event
-    eventBus.emit('MEMORY_CLEANUP', {
+    eventBus.emit("MEMORY_CLEANUP", {
       modules: toCleanup,
       aggressive,
       timestamp: new Date().toISOString(),
@@ -389,10 +394,10 @@ class MemoryManager {
 
   /**
    * Get Cleanup Candidates
-   * 
+   *
    * Plain English: "Which modules can we safely unload?"
    * Returns modules sorted by priority for cleanup (least important first).
-   * 
+   *
    * @returns Array of module IDs to clean up
    */
   private getCleanupCandidates(): ModuleType[] {
@@ -415,7 +420,10 @@ class MemoryManager {
 
     // Check if we have enough modules to keep minimum
     const totalMounted = mountedModules.length;
-    const maxToCleanup = Math.max(0, totalMounted - this.strategy.minModulesToKeep);
+    const maxToCleanup = Math.max(
+      0,
+      totalMounted - this.strategy.minModulesToKeep,
+    );
 
     if (maxToCleanup === 0) {
       return [];
@@ -424,8 +432,7 @@ class MemoryManager {
     // Sort by cleanup priority (LRU)
     candidates.sort((a, b) => {
       // Older last accessed time = higher priority for cleanup
-      const timeDiff =
-        a.lastAccessedAt.getTime() - b.lastAccessedAt.getTime();
+      const timeDiff = a.lastAccessedAt.getTime() - b.lastAccessedAt.getTime();
 
       if (timeDiff !== 0) {
         return timeDiff;
@@ -441,27 +448,27 @@ class MemoryManager {
 
   /**
    * Get Memory Statistics
-   * 
+   *
    * Plain English: "Show me what's loaded and how much memory it's using"
-   * 
+   *
    * @returns Memory statistics
    */
   getStatistics(): {
     currentUsage: MemoryUsageInfo | null;
     mountedModules: number;
     totalEstimatedMB: number;
-    modules: Array<{
+    modules: {
       moduleId: ModuleType;
       memoryMB: number;
       isPinned: boolean;
       accessCount: number;
       lastAccessed: string;
-    }>;
+    }[];
   } {
     const modules = Array.from(this.moduleMemoryInfo.values());
     const totalEstimatedMB = modules.reduce(
       (sum, info) => sum + info.estimatedMemoryMB,
-      0
+      0,
     );
 
     return {
@@ -480,7 +487,7 @@ class MemoryManager {
 
   /**
    * Update Strategy
-   * 
+   *
    * @param strategy - New strategy settings
    */
   updateStrategy(strategy: Partial<MemoryStrategy>): void {
@@ -488,12 +495,12 @@ class MemoryManager {
       ...this.strategy,
       ...strategy,
     };
-    console.log('[MemoryManager] Updated strategy:', this.strategy);
+    console.log("[MemoryManager] Updated strategy:", this.strategy);
   }
 
   /**
    * Get Current Strategy
-   * 
+   *
    * @returns Current memory strategy
    */
   getStrategy(): MemoryStrategy {
@@ -502,18 +509,18 @@ class MemoryManager {
 
   /**
    * Force Cleanup Now
-   * 
+   *
    * Plain English: "Clean up memory right now, don't wait"
    * Used for testing or when user manually requests cleanup.
    */
   async forceCleanup(): Promise<void> {
-    console.log('[MemoryManager] Forcing cleanup');
+    console.log("[MemoryManager] Forcing cleanup");
     await this.performCleanup(false);
   }
 
   /**
    * Reset All Tracking
-   * 
+   *
    * Plain English: "Forget all module memory info"
    * Used when app restarts or for testing.
    */
@@ -521,7 +528,7 @@ class MemoryManager {
     this.moduleMemoryInfo.clear();
     this.currentModule = null;
     this.lastMemoryCheck = null;
-    console.log('[MemoryManager] Reset all tracking');
+    console.log("[MemoryManager] Reset all tracking");
   }
 }
 

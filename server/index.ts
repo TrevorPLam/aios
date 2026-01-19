@@ -83,12 +83,14 @@ function setupRequestLogging(app: express.Application) {
       const duration = Date.now() - start;
 
       // Log API request with structured metadata
-      logger.info('API request', {
+      logger.info("API request", {
         method: req.method,
         path,
         statusCode: res.statusCode,
         duration: `${duration}ms`,
-        response: capturedJsonResponse ? JSON.stringify(capturedJsonResponse).substring(0, 100) : undefined,
+        response: capturedJsonResponse
+          ? JSON.stringify(capturedJsonResponse).substring(0, 100)
+          : undefined,
       });
     });
 
@@ -147,7 +149,7 @@ function serveLandingPage({
   const baseUrl = `${protocol}://${host}`;
   const expsUrl = `${host}`;
 
-  logger.debug('URL configuration', { baseUrl, expsUrl });
+  logger.debug("URL configuration", { baseUrl, expsUrl });
 
   const html = landingPageTemplate
     .replace(/BASE_URL_PLACEHOLDER/g, baseUrl)
@@ -226,7 +228,7 @@ function setupErrorHandler(app: express.Application) {
       reusePort: true,
     },
     () => {
-      logger.info('Server started', { port, host: '0.0.0.0' });
+      logger.info("Server started", { port, host: "0.0.0.0" });
     },
   );
 })();

@@ -106,7 +106,7 @@ interface AttentionConfig {
 
 /**
  * Default configuration
- * 
+ *
  * Why these values:
  * - 20 max items: Research shows 7±2 items is cognitive limit, but with
  *   bundling and priorities we can show more without overwhelm
@@ -123,7 +123,7 @@ const DEFAULT_CONFIG: AttentionConfig = {
 
 /**
  * Attention Manager Class
- * 
+ *
  * Manages the attention system for the entire app
  */
 class AttentionManager {
@@ -136,28 +136,28 @@ class AttentionManager {
   private config: AttentionConfig = DEFAULT_CONFIG;
   private expiryCheckInterval?: NodeJS.Timeout;
   private listeners: Set<() => void> = new Set();
-  private eventUnsubscribers: Array<() => void> = [];
+  private eventUnsubscribers: (() => void)[] = [];
 
   /**
    * Initialize the attention manager
-   * 
+   *
    * Technical: Sets up event subscriptions, loads saved preferences,
    * starts expiry checker
-   * 
+   *
    * Plain English: Starts the notification intelligence system
-   * 
+   *
    * @param startExpiryCheck - Whether to start the expiry checker (default: true). Set to false for testing.
    */
   async initialize(startExpiryCheck = true): Promise<void> {
     // Subscribe to module events and store unsubscribe functions
     this.eventUnsubscribers.push(
-      eventBus.on(EVENT_TYPES.TASK_CREATED, this.handleTaskCreated)
+      eventBus.on(EVENT_TYPES.TASK_CREATED, this.handleTaskCreated),
     );
     this.eventUnsubscribers.push(
-      eventBus.on(EVENT_TYPES.CALENDAR_EVENT_CREATED, this.handleUpcomingEvent)
+      eventBus.on(EVENT_TYPES.CALENDAR_EVENT_CREATED, this.handleUpcomingEvent),
     );
     this.eventUnsubscribers.push(
-      eventBus.on(EVENT_TYPES.MESSAGE_RECEIVED, this.handleMessageReceived)
+      eventBus.on(EVENT_TYPES.MESSAGE_RECEIVED, this.handleMessageReceived),
     );
 
     // Start expiry checker
@@ -179,12 +179,12 @@ class AttentionManager {
     // Unsubscribe from all events
     this.eventUnsubscribers.forEach((unsubscribe) => unsubscribe());
     this.eventUnsubscribers = [];
-    
+
     // Clear all state
     this.items.clear();
     this.bundles.clear();
     this.listeners.clear();
-    
+
     // Reset focus mode
     this.focusMode = {
       enabled: false,
@@ -194,7 +194,7 @@ class AttentionManager {
 
   /**
    * Add an attention item
-   * 
+   *
    * @param item - Attention item to add
    * @returns Whether item was added (may be rejected if focus mode active)
    */
@@ -220,15 +220,15 @@ class AttentionManager {
     // Notify listeners (synchronous)
     this.notifyListeners();
 
-    // Emit event for UI updates  
-    eventBus.emit(EVENT_TYPES.USER_ACTION, { 
+    // Emit event for UI updates
+    eventBus.emit(EVENT_TYPES.USER_ACTION, {
       action: "attention:item-added",
-      item 
+      item,
     });
-    
+
     // Save to storage (async, but don't wait)
     this.savePreferences().catch((error) => {
-      console.error('Failed to save attention state:', error);
+      console.error("Failed to save attention state:", error);
     });
 
     return true;
@@ -244,9 +244,9 @@ class AttentionManager {
 
     item.status = "dismissed";
     this.notifyListeners();
-    eventBus.emit(EVENT_TYPES.USER_ACTION, { 
+    eventBus.emit(EVENT_TYPES.USER_ACTION, {
       action: "attention:item-dismissed",
-      itemId 
+      itemId,
     });
   }
 
@@ -263,9 +263,9 @@ class AttentionManager {
 
     this.bundles.delete(bundleId);
     this.notifyListeners();
-    eventBus.emit(EVENT_TYPES.USER_ACTION, { 
+    eventBus.emit(EVENT_TYPES.USER_ACTION, {
       action: "attention:bundle-dismissed",
-      bundleId 
+      bundleId,
     });
   }
 
@@ -279,9 +279,9 @@ class AttentionManager {
 
     item.status = "resolved";
     this.notifyListeners();
-    eventBus.emit(EVENT_TYPES.USER_ACTION, { 
+    eventBus.emit(EVENT_TYPES.USER_ACTION, {
       action: "attention:item-resolved",
-      itemId 
+      itemId,
     });
   }
 
@@ -300,7 +300,8 @@ class AttentionManager {
     // Sort by priority (urgent first) then by creation time (newest first)
     return items.sort((a, b) => {
       const priorityOrder = { urgent: 3, attention: 2, fyi: 1 };
-      const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
+      const priorityDiff =
+        priorityOrder[b.priority] - priorityOrder[a.priority];
       if (priorityDiff !== 0) return priorityDiff;
 
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -332,29 +333,29 @@ class AttentionManager {
 
   /**
    * Set focus mode
-   * 
+   *
    * Plain English: Turn on "do not disturb" mode
    * Technical: Filters notifications based on priority and whitelist
    */
   setFocusMode(mode: Partial<FocusMode>): void {
     this.focusMode = { ...this.focusMode, ...mode };
-    
+
     // Notify listeners (synchronous)
     this.notifyListeners();
-    
-    eventBus.emit(EVENT_TYPES.USER_ACTION, { 
+
+    eventBus.emit(EVENT_TYPES.USER_ACTION, {
       action: "attention:focus-mode-changed",
-      mode: this.focusMode 
+      mode: this.focusMode,
     });
 
     // If enabling focus mode, re-evaluate all active items
     if (mode.enabled) {
       this.refilterItems();
     }
-    
+
     // Save to storage (async, but don't wait)
     this.savePreferences().catch((error) => {
-      console.error('Failed to save focus mode:', error);
+      console.error("Failed to save focus mode:", error);
     });
   }
 
@@ -367,7 +368,7 @@ class AttentionManager {
 
   /**
    * Subscribe to attention changes
-   * 
+   *
    * @param listener - Callback function
    * @returns Unsubscribe function
    */
@@ -378,11 +379,11 @@ class AttentionManager {
 
   /**
    * Classify an item's attention priority
-   * 
+   *
    * Technical: Rule-based classification with context awareness
-   * 
+   *
    * Safe AI extension point: Replace with ML model for learned priorities
-   * 
+   *
    * Fragile logic warning: These rules balance false positives vs false negatives.
    * Always err on the side of showing urgent items even if borderline.
    */
@@ -393,7 +394,10 @@ class AttentionManager {
     // Context-aware classification (optional - gracefully degrade if not available)
     let currentContext = null;
     try {
-      if (contextEngine && typeof contextEngine.getCurrentContext === 'function') {
+      if (
+        contextEngine &&
+        typeof contextEngine.getCurrentContext === "function"
+      ) {
         currentContext = contextEngine.getCurrentContext();
       }
     } catch (error) {
@@ -478,8 +482,7 @@ class AttentionManager {
    * the bundling threshold time window
    */
   private findBundleForItem(item: AttentionItem): string | undefined {
-    const thresholdMs =
-      this.config.bundleThresholdMinutes * 60 * 1000;
+    const thresholdMs = this.config.bundleThresholdMinutes * 60 * 1000;
     const itemTime = new Date(item.createdAt).getTime();
 
     for (const bundle of this.bundles.values()) {
@@ -530,10 +533,7 @@ class AttentionManager {
     } else {
       // Add to existing bundle
       bundle.items.push(item);
-      bundle.title = this.generateBundleTitle(
-        item.module,
-        bundle.items.length,
-      );
+      bundle.title = this.generateBundleTitle(item.module, bundle.items.length);
     }
   }
 
@@ -609,8 +609,8 @@ class AttentionManager {
 
     if (hasChanges) {
       this.notifyListeners();
-      eventBus.emit(EVENT_TYPES.USER_ACTION, { 
-        action: "attention:items-expired"
+      eventBus.emit(EVENT_TYPES.USER_ACTION, {
+        action: "attention:items-expired",
       });
     }
   }
@@ -631,7 +631,9 @@ class AttentionManager {
   /**
    * Event handlers
    */
-  private handleTaskCreated = (payload: { data: Record<string, unknown> }): void => {
+  private handleTaskCreated = (payload: {
+    data: Record<string, unknown>;
+  }): void => {
     const task = payload.data as {
       id: string;
       title: string;
@@ -656,7 +658,9 @@ class AttentionManager {
     });
   };
 
-  private handleUpcomingEvent = (payload: { data: Record<string, unknown> }): void => {
+  private handleUpcomingEvent = (payload: {
+    data: Record<string, unknown>;
+  }): void => {
     const event = payload.data as {
       id: string;
       title: string;
@@ -677,7 +681,9 @@ class AttentionManager {
     });
   };
 
-  private handleMessageReceived = (payload: { data: Record<string, unknown> }): void => {
+  private handleMessageReceived = (payload: {
+    data: Record<string, unknown>;
+  }): void => {
     const message = payload.data as {
       id: string;
       from: string;
@@ -697,7 +703,10 @@ class AttentionManager {
       summary: message.text,
       actionLabel: "Reply",
       actionTarget: `messages/conversation/${message.conversationId}`,
-      metadata: { messageId: message.id, conversationId: message.conversationId },
+      metadata: {
+        messageId: message.id,
+        conversationId: message.conversationId,
+      },
       createdAt: new Date().toISOString(),
     });
   };
@@ -708,43 +717,45 @@ class AttentionManager {
   private async loadPreferences(): Promise<void> {
     try {
       // Load focus mode settings
-      const focusMode = await loadFromStorage<FocusMode>('attention_focus_mode');
+      const focusMode = await loadFromStorage<FocusMode>(
+        "attention_focus_mode",
+      );
       if (focusMode) {
         this.focusMode = focusMode;
       }
-      
+
       // Load items and bundles
       const data = await loadFromStorage<{
-        items: Array<[string, AttentionItem]>;
-        bundles: Array<[string, AttentionBundle]>;
-      }>('attention_items');
-      
+        items: [string, AttentionItem][];
+        bundles: [string, AttentionBundle][];
+      }>("attention_items");
+
       if (data) {
         this.items = new Map(data.items || []);
         this.bundles = new Map(data.bundles || []);
       }
     } catch (error) {
-      console.error('Failed to load attention preferences:', error);
+      console.error("Failed to load attention preferences:", error);
       // Start fresh on error
     }
   }
-  
+
   /**
    * Helper: Save preferences to storage
    */
   private async savePreferences(): Promise<void> {
     try {
       // Save focus mode settings
-      await saveToStorage('attention_focus_mode', this.focusMode);
-      
+      await saveToStorage("attention_focus_mode", this.focusMode);
+
       // Save items and bundles
       const serialized = {
         items: Array.from(this.items.entries()),
         bundles: Array.from(this.bundles.entries()),
       };
-      await saveToStorage('attention_items', serialized);
+      await saveToStorage("attention_items", serialized);
     } catch (error) {
-      console.error('Failed to save attention preferences:', error);
+      console.error("Failed to save attention preferences:", error);
     }
   }
 

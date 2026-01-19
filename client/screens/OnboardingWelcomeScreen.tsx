@@ -68,10 +68,7 @@ function BenefitCard({
       ]}
     >
       <View
-        style={[
-          styles.benefitIcon,
-          { backgroundColor: `${theme.primary}15` },
-        ]}
+        style={[styles.benefitIcon, { backgroundColor: `${theme.primary}15` }]}
       >
         <Feather name={icon as any} size={24} color={theme.primary} />
       </View>
@@ -124,10 +121,7 @@ export default function OnboardingWelcomeScreen() {
           style={styles.logoContainer}
         >
           <View
-            style={[
-              styles.logo,
-              { backgroundColor: `${theme.primary}20` },
-            ]}
+            style={[styles.logo, { backgroundColor: `${theme.primary}20` }]}
           >
             <Feather name="zap" size={64} color={theme.primary} />
           </View>
@@ -208,14 +202,9 @@ export default function OnboardingWelcomeScreen() {
 
         <Pressable
           onPress={handleContinue}
-          style={[
-            styles.continueButton,
-            { backgroundColor: theme.primary },
-          ]}
+          style={[styles.continueButton, { backgroundColor: theme.primary }]}
         >
-          <ThemedText style={styles.continueButtonText}>
-            Get Started
-          </ThemedText>
+          <ThemedText style={styles.continueButtonText}>Get Started</ThemedText>
           <Feather name="arrow-right" size={20} color="#FFFFFF" />
         </Pressable>
       </Animated.View>

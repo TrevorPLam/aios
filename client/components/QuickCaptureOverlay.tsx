@@ -1,22 +1,22 @@
 /**
  * Quick Capture Overlay Component
- * 
+ *
  * Purpose (Plain English):
  * A global overlay accessible via long-press from anywhere in the app. Lets users
  * quickly capture notes, tasks, expenses, or photos without losing their current context.
  * When done, they return to exactly where they were.
- * 
+ *
  * What it interacts with:
  * - Mini-Mode Registry: Opens appropriate mini-modes for capture actions
  * - Gesture Handler: Detects long-press gestures globally
  * - Haptics: Provides tactile feedback
- * 
+ *
  * Safe AI extension points:
  * - Add AI-suggested capture types based on context
  * - Add voice-to-text for quick capture
  * - Add recent captures preview
  * - Add keyboard shortcuts for quick access
- * 
+ *
  * Warnings:
  * - Must not interfere with other gestures (scrolling, swiping)
  * - Always provide escape hatches (tap outside to dismiss)
@@ -24,30 +24,30 @@
  * - Ensure accessibility (keyboard nav, screen reader)
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   Modal,
   Platform,
-} from 'react-native';
+} from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
   ZoomIn,
   ZoomOut,
-} from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { Feather } from '@expo/vector-icons';
+} from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
+import { Feather } from "@expo/vector-icons";
 
-import { miniModeRegistry, useMiniMode } from '../lib/miniMode';
-import { ThemedText } from './ThemedText';
-import { Colors, Spacing, Typography } from '../constants/theme';
+import { miniModeRegistry, useMiniMode } from "../lib/miniMode";
+import { ThemedText } from "./ThemedText";
+import { Colors, Spacing, Typography } from "../constants/theme";
 
 /**
  * Capture action types
- * 
+ *
  * Plain English: What can users quickly capture?
  * Technical: Array of action definitions with icons, labels, and handlers
  */
@@ -68,11 +68,11 @@ interface QuickCaptureOverlayProps {
 
 /**
  * Quick Capture Menu Overlay
- * 
+ *
  * Plain English:
  * Shows a radial menu of quick capture options. User taps an option to
  * start capturing that type of content.
- * 
+ *
  * Technical:
  * Modal overlay with animated appearance. Each action either opens a mini-mode
  * or triggers a custom handler. Returns user to original context on dismiss.
@@ -80,69 +80,69 @@ interface QuickCaptureOverlayProps {
 export function QuickCaptureOverlay({
   visible,
   onDismiss,
-  source = 'unknown',
+  source = "unknown",
 }: QuickCaptureOverlayProps) {
   const { openMiniMode } = useMiniMode();
 
   /**
    * Available capture actions
-   * 
+   *
    * Plain English: What you can quickly create
    * Technical: Defines UI and behavior for each action
    */
   const captureActions: CaptureAction[] = [
     {
-      id: 'note',
-      icon: 'edit-3',
-      label: 'Note',
+      id: "note",
+      icon: "edit-3",
+      label: "Note",
       color: Colors.electricBlue,
-      miniModeModule: 'notebook',
+      miniModeModule: "notebook",
     },
     {
-      id: 'task',
-      icon: 'check-square',
-      label: 'Task',
+      id: "task",
+      icon: "check-square",
+      label: "Task",
       color: Colors.success,
-      miniModeModule: 'planner',
+      miniModeModule: "planner",
     },
     {
-      id: 'event',
-      icon: 'calendar',
-      label: 'Event',
+      id: "event",
+      icon: "calendar",
+      label: "Event",
       color: Colors.warning,
-      miniModeModule: 'calendar',
+      miniModeModule: "calendar",
     },
     {
-      id: 'expense',
-      icon: 'dollar-sign',
-      label: 'Expense',
+      id: "expense",
+      icon: "dollar-sign",
+      label: "Expense",
       color: Colors.error,
-      miniModeModule: 'budget', // Now implemented!
+      miniModeModule: "budget", // Now implemented!
     },
     {
-      id: 'photo',
-      icon: 'camera',
-      label: 'Photo',
-      color: '#9B59B6',
+      id: "photo",
+      icon: "camera",
+      label: "Photo",
+      color: "#9B59B6",
       // Note: Photo capture would use native camera
       handler: () => {
-        if (Platform.OS !== 'web') {
+        if (Platform.OS !== "web") {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
         }
-        alert('Photo capture coming soon!');
+        alert("Photo capture coming soon!");
       },
     },
   ];
 
   /**
    * Handle action selection
-   * 
+   *
    * Plain English: User tapped a capture option - open mini-mode or run handler
    * Technical: Opens mini-mode if defined, otherwise runs custom handler
    */
   const handleActionSelect = (action: CaptureAction) => {
     // Haptic feedback
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
 
@@ -157,16 +157,16 @@ export function QuickCaptureOverlay({
           module: action.miniModeModule,
           source: `quick_capture_${source}`,
           onComplete: (result) => {
-            console.log('[QuickCapture] Action completed:', result);
+            console.log("[QuickCapture] Action completed:", result);
           },
           onDismiss: () => {
-            console.log('[QuickCapture] Action dismissed');
+            console.log("[QuickCapture] Action dismissed");
           },
         });
 
         if (!success) {
           console.warn(
-            `[QuickCapture] Failed to open mini-mode: ${action.miniModeModule}`
+            `[QuickCapture] Failed to open mini-mode: ${action.miniModeModule}`,
           );
         }
       } else if (action.handler) {
@@ -236,11 +236,7 @@ export function QuickCaptureOverlay({
                     { backgroundColor: `${action.color}20` },
                   ]}
                 >
-                  <Feather
-                    name={action.icon}
-                    size={24}
-                    color={action.color}
-                  />
+                  <Feather name={action.icon} size={24} color={action.color} />
                 </View>
                 <ThemedText style={styles.actionLabel}>
                   {action.label}
@@ -271,34 +267,34 @@ const styles = StyleSheet.create({
   },
   backdropOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   menuContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: Spacing.xl,
   },
   menu: {
     backgroundColor: Colors.slatePanel,
     borderRadius: 24,
     padding: Spacing.lg,
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
     // Shadow for elevation
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 12,
   },
   menuHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: Spacing.lg,
   },
   menuTitle: {
     fontSize: Typography.h1.fontSize,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.electricBlue,
     marginBottom: 4,
   },
@@ -307,14 +303,14 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
   },
   actionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
     gap: Spacing.md,
     marginBottom: Spacing.lg,
   },
   actionButton: {
-    alignItems: 'center',
+    alignItems: "center",
     width: 80,
     marginBottom: Spacing.sm,
   },
@@ -322,19 +318,19 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: Spacing.xs,
   },
   actionLabel: {
     fontSize: Typography.caption.fontSize,
     color: Colors.textPrimary,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   closeButton: {
     paddingVertical: Spacing.md,
-    alignItems: 'center',
+    alignItems: "center",
     borderTopWidth: 1,
     borderTopColor: Colors.border,
     marginTop: Spacing.sm,
@@ -342,6 +338,6 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: Typography.body.fontSize,
     color: Colors.textSecondary,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });

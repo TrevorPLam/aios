@@ -1,22 +1,22 @@
 /**
  * Calendar Mini-Mode Component
- * 
+ *
  * Purpose (Plain English):
  * A compact calendar event creator that can be embedded in other screens.
  * Allows users to quickly create calendar events without leaving their current
  * context (e.g., from Messages when someone suggests a meeting time).
- * 
+ *
  * What it interacts with:
  * - Calendar Database: Creates events
  * - Event Bus: Emits CalendarEventCreated event after saving
  * - Mini-Mode Registry: Returns result via onComplete callback
- * 
+ *
  * Safe AI extension points:
  * - Add smart defaults based on context (e.g., pre-fill from message content)
  * - Add recurrence support
  * - Add location/reminder quick options
  * - Enhance date/time picker UX
- * 
+ *
  * Warnings:
  * - Keep form simple - this is "quick create", not full event editor
  * - Must handle keyboard properly (doesn't overflow screen)
@@ -24,7 +24,7 @@
  * - Always provide feedback on success/error
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -32,16 +32,16 @@ import {
   ScrollView,
   Platform,
   Alert,
-} from 'react-native';
-import * as Haptics from 'expo-haptics';
+} from "react-native";
+import * as Haptics from "expo-haptics";
 
-import { MiniModeComponentProps, MiniModeResult } from '../../lib/miniMode';
-import { eventBus } from '../../lib/eventBus';
-import { database } from '../../storage/database';
-import { ThemedText } from '../ThemedText';
-import { Button } from '../Button';
-import { Colors, Spacing, Typography } from '../../constants/theme';
-import type { CalendarEvent } from '../../models/types';
+import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
+import { eventBus } from "../../lib/eventBus";
+import { database } from "../../storage/database";
+import { ThemedText } from "../ThemedText";
+import { Button } from "../Button";
+import { Colors, Spacing, Typography } from "../../constants/theme";
+import type { CalendarEvent } from "../../models/types";
 
 interface CalendarMiniModeData {
   title?: string;
@@ -53,11 +53,11 @@ interface CalendarMiniModeData {
 
 /**
  * Calendar Mini-Mode Component
- * 
+ *
  * Plain English:
  * Quick form to create a calendar event. Shows title, date/time, and optional
  * description. Minimal fields for speed, but enough to create useful events.
- * 
+ *
  * Technical:
  * Controlled form with local state, validates on submit, creates event via database,
  * emits event to event bus, returns result via onComplete callback.
@@ -68,40 +68,40 @@ export function CalendarMiniMode({
   onDismiss,
   source,
 }: MiniModeComponentProps<CalendarMiniModeData>) {
-  const [title, setTitle] = useState(initialData?.title || '');
+  const [title, setTitle] = useState(initialData?.title || "");
   const [description, setDescription] = useState(
-    initialData?.description || ''
+    initialData?.description || "",
   );
   const [startDate, setStartDate] = useState(
-    initialData?.startDate || new Date()
+    initialData?.startDate || new Date(),
   );
   const [endDate, setEndDate] = useState(
-    initialData?.endDate || new Date(Date.now() + 60 * 60 * 1000) // +1 hour
+    initialData?.endDate || new Date(Date.now() + 60 * 60 * 1000), // +1 hour
   );
-  const [location, setLocation] = useState(initialData?.location || '');
+  const [location, setLocation] = useState(initialData?.location || "");
   const [saving, setSaving] = useState(false);
 
   /**
    * Handle form submission
-   * 
+   *
    * Plain English: Validate inputs, create event, notify caller
    * Technical: Async database operation with error handling
    */
   const handleSave = async () => {
     // Validation
     if (!title.trim()) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      Alert.alert('Required Field', 'Please enter an event title');
+      Alert.alert("Required Field", "Please enter an event title");
       return;
     }
 
     if (endDate <= startDate) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      Alert.alert('Invalid Time', 'End time must be after start time');
+      Alert.alert("Invalid Time", "End time must be after start time");
       return;
     }
 
@@ -121,7 +121,7 @@ export function CalendarMiniMode({
         recurrence: undefined,
         reminders: [],
         attendees: [],
-        status: 'confirmed',
+        status: "confirmed",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -130,10 +130,10 @@ export function CalendarMiniMode({
 
       // Emit event to event bus for cross-module coordination
       eventBus.emit({
-        type: 'CalendarEventCreated',
+        type: "CalendarEventCreated",
         payload: {
           event: createdEvent,
-          source: source || 'mini_mode',
+          source: source || "mini_mode",
         },
         metadata: {
           timestamp: new Date().toISOString(),
@@ -141,30 +141,28 @@ export function CalendarMiniMode({
       });
 
       // Haptic feedback on success
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
       // Notify caller with result
       const result: MiniModeResult<CalendarEvent> = {
-        action: 'created',
+        action: "created",
         data: createdEvent,
-        module: 'calendar',
+        module: "calendar",
       };
 
       onComplete(result);
     } catch (error) {
-      console.error('[CalendarMiniMode] Error creating event:', error);
+      console.error("[CalendarMiniMode] Error creating event:", error);
 
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
 
-      Alert.alert(
-        'Error',
-        'Failed to create event. Please try again.',
-        [{ text: 'OK' }]
-      );
+      Alert.alert("Error", "Failed to create event. Please try again.", [
+        { text: "OK" },
+      ]);
 
       setSaving(false);
     }
@@ -172,17 +170,17 @@ export function CalendarMiniMode({
 
   /**
    * Format date for display
-   * 
+   *
    * Plain English: Show date in readable format (e.g., "Jan 16, 2026 at 2:30 PM")
    * Technical: Uses toLocaleString for locale-aware formatting
    */
   const formatDateTime = (date: Date): string => {
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
     });
   };
 
@@ -290,7 +288,7 @@ export function CalendarMiniMode({
           accessibilityLabel="Cancel event creation"
         />
         <Button
-          label={saving ? 'Saving...' : 'Save Event'}
+          label={saving ? "Saving..." : "Save Event"}
           onPress={handleSave}
           variant="primary"
           style={styles.actionButton}
@@ -304,10 +302,10 @@ export function CalendarMiniMode({
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: '100%',
+    maxHeight: "100%",
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: Spacing.sm,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
@@ -322,7 +320,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: Typography.sizes.h2,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.electricBlue,
   },
   headerSubtitle: {
@@ -339,7 +337,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: Typography.sizes.body,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.textPrimary,
     marginBottom: Spacing.xs,
   },
@@ -356,7 +354,7 @@ const styles = StyleSheet.create({
   textArea: {
     paddingTop: Spacing.sm,
     minHeight: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   dateTimeRow: {
     backgroundColor: Colors.deepSpace,
@@ -374,7 +372,7 @@ const styles = StyleSheet.create({
     height: Spacing.lg,
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.sm,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.xs,

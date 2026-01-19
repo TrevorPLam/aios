@@ -335,7 +335,7 @@ function PrioritySection({
 
   const filteredItems = items.filter((item) => item.priority === priority);
   const filteredBundles = bundles.filter(
-    (bundle) => bundle.priority === priority
+    (bundle) => bundle.priority === priority,
   );
   const totalCount = filteredItems.length + filteredBundles.length;
 
@@ -482,7 +482,7 @@ export default function AttentionCenterScreen() {
         }
       }
     },
-    [navigation]
+    [navigation],
   );
 
   const handleExpandBundle = useCallback(
@@ -493,7 +493,7 @@ export default function AttentionCenterScreen() {
         handleItemAction(bundle.items[0]);
       }
     },
-    [handleItemAction]
+    [handleItemAction],
   );
 
   const handleToggleFocusMode = useCallback((value: boolean) => {
@@ -561,9 +561,7 @@ export default function AttentionCenterScreen() {
           /* Empty State */
           <View style={styles.emptyState}>
             <Feather name="check-circle" size={64} color={theme.success} />
-            <ThemedText style={styles.emptyStateTitle}>
-              All Clear!
-            </ThemedText>
+            <ThemedText style={styles.emptyStateTitle}>All Clear!</ThemedText>
             <ThemedText style={styles.emptyStateMessage}>
               You have no pending attention items.
               {focusMode && " Focus mode is active."}

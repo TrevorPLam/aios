@@ -414,17 +414,9 @@ export default function CommandCenterScreen() {
             <View>
               <Feather name="bell" size={24} color={theme.text} />
               {attentionCount > 0 && (
-                <View
-                  style={[
-                    styles.badge,
-                    { backgroundColor: theme.error },
-                  ]}
-                >
+                <View style={[styles.badge, { backgroundColor: theme.error }]}>
                   <ThemedText
-                    style={[
-                      styles.badgeText,
-                      { color: theme.backgroundRoot },
-                    ]}
+                    style={[styles.badgeText, { color: theme.backgroundRoot }]}
                   >
                     {attentionCount > 99 ? "99+" : attentionCount}
                   </ThemedText>

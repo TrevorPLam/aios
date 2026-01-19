@@ -631,12 +631,13 @@ export class MemStorage implements IStorage {
     if (!conversation || conversation.userId !== userId) return undefined;
 
     const contentUpdated =
-      typeof updates.content === "string" && updates.content !== message.content;
+      typeof updates.content === "string" &&
+      updates.content !== message.content;
     const updatedAt = new Date();
     const updated = {
       ...message,
       ...updates,
-      isEdited: contentUpdated ? true : updates.isEdited ?? message.isEdited,
+      isEdited: contentUpdated ? true : (updates.isEdited ?? message.isEdited),
       updatedAt,
     };
     this.messages.set(id, updated);

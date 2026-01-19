@@ -4,7 +4,11 @@ import bcrypt from "bcryptjs";
 import { storage } from "./storage";
 import { authenticate, generateToken } from "./middleware/auth";
 import { asyncHandler, AppError } from "./middleware/errorHandler";
-import { validate, validateParams, validateQuery } from "./middleware/validation";
+import {
+  validate,
+  validateParams,
+  validateQuery,
+} from "./middleware/validation";
 import {
   insertUserSchema,
   loginSchema,
@@ -549,10 +553,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     asyncHandler(async (req, res) => {
       // req.query is already validated and typed by validateQuery middleware
       const { q, conversationId, limit } = req.query;
-      const results = await storage.searchMessages(q as string, req.user!.userId, {
-        conversationId: conversationId as string | undefined,
-        limit: limit as number | undefined,
-      });
+      const results = await storage.searchMessages(
+        q as string,
+        req.user!.userId,
+        {
+          conversationId: conversationId as string | undefined,
+          limit: limit as number | undefined,
+        },
+      );
       res.json(results);
     }),
   );

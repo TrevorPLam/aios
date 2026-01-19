@@ -1,33 +1,33 @@
 /**
  * Omnisearch Screen
- * 
+ *
  * Purpose (Plain English):
  * Universal search that searches everything in your app. Type once, see results
  * from all modules (Notes, Tasks, Events, Contacts, etc.) grouped by type.
  * No need to remember where you saved something.
- * 
+ *
  * What it interacts with:
  * - Omnisearch engine (to perform searches)
  * - Module registry (to get module info)
  * - Navigation (to open search results)
  * - Recent searches storage
- * 
+ *
  * Technical Implementation:
  * Debounced search input triggers omnisearch engine. Results grouped by module
  * and displayed in sections. Tapping result navigates to that item.
- * 
+ *
  * Safe AI Extension Points:
  * - Add search filters (date range, module type)
  * - Add search suggestions
  * - Add voice search
- * 
+ *
  * Fragile Logic Warnings:
  * - Search must be fast (<500ms) or show loading state
  * - Empty results must be handled gracefully
  * - Navigation must work for all result types
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -36,24 +36,24 @@ import {
   FlatList,
   ActivityIndicator,
   Platform,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Feather } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useTheme } from '@/hooks/useTheme';
-import { Colors, Spacing, BorderRadius } from '@/constants/theme';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useTheme } from "@/hooks/useTheme";
+import { Colors, Spacing, BorderRadius } from "@/constants/theme";
 import {
   omnisearch,
   GroupedSearchResults,
   SearchResultGroup,
   SearchResultItem,
-} from '@/lib/omnisearch';
-import { moduleRegistry } from '@/lib/moduleRegistry';
-import { eventBus, EVENT_TYPES } from '@/lib/eventBus';
+} from "@/lib/omnisearch";
+import { moduleRegistry } from "@/lib/moduleRegistry";
+import { eventBus, EVENT_TYPES } from "@/lib/eventBus";
 
 export interface OmnisearchScreenProps {
   onResultPress: (moduleId: string, routeName: string, itemId: string) => void;
@@ -63,11 +63,14 @@ export interface OmnisearchScreenProps {
 /**
  * Omnisearch Screen Component
  */
-export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenProps) {
+export function OmnisearchScreen({
+  onResultPress,
+  onClose,
+}: OmnisearchScreenProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  
-  const [query, setQuery] = useState('');
+
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<GroupedSearchResults | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -83,38 +86,35 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
   /**
    * Perform Search
    */
-  const performSearch = useCallback(
-    async (searchQuery: string) => {
-      if (!searchQuery.trim()) {
-        setResults(null);
-        return;
-      }
+  const performSearch = useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setResults(null);
+      return;
+    }
 
-      setIsSearching(true);
+    setIsSearching(true);
 
-      try {
-        const searchResults = await omnisearch.search(searchQuery, {
-          maxResultsPerModule: 5,
-          minRelevanceScore: 30,
-        });
+    try {
+      const searchResults = await omnisearch.search(searchQuery, {
+        maxResultsPerModule: 5,
+        minRelevanceScore: 30,
+      });
 
-        setResults(searchResults);
-        
-        // Track search
-        eventBus.emit(EVENT_TYPES.SEARCH_PERFORMED, {
-          query: searchQuery,
-          resultCount: searchResults.totalResults,
-          searchTime: searchResults.searchTime,
-        });
-      } catch (error) {
-        console.error('Search error:', error);
-        setResults(null);
-      } finally {
-        setIsSearching(false);
-      }
-    },
-    []
-  );
+      setResults(searchResults);
+
+      // Track search
+      eventBus.emit(EVENT_TYPES.SEARCH_PERFORMED, {
+        query: searchQuery,
+        resultCount: searchResults.totalResults,
+        searchTime: searchResults.searchTime,
+      });
+    } catch (error) {
+      console.error("Search error:", error);
+      setResults(null);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
 
   /**
    * Debounced Search Effect
@@ -131,7 +131,7 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
    * Handle Result Press
    */
   const handleResultPress = (item: SearchResultItem) => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
@@ -153,7 +153,7 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
    */
   const renderResultItem = ({ item }: { item: SearchResultItem }) => {
     const module = moduleRegistry.getModule(item.moduleType);
-    
+
     return (
       <Animated.View entering={FadeInDown.delay(50)}>
         <Pressable
@@ -167,9 +167,11 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
           accessibilityLabel={`Open ${item.title} in ${module?.name}`}
         >
           {/* Module Icon */}
-          <View style={[styles.resultIcon, { backgroundColor: theme.accentDim }]}>
+          <View
+            style={[styles.resultIcon, { backgroundColor: theme.accentDim }]}
+          >
             <Feather
-              name={module?.icon as any || 'file'}
+              name={(module?.icon as any) || "file"}
               size={18}
               color={theme.accent}
             />
@@ -180,7 +182,7 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
             <ThemedText style={styles.resultTitle} numberOfLines={1}>
               {item.title}
             </ThemedText>
-            
+
             {item.subtitle && (
               <ThemedText
                 style={[styles.resultSubtitle, { color: theme.textSecondary }]}
@@ -189,7 +191,7 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
                 {item.subtitle}
               </ThemedText>
             )}
-            
+
             {item.preview && (
               <ThemedText
                 style={[styles.resultPreview, { color: theme.textMuted }]}
@@ -212,12 +214,17 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
    */
   const renderGroupHeader = (group: SearchResultGroup) => {
     const module = moduleRegistry.getModule(group.moduleType);
-    
+
     return (
-      <View style={[styles.groupHeader, { backgroundColor: theme.backgroundSecondary }]}>
+      <View
+        style={[
+          styles.groupHeader,
+          { backgroundColor: theme.backgroundSecondary },
+        ]}
+      >
         <View style={styles.groupHeaderContent}>
           <Feather
-            name={module?.icon as any || 'folder'}
+            name={(module?.icon as any) || "folder"}
             size={16}
             color={theme.accent}
           />
@@ -226,7 +233,7 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
           </ThemedText>
         </View>
         <ThemedText style={[styles.groupCount, { color: theme.textMuted }]}>
-          {group.totalCount} {group.totalCount === 1 ? 'result' : 'results'}
+          {group.totalCount} {group.totalCount === 1 ? "result" : "results"}
         </ThemedText>
       </View>
     );
@@ -278,7 +285,9 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
 
     return (
       <View style={styles.recentSection}>
-        <ThemedText style={[styles.recentTitle, { color: theme.textSecondary }]}>
+        <ThemedText
+          style={[styles.recentTitle, { color: theme.textSecondary }]}
+        >
           Recent Searches
         </ThemedText>
         {recentSearches.map((recent, index) => (
@@ -307,7 +316,12 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.border }]}>
         {/* Search Input */}
-        <View style={[styles.searchBar, { backgroundColor: theme.backgroundTertiary }]}>
+        <View
+          style={[
+            styles.searchBar,
+            { backgroundColor: theme.backgroundTertiary },
+          ]}
+        >
           <Feather name="search" size={20} color={theme.textSecondary} />
           <TextInput
             style={[styles.searchInput, { color: theme.text }]}
@@ -322,7 +336,7 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
           />
           {query.length > 0 && (
             <Pressable
-              onPress={() => setQuery('')}
+              onPress={() => setQuery("")}
               hitSlop={10}
               accessibilityRole="button"
               accessibilityLabel="Clear search"
@@ -348,7 +362,9 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
         {isSearching && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.accent} />
-            <ThemedText style={[styles.loadingText, { color: theme.textMuted }]}>
+            <ThemedText
+              style={[styles.loadingText, { color: theme.textMuted }]}
+            >
               Searching...
             </ThemedText>
           </View>
@@ -360,7 +376,12 @@ export function OmnisearchScreen({ onResultPress, onClose }: OmnisearchScreenPro
 
       {/* Search Stats */}
       {results && results.totalResults > 0 && (
-        <View style={[styles.statsBar, { backgroundColor: theme.backgroundSecondary }]}>
+        <View
+          style={[
+            styles.statsBar,
+            { backgroundColor: theme.backgroundSecondary },
+          ]}
+        >
           <ThemedText style={[styles.statsText, { color: theme.textMuted }]}>
             Found {results.totalResults} results in {results.searchTime}ms
           </ThemedText>
@@ -375,16 +396,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderBottomWidth: 1,
   },
   searchBar: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.lg,
@@ -404,8 +425,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: Spacing.md,
   },
   loadingText: {
@@ -416,14 +437,14 @@ const styles = StyleSheet.create({
   },
   recentTitle: {
     fontSize: 12,
-    fontWeight: '600',
-    textTransform: 'uppercase',
+    fontWeight: "600",
+    textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: Spacing.sm,
   },
   recentItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.sm,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.md,
@@ -441,29 +462,29 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   groupHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.md,
     marginBottom: Spacing.xs,
   },
   groupHeaderContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.sm,
   },
   groupTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   groupCount: {
     fontSize: 12,
   },
   resultItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.md,
@@ -477,8 +498,8 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: BorderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   resultContent: {
     flex: 1,
@@ -486,7 +507,7 @@ const styles = StyleSheet.create({
   },
   resultTitle: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   resultSubtitle: {
     fontSize: 13,
@@ -497,24 +518,24 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: Spacing.md,
     paddingHorizontal: Spacing.xl,
   },
   emptyText: {
     fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   emptyHint: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
   },
   statsBar: {
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statsText: {
     fontSize: 12,

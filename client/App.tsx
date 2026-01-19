@@ -31,11 +31,8 @@ const AIOSTheme = {
 };
 
 export default function App() {
-  const {
-    navigationRef,
-    handleNavigationReady,
-    handleNavigationStateChange,
-  } = useAnalyticsNavigation();
+  const { navigationRef, handleNavigationReady, handleNavigationStateChange } =
+    useAnalyticsNavigation();
 
   useEffect(() => {
     // Initialize analytics on app start

@@ -160,9 +160,7 @@ function HistoryCard({
       ]}
     >
       <View style={styles.cardHeader}>
-        <View
-          style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}
-        >
+        <View style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}>
           <ThemedText type="small" style={{ color: theme.accent }}>
             {recommendation.module.toUpperCase()}
           </ThemedText>

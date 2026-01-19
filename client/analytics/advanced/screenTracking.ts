@@ -10,7 +10,7 @@
  * - Time on screen
  * - Entry/exit screens
  * - Screen flow analysis
- * 
+ *
  * Documentation: See docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
  * Missing Features: See MISSING_FEATURES.md (Analytics section)
  */

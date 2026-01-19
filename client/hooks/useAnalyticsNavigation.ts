@@ -37,34 +37,31 @@ export function useAnalyticsNavigation() {
   const focusStartTimeRef = useRef<number | null>(null);
   const currentModuleRef = useRef<ModuleType | null>(null);
 
-  const trackRouteChange = useCallback(
-    (routeName: string | null) => {
-      if (!routeName || previousRouteRef.current === routeName) return;
+  const trackRouteChange = useCallback((routeName: string | null) => {
+    if (!routeName || previousRouteRef.current === routeName) return;
 
-      const moduleId = ROUTE_TO_MODULE[routeName];
-      if (!moduleId) return;
+    const moduleId = ROUTE_TO_MODULE[routeName];
+    if (!moduleId) return;
 
-      if (currentModuleRef.current && focusStartTimeRef.current) {
-        const durationSeconds = (Date.now() - focusStartTimeRef.current) / 1000;
-        analytics.trackModuleFocusEnd(currentModuleRef.current, durationSeconds);
+    if (currentModuleRef.current && focusStartTimeRef.current) {
+      const durationSeconds = (Date.now() - focusStartTimeRef.current) / 1000;
+      analytics.trackModuleFocusEnd(currentModuleRef.current, durationSeconds);
+    }
+
+    if (previousRouteRef.current && previousRouteRef.current !== routeName) {
+      const previousModuleId = ROUTE_TO_MODULE[previousRouteRef.current];
+      if (previousModuleId) {
+        analytics.trackModuleSwitch(previousModuleId, moduleId);
       }
+    }
 
-      if (previousRouteRef.current && previousRouteRef.current !== routeName) {
-        const previousModuleId = ROUTE_TO_MODULE[previousRouteRef.current];
-        if (previousModuleId) {
-          analytics.trackModuleSwitch(previousModuleId, moduleId);
-        }
-      }
+    analytics.trackModuleOpened(moduleId, "contextual");
+    focusStartTimeRef.current = Date.now();
+    analytics.trackModuleFocusStart(moduleId);
 
-      analytics.trackModuleOpened(moduleId, "contextual");
-      focusStartTimeRef.current = Date.now();
-      analytics.trackModuleFocusStart(moduleId);
-
-      previousRouteRef.current = routeName;
-      currentModuleRef.current = moduleId;
-    },
-    []
-  );
+    previousRouteRef.current = routeName;
+    currentModuleRef.current = moduleId;
+  }, []);
 
   const handleNavigationReady = useCallback(() => {
     trackRouteChange(navigationRef.getCurrentRoute()?.name ?? null);
@@ -78,7 +75,10 @@ export function useAnalyticsNavigation() {
     return () => {
       if (currentModuleRef.current && focusStartTimeRef.current) {
         const durationSeconds = (Date.now() - focusStartTimeRef.current) / 1000;
-        analytics.trackModuleFocusEnd(currentModuleRef.current, durationSeconds);
+        analytics.trackModuleFocusEnd(
+          currentModuleRef.current,
+          durationSeconds,
+        );
       }
     };
   }, []);

@@ -1,21 +1,21 @@
 /**
  * Mini-Mode Container Component
- * 
+ *
  * Purpose (Plain English):
  * Renders mini-mode overlays on top of the current screen. Listens for mini-mode
  * open events and displays the appropriate mini-mode component as a modal.
- * 
+ *
  * What it interacts with:
  * - Event Bus: Listens for mini_mode_open events
  * - Mini-Mode Registry: Gets current mini-mode provider and config
  * - Haptics: Provides tactile feedback on open/close
- * 
+ *
  * Safe AI extension points:
  * - Customize animation styles and timing
  * - Add gesture support (swipe to dismiss)
  * - Enhance backdrop blur effects
  * - Add different presentation styles (full screen, bottom sheet, etc.)
- * 
+ *
  * Warnings:
  * - Must be rendered at app root level (above all screens)
  * - Only one mini-mode can be active at a time (enforced by registry)
@@ -23,7 +23,7 @@
  * - Performance: Lazy load mini-mode components when possible
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -32,32 +32,32 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
-} from 'react-native';
+} from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
   SlideInUp,
   SlideOutDown,
-} from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+} from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
 import {
   miniModeRegistry,
   MiniModeConfig,
   MiniModeProvider,
   MiniModeResult,
-} from '../lib/miniMode';
-import { Colors } from '../constants/theme';
+} from "../lib/miniMode";
+import { Colors } from "../constants/theme";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 /**
  * Main mini-mode container component
- * 
+ *
  * Plain English:
  * This component sits at the root of your app and shows mini-mode overlays
  * when requested. It handles the modal presentation, backdrop, and callbacks.
- * 
+ *
  * Technical:
  * Subscribes to event bus for mini_mode_open events, maintains local state
  * for current mini-mode, handles keyboard avoidance, and provides callbacks
@@ -66,7 +66,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export function MiniModeContainer() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentConfig, setCurrentConfig] = useState<MiniModeConfig | null>(
-    null
+    null,
   );
   const [currentProvider, setCurrentProvider] =
     useState<MiniModeProvider | null>(null);
@@ -74,12 +74,12 @@ export function MiniModeContainer() {
   useEffect(() => {
     /**
      * Subscribe to mini-mode events
-     * 
+     *
      * Plain English: When something requests to open a mini-mode, show it
      * Technical: Subscribes to mini-mode registry events
      */
     const unsubscribe = miniModeRegistry.subscribe((event, data) => {
-      if (event === 'mini_mode_open') {
+      if (event === "mini_mode_open") {
         const current = miniModeRegistry.getCurrent();
         if (current) {
           setCurrentConfig(current.config);
@@ -87,13 +87,13 @@ export function MiniModeContainer() {
           setIsVisible(true);
 
           // Haptic feedback on open
-          if (Platform.OS !== 'web') {
+          if (Platform.OS !== "web") {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }
         }
-      } else if (event === 'mini_mode_close') {
+      } else if (event === "mini_mode_close") {
         handleDismiss();
-      } else if (event === 'mini_mode_complete') {
+      } else if (event === "mini_mode_complete") {
         // Close modal on completion
         setIsVisible(false);
         setCurrentConfig(null);
@@ -108,12 +108,12 @@ export function MiniModeContainer() {
 
   /**
    * Handle mini-mode dismissal (user cancelled)
-   * 
+   *
    * Plain English: User tapped outside or pressed cancel - close without saving
    * Technical: Notifies registry to invoke onDismiss, clears local state
    */
   const handleDismiss = () => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
@@ -125,12 +125,12 @@ export function MiniModeContainer() {
 
   /**
    * Handle mini-mode completion (user saved/selected)
-   * 
+   *
    * Plain English: User completed the action - close and notify caller
    * Technical: Invokes registry.complete() which handles callbacks, then clears state
    */
   const handleComplete = (result: MiniModeResult) => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== "web") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
 
@@ -177,7 +177,7 @@ export function MiniModeContainer() {
 
       {/* Mini-mode content */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoid}
       >
         <View style={styles.contentContainer}>
@@ -202,18 +202,18 @@ export function MiniModeContainer() {
 const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   backdropOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   keyboardAvoid: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   contentContainer: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     maxHeight: SCREEN_HEIGHT * 0.85, // Max 85% of screen height
   },
   miniModeCard: {
@@ -222,11 +222,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingTop: 8,
     paddingHorizontal: 16,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 16, // Account for home indicator
+    paddingBottom: Platform.OS === "ios" ? 34 : 16, // Account for home indicator
     minHeight: 200,
     maxHeight: SCREEN_HEIGHT * 0.85,
     // Shadow for elevation
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

@@ -59,7 +59,7 @@ describe("OnboardingManager", () => {
 
     it("should require exactly 3 modules", async () => {
       await expect(
-        onboardingManager.startOnboarding(["notebook", "planner"])
+        onboardingManager.startOnboarding(["notebook", "planner"]),
       ).rejects.toThrow("Must select exactly 3 modules");
     });
 
@@ -297,7 +297,7 @@ describe("OnboardingManager", () => {
 
     it("should auto-unlock a module after usage threshold", () => {
       const unlockedBefore = onboardingManager.getUnlockedModules();
-      const beforeModules = new Set(unlockedBefore.map(u => u.module));
+      const beforeModules = new Set(unlockedBefore.map((u) => u.module));
 
       // Trigger usage milestone (every 3 uses by default)
       eventBus.emit(EVENT_TYPES.MODULE_OPENED, { module: "notebook" });
@@ -305,17 +305,19 @@ describe("OnboardingManager", () => {
       eventBus.emit(EVENT_TYPES.MODULE_OPENED, { module: "calendar" });
 
       const unlockedAfter = onboardingManager.getUnlockedModules();
-      const afterModules = new Set(unlockedAfter.map(u => u.module));
-      
+      const afterModules = new Set(unlockedAfter.map((u) => u.module));
+
       // Check that we have at least one new module
-      const newModules = Array.from(afterModules).filter(m => !beforeModules.has(m));
+      const newModules = Array.from(afterModules).filter(
+        (m) => !beforeModules.has(m),
+      );
       expect(newModules.length).toBeGreaterThanOrEqual(1);
     });
 
     it("should not count usage for locked modules", () => {
       // Verify messages is locked
       expect(onboardingManager.isModuleUnlocked("messages")).toBe(false);
-      
+
       const statsBefore = onboardingManager.getStats();
 
       // Try to open a locked module

@@ -20,13 +20,13 @@ export const errorHandler = (
 ) => {
   if (err instanceof AppError) {
     // Log operational errors with context
-    logger.warn('Operational error', {
+    logger.warn("Operational error", {
       statusCode: err.statusCode,
       message: err.message,
       path: req.path,
       method: req.method,
     });
-    
+
     return res.status(err.statusCode).json({
       status: "error",
       message: err.message,
@@ -34,7 +34,7 @@ export const errorHandler = (
   }
 
   // Log unexpected errors with full context and stack trace
-  logger.error('Unexpected error', {
+  logger.error("Unexpected error", {
     error: err,
     message: err.message,
     stack: err.stack,
@@ -42,7 +42,7 @@ export const errorHandler = (
     method: req.method,
     timestamp: new Date().toISOString(),
   });
-  
+
   return res.status(500).json({
     status: "error",
     message: "Internal server error",
