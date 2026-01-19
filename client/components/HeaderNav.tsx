@@ -51,7 +51,8 @@ export function HeaderRightNav({ settingsRoute }: HeaderRightNavProps = {}) {
 
   const handlePress = () => {
     if (settingsRoute) {
-      navigation.navigate(settingsRoute as any);
+      // Type-safe navigation - settingsRoute is keyof AppStackParamList
+      navigation.navigate(settingsRoute, undefined);
     } else {
       navigation.navigate("Settings");
     }

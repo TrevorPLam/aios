@@ -3,11 +3,10 @@
  *
  * Purpose (Plain English):
  * Wrapper screen for the OmnisearchScreen component that integrates with React Navigation.
- * Provides universal search across all modules with keyboard shortcut support.
+ * Provides universal search across all modules with modal presentation.
  *
  * Features:
- * - Universal search across all 14+ modules
- * - Keyboard shortcut (Cmd+K on iOS) support
+ * - Universal search across 11 modules
  * - Modal presentation for quick access
  * - Navigation to search results
  * - Recent searches tracking
@@ -22,6 +21,7 @@
  * - Add search filters
  * - Add voice search
  * - Add search analytics
+ * - Add keyboard shortcuts (future iPad enhancement)
  *
  * Fragile Logic Warnings:
  * - Must handle navigation for all module types
