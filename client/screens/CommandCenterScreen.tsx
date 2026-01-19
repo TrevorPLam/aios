@@ -7,7 +7,7 @@
  *
  * Key Features:
  * - Swipeable recommendation cards (swipe right to accept, left to decline)
- * - Visual glow indicator for unread recommendations (white shadow)
+ * - Visual glow indicator for unread recommendations (accent-colored shadow on iOS)
  * - Confidence meter showing AI certainty level (low/medium/high)
  * - Real-time AI usage limits tracking with countdown
  * - Secondary navigation bar for quick access (Search, Attention, History)
@@ -106,9 +106,6 @@ const CARD_SPACING = 2;
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 
-/** Badge count threshold for primary nav */
-const PRIMARY_NAV_BADGE_THRESHOLD = 99;
-
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
 /**
@@ -166,8 +163,8 @@ function ConfidenceMeter({
  * - During swipe: Card rotates ±15° and shows colored glow (green=accept, red=decline)
  *
  * Visual States:
- * - Unopened: White glow (shadowOpacity 0.4, radius 16px) to draw attention
- * - Opened: Standard card appearance without glow
+ * - Unopened: Accent-colored shadow glow (iOS: shadowOpacity 0.6, radius 16px) to draw attention
+ * - Opened: Subtle shadow (iOS: shadowOpacity 0.15, radius 8px)
  * - Swiping: Animated rotation and edge glow based on swipe direction/distance
  *
  * Performance:
@@ -266,67 +263,81 @@ function RecommendationCard({
 
   return (
     <GestureDetector gesture={gesture}>
+      {/* Shadow wrapper - allows shadow to render (no overflow hidden) */}
       <Animated.View
         style={[
-          styles.card,
-          { backgroundColor: theme.backgroundDefault },
-          // Add white glow for unopened cards
-          isUnopened && {
+          styles.cardShadowWrapper,
+          { 
             shadowColor: "#FFFFFF",
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.4,
+            backgroundColor: theme.backgroundDefault,
+          },
+          // Stronger shadow for unopened cards
+          isUnopened ? {
+            shadowOpacity: 0.6,
             shadowRadius: 16,
             elevation: 8,
+          } : {
+            shadowOpacity: 0.15,
+            shadowRadius: 8,
+            elevation: 4,
           },
           animatedStyle,
         ]}
       >
-        <Animated.View
+        {/* Card content - has overflow hidden to clip glow indicators */}
+        <View
           style={[
-            styles.cardGlow,
-            styles.acceptGlow,
-            { backgroundColor: theme.success },
-            acceptGlowStyle,
+            styles.card,
+            { backgroundColor: theme.backgroundDefault },
           ]}
-        />
-        <Animated.View
-          style={[
-            styles.cardGlow,
-            styles.declineGlow,
-            { backgroundColor: theme.error },
-            declineGlowStyle,
-          ]}
-        />
+        >
+          <Animated.View
+            style={[
+              styles.cardGlow,
+              styles.acceptGlow,
+              { backgroundColor: theme.success },
+              acceptGlowStyle,
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.cardGlow,
+              styles.declineGlow,
+              { backgroundColor: theme.error },
+              declineGlowStyle,
+            ]}
+          />
 
-        <View style={styles.cardHeader}>
-          <View
-            style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}
-          >
-            <ThemedText type="small" style={{ color: theme.accent }}>
-              {recommendation.module.toUpperCase()}
-            </ThemedText>
+          <View style={styles.cardHeader}>
+            <View
+              style={[styles.moduleTag, { backgroundColor: theme.accentDim }]}
+            >
+              <ThemedText type="small" style={{ color: theme.accent }}>
+                {recommendation.module.toUpperCase()}
+              </ThemedText>
+            </View>
+            <ConfidenceMeter confidence={recommendation.confidence} />
           </View>
-          <ConfidenceMeter confidence={recommendation.confidence} />
-        </View>
 
-        <ThemedText type="h3" style={styles.cardTitle}>
-          {recommendation.title}
-        </ThemedText>
-
-        <ThemedText type="body" secondary style={styles.cardSummary}>
-          {recommendation.summary}
-        </ThemedText>
-
-        <View style={styles.cardFooter}>
-          <View style={styles.expiryContainer}>
-            <Feather name="clock" size={14} color={theme.textMuted} />
-            <ThemedText type="small" muted style={styles.expiryText}>
-              {formatTimeRemaining(recommendation.expiresAt)}
-            </ThemedText>
-          </View>
-          <ThemedText type="small" style={{ color: theme.accent }}>
-            Tap for details
+          <ThemedText type="h3" style={styles.cardTitle}>
+            {recommendation.title}
           </ThemedText>
+
+          <ThemedText type="body" secondary style={styles.cardSummary}>
+            {recommendation.summary}
+          </ThemedText>
+
+          <View style={styles.cardFooter}>
+            <View style={styles.expiryContainer}>
+              <Feather name="clock" size={14} color={theme.textMuted} />
+              <ThemedText type="small" muted style={styles.expiryText}>
+                {formatTimeRemaining(recommendation.expiresAt)}
+              </ThemedText>
+            </View>
+            <ThemedText type="small" style={{ color: theme.accent }}>
+              Tap for details
+            </ThemedText>
+          </View>
         </View>
       </Animated.View>
     </GestureDetector>
@@ -583,63 +594,17 @@ export default function CommandCenterScreen() {
           <ThemedText type="h2">Command Center</ThemedText>
         </Animated.View>
 
-        <View style={styles.headerActions}>
-          <Pressable
-            onPress={() => navigation.navigate("Omnisearch")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel="Open search"
-          >
-            <Feather name="search" size={24} color={theme.text} />
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("AttentionCenter")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel={`Attention center, ${attentionCount} items`}
-          >
-            <View>
-              <Feather name="bell" size={24} color={theme.text} />
-              {attentionCount > 0 && (
-                <View style={[styles.badge, { backgroundColor: theme.error }]}>
-                  <ThemedText
-                    style={[styles.badgeText, { color: theme.backgroundRoot }]}
-                  >
-                    {attentionCount > PRIMARY_NAV_BADGE_THRESHOLD 
-                      ? `${PRIMARY_NAV_BADGE_THRESHOLD}+` 
-                      : attentionCount}
-                  </ThemedText>
-                </View>
-              )}
-            </View>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("RecommendationHistory")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel="View recommendation history"
-          >
-            <Feather name="clock" size={24} color={theme.text} />
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("Settings")}
-            style={({ pressed }) => [
-              styles.headerButton,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Feather name="settings" size={24} color={theme.text} />
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={() => navigation.navigate("Settings")}
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && styles.pressed,
+          ]}
+          accessibilityRole="button"
+          accessibilityLabel="Open settings"
+        >
+          <Feather name="settings" size={24} color={theme.text} />
+        </Pressable>
       </View>
 
       {/* Secondary Navigation Bar - Oval, transparent, module-specific actions */}
@@ -783,7 +748,9 @@ export default function CommandCenterScreen() {
               </ThemedText>
             </View>
           </View>
+        </View>
 
+        <View style={styles.bottomNavContainer}>
           <BottomNav onAiPress={() => setShowAISheet(true)} />
         </View>
       </View>
@@ -820,10 +787,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.sm,
-  },
-  headerActions: {
-    flexDirection: "row",
-    gap: Spacing.xs,
   },
   secondaryNav: {
     paddingHorizontal: Spacing.lg,
@@ -877,17 +840,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     minHeight: 300,
   },
+  cardShadowWrapper: {
+    width: CARD_WIDTH,
+    borderRadius: BorderRadius.lg,
+    // Shadow properties (no overflow hidden so shadow renders)
+    // backgroundColor required for iOS shadow rendering (even if transparent)
+    shadowOffset: { width: 0, height: 0 },
+  },
   card: {
     width: CARD_WIDTH,
     padding: Spacing.xl,
     borderRadius: BorderRadius.lg,
-    overflow: "hidden",
-    // Soft white glow around cards
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 6,
+    overflow: "hidden", // Clips glow indicators to card bounds
   },
   cardGlow: {
     position: "absolute",
@@ -962,7 +926,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0, // Remove horizontal padding to extend to edges
   },
   footerContent: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.lg, // Only apply padding to limits container
+  },
+  bottomNavContainer: {
+    paddingHorizontal: 0, // No padding - BottomNav handles its own padding
   },
   limitsContainer: {
     flexDirection: "row",
@@ -977,22 +944,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
-  },
-  badge: {
-    position: "absolute",
-    top: -4,
-    right: -4,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 4,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: "bold",
-    lineHeight: 12,
   },
   bottomNav: {
     display: "none",
