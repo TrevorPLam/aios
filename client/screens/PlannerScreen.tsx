@@ -27,8 +27,6 @@ import {
   Platform,
   TextInput,
   ScrollView,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -36,9 +34,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import Animated, {
   FadeInDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
@@ -53,14 +48,8 @@ import { formatDate, getPriorityColor } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
-
-// Secondary Navigation Constants
-const SECONDARY_NAV_BADGE_THRESHOLD = 9;
-const SECONDARY_NAV_HIDE_OFFSET = -72;
-const SECONDARY_NAV_ANIMATION_DURATION = 200;
-const SCROLL_TOP_THRESHOLD = 10;
-const SCROLL_DOWN_THRESHOLD = 5;
-const SCROLL_UP_THRESHOLD = -5;
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -270,9 +259,7 @@ export default function PlannerScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
 
-  const lastScrollY = useSharedValue(0);
-  const secondaryNavTranslateY = useSharedValue(0);
-  const isAnimating = useSharedValue(false);
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [tasks, setTasks] = useState<TaskWithSubtasks[]>([]);
   const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
@@ -606,40 +593,7 @@ export default function PlannerScreen() {
 
   const listData = buildListData();
 
-  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const currentScrollY = event.nativeEvent.contentOffset.y;
-    const delta = currentScrollY - lastScrollY.value;
 
-    if (isAnimating.value) {
-      lastScrollY.value = currentScrollY;
-      return;
-    }
-
-    if (currentScrollY < SCROLL_TOP_THRESHOLD && secondaryNavTranslateY.value !== 0) {
-      isAnimating.value = true;
-      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
-        isAnimating.value = false;
-      });
-    } else if (delta > SCROLL_DOWN_THRESHOLD && secondaryNavTranslateY.value !== SECONDARY_NAV_HIDE_OFFSET) {
-      isAnimating.value = true;
-      secondaryNavTranslateY.value = withTiming(SECONDARY_NAV_HIDE_OFFSET, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
-        isAnimating.value = false;
-      });
-    } else if (delta < SCROLL_UP_THRESHOLD && secondaryNavTranslateY.value !== 0) {
-      isAnimating.value = true;
-      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
-        isAnimating.value = false;
-      });
-    }
-
-    lastScrollY.value = currentScrollY;
-  }, []);
-
-  const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: secondaryNavTranslateY.value }],
-    };
-  });
 
   const renderItem = ({ item }: { item: (typeof listData)[0] }) => {
     const isSubtask = item.type === "subtask";
@@ -706,11 +660,16 @@ export default function PlannerScreen() {
         >
           <Pressable
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                setShowAISheet(true);
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in AI Assist button:', error);
+                }
               }
-              console.log("AI Assist");
-              setShowAISheet(true);
             }}
             style={({ pressed }) => [
               styles.secondaryNavButton,
@@ -725,10 +684,17 @@ export default function PlannerScreen() {
 
           <Pressable
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('PlannerScreen', 'Time Block');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Time Block button:', error);
+                }
               }
-              console.log("Time Block");
             }}
             style={({ pressed }) => [
               styles.secondaryNavButton,
@@ -743,10 +709,17 @@ export default function PlannerScreen() {
 
           <Pressable
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('PlannerScreen', 'Dependencies');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Dependencies button:', error);
+                }
               }
-              console.log("Dependencies");
             }}
             style={({ pressed }) => [
               styles.secondaryNavButton,
@@ -1031,7 +1004,7 @@ export default function PlannerScreen() {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.task.id}
-        onScroll={handleScroll}
+        onScroll={handleSecondaryNavScroll}
         scrollEventThrottle={16}
         contentContainerStyle={[
           styles.listContent,

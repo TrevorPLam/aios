@@ -28,8 +28,6 @@ import {
   Alert,
   TextInput,
   Modal,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -37,9 +35,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import Animated, {
   FadeInDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
@@ -54,14 +49,8 @@ import { formatRelativeDate } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
-
-// Secondary Navigation Constants
-const SECONDARY_NAV_BADGE_THRESHOLD = 9;
-const SECONDARY_NAV_HIDE_OFFSET = -72;
-const SECONDARY_NAV_ANIMATION_DURATION = 200;
-const SCROLL_TOP_THRESHOLD = 10;
-const SCROLL_DOWN_THRESHOLD = 5;
-const SCROLL_UP_THRESHOLD = -5;
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -322,9 +311,7 @@ export default function ListsScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
 
-  const lastScrollY = useSharedValue(0);
-  const secondaryNavTranslateY = useSharedValue(0);
-  const isAnimating = useSharedValue(false);
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [lists, setLists] = useState<List[]>([]);
   const [filter, setFilter] = useState<FilterType>("active");
@@ -696,64 +683,7 @@ export default function ListsScreen() {
     ],
   );
 
-  const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const currentScrollY = event.nativeEvent.contentOffset.y;
-      const delta = currentScrollY - lastScrollY.value;
 
-      if (isAnimating.value) {
-        lastScrollY.value = currentScrollY;
-        return;
-      }
-
-      if (
-        currentScrollY < SCROLL_TOP_THRESHOLD &&
-        secondaryNavTranslateY.value !== 0
-      ) {
-        isAnimating.value = true;
-        secondaryNavTranslateY.value = withTiming(
-          0,
-          { duration: SECONDARY_NAV_ANIMATION_DURATION },
-          () => {
-            isAnimating.value = false;
-          },
-        );
-      } else if (
-        delta > SCROLL_DOWN_THRESHOLD &&
-        secondaryNavTranslateY.value !== SECONDARY_NAV_HIDE_OFFSET
-      ) {
-        isAnimating.value = true;
-        secondaryNavTranslateY.value = withTiming(
-          SECONDARY_NAV_HIDE_OFFSET,
-          { duration: SECONDARY_NAV_ANIMATION_DURATION },
-          () => {
-            isAnimating.value = false;
-          },
-        );
-      } else if (
-        delta < SCROLL_UP_THRESHOLD &&
-        secondaryNavTranslateY.value !== 0
-      ) {
-        isAnimating.value = true;
-        secondaryNavTranslateY.value = withTiming(
-          0,
-          { duration: SECONDARY_NAV_ANIMATION_DURATION },
-          () => {
-            isAnimating.value = false;
-          },
-        );
-      }
-
-      lastScrollY.value = currentScrollY;
-    },
-    [],
-  );
-
-  const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: secondaryNavTranslateY.value }],
-    };
-  });
 
   const SortIcon = ({ option }: { option: SortOption }) => {
     if (sortBy === option) {
@@ -812,10 +742,17 @@ export default function ListsScreen() {
               pressed && styles.pressed,
             ]}
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('ListsScreen', 'Share List');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Share List button:', error);
+                }
               }
-              console.log("Share List pressed");
             }}
           >
             <Feather name="share-2" size={20} color={theme.text} />
@@ -831,10 +768,17 @@ export default function ListsScreen() {
               pressed && styles.pressed,
             ]}
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('ListsScreen', 'Templates');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Templates button:', error);
+                }
               }
-              console.log("Templates pressed");
             }}
           >
             <Feather name="copy" size={20} color={theme.text} />
@@ -850,10 +794,17 @@ export default function ListsScreen() {
               pressed && styles.pressed,
             ]}
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('ListsScreen', 'Statistics');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Statistics button:', error);
+                }
               }
-              console.log("Statistics pressed");
             }}
           >
             <Feather name="bar-chart-2" size={20} color={theme.text} />
@@ -1173,7 +1124,7 @@ export default function ListsScreen() {
           },
         ]}
         showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
+        onScroll={handleSecondaryNavScroll}
         scrollEventThrottle={16}
         ListEmptyComponent={
           <View style={styles.emptyState}>
