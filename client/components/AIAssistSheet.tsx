@@ -249,6 +249,48 @@ const MODULE_ACTIONS: Record<ModuleType | "command", AIAction[]> = {
       description: "Find people to add",
     },
   ],
+  translator: [
+    {
+      id: "improve-translation",
+      icon: "globe",
+      title: "Improve Translation",
+      description: "Enhance translation quality",
+    },
+    {
+      id: "detect-language",
+      icon: "search",
+      title: "Detect Language",
+      description: "Auto-detect source language",
+    },
+  ],
+  budget: [
+    {
+      id: "categorize",
+      icon: "tag",
+      title: "Categorize Expenses",
+      description: "Auto-categorize transactions",
+    },
+    {
+      id: "insights",
+      icon: "trending-up",
+      title: "Budget Insights",
+      description: "Spending analysis",
+    },
+  ],
+  history: [
+    {
+      id: "analyze-patterns",
+      icon: "activity",
+      title: "Analyze Patterns",
+      description: "Find usage patterns",
+    },
+    {
+      id: "suggest-actions",
+      icon: "zap",
+      title: "Suggest Actions",
+      description: "Recommended next steps",
+    },
+  ],
 };
 
 interface AIAssistSheetProps {

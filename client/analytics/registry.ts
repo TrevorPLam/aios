@@ -90,6 +90,12 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
     route: "Budget",
     category: "productivity",
   },
+  history: {
+    id: "history",
+    displayName: "History",
+    route: "History",
+    category: "utility",
+  },
 };
 
 /**

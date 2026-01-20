@@ -43,7 +43,7 @@ import * as Haptics from "expo-haptics";
 import { BlurView } from "expo-blur";
 
 import { moduleHandoffManager, useModuleHandoff } from "../lib/moduleHandoff";
-import { Colors } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -69,6 +69,7 @@ interface HandoffBreadcrumbProps {
 export function HandoffBreadcrumb({ onBack, style }: HandoffBreadcrumbProps) {
   const insets = useSafeAreaInsets();
   const { returnFromHandoff, breadcrumbs, isInHandoff } = useModuleHandoff();
+  const { theme: Colors } = useTheme();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -167,6 +168,7 @@ export function HandoffBreadcrumb({ onBack, style }: HandoffBreadcrumbProps) {
  */
 export function CompactBreadcrumb({ style }: { style?: any }) {
   const { breadcrumbs, isInHandoff } = useModuleHandoff();
+  const { theme: Colors } = useTheme();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

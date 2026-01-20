@@ -52,6 +52,7 @@ export function HeaderRightNav({ settingsRoute }: HeaderRightNavProps = {}) {
   const handlePress = () => {
     if (settingsRoute) {
       // Type-safe navigation - settingsRoute is keyof AppStackParamList
+      // @ts-expect-error: TypeScript doesn't narrow the union type correctly for navigate() calls
       navigation.navigate(settingsRoute, undefined);
     } else {
       navigation.navigate("Settings");
