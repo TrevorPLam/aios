@@ -99,18 +99,26 @@ const CARD_ROTATION_ANGLE = 15;
 /** Minimum recommendations before auto-refresh triggers to maintain card availability */
 const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 
-/** Opacity for secondary navigation bar (semi-transparent for modern iOS aesthetic) */
-const SECONDARY_NAV_OPACITY = 0.8;
+/** Minimum card spacing in pixels (small spacing between cards for visual separation) */
+const CARD_SPACING = Spacing.sm; // Using theme spacing for consistency
 
-/** Minimum card spacing in pixels (near-stacked appearance as per design spec) */
-const CARD_SPACING = 0;
+/** Opacity for secondary navigation oval (semi-transparent for visual depth) */
+const SECONDARY_NAV_OPACITY = 0.8;
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 
 // Scroll Animation Constants
-/** Secondary nav bar hide offset in pixels when scrolling down */
-const SECONDARY_NAV_HIDE_OFFSET = -80;
+/** 
+ * Secondary nav bar hide offset in pixels when scrolling down.
+ * This value must be large enough to hide the entire secondary nav including:
+ * - secondaryNav paddingVertical (Spacing.xs = 4px) * 2 = 8px
+ * - secondaryNavContent paddingVertical (Spacing.sm = 8px) * 2 = 16px
+ * - secondaryNavContent height (icon 20px + text ~12px + gap Spacing.xs 4px) = ~36px
+ * - Additional buffer for complete hiding = ~40px
+ * Total: approximately -100px ensures complete hiding
+ */
+const SECONDARY_NAV_HIDE_OFFSET = -100;
 
 /** Animation duration in milliseconds for secondary nav show/hide transitions */
 const SECONDARY_NAV_ANIMATION_DURATION = 200;
@@ -145,7 +153,11 @@ interface ConfidenceMeterProps {
   confidence: "low" | "medium" | "high";
 }
 
-function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
+/**
+ * Memoized to prevent unnecessary re-renders.
+ * Only re-renders when confidence level changes.
+ */
+const ConfidenceMeter = React.memo(function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
   const { theme } = useTheme();
   const filledSegments = confidence === "high" ? 3 : confidence === "medium" ? 2 : 1;
 
@@ -167,7 +179,7 @@ function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
       ))}
     </View>
   );
-}
+});
 
 /**
  * RecommendationCard Component
@@ -204,7 +216,11 @@ interface RecommendationCardProps {
   onPress: () => void;
 }
 
-function RecommendationCard({
+/**
+ * Memoized to prevent unnecessary re-renders when parent component updates.
+ * Only re-renders when recommendation ID or opened status changes.
+ */
+const RecommendationCard = React.memo(function RecommendationCard({
   recommendation,
   onAccept,
   onDecline,
@@ -362,7 +378,13 @@ function RecommendationCard({
       </Animated.View>
     </GestureDetector>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison: only re-render if recommendation ID or opened status changes
+  return (
+    prevProps.recommendation.id === nextProps.recommendation.id &&
+    prevProps.recommendation.openedAt === nextProps.recommendation.openedAt
+  );
+});
 
 export default function CommandCenterScreen() {
   const { theme } = useTheme();
@@ -423,7 +445,11 @@ export default function CommandCenterScreen() {
    * Performance Note:
    * - Auto-refresh only triggers on initial load, not on subsequent refreshes
    * - Prevents infinite refresh loops via isRefreshing flag
+   * 
+   * ESLint Suppression Justification:
    * - handleRefreshRecommendations is intentionally NOT in deps to avoid circular dependency
+   * - Including it would cause infinite re-renders since loadData is called from handleRefreshRecommendations
+   * - The isRefreshing flag ensures safe non-blocking behavior
    */
   const loadData = useCallback(async () => {
     const count = await loadDataCore();
@@ -606,10 +632,11 @@ export default function CommandCenterScreen() {
    * - Uses shared values for smooth 60fps animations
    * - Throttled via scrollEventThrottle={16} on FlatList
    * - Animation state checks prevent redundant updates
+   * - Memoized with useCallback to prevent recreation on every render
    * 
    * @param event - Native scroll event containing contentOffset
    */
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     const delta = currentScrollY - lastScrollY.value;
 
@@ -642,7 +669,7 @@ export default function CommandCenterScreen() {
     }
 
     lastScrollY.value = currentScrollY;
-  };
+  }, []); // Empty deps array: uses shared values that don't need to be in deps
 
   /**
    * Animated style for secondary navigation bar.
@@ -650,7 +677,7 @@ export default function CommandCenterScreen() {
    * 
    * Values:
    * - 0: Nav bar visible (default position)
-   * - SECONDARY_NAV_HIDE_OFFSET (-80): Nav bar hidden (moved up off screen)
+   * - SECONDARY_NAV_HIDE_OFFSET (-100): Nav bar hidden (moved up off screen)
    */
   const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -698,7 +725,7 @@ export default function CommandCenterScreen() {
         </Pressable>
       </View>
 
-      {/* Secondary Navigation Bar - Oval, transparent, module-specific actions */}
+      {/* Secondary Navigation Bar - Transparent oval with buttons, sits above cards */}
       <Animated.View 
         style={[
           styles.secondaryNav, 
@@ -876,25 +903,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: Spacing.lg,
-    paddingBottom: Spacing.md,
+    paddingBottom: Spacing.xs, // Reduced from Spacing.md to make header thinner
   },
   headerButton: {
-    width: 44,
-    height: 44,
+    width: 40, // Reduced from 44 to make header thinner
+    height: 40, // Reduced from 44 to make header thinner
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.sm,
   },
   secondaryNav: {
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.xs, // Reduced from Spacing.sm to make nav thinner
   },
   secondaryNavContent: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm, // Reduced from Spacing.md to make nav thinner
+    paddingHorizontal: Spacing.lg, // Reduced from Spacing.xl to make nav thinner
     borderRadius: BorderRadius.full, // Oval/pill shape
   },
   secondaryNavButton: {

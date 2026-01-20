@@ -45,7 +45,7 @@
  * @module BottomNav
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, Pressable, Alert } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -99,11 +99,13 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     useState<ModuleItem[]>(ALL_MODULES);
   const { contextualModule, clearContextualModule } = useNavigationContext();
 
-  useEffect(() => {
-    loadModuleOrder();
-  }, []);
-
-  const loadModuleOrder = async () => {
+  /**
+   * Loads and orders modules based on user settings and usage statistics.
+   * Memoized to prevent recreation on every render.
+   * 
+   * @returns {Promise<void>}
+   */
+  const loadModuleOrder = useCallback(async () => {
     const settings = await db.settings.get();
     let modules = [...ALL_MODULES];
 
@@ -123,7 +125,12 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     }
 
     setOrderedModules(modules);
-  };
+  }, []); // Empty deps: uses shared values which are mutable refs (don't trigger re-renders)
+
+  useEffect(() => {
+    // loadModuleOrder is stable (memoized with empty deps), safe to use here
+    loadModuleOrder();
+  }, [loadModuleOrder]);
 
   // Find current module index if we are in one, otherwise default to -1
   const currentIndex = orderedModules.findIndex((m) => m.route === route.name);
@@ -298,7 +305,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
       >
         <MaterialCommunityIcons
           name="brain"
-          size={28}
+          size={24}
           color={theme.backgroundRoot}
         />
       </Pressable>
@@ -331,12 +338,12 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.xs,
     // Container extends edge-to-edge; buttons maintain spacing via justifyContent
     width: "100%",
-    minHeight: 80,
+    minHeight: 68, // Reduced from 80 to make nav thinner
   },
   navButton: {
-    // FIXED SIZE: Do not change without updating constraint comment
-    width: 56,
-    height: 56,
+    // FIXED SIZE: Reduced to make nav bar thinner
+    width: 48, // Reduced from 56
+    height: 48, // Reduced from 56
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.lg,
@@ -357,9 +364,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   aiButton: {
-    // FIXED SIZE: AI button centered between arrows
-    width: 64,
-    height: 64,
+    // FIXED SIZE: AI button centered between arrows (reduced to make nav thinner)
+    width: 56, // Reduced from 64
+    height: 56, // Reduced from 64
     alignItems: "center",
     justifyContent: "center",
     borderRadius: BorderRadius.full,
