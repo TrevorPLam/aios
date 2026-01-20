@@ -33,6 +33,7 @@
 import { ModuleType } from "@/models/types";
 import { lazyLoader } from "./lazyLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logger } from "@/utils/logger";
 
 /**
  * Module Transition
@@ -158,13 +159,13 @@ class PrefetchEngine {
       }
 
       this.initialized = true;
-      console.log(
-        "[PrefetchEngine] Initialized with",
-        this.patterns.size,
-        "patterns",
-      );
+      logger.info("PrefetchEngine", "Initialized", {
+        patternsCount: this.patterns.size,
+      });
     } catch (error) {
-      console.error("[PrefetchEngine] Initialization error:", error);
+      logger.error("PrefetchEngine", "Initialization error", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       this.initialized = true; // Continue anyway
     }
   }
@@ -345,7 +346,7 @@ class PrefetchEngine {
   private async executePrefetch(currentModule: ModuleType): Promise<void> {
     // Check constraints
     if (!this.shouldPrefetch()) {
-      console.log("[PrefetchEngine] Skipping prefetch due to constraints");
+      logger.debug("PrefetchEngine", "Skipping prefetch due to constraints");
       return;
     }
 
@@ -353,7 +354,7 @@ class PrefetchEngine {
     const predictions = this.predictNextModules(currentModule);
 
     if (predictions.length === 0) {
-      console.log("[PrefetchEngine] No predictions for", currentModule);
+      logger.debug("PrefetchEngine", "No predictions", { currentModule });
       return;
     }
 
@@ -367,7 +368,9 @@ class PrefetchEngine {
       return;
     }
 
-    console.log("[PrefetchEngine] Prefetching:", toPrefetch);
+    logger.info("PrefetchEngine", "Prefetching modules", {
+      modules: toPrefetch,
+    });
 
     // Trigger prefetch
     lazyLoader.preloadModules(toPrefetch, "prefetch");
@@ -539,9 +542,13 @@ class PrefetchEngine {
           JSON.stringify(patternsArray),
         );
 
-        console.log("[PrefetchEngine] Saved", this.patterns.size, "patterns");
+        logger.debug("PrefetchEngine", "Saved patterns", {
+          count: this.patterns.size,
+        });
       } catch (error) {
-        console.error("[PrefetchEngine] Save error:", error);
+        logger.error("PrefetchEngine", "Save error", {
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     }, 2000); // 2 second debounce
   }
@@ -590,7 +597,7 @@ class PrefetchEngine {
       STORAGE_KEYS.MODULE_ENTER_TIME,
     ]);
 
-    console.log("[PrefetchEngine] Cleared all data");
+    logger.info("PrefetchEngine", "Cleared all data");
   }
 
   /**

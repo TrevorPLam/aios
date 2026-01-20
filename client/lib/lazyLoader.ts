@@ -32,6 +32,7 @@
 
 import React, { ComponentType, LazyExoticComponent } from "react";
 import { ModuleType } from "@/models/types";
+import { logger } from "@/utils/logger";
 
 /**
  * Module Loader Configuration
@@ -214,14 +215,18 @@ class LazyLoader {
             loadTime,
           });
 
-          console.log(
-            `[LazyLoader] Loaded ${moduleId} in ${loadTime.toFixed(2)}ms`,
-          );
+          logger.debug("LazyLoader", "Loaded module", {
+            moduleId,
+            loadTimeMs: loadTime.toFixed(2),
+          });
 
           return module;
         })
         .catch((error) => {
-          console.error(`[LazyLoader] Failed to load ${moduleId}:`, error);
+          logger.error("LazyLoader", "Failed to load module", {
+            moduleId,
+            error: error instanceof Error ? error.message : String(error),
+          });
 
           // Store error
           this.loadedModules.set(moduleId, {
@@ -314,18 +319,21 @@ class LazyLoader {
 
         const config = this.loaderConfigs.get(moduleId);
         if (!config) {
-          console.warn(`[LazyLoader] No config for module: ${moduleId}`);
+          logger.warn("LazyLoader", "No config for module", { moduleId });
           return;
         }
 
         // Start loading
         const loadPromise = this.loadModule(config.path)
           .then(() => {
-            console.log(`[LazyLoader] Preloaded ${moduleId}`);
+            logger.debug("LazyLoader", "Preloaded module", { moduleId });
             this.loadingPromises.delete(moduleId);
           })
           .catch((error) => {
-            console.error(`[LazyLoader] Failed to preload ${moduleId}:`, error);
+            logger.error("LazyLoader", "Failed to preload module", {
+              moduleId,
+              error: error instanceof Error ? error.message : String(error),
+            });
             this.loadingPromises.delete(moduleId);
           });
 
