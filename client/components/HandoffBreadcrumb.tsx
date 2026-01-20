@@ -69,8 +69,9 @@ interface HandoffBreadcrumbProps {
 export function HandoffBreadcrumb({ onBack, style }: HandoffBreadcrumbProps) {
   const insets = useSafeAreaInsets();
   const { returnFromHandoff, breadcrumbs, isInHandoff } = useModuleHandoff();
-  const { theme: Colors } = useTheme();
+  const { theme } = useTheme();
   const [visible, setVisible] = useState(false);
+  const styles = createStyles(theme);
 
   useEffect(() => {
     // Subscribe to handoff events
@@ -140,7 +141,7 @@ export function HandoffBreadcrumb({ onBack, style }: HandoffBreadcrumbProps) {
           accessibilityLabel={`Back to ${previousModule}`}
           accessibilityHint="Return to previous screen"
         >
-          <Feather name="chevron-left" size={24} color={Colors.electric} />
+          <Feather name="chevron-left" size={24} color={theme.electric} />
           <Text style={styles.backText} numberOfLines={1}>
             {previousModule}
           </Text>
@@ -168,8 +169,9 @@ export function HandoffBreadcrumb({ onBack, style }: HandoffBreadcrumbProps) {
  */
 export function CompactBreadcrumb({ style }: { style?: any }) {
   const { breadcrumbs, isInHandoff } = useModuleHandoff();
-  const { theme: Colors } = useTheme();
+  const { theme } = useTheme();
   const [visible, setVisible] = useState(false);
+  const styles = createStyles(theme);
 
   useEffect(() => {
     const unsubscribe = moduleHandoffManager.subscribe(() => {
@@ -196,7 +198,7 @@ export function CompactBreadcrumb({ style }: { style?: any }) {
       <Feather
         name="corner-down-right"
         size={14}
-        color={Colors.textSecondary}
+        color={theme.textSecondary}
         style={styles.compactIcon}
       />
       <Text style={styles.compactText} numberOfLines={1}>
@@ -206,14 +208,19 @@ export function CompactBreadcrumb({ style }: { style?: any }) {
   );
 }
 
-const styles = StyleSheet.create({
+/**
+ * Create styles with theme colors
+ * Using a factory function instead of StyleSheet.create at module level
+ * because we need runtime theme colors (light/dark mode)
+ */
+const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
   container: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
-    backgroundColor: Platform.OS === "ios" ? "transparent" : Colors.deepSpace,
+    backgroundColor: Platform.OS === "ios" ? "transparent" : theme.deepSpace,
     overflow: "hidden",
   },
   fallbackBackdrop: {
@@ -234,7 +241,7 @@ const styles = StyleSheet.create({
     maxWidth: SCREEN_WIDTH * 0.5, // Max 50% width
   },
   backText: {
-    color: Colors.electric,
+    color: theme.electric,
     fontSize: 17, // iOS standard font size
     fontWeight: "400",
     marginLeft: 4,
@@ -245,14 +252,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   breadcrumbText: {
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     fontSize: 13,
     fontWeight: "500",
     opacity: 0.7,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: Colors.border,
+    backgroundColor: theme.border,
     opacity: 0.3,
   },
   // Compact style
@@ -268,7 +275,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   compactText: {
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     fontSize: 12,
     fontWeight: "500",
     flex: 1,
