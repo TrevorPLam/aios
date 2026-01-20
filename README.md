@@ -446,7 +446,7 @@ The server now includes a complete REST API with authentication and CRUD endpoin
 - User-specific data isolation
 - In-memory storage (ready for PostgreSQL migration)
 
-See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentation.
+See [API_DOCUMENTATION.md](./docs/technical/API_DOCUMENTATION.md) for detailed API documentation.
 
 ## 💬 P2P Messaging Module
 
@@ -555,7 +555,7 @@ To integrate AI:
 - ❌ Multi-device sync
 - ❌ AI Assist actions implementation (grammar check, summarization, etc.)
 
-See [MISSING_FEATURES.md](./MISSING_FEATURES.md) for a complete analysis.
+See [MISSING_FEATURES.md](./docs/planning/MISSING_FEATURES.md) for a complete analysis.
 
 ## 📧 Email Module (Enhanced)
 
