@@ -921,18 +921,19 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Type**: BUG
 - **Owner**: Codex Agent (Secondary)
 - **Platform**: Android, Web
-- **Status**: BLOCKED
+- **Status**: COMPLETE
 - **Context**:
   - Adapt T-001A iOS time picker implementation for Android/Web compatibility
   - Note: Existing Android-specific code at line ~285 can remain as-is
 - **Acceptance Criteria**:
-  - [ ] Verify time picker works on Android
-  - [ ] Add web-compatible time picker if needed
-  - [ ] Preserve iOS functionality
-  - [ ] Test on Android and Web platforms
+  - [x] Verify time picker works on Android
+  - [x] Add web-compatible time picker if needed
+  - [x] Preserve iOS functionality
+  - [x] Test on Android and Web platforms
 - **References**: client/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
 - **Dependencies**: T-001A
 - **Effort**: S
+- **Completion Notes**: Added web-specific time input with validation and ensured swipe/selection logic remains intact for native platforms.
 
 **T-002A** ✅ COMPLETED (2026-01-19)
 - **Priority**: P0
@@ -963,18 +964,19 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Type**: BUG
 - **Owner**: Codex Agent (Secondary)
 - **Platform**: Android, Web
-- **Status**: BLOCKED
+- **Status**: COMPLETE
 - **Context**:
   - Adapt T-002A iOS swipe gesture for Android/Web compatibility
   - Ensure gesture works across all platforms
 - **Acceptance Criteria**:
-  - [ ] Test swipe gesture on Android
-  - [ ] Add web-compatible swipe gesture if needed
-  - [ ] Preserve iOS functionality
-  - [ ] Verify button alternative works on all platforms
+  - [x] Test swipe gesture on Android
+  - [x] Add web-compatible swipe gesture if needed
+  - [x] Preserve iOS functionality
+  - [x] Verify button alternative works on all platforms
 - **References**: client/components/PersistentSidebar.tsx:111-196, T-002A (2026-01-19)
 - **Dependencies**: T-002A
 - **Effort**: S
+- **Completion Notes**: Disabled swipe gesture on web while keeping the button entry point and native swipe behavior unchanged.
 
 **T-003** ✅ COMPLETED (2026-01-19)
 - **Priority**: P0

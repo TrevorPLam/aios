@@ -62,6 +62,7 @@ import {
 import { moduleRegistry, ModuleDefinition } from "@/lib/moduleRegistry";
 import { contextEngine, ContextZone } from "@/lib/contextEngine";
 import { eventBus, EVENT_TYPES } from "@/lib/eventBus";
+import { isSidebarSwipeSupported } from "@/utils/platformSupport";
 
 const SIDEBAR_WIDTH = Sidebar.width;
 const COLLAPSED_WIDTH = Sidebar.collapsedWidth;
@@ -91,6 +92,7 @@ export function PersistentSidebar({
   const [contextZone, setContextZone] = useState<ContextZone>(ContextZone.AUTO);
 
   const translateX = useSharedValue(-SIDEBAR_WIDTH);
+  const isSwipeEnabled = isSidebarSwipeSupported(Platform.OS);
 
   /**
    * PanResponder for Edge Swipe Gesture
@@ -123,6 +125,7 @@ export function PersistentSidebar({
        * Only activates for touches near the left edge with minimum movement.
        */
       onStartShouldSetPanResponder: (evt, gestureState) => {
+        if (!isSwipeEnabled) return false;
         // Don't capture if sidebar is already open
         if (isOpen) return false;
 
@@ -143,6 +146,7 @@ export function PersistentSidebar({
        * Activates when movement clearly indicates rightward swipe intent.
        */
       onMoveShouldSetPanResponder: (evt, gestureState) => {
+        if (!isSwipeEnabled) return false;
         if (isOpen) return false;
 
         const { pageX } = evt.nativeEvent;
@@ -157,6 +161,7 @@ export function PersistentSidebar({
        * Updates sidebar position to follow finger, clamped to valid range.
        */
       onPanResponderMove: (evt, gestureState) => {
+        if (!isSwipeEnabled) return;
         const { dx } = gestureState;
 
         // Limit translation to 0 (fully open) and -SIDEBAR_WIDTH (fully closed)
@@ -172,6 +177,7 @@ export function PersistentSidebar({
        * Determines final state based on swipe distance and velocity.
        */
       onPanResponderRelease: (evt, gestureState) => {
+        if (!isSwipeEnabled) return;
         const { dx, vx } = gestureState;
 
         // Determine if swipe velocity or distance is sufficient to open
@@ -194,6 +200,7 @@ export function PersistentSidebar({
        * Always snaps back to closed state for safety.
        */
       onPanResponderTerminate: () => {
+        if (!isSwipeEnabled) return;
         // Snap back closed
         translateX.value = withSpring(-SIDEBAR_WIDTH, {
           damping: Animation.springDamping,
@@ -474,7 +481,7 @@ export function PersistentSidebar({
       )}
 
       {/* Edge Swipe Gesture Zone */}
-      {!isOpen && (
+      {!isOpen && isSwipeEnabled && (
         <View
           {...panResponder.panHandlers}
           style={[
