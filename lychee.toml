@@ -23,10 +23,6 @@ exclude = [
   "https?://example\\.com.*",
   "https?://example\\.org.*",
   
-  # Exclude placeholders
-  "https?://.*\\{.*\\}.*",
-  "https?://.*<.*>.*",
-  
   # Exclude LinkedIn (blocks automated checks)
   "https?://.*linkedin\\.com.*",
   
@@ -45,10 +41,10 @@ exclude_path = [
   "coverage"
 ]
 
-# Cache settings (in seconds)
-max_cache_age = 86400  # 1 day
+# Cache settings
+max_cache_age = "1d"  # 1 day
 
-# Timeout for requests (in seconds)
+# Timeout for requests
 timeout = 20
 
 # Retry failed requests
@@ -63,8 +59,8 @@ insecure = false
 # Check fragments/anchors on HTML pages
 include_fragments = true
 
-# Base URL for relative links (leave empty to use file location)
-base_url = ""
+# Base URL for relative links (comment out to use file location)
+# base_url = ""
 
 # Headers to send with requests
 headers = []

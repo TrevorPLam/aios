@@ -24,6 +24,7 @@ expo-env.d.ts
 
 # Cache directories
 node_modules/.cache/
+.lycheecache
 
 # debug
 npm-debug.*
