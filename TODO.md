@@ -1490,16 +1490,161 @@ For new features requiring multi-platform support, use sequential tasks:
 
 Following T-028 decision to COMPLETE analytics implementation, tasks broken down into phases:
 
+**NOTE:** Phase 0 (T-081 through T-085) must complete BEFORE Phase 1 (T-071) can begin.  
+**CRITICAL:** Analytics client POSTs to `/api/telemetry/events` but this endpoint doesn't exist!
+
+---
+
+### Phase 0: Server Foundation (BLOCKING) ⭐ NEW
+
+**T-081**
+- **Priority**: P0
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic (Server)
+- **Status**: READY
+- **Context**:
+  - Phase 0: Server Foundation (CRITICAL - BLOCKS ALL ANALYTICS)
+  - Analytics client sends events to `/api/telemetry/events` but endpoint doesn't exist
+  - Need database schema for analytics_events table
+  - Without this, all analytics events queue indefinitely on client
+- **Acceptance Criteria**:
+  - [ ] Create migration file for analytics_events table
+  - [ ] Table includes: id, user_id, event_name, event_properties (JSONB), timestamp, session_id, device_id, platform
+  - [ ] Foreign key constraint to users table with ON DELETE CASCADE
+  - [ ] Indexes on: user_id, event_name, timestamp (DESC), session_id
+  - [ ] Timestamp with timezone for correct time handling
+  - [ ] Test migration up/down successfully
+- **References**: 
+  - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.1)
+  - server/migrations/ (NEW migration file)
+- **Dependencies**: None
+- **Effort**: S (4-6 hours)
+- **Note**: Unblocks T-082, T-083. CRITICAL for analytics to work.
+
+**T-082**
+- **Priority**: P0
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic (Server)
+- **Status**: BLOCKED
+- **Context**:
+  - Phase 0: Server Foundation
+  - Add storage methods for analytics event persistence
+  - Support batch inserts for performance (50+ events at once)
+  - GDPR deletion support required
+- **Acceptance Criteria**:
+  - [ ] Add saveAnalyticsEvents(events: AnalyticsEvent[]): Promise<void>
+  - [ ] Batch insert optimization (use transaction, single query)
+  - [ ] Handle duplicate event IDs gracefully (idempotency)
+  - [ ] Add getAnalyticsEvents(userId, filters) for querying
+  - [ ] Add deleteUserAnalytics(userId) for GDPR deletion
+  - [ ] Error logging for monitoring
+  - [ ] Unit tests for all methods (80%+ coverage)
+- **References**: 
+  - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.2)
+  - server/storage.ts
+- **Dependencies**: T-081 (database schema)
+- **Effort**: M (6-8 hours)
+- **Note**: Unblocks T-083. Required for endpoint.
+
+**T-083**
+- **Priority**: P0
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic (Server)
+- **Status**: BLOCKED
+- **Context**:
+  - Phase 0: Server Foundation
+  - Create POST /api/telemetry/events endpoint
+  - Client is already configured to send to this endpoint
+  - This is the CRITICAL missing piece blocking all analytics
+- **Acceptance Criteria**:
+  - [ ] POST /api/telemetry/events endpoint in server/routes.ts
+  - [ ] Require authentication (JWT token)
+  - [ ] Validate payload with Zod schema (analyticsBatchSchema)
+  - [ ] Rate limiting per user (1000 events/min)
+  - [ ] Call storage.saveAnalyticsEvents(events)
+  - [ ] Return 202 Accepted with confirmation
+  - [ ] Error handling for storage failures
+  - [ ] Integration test (send from client → persist to DB)
+- **References**: 
+  - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.3)
+  - server/routes.ts
+  - client/analytics/transport.ts (client-side POST)
+- **Dependencies**: T-082 (storage methods)
+- **Effort**: M (4-6 hours)
+- **Note**: Unblocks T-071. Makes analytics work end-to-end.
+
+**T-084**
+- **Priority**: P0
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic (Shared)
+- **Status**: READY
+- **Context**:
+  - Phase 0: Server Foundation
+  - Add Zod validation schema for analytics payloads
+  - Ensures data quality and security on server
+  - Can be done in parallel with T-081, T-082
+- **Acceptance Criteria**:
+  - [ ] Add analyticsEventSchema to shared/schema.ts
+  - [ ] Validate: eventId (UUID), eventName (string), timestamp (datetime), properties (object)
+  - [ ] Validate identity: userId, deviceId, sessionId
+  - [ ] Add analyticsBatchSchema (array of events, 1-100 limit)
+  - [ ] Schema compatible with client types
+  - [ ] Export for use in server validation
+  - [ ] Add schema tests
+- **References**: 
+  - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.4)
+  - shared/schema.ts
+- **Dependencies**: None (can parallelize)
+- **Effort**: S (3-4 hours)
+- **Note**: Required by T-083 for validation.
+
+**T-085**
+- **Priority**: P0
+- **Type**: QUALITY
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: Platform-Agnostic
+- **Status**: BLOCKED
+- **Context**:
+  - Phase 0: Integration Testing
+  - End-to-end test from client to database
+  - Verify offline queueing, retry, GDPR deletion
+  - Critical to ensure Phase 0 works before Phase 1
+- **Acceptance Criteria**:
+  - [ ] E2E test: Client sends events → Server receives → DB persists
+  - [ ] Test offline queueing (events queue when server down)
+  - [ ] Test retry logic (events retry on failure)
+  - [ ] Test batch sending (50 events sent as batch)
+  - [ ] Test GDPR deletion (deleteUserAnalytics removes all events)
+  - [ ] Test error handling (bad payload returns 400)
+  - [ ] Test coverage >80%
+- **References**: 
+  - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5)
+- **Dependencies**: T-081, T-082, T-083, T-084 (all Phase 0 tasks)
+- **Effort**: M (4-6 hours)
+- **Note**: Validates Phase 0 complete. Unblocks Phase 1.
+
+**Phase 0 Total Effort:** 21-30 hours (1-1.5 weeks)  
+**Phase 0 Unblocks:** T-071 (Phase 1)
+
+---
+
+### Phase 1: Production Readiness (Client Features)
+
 **T-071**
 - **Priority**: P0
 - **Type**: FEATURE
 - **Owner**: GitHub Agent (Primary)
 - **Platform**: Platform-Agnostic
-- **Status**: READY
+- **Status**: BLOCKED
 - **Context**:
   - Phase 1: Production Readiness (Critical observability and privacy features)
   - Event Inspector and Metrics Collection are critical for production monitoring
   - Consent Management required for GDPR/CCPA compliance
+  - **BLOCKED BY:** Phase 0 (T-081-T-085) must complete first
 - **Acceptance Criteria**:
   - [ ] Task 1.1: Event Inspector UI (20-30h) - Real-time event visualization
   - [ ] Task 1.2: Metrics Collection (20-30h) - Throughput, latency, error rates
@@ -1509,12 +1654,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Task 1.6: Testing & Documentation (10-20h) - 80%+ coverage
 - **References**: 
   - docs/analytics/IMPLEMENTATION_PLAN.md (Phase 1)
+  - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Phase 1 details)
   - client/analytics/observability/inspector.ts
   - client/analytics/observability/metrics.ts
   - client/analytics/privacy/consent.ts
   - client/analytics/privacy/retention.ts
   - client/analytics/privacy/deletion.ts
-- **Dependencies**: None (T-028 complete)
+- **Dependencies**: T-085 (Phase 0 complete and tested)
 - **Effort**: L (80-120 hours total for Phase 1)
 - **Note**: Phase 1 is production-critical. Target: 53/100 → 70/100 score.
 
@@ -2005,28 +2151,29 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - Updated 2026-01-19 (Session 2): Completed 4 additional tasks (T-002A, T-003, T-004, T-014, T-031). 3 tasks verified as already complete from previous work (T-002A, T-003, T-031), 2 tasks implemented with new features (T-004 Omnisearch, T-014 Module Settings Navigation).
 - Updated 2026-01-19 (Session 3): Completed 3 additional tasks (T-005, T-006, T-015). All 3 implemented with new features: Settings menu enhancement with History and AttentionCenter, and Context Zone selector UI in AIPreferences.
 - Updated 2026-01-19 (Session 4): Reverted T-009 (module-selection onboarding removed per user request). Added T-057 for future AI personality-based onboarding.
-- Updated 2026-01-20: Completed analytics decision (T-028). Decision: COMPLETE implementation (not remove). Created ADR-006 and IMPLEMENTATION_PLAN.md. Split T-029 into phased tasks T-071 through T-080.
+- Updated 2026-01-20 (Session 1): Completed analytics decision (T-028). Decision: COMPLETE implementation (not remove). Created ADR-006 and IMPLEMENTATION_PLAN.md. Split T-029 into phased tasks T-071 through T-080.
+- Updated 2026-01-20 (Session 2): Deep assessment revealed CRITICAL gap: Analytics client POSTs to `/api/telemetry/events` but endpoint doesn't exist! Added Phase 0 (T-081 through T-085) to create server foundation. Phase 0 MUST complete before Phase 1.
 
 ---
 
 ## Summary
 
-**Total Tasks**: 76 (added T-071 through T-080)
+**Total Tasks**: 81 (added T-081 through T-085)
 **Completed**: 13 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-028, T-031, T-043)
 **Obsolete**: 2 tasks (T-029, T-030 - replaced by T-071-T-080)
 **Reverted**: 1 task (T-009)
-**Remaining**: 60 tasks (10 new analytics tasks)
+**Remaining**: 65 tasks (15 new analytics tasks: Phase 0 + Phase 1-3)
 
 **By Priority**:
-- P0 (Critical): 3 tasks (3 complete: T-002A, T-003, T-028; 1 new: T-071)
-- P1 (High): 17 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057; 5 new: T-072-T-076)
-- P2 (Medium): 34 tasks (4 complete: T-014, T-015, T-022, T-031; 4 new: T-077-T-080)
+- P0 (Critical): 7 tasks (3 complete: T-002A, T-003, T-028; 4 new: T-081, T-082, T-083, T-085; 1 blocked: T-071)
+- P1 (High): 18 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057, T-084; 5 blocked: T-072-T-076)
+- P2 (Medium): 34 tasks (4 complete: T-014, T-015, T-022, T-031; 4 blocked: T-077-T-080)
 - P3 (Low): 16 tasks (1 complete: T-043; 2 obsolete: T-029, T-030)
 
 **By Type**:
 - BUG: 2 (2 complete: T-002A, T-003)
-- FEATURE: 36 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 2 new: T-057, T-071-T-080)
-- QUALITY: 14 (2 complete: T-022, T-043)
+- FEATURE: 40 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 15 new: T-057, T-071-T-080, T-081-T-084)
+- QUALITY: 15 (2 complete: T-022, T-043; 1 new: T-085)
 - DOCS: 12
 - CHORE: 7 (1 complete: T-028; 1 obsolete: T-030)
 - SECURITY: 0
@@ -2034,30 +2181,31 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - DEPENDENCY: 1
 
 **By Owner**:
-- GitHub Agent (Primary): 75 tasks (13 complete, 2 obsolete)
+- GitHub Agent (Primary): 80 tasks (13 complete, 2 obsolete)
 - Trevor: 0 tasks (T-028 completed by Agent)
 
 **By Status**:
 - COMPLETE: 13 tasks
 - OBSOLETE: 2 tasks
-- READY: 51 tasks
-- BLOCKED: 10 tasks (T-001B, T-002B, T-072-T-080 - blocked by Phase 1)
+- READY: 54 tasks (includes 2 Phase 0 tasks: T-081, T-084)
+- BLOCKED: 13 tasks (T-001B, T-002B, T-071-T-080 - Phase 1-3 blocked by Phase 0; T-082, T-083, T-085 - Phase 0 blocked by T-081)
 
 **By Effort**:
-- Small (S): 14 tasks
-- Medium (M): 54 tasks (includes 7 new analytics tasks)
-- Large (L): 6 tasks (includes 3 new analytics tasks: T-071, T-077, T-080)
+- Small (S): 16 tasks (includes 2 Phase 0: T-081, T-084)
+- Medium (M): 57 tasks (includes 3 Phase 0: T-082, T-083, T-085; 7 analytics Phase 1-3)
+- Large (L): 6 tasks (includes 3 analytics tasks: T-071, T-077, T-080)
 
 **Critical Path**:
 1. Fix critical bugs (T-001, T-002, T-003) ✅
 2. Expose hidden features (T-004 through T-013) - In Progress
-3. Analytics Phase 1 (T-071) - Production readiness 🆕
-4. Fix TypeScript errors (T-039 through T-044)
-5. Improve UX and testing (T-014 through T-027, T-032 through T-035)
-6. Analytics Phase 2 (T-072-T-076) - Product features 🆕
-7. Analytics Phase 3 (T-077-T-080) - Advanced features 🆕
-8. Documentation improvements (T-036 through T-053)
-9. Edge cases and polish (T-054 through T-056)
+3. **Analytics Phase 0 (T-081-T-085) - Server Foundation ⭐ CRITICAL - BLOCKS ALL ANALYTICS**
+4. Analytics Phase 1 (T-071) - Production readiness (blocked by Phase 0)
+5. Fix TypeScript errors (T-039 through T-044)
+6. Improve UX and testing (T-014 through T-027, T-032 through T-035)
+7. Analytics Phase 2 (T-072-T-076) - Product features (blocked by Phase 1)
+8. Analytics Phase 3 (T-077-T-080) - Advanced features (blocked by Phase 2)
+9. Documentation improvements (T-036 through T-053)
+10. Edge cases and polish (T-054 through T-056)
 
 ## 🔴 Critical Priority - Bugs & Broken Functionality
 
