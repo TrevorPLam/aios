@@ -46,6 +46,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { Animation, Opacity, ComponentSize } from "@/constants/uiConstants";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Contact } from "@/models/types";
@@ -87,7 +88,7 @@ function ContactCard({
   const { theme } = useTheme();
 
   return (
-    <Animated.View entering={FadeInDown.delay(index * 30).springify()}>
+    <Animated.View entering={FadeInDown.delay(index * Animation.staggerDelay).springify()}>
       <Pressable
         onPress={onPress}
         style={({ pressed }) => [
@@ -172,7 +173,7 @@ function ContactCard({
               }}
               style={({ pressed }) => [
                 styles.actionButton,
-                pressed && { opacity: 0.7 },
+                pressed && { opacity: Opacity.pressedLight },
               ]}
             >
               <Feather
@@ -191,7 +192,7 @@ function ContactCard({
               style={({ pressed }) => [
                 styles.messageButton,
                 { backgroundColor: theme.accentDim },
-                pressed && { opacity: 0.8 },
+                pressed && { opacity: Opacity.pressed },
               ]}
             >
               <Feather name="message-circle" size={14} color={theme.accent} />
@@ -579,7 +580,7 @@ export default function ContactsScreen() {
       {/* Search Bar */}
       {contacts.length > 0 && (
         <Animated.View
-          entering={FadeInDown.delay(50).springify()}
+          entering={FadeInDown.delay(Animation.shortDelay).springify()}
           style={[
             styles.searchContainer,
             { backgroundColor: theme.backgroundDefault },
@@ -603,7 +604,7 @@ export default function ContactsScreen() {
 
       {/* Filter Chips */}
       {contacts.length > 0 && (
-        <Animated.View entering={FadeInDown.delay(100).springify()}>
+        <Animated.View entering={FadeInDown.delay(Animation.mediumDelay).springify()}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -918,9 +919,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -2,
     right: -2,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    width: ComponentSize.favoriteBadge,
+    height: ComponentSize.favoriteBadge,
+    borderRadius: ComponentSize.favoriteBadgeRadius,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -963,9 +964,9 @@ const styles = StyleSheet.create({
     padding: Spacing.xs,
   },
   messageButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ComponentSize.iconSmall,
+    height: ComponentSize.iconSmall,
+    borderRadius: ComponentSize.iconSmall / 2,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -995,21 +996,21 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   fab: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: ComponentSize.fab,
+    height: ComponentSize.fab,
+    borderRadius: ComponentSize.fabRadius,
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,
   },
   primaryFab: {
-    width: 56,
-    height: 56,
+    width: ComponentSize.fab,
+    height: ComponentSize.fab,
   },
   secondaryFab: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: ComponentSize.secondaryFab,
+    height: ComponentSize.secondaryFab,
+    borderRadius: ComponentSize.secondaryFabRadius,
   },
   bottomNavContainer: {
     position: "absolute",

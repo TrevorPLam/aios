@@ -52,14 +52,21 @@ import * as Haptics from "expo-haptics";
 import { ThemedText } from "./ThemedText";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
+import { 
+  Animation, 
+  Opacity, 
+  ComponentSize, 
+  Sidebar, 
+  ZIndex 
+} from "@/constants/uiConstants";
 import { moduleRegistry, ModuleDefinition } from "@/lib/moduleRegistry";
 import { contextEngine, ContextZone } from "@/lib/contextEngine";
 import { eventBus, EVENT_TYPES } from "@/lib/eventBus";
 
-const SIDEBAR_WIDTH = 280;
-const COLLAPSED_WIDTH = 60;
-const EDGE_SWIPE_WIDTH = 30; // Distance from edge to detect swipe gesture
-const MINIMUM_GESTURE_THRESHOLD = 2; // Minimum movement in pixels to activate gesture
+const SIDEBAR_WIDTH = Sidebar.width;
+const COLLAPSED_WIDTH = Sidebar.collapsedWidth;
+const EDGE_SWIPE_WIDTH = Sidebar.edgeSwipeWidth;
+const MINIMUM_GESTURE_THRESHOLD = Sidebar.gestureThreshold;
 
 export interface PersistentSidebarProps {
   currentModuleId?: string;
@@ -141,8 +148,8 @@ export function PersistentSidebar({
         const { pageX } = evt.nativeEvent;
         const { dx } = gestureState;
 
-        // Only respond if swipe started near edge and moving right (dx > 5)
-        return pageX <= EDGE_SWIPE_WIDTH && dx > 5;
+        // Only respond if swipe started near edge and moving right
+        return pageX <= EDGE_SWIPE_WIDTH && dx > Sidebar.minimumSwipeDistance;
       },
 
       /**
@@ -169,15 +176,15 @@ export function PersistentSidebar({
 
         // Determine if swipe velocity or distance is sufficient to open
         // Distance: > 30% of sidebar width OR Velocity: > 0.5 units/ms
-        const shouldOpen = dx > SIDEBAR_WIDTH * 0.3 || vx > 0.5;
+        const shouldOpen = dx > SIDEBAR_WIDTH * Sidebar.openThreshold || vx > Sidebar.velocityThreshold;
 
         if (shouldOpen) {
           runOnJS(openSidebar)();
         } else {
           // Snap back closed with spring animation
           translateX.value = withSpring(-SIDEBAR_WIDTH, {
-            damping: 20,
-            stiffness: 90,
+            damping: Animation.springDamping,
+            stiffness: Animation.springStiffness,
           });
         }
       },
@@ -189,8 +196,8 @@ export function PersistentSidebar({
       onPanResponderTerminate: () => {
         // Snap back closed
         translateX.value = withSpring(-SIDEBAR_WIDTH, {
-          damping: 20,
-          stiffness: 90,
+          damping: Animation.springDamping,
+          stiffness: Animation.springStiffness,
         });
       },
     }),
@@ -224,8 +231,8 @@ export function PersistentSidebar({
   const openSidebar = () => {
     setIsOpen(true);
     translateX.value = withSpring(0, {
-      damping: 20,
-      stiffness: 90,
+      damping: Animation.springDamping,
+      stiffness: Animation.springStiffness,
     });
 
     if (Platform.OS !== "web") {
@@ -243,8 +250,8 @@ export function PersistentSidebar({
   const closeSidebar = () => {
     setIsOpen(false);
     translateX.value = withSpring(-SIDEBAR_WIDTH, {
-      damping: 20,
-      stiffness: 90,
+      damping: Animation.springDamping,
+      stiffness: Animation.springStiffness,
     });
 
     if (Platform.OS !== "web") {
@@ -290,7 +297,9 @@ export function PersistentSidebar({
   });
 
   const overlayAnimatedStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(isOpen ? 0.5 : 0, { duration: 200 });
+    const opacity = withTiming(isOpen ? Opacity.overlay : 0, { 
+      duration: Animation.overlayDuration 
+    });
     return { opacity };
   });
 
@@ -429,7 +438,7 @@ export function PersistentSidebar({
           style={({ pressed }) => [
             styles.allModulesButton,
             { backgroundColor: theme.backgroundTertiary },
-            pressed && { opacity: 0.7 },
+            pressed && { opacity: Opacity.pressedLight },
           ]}
           accessibilityRole="button"
           accessibilityLabel="View all modules"
@@ -486,14 +495,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 998,
+    zIndex: ZIndex.overlay,
   },
   sidebar: {
     position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
-    zIndex: 999,
+    zIndex: ZIndex.sidebar,
     borderRightWidth: 1,
     paddingHorizontal: Spacing.sm,
   },
@@ -538,11 +547,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 217, 255, 0.1)",
   },
   moduleItemPressed: {
-    opacity: 0.7,
+    opacity: Opacity.pressedLight,
   },
   moduleIcon: {
-    width: 36,
-    height: 36,
+    width: ComponentSize.iconMedium,
+    height: ComponentSize.iconMedium,
     borderRadius: BorderRadius.md,
     justifyContent: "center",
     alignItems: "center",
@@ -559,7 +568,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    width: 3,
+    width: ComponentSize.activeIndicator,
     borderTopRightRadius: 2,
     borderBottomRightRadius: 2,
   },
@@ -579,19 +588,19 @@ const styles = StyleSheet.create({
   edgeButton: {
     position: "absolute",
     left: 0,
-    width: 40,
-    height: 40,
+    width: ComponentSize.edgeButton,
+    height: ComponentSize.edgeButton,
     borderTopRightRadius: BorderRadius.lg,
     borderBottomRightRadius: BorderRadius.lg,
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 997,
+    zIndex: ZIndex.edgeButton,
   },
   edgeSwipeZone: {
     position: "absolute",
     left: 0,
     width: EDGE_SWIPE_WIDTH,
-    zIndex: 996,
+    zIndex: ZIndex.edgeButton - 1,
   },
 });
