@@ -7,6 +7,7 @@ import {
   jsonb,
   boolean,
   integer,
+  index,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -299,3 +300,55 @@ export type Event = typeof events.$inferSelect;
 export type Settings = typeof settings.$inferSelect;
 export type Conversation = typeof conversations.$inferSelect;
 export type Message = typeof messages.$inferSelect;
+
+// Analytics events table with indexes for performance
+export const analyticsEvents = pgTable(
+  "analytics_events",
+  {
+    id: varchar("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    userId: varchar("user_id"),
+    eventName: varchar("event_name", { length: 100 }).notNull(),
+    eventProperties: jsonb("event_properties").notNull().default({}),
+    timestamp: timestamp("timestamp", { withTimezone: true }).notNull(),
+    sessionId: varchar("session_id", { length: 50 }),
+    deviceId: varchar("device_id", { length: 100 }),
+    platform: varchar("platform", { length: 20 }),
+    appVersion: varchar("app_version", { length: 20 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index("analytics_user_id_idx").on(table.userId),
+    eventNameIdx: index("analytics_event_name_idx").on(table.eventName),
+    timestampIdx: index("analytics_timestamp_idx").on(table.timestamp),
+    sessionIdIdx: index("analytics_session_id_idx").on(table.sessionId),
+  }),
+);
+
+// Analytics validation schemas
+export const analyticsEventSchema = z.object({
+  eventId: z.string().uuid(),
+  eventName: z.string().min(1).max(100),
+  timestamp: z.string().datetime(),
+  properties: z.record(z.any()),
+  identity: z.object({
+    userId: z.string().uuid().optional(),
+    deviceId: z.string().optional(),
+    sessionId: z.string().optional(),
+  }),
+  appVersion: z.string().optional(),
+  platform: z.string().optional(),
+});
+
+export const analyticsBatchSchema = z.object({
+  events: z.array(analyticsEventSchema).min(1).max(100),
+  schemaVersion: z.string().default("1.0.0"),
+  mode: z.enum(["default", "privacy"]).optional(),
+});
+
+// Type exports for analytics
+export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
+export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;
+export type AnalyticsEventPayload = z.infer<typeof analyticsEventSchema>;
+export type AnalyticsBatchPayload = z.infer<typeof analyticsBatchSchema>;
