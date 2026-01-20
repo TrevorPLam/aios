@@ -15,6 +15,7 @@
  * - All-day event support
  * - AI assistance for event suggestions
  * - Haptic feedback for interactions
+ * - Secondary navigation bar for quick access (Sync, Export, Quick Add)
  *
  * Technical Features:
  * - Comprehensive date-based filtering (day, week, month, date range)
@@ -40,7 +41,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -54,6 +57,8 @@ import { formatTime, isSameDay, getWeekDates } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -158,6 +163,8 @@ export default function CalendarScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
@@ -298,6 +305,8 @@ export default function CalendarScreen() {
       onPress={() => navigation.navigate("EventDetail", { eventId: item.id })}
     />
   );
+
+
 
   const viewLabels = {
     day: "Day",
@@ -516,10 +525,105 @@ export default function CalendarScreen() {
         )}
       </View>
 
+      {/* Secondary Navigation Bar */}
+      <View 
+        style={[
+          styles.secondaryNav, 
+          { backgroundColor: "transparent" },
+        ]}
+      >
+        <Animated.View
+          style={[
+            styles.secondaryNavContent,
+            {
+              backgroundColor: "transparent",
+            },
+            secondaryNavAnimatedStyle
+          ]}
+        >
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('CalendarScreen', 'Sync');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Sync button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Sync"
+          >
+            <Feather name="refresh-cw" size={20} color={theme.text} />
+            <ThemedText type="small">Sync</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('CalendarScreen', 'Export');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Export button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Export"
+          >
+            <Feather name="download" size={20} color={theme.text} />
+            <ThemedText type="small">Export</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('CalendarScreen', 'Quick Add');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Quick Add button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Quick Add"
+          >
+            <Feather name="plus-circle" size={20} color={theme.text} />
+            <ThemedText type="small">Quick Add</ThemedText>
+          </Pressable>
+        </Animated.View>
+      </View>
+
       <FlatList
         data={filteredEvents}
         renderItem={renderEvent}
         keyExtractor={(item) => item.id}
+        onScroll={handleSecondaryNavScroll}
+        scrollEventThrottle={16}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -767,5 +871,25 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  secondaryNav: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+  },
+  secondaryNavContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.full,
+  },
+  secondaryNavButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });

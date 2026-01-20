@@ -11,6 +11,7 @@
  * - Filtering by category and archive status
  * - AI assistance for list suggestions
  * - Haptic feedback for interactions
+ * - Secondary navigation bar with scroll-aware visibility
  *
  * @module ListsScreen
  */
@@ -32,7 +33,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -46,6 +49,8 @@ import { formatRelativeDate } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -305,6 +310,8 @@ export default function ListsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [lists, setLists] = useState<List[]>([]);
   const [filter, setFilter] = useState<FilterType>("active");
@@ -676,6 +683,8 @@ export default function ListsScreen() {
     ],
   );
 
+
+
   const SortIcon = ({ option }: { option: SortOption }) => {
     if (sortBy === option) {
       return <Feather name="check" size={18} color={theme.accent} />;
@@ -711,6 +720,100 @@ export default function ListsScreen() {
           </Pressable>
         )}
       </View>
+
+      {/* Secondary Navigation */}
+      <Animated.View
+        style={[
+          styles.secondaryNav,
+          { backgroundColor: "transparent" },
+          secondaryNavAnimatedStyle,
+        ]}
+      >
+        <View
+          style={[
+            styles.secondaryNavContent,
+            { backgroundColor: "transparent" },
+          ]}
+        >
+          {/* Share List Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('ListsScreen', 'Share List');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Share List button:', error);
+                }
+              }
+            }}
+          >
+            <Feather name="share-2" size={20} color={theme.text} />
+            <ThemedText type="small">
+              Share List
+            </ThemedText>
+          </Pressable>
+
+          {/* Templates Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('ListsScreen', 'Templates');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Templates button:', error);
+                }
+              }
+            }}
+          >
+            <Feather name="copy" size={20} color={theme.text} />
+            <ThemedText type="small">
+              Templates
+            </ThemedText>
+          </Pressable>
+
+          {/* Statistics Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('ListsScreen', 'Statistics');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Statistics button:', error);
+                }
+              }
+            }}
+          >
+            <Feather name="bar-chart-2" size={20} color={theme.text} />
+            <ThemedText type="small">
+              Statistics
+            </ThemedText>
+          </Pressable>
+        </View>
+      </Animated.View>
 
       {/* Toolbar */}
       <View
@@ -1021,6 +1124,8 @@ export default function ListsScreen() {
           },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleSecondaryNavScroll}
+        scrollEventThrottle={16}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Image
@@ -1754,5 +1859,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,
+  },
+  secondaryNav: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+  },
+  secondaryNavContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.full,
+  },
+  secondaryNavButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });

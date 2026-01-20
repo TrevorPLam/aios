@@ -12,6 +12,7 @@
  * - Subtask support
  * - AI assistance for task suggestions
  * - Haptic feedback for interactions
+ * - Secondary navigation bar for quick access (AI Assist, Time Block, Dependencies)
  *
  * @module PlannerScreen
  */
@@ -31,7 +32,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -45,6 +48,8 @@ import { formatDate, getPriorityColor } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -253,6 +258,8 @@ export default function PlannerScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [tasks, setTasks] = useState<TaskWithSubtasks[]>([]);
   const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
@@ -586,6 +593,8 @@ export default function PlannerScreen() {
 
   const listData = buildListData();
 
+
+
   const renderItem = ({ item }: { item: (typeof listData)[0] }) => {
     const isSubtask = item.type === "subtask";
     const hasSubtasks = item.parentHasSubtasks;
@@ -631,6 +640,98 @@ export default function PlannerScreen() {
             <Feather name="x" size={18} color={theme.textMuted} />
           </Pressable>
         )}
+      </View>
+
+      {/* Secondary Navigation Bar */}
+      <View 
+        style={[
+          styles.secondaryNav, 
+          { backgroundColor: "transparent" },
+        ]}
+      >
+        <Animated.View
+          style={[
+            styles.secondaryNavContent,
+            {
+              backgroundColor: "transparent",
+            },
+            secondaryNavAnimatedStyle
+          ]}
+        >
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                setShowAISheet(true);
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in AI Assist button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="AI Assist"
+          >
+            <Feather name="cpu" size={20} color={theme.text} />
+            <ThemedText type="small">AI Assist</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('PlannerScreen', 'Time Block');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Time Block button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Time Block"
+          >
+            <Feather name="calendar" size={20} color={theme.text} />
+            <ThemedText type="small">Time Block</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('PlannerScreen', 'Dependencies');
+                // TODO: Implement functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Dependencies button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Dependencies"
+          >
+            <Feather name="git-merge" size={20} color={theme.text} />
+            <ThemedText type="small">Dependencies</ThemedText>
+          </Pressable>
+        </Animated.View>
       </View>
 
       {/* Statistics Dashboard - Collapsible */}
@@ -903,6 +1004,8 @@ export default function PlannerScreen() {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.task.id}
+        onScroll={handleSecondaryNavScroll}
+        scrollEventThrottle={16}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -1143,5 +1246,25 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  secondaryNav: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+  },
+  secondaryNavContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.full,
+  },
+  secondaryNavButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });

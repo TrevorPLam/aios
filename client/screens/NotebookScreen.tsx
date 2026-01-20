@@ -17,6 +17,7 @@
  * - Last edited timestamps
  * - AI assistance for note suggestions
  * - Haptic feedback for interactions
+ * - Secondary navigation bar for quick access (AI Assist, Backup, Templates)
  *
  * @module NotebookScreen
  */
@@ -52,6 +53,8 @@ import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 import analytics from "@/analytics";
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logButtonPress, logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -176,6 +179,9 @@ export default function NotebookScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+
+  // Secondary navigation scroll handling
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
@@ -465,6 +471,87 @@ export default function NotebookScreen() {
         )}
       </View>
 
+      {/* Secondary Navigation Bar - Transparent oval with module-specific actions */}
+      <View 
+        style={[
+          styles.secondaryNav, 
+          { backgroundColor: "transparent" },
+        ]}
+      >
+        <Animated.View
+          style={[
+            styles.secondaryNavContent,
+            {
+              backgroundColor: "transparent",
+            },
+            secondaryNavAnimatedStyle
+          ]}
+        >
+          <Pressable
+            onPress={() => setShowAISheet(true)}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="AI Assist"
+          >
+            <Feather name="cpu" size={20} color={theme.text} />
+            <ThemedText type="small">AI Assist</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('NotebookScreen', 'Backup');
+                // TODO: Implement backup functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Backup button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Backup"
+          >
+            <Feather name="cloud" size={20} color={theme.text} />
+            <ThemedText type="small">Backup</ThemedText>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('NotebookScreen', 'Templates');
+                // TODO: Implement templates functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Templates button:', error);
+                }
+              }
+            }}
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Templates"
+          >
+            <Feather name="file-text" size={20} color={theme.text} />
+            <ThemedText type="small">Templates</ThemedText>
+          </Pressable>
+        </Animated.View>
+      </View>
+
       {/* Toolbar */}
       <View
         style={[styles.toolbar, { backgroundColor: theme.backgroundElevated }]}
@@ -598,6 +685,8 @@ export default function NotebookScreen() {
         data={filteredAndSortedNotes}
         renderItem={renderNote}
         keyExtractor={(item) => item.id}
+        onScroll={handleSecondaryNavScroll}
+        scrollEventThrottle={16}
         contentContainerStyle={[
           styles.listContent,
           {
@@ -1037,5 +1126,26 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  // Secondary Navigation Styles
+  secondaryNav: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+  },
+  secondaryNavContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.full,
+  },
+  secondaryNavButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });
