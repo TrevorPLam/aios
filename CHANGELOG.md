@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Secondary navigation bars across all major modules (T-003A) - 2026-01-20
+  - NotebookScreen: AI Assist, Backup, Templates quick actions
+  - ListsScreen: Share List, Templates, Statistics quick actions
+  - PlannerScreen: AI Assist, Time Block, Dependencies quick actions
+  - CalendarScreen: Sync, Export, Quick Add quick actions
+  - Scroll-based hide/show animation for all secondary navigation bars
+  - Consistent oval, transparent design with haptic feedback
+  - 19 automated tests validating navigation consistency and behavior
+
+### Changed
+- Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
+- Enhanced UX consistency across modules with unified navigation pattern
+
+### Technical
+- Implemented scroll-aware animations using React Native Reanimated shared values
+- Added constants for animation timing, thresholds, and scroll behavior
+- Used `translateY` transforms for smooth 60fps animations
+
 ### Documentation
 - Comprehensive documentation consolidation and reorganization
 - Added documentation best practices guide
