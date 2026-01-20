@@ -102,6 +102,9 @@ const MIN_RECOMMENDATIONS_THRESHOLD = 3;
 /** Minimum card spacing in pixels (small spacing between cards for visual separation) */
 const CARD_SPACING = Spacing.sm; // Using theme spacing for consistency
 
+/** Opacity for secondary navigation oval (semi-transparent for visual depth) */
+const SECONDARY_NAV_OPACITY = 0.8;
+
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 
@@ -722,7 +725,7 @@ export default function CommandCenterScreen() {
         </Pressable>
       </View>
 
-      {/* Secondary Navigation Bar - Oval, transparent, module-specific actions */}
+      {/* Secondary Navigation Bar - Transparent oval with buttons, sits above cards */}
       <Animated.View 
         style={[
           styles.secondaryNav, 
@@ -735,6 +738,7 @@ export default function CommandCenterScreen() {
             styles.secondaryNavContent,
             {
               backgroundColor: theme.backgroundDefault,
+              opacity: SECONDARY_NAV_OPACITY,
             },
           ]}
         >
