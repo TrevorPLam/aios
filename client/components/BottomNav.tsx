@@ -99,11 +99,13 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     useState<ModuleItem[]>(ALL_MODULES);
   const { contextualModule, clearContextualModule } = useNavigationContext();
 
-  useEffect(() => {
-    loadModuleOrder();
-  }, []);
-
-  const loadModuleOrder = async () => {
+  /**
+   * Loads and orders modules based on user settings and usage statistics.
+   * Memoized to prevent recreation on every render.
+   * 
+   * @returns {Promise<void>}
+   */
+  const loadModuleOrder = useCallback(async () => {
     const settings = await db.settings.get();
     let modules = [...ALL_MODULES];
 
@@ -123,7 +125,11 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     }
 
     setOrderedModules(modules);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadModuleOrder();
+  }, [loadModuleOrder]);
 
   // Find current module index if we are in one, otherwise default to -1
   const currentIndex = orderedModules.findIndex((m) => m.route === route.name);
