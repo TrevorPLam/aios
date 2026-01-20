@@ -32,6 +32,11 @@
 
 **Visual Feedback**: All touchable elements must have pressed states using electric blue glow or 85% opacity.
 
+**Theme Token Usage**:
+- Always use color tokens from `client/constants/theme.ts` instead of hardcoded hex/rgba values.
+- Overlay/backdrop treatments should use `overlayStrong`, `overlayMedium`, `overlaySubtle`, `overlayCompact`, or `overlayHandle` tokens for consistent translucency across light/dark modes.
+- Semantic accents (success/warning/error) should rely on theme tokens to keep module actions consistent.
+
 ---
 
 ## Typography

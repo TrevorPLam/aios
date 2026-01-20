@@ -44,6 +44,7 @@ import { BlurView } from "expo-blur";
 
 import { moduleHandoffManager, useModuleHandoff } from "../lib/moduleHandoff";
 import { useTheme } from "../hooks/useTheme";
+import { getOverlayColor } from "../utils/themeColors";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -213,7 +214,7 @@ export function CompactBreadcrumb({ style }: { style?: any }) {
  * Using a factory function instead of StyleSheet.create at module level
  * because we need runtime theme colors (light/dark mode)
  */
-const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
+const createStyles = (theme: ReturnType<typeof useTheme>["theme"]) => StyleSheet.create({
   container: {
     position: "absolute",
     top: 0,
@@ -225,7 +226,7 @@ const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet
   },
   fallbackBackdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(10, 14, 26, 0.95)",
+    backgroundColor: getOverlayColor(theme, "backdropFallback"),
   },
   content: {
     flexDirection: "row",
@@ -268,7 +269,7 @@ const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: "rgba(26, 31, 46, 0.8)",
+    backgroundColor: getOverlayColor(theme, "breadcrumbCompact"),
     borderRadius: 12,
   },
   compactIcon: {

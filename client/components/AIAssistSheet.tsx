@@ -10,6 +10,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { ModuleType } from "@/models/types";
 import analytics from "@/analytics";
+import { getOverlayColor } from "@/utils/themeColors";
 
 interface AIAction {
   id: string;
@@ -308,6 +309,7 @@ export default function AIAssistSheet({
 }: AIAssistSheetProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+  const handleColor = getOverlayColor(theme, "sheetHandle");
 
   const actions = MODULE_ACTIONS[module] || [];
 
@@ -356,7 +358,7 @@ export default function AIAssistSheet({
           },
         ]}
       >
-        <View style={styles.handle} />
+        <View style={[styles.handle, { backgroundColor: handleColor }]} />
 
         <View style={styles.header}>
           <View style={[styles.aiIcon, { backgroundColor: theme.accentDim }]}>
@@ -429,7 +431,6 @@ const styles = StyleSheet.create({
   handle: {
     width: 36,
     height: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 2,
     alignSelf: "center",
     marginBottom: Spacing.md,
