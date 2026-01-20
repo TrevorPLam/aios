@@ -33,6 +33,7 @@ import { ModuleType } from "@/models/types";
 import { eventBus, EVENT_TYPES } from "./eventBus";
 import { contextEngine } from "./contextEngine";
 import { saveToStorage, loadFromStorage } from "./storage";
+import { logger } from "@/utils/logger";
 
 /**
  * Attention priority levels
@@ -228,7 +229,9 @@ class AttentionManager {
 
     // Save to storage (async, but don't wait)
     this.savePreferences().catch((error) => {
-      console.error("Failed to save attention state:", error);
+      logger.error("AttentionManager", "Failed to save attention state", {
+        error: error instanceof Error ? error.message : String(error),
+      });
     });
 
     return true;
@@ -355,7 +358,9 @@ class AttentionManager {
 
     // Save to storage (async, but don't wait)
     this.savePreferences().catch((error) => {
-      console.error("Failed to save focus mode:", error);
+      logger.error("AttentionManager", "Failed to save focus mode", {
+        error: error instanceof Error ? error.message : String(error),
+      });
     });
   }
 
@@ -621,7 +626,9 @@ class AttentionManager {
       try {
         listener();
       } catch (error) {
-        console.error("Error in attention listener:", error);
+        logger.error("AttentionManager", "Error in attention listener", {
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     });
   }
@@ -733,7 +740,9 @@ class AttentionManager {
         this.bundles = new Map(data.bundles || []);
       }
     } catch (error) {
-      console.error("Failed to load attention preferences:", error);
+      logger.error("AttentionManager", "Failed to load attention preferences", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       // Start fresh on error
     }
   }
@@ -753,7 +762,9 @@ class AttentionManager {
       };
       await saveToStorage("attention_items", serialized);
     } catch (error) {
-      console.error("Failed to save attention preferences:", error);
+      logger.error("AttentionManager", "Failed to save attention preferences", {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 

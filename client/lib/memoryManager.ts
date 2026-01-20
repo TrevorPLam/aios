@@ -34,6 +34,7 @@ import { Platform } from "react-native";
 import { ModuleType } from "@/models/types";
 import { eventBus } from "./eventBus";
 import { EVENT_TYPES } from "./eventBus";
+import { logger } from "@/utils/logger";
 
 /**
  * Memory Usage Info
@@ -108,7 +109,7 @@ class MemoryManager {
       cleanupBatchSize: 2, // Unmount 2 modules per cleanup
     };
 
-    console.log("[MemoryManager] Initialized with strategy:", this.strategy);
+    logger.info("MemoryManager", "Initialized with strategy", { strategy: this.strategy });
   }
 
   /**
@@ -119,11 +120,11 @@ class MemoryManager {
    */
   startMonitoring(): void {
     if (this.monitoringInterval) {
-      console.log("[MemoryManager] Already monitoring");
+      logger.debug("MemoryManager", "Already monitoring");
       return;
     }
 
-    console.log("[MemoryManager] Starting memory monitoring");
+    logger.info("MemoryManager", "Starting memory monitoring");
 
     this.monitoringInterval = setInterval(() => {
       this.checkMemoryAndCleanup();
@@ -142,7 +143,7 @@ class MemoryManager {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
-      console.log("[MemoryManager] Stopped monitoring");
+      logger.info("MemoryManager", "Stopped monitoring");
     }
   }
 
@@ -181,9 +182,10 @@ class MemoryManager {
       });
     }
 
-    console.log(
-      `[MemoryManager] Registered ${moduleId} (${estimatedMemoryMB}MB)`,
-    );
+    logger.debug("MemoryManager", "Registered module mount", {
+      moduleId,
+      estimatedMemoryMB,
+    });
   }
 
   /**
@@ -216,7 +218,7 @@ class MemoryManager {
    */
   registerModuleUnmount(moduleId: ModuleType): void {
     this.moduleMemoryInfo.delete(moduleId);
-    console.log(`[MemoryManager] Unregistered ${moduleId}`);
+    logger.debug("MemoryManager", "Unregistered module", { moduleId });
   }
 
   /**
@@ -234,7 +236,7 @@ class MemoryManager {
         ...info,
         isPinned: true,
       });
-      console.log(`[MemoryManager] Pinned ${moduleId}`);
+      logger.debug("MemoryManager", "Pinned module", { moduleId });
     }
   }
 
@@ -250,7 +252,7 @@ class MemoryManager {
         ...info,
         isPinned: false,
       });
-      console.log(`[MemoryManager] Unpinned ${moduleId}`);
+      logger.debug("MemoryManager", "Unpinned module", { moduleId });
     }
   }
 
@@ -320,9 +322,12 @@ class MemoryManager {
     const memoryInfo = this.getCurrentMemoryUsage();
     this.lastMemoryCheck = memoryInfo;
 
-    console.log(
-      `[MemoryManager] Memory: ${memoryInfo.usedMemoryMB.toFixed(1)}MB / ${memoryInfo.totalMemoryMB}MB (${memoryInfo.percentUsed.toFixed(1)}%) - Pressure: ${memoryInfo.pressure}`,
-    );
+    logger.debug("MemoryManager", "Memory check", {
+      usedMB: memoryInfo.usedMemoryMB.toFixed(1),
+      totalMB: memoryInfo.totalMemoryMB,
+      percentUsed: memoryInfo.percentUsed.toFixed(1),
+      pressure: memoryInfo.pressure,
+    });
 
     // Emit memory event based on pressure
     if (memoryInfo.pressure === "critical" || memoryInfo.pressure === "high") {
@@ -340,10 +345,10 @@ class MemoryManager {
     if (memoryInfo.usedMemoryMB >= this.strategy.hardLimitMB) {
       shouldCleanup = true;
       isAggressive = true;
-      console.log("[MemoryManager] CRITICAL: Aggressive cleanup needed");
+      logger.warn("MemoryManager", "CRITICAL: Aggressive cleanup needed");
     } else if (memoryInfo.usedMemoryMB >= this.strategy.softLimitMB) {
       shouldCleanup = true;
-      console.log("[MemoryManager] WARNING: Cleanup needed");
+      logger.warn("MemoryManager", "WARNING: Cleanup needed");
     }
 
     if (shouldCleanup) {
@@ -366,7 +371,7 @@ class MemoryManager {
     const candidates = this.getCleanupCandidates();
 
     if (candidates.length === 0) {
-      console.log("[MemoryManager] No cleanup candidates available");
+      logger.debug("MemoryManager", "No cleanup candidates available");
       return;
     }
 
@@ -377,7 +382,10 @@ class MemoryManager {
 
     const toCleanup = candidates.slice(0, batchSize);
 
-    console.log("[MemoryManager] Cleaning up modules:", toCleanup);
+    logger.info("MemoryManager", "Cleaning up modules", {
+      modules: toCleanup,
+      aggressive,
+    });
 
     // Emit cleanup event
     eventBus.emit(EVENT_TYPES.MEMORY_CLEANUP, {
@@ -496,7 +504,7 @@ class MemoryManager {
       ...this.strategy,
       ...strategy,
     };
-    console.log("[MemoryManager] Updated strategy:", this.strategy);
+    logger.info("MemoryManager", "Updated strategy", { strategy: this.strategy });
   }
 
   /**
@@ -515,7 +523,7 @@ class MemoryManager {
    * Used for testing or when user manually requests cleanup.
    */
   async forceCleanup(): Promise<void> {
-    console.log("[MemoryManager] Forcing cleanup");
+    logger.info("MemoryManager", "Forcing cleanup");
     await this.performCleanup(false);
   }
 
@@ -529,7 +537,7 @@ class MemoryManager {
     this.moduleMemoryInfo.clear();
     this.currentModule = null;
     this.lastMemoryCheck = null;
-    console.log("[MemoryManager] Reset all tracking");
+    logger.info("MemoryManager", "Reset all tracking");
   }
 }
 
