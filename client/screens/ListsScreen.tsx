@@ -11,6 +11,7 @@
  * - Filtering by category and archive status
  * - AI assistance for list suggestions
  * - Haptic feedback for interactions
+ * - Secondary navigation bar with scroll-aware visibility
  *
  * @module ListsScreen
  */
@@ -27,12 +28,19 @@ import {
   Alert,
   TextInput,
   Modal,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -46,6 +54,14 @@ import { formatRelativeDate } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
+
+// Secondary Navigation Constants
+const SECONDARY_NAV_BADGE_THRESHOLD = 9;
+const SECONDARY_NAV_HIDE_OFFSET = -72;
+const SECONDARY_NAV_ANIMATION_DURATION = 200;
+const SCROLL_TOP_THRESHOLD = 10;
+const SCROLL_DOWN_THRESHOLD = 5;
+const SCROLL_UP_THRESHOLD = -5;
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -305,6 +321,10 @@ export default function ListsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+
+  const lastScrollY = useSharedValue(0);
+  const secondaryNavTranslateY = useSharedValue(0);
+  const isAnimating = useSharedValue(false);
 
   const [lists, setLists] = useState<List[]>([]);
   const [filter, setFilter] = useState<FilterType>("active");
@@ -676,6 +696,65 @@ export default function ListsScreen() {
     ],
   );
 
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const currentScrollY = event.nativeEvent.contentOffset.y;
+      const delta = currentScrollY - lastScrollY.value;
+
+      if (isAnimating.value) {
+        lastScrollY.value = currentScrollY;
+        return;
+      }
+
+      if (
+        currentScrollY < SCROLL_TOP_THRESHOLD &&
+        secondaryNavTranslateY.value !== 0
+      ) {
+        isAnimating.value = true;
+        secondaryNavTranslateY.value = withTiming(
+          0,
+          { duration: SECONDARY_NAV_ANIMATION_DURATION },
+          () => {
+            isAnimating.value = false;
+          },
+        );
+      } else if (
+        delta > SCROLL_DOWN_THRESHOLD &&
+        secondaryNavTranslateY.value !== SECONDARY_NAV_HIDE_OFFSET
+      ) {
+        isAnimating.value = true;
+        secondaryNavTranslateY.value = withTiming(
+          SECONDARY_NAV_HIDE_OFFSET,
+          { duration: SECONDARY_NAV_ANIMATION_DURATION },
+          () => {
+            isAnimating.value = false;
+          },
+        );
+      } else if (
+        delta < SCROLL_UP_THRESHOLD &&
+        secondaryNavTranslateY.value !== 0
+      ) {
+        isAnimating.value = true;
+        secondaryNavTranslateY.value = withTiming(
+          0,
+          { duration: SECONDARY_NAV_ANIMATION_DURATION },
+          () => {
+            isAnimating.value = false;
+          },
+        );
+      }
+
+      lastScrollY.value = currentScrollY;
+    },
+    [],
+  );
+
+  const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: secondaryNavTranslateY.value }],
+    };
+  });
+
   const SortIcon = ({ option }: { option: SortOption }) => {
     if (sortBy === option) {
       return <Feather name="check" size={18} color={theme.accent} />;
@@ -711,6 +790,79 @@ export default function ListsScreen() {
           </Pressable>
         )}
       </View>
+
+      {/* Secondary Navigation */}
+      <Animated.View
+        style={[
+          styles.secondaryNav,
+          { backgroundColor: theme.background },
+          secondaryNavAnimatedStyle,
+        ]}
+      >
+        <View
+          style={[
+            styles.secondaryNavContent,
+            { backgroundColor: theme.backgroundSecondary },
+          ]}
+        >
+          {/* Share List Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+              console.log("Share List pressed");
+            }}
+          >
+            <Feather name="share-2" size={20} color={theme.textSecondary} />
+            <ThemedText type="small" secondary>
+              Share List
+            </ThemedText>
+          </Pressable>
+
+          {/* Templates Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+              console.log("Templates pressed");
+            }}
+          >
+            <Feather name="copy" size={20} color={theme.textSecondary} />
+            <ThemedText type="small" secondary>
+              Templates
+            </ThemedText>
+          </Pressable>
+
+          {/* Statistics Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.secondaryNavButton,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+              console.log("Statistics pressed");
+            }}
+          >
+            <Feather name="bar-chart-2" size={20} color={theme.textSecondary} />
+            <ThemedText type="small" secondary>
+              Statistics
+            </ThemedText>
+          </Pressable>
+        </View>
+      </Animated.View>
 
       {/* Toolbar */}
       <View
@@ -1021,6 +1173,8 @@ export default function ListsScreen() {
           },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Image
@@ -1754,5 +1908,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,
+  },
+  secondaryNav: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+  },
+  secondaryNavContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.full,
+  },
+  secondaryNavButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });
