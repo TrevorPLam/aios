@@ -1,7 +1,7 @@
 # TODO.md 
 
 Document Type: Workflow
-Last Updated: 2026-01-19
+Last Updated: 2026-01-20
 Task Truth Source: **TODO.md**
 
 This file is the single source of truth for actionable work.
@@ -161,6 +161,74 @@ For new features requiring multi-platform support, use sequential tasks:
   - docs/archive/2026-01-pre-consolidation/F&F-BACKUP.md
 - **Dependencies**: None
 - **Effort**: L
+
+**T-082**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitor planners offer auto-scheduling/time blocking to turn tasks into calendar events
+  - AIOS can differentiate by combining Planner priorities with Calendar availability
+  - This enables guided planning and reduces manual scheduling effort
+- **Acceptance Criteria**:
+  - [ ] Add time-block scheduling UI in Planner (assign duration/start window)
+  - [ ] Implement auto-schedule that proposes calendar slots using availability rules
+  - [ ] Sync scheduled tasks to Calendar with bi-directional updates
+  - [ ] Add tests for scheduling conflicts and reschedule logic
+- **References**:
+  - client/screens/PlannerScreen.tsx
+  - client/screens/TaskDetailScreen.tsx
+  - client/screens/CalendarScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-083**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Shared projects and task assignments are standard in Asana/Todoist/ClickUp
+  - Planner currently has no collaboration or assignment workflows
+  - Collaboration is required for team planning parity
+- **Acceptance Criteria**:
+  - [ ] Add project sharing and member roles (owner/editor/viewer)
+  - [ ] Support task assignment with assignee avatars and status
+  - [ ] Add activity feed for assignment and status changes
+  - [ ] Add tests for permission enforcement and assignment rendering
+- **References**:
+  - client/screens/PlannerScreen.tsx
+  - client/screens/TaskDetailScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-084**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Natural language quick add and task inboxes are core in Todoist/Things
+  - Planner lacks an intake flow for rapid capture and triage
+  - Fast capture is critical for mobile task apps
+- **Acceptance Criteria**:
+  - [ ] Add a Planner inbox view for untriaged tasks
+  - [ ] Implement natural language parsing for due dates, priorities, and projects
+  - [ ] Provide bulk triage actions (schedule, prioritize, assign)
+  - [ ] Add tests for parsing and triage flows
+- **References**:
+  - client/screens/PlannerScreen.tsx
+  - client/screens/TaskDetailScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
 
 ---
 
@@ -360,6 +428,423 @@ For new features requiring multi-platform support, use sequential tasks:
   - client/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
+- **Effort**: M
+
+**T-088**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitor calendars provide availability/working hours and scheduling links
+  - AIOS lacks availability settings and shareable booking workflows
+  - Scheduling links are a differentiator for busy users
+- **Acceptance Criteria**:
+  - [ ] Add working hours and availability settings to Calendar
+  - [ ] Generate shareable scheduling links with availability rules
+  - [ ] Allow booking requests to create tentative events with confirmation
+  - [ ] Add tests for availability calculations and link booking flow
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-089**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Multi-calendar management and subscriptions are standard in Google/Outlook
+  - AIOS currently treats all events as a single calendar
+  - Separate calendars improve organization and sharing workflows
+- **Acceptance Criteria**:
+  - [ ] Add multiple calendars with colors and visibility toggles
+  - [ ] Support subscribing to external calendars (ICS/CalDAV)
+  - [ ] Filter views by calendar and show combined agenda
+  - [ ] Add tests for calendar visibility and subscription updates
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+---
+
+### 📋 Lists Module Expansion
+
+**T-076**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Shared lists and collaboration are table stakes in Todoist/MS To Do
+  - Lists module lacks sharing, which blocks multi-user workflows
+  - Collaboration is required to meet competitor parity
+- **Acceptance Criteria**:
+  - [ ] Add list sharing flow (invite via contacts/email)
+  - [ ] Add roles/permissions (owner/editor/viewer) to list access
+  - [ ] Sync shared list changes and show collaborator indicators
+  - [ ] Add tests for permission enforcement and merge behavior
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/screens/ListEditorScreen.tsx
+  - client/models/types.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-077**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitors support recurring tasks/lists
+  - Lists module has due dates but no recurrence rules
+  - Recurrence is critical for routine checklists
+- **Acceptance Criteria**:
+  - [ ] Add recurrence rules to list items (daily/weekly/monthly/custom)
+  - [ ] Auto-create next occurrence on completion or schedule
+  - [ ] Show recurrence indicators and filters in Lists UI
+  - [ ] Add tests for recurrence scheduling logic
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-078**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Top list apps include reminders (time and location)
+  - List items support due dates but no notifications
+  - Reminders improve daily engagement and parity
+- **Acceptance Criteria**:
+  - [ ] Add reminder configuration (none/relative/custom) to list items
+  - [ ] Schedule/update/cancel local notifications for list reminders
+  - [ ] Add location-based reminder support for list items
+  - [ ] Add tests for reminder scheduling and notification lifecycle
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-079**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitors support subtasks; Lists items are flat today
+  - Nested checklists enable complex workflows and parity
+  - Hierarchy improves clarity for multi-step lists
+- **Acceptance Criteria**:
+  - [ ] Add nested child items to ListItem schema
+  - [ ] Build UI to indent/expand/collapse subitems
+  - [ ] Roll up completion state based on child items
+  - [ ] Add tests for nested item rendering and completion logic
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-080**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Voice input is a common quick-capture path in competitor apps
+  - Lists lacks voice-based capture for items
+  - Quick add improves mobile usability
+- **Acceptance Criteria**:
+  - [ ] Add voice input entry point from Lists screens
+  - [ ] Transcribe voice to item text with confirmation edit
+  - [ ] Handle permission denial and error states
+  - [ ] Add tests for voice input flow
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/screens/ListEditorScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-081**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Differentiator opportunity beyond parity features
+  - Use list history to surface insights and suggestions
+  - Smart suggestions reinforce AIOS ecosystem value
+- **Acceptance Criteria**:
+  - [ ] Add Lists insights panel (completion trends, overdue patterns)
+  - [ ] Surface smart suggestions (auto-prioritize, recommend templates)
+  - [ ] Log insights/suggestions to History for auditability
+  - [ ] Add tests for insights calculations
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/storage/database.ts
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-085**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitors offer smart lists/saved filters (Today, High Priority, Upcoming)
+  - Lists currently rely on manual filtering only
+  - Saved views improve daily workflows and parity
+- **Acceptance Criteria**:
+  - [ ] Add saved filters (smart lists) with configurable criteria
+  - [ ] Allow pinning smart lists to the Lists home screen
+  - [ ] Support dynamic counts and empty state messaging per view
+  - [ ] Add tests for filter persistence and query accuracy
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-086**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Top list apps support item notes, links, and attachments
+  - Lists items are text-only today
+  - Rich item details improve parity and reduce context switching
+- **Acceptance Criteria**:
+  - [ ] Add notes and link fields to list items
+  - [ ] Support attachment upload/preview (images/files) per item
+  - [ ] Render attachments in list detail view with download/share actions
+  - [ ] Add tests for attachment persistence and rendering
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-087**
+- **Priority**: P3
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Power-user list apps provide automation rules and quick actions
+  - Lists module lacks auto-organize or rule-based updates
+  - Automation is a differentiator for AIOS beyond parity features
+- **Acceptance Criteria**:
+  - [ ] Add rule builder for list items (if due date, category, priority)
+  - [ ] Support auto-move, auto-archive, and auto-reminder actions
+  - [ ] Provide audit log of rule executions
+  - [ ] Add tests for rule evaluation and side effects
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+---
+
+### 📧 Email Module Expansion
+
+**T-071**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Email module is UI-only for thread management; no real provider integration
+  - Competitors require Gmail/Outlook integration for send/receive parity
+  - Provider sync is the critical gap blocking production viability
+- **Acceptance Criteria**:
+  - [ ] Add OAuth flows for Gmail and Microsoft Graph (secure token storage)
+  - [ ] Implement provider sync for inbox/sent/archives/labels into local storage
+  - [ ] Support multiple connected accounts with unified inbox view
+  - [ ] Add provider health/error states and retry workflows
+  - [ ] Add integration tests for provider sync with mocked APIs
+- **References**:
+  - MODULE_DETAILS.md
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+  - client/storage/database.ts
+- **Dependencies**: None
+- **Effort**: L
+
+**T-072**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Compose/send/reply/forward workflows are not implemented
+  - Competitors ship full composition with templates, signatures, and scheduling
+  - Differentiator: compose flows should integrate with AI Assist and other modules
+- **Acceptance Criteria**:
+  - [ ] Build compose UI with reply/forward, CC/BCC, and draft autosave
+  - [ ] Add rich-text editor with attachment upload/preview
+  - [ ] Support signatures, templates, and scheduled send
+  - [ ] Persist drafts and sent messages to storage with thread linkage
+  - [ ] Add tests for draft lifecycle and composition validation
+- **References**:
+  - MODULE_DETAILS.md
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+  - client/components/AIAssistSheet.tsx
+- **Dependencies**: T-071
+- **Effort**: L
+
+**T-073**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - No email notifications or background sync in the current build
+  - Competitors deliver real-time alerts and offline access
+  - Local-first UX requires cached threads with clear sync status
+- **Acceptance Criteria**:
+  - [ ] Implement background fetch + incremental sync with provider APIs
+  - [ ] Add push/local notifications for new emails with per-account controls
+  - [ ] Expose offline mode indicators and retry logic
+  - [ ] Add tests for notification scheduling and sync status updates
+- **References**:
+  - MODULE_DETAILS.md
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+- **Dependencies**: T-071
+- **Effort**: M
+
+**T-074**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Current storage only models threads without mailbox lifecycle states
+  - Competitors include sent, spam, trash, and custom rules
+  - Lifecycle management enables email zero workflows and compliance needs
+- **Acceptance Criteria**:
+  - [ ] Add mailbox folders (inbox/sent/trash/spam/archives) with counts
+  - [ ] Implement server-side delete, spam reporting, and restore flows
+  - [ ] Add basic rules/filters (sender, subject, label) for auto-organization
+  - [ ] Add tests for mailbox transitions and rule application
+- **References**:
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+  - client/storage/database.ts
+- **Dependencies**: T-071
+- **Effort**: M
+
+**T-075**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Email intelligence differentiates premium clients (smart replies, priority inbox)
+  - AIOS can exceed competitors with cross-module automation
+  - Action extraction bridges Email → Planner/Calendar/Notebook workflows
+- **Acceptance Criteria**:
+  - [ ] Add AI summaries, smart reply, and smart compose actions
+  - [ ] Implement action item extraction to Planner and meeting detection to Calendar
+  - [ ] Add priority inbox scoring and urgency indicators
+  - [ ] Log AI actions to History with opt-in and privacy safeguards
+  - [ ] Add tests for AI action routing and metadata creation
+- **References**:
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/components/AIAssistSheet.tsx
+  - client/lib/contextEngine.ts
+  - client/screens/EmailScreen.tsx
+- **Dependencies**: T-072
+- **Effort**: M
+
+**T-090**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Power users rely on advanced search and saved filters
+  - Email module lacks search operators, saved queries, and filter chips
+  - Search parity is required for Gmail/Outlook competitiveness
+- **Acceptance Criteria**:
+  - [ ] Implement advanced search (from/to/subject/has:attachment/date)
+  - [ ] Add saved searches with quick-access chips
+  - [ ] Provide filter UI for unread, starred, priority, and attachments
+  - [ ] Add tests for search parsing and query execution
+- **References**:
+  - client/screens/EmailScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: T-071
+- **Effort**: M
+
+**T-091**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Snooze and follow-up reminders are core in Superhuman/Outlook
+  - AIOS currently has no email tasking/reminder loop
+  - Follow-up flows are a differentiator for productivity-first email
+- **Acceptance Criteria**:
+  - [ ] Add email snooze with configurable return times
+  - [ ] Add follow-up reminders and “waiting on reply” states
+  - [ ] Surface snoozed/follow-up queues with counts
+  - [ ] Add tests for reminder scheduling and queue transitions
+- **References**:
+  - client/screens/EmailScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: T-071
 - **Effort**: M
 
 **T-001A**
@@ -2174,6 +2659,21 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - BUG: 2 (2 complete: T-002A, T-003)
 - FEATURE: 40 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 15 new: T-057, T-071-T-080, T-081-T-084)
 - QUALITY: 15 (2 complete: T-022, T-043; 1 new: T-085)
+**Total Tasks**: 77 (added T-081)
+**Completed**: 12 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-031, T-043)
+**Reverted**: 1 task (T-009)
+**Remaining**: 64 tasks
+
+**By Priority**:
+- P0 (Critical): 2 tasks (2 complete: T-002A, T-003)
+- P1 (High): 19 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 7 new: T-057, T-076-T-081)
+- P2 (Medium): 35 tasks (4 complete: T-014, T-015, T-022, T-031)
+- P3 (Low): 16 tasks (1 complete: T-043)
+
+**By Type**:
+- BUG: 2 (2 complete: T-002A, T-003)
+- FEATURE: 37 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 7 new: T-057, T-076-T-081)
+- QUALITY: 14 (2 complete: T-022, T-043)
 - DOCS: 12
 - CHORE: 7 (1 complete: T-028; 1 obsolete: T-030)
 - SECURITY: 0
@@ -2194,6 +2694,18 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - Small (S): 16 tasks (includes 2 Phase 0: T-081, T-084)
 - Medium (M): 57 tasks (includes 3 Phase 0: T-082, T-083, T-085; 7 analytics Phase 1-3)
 - Large (L): 6 tasks (includes 3 analytics tasks: T-071, T-077, T-080)
+- AGENT: 70 tasks (12 complete)
+- Trevor: 1 task (T-028 - Analytics decision)
+
+**By Status**:
+- COMPLETE: 12 tasks
+- READY: 61 tasks
+- BLOCKED: 3 tasks (T-001B, T-002B, T-028, T-029, T-030 - analytics decision chain)
+
+**By Effort**:
+- Small (S): 14 tasks
+- Medium (M): 54 tasks
+- Large (L): 8 tasks (T-029 - Analytics, requires phased multi-week approach)
 
 **Critical Path**:
 1. Fix critical bugs (T-001, T-002, T-003) ✅
@@ -2725,5 +3237,5 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ---
 
 **Last Updated**: 2026-01-17
-**Total Items**: 72
-**Priority Breakdown**: 2 Critical, 18 High, 30 Medium, 22 Low
+**Total Items**: 78
+**Priority Breakdown**: 2 Critical, 22 High, 32 Medium, 22 Low
