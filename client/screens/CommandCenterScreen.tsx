@@ -14,6 +14,8 @@
  * - Attention Center integration with badge count
  * - History logging of all user decisions
  * - Auto-refresh when recommendations fall below threshold (3)
+ * - Manual refresh button with haptic confirmation
+ * - Card-level reasoning and evidence previews
  * - Haptic feedback for all interactions (iOS/Android)
  * - Empty state with visual prompt for AI generation
  *
@@ -36,6 +38,7 @@
  * - Memoized callbacks to prevent unnecessary re-renders
  * - Auto-refresh only when count falls below MIN_RECOMMENDATIONS_THRESHOLD
  * - Attention counts calculated once per load
+ * - Recommendation preferences loaded from settings (show/evidence/auto-refresh)
  *
  * @module CommandCenterScreen
  */
@@ -75,8 +78,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
-import { Recommendation, AILimits } from "@/models/types";
-import { formatTimeRemaining, getConfidenceColor } from "@/utils/helpers";
+import { Recommendation, AILimits, Settings } from "@/models/types";
+import { formatDate, formatTimeRemaining, getConfidenceColor } from "@/utils/helpers";
 import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { RecommendationEngine } from "@/lib/recommendationEngine";
@@ -107,6 +110,40 @@ const SECONDARY_NAV_OPACITY = 0.8;
 
 /** Badge count threshold for secondary nav (smaller due to reduced badge size) */
 const SECONDARY_NAV_BADGE_THRESHOLD = 9;
+
+type RecommendationPreferences = Pick<
+  Settings,
+  | "recommendationsEnabled"
+  | "recommendationAutoRefresh"
+  | "recommendationShowEvidence"
+  | "recommendationShowReasoning"
+>;
+
+const DEFAULT_RECOMMENDATION_PREFERENCES: RecommendationPreferences = {
+  recommendationsEnabled: true,
+  recommendationAutoRefresh: true,
+  recommendationShowEvidence: true,
+  recommendationShowReasoning: true,
+};
+
+/**
+ * Generate a short evidence summary for display on recommendation cards.
+ *
+ * Plain English: Shows how many signals informed the recommendation and
+ * highlights the most recent evidence timestamp for quick context.
+ */
+const buildEvidenceSummary = (timestamps: string[]): string => {
+  if (timestamps.length === 0) {
+    return "Evidence pending";
+  }
+
+  const latestTimestamp = timestamps.reduce((latest, current) =>
+    new Date(current) > new Date(latest) ? current : latest,
+  );
+  const plural = timestamps.length === 1 ? "signal" : "signals";
+
+  return `${timestamps.length} ${plural} • Latest ${formatDate(latestTimestamp)}`;
+};
 
 // Scroll Animation Constants
 /** 
@@ -213,6 +250,8 @@ interface RecommendationCardProps {
   onAccept: () => void;
   onDecline: () => void;
   onPress: () => void;
+  showReasoning: boolean;
+  showEvidence: boolean;
 }
 
 /**
@@ -224,12 +263,16 @@ const RecommendationCard = React.memo(function RecommendationCard({
   onAccept,
   onDecline,
   onPress,
+  showReasoning,
+  showEvidence,
 }: RecommendationCardProps) {
   const { theme } = useTheme();
   const translateX = useSharedValue(0);
   
   // Determine if card is unopened (shows white glow to indicate newness)
   const isUnopened = !recommendation.openedAt;
+
+  const evidenceSummary = buildEvidenceSummary(recommendation.evidenceTimestamps);
 
   // Pan gesture for swipe-to-accept/decline interaction
   const panGesture = Gesture.Pan()
@@ -362,6 +405,29 @@ const RecommendationCard = React.memo(function RecommendationCard({
             {recommendation.summary}
           </ThemedText>
 
+          {showReasoning && (
+            <View style={styles.reasoningRow}>
+              <Feather name="info" size={14} color={theme.textMuted} />
+              <ThemedText
+                type="small"
+                muted
+                numberOfLines={2}
+                style={styles.reasoningText}
+              >
+                {recommendation.why}
+              </ThemedText>
+            </View>
+          )}
+
+          {showEvidence && (
+            <View style={styles.evidenceRow}>
+              <Feather name="activity" size={14} color={theme.textMuted} />
+              <ThemedText type="small" muted style={styles.evidenceText}>
+                {evidenceSummary}
+              </ThemedText>
+            </View>
+          )}
+
           <View style={styles.cardFooter}>
             <View style={styles.expiryContainer}>
               <Feather name="clock" size={14} color={theme.textMuted} />
@@ -381,7 +447,9 @@ const RecommendationCard = React.memo(function RecommendationCard({
   // Custom comparison: only re-render if recommendation ID or opened status changes
   return (
     prevProps.recommendation.id === nextProps.recommendation.id &&
-    prevProps.recommendation.openedAt === nextProps.recommendation.openedAt
+    prevProps.recommendation.openedAt === nextProps.recommendation.openedAt &&
+    prevProps.showReasoning === nextProps.showReasoning &&
+    prevProps.showEvidence === nextProps.showEvidence
   );
 });
 
@@ -395,6 +463,8 @@ export default function CommandCenterScreen() {
   const [showAISheet, setShowAISheet] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [attentionCount, setAttentionCount] = useState(0);
+  const [recommendationPreferences, setRecommendationPreferences] =
+    useState<RecommendationPreferences>(DEFAULT_RECOMMENDATION_PREFERENCES);
 
   // Scroll animation for secondary nav
   const lastScrollY = useSharedValue(0);
@@ -425,6 +495,25 @@ export default function CommandCenterScreen() {
       const limits = await db.aiLimits.get();
       setAiLimits(limits);
 
+      const settings = await db.settings.get();
+      const nextPreferences: RecommendationPreferences = {
+        // Normalize to strict booleans; legacy installs may have undefined fields.
+        recommendationsEnabled: settings.recommendationsEnabled === true,
+        recommendationAutoRefresh: settings.recommendationAutoRefresh === true,
+        recommendationShowEvidence: settings.recommendationShowEvidence === true,
+        recommendationShowReasoning: settings.recommendationShowReasoning === true,
+      };
+
+      // Avoid unnecessary re-renders by only updating when values change.
+      setRecommendationPreferences((prev) =>
+        prev.recommendationsEnabled === nextPreferences.recommendationsEnabled &&
+        prev.recommendationAutoRefresh === nextPreferences.recommendationAutoRefresh &&
+        prev.recommendationShowEvidence === nextPreferences.recommendationShowEvidence &&
+        prev.recommendationShowReasoning === nextPreferences.recommendationShowReasoning
+          ? prev
+          : nextPreferences,
+      );
+
       // Sum urgent and attention priority items for badge count
       const counts = attentionManager.getCounts();
       const totalCount = (counts?.urgent || 0) + (counts?.attention || 0);
@@ -454,11 +543,16 @@ export default function CommandCenterScreen() {
     const count = await loadDataCore();
     
     // Maintain minimum recommendations for better UX (only on initial load)
-    if (count < MIN_RECOMMENDATIONS_THRESHOLD && !isRefreshing) {
+    if (
+      recommendationPreferences.recommendationsEnabled &&
+      recommendationPreferences.recommendationAutoRefresh &&
+      count < MIN_RECOMMENDATIONS_THRESHOLD &&
+      !isRefreshing
+    ) {
       handleRefreshRecommendations();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadDataCore, isRefreshing]);
+  }, [loadDataCore, recommendationPreferences, isRefreshing]);
 
   /**
    * Manually refresh recommendations using the AI recommendation engine.
@@ -477,7 +571,9 @@ export default function CommandCenterScreen() {
    * @returns {Promise<void>}
    */
   const handleRefreshRecommendations = useCallback(async () => {
-    if (isRefreshing) return; // Prevent concurrent refresh requests
+    if (isRefreshing || !recommendationPreferences.recommendationsEnabled) {
+      return; // Prevent concurrent refresh requests or refreshes when disabled
+    }
 
     setIsRefreshing(true);
     try {
@@ -496,7 +592,7 @@ export default function CommandCenterScreen() {
     } finally {
       setIsRefreshing(false);
     }
-  }, [isRefreshing, loadDataCore]);
+  }, [isRefreshing, recommendationPreferences.recommendationsEnabled, loadDataCore]);
 
   // Load data on component mount
   useEffect(() => {
@@ -804,26 +900,47 @@ export default function CommandCenterScreen() {
       </View>
 
       <View style={styles.content}>
-        {recommendations.length > 0 ? (
-          <FlatList
-            data={recommendations}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-            renderItem={({ item }) => (
-              <View style={styles.cardContainer}>
-                <RecommendationCard
-                  recommendation={item}
-                  onAccept={() => handleAccept(item)}
-                  onDecline={() => handleDecline(item)}
-                  onPress={() => handleCardPress(item)}
-                />
-              </View>
-            )}
-            ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
-            contentContainerStyle={styles.listContent}
-          />
+        {recommendationPreferences.recommendationsEnabled ? (
+          recommendations.length > 0 ? (
+            <FlatList
+              data={recommendations}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item) => item.id}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+              renderItem={({ item }) => (
+                <View style={styles.cardContainer}>
+                  <RecommendationCard
+                    recommendation={item}
+                    onAccept={() => handleAccept(item)}
+                    onDecline={() => handleDecline(item)}
+                    onPress={() => handleCardPress(item)}
+                    showReasoning={recommendationPreferences.recommendationShowReasoning}
+                    showEvidence={recommendationPreferences.recommendationShowEvidence}
+                  />
+                </View>
+              )}
+              ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
+              contentContainerStyle={styles.listContent}
+            />
+          ) : (
+            <Animated.View
+              entering={FadeInDown.delay(300)}
+              style={styles.emptyState}
+            >
+              <Image
+                source={require("../../assets/images/empty-command-center.png")}
+                style={styles.emptyImage}
+                resizeMode="contain"
+              />
+              <ThemedText type="h3" style={styles.emptyTitle}>
+                No Active Recommendations
+              </ThemedText>
+              <ThemedText type="body" secondary style={styles.emptyText}>
+                Check back in {refreshTime}
+              </ThemedText>
+            </Animated.View>
+          )
         ) : (
           <Animated.View
             entering={FadeInDown.delay(300)}
@@ -835,10 +952,10 @@ export default function CommandCenterScreen() {
               resizeMode="contain"
             />
             <ThemedText type="h3" style={styles.emptyTitle}>
-              No Active Recommendations
+              Recommendations Paused
             </ThemedText>
             <ThemedText type="body" secondary style={styles.emptyText}>
-              Check back in {refreshTime}
+              Turn recommendations back on in AI Preferences to see suggestions.
             </ThemedText>
           </Animated.View>
         )}
@@ -846,6 +963,49 @@ export default function CommandCenterScreen() {
 
       <View style={styles.footer}>
         <View style={styles.footerContent}>
+          <Pressable
+            onPress={handleRefreshRecommendations}
+            disabled={
+              isRefreshing || !recommendationPreferences.recommendationsEnabled
+            }
+            style={({ pressed }) => [
+              styles.refreshButton,
+              {
+                backgroundColor: recommendationPreferences.recommendationsEnabled
+                  ? theme.accentDim
+                  : theme.backgroundSecondary,
+              },
+              pressed && styles.pressed,
+              (isRefreshing || !recommendationPreferences.recommendationsEnabled) &&
+                styles.refreshButtonDisabled,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Refresh Recommendations"
+            accessibilityState={{
+              disabled:
+                isRefreshing || !recommendationPreferences.recommendationsEnabled,
+            }}
+          >
+            <Feather
+              name="refresh-cw"
+              size={16}
+              color={
+                recommendationPreferences.recommendationsEnabled
+                  ? theme.accent
+                  : theme.textMuted
+              }
+            />
+            <ThemedText
+              type="small"
+              style={{
+                color: recommendationPreferences.recommendationsEnabled
+                  ? theme.accent
+                  : theme.textMuted,
+              }}
+            >
+              {isRefreshing ? "Refreshing..." : "Refresh Recommendations"}
+            </ThemedText>
+          </Pressable>
           <View style={styles.limitsContainer}>
             <View
               style={[
@@ -1011,7 +1171,25 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   cardSummary: {
+    marginBottom: Spacing.md,
+  },
+  reasoningRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: Spacing.xs,
+    marginBottom: Spacing.sm,
+  },
+  reasoningText: {
+    flex: 1,
+  },
+  evidenceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
     marginBottom: Spacing.lg,
+  },
+  evidenceText: {
+    flex: 1,
   },
   cardFooter: {
     flexDirection: "row",
@@ -1048,6 +1226,19 @@ const styles = StyleSheet.create({
   },
   footerContent: {
     paddingHorizontal: Spacing.lg, // Only apply padding to limits container
+    gap: Spacing.md,
+  },
+  refreshButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+    borderRadius: BorderRadius.md,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+  },
+  refreshButtonDisabled: {
+    opacity: 0.6,
   },
   bottomNavContainer: {
     position: "absolute",
