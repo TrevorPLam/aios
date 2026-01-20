@@ -362,6 +362,126 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Dependencies**: None
 - **Effort**: M
 
+---
+
+### 📧 Email Module Expansion
+
+**T-071**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Email module is UI-only for thread management; no real provider integration
+  - Competitors require Gmail/Outlook integration for send/receive parity
+  - Provider sync is the critical gap blocking production viability
+- **Acceptance Criteria**:
+  - [ ] Add OAuth flows for Gmail and Microsoft Graph (secure token storage)
+  - [ ] Implement provider sync for inbox/sent/archives/labels into local storage
+  - [ ] Support multiple connected accounts with unified inbox view
+  - [ ] Add provider health/error states and retry workflows
+  - [ ] Add integration tests for provider sync with mocked APIs
+- **References**:
+  - MODULE_DETAILS.md
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+  - client/storage/database.ts
+- **Dependencies**: None
+- **Effort**: L
+
+**T-072**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Compose/send/reply/forward workflows are not implemented
+  - Competitors ship full composition with templates, signatures, and scheduling
+  - Differentiator: compose flows should integrate with AI Assist and other modules
+- **Acceptance Criteria**:
+  - [ ] Build compose UI with reply/forward, CC/BCC, and draft autosave
+  - [ ] Add rich-text editor with attachment upload/preview
+  - [ ] Support signatures, templates, and scheduled send
+  - [ ] Persist drafts and sent messages to storage with thread linkage
+  - [ ] Add tests for draft lifecycle and composition validation
+- **References**:
+  - MODULE_DETAILS.md
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+  - client/components/AIAssistSheet.tsx
+- **Dependencies**: T-071
+- **Effort**: L
+
+**T-073**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - No email notifications or background sync in the current build
+  - Competitors deliver real-time alerts and offline access
+  - Local-first UX requires cached threads with clear sync status
+- **Acceptance Criteria**:
+  - [ ] Implement background fetch + incremental sync with provider APIs
+  - [ ] Add push/local notifications for new emails with per-account controls
+  - [ ] Expose offline mode indicators and retry logic
+  - [ ] Add tests for notification scheduling and sync status updates
+- **References**:
+  - MODULE_DETAILS.md
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+- **Dependencies**: T-071
+- **Effort**: M
+
+**T-074**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Current storage only models threads without mailbox lifecycle states
+  - Competitors include sent, spam, trash, and custom rules
+  - Lifecycle management enables email zero workflows and compliance needs
+- **Acceptance Criteria**:
+  - [ ] Add mailbox folders (inbox/sent/trash/spam/archives) with counts
+  - [ ] Implement server-side delete, spam reporting, and restore flows
+  - [ ] Add basic rules/filters (sender, subject, label) for auto-organization
+  - [ ] Add tests for mailbox transitions and rule application
+- **References**:
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/screens/EmailScreen.tsx
+  - client/storage/database.ts
+- **Dependencies**: T-071
+- **Effort**: M
+
+**T-075**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Email intelligence differentiates premium clients (smart replies, priority inbox)
+  - AIOS can exceed competitors with cross-module automation
+  - Action extraction bridges Email → Planner/Calendar/Notebook workflows
+- **Acceptance Criteria**:
+  - [ ] Add AI summaries, smart reply, and smart compose actions
+  - [ ] Implement action item extraction to Planner and meeting detection to Calendar
+  - [ ] Add priority inbox scoring and urgency indicators
+  - [ ] Log AI actions to History with opt-in and privacy safeguards
+  - [ ] Add tests for AI action routing and metadata creation
+- **References**:
+  - docs/analysis/CODE_QUALITY_ANALYSIS.md
+  - client/components/AIAssistSheet.tsx
+  - client/lib/contextEngine.ts
+  - client/screens/EmailScreen.tsx
+- **Dependencies**: T-072
+- **Effort**: M
+
 **T-001A**
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
@@ -1779,20 +1899,20 @@ For new features requiring multi-platform support, use sequential tasks:
 
 ## Summary
 
-**Total Tasks**: 66 (added T-070)
+**Total Tasks**: 71 (added T-075)
 **Completed**: 12 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-031, T-043)
 **Reverted**: 1 task (T-009)
-**Remaining**: 53 tasks
+**Remaining**: 58 tasks
 
 **By Priority**:
 - P0 (Critical): 2 tasks (2 complete: T-002A, T-003)
-- P1 (High): 13 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057)
-- P2 (Medium): 30 tasks (4 complete: T-014, T-015, T-022, T-031)
+- P1 (High): 15 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057)
+- P2 (Medium): 33 tasks (4 complete: T-014, T-015, T-022, T-031)
 - P3 (Low): 16 tasks (1 complete: T-043)
 
 **By Type**:
 - BUG: 2 (2 complete: T-002A, T-003)
-- FEATURE: 26 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 1 new: T-057)
+- FEATURE: 31 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 1 new: T-057)
 - QUALITY: 14 (2 complete: T-022, T-043)
 - DOCS: 12
 - CHORE: 7
@@ -1801,18 +1921,18 @@ For new features requiring multi-platform support, use sequential tasks:
 - DEPENDENCY: 1
 
 **By Owner**:
-- AGENT: 59 tasks (12 complete)
+- AGENT: 64 tasks (12 complete)
 - Trevor: 1 task (T-028 - Analytics decision)
 
 **By Status**:
 - COMPLETE: 12 tasks
-- READY: 50 tasks
+- READY: 55 tasks
 - BLOCKED: 3 tasks (T-001B, T-002B, T-028, T-029, T-030 - analytics decision chain)
 
 **By Effort**:
 - Small (S): 14 tasks
-- Medium (M): 47 tasks
-- Large (L): 4 tasks (T-029 - Analytics, requires phased multi-week approach)
+- Medium (M): 50 tasks
+- Large (L): 6 tasks (T-029 - Analytics, requires phased multi-week approach)
 
 **Critical Path**:
 1. Fix critical bugs (T-001, T-002, T-003)
