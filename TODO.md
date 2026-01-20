@@ -364,6 +364,148 @@ For new features requiring multi-platform support, use sequential tasks:
 
 ---
 
+### 📋 Lists Module Expansion
+
+**T-076**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Shared lists and collaboration are table stakes in Todoist/MS To Do
+  - Lists module lacks sharing, which blocks multi-user workflows
+  - Collaboration is required to meet competitor parity
+- **Acceptance Criteria**:
+  - [ ] Add list sharing flow (invite via contacts/email)
+  - [ ] Add roles/permissions (owner/editor/viewer) to list access
+  - [ ] Sync shared list changes and show collaborator indicators
+  - [ ] Add tests for permission enforcement and merge behavior
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/screens/ListEditorScreen.tsx
+  - client/models/types.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-077**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitors support recurring tasks/lists
+  - Lists module has due dates but no recurrence rules
+  - Recurrence is critical for routine checklists
+- **Acceptance Criteria**:
+  - [ ] Add recurrence rules to list items (daily/weekly/monthly/custom)
+  - [ ] Auto-create next occurrence on completion or schedule
+  - [ ] Show recurrence indicators and filters in Lists UI
+  - [ ] Add tests for recurrence scheduling logic
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - client/storage/database.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-078**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Top list apps include reminders (time and location)
+  - List items support due dates but no notifications
+  - Reminders improve daily engagement and parity
+- **Acceptance Criteria**:
+  - [ ] Add reminder configuration (none/relative/custom) to list items
+  - [ ] Schedule/update/cancel local notifications for list reminders
+  - [ ] Add location-based reminder support for list items
+  - [ ] Add tests for reminder scheduling and notification lifecycle
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-079**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Competitors support subtasks; Lists items are flat today
+  - Nested checklists enable complex workflows and parity
+  - Hierarchy improves clarity for multi-step lists
+- **Acceptance Criteria**:
+  - [ ] Add nested child items to ListItem schema
+  - [ ] Build UI to indent/expand/collapse subitems
+  - [ ] Roll up completion state based on child items
+  - [ ] Add tests for nested item rendering and completion logic
+- **References**:
+  - client/models/types.ts
+  - client/screens/ListEditorScreen.tsx
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-080**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Voice input is a common quick-capture path in competitor apps
+  - Lists lacks voice-based capture for items
+  - Quick add improves mobile usability
+- **Acceptance Criteria**:
+  - [ ] Add voice input entry point from Lists screens
+  - [ ] Transcribe voice to item text with confirmation edit
+  - [ ] Handle permission denial and error states
+  - [ ] Add tests for voice input flow
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/screens/ListEditorScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-081**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Differentiator opportunity beyond parity features
+  - Use list history to surface insights and suggestions
+  - Smart suggestions reinforce AIOS ecosystem value
+- **Acceptance Criteria**:
+  - [ ] Add Lists insights panel (completion trends, overdue patterns)
+  - [ ] Surface smart suggestions (auto-prioritize, recommend templates)
+  - [ ] Log insights/suggestions to History for auditability
+  - [ ] Add tests for insights calculations
+- **References**:
+  - client/screens/ListsScreen.tsx
+  - client/storage/database.ts
+  - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
+- **Dependencies**: None
+- **Effort**: M
+
+---
+
 ### 📧 Email Module Expansion
 
 **T-071**
@@ -1899,20 +2041,20 @@ For new features requiring multi-platform support, use sequential tasks:
 
 ## Summary
 
-**Total Tasks**: 71 (added T-075)
+**Total Tasks**: 77 (added T-081)
 **Completed**: 12 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-031, T-043)
 **Reverted**: 1 task (T-009)
-**Remaining**: 58 tasks
+**Remaining**: 64 tasks
 
 **By Priority**:
 - P0 (Critical): 2 tasks (2 complete: T-002A, T-003)
-- P1 (High): 15 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057)
-- P2 (Medium): 33 tasks (4 complete: T-014, T-015, T-022, T-031)
+- P1 (High): 19 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 7 new: T-057, T-076-T-081)
+- P2 (Medium): 35 tasks (4 complete: T-014, T-015, T-022, T-031)
 - P3 (Low): 16 tasks (1 complete: T-043)
 
 **By Type**:
 - BUG: 2 (2 complete: T-002A, T-003)
-- FEATURE: 31 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 1 new: T-057)
+- FEATURE: 37 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 7 new: T-057, T-076-T-081)
 - QUALITY: 14 (2 complete: T-022, T-043)
 - DOCS: 12
 - CHORE: 7
@@ -1921,18 +2063,18 @@ For new features requiring multi-platform support, use sequential tasks:
 - DEPENDENCY: 1
 
 **By Owner**:
-- AGENT: 64 tasks (12 complete)
+- AGENT: 70 tasks (12 complete)
 - Trevor: 1 task (T-028 - Analytics decision)
 
 **By Status**:
 - COMPLETE: 12 tasks
-- READY: 55 tasks
+- READY: 61 tasks
 - BLOCKED: 3 tasks (T-001B, T-002B, T-028, T-029, T-030 - analytics decision chain)
 
 **By Effort**:
 - Small (S): 14 tasks
-- Medium (M): 50 tasks
-- Large (L): 6 tasks (T-029 - Analytics, requires phased multi-week approach)
+- Medium (M): 54 tasks
+- Large (L): 8 tasks (T-029 - Analytics, requires phased multi-week approach)
 
 **Critical Path**:
 1. Fix critical bugs (T-001, T-002, T-003)
@@ -2461,5 +2603,5 @@ For new features requiring multi-platform support, use sequential tasks:
 ---
 
 **Last Updated**: 2026-01-17
-**Total Items**: 72
-**Priority Breakdown**: 2 Critical, 18 High, 30 Medium, 22 Low
+**Total Items**: 78
+**Priority Breakdown**: 2 Critical, 22 High, 32 Medium, 22 Low
