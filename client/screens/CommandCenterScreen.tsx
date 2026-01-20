@@ -497,10 +497,11 @@ export default function CommandCenterScreen() {
 
       const settings = await db.settings.get();
       const nextPreferences: RecommendationPreferences = {
-        recommendationsEnabled: settings.recommendationsEnabled,
-        recommendationAutoRefresh: settings.recommendationAutoRefresh,
-        recommendationShowEvidence: settings.recommendationShowEvidence,
-        recommendationShowReasoning: settings.recommendationShowReasoning,
+        // Normalize to strict booleans; legacy installs may have undefined fields.
+        recommendationsEnabled: settings.recommendationsEnabled === true,
+        recommendationAutoRefresh: settings.recommendationAutoRefresh === true,
+        recommendationShowEvidence: settings.recommendationShowEvidence === true,
+        recommendationShowReasoning: settings.recommendationShowReasoning === true,
       };
 
       // Avoid unnecessary re-renders by only updating when values change.
