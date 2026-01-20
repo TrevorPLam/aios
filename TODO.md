@@ -65,6 +65,103 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Dependencies**: None
 - **Effort**: M
 
+---
+
+### 📋 Planner Module Expansion
+
+**T-058**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Planner AI Assist actions are listed but not implemented
+  - Competing planners ship AI-assisted prioritization and task breakdown
+  - This is a differentiator tied to the Command Center/AI narrative
+- **Acceptance Criteria**:
+  - [ ] Implement Planner AI Assist actions: priority suggestion, due date recommendation, task breakdown, dependency identification
+  - [ ] Persist AI output into task fields or subtasks with user confirmation
+  - [ ] Log AI Assist outcomes in History for auditability
+  - [ ] Add empty/error states for AI Assist actions
+  - [ ] Test AI Assist actions on iOS with sample tasks
+- **References**:
+  - client/components/AIAssistSheet.tsx
+  - docs/planning/MISSING_FEATURES.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-059**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Task dependencies exist in the data model but UI/validation is incomplete
+  - Competitive planners visualize dependency chains and block conflicting tasks
+  - Dependency management unlocks critical-path planning
+- **Acceptance Criteria**:
+  - [ ] Add dependency selection UI in TaskDetailScreen
+  - [ ] Validate cycles and blocked tasks before save
+  - [ ] Surface dependency status in Planner list (blocked/ready)
+  - [ ] Add dependency graph summary in task details
+  - [ ] Add tests for dependency validation logic
+- **References**:
+  - client/screens/TaskDetailScreen.tsx
+  - client/screens/PlannerScreen.tsx
+  - docs/planning/MISSING_FEATURES.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-060**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Top competitors support recurring tasks and habit workflows
+  - Planner currently focuses on one-off tasks and due dates
+  - Recurrence improves long-term planning and retention
+- **Acceptance Criteria**:
+  - [ ] Add recurrence rules to task model (daily/weekly/monthly/custom)
+  - [ ] Allow next-occurrence scheduling and skip/snooze
+  - [ ] Show recurrence indicators in task list and details
+  - [ ] Add recurrence-aware filters (overdue vs recurring)
+  - [ ] Add tests for recurrence scheduling logic
+- **References**:
+  - client/screens/TaskDetailScreen.tsx
+  - client/screens/PlannerScreen.tsx
+  - shared/schema.ts
+- **Dependencies**: None
+- **Effort**: L
+
+**T-061**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Planner should be a hub for action items across modules
+  - Integrations like Notebook/Email/List → Planner are documented but not implemented
+  - Cross-module capture differentiates AIOS from single-purpose task apps
+- **Acceptance Criteria**:
+  - [ ] Add “Send to Planner” actions in Notebook, Lists, Email, Calendar
+  - [ ] Link tasks back to source module item for traceability
+  - [ ] Auto-populate task metadata (source, due date, priority)
+  - [ ] Add cross-module tests for task creation flows
+  - [ ] Document new integration hooks in module guides
+- **References**:
+  - client/screens/NotebookScreen.tsx
+  - client/screens/ListsScreen.tsx
+  - client/screens/EmailScreen.tsx
+  - client/screens/CalendarScreen.tsx
+  - docs/archive/2026-01-pre-consolidation/F&F-BACKUP.md
+- **Dependencies**: None
+- **Effort**: L
+
 **T-001A**
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
