@@ -25,6 +25,7 @@ import {
   updateConversationSchema,
   insertMessageSchema,
   updateMessageSchema,
+  analyticsBatchSchema,
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -680,6 +681,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Translation error:", error);
         throw new AppError(500, "Translation service unavailable");
       }
+    }),
+  );
+
+  // Analytics telemetry endpoint
+  app.post(
+    "/api/telemetry/events",
+    authenticate,
+    validate(analyticsBatchSchema),
+    asyncHandler(async (req, res) => {
+      const { events, schemaVersion } = req.body;
+
+      // Map client event format to storage format
+      const mappedEvents = events.map((event: any) => ({
+        eventId: event.eventId,
+        eventName: event.eventName,
+        timestamp: event.timestamp,
+        properties: event.properties,
+        identity: event.identity,
+        appVersion: event.appVersion,
+        platform: event.platform,
+      }));
+
+      // Save events to storage
+      await storage.saveAnalyticsEvents(mappedEvents);
+
+      // Return 202 Accepted (async processing)
+      res.status(202).json({
+        received: events.length,
+        timestamp: new Date().toISOString(),
+        schemaVersion,
+      });
     }),
   );
 

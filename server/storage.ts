@@ -17,6 +17,8 @@ import type {
   Settings,
   Conversation,
   Message,
+  AnalyticsEvent,
+  InsertAnalyticsEvent,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -165,6 +167,33 @@ export interface IStorage {
       limit?: number;
     },
   ): Promise<Message[]>;
+
+  // Analytics methods
+  saveAnalyticsEvents(
+    events: Array<{
+      eventId: string;
+      eventName: string;
+      timestamp: string;
+      properties: Record<string, any>;
+      identity: {
+        userId?: string;
+        deviceId?: string;
+        sessionId?: string;
+      };
+      appVersion?: string;
+      platform?: string;
+    }>,
+  ): Promise<void>;
+  getAnalyticsEvents(
+    userId: string,
+    filters?: {
+      startDate?: Date;
+      endDate?: Date;
+      eventNames?: string[];
+      limit?: number;
+    },
+  ): Promise<AnalyticsEvent[]>;
+  deleteUserAnalytics(userId: string): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -178,6 +207,7 @@ export class MemStorage implements IStorage {
   private settings: Map<string, Settings>;
   private conversations: Map<string, Conversation>;
   private messages: Map<string, Message>;
+  private analyticsEvents: Map<string, AnalyticsEvent>;
 
   constructor() {
     this.users = new Map();
@@ -189,6 +219,7 @@ export class MemStorage implements IStorage {
     this.settings = new Map();
     this.conversations = new Map();
     this.messages = new Map();
+    this.analyticsEvents = new Map();
   }
 
   /**
@@ -712,6 +743,110 @@ export class MemStorage implements IStorage {
     return typeof options?.limit === "number"
       ? sorted.slice(0, options.limit)
       : sorted;
+  }
+
+  // Analytics methods
+  async saveAnalyticsEvents(
+    events: Array<{
+      eventId: string;
+      eventName: string;
+      timestamp: string;
+      properties: Record<string, any>;
+      identity: {
+        userId?: string;
+        deviceId?: string;
+        sessionId?: string;
+      };
+      appVersion?: string;
+      platform?: string;
+    }>,
+  ): Promise<void> {
+    const now = new Date();
+    
+    for (const event of events) {
+      // Skip if event ID already exists (idempotency)
+      if (this.analyticsEvents.has(event.eventId)) {
+        console.log(`[Analytics] Skipping duplicate event: ${event.eventId}`);
+        continue;
+      }
+
+      const analyticsEvent: AnalyticsEvent = {
+        id: event.eventId,
+        userId: event.identity.userId || null,
+        eventName: event.eventName,
+        eventProperties: event.properties,
+        timestamp: new Date(event.timestamp),
+        sessionId: event.identity.sessionId || null,
+        deviceId: event.identity.deviceId || null,
+        platform: event.platform || null,
+        appVersion: event.appVersion || null,
+        createdAt: now,
+      };
+
+      this.analyticsEvents.set(event.eventId, analyticsEvent);
+    }
+
+    console.log(`[Analytics] Saved ${events.length} events`);
+  }
+
+  async getAnalyticsEvents(
+    userId: string,
+    filters?: {
+      startDate?: Date;
+      endDate?: Date;
+      eventNames?: string[];
+      limit?: number;
+    },
+  ): Promise<AnalyticsEvent[]> {
+    let results = Array.from(this.analyticsEvents.values()).filter(
+      (event) => event.userId === userId,
+    );
+
+    // Apply filters
+    if (filters?.startDate) {
+      results = results.filter(
+        (event) => new Date(event.timestamp) >= filters.startDate!,
+      );
+    }
+
+    if (filters?.endDate) {
+      results = results.filter(
+        (event) => new Date(event.timestamp) <= filters.endDate!,
+      );
+    }
+
+    if (filters?.eventNames && filters.eventNames.length > 0) {
+      results = results.filter((event) =>
+        filters.eventNames!.includes(event.eventName),
+      );
+    }
+
+    // Sort by timestamp descending (newest first)
+    results.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    );
+
+    // Apply limit
+    if (filters?.limit && filters.limit > 0) {
+      results = results.slice(0, filters.limit);
+    }
+
+    return results;
+  }
+
+  async deleteUserAnalytics(userId: string): Promise<void> {
+    const eventsToDelete = Array.from(this.analyticsEvents.values()).filter(
+      (event) => event.userId === userId,
+    );
+
+    for (const event of eventsToDelete) {
+      this.analyticsEvents.delete(event.id);
+    }
+
+    console.log(
+      `[Analytics] Deleted ${eventsToDelete.length} events for user ${userId}`,
+    );
   }
 }
 
