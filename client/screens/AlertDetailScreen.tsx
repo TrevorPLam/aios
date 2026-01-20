@@ -42,6 +42,11 @@ import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Alert, AlertType, RecurrenceRule } from "@/models/types";
 import AlertStatisticsSheet from "@/components/AlertStatisticsSheet";
+import {
+  formatTimeForDisplay,
+  formatTimeForInput,
+  parseTimeInput,
+} from "@/utils/timeInput";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type AlertDetailRouteProp = RouteProp<AppStackParamList, "AlertDetail">;
@@ -142,6 +147,7 @@ export default function AlertDetailScreen() {
     number | null
   >(null);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [webTimeInput, setWebTimeInput] = useState("");
 
   // Load existing alert data or set defaults for new alert
   useEffect(() => {
@@ -176,6 +182,12 @@ export default function AlertDetailScreen() {
       setTime(now.toISOString());
     }
   }, [alertId]);
+
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      setWebTimeInput(time ? formatTimeForInput(time) : "");
+    }
+  }, [time]);
 
   /**
    * Save alert to database
@@ -260,22 +272,6 @@ export default function AlertDetailScreen() {
   };
 
   /**
-   * Format ISO time string for display
-   *
-   * @param {string} isoString - ISO 8601 time string
-   * @returns {string} Formatted time (e.g., "08:00 AM")
-   */
-  const formatTimeForDisplay = (isoString: string) => {
-    if (!isoString) return "";
-    const date = new Date(isoString);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  /**
    * Handle time picker interaction.
    * Opens the native date/time picker for user to select alert time.
    * Handles platform-specific dismissal logic for iOS and Android.
@@ -327,6 +323,26 @@ export default function AlertDetailScreen() {
    */
   const openTimePicker = () => {
     setShowTimePicker(true);
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
+
+  /**
+   * Apply web time input to the alert time.
+   * Ensures the input is valid before updating state.
+   */
+  const applyWebTimeInput = () => {
+    const referenceDate = time ? new Date(time) : new Date();
+    const result = parseTimeInput(webTimeInput, referenceDate);
+
+    if (result.error || !result.date) {
+      RNAlert.alert("Invalid time", result.error ?? "Enter a valid time.");
+      return;
+    }
+
+    setTime(result.date.toISOString());
+
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -433,29 +449,68 @@ export default function AlertDetailScreen() {
           <ThemedText type="body" style={styles.label}>
             Time
           </ThemedText>
-          <Pressable
-            onPress={openTimePicker}
-            style={[
-              styles.picker,
-              {
-                backgroundColor: theme.backgroundDefault,
-                borderColor: theme.border,
-              },
-            ]}
-          >
-            <ThemedText type="body">
-              {time ? formatTimeForDisplay(time) : "Set time"}
-            </ThemedText>
-            <Feather name="clock" size={20} color={theme.textMuted} />
-          </Pressable>
-          {showTimePicker && (
-            <DateTimePicker
-              value={time ? new Date(time) : new Date()}
-              mode="time"
-              is24Hour={false}
-              onChange={handleTimeChange}
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-            />
+          {Platform.OS === "web" ? (
+            <>
+              <View style={styles.webTimeRow}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.webTimeInput,
+                    {
+                      backgroundColor: theme.backgroundDefault,
+                      color: theme.text,
+                      borderColor: theme.border,
+                    },
+                  ]}
+                  value={webTimeInput}
+                  onChangeText={setWebTimeInput}
+                  placeholder="HH:MM"
+                  placeholderTextColor={theme.textMuted}
+                  autoCapitalize="none"
+                  keyboardType="numbers-and-punctuation"
+                />
+                <Button
+                  onPress={applyWebTimeInput}
+                  style={styles.webTimeButton}
+                  disabled={!webTimeInput.trim()}
+                >
+                  Apply
+                </Button>
+              </View>
+              <ThemedText
+                type="caption"
+                style={[styles.webTimeHint, { color: theme.textMuted }]}
+              >
+                Use 24-hour format (HH:MM).
+              </ThemedText>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={openTimePicker}
+                style={[
+                  styles.picker,
+                  {
+                    backgroundColor: theme.backgroundDefault,
+                    borderColor: theme.border,
+                  },
+                ]}
+              >
+                <ThemedText type="body">
+                  {time ? formatTimeForDisplay(time) : "Set time"}
+                </ThemedText>
+                <Feather name="clock" size={20} color={theme.textMuted} />
+              </Pressable>
+              {showTimePicker && (
+                <DateTimePicker
+                  value={time ? new Date(time) : new Date()}
+                  mode="time"
+                  is24Hour={false}
+                  onChange={handleTimeChange}
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                />
+              )}
+            </>
           )}
         </View>
 
@@ -934,6 +989,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: BorderRadius.md,
     padding: Spacing.md,
+  },
+  webTimeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  webTimeInput: {
+    flex: 1,
+  },
+  webTimeButton: {
+    paddingHorizontal: Spacing.lg,
+  },
+  webTimeHint: {
+    marginTop: Spacing.xs,
   },
   optionGroup: {
     flexDirection: "row",

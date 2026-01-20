@@ -262,6 +262,9 @@ Also see [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md
 - Press `i` in the Expo CLI to explicitly open iOS simulator
 - If using Expo Go, make sure you're on a physical iOS device or iOS Simulator
 
+**Using the web build for alerts?**
+- Web builds rely on a manual 24-hour time input (HH:MM) on the Alert detail screen because native time pickers are not available on web.
+
 ### Building for Production
 
 **Build the mobile app:**
