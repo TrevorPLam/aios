@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { DEFAULT_SETTINGS } from "@/models/types";
 
 describe("Settings - New Fields", () => {
   beforeEach(async () => {

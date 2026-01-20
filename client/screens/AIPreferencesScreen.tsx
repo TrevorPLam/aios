@@ -34,6 +34,7 @@
  * - Added real-time context change detection
  * - Added manual override capability
  * - Added recommendation preferences (T-007)
+ * - Disabled dependent recommendation toggles when recommendations are paused
  * 
  * @module AIPreferencesScreen
  */
@@ -272,6 +273,8 @@ export default function AIPreferencesScreen() {
     );
   }
 
+  const recommendationsDisabled = !settings.recommendationsEnabled;
+
   return (
     <ThemedView style={styles.container}>
       <ScrollView
@@ -504,7 +507,11 @@ export default function AIPreferencesScreen() {
             ]}
           >
             <View style={styles.settingInfo}>
-              <Feather name="refresh-cw" size={20} color={theme.accent} />
+              <Feather
+                name="refresh-cw"
+                size={20}
+                color={recommendationsDisabled ? theme.textMuted : theme.accent}
+              />
               <View>
                 <ThemedText type="body">Auto-refresh Suggestions</ThemedText>
                 <ThemedText type="small" muted>
@@ -514,6 +521,7 @@ export default function AIPreferencesScreen() {
             </View>
             <Switch
               value={settings.recommendationAutoRefresh}
+              disabled={recommendationsDisabled}
               onValueChange={() =>
                 toggleRecommendationSetting("recommendationAutoRefresh")
               }
@@ -522,7 +530,9 @@ export default function AIPreferencesScreen() {
                 true: theme.accentDim,
               }}
               thumbColor={
-                settings.recommendationAutoRefresh ? theme.accent : theme.textSecondary
+                settings.recommendationAutoRefresh
+                  ? theme.accent
+                  : theme.textSecondary
               }
             />
           </View>
@@ -534,7 +544,11 @@ export default function AIPreferencesScreen() {
             ]}
           >
             <View style={styles.settingInfo}>
-              <Feather name="info" size={20} color={theme.accent} />
+              <Feather
+                name="info"
+                size={20}
+                color={recommendationsDisabled ? theme.textMuted : theme.accent}
+              />
               <View>
                 <ThemedText type="body">Show Reasoning</ThemedText>
                 <ThemedText type="small" muted>
@@ -544,6 +558,7 @@ export default function AIPreferencesScreen() {
             </View>
             <Switch
               value={settings.recommendationShowReasoning}
+              disabled={recommendationsDisabled}
               onValueChange={() =>
                 toggleRecommendationSetting("recommendationShowReasoning")
               }
@@ -552,13 +567,19 @@ export default function AIPreferencesScreen() {
                 true: theme.accentDim,
               }}
               thumbColor={
-                settings.recommendationShowReasoning ? theme.accent : theme.textSecondary
+                settings.recommendationShowReasoning
+                  ? theme.accent
+                  : theme.textSecondary
               }
             />
           </View>
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Feather name="activity" size={20} color={theme.accent} />
+              <Feather
+                name="activity"
+                size={20}
+                color={recommendationsDisabled ? theme.textMuted : theme.accent}
+              />
               <View>
                 <ThemedText type="body">Show Evidence</ThemedText>
                 <ThemedText type="small" muted>
@@ -568,6 +589,7 @@ export default function AIPreferencesScreen() {
             </View>
             <Switch
               value={settings.recommendationShowEvidence}
+              disabled={recommendationsDisabled}
               onValueChange={() =>
                 toggleRecommendationSetting("recommendationShowEvidence")
               }
@@ -576,7 +598,9 @@ export default function AIPreferencesScreen() {
                 true: theme.accentDim,
               }}
               thumbColor={
-                settings.recommendationShowEvidence ? theme.accent : theme.textSecondary
+                settings.recommendationShowEvidence
+                  ? theme.accent
+                  : theme.textSecondary
               }
             />
           </View>
