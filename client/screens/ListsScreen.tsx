@@ -795,14 +795,14 @@ export default function ListsScreen() {
       <Animated.View
         style={[
           styles.secondaryNav,
-          { backgroundColor: theme.background },
+          { backgroundColor: "transparent" },
           secondaryNavAnimatedStyle,
         ]}
       >
         <View
           style={[
             styles.secondaryNavContent,
-            { backgroundColor: theme.backgroundSecondary },
+            { backgroundColor: "transparent" },
           ]}
         >
           {/* Share List Button */}
@@ -818,8 +818,8 @@ export default function ListsScreen() {
               console.log("Share List pressed");
             }}
           >
-            <Feather name="share-2" size={20} color={theme.textSecondary} />
-            <ThemedText type="small" secondary>
+            <Feather name="share-2" size={20} color={theme.text} />
+            <ThemedText type="small">
               Share List
             </ThemedText>
           </Pressable>
@@ -837,8 +837,8 @@ export default function ListsScreen() {
               console.log("Templates pressed");
             }}
           >
-            <Feather name="copy" size={20} color={theme.textSecondary} />
-            <ThemedText type="small" secondary>
+            <Feather name="copy" size={20} color={theme.text} />
+            <ThemedText type="small">
               Templates
             </ThemedText>
           </Pressable>
@@ -856,8 +856,8 @@ export default function ListsScreen() {
               console.log("Statistics pressed");
             }}
           >
-            <Feather name="bar-chart-2" size={20} color={theme.textSecondary} />
-            <ThemedText type="small" secondary>
+            <Feather name="bar-chart-2" size={20} color={theme.text} />
+            <ThemedText type="small">
               Statistics
             </ThemedText>
           </Pressable>
