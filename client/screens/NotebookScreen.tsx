@@ -33,19 +33,12 @@ import {
   TextInput,
   ScrollView,
   Modal,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
-import Animated, {
-  FadeInDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -60,28 +53,8 @@ import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 import analytics from "@/analytics";
-
-// Secondary Navigation Constants
-/** Badge count threshold for secondary nav (smaller due to reduced badge size) */
-const SECONDARY_NAV_BADGE_THRESHOLD = 9;
-
-/** 
- * Secondary nav bar hide offset in pixels when scrolling down.
- * This value must be large enough to hide the entire secondary nav content.
- */
-const SECONDARY_NAV_HIDE_OFFSET = -72;
-
-/** Animation duration in milliseconds for secondary nav show/hide transitions */
-const SECONDARY_NAV_ANIMATION_DURATION = 200;
-
-/** Scroll position threshold to show nav when near top of page */
-const SCROLL_TOP_THRESHOLD = 10;
-
-/** Scroll delta threshold to hide nav when scrolling down */
-const SCROLL_DOWN_THRESHOLD = 5;
-
-/** Scroll delta threshold to show nav when scrolling up (negative value) */
-const SCROLL_UP_THRESHOLD = -5;
+import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
+import { logButtonPress, logPlaceholderAction } from "@/utils/analyticsLogger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -207,10 +180,8 @@ export default function NotebookScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
 
-  // Shared values for secondary navigation animation
-  const lastScrollY = useSharedValue(0);
-  const secondaryNavTranslateY = useSharedValue(0);
-  const isAnimating = useSharedValue(false);
+  // Secondary navigation scroll handling
+  const { handleScroll: handleSecondaryNavScroll, animatedStyle: secondaryNavAnimatedStyle } = useSecondaryNavScroll();
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [showAISheet, setShowAISheet] = useState(false);
@@ -253,54 +224,6 @@ export default function NotebookScreen() {
     });
     return Array.from(tagSet).sort();
   }, [notes]);
-
-  /**
-   * Scroll handler to hide/show secondary nav based on scroll direction and position.
-   * 
-   * Behavior:
-   * - Shows nav when at top of page (scrollY < SCROLL_TOP_THRESHOLD)
-   * - Hides nav when scrolling down significantly (delta > SCROLL_DOWN_THRESHOLD)
-   * - Shows nav when scrolling up significantly (delta < SCROLL_UP_THRESHOLD)
-   * - Prevents animation overlap using isAnimating flag
-   */
-  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const currentScrollY = event.nativeEvent.contentOffset.y;
-    const delta = currentScrollY - lastScrollY.value;
-
-    if (isAnimating.value) {
-      lastScrollY.value = currentScrollY;
-      return;
-    }
-
-    if (currentScrollY < SCROLL_TOP_THRESHOLD && secondaryNavTranslateY.value !== 0) {
-      isAnimating.value = true;
-      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
-        isAnimating.value = false;
-      });
-    } else if (delta > SCROLL_DOWN_THRESHOLD && secondaryNavTranslateY.value !== SECONDARY_NAV_HIDE_OFFSET) {
-      isAnimating.value = true;
-      secondaryNavTranslateY.value = withTiming(SECONDARY_NAV_HIDE_OFFSET, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
-        isAnimating.value = false;
-      });
-    } else if (delta < SCROLL_UP_THRESHOLD && secondaryNavTranslateY.value !== 0) {
-      isAnimating.value = true;
-      secondaryNavTranslateY.value = withTiming(0, { duration: SECONDARY_NAV_ANIMATION_DURATION }, () => {
-        isAnimating.value = false;
-      });
-    }
-
-    lastScrollY.value = currentScrollY;
-  }, []); // Empty deps: uses shared values
-
-  /**
-   * Animated style for secondary navigation bar.
-   * Applies vertical translation (translateY) to hide/show the nav bar on scroll.
-   */
-  const secondaryNavAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: secondaryNavTranslateY.value }],
-    };
-  });
 
   // Filter and sort notes
   const filteredAndSortedNotes = useMemo(() => {
@@ -579,11 +502,17 @@ export default function NotebookScreen() {
 
           <Pressable
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('NotebookScreen', 'Backup');
+                // TODO: Implement backup functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Backup button:', error);
+                }
               }
-              // TODO: Implement backup functionality
-              console.log("Backup notes");
             }}
             style={({ pressed }) => [
               styles.secondaryNavButton,
@@ -598,11 +527,17 @@ export default function NotebookScreen() {
 
           <Pressable
             onPress={() => {
-              if (Platform.OS !== "web") {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              try {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                logPlaceholderAction('NotebookScreen', 'Templates');
+                // TODO: Implement templates functionality in follow-up task T-XXX
+              } catch (error) {
+                if (__DEV__) {
+                  console.error('Error in Templates button:', error);
+                }
               }
-              // TODO: Implement templates functionality
-              console.log("Open templates");
             }}
             style={({ pressed }) => [
               styles.secondaryNavButton,
@@ -750,7 +685,7 @@ export default function NotebookScreen() {
         data={filteredAndSortedNotes}
         renderItem={renderNote}
         keyExtractor={(item) => item.id}
-        onScroll={handleScroll}
+        onScroll={handleSecondaryNavScroll}
         scrollEventThrottle={16}
         contentContainerStyle={[
           styles.listContent,
