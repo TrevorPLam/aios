@@ -55,6 +55,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
+import { Animation, Opacity, ComponentSize } from "@/constants/uiConstants";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { Photo, PhotoGridSize } from "@/models/types";
@@ -92,7 +93,7 @@ function PhotoCard({
     itemsPerRow;
 
   return (
-    <Animated.View entering={FadeInDown.delay(index * 30).springify()}>
+    <Animated.View entering={FadeInDown.delay(index * Animation.staggerDelay).springify()}>
       <Pressable
         onPress={onPress}
         onLongPress={onLongPress}
@@ -245,7 +246,7 @@ export default function PhotosScreen() {
             onPress={() => navigation.navigate("Albums")}
             style={({ pressed }) => [
               { padding: Spacing.xs },
-              pressed && { opacity: 0.7 },
+              pressed && { opacity: Opacity.pressedLight },
             ]}
           >
             <Feather name="folder" size={22} color={theme.accent} />
@@ -254,7 +255,7 @@ export default function PhotosScreen() {
             onPress={() => setShowStatsSheet(true)}
             style={({ pressed }) => [
               { padding: Spacing.xs },
-              pressed && { opacity: 0.7 },
+              pressed && { opacity: Opacity.pressedLight },
             ]}
           >
             <Feather name="pie-chart" size={22} color={theme.accent} />
@@ -263,7 +264,7 @@ export default function PhotosScreen() {
             onPress={() => setShowFilterSheet(true)}
             style={({ pressed }) => [
               { padding: Spacing.xs },
-              pressed && { opacity: 0.7 },
+              pressed && { opacity: Opacity.pressedLight },
             ]}
           >
             <Feather
@@ -277,7 +278,7 @@ export default function PhotosScreen() {
               onPress={handleCancelSelection}
               style={({ pressed }) => [
                 { padding: Spacing.xs },
-                pressed && { opacity: 0.7 },
+                pressed && { opacity: Opacity.pressedLight },
               ]}
             >
               <Feather name="x" size={22} color={theme.text} />
@@ -573,7 +574,7 @@ export default function PhotosScreen() {
                   disabled={selectedPhotos.size === 0}
                   style={[
                     styles.selectionButton,
-                    selectedPhotos.size === 0 && { opacity: 0.5 },
+                    selectedPhotos.size === 0 && { opacity: Opacity.disabled },
                   ]}
                 >
                   <Feather name="trash-2" size={20} color={theme.error} />
@@ -624,8 +625,8 @@ export default function PhotosScreen() {
               style={({ pressed }) => [
                 styles.controlButton,
                 { backgroundColor: theme.backgroundSecondary },
-                gridSize === 2 && { opacity: 0.5 },
-                pressed && { opacity: 0.8 },
+                gridSize === 2 && { opacity: Opacity.disabled },
+                pressed && { opacity: Opacity.pressed },
               ]}
             >
               <Feather name="zoom-in" size={20} color={theme.accent} />
@@ -641,8 +642,8 @@ export default function PhotosScreen() {
               style={({ pressed }) => [
                 styles.controlButton,
                 { backgroundColor: theme.backgroundSecondary },
-                gridSize === 6 && { opacity: 0.5 },
-                pressed && { opacity: 0.8 },
+                gridSize === 6 && { opacity: Opacity.disabled },
+                pressed && { opacity: Opacity.pressed },
               ]}
             >
               <Feather name="zoom-out" size={20} color={theme.accent} />
@@ -859,9 +860,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: Spacing.xs,
     right: Spacing.xs,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: ComponentSize.selectionBadge,
+    height: ComponentSize.selectionBadge,
+    borderRadius: ComponentSize.selectionBadgeRadius,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -969,8 +970,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   controlButton: {
-    width: 36,
-    height: 36,
+    width: ComponentSize.iconMedium,
+    height: ComponentSize.iconMedium,
     borderRadius: BorderRadius.sm,
     alignItems: "center",
     justifyContent: "center",
@@ -981,9 +982,9 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: ComponentSize.fab,
+    height: ComponentSize.fab,
+    borderRadius: ComponentSize.fabRadius,
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.fab,

@@ -62,6 +62,9 @@ export default function PhotoEditorScreen() {
 
   useEffect(() => {
     loadPhoto();
+    // ESLint disable justification: loadPhoto is a stable function that doesn't need to be
+    // in the dependency array. Including it would cause unnecessary re-renders when the
+    // function reference changes. We only want to reload when the photoId changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params.photoId]);
 
@@ -86,6 +89,9 @@ export default function PhotoEditorScreen() {
         </Pressable>
       ),
     });
+    // ESLint disable justification: theme and handleSave are stable references that don't
+    // need to be in the dependency array. Including them would cause unnecessary header
+    // re-renders. We only need to update the header when navigation or isSaving changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, isSaving]);
 
