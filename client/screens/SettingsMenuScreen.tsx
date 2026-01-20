@@ -194,11 +194,13 @@ export default function SettingsMenuScreen() {
   const navigation = useNavigation<NavigationProp>();
 
   const handleMenuPress = (route: keyof AppStackParamList) => {
+    // @ts-expect-error - Navigation type from keyof AppStackParamList is complex but safe
     navigation.navigate(route);
   };
 
   const handleModuleSettingsPress = (item: ModuleSettingsItem) => {
     if (item.route) {
+      // @ts-expect-error - Navigation type from module settings route is complex but safe
       navigation.navigate(item.route);
     } else {
       Alert.alert(

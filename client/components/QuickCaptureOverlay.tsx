@@ -44,6 +44,7 @@ import { Feather } from "@expo/vector-icons";
 import { miniModeRegistry, useMiniMode } from "../lib/miniMode";
 import { ThemedText } from "./ThemedText";
 import { Colors, Spacing, Typography } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
 
 /**
  * Capture action types
@@ -83,6 +84,7 @@ export function QuickCaptureOverlay({
   source = "unknown",
 }: QuickCaptureOverlayProps) {
   const { openMiniMode } = useMiniMode();
+  const themeHook = useTheme();
 
   /**
    * Available capture actions
@@ -95,28 +97,28 @@ export function QuickCaptureOverlay({
       id: "note",
       icon: "edit-3",
       label: "Note",
-      color: Colors.electricBlue,
+      color: themeHook.theme.accent,
       miniModeModule: "notebook",
     },
     {
       id: "task",
       icon: "check-square",
       label: "Task",
-      color: Colors.success,
+      color: "#10B981",
       miniModeModule: "planner",
     },
     {
       id: "event",
       icon: "calendar",
       label: "Event",
-      color: Colors.warning,
+      color: "#F59E0B",
       miniModeModule: "calendar",
     },
     {
       id: "expense",
       icon: "dollar-sign",
       label: "Expense",
-      color: Colors.error,
+      color: "#EF4444",
       miniModeModule: "budget", // Now implemented!
     },
     {
@@ -175,6 +177,8 @@ export function QuickCaptureOverlay({
       }
     }, 200);
   };
+
+  const styles = createStyles(themeHook);
 
   return (
     <Modal
@@ -261,7 +265,7 @@ export function QuickCaptureOverlay({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ReturnType<typeof useTheme>) => StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -276,7 +280,7 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
   },
   menu: {
-    backgroundColor: Colors.slatePanel,
+    backgroundColor: theme.theme.cardBackground,
     borderRadius: 24,
     padding: Spacing.lg,
     width: "100%",
@@ -295,12 +299,12 @@ const styles = StyleSheet.create({
   menuTitle: {
     fontSize: Typography.h1.fontSize,
     fontWeight: "700",
-    color: Colors.electricBlue,
+    color: theme.theme.accent,
     marginBottom: 4,
   },
   menuSubtitle: {
     fontSize: Typography.caption.fontSize,
-    color: Colors.textSecondary,
+    color: theme.theme.textSecondary,
   },
   actionsGrid: {
     flexDirection: "row",
@@ -324,7 +328,7 @@ const styles = StyleSheet.create({
   },
   actionLabel: {
     fontSize: Typography.caption.fontSize,
-    color: Colors.textPrimary,
+    color: theme.theme.text,
     fontWeight: "500",
     textAlign: "center",
   },
@@ -332,12 +336,12 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.theme.border,
     marginTop: Spacing.sm,
   },
   closeButtonText: {
     fontSize: Typography.body.fontSize,
-    color: Colors.textSecondary,
+    color: theme.theme.textSecondary,
     fontWeight: "500",
   },
 });

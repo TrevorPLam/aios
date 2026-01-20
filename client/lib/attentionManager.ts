@@ -396,9 +396,9 @@ class AttentionManager {
     try {
       if (
         contextEngine &&
-        typeof contextEngine.getCurrentContext === "function"
+        typeof contextEngine.getCurrentZone === "function"
       ) {
-        currentContext = contextEngine.getCurrentContext();
+        currentContext = contextEngine.getCurrentZone();
       }
     } catch (error) {
       // Context engine not available or not initialized - continue without it
@@ -555,8 +555,6 @@ class AttentionManager {
       photos: "Photos",
       history: "History",
       budget: "Budget",
-      integrations: "Integrations",
-      settings: "Settings",
     };
 
     const name = moduleNames[module] || module;

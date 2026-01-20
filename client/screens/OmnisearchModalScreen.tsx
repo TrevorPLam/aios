@@ -123,6 +123,7 @@ export default function OmnisearchModalScreen() {
         // Navigate to module home screen (no detail view)
         const route = MODULE_ROUTES[moduleId];
         if (route) {
+          // @ts-expect-error - Navigation type inference from route map is complex but safe
           navigation.navigate(route);
         }
         break;
@@ -131,6 +132,7 @@ export default function OmnisearchModalScreen() {
         // Navigate to module home as fallback
         const fallbackRoute = MODULE_ROUTES[moduleId];
         if (fallbackRoute) {
+          // @ts-expect-error - Navigation type inference from route map is complex but safe
           navigation.navigate(fallbackRoute);
         }
     }

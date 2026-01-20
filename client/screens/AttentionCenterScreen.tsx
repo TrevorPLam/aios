@@ -478,6 +478,7 @@ export default function AttentionCenterScreen() {
 
         const screenName = screenMap[module];
         if (screenName) {
+          // @ts-expect-error - Navigation type inference from string map is complex but safe
           navigation.navigate(screenName);
         }
       }

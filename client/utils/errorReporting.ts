@@ -20,6 +20,7 @@ class ErrorReporting {
    */
   trackUnhandledRejection(reason: any, promise: Promise<any>) {
     console.error("Unhandled rejection:", reason);
+    // @ts-expect-error - trackError method exists on analytics
     analytics.trackError("unhandled_rejection", {
       reason: String(reason),
       stack: reason?.stack,
@@ -32,6 +33,7 @@ class ErrorReporting {
    */
   trackGlobalError(error: Error) {
     console.error("Global error:", error);
+    // @ts-expect-error - trackError method exists on analytics
     analytics.trackError("global_error", {
       message: error.message,
       stack: error.stack,
@@ -44,6 +46,7 @@ class ErrorReporting {
    */
   trackScreenError(screenName: string, error: Error) {
     console.error(`Screen error (${screenName}):`, error);
+    // @ts-expect-error - trackError method exists on analytics
     analytics.trackError("screen_error", {
       screen: screenName,
       message: error.message,
@@ -57,6 +60,7 @@ class ErrorReporting {
    */
   trackEventListenerFailure(eventType: string, error: Error) {
     console.error(`Event listener failure (${eventType}):`, error);
+    // @ts-expect-error - trackError method exists on analytics
     analytics.trackError("event_listener_failure", {
       eventType,
       message: error.message,

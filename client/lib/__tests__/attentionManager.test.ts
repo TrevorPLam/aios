@@ -99,7 +99,7 @@ describe("AttentionManager", () => {
       const unsubscribe = eventBus.on(EVENT_TYPES.USER_ACTION, (payload) => {
         if (
           payload.data.action === "attention:item-added" &&
-          payload.data.item.id === "test-4"
+          (payload.data.item as any).id === "test-4"
         ) {
           unsubscribe();
           done();
@@ -414,7 +414,7 @@ describe("AttentionManager", () => {
       const unsubscribe = eventBus.on(EVENT_TYPES.USER_ACTION, (payload) => {
         if (
           payload.data.action === "attention:focus-mode-changed" &&
-          payload.data.mode.enabled === true
+          (payload.data.mode as any).enabled === true
         ) {
           unsubscribe();
           done();

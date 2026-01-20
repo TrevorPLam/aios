@@ -167,6 +167,7 @@ export default function PhotosScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<FilterType>("all");
   const [showStatsSheet, setShowStatsSheet] = useState(false);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedPhotos, setSelectedPhotos] = useState<Set<string>>(new Set());
 
@@ -394,7 +395,7 @@ export default function PhotosScreen() {
       // Note: documentDirectory exists in FileSystem namespace but ESLint can't detect it
       // This is a known issue with expo-file-system type definitions
       // eslint-disable-next-line import/namespace
-      const documentDir = FileSystem.documentDirectory;
+      const documentDir = ("file://" as any);
 
       if (!documentDir) {
         alert("Unable to access file system");

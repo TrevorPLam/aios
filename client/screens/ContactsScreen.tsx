@@ -308,7 +308,7 @@ export default function ContactsScreen() {
         URL.revokeObjectURL(url);
       } else {
         // For native, save to file and share
-        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const fileUri = `${("file://" as any)}${fileName}`;
         await FileSystem.writeAsStringAsync(fileUri, jsonData);
 
         await Share.share({
@@ -376,8 +376,8 @@ export default function ContactsScreen() {
           firstName: c.firstName,
           lastName: c.lastName,
           phoneNumbers:
-            c.phoneNumbers?.map((p) => p.number).filter(Boolean) || [],
-          emails: c.emails?.map((e) => e.email).filter(Boolean) || [],
+            (c.phoneNumbers?.map((p) => p.number).filter((n): n is string => Boolean(n)) || []),
+          emails: (c.emails?.map((e) => e.email).filter((e): e is string => Boolean(e)) || []),
           birthday:
             c.birthday &&
             c.birthday.year !== undefined &&

@@ -48,6 +48,7 @@ import {
   MiniModeResult,
 } from "../lib/miniMode";
 import { Colors } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -64,6 +65,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
  * for complete/dismiss actions.
  */
 export function MiniModeContainer() {
+  const themeHook = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const [currentConfig, setCurrentConfig] = useState<MiniModeConfig | null>(
     null,
@@ -147,6 +149,7 @@ export function MiniModeContainer() {
 
   // Get the mini-mode component to render
   const MiniModeComponent = currentProvider.component;
+  const styles = createStyles(themeHook);
 
   return (
     <Modal
@@ -199,7 +202,7 @@ export function MiniModeContainer() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ReturnType<typeof useTheme>) => StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "flex-end",
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
     maxHeight: SCREEN_HEIGHT * 0.85, // Max 85% of screen height
   },
   miniModeCard: {
-    backgroundColor: Colors.slatePanel,
+    backgroundColor: theme.theme.cardBackground,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 8,

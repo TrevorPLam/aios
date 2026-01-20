@@ -181,70 +181,78 @@ class SearchIndex {
    */
   private setupEventListeners(): void {
     // Listen for item created events
-    eventBus.on("NOTE_CREATED", (data) => {
+    eventBus.on(EVENT_TYPES.NOTE_CREATED, (data) => {
+      const payload = data as any;
       this.addItem({
-        id: data.note.id,
+        id: payload.note.id,
         moduleType: "notebook",
-        title: data.note.title,
-        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(" ")}`,
-        timestamp: new Date(data.note.createdAt).getTime(),
+        title: payload.note.title,
+        searchableText: `${payload.note.title} ${payload.note.bodyMarkdown} ${payload.note.tags.join(" ")}`,
+        timestamp: new Date(payload.note.createdAt).getTime(),
       });
     });
 
-    eventBus.on("TASK_CREATED", (data) => {
+    eventBus.on(EVENT_TYPES.TASK_CREATED, (data) => {
+      const payload = data as any;
       this.addItem({
-        id: data.task.id,
+        id: payload.task.id,
         moduleType: "planner",
-        title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.userNotes || ""}`,
-        timestamp: new Date(data.task.createdAt).getTime(),
-        metadata: { status: data.task.status, priority: data.task.priority },
+        title: payload.task.title,
+        searchableText: `${payload.task.title} ${payload.task.userNotes || ""}`,
+        timestamp: new Date(payload.task.createdAt).getTime(),
+        metadata: { status: payload.task.status, priority: payload.task.priority },
       });
     });
 
-    eventBus.on("EVENT_CREATED", (data) => {
+    eventBus.on(EVENT_TYPES.EVENT_CREATED, (data) => {
+      const payload = data as any;
       this.addItem({
-        id: data.event.id,
+        id: payload.event.id,
         moduleType: "calendar",
-        title: data.event.title,
-        searchableText: `${data.event.title} ${data.event.description || ""} ${data.event.location || ""}`,
-        timestamp: new Date(data.event.startAt).getTime(),
+        title: payload.event.title,
+        searchableText: `${payload.event.title} ${payload.event.description || ""} ${payload.event.location || ""}`,
+        timestamp: new Date(payload.event.startAt).getTime(),
       });
     });
 
     // Listen for item updated events
-    eventBus.on("NOTE_UPDATED", (data) => {
+    eventBus.on(EVENT_TYPES.NOTE_UPDATED, (data) => {
+      const payload = data as any;
       this.updateItem({
-        id: data.note.id,
+        id: payload.note.id,
         moduleType: "notebook",
-        title: data.note.title,
-        searchableText: `${data.note.title} ${data.note.bodyMarkdown} ${data.note.tags.join(" ")}`,
-        timestamp: new Date(data.note.updatedAt).getTime(),
+        title: payload.note.title,
+        searchableText: `${payload.note.title} ${payload.note.bodyMarkdown} ${payload.note.tags.join(" ")}`,
+        timestamp: new Date(payload.note.updatedAt).getTime(),
       });
     });
 
-    eventBus.on("TASK_UPDATED", (data) => {
+    eventBus.on(EVENT_TYPES.TASK_UPDATED, (data) => {
+      const payload = data as any;
       this.updateItem({
-        id: data.task.id,
+        id: payload.task.id,
         moduleType: "planner",
-        title: data.task.title,
-        searchableText: `${data.task.title} ${data.task.userNotes || ""}`,
-        timestamp: new Date(data.task.updatedAt).getTime(),
-        metadata: { status: data.task.status, priority: data.task.priority },
+        title: payload.task.title,
+        searchableText: `${payload.task.title} ${payload.task.userNotes || ""}`,
+        timestamp: new Date(payload.task.updatedAt).getTime(),
+        metadata: { status: payload.task.status, priority: payload.task.priority },
       });
     });
 
     // Listen for item deleted events
-    eventBus.on("NOTE_DELETED", (data) => {
-      this.removeItem(data.noteId);
+    eventBus.on(EVENT_TYPES.NOTE_DELETED, (data) => {
+      const payload = data as any;
+      this.removeItem(payload.noteId);
     });
 
-    eventBus.on("TASK_DELETED", (data) => {
-      this.removeItem(data.taskId);
+    eventBus.on(EVENT_TYPES.TASK_DELETED, (data) => {
+      const payload = data as any;
+      this.removeItem(payload.taskId);
     });
 
-    eventBus.on("EVENT_DELETED", (data) => {
-      this.removeItem(data.eventId);
+    eventBus.on(EVENT_TYPES.EVENT_DELETED, (data) => {
+      const payload = data as any;
+      this.removeItem(payload.eventId);
     });
   }
 

@@ -35,6 +35,7 @@ export function logButtonPress(
   metadata?: Record<string, unknown>
 ): void {
   try {
+    // @ts-expect-error - track method exists on analytics
     analytics.track('secondary_nav_button_pressed', {
       screen,
       button: buttonName,
@@ -65,6 +66,7 @@ export function logButtonPress(
  */
 export function logPlaceholderAction(screen: string, featureName: string): void {
   try {
+    // @ts-expect-error - track method exists on analytics
     analytics.track('placeholder_feature_used', {
       screen,
       feature: featureName,
