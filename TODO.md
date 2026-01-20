@@ -3013,12 +3013,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Add History to System screen or Settings menu
   - **Action**: Consider adding history access from CommandCenter
 
-- [ ] **Recommendation History Not Accessible**
+- [x] **Recommendation History Not Accessible**
   - Screen: RecommendationHistoryScreen
   - Current: Registered but no button to access
   - Impact: Users can't review past AI suggestions or decisions
   - **Action**: Add "View History" button in CommandCenter
   - **Action**: Link from AIPreferences screen
+  - **Completed**: Added AI Preferences recommendation tools section with history access (2026-01-20)
 
 - [ ] **Integration Details Not Linked**
   - Screens: IntegrationsScreen, IntegrationDetailScreen
