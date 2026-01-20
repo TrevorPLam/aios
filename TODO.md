@@ -162,6 +162,206 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Dependencies**: None
 - **Effort**: L
 
+---
+
+### 📅 Calendar Module Expansion
+
+**T-062**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Recurrence rules exist in the data model, but instances are not expanded
+  - Competitors treat recurrence as a core capability
+  - Missing recurrence logic blocks parity for everyday scheduling
+- **Acceptance Criteria**:
+  - [ ] Implement recurrence expansion logic for daily/weekly/monthly/custom rules
+  - [ ] Support exception dates and overrides in recurrence series
+  - [ ] Render recurring instances in day/week/month/agenda views
+  - [ ] Add tests for recurrence expansion and exception handling
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/planning/MISSING_FEATURES.md
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-063**
+- **Priority**: P1
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Calendar events have no reminders or notifications
+  - Competitors rely on alerts for core utility
+  - Lack of reminders reduces daily engagement
+- **Acceptance Criteria**:
+  - [ ] Add reminder configuration (none/5m/15m/1h/1d/custom) to event detail
+  - [ ] Schedule local notifications for upcoming events with expo-notifications
+  - [ ] Update/cancel notifications on event edits/deletes
+  - [ ] Add tests for reminder scheduling and notification lifecycle
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-064**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Calendar sharing and attendee management are missing
+  - Competitors support invitations, RSVPs, and shared calendars
+  - Collaboration is required for meeting coordination
+- **Acceptance Criteria**:
+  - [ ] Add attendee fields (email/name/status) to CalendarEvent model
+  - [ ] Build attendee management UI (add/remove, RSVP status)
+  - [ ] Implement calendar sharing flow (share link or invite)
+  - [ ] Surface RSVP status in event details and list cards
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-065**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Calendar data is isolated from device calendars
+  - Users expect iOS/Android calendar sync parity
+  - Sync unlocks adoption for users with existing calendars
+- **Acceptance Criteria**:
+  - [ ] Integrate expo-calendar for device calendar access
+  - [ ] Support one-time import + ongoing two-way sync
+  - [ ] Handle permissions and sync failure states
+  - [ ] Add tests for sync mapping and conflict resolution
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-066**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Manual event entry is slower than competitor quick add flows
+  - Natural language input is a key differentiator in leading apps
+  - Quick capture improves mobile usability
+- **Acceptance Criteria**:
+  - [ ] Add quick-add input for natural language event creation
+  - [ ] Parse date/time/location/attendees from text
+  - [ ] Provide preview + user confirmation before save
+  - [ ] Add tests for common natural language patterns
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-067**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Calendar AI actions (focus time, schedule optimization) are listed but not implemented
+  - Competitors offer limited intelligence; AIOS should differentiate here
+  - Insights unlock proactive productivity value
+- **Acceptance Criteria**:
+  - [ ] Implement focus time blocking actions from AI Assist sheet
+  - [ ] Add schedule optimization suggestions (reschedule/conflict fixes)
+  - [ ] Surface calendar insights (meeting load, focus hours, trends)
+  - [ ] Log AI actions to History for auditability
+- **References**:
+  - client/components/AIAssistSheet.tsx
+  - docs/planning/MISSING_FEATURES.md
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: L
+
+**T-068**
+- **Priority**: P2
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Time zone fields are stored but not fully supported in views
+  - Travel time buffers and weather context are competitor parity items
+  - Users need accurate scheduling across time zones
+- **Acceptance Criteria**:
+  - [ ] Render event times with explicit time zone support
+  - [ ] Add travel time buffer field and surface in event view
+  - [ ] Add optional weather context for outdoor events
+  - [ ] Add tests for time zone conversion edge cases
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-069**
+- **Priority**: P3
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Video conference links are standard in competitor calendars
+  - Meetings often need Zoom/Meet/Teams launch links
+  - Integration improves event usefulness
+- **Acceptance Criteria**:
+  - [ ] Add meeting link field to CalendarEvent model
+  - [ ] Support quick-add of video conferencing links
+  - [ ] Render "Join Meeting" action on event details
+  - [ ] Add tests for link validation and rendering
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - shared/schema.ts
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
+**T-070**
+- **Priority**: P3
+- **Type**: FEATURE
+- **Owner**: GitHub Agent (Primary)
+- **Platform**: iOS
+- **Status**: READY
+- **Context**:
+  - Bulk delete exists, but bulk edit/reschedule does not
+  - Competitors lack bulk rescheduling; this can differentiate AIOS
+  - Power users need efficient calendar maintenance tools
+- **Acceptance Criteria**:
+  - [ ] Add multi-select mode for events in list/agenda view
+  - [ ] Implement bulk edit (shift time, move date, update location)
+  - [ ] Add bulk confirmation and undo safety prompts
+  - [ ] Add tests for bulk edit operations
+- **References**:
+  - client/screens/CalendarScreen.tsx
+  - docs/analysis/COMPETITIVE_ANALYSIS.md
+- **Dependencies**: None
+- **Effort**: M
+
 **T-001A**
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
@@ -1579,20 +1779,20 @@ For new features requiring multi-platform support, use sequential tasks:
 
 ## Summary
 
-**Total Tasks**: 57 (added T-057)
-**Completed**: 11 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-031, T-043)
+**Total Tasks**: 66 (added T-070)
+**Completed**: 12 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-031, T-043)
 **Reverted**: 1 task (T-009)
-**Remaining**: 45 tasks
+**Remaining**: 53 tasks
 
 **By Priority**:
 - P0 (Critical): 2 tasks (2 complete: T-002A, T-003)
-- P1 (High): 11 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057)
-- P2 (Medium): 25 tasks (4 complete: T-014, T-015, T-022, T-031)
-- P3 (Low): 14 tasks (1 complete: T-043)
+- P1 (High): 13 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 1 new: T-057)
+- P2 (Medium): 30 tasks (4 complete: T-014, T-015, T-022, T-031)
+- P3 (Low): 16 tasks (1 complete: T-043)
 
 **By Type**:
 - BUG: 2 (2 complete: T-002A, T-003)
-- FEATURE: 17 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 1 new: T-057)
+- FEATURE: 26 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 1 new: T-057)
 - QUALITY: 14 (2 complete: T-022, T-043)
 - DOCS: 12
 - CHORE: 7
@@ -1601,18 +1801,18 @@ For new features requiring multi-platform support, use sequential tasks:
 - DEPENDENCY: 1
 
 **By Owner**:
-- AGENT: 50 tasks (12 complete)
+- AGENT: 59 tasks (12 complete)
 - Trevor: 1 task (T-028 - Analytics decision)
 
 **By Status**:
 - COMPLETE: 12 tasks
-- READY: 41 tasks
+- READY: 50 tasks
 - BLOCKED: 3 tasks (T-001B, T-002B, T-028, T-029, T-030 - analytics decision chain)
 
 **By Effort**:
 - Small (S): 14 tasks
-- Medium (M): 41 tasks
-- Large (L): 1 task (T-029 - Analytics, requires phased multi-week approach)
+- Medium (M): 47 tasks
+- Large (L): 4 tasks (T-029 - Analytics, requires phased multi-week approach)
 
 **Critical Path**:
 1. Fix critical bugs (T-001, T-002, T-003)
