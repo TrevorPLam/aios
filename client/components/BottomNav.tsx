@@ -125,9 +125,10 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
     }
 
     setOrderedModules(modules);
-  }, []);
+  }, []); // Empty deps: uses shared values which are mutable refs (don't trigger re-renders)
 
   useEffect(() => {
+    // loadModuleOrder is stable (memoized with empty deps), safe to use here
     loadModuleOrder();
   }, [loadModuleOrder]);
 
