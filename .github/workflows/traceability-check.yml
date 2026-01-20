@@ -1,0 +1,87 @@
+name: Traceability Check
+
+on:
+  pull_request:
+    paths:
+      - 'docs/traceability_matrix.md'
+      - 'docs/apis/openapi/*.yaml'
+      - 'client/**'
+      - 'server/**'
+      - 'docs/modules/**'
+  workflow_dispatch:
+
+jobs:
+  check-traceability:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Run traceability checker
+        id: traceability
+        run: |
+          node scripts/tools/check-traceability.mjs
+        continue-on-error: true
+        
+      - name: Report results
+        run: |
+          if [ "${{ steps.traceability.outcome }}" == "success" ]; then
+            echo "✅ Traceability checks passed"
+          else
+            echo "⚠️ Traceability issues detected"
+            echo ""
+            echo "Current enforcement mode: WARN (build will pass)"
+            echo ""
+            echo "📝 Recommended actions:"
+            echo "  - Review docs/traceability_matrix.md"
+            echo "  - Add traceability rows for new features"
+            echo "  - Fill in TODO placeholders"
+            echo "  - Link features to code, tests, and docs"
+            echo ""
+            echo "ℹ️  To enable strict enforcement:"
+            echo "  - Update docs/governance/state.md"
+            echo "  - Change TRACEABILITY_ENFORCEMENT from WARN to FAIL"
+          fi
+          
+      - name: Annotate PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const output = `
+            ## Traceability Check
+            
+            ${
+              '${{ steps.traceability.outcome }}' === 'success'
+                ? '✅ Traceability checks passed'
+                : '⚠️ Traceability issues detected (warn-only mode)'
+            }
+            
+            **Enforcement Mode:** WARN (does not block merge)
+            
+            ${
+              '${{ steps.traceability.outcome }}' === 'failure'
+                ? `
+            ### Action Items
+            - Review \`docs/traceability_matrix.md\`
+            - Ensure new features have traceability rows
+            - Replace TODOs with actual references
+            
+            *Enforcement will be strict once matrix is >80% complete*
+            `
+                : ''
+            }
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });

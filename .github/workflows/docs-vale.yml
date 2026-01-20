@@ -1,0 +1,51 @@
+name: Vale Prose Linting
+
+# Vale prevents inconsistent tone and unclear writing in PRs.
+on:
+  pull_request:
+    paths:
+      - 'docs/**/*.md'
+      - '.vale.ini'
+      - '.github/styles/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**/*.md'
+      - '.vale.ini'
+      - '.github/styles/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  vale:
+    name: Run Vale Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Vale
+        uses: errata-ai/vale-action@v2
+        with:
+          # Only lint files changed in PRs for faster feedback
+          files: docs
+          # Post review comments on PRs
+          fail_on_error: true
+          version: 3.7.1
+        env:
+          # Use GitHub token for posting comments
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Vale results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: vale-results
+          path: vale-results.json
+          retention-days: 30

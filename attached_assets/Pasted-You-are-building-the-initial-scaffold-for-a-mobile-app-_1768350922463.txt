@@ -1,0 +1,90 @@
+You are building the initial scaffold for a mobile app called “AIOS” (user can rename later). This is a mobile-first iOS app (portrait only) using React Native + Expo. No backend/API/DB in this scaffold. No auth in this scaffold. No external integrations in this scaffold (no Gmail, no Google Calendar, etc.). Data is local-only using a simple local persistence layer (AsyncStorage or SQLite — choose SQLite if it’s not significantly harder; otherwise AsyncStorage). Build clean, generic but production-sane code with clear folder structure, typed models, and reusable components.
+
+GOAL: produce a “tech-forward, futuristic HUD/control panel” aesthetic:
+- Dark-first UI
+- Electric blue accent color
+- Expressive motion (tasteful animations, swipe physics, subtle glow highlights)
+- Humanist typography (clean modern sans)
+- Confidence shown visually on cards
+- Expiry/freshness shown visually on cards
+- Avoid generic template look; make it feel innovative and premium
+
+CORE UX: There is NO chatbox. The home screen is the “AI Command Center” showing recommendation cards. AI does NOT generate freeform text; it selects from typed card templates with bounded fields. Cards can be accepted/declined by swiping right/left. Tapping expands details and reveals the “Why” explanation. A visible indicator shows remaining AI card limits (even though this is local-only MVP). The AI name defaults to “AIOS” but is user-configurable later; keep it as a constant for now.
+
+MODULES (all should exist, wired in navigation):
+1) Command Center (home)
+2) Notebook (notes editor)
+3) Planner (tasks + projects)
+4) Calendar (native CRUD calendar)
+5) Email (UI only; no provider integration)
+
+NAVIGATION:
+- Home/Command Center is default.
+- Provide a “module grid” screen accessible from a top-left Home icon.
+- Bottom navigation: left and right module quick buttons + centered AI button (brain) that opens a module-scoped “AI Assist” bottom sheet (no chat; just surfaces a few card templates relevant to the module). Include Settings icon top-right.
+- Side arrows to switch pages/modules is optional; if included, ensure it doesn’t feel cluttered.
+
+DATA MODEL (local-only):
+Define TypeScript types and local storage interfaces for:
+- Recommendation (unified schema): id, module, title, summary, type, status, createdAt, expiresAt, confidence (low/med/high), priority, dedupeKey, countsAgainstLimit, why (hidden until expand), evidence timestamps placeholder.
+- RecommendationDecision: recommendationId, decision (accepted/declined/dismissed), decidedAt.
+- Notebook Note: id, title, bodyMarkdown, createdAt, updatedAt, tags[], links[].
+- Planner Task: id, title, userNotes (editable), aiNotes[] (non-editable), priority, dueDate, status, recurrenceRule, projectId, dependencyIds[], createdAt, updatedAt.
+- Project: id, name, description, taskIds[], createdAt, updatedAt.
+- Calendar Event (native): id, title, description?, location?, startAt, endAt, allDay, timezone, recurrenceRule?, exceptions?, overrides?, createdAt, updatedAt, source=LOCAL.
+- Settings (local): aiName, enabledModules, aiLimitTier (0/1/2/3), etc.
+- History Log entry: timestamp, message format like “AI generated card option: _____. User declined.” Must also support “archived/banked/deprecated” events.
+
+MVP SCREEN REQUIREMENTS (scaffold quality, not fully featured):
+A) Command Center
+- Swipeable deck/list of up to 24 active recommendations (mock generator seeds a few).
+- Visual confidence indicator (e.g., HUD meter or segmented dots) and visible expiry/freshness timestamp indicator.
+- Tap to expand: shows details + “Why” field.
+- Accept/decline creates a History entry and moves card to archived.
+- Visible AI limits indicator (e.g., “AI Cards Remaining: X / Y”) and next refresh countdown (6 hours cadence mocked locally).
+- Archive storage exists but not visible on home; can be viewed in Settings -> History.
+
+B) Notebook
+- List of notes + create note.
+- Note editor screen: Markdown-friendly with basic formatting toolbar.
+- Tags parsed from #tags; links parsed from [[links]] (simple parser ok).
+- Provide AI button in note that shows a bottom sheet with non-chat actions: Grammar, Clarity, Title, Tags, Summary, Checklist. For scaffold, these can be stubbed with placeholder outputs; ensure accept applies changes only on explicit accept.
+- Keep user content safe: autosave.
+
+C) Planner
+- Task list + create task.
+- Task detail: separate User Notes (editable) and AI Notes (read-only section).
+- Projects list + create project; assign tasks to projects.
+- Dependencies UI minimal (select prerequisite tasks).
+- Recurring tasks UI minimal (daily/weekly/monthly/custom interval).
+- AI Assist bottom sheet: suggests priority/due date/breakdown/dependency as card templates (stub logic ok). “Need more information to assist” appears ONLY inside AI Notes, never as a recommendation card.
+
+D) Calendar
+- Day/Week view basic (can be simple list-based for scaffold).
+- Create/edit/delete events locally.
+- Recurrence support can be stubbed in UI (store rule string, no complex expansion required yet).
+- Calendar feeds availability computation stub (later).
+- No integrations.
+
+E) Email (UI only)
+- Thread list screen with mock data.
+- Thread detail view with mock messages.
+- Draft reply UI: generates placeholder draft, user edits, “Send” button disabled with tooltip “Integrations not enabled in this build”.
+
+SETTINGS
+- Enabled modules toggles (disable hides from nav/grid).
+- AI name setting stub (stored locally).
+- Tier setting stub (affects visible limits numbers only).
+- History log screen shows formatted entries including accepted/declined and archived/banked/deprecated.
+
+ENGINEERING REQUIREMENTS
+- Use TypeScript everywhere.
+- Clean folder structure: src/{app,navigation,screens,components,models,storage,theme,utils}.
+- Theme system: colors, typography, spacing; dark-first with electric blue accent.
+- Motion: use Reanimated/gesture handler if reasonable; otherwise simple Animated with good feel. Include swipe gestures for cards.
+- Provide seed/mock recommendation generator that produces deterministic demo cards across modules using typed templates and bounded fields (no freeform AI text).
+- Keep code readable with comments explaining non-obvious decisions.
+
+OUTPUT
+- Create the full repo with all screens wired, runnable with `npx expo start`.
+- Include a concise README explaining how to run, where to edit theme, and where mock data lives.

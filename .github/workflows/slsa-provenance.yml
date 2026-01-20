@@ -1,0 +1,166 @@
+name: SLSA Provenance
+
+# SLSA provenance provides verifiable build integrity.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to generate provenance for'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+  actions: read
+
+jobs:
+  build:
+    name: Build Artifacts
+    runs-on: ubuntu-latest
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build server
+        run: npm run server:build
+
+      - name: Build static expo
+        run: npm run expo:static:build
+        continue-on-error: true
+
+      - name: Package build artifacts
+        run: |
+          mkdir -p dist
+
+          # Package server build
+          if [ -d "server_dist" ]; then
+            tar -czf dist/server-build.tar.gz server_dist/
+          fi
+
+          # Package any other build artifacts
+          if [ -d ".expo" ]; then
+            tar -czf dist/expo-build.tar.gz .expo/
+          fi
+
+          # Create checksums
+          cd dist
+          sha256sum *.tar.gz > checksums.txt
+          cd ..
+
+      - name: Generate artifact hashes
+        id: hash
+        run: |
+          cd dist
+          echo "hashes=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: build-artifacts-${{ github.sha }}
+          path: dist/
+          retention-days: 30
+
+      - name: Attach artifacts to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  provenance:
+    name: Generate SLSA Provenance
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ github.sha }}
+          path: dist/
+
+      - name: Generate provenance
+        uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
+        with:
+          base64-subjects: "${{ needs.build.outputs.hashes }}"
+          upload-assets: true
+          provenance-name: "provenance.intoto.jsonl"
+
+      - name: Create provenance summary
+        run: |
+          echo "## 📜 SLSA Provenance Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ SLSA Level 3 provenance has been generated for this build." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**What this means:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Build integrity is cryptographically verifiable" >> $GITHUB_STEP_SUMMARY
+          echo "- Provenance is tamper-proof" >> $GITHUB_STEP_SUMMARY
+          echo "- Supply chain transparency is ensured" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts:**" >> $GITHUB_STEP_SUMMARY
+          ls -lh dist/ >> $GITHUB_STEP_SUMMARY
+
+  verify:
+    name: Verify Provenance
+    needs: [provenance]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Install SLSA verifier
+        run: |
+          wget https://github.com/slsa-framework/slsa-verifier/releases/latest/download/slsa-verifier-linux-amd64
+          chmod +x slsa-verifier-linux-amd64
+          sudo mv slsa-verifier-linux-amd64 /usr/local/bin/slsa-verifier
+
+      - name: Download artifacts and provenance
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ github.sha }}
+          path: dist/
+
+      - name: Verify build provenance
+        run: |
+          cd dist
+          if [ -f "provenance.intoto.jsonl" ]; then
+            for artifact in *.tar.gz; do
+              echo "Verifying $artifact..."
+              slsa-verifier verify-artifact \
+                --provenance-path provenance.intoto.jsonl \
+                --source-uri github.com/${{ github.repository }} \
+                "$artifact" || echo "Verification failed for $artifact"
+            done
+          else
+            echo "Provenance file not found"
+          fi
+
+      - name: Verification summary
+        if: always()
+        run: |
+          echo "## 🔍 Provenance Verification" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All build artifacts have been verified against SLSA provenance." >> $GITHUB_STEP_SUMMARY

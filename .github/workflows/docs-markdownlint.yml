@@ -1,0 +1,55 @@
+name: Markdown Linting
+
+# Markdownlint prevents formatting entropy and unreadable diffs.
+on:
+  pull_request:
+    paths:
+      - 'docs/**/*.md'
+      - '*.md'
+      - '.markdownlint.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**/*.md'
+      - '*.md'
+      - '.markdownlint.json'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  markdownlint:
+    name: Lint Markdown Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: avto-dev/markdown-lint@v1
+        with:
+          config: '.markdownlint.json'
+          args: 'docs/**/*.md *.md'
+          ignore: 'node_modules'
+
+      - name: Lint root markdown files
+        if: always()
+        uses: avto-dev/markdown-lint@v1
+        with:
+          config: '.markdownlint.json'
+          args: '*.md'
+
+      - name: Comment on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **Markdownlint failed**\n\nPlease fix markdown formatting issues. Run `npx markdownlint-cli2 "docs/**/*.md" "*.md"` locally to see details.'
+            })

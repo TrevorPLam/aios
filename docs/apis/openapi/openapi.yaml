@@ -1,0 +1,444 @@
+openapi: 3.0.0
+
+info:
+  title: AIOS API
+  version: 1.0.0
+  description: |
+    REST API for the AIOS mobile application.
+    
+    ## Authentication
+    Most endpoints require authentication using JWT tokens.
+    Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your-token>
+    ```
+    
+    ## Rate Limiting
+    - Authenticated users: 100 requests/minute
+    - Unauthenticated users: 20 requests/minute
+    
+    ## Pagination
+    List endpoints support pagination with `limit` and `offset` query parameters.
+  contact:
+    name: AIOS Engineering Team
+    email: engineering@aios.example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://staging-api.aios.example.com/api
+    description: Staging server
+  - url: https://api.aios.example.com/api
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication and registration
+  - name: Users
+    description: User management
+  - name: Data
+    description: Application data operations
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Check if the API is running
+      tags:
+        - System
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: 1.0.0
+
+  /auth/register:
+    post:
+      summary: Register new user
+      description: Create a new user account
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  maxLength: 100
+                  example: SecureP@ssw0rd
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  example: John Doe
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      summary: Login user
+      description: Authenticate user and receive JWT token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: SecureP@ssw0rd
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      summary: Logout user
+      description: Invalidate current JWT token
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Logout successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/me:
+    get:
+      summary: Get current user
+      description: Get the authenticated user's profile
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      summary: Update current user
+      description: Update the authenticated user's profile
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  example: Jane Doe
+                email:
+                  type: string
+                  format: email
+                  example: jane@example.com
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from /auth/login
+
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: Unique user identifier
+        email:
+          type: string
+          format: email
+          example: user@example.com
+          description: User's email address
+        name:
+          type: string
+          example: John Doe
+          description: User's full name
+        createdAt:
+          type: string
+          format: date-time
+          example: 2024-01-15T12:00:00Z
+          description: Account creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2024-01-15T12:00:00Z
+          description: Last update timestamp
+
+    AuthResponse:
+      type: object
+      required:
+        - token
+        - refreshToken
+        - user
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          description: JWT access token (expires in 7 days)
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          description: Refresh token (expires in 30 days)
+        user:
+          $ref: '#/components/schemas/User'
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+              description: Machine-readable error code
+            message:
+              type: string
+              example: Invalid input provided
+              description: Human-readable error message
+            details:
+              type: array
+              description: Additional error details (e.g., validation errors)
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: email
+                  message:
+                    type: string
+                    example: Invalid email format
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ResponseMeta:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: 2024-01-15T12:00:00Z
+        requestId:
+          type: string
+          example: req_abc123xyz
+          description: Unique request identifier for tracing
+
+    PaginationMeta:
+      type: object
+      required:
+        - limit
+        - offset
+        - total
+        - hasMore
+      properties:
+        limit:
+          type: integer
+          example: 20
+          description: Number of items per page
+        offset:
+          type: integer
+          example: 0
+          description: Number of items skipped
+        total:
+          type: integer
+          example: 150
+          description: Total number of items
+        hasMore:
+          type: boolean
+          example: true
+          description: Whether more items exist
+
+  responses:
+    BadRequest:
+      description: Bad request - validation error or malformed request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: Invalid input provided
+              details:
+                - field: email
+                  message: Invalid email format
+
+    Unauthorized:
+      description: Unauthorized - missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: UNAUTHORIZED
+              message: Authentication required
+
+    Forbidden:
+      description: Forbidden - authenticated but not authorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: FORBIDDEN
+              message: Insufficient permissions
+
+    NotFound:
+      description: Not found - resource doesn't exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: NOT_FOUND
+              message: Resource not found
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: INTERNAL_ERROR
+              message: An unexpected error occurred
+
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      description: Maximum number of items to return
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+    OffsetParam:
+      name: offset
+      in: query
+      description: Number of items to skip
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+
+    SortParam:
+      name: sort
+      in: query
+      description: |
+        Sort field and direction.
+        Prefix with `-` for descending order.
+        Examples: `createdAt`, `-createdAt`
+      schema:
+        type: string

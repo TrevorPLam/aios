@@ -1,0 +1,97 @@
+name: Generate SBOM
+
+# SBOM creates audit-ready inventory of all dependencies.
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+  schedule:
+    # Weekly on Sundays at midnight UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  sbom:
+    name: Generate Software Bill of Materials
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0
+        with:
+          format: 'spdx-json'
+          output-file: 'sbom-spdx.json'
+          upload-artifact: true
+          upload-release-assets: ${{ github.event_name == 'release' }}
+
+      - name: Generate CycloneDX SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          format: 'cyclonedx-json'
+          output-file: 'sbom-cyclonedx.json'
+          upload-artifact: true
+          upload-release-assets: ${{ github.event_name == 'release' }}
+
+      - name: Generate human-readable SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          format: 'table'
+          output-file: 'sbom-table.txt'
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: sbom-${{ github.sha }}
+          path: |
+            sbom-*.json
+            sbom-*.txt
+          retention-days: 90
+
+      - name: Create SBOM summary
+        run: |
+          echo "## Software Bill of Materials Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 **Formats Generated:**" >> $GITHUB_STEP_SUMMARY
+          echo "- SPDX JSON (industry standard)" >> $GITHUB_STEP_SUMMARY
+          echo "- CycloneDX JSON (OWASP standard)" >> $GITHUB_STEP_SUMMARY
+          echo "- Human-readable table" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Component Count:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          head -n 50 sbom-table.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Attach SBOM to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            sbom-spdx.json
+            sbom-cyclonedx.json
+            sbom-table.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          comment-summary-in-pr: always

@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+# Run type checking
+echo "Running TypeScript type check..."
+npm run check:types || {
+  echo "❌ Type check failed. Please fix TypeScript errors before committing."
+  exit 1
+}
+
+# Run linting  
+echo "Running ESLint..."
+npm run lint || {
+  echo "❌ Lint check failed. Run 'npm run lint:fix' to auto-fix issues."
+  exit 1
+}
+
+# Run format check
+echo "Checking code formatting..."
+npm run check:format || {
+  echo "❌ Format check failed. Run 'npm run format' to auto-format code."
+  exit 1
+}
+
+echo "✅ All pre-commit checks passed!"

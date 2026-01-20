@@ -1,0 +1,90 @@
+name: API Spec Linting with Spectral
+
+# Spectral enforces API consistency and prevents contract drift.
+on:
+  pull_request:
+    paths:
+      - 'docs/apis/**/*.yaml'
+      - 'docs/apis/**/*.yml'
+      - 'docs/apis/**/*.json'
+      - '.spectral.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/apis/**/*.yaml'
+      - 'docs/apis/**/*.yml'
+      - 'docs/apis/**/*.json'
+      - '.spectral.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  spectral:
+    name: Lint OpenAPI Specifications
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check if API specs exist
+        id: check-specs
+        run: |
+          if [ -d "docs/apis" ] && [ -n "$(find docs/apis -type f \( -name '*.yaml' -o -name '*.yml' -o -name '*.json' \))" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "API specs found"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No API specs found, skipping"
+          fi
+
+      - name: Run Spectral linting
+        if: steps.check-specs.outputs.exists == 'true'
+        uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: 'docs/apis/**/*.{yaml,yml,json}'
+          spectral_ruleset: '.spectral.yml'
+
+      - name: Comment on PR
+        if: failure() && github.event_name == 'pull_request' && steps.check-specs.outputs.exists == 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **Spectral API Linting Failed**\n\nYour OpenAPI specifications have validation errors. Please review the workflow logs and fix the issues.\n\nCommon issues:\n- Missing required fields\n- Invalid schema definitions\n- Inconsistent response formats\n- Missing API documentation'
+            })
+
+  validate-openapi:
+    name: Validate OpenAPI Structure
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.pull_request.changed_files, 'docs/apis/') ||
+      github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install OpenAPI validator
+        run: npm install -g @ibm/openapi-validator
+
+      - name: Validate OpenAPI specs
+        run: |
+          if [ -d "docs/apis" ]; then
+            find docs/apis -type f \( -name '*.yaml' -o -name '*.yml' \) -exec echo "Validating {}" \; -exec lint-openapi {} \;
+          else
+            echo "No API specs directory found, skipping validation"
+          fi

@@ -1,0 +1,98 @@
+name: Documentation Issue Automation
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  triage-docs-issues:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Label documentation issues
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title ?? '';
+            const body = issue.body ?? '';
+            const hasDocsPrefix = title.startsWith('[DOCS]') || title.startsWith('[DOCS]:');
+            const mentionsDocs = /documentation|docs/i.test(body);
+            if (!hasDocsPrefix && !mentionsDocs) {
+              return;
+            }
+
+            const labelsToEnsure = [
+              { name: 'documentation', color: '0e8a16', description: 'Documentation-related issue' },
+              { name: 'needs-triage', color: 'fbca04', description: 'Needs initial documentation triage' },
+              { name: 'triaged', color: 'c2e0c6', description: 'Documentation issue triaged' },
+            ];
+
+            const existingLabels = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100,
+            });
+
+            for (const label of labelsToEnsure) {
+              if (!existingLabels.find((item) => item.name === label.name)) {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+              }
+            }
+
+            const labelsToAdd = ['documentation', 'needs-triage'];
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: labelsToAdd,
+            });
+
+  mark-docs-triaged:
+    if: github.event_name == 'issue_comment'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Mark documentation issues as triaged
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const comment = context.payload.comment;
+            if (!issue || !comment) {
+              return;
+            }
+
+            const labelNames = (issue.labels ?? []).map((label) => label.name);
+            if (!labelNames.includes('documentation') || !labelNames.includes('needs-triage')) {
+              return;
+            }
+
+            if (comment.user?.id === issue.user?.id) {
+              return;
+            }
+
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              name: 'needs-triage',
+            });
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: ['triaged'],
+            });

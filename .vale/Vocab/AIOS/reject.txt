@@ -1,0 +1,12 @@
+# AIOS Project Vocabulary - Rejected Terms
+# Terms that should always be flagged (typos, deprecated names, etc.)
+
+# Deprecated names
+AsyncStore
+ReactNative
+Postgres
+
+# Common typos
+recieve
+seperate
+occured
