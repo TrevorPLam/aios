@@ -859,6 +859,10 @@ export interface Settings {
   colorTheme: ColorTheme;
   aiPersonality: AIPersonality;
   aiCustomPrompt: string;
+  recommendationsEnabled: boolean;
+  recommendationAutoRefresh: boolean;
+  recommendationShowEvidence: boolean;
+  recommendationShowReasoning: boolean;
   moduleViewMode: ModuleViewMode;
   moduleArrangement: ModuleArrangement;
   moduleOrder?: ModuleType[]; // For static arrangement
@@ -1002,6 +1006,10 @@ export const DEFAULT_SETTINGS: Settings = {
   colorTheme: "cyan",
   aiPersonality: "default",
   aiCustomPrompt: DEFAULT_AI_CUSTOM_PROMPT,
+  recommendationsEnabled: true,
+  recommendationAutoRefresh: true,
+  recommendationShowEvidence: true,
+  recommendationShowReasoning: true,
   moduleViewMode: "grid",
   moduleArrangement: "intuitive",
   moduleOrder: undefined,

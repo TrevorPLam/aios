@@ -1106,19 +1106,25 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Type**: FEATURE
 - **Owner**: GitHub Agent (Primary)
 - **Platform**: iOS
-- **Status**: READY
+- **Status**: COMPLETED
 - **Context**:
   - Recommendation engine exists with cross-module analysis
   - Only CommandCenter shows recommendations
   - No manual refresh, history, or preference settings
 - **Acceptance Criteria**:
-  - [ ] Add "Refresh Recommendations" button in CommandCenter
-  - [ ] Add recommendation settings in AIPreferences screen
-  - [ ] Show evidence/reasoning in recommendation cards
-  - [ ] Wire up RecommendationHistoryScreen to navigation on iOS
+  - [x] Add "Refresh Recommendations" button in CommandCenter
+  - [x] Add recommendation settings in AIPreferences screen
+  - [x] Show evidence/reasoning in recommendation cards
+  - [x] Wire up RecommendationHistoryScreen to navigation on iOS
 - **References**: client/lib/recommendationEngine.ts, client/screens/RecommendationHistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
+- **Completion Date**: 2026-01-20
+- **Implementation Details**:
+  - Added recommendation preference toggles for visibility, auto-refresh, and card evidence display.
+  - Exposed manual refresh button and disabled state handling in Command Center footer.
+  - Added reasoning and evidence preview rows on recommendation cards.
+  - Confirmed history navigation stays reachable from Command Center secondary nav.
 - **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
 
 **T-008**

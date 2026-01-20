@@ -9,6 +9,7 @@
  * - Personality selection (default, enthusiastic, coach, witty, militant)
  * - Context zone selection (work, personal, focus, social, wellness, evening, weekend, auto)
  * - Custom personality traits/prompts
+ * - Recommendation display and refresh preferences
  * 
  * Context Zones:
  * Context zones automatically show/hide relevant modules based on your current activity:
@@ -26,11 +27,13 @@
  * - Listens to context changes via contextEngine.onChange()
  * - Updates user override via contextEngine.setUserOverride()
  * - Integrates with PersistentSidebar for module visibility
+ * - Persists recommendation preferences for Command Center UI
  * 
  * Recent Updates:
  * - Added context zone selector UI (T-006)
  * - Added real-time context change detection
  * - Added manual override capability
+ * - Added recommendation preferences (T-007)
  * 
  * @module AIPreferencesScreen
  */
@@ -41,6 +44,7 @@ import {
   ScrollView,
   TextInput,
   Pressable,
+  Switch,
   Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -54,6 +58,12 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 import { db } from "@/storage/database";
 import { Settings, AIPersonality } from "@/models/types";
 import { contextEngine, ContextZone } from "@/lib/contextEngine";
+
+type RecommendationSettingKey =
+  | "recommendationsEnabled"
+  | "recommendationAutoRefresh"
+  | "recommendationShowEvidence"
+  | "recommendationShowReasoning";
 
 const PERSONALITIES: {
   id: AIPersonality;
@@ -212,6 +222,25 @@ export default function AIPreferencesScreen() {
       await db.settings.update({ aiCustomPrompt: customPrompt });
     }
   }, [settings, customPrompt]);
+
+  /**
+   * Toggle a recommendation setting in persistent storage.
+   * 
+   * Keeps local state in sync so the UI updates immediately.
+   */
+  const toggleRecommendationSetting = useCallback(
+    async (key: RecommendationSettingKey) => {
+      if (!settings) return;
+
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+
+      const updated = await db.settings.update({ [key]: !settings[key] });
+      setSettings(updated);
+    },
+    [settings],
+  );
 
   /**
    * Handle context zone selection
@@ -437,6 +466,122 @@ export default function AIPreferencesScreen() {
           </View>
         </View>
 
+        <ThemedText type="caption" secondary style={styles.sectionTitle}>
+          RECOMMENDATIONS
+        </ThemedText>
+        <View
+          style={[styles.section, { backgroundColor: theme.backgroundDefault }]}
+        >
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Feather name="sparkles" size={20} color={theme.accent} />
+              <View>
+                <ThemedText type="body">Show Recommendations</ThemedText>
+                <ThemedText type="small" muted>
+                  Display AI cards in Command Center
+                </ThemedText>
+              </View>
+            </View>
+            <Switch
+              value={settings.recommendationsEnabled}
+              onValueChange={() =>
+                toggleRecommendationSetting("recommendationsEnabled")
+              }
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.recommendationsEnabled ? theme.accent : theme.textSecondary
+              }
+            />
+          </View>
+          <View
+            style={[
+              styles.settingRow,
+              styles.settingDivider,
+              { borderTopColor: theme.border },
+            ]}
+          >
+            <View style={styles.settingInfo}>
+              <Feather name="refresh-cw" size={20} color={theme.accent} />
+              <View>
+                <ThemedText type="body">Auto-refresh Suggestions</ThemedText>
+                <ThemedText type="small" muted>
+                  Keep at least a few fresh recommendations
+                </ThemedText>
+              </View>
+            </View>
+            <Switch
+              value={settings.recommendationAutoRefresh}
+              onValueChange={() =>
+                toggleRecommendationSetting("recommendationAutoRefresh")
+              }
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.recommendationAutoRefresh ? theme.accent : theme.textSecondary
+              }
+            />
+          </View>
+          <View
+            style={[
+              styles.settingRow,
+              styles.settingDivider,
+              { borderTopColor: theme.border },
+            ]}
+          >
+            <View style={styles.settingInfo}>
+              <Feather name="info" size={20} color={theme.accent} />
+              <View>
+                <ThemedText type="body">Show Reasoning</ThemedText>
+                <ThemedText type="small" muted>
+                  Display a short explanation on each card
+                </ThemedText>
+              </View>
+            </View>
+            <Switch
+              value={settings.recommendationShowReasoning}
+              onValueChange={() =>
+                toggleRecommendationSetting("recommendationShowReasoning")
+              }
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.recommendationShowReasoning ? theme.accent : theme.textSecondary
+              }
+            />
+          </View>
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Feather name="activity" size={20} color={theme.accent} />
+              <View>
+                <ThemedText type="body">Show Evidence</ThemedText>
+                <ThemedText type="small" muted>
+                  Highlight signals that informed the suggestion
+                </ThemedText>
+              </View>
+            </View>
+            <Switch
+              value={settings.recommendationShowEvidence}
+              onValueChange={() =>
+                toggleRecommendationSetting("recommendationShowEvidence")
+              }
+              trackColor={{
+                false: theme.backgroundSecondary,
+                true: theme.accentDim,
+              }}
+              thumbColor={
+                settings.recommendationShowEvidence ? theme.accent : theme.textSecondary
+              }
+            />
+          </View>
+        </View>
+
         <ThemedText type="caption" muted style={styles.note}>
           Customize your AI assistant's personality and behavior
         </ThemedText>
@@ -519,6 +664,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: Spacing.md,
+  },
+  settingDivider: {
+    borderTopWidth: 1,
   },
   contextLeft: {
     flexDirection: "row",

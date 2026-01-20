@@ -16,10 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Scroll-based hide/show animation for all secondary navigation bars
   - Consistent oval, transparent design with haptic feedback
   - 19 automated tests validating navigation consistency and behavior
+- Recommendation preferences in AI Preferences for Command Center visibility, auto-refresh, and card evidence (T-007)
+- Manual "Refresh Recommendations" button in Command Center with disabled state handling (T-007)
 
 ### Changed
 - Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
 - Enhanced UX consistency across modules with unified navigation pattern
+- Recommendation cards now surface reasoning and evidence previews for faster decision-making (T-007)
 
 ### Technical
 - Implemented scroll-aware animations using React Native Reanimated shared values

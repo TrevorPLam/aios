@@ -83,4 +83,29 @@ describe("Settings - New Fields", () => {
       expect(settings.aiCustomPrompt).toBe(customPrompt);
     });
   });
+
+  describe("recommendationPreferences", () => {
+    it("should default to showing and auto-refreshing recommendations", async () => {
+      const settings = await db.settings.get();
+      expect(settings.recommendationsEnabled).toBe(true);
+      expect(settings.recommendationAutoRefresh).toBe(true);
+      expect(settings.recommendationShowEvidence).toBe(true);
+      expect(settings.recommendationShowReasoning).toBe(true);
+    });
+
+    it("should update recommendation preference toggles", async () => {
+      await db.settings.update({
+        recommendationsEnabled: false,
+        recommendationAutoRefresh: false,
+        recommendationShowEvidence: false,
+        recommendationShowReasoning: false,
+      });
+
+      const settings = await db.settings.get();
+      expect(settings.recommendationsEnabled).toBe(false);
+      expect(settings.recommendationAutoRefresh).toBe(false);
+      expect(settings.recommendationShowEvidence).toBe(false);
+      expect(settings.recommendationShowReasoning).toBe(false);
+    });
+  });
 });
