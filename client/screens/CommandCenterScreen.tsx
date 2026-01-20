@@ -111,14 +111,13 @@ const SECONDARY_NAV_BADGE_THRESHOLD = 9;
 // Scroll Animation Constants
 /** 
  * Secondary nav bar hide offset in pixels when scrolling down.
- * This value must be large enough to hide the entire secondary nav including:
- * - secondaryNav paddingVertical (Spacing.xs = 4px) * 2 = 8px
+ * This value must be large enough to hide the entire secondary nav content:
  * - secondaryNavContent paddingVertical (Spacing.sm = 8px) * 2 = 16px
  * - secondaryNavContent height (icon 20px + text ~12px + gap Spacing.xs 4px) = ~36px
- * - Additional buffer for complete hiding = ~40px
- * Total: approximately -100px ensures complete hiding
+ * - Additional buffer for complete hiding = ~20px
+ * Total: approximately -72px ensures complete hiding
  */
-const SECONDARY_NAV_HIDE_OFFSET = -100;
+const SECONDARY_NAV_HIDE_OFFSET = -72;
 
 /** Animation duration in milliseconds for secondary nav show/hide transitions */
 const SECONDARY_NAV_ANIMATION_DURATION = 200;
@@ -726,20 +725,19 @@ export default function CommandCenterScreen() {
       </View>
 
       {/* Secondary Navigation Bar - Transparent oval with buttons, sits above cards */}
-      <Animated.View 
+      <View 
         style={[
           styles.secondaryNav, 
           { backgroundColor: "transparent" },
-          secondaryNavAnimatedStyle
         ]}
       >
-        <View
+        <Animated.View
           style={[
             styles.secondaryNavContent,
             {
-              backgroundColor: theme.backgroundDefault,
-              opacity: SECONDARY_NAV_OPACITY,
+              backgroundColor: "transparent",
             },
+            secondaryNavAnimatedStyle
           ]}
         >
           <Pressable
@@ -802,8 +800,8 @@ export default function CommandCenterScreen() {
             <Feather name="clock" size={20} color={theme.text} />
             <ThemedText type="small">History</ThemedText>
           </Pressable>
-        </View>
-      </Animated.View>
+        </Animated.View>
+      </View>
 
       <View style={styles.content}>
         {recommendations.length > 0 ? (
