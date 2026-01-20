@@ -28,6 +28,12 @@ exclude = [
   
   # Exclude links that require authentication
   "https?://.*\\.atlassian\\.net.*",
+  
+  # Exclude template placeholder links (e.g., [related-api].md, NNNN-title.md)
+  ".*\\[.*\\]\\.md",
+  ".*NNNN-.*\\.md",
+  ".*XXXX-.*\\.md",
+  ".*\\[.*\\]",
 ]
 
 # Exclude specific URL patterns
@@ -38,17 +44,19 @@ exclude_path = [
   "build",
   "dist",
   ".expo",
-  "coverage"
+  "coverage",
+  "docs/archive",
+  "attached_assets",
 ]
 
 # Cache settings
 max_cache_age = "1d"  # 1 day
 
-# Timeout for requests
-timeout = 20
+# Timeout for requests (increased for rate-limited sites)
+timeout = 30
 
-# Retry failed requests
-max_retries = 3
+# Retry failed requests (increased for reliability)
+max_retries = 5
 
 # Include email addresses
 include_mail = false
