@@ -33,6 +33,7 @@
 import { Platform } from "react-native";
 import { ModuleType } from "@/models/types";
 import { eventBus } from "./eventBus";
+import { EVENT_TYPES } from "./eventBus";
 
 /**
  * Memory Usage Info
@@ -325,7 +326,7 @@ class MemoryManager {
 
     // Emit memory event based on pressure
     if (memoryInfo.pressure === "critical" || memoryInfo.pressure === "high") {
-      eventBus.emit("MEMORY_PRESSURE", {
+      eventBus.emit(EVENT_TYPES.MEMORY_PRESSURE, {
         level: memoryInfo.pressure,
         usedMB: memoryInfo.usedMemoryMB,
         timestamp: new Date().toISOString(),
@@ -379,7 +380,7 @@ class MemoryManager {
     console.log("[MemoryManager] Cleaning up modules:", toCleanup);
 
     // Emit cleanup event
-    eventBus.emit("MEMORY_CLEANUP", {
+    eventBus.emit(EVENT_TYPES.MEMORY_CLEANUP, {
       modules: toCleanup,
       aggressive,
       timestamp: new Date().toISOString(),

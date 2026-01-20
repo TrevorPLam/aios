@@ -222,7 +222,7 @@ class OmnisearchEngine {
 
         const titleScore = this.calculateRelevance(note.title, query, "title");
         const contentScore = this.calculateRelevance(
-          note.body,
+          note.bodyMarkdown,
           query,
           "content",
         );
@@ -239,7 +239,7 @@ class OmnisearchEngine {
             id: note.id,
             moduleType: "notebook",
             title: note.title,
-            preview: note.body.substring(0, 100),
+            preview: note.bodyMarkdown.substring(0, 100),
             relevanceScore,
             createdAt: note.createdAt,
             updatedAt: note.updatedAt,
@@ -274,8 +274,8 @@ class OmnisearchEngine {
           continue;
 
         const titleScore = this.calculateRelevance(task.title, query, "title");
-        const descScore = task.description
-          ? this.calculateRelevance(task.description, query, "content")
+        const descScore = task.userNotes
+          ? this.calculateRelevance(task.userNotes, query, "content")
           : 0;
 
         const maxScore = Math.max(titleScore, descScore);
@@ -288,7 +288,7 @@ class OmnisearchEngine {
             moduleType: "planner",
             title: task.title,
             subtitle: task.projectId ? "Project Task" : undefined,
-            preview: task.description,
+            preview: task.userNotes,
             relevanceScore,
             createdAt: task.createdAt,
             updatedAt: task.updatedAt,
@@ -327,11 +327,11 @@ class OmnisearchEngine {
           : 0;
 
         const maxScore = Math.max(titleScore, descScore, locationScore);
-        const recencyBoost = this.calculateRecencyBoost(event.startDate);
+        const recencyBoost = this.calculateRecencyBoost(event.startAt);
         const relevanceScore = maxScore + recencyBoost;
 
         if (relevanceScore > 0) {
-          const startDate = new Date(event.startDate);
+          const startDate = new Date(event.startAt);
           results.push({
             id: event.id,
             moduleType: "calendar",
@@ -367,11 +367,11 @@ class OmnisearchEngine {
 
       for (const contact of allContacts) {
         const nameScore = this.calculateRelevance(contact.name, query, "title");
-        const emailScore = contact.email
-          ? this.calculateRelevance(contact.email, query, "metadata")
+        const emailScore = contact.emails.length > 0
+          ? this.calculateRelevance(contact.emails[0], query, "metadata")
           : 0;
-        const phoneScore = contact.phone
-          ? this.calculateRelevance(contact.phone, query, "metadata")
+        const phoneScore = contact.phoneNumbers.length > 0
+          ? this.calculateRelevance(contact.phoneNumbers[0], query, "metadata")
           : 0;
 
         const maxScore = Math.max(nameScore, emailScore, phoneScore);
@@ -382,9 +382,9 @@ class OmnisearchEngine {
             id: contact.id,
             moduleType: "contacts",
             title: contact.name,
-            subtitle: contact.email || contact.phone,
+            subtitle: contact.emails[0] || contact.phoneNumbers[0],
             relevanceScore,
-            metadata: { email: contact.email, phone: contact.phone },
+            metadata: { email: contact.emails[0], phone: contact.phoneNumbers[0] },
           });
         }
       }
@@ -582,6 +582,7 @@ class OmnisearchEngine {
       contacts: "Contacts",
       translator: "Translator",
       budget: "Budget",
+      history: "History",
     };
     return names[moduleType] || moduleType;
   }

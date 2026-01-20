@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import type { ModuleType } from "@/models/types";
 import {
   View,
   StyleSheet,

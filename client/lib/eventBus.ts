@@ -78,6 +78,11 @@ export enum EVENT_TYPES {
   APP_FOREGROUNDED = "system:app:foregrounded",
   APP_BACKGROUNDED = "system:app:backgrounded",
   DATA_SYNCED = "system:data:synced",
+  MEMORY_PRESSURE = "system:memory:pressure",
+  MEMORY_CLEANUP = "system:memory:cleanup",
+  EVENT_CREATED = "calendar:event:created",
+  EVENT_UPDATED = "calendar:event:updated",
+  EVENT_DELETED = "calendar:event:deleted",
 }
 
 // Note event payloads

@@ -42,7 +42,8 @@ import { eventBus, EVENT_TYPES } from "../../lib/eventBus";
 import { database } from "../../storage/database";
 import { ThemedText } from "../ThemedText";
 import { Button } from "../Button";
-import { Colors, Spacing, Typography } from "../../constants/theme";
+import { Spacing, Typography } from "../../constants/theme";
+import { useTheme } from "../../hooks/useTheme";
 import type { Contact } from "../../models/types";
 
 interface ContactsMiniModeData {
@@ -68,6 +69,8 @@ export function ContactsMiniMode({
   onDismiss,
   source,
 }: MiniModeComponentProps<ContactsMiniModeData>) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [filteredContacts, setFilteredContacts] = useState<Contact[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -119,8 +122,8 @@ export function ContactsMiniMode({
     const query = searchQuery.toLowerCase();
     const filtered = contacts.filter((contact) => {
       const name = contact.name?.toLowerCase() || "";
-      const email = contact.email?.toLowerCase() || "";
-      const phone = contact.phone?.toLowerCase() || "";
+      const email = contact.emails?.[0]?.toLowerCase() || "";
+      const phone = contact.phoneNumbers?.[0]?.toLowerCase() || "";
 
       return (
         name.includes(query) || email.includes(query) || phone.includes(query)
@@ -162,11 +165,14 @@ export function ContactsMiniMode({
    */
   const completeSelection = (selectedContacts: Contact[]) => {
     // Emit event to event bus
-    eventBus.emit(EVENT_TYPES.CONTACT_SELECTED, {
-      contacts: selectedContacts,
-      source,
-      purpose: initialData?.purpose,
-    });
+    eventBus.emit(
+      EVENT_TYPES.MODULE_OPENED,
+      {
+        contacts: selectedContacts,
+        source,
+        purpose: initialData?.purpose,
+      },
+    );
 
     // Success haptic on iOS
     if (Platform.OS === "ios") {
@@ -217,9 +223,9 @@ export function ContactsMiniMode({
           <ThemedText style={styles.contactName} numberOfLines={1}>
             {item.name || "Unknown"}
           </ThemedText>
-          {item.email && (
+          {item.emails?.[0] && (
             <ThemedText style={styles.contactDetail} numberOfLines={1}>
-              {item.email}
+              {item.emails[0]}
             </ThemedText>
           )}
         </View>
@@ -230,7 +236,7 @@ export function ContactsMiniMode({
             style={[styles.checkbox, isSelected && styles.checkboxSelected]}
           >
             {isSelected && (
-              <Feather name="check" size={16} color={Colors.deepSpace} />
+              <Feather name="check" size={16} color={theme.deepSpace} />
             )}
           </View>
         )}
@@ -240,7 +246,7 @@ export function ContactsMiniMode({
           <Feather
             name="chevron-right"
             size={20}
-            color={Colors.textSecondary}
+            color={theme.textSecondary}
           />
         )}
       </TouchableOpacity>
@@ -265,7 +271,7 @@ export function ContactsMiniMode({
           accessibilityRole="button"
           accessibilityLabel="Close"
         >
-          <Feather name="x" size={24} color={Colors.textSecondary} />
+          <Feather name="x" size={24} color={theme.textSecondary} />
         </TouchableOpacity>
       </View>
 
@@ -274,7 +280,7 @@ export function ContactsMiniMode({
         <Feather
           name="search"
           size={18}
-          color={Colors.textSecondary}
+          color={theme.textSecondary}
           style={styles.searchIcon}
         />
         <TextInput
@@ -282,7 +288,7 @@ export function ContactsMiniMode({
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder="Search contacts..."
-          placeholderTextColor={Colors.textSecondary}
+          placeholderTextColor={theme.textSecondary}
           returnKeyType="search"
           autoCapitalize="none"
           autoCorrect={false}
@@ -296,7 +302,7 @@ export function ContactsMiniMode({
             accessibilityRole="button"
             accessibilityLabel="Clear search"
           >
-            <Feather name="x-circle" size={18} color={Colors.textSecondary} />
+            <Feather name="x-circle" size={18} color={theme.textSecondary} />
           </TouchableOpacity>
         )}
       </View>
@@ -304,14 +310,14 @@ export function ContactsMiniMode({
       {/* Contacts List */}
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.electric} />
+          <ActivityIndicator size="large" color={theme.electric} />
           <ThemedText style={styles.loadingText}>
             Loading contacts...
           </ThemedText>
         </View>
       ) : filteredContacts.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Feather name="users" size={48} color={Colors.textSecondary} />
+          <Feather name="users" size={48} color={theme.textSecondary} />
           <ThemedText style={styles.emptyText}>
             {searchQuery ? "No matching contacts" : "No contacts found"}
           </ThemedText>
@@ -336,24 +342,27 @@ export function ContactsMiniMode({
       {allowMultiple && (
         <View style={styles.actions}>
           <Button
-            label="Cancel"
             onPress={onDismiss}
-            variant="secondary"
             style={styles.button}
-          />
+          >
+            <ThemedText>Cancel</ThemedText>
+          </Button>
           <Button
-            label={`Done${selectedIds.length > 0 ? ` (${selectedIds.length})` : ""}`}
             onPress={handleDone}
             disabled={selectedIds.length === 0}
             style={[styles.button, styles.buttonPrimary]}
-          />
+          >
+            <ThemedText>
+              {`Done${selectedIds.length > 0 ? ` (${selectedIds.length})` : ""}`}
+            </ThemedText>
+          </Button>
         </View>
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
   container: {
     flex: 1,
     maxHeight: "85%",
@@ -370,13 +379,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: Typography.fontSize.h2,
+    fontSize: Typography.sizes.h2,
     fontWeight: "600",
     marginBottom: Spacing.xs,
   },
   subtitle: {
-    fontSize: Typography.fontSize.caption,
-    color: Colors.textSecondary,
+    fontSize: Typography.sizes.caption,
+    color: theme.textSecondary,
   },
   closeButton: {
     padding: Spacing.xs,
@@ -385,21 +394,21 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.deepSpace,
+    backgroundColor: theme.deepSpace,
     borderRadius: 12,
     marginHorizontal: Spacing.md,
     marginBottom: Spacing.md,
     paddingHorizontal: Spacing.md,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
   },
   searchIcon: {
     marginRight: Spacing.sm,
   },
   searchInput: {
     flex: 1,
-    fontSize: Typography.fontSize.body,
-    color: Colors.text,
+    fontSize: Typography.sizes.body,
+    color: theme.text,
     paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
   },
   clearButton: {
@@ -415,7 +424,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   contactItemSelected: {
     backgroundColor: "rgba(0, 217, 255, 0.1)", // Electric with opacity
@@ -424,69 +433,69 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.electric,
+    backgroundColor: theme.electric,
     alignItems: "center",
     justifyContent: "center",
     marginRight: Spacing.md,
   },
   avatarText: {
-    fontSize: Typography.fontSize.h3,
+    fontSize: Typography.sizes.h3,
     fontWeight: "600",
-    color: Colors.deepSpace,
+    color: theme.deepSpace,
   },
   contactInfo: {
     flex: 1,
     marginRight: Spacing.md,
   },
   contactName: {
-    fontSize: Typography.fontSize.body,
+    fontSize: Typography.sizes.body,
     fontWeight: "500",
     marginBottom: 2,
   },
   contactDetail: {
-    fontSize: Typography.fontSize.small,
-    color: Colors.textSecondary,
+    fontSize: Typography.sizes.small,
+    color: theme.textSecondary,
   },
   checkbox: {
     width: 24,
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     alignItems: "center",
     justifyContent: "center",
     marginLeft: Spacing.sm,
   },
   checkboxSelected: {
-    backgroundColor: Colors.electric,
-    borderColor: Colors.electric,
+    backgroundColor: theme.electric,
+    borderColor: theme.electric,
   },
   loadingContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: Spacing.xxl,
+    paddingVertical: Spacing["2xl"],
   },
   loadingText: {
     marginTop: Spacing.md,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   emptyContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: Spacing.xxl,
+    paddingVertical: Spacing["2xl"],
     paddingHorizontal: Spacing.xl,
   },
   emptyText: {
-    fontSize: Typography.fontSize.h3,
+    fontSize: Typography.sizes.h3,
     fontWeight: "500",
     marginTop: Spacing.md,
     textAlign: "center",
   },
   emptyHint: {
-    fontSize: Typography.fontSize.small,
-    color: Colors.textSecondary,
+    fontSize: Typography.sizes.small,
+    color: theme.textSecondary,
     marginTop: Spacing.xs,
     textAlign: "center",
   },
@@ -496,7 +505,7 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.border,
   },
   button: {
     flex: 1,

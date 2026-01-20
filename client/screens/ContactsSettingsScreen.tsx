@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import type { ModuleType } from "@/models/types";
 import { View, StyleSheet, ScrollView, Switch, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -40,7 +41,7 @@ export default function ContactsSettingsScreen() {
       ? settings.enabledModules.filter((m) => m !== "contacts")
       : [...settings.enabledModules, "contacts"];
 
-    const updated = await db.settings.update({ enabledModules });
+    const updated = await db.settings.update({ enabledModules: enabledModules as ModuleType[] });
     setSettings(updated);
   }, [settings]);
 

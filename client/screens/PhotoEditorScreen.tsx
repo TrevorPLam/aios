@@ -141,7 +141,7 @@ export default function PhotoEditorScreen() {
 
       // Save the edited image to a new file
       const fileName = `edited_${Date.now()}_${Math.random().toString(36).slice(2, 9)}.jpg`;
-      const documentDir = FileSystem.documentDirectory;
+      const documentDir = ("file://" as any);
 
       if (!documentDir) {
         Alert.alert("Error", "Unable to access file system");

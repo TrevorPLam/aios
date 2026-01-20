@@ -13,6 +13,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from "react";
+import type { ModuleType } from "@/models/types";
 import { View, StyleSheet, ScrollView, Switch, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -68,7 +69,7 @@ export default function CalendarSettingsScreen() {
       ? settings.enabledModules.filter((m) => m !== "calendar")
       : [...settings.enabledModules, "calendar"];
 
-    const updated = await db.settings.update({ enabledModules });
+    const updated = await db.settings.update({ enabledModules: enabledModules as ModuleType[] });
     setSettings(updated);
   }, [settings]);
 

@@ -35,12 +35,13 @@ import {
 import * as Haptics from "expo-haptics";
 
 import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
-import { eventBus } from "../../lib/eventBus";
+import { eventBus, EVENT_TYPES } from "../../lib/eventBus";
 import { database } from "../../storage/database";
 import { ThemedText } from "../ThemedText";
 import { Button } from "../Button";
-import { Colors, Spacing, Typography } from "../../constants/theme";
-import type { Task } from "../../models/types";
+import { Spacing, Typography } from "../../constants/theme";
+import { useTheme } from "../../hooks/useTheme";
+import type { Task, TaskStatus } from "../../models/types";
 
 interface TaskMiniModeData {
   title?: string;
@@ -66,6 +67,8 @@ export function TaskMiniMode({
   onDismiss,
   source,
 }: MiniModeComponentProps<TaskMiniModeData>) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [title, setTitle] = useState(initialData?.title || "");
   const [description, setDescription] = useState(
     initialData?.description || "",
@@ -97,40 +100,36 @@ export function TaskMiniMode({
       // Create task in database
       const newTask: Partial<Task> = {
         title: title.trim(),
-        description: description.trim() || undefined,
+        userNotes: description.trim() || "",
+        aiNotes: [],
         priority,
-        status: "todo",
-        dueDate: initialData?.dueDate?.toISOString(),
+        status: "pending" as TaskStatus,
+        dueDate: initialData?.dueDate?.toISOString() || null,
         projectId: null,
-        subtasks: [],
-        tags: [],
+        parentTaskId: null,
+        dependencyIds: [],
+        recurrenceRule: "none",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
 
-      const createdTask = await database.tasks.createTask(newTask);
+      await database.tasks.save(newTask as any);
 
-      // Emit event to event bus for cross-module coordination
-      eventBus.emit({
-        type: "TaskCreated",
-        payload: {
-          task: createdTask,
-          source: source || "mini_mode",
-        },
-        metadata: {
-          timestamp: new Date().toISOString(),
-        },
-      });
+      // Use our data since save returns void
+      const taskData = { ...newTask, id: newTask.id || Date.now().toString() } as Task;
+      
+      eventBus.emit(
+        EVENT_TYPES.TASK_CREATED,
+        { task: taskData, source: source || "mini_mode" },
+      );
 
-      // Haptic feedback on success
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
-      // Notify caller with result
       const result: MiniModeResult<Task> = {
         action: "created",
-        data: createdTask,
+        data: taskData,
         module: "planner",
       };
 
@@ -159,15 +158,15 @@ export function TaskMiniMode({
   const getPriorityColor = (p: Task["priority"]): string => {
     switch (p) {
       case "urgent":
-        return Colors.error;
+        return theme.error;
       case "high":
-        return Colors.warning;
+        return theme.warning;
       case "medium":
-        return Colors.electricBlue;
+        return theme.electricBlue;
       case "low":
-        return Colors.success;
+        return theme.success;
       default:
-        return Colors.textSecondary;
+        return theme.textSecondary;
     }
   };
 
@@ -207,7 +206,7 @@ export function TaskMiniMode({
             value={title}
             onChangeText={setTitle}
             placeholder="What needs to be done?"
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={theme.textTertiary}
             autoFocus
             maxLength={200}
             accessible={true}
@@ -265,7 +264,7 @@ export function TaskMiniMode({
             value={description}
             onChangeText={setDescription}
             placeholder="Add details (optional)"
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={theme.textTertiary}
             multiline
             numberOfLines={3}
             maxLength={500}
@@ -280,27 +279,25 @@ export function TaskMiniMode({
       {/* Actions */}
       <View style={styles.actions}>
         <Button
-          label="Cancel"
           onPress={onDismiss}
-          variant="secondary"
-          style={styles.actionButton}
           disabled={saving}
-          accessibilityLabel="Cancel task creation"
-        />
+          style={styles.actionButton}
+        >
+          <ThemedText>Cancel</ThemedText>
+        </Button>
         <Button
-          label={saving ? "Saving..." : "Create Task"}
           onPress={handleSave}
-          variant="primary"
-          style={styles.actionButton}
           disabled={saving}
-          accessibilityLabel="Create task"
-        />
+          style={styles.actionButton}
+        >
+          <ThemedText>{saving ? "Saving..." : "Create Task"}</ThemedText>
+        </Button>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
   container: {
     maxHeight: "100%",
   },
@@ -309,23 +306,23 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.sm,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   handleBar: {
     width: 40,
     height: 4,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: theme.textTertiary,
     borderRadius: 2,
     marginBottom: Spacing.sm,
   },
   headerTitle: {
     fontSize: Typography.sizes.h2,
     fontWeight: "600",
-    color: Colors.electricBlue,
+    color: theme.electricBlue,
   },
   headerSubtitle: {
     fontSize: Typography.sizes.caption,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 4,
   },
   form: {
@@ -338,18 +335,18 @@ const styles = StyleSheet.create({
   label: {
     fontSize: Typography.sizes.body,
     fontWeight: "500",
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     marginBottom: Spacing.xs,
   },
   input: {
-    backgroundColor: Colors.deepSpace,
+    backgroundColor: theme.deepSpace,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     borderRadius: 8,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     fontSize: Typography.sizes.body,
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   textArea: {
     paddingTop: Spacing.sm,
@@ -366,13 +363,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.xs,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.deepSpace,
+    borderColor: theme.border,
+    backgroundColor: theme.deepSpace,
     alignItems: "center",
   },
   priorityText: {
     fontSize: Typography.sizes.caption,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
   },
   spacer: {
     height: Spacing.lg,
@@ -383,7 +380,7 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     paddingBottom: Spacing.xs,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.border,
   },
   actionButton: {
     flex: 1,

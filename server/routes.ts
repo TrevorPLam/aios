@@ -48,7 +48,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post(
     "/api/auth/register",
-    validate(insertUserSchema),
+    validate(insertUserSchema as any),
     asyncHandler(async (req, res) => {
       const { username, password } = req.body;
 
@@ -198,7 +198,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post(
     "/api/notes",
     authenticate,
-    validate(insertNoteSchema),
+    validate(insertNoteSchema as any),
     asyncHandler(async (req, res) => {
       const note = await storage.createNote({
         ...req.body,
@@ -212,7 +212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/notes/:id",
     authenticate,
     validateParams(idParamSchema),
-    validate(updateNoteSchema),
+    validate(updateNoteSchema as any),
     asyncHandler(async (req, res) => {
       const note = await storage.updateNote(
         req.params.id,
@@ -265,7 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post(
     "/api/tasks",
     authenticate,
-    validate(insertTaskSchema),
+    validate(insertTaskSchema as any),
     asyncHandler(async (req, res) => {
       const task = await storage.createTask({
         ...req.body,
@@ -279,7 +279,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/tasks/:id",
     authenticate,
     validateParams(idParamSchema),
-    validate(updateTaskSchema),
+    validate(updateTaskSchema as any),
     asyncHandler(async (req, res) => {
       const task = await storage.updateTask(
         req.params.id,
@@ -332,7 +332,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post(
     "/api/projects",
     authenticate,
-    validate(insertProjectSchema),
+    validate(insertProjectSchema as any),
     asyncHandler(async (req, res) => {
       const project = await storage.createProject({
         ...req.body,
@@ -346,7 +346,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/projects/:id",
     authenticate,
     validateParams(idParamSchema),
-    validate(updateProjectSchema),
+    validate(updateProjectSchema as any),
     asyncHandler(async (req, res) => {
       const project = await storage.updateProject(
         req.params.id,
@@ -402,7 +402,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post(
     "/api/events",
     authenticate,
-    validate(insertEventSchema),
+    validate(insertEventSchema as any),
     asyncHandler(async (req, res) => {
       const event = await storage.createEvent({
         ...req.body,
@@ -416,7 +416,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/events/:id",
     authenticate,
     validateParams(idParamSchema),
-    validate(updateEventSchema),
+    validate(updateEventSchema as any),
     asyncHandler(async (req, res) => {
       const event = await storage.updateEvent(
         req.params.id,
@@ -462,7 +462,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put(
     "/api/settings",
     authenticate,
-    validate(updateSettingsSchema),
+    validate(updateSettingsSchema as any),
     asyncHandler(async (req, res) => {
       const settings = await storage.updateSettings(req.user!.userId, req.body);
       if (!settings) {
@@ -501,7 +501,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post(
     "/api/conversations",
     authenticate,
-    validate(insertConversationSchema),
+    validate(insertConversationSchema as any),
     asyncHandler(async (req, res) => {
       const conversation = await storage.createConversation({
         ...req.body,
@@ -515,7 +515,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/conversations/:id",
     authenticate,
     validateParams(idParamSchema),
-    validate(updateConversationSchema),
+    validate(updateConversationSchema as any),
     asyncHandler(async (req, res) => {
       const conversation = await storage.updateConversation(
         req.params.id,
@@ -596,7 +596,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/conversations/:id/messages",
     authenticate,
     validateParams(idParamSchema),
-    validate(insertMessageSchema),
+    validate(insertMessageSchema as any),
     asyncHandler(async (req, res) => {
       const message = await storage.createMessage({
         ...req.body,
@@ -610,7 +610,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/messages/:id",
     authenticate,
     validateParams(idParamSchema),
-    validate(updateMessageSchema),
+    validate(updateMessageSchema as any),
     asyncHandler(async (req, res) => {
       const message = await storage.updateMessage(
         req.params.id,

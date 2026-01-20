@@ -36,11 +36,12 @@ import {
 import * as Haptics from "expo-haptics";
 
 import { MiniModeComponentProps, MiniModeResult } from "../../lib/miniMode";
-import { eventBus } from "../../lib/eventBus";
+import { eventBus, EVENT_TYPES } from "../../lib/eventBus";
 import { database } from "../../storage/database";
 import { ThemedText } from "../ThemedText";
 import { Button } from "../Button";
-import { Colors, Spacing, Typography } from "../../constants/theme";
+import { Spacing, Typography } from "../../constants/theme";
+import { useTheme } from "../../hooks/useTheme";
 import type { CalendarEvent } from "../../models/types";
 
 interface CalendarMiniModeData {
@@ -68,6 +69,8 @@ export function CalendarMiniMode({
   onDismiss,
   source,
 }: MiniModeComponentProps<CalendarMiniModeData>) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [title, setTitle] = useState(initialData?.title || "");
   const [description, setDescription] = useState(
     initialData?.description || "",
@@ -111,34 +114,31 @@ export function CalendarMiniMode({
       // Create event in database
       const newEvent: Partial<CalendarEvent> = {
         title: title.trim(),
-        description: description.trim() || undefined,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-        location: location.trim() || undefined,
-        isAllDay: false,
-        color: Colors.electricBlue,
-        // Defaults
-        recurrence: undefined,
-        reminders: [],
-        attendees: [],
-        status: "confirmed",
+        description: description.trim() || "",
+        startAt: startDate.toISOString(),
+        endAt: endDate.toISOString(),
+        location: location.trim() || "",
+        allDay: false,
+        timezone: "UTC",
+        recurrenceRule: "none",
+        exceptions: [],
+        overrides: {},
+        reminderMinutes: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        source: "LOCAL",
       };
 
-      const createdEvent = await database.calendar.createEvent(newEvent);
+      await database.events.save(newEvent as any);
+
+      // Use our data since save returns void
+      const eventData = { ...newEvent, id: newEvent.id || Date.now().toString() } as CalendarEvent;
 
       // Emit event to event bus for cross-module coordination
-      eventBus.emit({
-        type: "CalendarEventCreated",
-        payload: {
-          event: createdEvent,
-          source: source || "mini_mode",
-        },
-        metadata: {
-          timestamp: new Date().toISOString(),
-        },
-      });
+      eventBus.emit(
+        EVENT_TYPES.CALENDAR_EVENT_CREATED,
+        { event: eventData, source: source || "mini_mode" },
+      );
 
       // Haptic feedback on success
       if (Platform.OS !== "web") {
@@ -148,7 +148,7 @@ export function CalendarMiniMode({
       // Notify caller with result
       const result: MiniModeResult<CalendarEvent> = {
         action: "created",
-        data: createdEvent,
+        data: eventData,
         module: "calendar",
       };
 
@@ -209,7 +209,7 @@ export function CalendarMiniMode({
             value={title}
             onChangeText={setTitle}
             placeholder="Meeting, appointment, etc."
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={theme.textTertiary}
             autoFocus
             maxLength={100}
             accessible={true}
@@ -250,7 +250,7 @@ export function CalendarMiniMode({
             value={location}
             onChangeText={setLocation}
             placeholder="Add location (optional)"
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={theme.textTertiary}
             maxLength={200}
             accessible={true}
             accessibilityLabel="Event location"
@@ -265,7 +265,7 @@ export function CalendarMiniMode({
             value={description}
             onChangeText={setDescription}
             placeholder="Add details (optional)"
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={theme.textTertiary}
             multiline
             numberOfLines={3}
             maxLength={500}
@@ -280,27 +280,25 @@ export function CalendarMiniMode({
       {/* Actions */}
       <View style={styles.actions}>
         <Button
-          label="Cancel"
           onPress={onDismiss}
-          variant="secondary"
-          style={styles.actionButton}
           disabled={saving}
-          accessibilityLabel="Cancel event creation"
-        />
+          style={styles.actionButton}
+        >
+          <ThemedText>Cancel</ThemedText>
+        </Button>
         <Button
-          label={saving ? "Saving..." : "Save Event"}
           onPress={handleSave}
-          variant="primary"
-          style={styles.actionButton}
           disabled={saving}
-          accessibilityLabel="Save event"
-        />
+          style={styles.actionButton}
+        >
+          <ThemedText>{saving ? "Saving..." : "Save Event"}</ThemedText>
+        </Button>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
   container: {
     maxHeight: "100%",
   },
@@ -309,23 +307,23 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.sm,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: theme.border,
   },
   handleBar: {
     width: 40,
     height: 4,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: theme.textTertiary,
     borderRadius: 2,
     marginBottom: Spacing.sm,
   },
   headerTitle: {
     fontSize: Typography.sizes.h2,
     fontWeight: "600",
-    color: Colors.electricBlue,
+    color: theme.electricBlue,
   },
   headerSubtitle: {
     fontSize: Typography.sizes.caption,
-    color: Colors.textSecondary,
+    color: theme.textSecondary,
     marginTop: 4,
   },
   form: {
@@ -338,18 +336,18 @@ const styles = StyleSheet.create({
   label: {
     fontSize: Typography.sizes.body,
     fontWeight: "500",
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
     marginBottom: Spacing.xs,
   },
   input: {
-    backgroundColor: Colors.deepSpace,
+    backgroundColor: theme.deepSpace,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     borderRadius: 8,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     fontSize: Typography.sizes.body,
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   textArea: {
     paddingTop: Spacing.sm,
@@ -357,16 +355,16 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   dateTimeRow: {
-    backgroundColor: Colors.deepSpace,
+    backgroundColor: theme.deepSpace,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: theme.border,
     borderRadius: 8,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
   },
   dateTimeText: {
     fontSize: Typography.sizes.body,
-    color: Colors.textPrimary,
+    color: theme.textPrimary,
   },
   spacer: {
     height: Spacing.lg,
@@ -377,7 +375,7 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     paddingBottom: Spacing.xs,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: theme.border,
   },
   actionButton: {
     flex: 1,

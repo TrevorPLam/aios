@@ -54,6 +54,7 @@ function mockDateTo(targetDate: Date): void {
       if (args.length === 0) {
         super(targetDate.getTime());
       } else {
+        // @ts-expect-error - Spread args to super is safe here, constructor signature is complex
         super(...args);
       }
     }
@@ -107,8 +108,12 @@ describe("RecommendationEngine", () => {
         startAt: yesterday.toISOString(),
         endAt: yesterday.toISOString(),
         allDay: false,
-        location: null,
-        description: null,
+          timezone: "UTC",
+          exceptions: [],
+          overrides: {},
+          source: "LOCAL",
+        location: "",
+        description: "",
         recurrenceRule: "none",
         createdAt: yesterday.toISOString(),
         updatedAt: yesterday.toISOString(),
@@ -139,8 +144,12 @@ describe("RecommendationEngine", () => {
         startAt: yesterday.toISOString(),
         endAt: yesterday.toISOString(),
         allDay: false,
-        location: null,
-        description: null,
+          timezone: "UTC",
+          exceptions: [],
+          overrides: {},
+          source: "LOCAL",
+        location: "",
+        description: "",
         recurrenceRule: "none",
         createdAt: yesterday.toISOString(),
         updatedAt: yesterday.toISOString(),
@@ -178,13 +187,15 @@ describe("RecommendationEngine", () => {
         status: "pending",
         priority: "high",
         dueDate: null,
-        recurrence: "none",
+        
         userNotes: "",
         aiNotes: [],
         createdAt: fiveDaysAgo.toISOString(),
         updatedAt: fiveDaysAgo.toISOString(),
         parentTaskId: null,
         projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
       };
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue([mockTask]);
@@ -209,13 +220,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: null,
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
         {
           id: "task2",
@@ -223,13 +236,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "urgent",
           dueDate: null,
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
       ];
 
@@ -257,13 +272,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: null,
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
         {
           id: "task2",
@@ -271,13 +288,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "urgent",
           dueDate: null,
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
       ];
 
@@ -287,8 +306,12 @@ describe("RecommendationEngine", () => {
         startAt: tomorrow.toISOString(),
         endAt: tomorrow.toISOString(),
         allDay: false,
-        location: null,
-        description: null,
+          timezone: "UTC",
+          exceptions: [],
+          overrides: {},
+          source: "LOCAL",
+        location: "",
+        description: "",
         recurrenceRule: "none",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -333,13 +356,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "medium",
           dueDate: twoDaysFromNow.toISOString(),
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
         {
           id: "task2",
@@ -347,13 +372,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: twoDaysFromNow.toISOString(),
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
         {
           id: "task3",
@@ -361,13 +388,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "low",
           dueDate: twoDaysFromNow.toISOString(),
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
       ];
 
@@ -418,13 +447,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: null,
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: fiveDaysAgo.toISOString(),
           updatedAt: fiveDaysAgo.toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
         {
           id: "task2",
@@ -432,13 +463,15 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "urgent",
           dueDate: null,
-          recurrence: "none",
+          
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentTaskId: null,
           projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
         },
       ];
 
@@ -471,13 +504,15 @@ describe("RecommendationEngine", () => {
         status: "pending",
         priority: "high",
         dueDate: null,
-        recurrence: "none",
+        
         userNotes: "",
         aiNotes: [],
         createdAt: fiveDaysAgo.toISOString(),
         updatedAt: fiveDaysAgo.toISOString(),
         parentTaskId: null,
         projectId: null,
+          recurrenceRule: "none",
+          dependencyIds: [],
       };
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue([mockTask]);

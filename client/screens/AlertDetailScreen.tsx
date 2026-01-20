@@ -709,7 +709,9 @@ export default function AlertDetailScreen() {
               smartSnoozeSuggestion !== snoozeDuration && (
                 <Pressable
                   onPress={() => {
-                    setSnoozeDuration(smartSnoozeSuggestion);
+                    if (smartSnoozeSuggestion !== null) {
+                      setSnoozeDuration(smartSnoozeSuggestion as import("@/models/types").SnoozeDuration);
+                    }
                     if (Platform.OS !== "web") {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     }

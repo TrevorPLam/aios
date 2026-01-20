@@ -79,6 +79,7 @@ export function PersistentSidebar({
   const insets = useSafeAreaInsets();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [modules, setModules] = useState<ModuleDefinition[]>([]);
   const [contextZone, setContextZone] = useState<ContextZone>(ContextZone.AUTO);
 

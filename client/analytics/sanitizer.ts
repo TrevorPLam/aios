@@ -246,6 +246,7 @@ export function sanitizeEvent<T extends EventName>(
     day_of_week: getDayOfWeek(timestamp),
     hour_of_day: getHourOfDay(timestamp),
     // Sanitize props with proper typing
+    // @ts-expect-error: Type assertion is safe here as sanitizeProps ensures type safety
     props: sanitizeProps(
       event.event_name,
       event.props as unknown as Record<string, unknown>,

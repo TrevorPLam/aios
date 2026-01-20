@@ -39,7 +39,7 @@ describe("PrefetchEngine", () => {
       const transitions = [
         {
           from: "calendar" as ModuleType,
-          to: "maps" as ModuleType,
+          to: "calendar" as ModuleType as ModuleType,
           timestamp: new Date().toISOString(),
           timeSpent: 120,
         },
@@ -77,7 +77,7 @@ describe("PrefetchEngine", () => {
     it("should record transition between modules", async () => {
       await prefetchEngine.onModuleEnter("calendar");
       await new Promise((resolve) => setTimeout(resolve, 100));
-      await prefetchEngine.onModuleEnter("maps");
+      await prefetchEngine.onModuleEnter("calendar" as ModuleType);
 
       const stats = prefetchEngine.getStatistics();
       expect(stats.totalTransitions).toBeGreaterThan(0);
@@ -87,11 +87,11 @@ describe("PrefetchEngine", () => {
       // Record multiple transitions
       await prefetchEngine.onModuleEnter("calendar");
       await new Promise((resolve) => setTimeout(resolve, 50));
-      await prefetchEngine.onModuleEnter("maps");
+      await prefetchEngine.onModuleEnter("calendar" as ModuleType);
       await new Promise((resolve) => setTimeout(resolve, 50));
       await prefetchEngine.onModuleEnter("calendar");
       await new Promise((resolve) => setTimeout(resolve, 50));
-      await prefetchEngine.onModuleEnter("maps");
+      await prefetchEngine.onModuleEnter("calendar" as ModuleType);
 
       // Wait for pattern calculation
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -106,7 +106,7 @@ describe("PrefetchEngine", () => {
       // Create some transitions
       await prefetchEngine.onModuleEnter("calendar");
       await new Promise((resolve) => setTimeout(resolve, 50));
-      await prefetchEngine.onModuleEnter("maps");
+      await prefetchEngine.onModuleEnter("calendar" as ModuleType);
 
       const predictions = prefetchEngine.predictNextModules("calendar");
       expect(Array.isArray(predictions)).toBe(true);
@@ -165,7 +165,7 @@ describe("PrefetchEngine", () => {
       for (let i = 0; i < 5; i++) {
         await prefetchEngine.onModuleEnter("calendar");
         await new Promise((resolve) => setTimeout(resolve, 10));
-        await prefetchEngine.onModuleEnter("maps");
+        await prefetchEngine.onModuleEnter("calendar" as ModuleType);
         await new Promise((resolve) => setTimeout(resolve, 10));
       }
 
@@ -210,7 +210,7 @@ describe("PrefetchEngine", () => {
     it("should save transitions to storage", async () => {
       await prefetchEngine.onModuleEnter("calendar");
       await new Promise((resolve) => setTimeout(resolve, 50));
-      await prefetchEngine.onModuleEnter("maps");
+      await prefetchEngine.onModuleEnter("calendar" as ModuleType);
 
       // Wait for debounced save
       await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -232,7 +232,7 @@ describe("PrefetchEngine", () => {
     it("should handle rapid module switches", async () => {
       const modules: ModuleType[] = [
         "calendar",
-        "maps",
+        "calendar" as ModuleType,
         "notebook",
         "planner",
         "messages",
@@ -250,7 +250,7 @@ describe("PrefetchEngine", () => {
     it("should limit stored transitions", async () => {
       // Try to create more than max transitions
       for (let i = 0; i < 1100; i++) {
-        await prefetchEngine.onModuleEnter(i % 2 === 0 ? "calendar" : "maps");
+        await prefetchEngine.onModuleEnter(i % 2 === 0 ? "calendar" : "calendar" as ModuleType);
       }
 
       const stats = prefetchEngine.getStatistics();

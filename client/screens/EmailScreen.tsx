@@ -668,7 +668,7 @@ export default function EmailScreen() {
               },
             ]}
           >
-            <Feather name="arrow-down-up" size={14} color={theme.text} />
+            <Feather name="arrow-down" size={14} color={theme.text} />
             <ThemedText type="small">Sort</ThemedText>
           </Pressable>
 
@@ -747,7 +747,7 @@ export default function EmailScreen() {
               onPress={handleBulkMarkUnread}
               style={styles.toolbarButton}
             >
-              <Feather name="mail-open" size={20} color={theme.accent} />
+              <Feather name="mail" size={20} color={theme.accent} />
             </Pressable>
             <Pressable onPress={handleBulkStar} style={styles.toolbarButton}>
               <Feather name="star" size={20} color={theme.accent} />
@@ -905,7 +905,7 @@ export default function EmailScreen() {
               </View>
 
               <View style={styles.statCard}>
-                <Feather name="mail-open" size={24} color={theme.warning} />
+                <Feather name="mail" size={24} color={theme.warning} />
                 <ThemedText type="h2" style={{ marginTop: Spacing.sm }}>
                   {statistics.unread}
                 </ThemedText>
