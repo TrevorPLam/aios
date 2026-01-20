@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
 - Enhanced UX consistency across modules with unified navigation pattern
 - Recommendation cards now surface reasoning and evidence previews for faster decision-making (T-007)
+- Standardized overlay colors and quick-capture action accents through theme tokens
 
 ### Technical
 - Implemented scroll-aware animations using React Native Reanimated shared values
@@ -33,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive documentation consolidation and reorganization
 - Added documentation best practices guide
 - Created implementation plan for world-class documentation standards
+- Documented theme token usage for overlay and semantic colors
 
 ## [2.0.0] - 2026-01-16
 

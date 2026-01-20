@@ -43,8 +43,9 @@ import { Feather } from "@expo/vector-icons";
 
 import { miniModeRegistry, useMiniMode } from "../lib/miniMode";
 import { ThemedText } from "./ThemedText";
-import { Colors, Spacing, Typography } from "../constants/theme";
+import { Spacing, Typography } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
+import { getOverlayColor } from "../utils/themeColors";
 
 /**
  * Capture action types
@@ -104,28 +105,28 @@ export function QuickCaptureOverlay({
       id: "task",
       icon: "check-square",
       label: "Task",
-      color: "#10B981",
+      color: themeHook.theme.success,
       miniModeModule: "planner",
     },
     {
       id: "event",
       icon: "calendar",
       label: "Event",
-      color: "#F59E0B",
+      color: themeHook.theme.warning,
       miniModeModule: "calendar",
     },
     {
       id: "expense",
       icon: "dollar-sign",
       label: "Expense",
-      color: "#EF4444",
+      color: themeHook.theme.error,
       miniModeModule: "budget", // Now implemented!
     },
     {
       id: "photo",
       icon: "camera",
       label: "Photo",
-      color: "#9B59B6",
+      color: themeHook.theme.accentPurple,
       // Note: Photo capture would use native camera
       handler: () => {
         if (Platform.OS !== "web") {
@@ -271,7 +272,7 @@ const createStyles = (theme: ReturnType<typeof useTheme>) => StyleSheet.create({
   },
   backdropOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: getOverlayColor(theme.theme, "backdropStrong"),
   },
   menuContainer: {
     flex: 1,

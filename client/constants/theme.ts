@@ -67,6 +67,12 @@ export const Colors = {
     lowConfidence: "#6366F1",
     border: "rgba(0, 0, 0, 0.08)",
     overlay: "rgba(255, 255, 255, 0.95)",
+    overlayStrong: "rgba(0, 0, 0, 0.7)",
+    overlayMedium: "rgba(0, 0, 0, 0.5)",
+    overlaySubtle: "rgba(0, 0, 0, 0.2)",
+    overlayCompact: "rgba(255, 255, 255, 0.85)",
+    overlayHandle: "rgba(0, 0, 0, 0.1)",
+    accentPurple: "#9B59B6",
     info: "#3B82F6", // Info blue color
     // Additional colors for consistency with existing component code
     electric: "#00D9FF", // Alias for 'accent'
@@ -106,6 +112,12 @@ export const Colors = {
     lowConfidence: "#6366F1",
     border: "rgba(255, 255, 255, 0.08)",
     overlay: "rgba(10, 14, 26, 0.9)",
+    overlayStrong: "rgba(0, 0, 0, 0.7)",
+    overlayMedium: "rgba(0, 0, 0, 0.5)",
+    overlaySubtle: "rgba(0, 0, 0, 0.2)",
+    overlayCompact: "rgba(26, 31, 46, 0.8)",
+    overlayHandle: "rgba(255, 255, 255, 0.2)",
+    accentPurple: "#9B59B6",
     info: "#3B82F6", // Info blue color
     // Additional colors for consistency with existing component code
     electric: "#00D9FF", // Alias for 'accent'

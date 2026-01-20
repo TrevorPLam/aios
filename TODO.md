@@ -3059,16 +3059,17 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 
 ### Design System Improvements
 
-- [ ] **Replace Hardcoded Colors with Theme Constants** (11 occurrences)
+- [x] **Replace Hardcoded Colors with Theme Constants** (11 occurrences)
   - Files: Multiple components use rgba() and hex values directly
   - Examples:
     - `rgba(0, 0, 0, 0.7)` in QuickCaptureOverlay
     - `rgba(10, 14, 26, 0.95)` in HandoffBreadcrumb
     - `rgba(255, 255, 255, 0.2)` in AIAssistSheet
     - `#9B59B6` in QuickCaptureOverlay
-  - **Action**: Replace with theme.overlay, theme.border, etc.
-  - **Action**: Add any missing color constants to theme.ts
-  - **Action**: Document color usage guidelines
+  - **Action**: Replace with theme.overlay, theme.border, etc. (completed 2026-01-20)
+  - **Action**: Add any missing color constants to theme.ts (completed 2026-01-20)
+  - **Action**: Document color usage guidelines (completed 2026-01-20)
+  - **New tasks discovered**: None
 
 - [ ] **Standardize Import Paths**
   - Issue: Mix of relative (`../`, `./`) and alias (`@/`) imports
