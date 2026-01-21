@@ -46,7 +46,10 @@ export function getLazyFallbackCopy(
   const trimmedName = screenName.trim();
 
   if (!trimmedName) {
-    return { copy: DEFAULT_COPY };
+    return {
+      copy: DEFAULT_COPY,
+      error: "Screen name cannot be empty or whitespace.",
+    };
   }
 
   return {
