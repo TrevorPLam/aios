@@ -8,7 +8,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 ## Level 1: System Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                        AIOS System                           │
 ├─────────────────────────────────────────────────────────────┤
@@ -37,13 +37,13 @@ This document shows the internal structure of AIOS - how it's organized into com
 │                  └─────────────────────┘                   │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### Building Block: Mobile Client
 
 **Purpose:** Provide native iOS/Android user interface and local data management
 
-**Responsibilities:**
+### Responsibilities
 - Render 43 screens across 14 modules
 - Manage local state with React hooks
 - Store data in AsyncStorage (offline-first)
@@ -53,7 +53,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 **Location:** `/client/`
 
-**Key Components:**
+### Key Components
 - Screens (UI)
 - Components (Reusable UI)
 - Storage (AsyncStorage wrapper)
@@ -64,7 +64,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 **Purpose:** Provide REST API, authentication, and future database integration
 
-**Responsibilities:**
+### Responsibilities (2)
 - REST API endpoints for all modules
 - JWT-based authentication
 - Request validation with Zod
@@ -74,7 +74,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 **Location:** `/server/`
 
-**Key Components:**
+### Key Components (2)
 - Routes (API endpoints)
 - Middleware (Auth, validation, errors)
 - Storage (In-memory, future: PostgreSQL)
@@ -83,14 +83,14 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 **Purpose:** Share types, schemas, and constants between client and server
 
-**Responsibilities:**
+### Responsibilities (3)
 - TypeScript types/interfaces
 - Zod validation schemas
 - Shared constants
 
 **Location:** `/shared/`
 
-**Key Components:**
+### Key Components (3)
 - `schema.ts` - Drizzle ORM schema (future)
 - `constants.ts` - Shared constants
 
@@ -100,7 +100,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 ### Layer Structure
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                     Mobile Client                            │
 ├─────────────────────────────────────────────────────────────┤
@@ -133,7 +133,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 │  └───────────────────────────────────────────────────────┘  │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### UI Layer Components
 
@@ -141,8 +141,8 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 **Purpose:** Full-screen views for each feature
 
-**Structure:**
-```
+### Structure
+```text
 /client/screens/
 ├── CommandCenterScreen.tsx        # AI recommendations
 ├── NotebookScreen.tsx              # Notes list
@@ -187,9 +187,9 @@ This document shows the internal structure of AIOS - how it's organized into com
 ├── OnboardingModuleSelectionScreen.tsx # Onboarding 2
 ├── RecommendationDetailScreen.tsx  # Recommendation detail
 └── RecommendationHistoryScreen.tsx # Past recommendations
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (4)
 - Render UI with React Native components
 - Handle user interactions
 - Call storage methods
@@ -197,7 +197,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 - Provide haptic feedback
 - Show loading/error states
 
-**Example Pattern:**
+### Example Pattern
 ```typescript
 // Pattern used in all screens
 export const NotebookScreen = ({ navigation }: Props) => {
@@ -226,14 +226,14 @@ export const NotebookScreen = ({ navigation }: Props) => {
     />
   );
 };
-```
+```text
 
 #### Components (25+ files)
 
 **Purpose:** Reusable UI elements shared across screens
 
-**Structure:**
-```
+### Structure (2)
+```text
 /client/components/
 ├── Button.tsx                  # Primary button
 ├── Card.tsx                    # Container card
@@ -244,15 +244,15 @@ export const NotebookScreen = ({ navigation }: Props) => {
 ├── MiniBudget.tsx              # Budget mini-mode
 ├── MiniContacts.tsx            # Contacts mini-mode
 └── ... (17 more components)
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (5)
 - Consistent UI across app
 - Reduce code duplication
 - Encapsulate common patterns
 - Apply design system (theme, colors, typography)
 
-**Example:**
+### Example
 ```typescript
 // /client/components/Button.tsx
 export const Button = ({ title, onPress, variant = 'primary' }: ButtonProps) => {
@@ -271,25 +271,25 @@ export const Button = ({ title, onPress, variant = 'primary' }: ButtonProps) => 
     </TouchableOpacity>
   );
 };
-```
+```text
 
 #### Navigation
 
 **Purpose:** Manage screen routing and transitions
 
-**Structure:**
-```
+### Structure (3)
+```text
 /client/navigation/
 └── AppNavigator.tsx       # React Navigation setup
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (6)
 - Define navigation structure (tabs, stacks)
 - Configure screen transitions
 - Handle deep linking
 - Manage navigation state
 
-**Implementation:**
+### Implementation
 ```typescript
 // Tab navigator for main modules
 const Tab = createBottomTabNavigator();
@@ -306,7 +306,7 @@ const Stack = createNativeStackNavigator();
     {/* ... other modules */}
   </Tab.Navigator>
 </NavigationContainer>
-```
+```text
 
 ### Business Logic Layer
 
@@ -314,16 +314,16 @@ const Stack = createNativeStackNavigator();
 
 **Purpose:** Encapsulate reusable logic and state management
 
-**Structure:**
-```
+### Structure (4)
+```text
 /client/hooks/
 ├── useDebounce.ts         # Debounce inputs
 ├── useSearch.ts           # Search logic
 ├── useFilter.ts           # Filtering logic
 └── ... (more hooks)
-```
+```text
 
-**Example:**
+### Example (2)
 ```typescript
 // /client/hooks/useDebounce.ts
 export const useDebounce = <T,>(value: T, delay: number): T => {
@@ -339,19 +339,19 @@ export const useDebounce = <T,>(value: T, delay: number): T => {
 
   return debouncedValue;
 };
-```
+```text
 
 #### React Context
 
 **Purpose:** Share state across components without prop drilling
 
-**Structure:**
-```
+### Structure (5)
+```text
 /client/context/
 └── HandoffContext.tsx     # Module handoff state
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (7)
 - Module handoff breadcrumbs
 - User preferences (future)
 - Theme state (future)
@@ -360,14 +360,14 @@ export const useDebounce = <T,>(value: T, delay: number): T => {
 
 **Purpose:** Helper functions and seed data
 
-**Structure:**
-```
+### Structure (6)
+```text
 /client/utils/
 ├── helpers.ts             # General utilities
 ├── seedData.ts            # Demo data for development
 ├── contactHelpers.ts      # Contact operations
 └── errorReporting.ts      # Error handling
-```
+```text
 
 ### Storage Layer
 
@@ -377,7 +377,7 @@ export const useDebounce = <T,>(value: T, delay: number): T => {
 
 **File:** `/client/storage/database.ts` (5,000+ lines, 200+ methods)
 
-**Structure:**
+### Structure (7)
 ```typescript
 // Organized by module
 export const database = {
@@ -436,9 +436,9 @@ export const database = {
   // Messages, Lists, Alerts, Contacts, etc.
   // ... 100+ more methods
 };
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (8)
 - All database operations (CRUD)
 - Data validation before storage
 - Complex queries (search, filter, sort)
@@ -446,28 +446,28 @@ export const database = {
 - Bulk operations
 - Error handling
 
-**Example Method:**
+### Example Method
 ```typescript
 export const saveNote = async (note: Note): Promise<void> => {
   try {
     const notes = await getNotes();
     const index = notes.findIndex(n => n.id === note.id);
-    
+
     if (index >= 0) {
       notes[index] = { ...note, updatedAt: Date.now() };
     } else {
       notes.push({ ...note, createdAt: Date.now(), updatedAt: Date.now() });
     }
-    
+
     await AsyncStorage.setItem(NOTES_KEY, JSON.stringify(notes));
   } catch (error) {
     console.error('Failed to save note:', error);
     throw error;
   }
 };
-```
+```text
 
-**Test Coverage:**
+### Test Coverage
 - 659 unit tests total
 - 100% coverage on 14 production modules
 - Tests in `/client/storage/__tests__/`
@@ -480,7 +480,7 @@ Each of the 14 modules follows the same structure:
 
 ### Module Pattern
 
-```
+```text
 Module Name (e.g., Notebook)
 │
 ├── UI Layer
@@ -493,18 +493,18 @@ Module Name (e.g., Notebook)
 │
 └── Settings (optional)
     └── ModuleSettingsScreen.tsx    (Module-specific settings)
-```
+```text
 
 ### Example: Notebook Module
 
-**Files:**
+#### Files
 - `/client/screens/NotebookScreen.tsx` - List all notes
 - `/client/screens/NoteEditorScreen.tsx` - Create/edit note
 - `/client/screens/NotebookSettingsScreen.tsx` - Notebook preferences
 - `/client/storage/database.ts` - 29 note-related methods
 - `/client/storage/__tests__/notebook.test.ts` - 49 unit tests
 
-**Data Flow:**
+### Data Flow
 1. User opens NotebookScreen
 2. Screen calls `getNotes()` from storage layer
 3. Storage layer retrieves from AsyncStorage
@@ -521,9 +521,9 @@ Module Name (e.g., Notebook)
 
 ## Backend Server Architecture
 
-### Layer Structure
+### Layer Structure (2)
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                   Backend Server                             │
 ├─────────────────────────────────────────────────────────────┤
@@ -552,13 +552,13 @@ Module Name (e.g., Notebook)
 │  └───────────────────────────────────────────────────────┘  │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### API Layer
 
 **File:** `/server/routes.ts`
 
-**Structure:**
+### Structure (8)
 ```typescript
 // Authentication
 router.post('/api/auth/register', registerHandler);
@@ -571,9 +571,9 @@ router.post('/api/recommendations', authMiddleware, validateRecommendation, crea
 
 // Notes, Tasks, Events, Messages, etc.
 // ... 50+ endpoints
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (9)
 - Define API routes
 - Call middleware
 - Call business logic
@@ -581,27 +581,27 @@ router.post('/api/recommendations', authMiddleware, validateRecommendation, crea
 
 ### Middleware Layer
 
-**Files:**
+#### Files (2)
 - `/server/middleware/auth.ts` - JWT validation
 - `/server/middleware/validation.ts` - Zod validation
 - `/server/middleware/errorHandler.ts` - Error responses
 
-**Responsibilities:**
+### Responsibilities (10)
 - Authenticate requests
 - Validate request bodies
 - Handle errors
 - Add security headers
 
-**Example:**
+### Example (3)
 ```typescript
 // /server/middleware/auth.ts
 export const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
-  
+
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     req.userId = decoded.userId;
@@ -610,16 +610,16 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).json({ error: 'Invalid token' });
   }
 };
-```
+```text
 
-### Storage Layer
+### Storage Layer (2)
 
 **File:** `/server/storage.ts`
 
-**Current:** In-memory storage (Maps/Arrays)  
+**Current:** In-memory storage (Maps/Arrays)
 **Future:** Drizzle ORM + PostgreSQL
 
-**Structure:**
+### Structure (9)
 ```typescript
 // In-memory storage for MVP
 const users = new Map<string, User>();
@@ -633,7 +633,7 @@ import { notes, tasks } from '@shared/schema';
 export const getUserNotes = async (userId: string) => {
   return await db.select().from(notes).where(eq(notes.userId, userId));
 };
-```
+```text
 
 ---
 
@@ -651,26 +651,26 @@ await saveNote(note);
 // Storage returns data or throws error
 return Promise<Note[]>
 throw Error
-```
+```text
 
 ### Client ↔ Backend (Future)
 
 **Interface:** REST API (HTTPS + JSON)
 
-**Request:**
+### Request
 ```http
 GET /api/notes
 Authorization: Bearer <jwt-token>
-```
+```text
 
-**Response:**
+### Response
 ```json
 {
   "notes": [
     { "id": "1", "title": "Note 1", "body": "Content" }
   ]
 }
-```
+```text
 
 ### Backend → Database (Future)
 
@@ -682,7 +682,7 @@ const notes = await db
   .select()
   .from(notesTable)
   .where(eq(notesTable.userId, userId));
-```
+```text
 
 ---
 
@@ -741,7 +741,7 @@ find /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/__tests__ 
 
 # Check backend
 ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
-```
+```text
 
 ### Verify Module Pattern
 
@@ -753,9 +753,9 @@ ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/NoteEdit
 # Check storage methods
 grep -A 5 "export const saveNote" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
 
-# Check tests
+# Check tests (2)
 npm test -- notebook
-```
+```text
 
 ### Run Tests
 
@@ -768,7 +768,7 @@ npm run test:coverage
 
 # Specific module
 npm test -- calendar
-```
+```text
 
 ---
 

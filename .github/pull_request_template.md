@@ -57,15 +57,14 @@ Relates to #
 - [ ] I have verified there are no TypeScript errors (`npm run check:types`)
 - [ ] I have run the linter and fixed all issues (`npm run lint`)
 
-**How I verified this works:**
-
+### How I verified this works
 <!-- Describe your testing approach. See docs/verification.md for guidelines. -->
 
-```
-1. 
-2. 
-3. 
-```
+```text
+1.
+2.
+3.
+```text
 
 ### Security & Dependencies
 
@@ -96,16 +95,16 @@ Relates to #
 
 <!-- What could potentially break? What should reviewers pay special attention to? -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## 🚀 Deployment Notes
 
 <!-- Any special deployment considerations? Database migrations? Environment variables? -->
 
-- 
-- 
+-
+-
 
 ## 📚 Additional Context
 

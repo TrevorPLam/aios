@@ -8,14 +8,15 @@ This directory contains detailed documentation for each major module in the AIOS
 
 The AIOS system is organized into three main modules:
 
-```
+```text
 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
 ├── client/          # React Native mobile application
 ├── server/          # Node.js/Express backend API
 └── shared/          # TypeScript code shared between client and server
-```
+```text
 
 Each module has its own:
+
 - Dependencies (`package.json`)
 - Build configuration
 - Test suite
@@ -25,6 +26,7 @@ Each module has its own:
 ### Module Documentation Structure
 
 Each module document follows this structure:
+
 - **Purpose** - What the module does
 - **Architecture** - How it's structured
 - **Key Components** - Main pieces and their responsibilities
@@ -37,7 +39,7 @@ Each module document follows this structure:
 ## Available Module Documentation
 
 | Module | Description | Document |
-|--------|-------------|----------|
+| -------- | ------------- | ---------- |
 | **Client** | React Native mobile app (iOS/Android) | [client.md](./client.md) |
 | **Server** | Node.js/Express REST API backend | [server.md](./server.md) |
 | **Shared** | TypeScript utilities, types, validators | [shared.md](./shared.md) |
@@ -54,15 +56,17 @@ Each module document follows this structure:
 ## Failure Modes
 
 ### Failure Mode 1: Circular Dependencies
+
 - **Symptom:** Build fails with "cannot resolve module" or infinite import loops
 - **Impact:** Cannot build or run the application
 - **Detection:** Build errors, TypeScript compiler errors
-- **Mitigation:** 
+- **Mitigation:**
   - Run `npm run lint` to detect circular dependencies
   - Use `madge` to visualize dependency graph: `npx madge --circular --extensions ts,tsx ./`
   - Refactor to break cycles using dependency inversion
 
 ### Failure Mode 2: Version Mismatches
+
 - **Symptom:** Shared code behaves differently in client vs server
 - **Impact:** Subtle bugs, inconsistent validation, data corruption
 - **Detection:** Integration tests fail, production errors
@@ -72,6 +76,7 @@ Each module document follows this structure:
   - Test shared code in both contexts
 
 ### Failure Mode 3: Documentation Drift
+
 - **Symptom:** Documentation doesn't match actual module structure
 - **Impact:** Developers make incorrect assumptions, onboarding is confusing
 - **Detection:** PR reviews catch discrepancies
@@ -83,6 +88,7 @@ Each module document follows this structure:
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # Verify all modules can be built independently
 cd client && npm run build
@@ -96,15 +102,17 @@ npx madge --circular --extensions ts,tsx ./shared/
 
 # Verify documentation exists
 ls -la docs/modules/*.md
-```
+```text
 
 ### Automated Checks
+
 - [ ] All modules build successfully: `npm run build`
 - [ ] All module tests pass: `npm test`
 - [ ] No circular dependencies detected
 - [ ] Module documentation files exist for client, server, shared
 
 ### Success Criteria
+
 1. Each module can be built independently
 2. Module boundaries are clear and documented
 3. Shared code works consistently in all contexts
@@ -115,20 +123,21 @@ ls -la docs/modules/*.md
 If you need to add a new module:
 
 1. **Copy the template:**
+
    ```bash
    cp docs/modules/_template.md docs/modules/new-module-name.md
-   ```
+   ```text
 
-2. **Fill in all sections:**
+1. **Fill in all sections:**
    - Replace placeholders with actual information
    - Include concrete examples from your module
    - Document all failure modes you can think of
 
-3. **Update this README:**
+2. **Update this README:**
    - Add your module to the table above
    - Update any affected diagrams or lists
 
-4. **Link from other docs:**
+3. **Link from other docs:**
    - Update architecture diagrams
    - Reference from API documentation
    - Link from tutorials if relevant
@@ -144,6 +153,7 @@ If you need to add a new module:
 ## Notes
 
 Module documentation should be:
+
 - **Practical** - Focus on what developers need to know to work with the module
 - **Current** - Update when module structure changes
 - **Specific** - Include actual file paths, commands, and examples

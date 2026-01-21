@@ -26,7 +26,7 @@ Each schema should be documented with:
 ```markdown
 # [Table Name]
 
-**Location:** `server/src/models/[filename].ts`  
+**Location:** `server/src/models/[filename].ts`
 **Migration:** `drizzle/migrations/NNNN_*.sql`
 
 ## Purpose
@@ -38,7 +38,7 @@ Each schema should be documented with:
 ### Columns
 
 | Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
+| -------- | ------ | ------------- | ------------- |
 | id | UUID | PK, NOT NULL, DEFAULT random | Primary key |
 | ... | ... | ... | ... |
 
@@ -69,7 +69,7 @@ Each schema should be documented with:
 ## Examples
 
 [Sample data and usage examples]
-```
+```text
 
 ## Documenting Existing Schemas
 
@@ -78,6 +78,7 @@ For the AIOS system, document these core schemas:
 ### 1. Users Schema
 
 Document the users table including:
+
 - User identification (id, email)
 - Authentication (password hash)
 - Profile information (name, etc.)
@@ -89,6 +90,7 @@ Document the users table including:
 ### 2. Sessions Schema
 
 Document user sessions including:
+
 - Session identification
 - User association
 - Expiration
@@ -105,25 +107,27 @@ Document your application-specific tables based on your actual `server/src/model
 When adding a new table:
 
 1. **Create migration:**
+
    ```bash
    # Update server/src/models/new_table.ts
    npm run db:generate
-   ```
+   ```text
 
-2. **Document the schema:**
+1. **Document the schema:**
+
    ```bash
    # Create docs/data/schemas/new_table.md
    # Follow the template above
-   ```
+   ```text
 
-3. **Include in this README:**
+1. **Include in this README:**
    - Add link in the list below
    - Update any affected relationship docs
 
 ## Available Schema Documentation
 
 | Schema | Purpose | Documentation |
-|--------|---------|---------------|
+| -------- | --------- | --------------- |
 | **users** | User accounts and authentication | _To be created_ |
 | **sessions** | User session management | _To be created_ |
 | [Your tables here] | [Purpose] | _To be created_ |
@@ -131,15 +135,16 @@ When adding a new table:
 ## Assumptions
 
 - **Assumption 1:** All tables have UUID primary keys
-  - *If false:* Document exceptions and why
+  - _If false:_ Document exceptions and why
 - **Assumption 2:** All tables have createdAt/updatedAt timestamps
-  - *If false:* Document exceptions and add if needed
+  - _If false:_ Document exceptions and add if needed
 - **Assumption 3:** Foreign keys are always enforced
-  - *If false:* Document exceptions and application-level handling
+  - _If false:_ Document exceptions and application-level handling
 
 ## Failure Modes
 
 ### Failure Mode 1: Schema Documentation Drift
+
 - **Symptom:** Documentation doesn't match actual database schema
 - **Impact:** Confusion, incorrect development, bugs
 - **Detection:** Manual schema comparison, failed queries
@@ -150,6 +155,7 @@ When adding a new table:
 - **Monitoring:** Manual reviews during code review
 
 ### Failure Mode 2: Missing Relationship Documentation
+
 - **Symptom:** Developers don't understand data connections
 - **Impact:** Incorrect queries, N+1 problems, data integrity issues
 - **Detection:** Code review finds inefficient queries
@@ -160,6 +166,7 @@ When adding a new table:
 - **Monitoring:** Query performance metrics
 
 ### Failure Mode 3: Undocumented Constraints
+
 - **Symptom:** Developers violate database constraints
 - **Impact:** Runtime errors, failed operations
 - **Detection:** Constraint violation errors in logs
@@ -172,6 +179,7 @@ When adding a new table:
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Compare docs to actual schema
 npm run db:studio  # Visual comparison
@@ -183,15 +191,17 @@ ls docs/data/schemas/*.md
 # 3. Check relationship accuracy
 # Query actual foreign keys in PostgreSQL
 psql $DATABASE_URL -c "\d+ users"
-```
+```text
 
 ### Automated Checks
+
 - [ ] All schema files in models/ have corresponding .md files
 - [ ] All foreign keys are documented
 - [ ] All indexes are documented
 - [ ] All constraints are documented
 
 ### Success Criteria
+
 1. Every table has documentation
 2. All relationships are clear
 3. Common queries are shown
@@ -201,6 +211,7 @@ psql $DATABASE_URL -c "\d+ users"
 ## Schema Documentation Best Practices
 
 ### Clarity
+
 1. **Use plain English** - Explain purpose in simple terms
 2. **Include examples** - Show actual data samples
 3. **Explain why** - Document reasons for design decisions
@@ -208,6 +219,7 @@ psql $DATABASE_URL -c "\d+ users"
 5. **Link relationships** - Reference related schema docs
 
 ### Completeness
+
 1. **Every column** - Document all fields
 2. **Every constraint** - Explain all rules
 3. **Every index** - Note all performance optimizations
@@ -215,6 +227,7 @@ psql $DATABASE_URL -c "\d+ users"
 5. **Migration history** - Note significant changes
 
 ### Maintenance
+
 1. **Update with changes** - Keep docs current with code
 2. **Version migrations** - Reference migration numbers
 3. **Mark deprecated** - Flag old patterns
@@ -224,6 +237,7 @@ psql $DATABASE_URL -c "\d+ users"
 ## Tools for Schema Documentation
 
 ### Schema Visualization
+
 ```bash
 # Generate ER diagram
 npx prisma generate  # If using Prisma
@@ -231,24 +245,26 @@ npx prisma generate  # If using Prisma
 
 # Export schema to SQL
 pg_dump --schema-only $DATABASE_URL > schema.sql
-```
+```text
 
 ### Schema Comparison
+
 ```bash
 # Compare dev to production schema
 pg_dump --schema-only $DEV_DATABASE_URL > dev_schema.sql
 pg_dump --schema-only $PROD_DATABASE_URL > prod_schema.sql
 diff dev_schema.sql prod_schema.sql
-```
+```text
 
 ### Auto-Documentation
+
 ```bash
 # Generate docs from schema (various tools)
 npx schemats generate -c $DATABASE_URL -o docs/data/schemas/
 
 # Or use Drizzle introspection
 npx drizzle-kit introspect:pg
-```
+```text
 
 ## Related Documentation
 

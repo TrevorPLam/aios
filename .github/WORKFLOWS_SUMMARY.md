@@ -30,22 +30,22 @@ This repository includes 14 comprehensive GitHub Actions workflows for documenta
 
 ### Security & Compliance (4)
 
-5. **sbom.yml** - Software Bill of Materials
+1. **sbom.yml** - Software Bill of Materials
    - Caption: "SBOM creates audit-ready inventory of all dependencies."
    - Triggers: push to main, releases, weekly schedule
    - Formats: SPDX, CycloneDX, human-readable
 
-6. **trivy.yml** - Vulnerability scanning
+2. **trivy.yml** - Vulnerability scanning
    - Caption: "Trivy catches security issues in dependencies and configuration."
    - Triggers: PR, push to main, daily schedule
    - Scans: filesystem, npm deps, config files
 
-7. **slsa-provenance.yml** - Build provenance
+3. **slsa-provenance.yml** - Build provenance
    - Caption: "SLSA provenance provides verifiable build integrity."
    - Triggers: releases
    - Level: SLSA Level 3
 
-8. **ossf-scorecard.yml** - Security best practices
+4. **ossf-scorecard.yml** - Security best practices
    - Caption: "OpenSSF Scorecard measures security best practices compliance."
    - Triggers: push to main, weekly schedule
    - Checks: 15+ security practices
@@ -54,7 +54,7 @@ This repository includes 14 comprehensive GitHub Actions workflows for documenta
 
 ### Automation Config
 
-9. **dependabot.yml** - Automated dependency updates
+1. **dependabot.yml** - Automated dependency updates
    - Caption: "Dependabot automates dependency updates and security patches."
    - NPM: Weekly (Mondays)
    - GitHub Actions: Weekly (Tuesdays)
@@ -62,27 +62,27 @@ This repository includes 14 comprehensive GitHub Actions workflows for documenta
 
 ### Developer Experience
 
-10. **pull_request_template.md** - PR template
+1. **pull_request_template.md** - PR template
     - Caption: "PR template prevents undocumented changes from quietly landing."
     - Ensures documentation, testing, security review
 
-11. **CODEOWNERS.example** - Code ownership
+2. **CODEOWNERS.example** - Code ownership
     - Caption: "CODEOWNERS ensures qualified reviewers see critical changes."
     - Protects: docs/, .github/, security code, database
 
 ### Linting Configs
 
-12. **.spectral.yml** - API linting rules
+1. **.spectral.yml** - API linting rules
     - OpenAPI/AsyncAPI standards
     - Required fields enforcement
 
-13. **.lycheeignore** - Link checker exclusions
+2. **.lycheeignore** - Link checker exclusions
     - Excludes localhost, private IPs
     - Rate limit handling
 
 ## 📚 Documentation
 
-14. **docs/github-actions-guide.md** - Complete guide
+1. **docs/github-actions-guide.md** - Complete guide
     - Detailed workflow documentation
     - Troubleshooting guide
     - Best practices
@@ -109,7 +109,7 @@ npm run lint
 
 # Tests
 npm test
-```
+```text
 
 ## 🚀 Next Steps
 
@@ -130,36 +130,36 @@ npm test
 
 ### Soon (Recommended)
 
-4. **Install Vale styles:**
+1. **Install Vale styles:**
    ```bash
    mkdir -p .github/styles
    cd .github/styles
    vale sync  # Downloads configured style packages
-   ```
+   ```text
 
-5. **Test workflows:**
+2. **Test workflows:**
    - Create a test PR with doc changes
    - Verify all workflows trigger correctly
    - Check workflow logs for issues
 
-6. **Configure branch protection:**
+3. **Configure branch protection:**
    - Require status checks: vale, markdownlint, links
    - Require CODEOWNERS approval
    - Require linear history
 
 ### Optional (Enhanced Security)
 
-7. **Enable GitHub Advanced Security:**
+1. **Enable GitHub Advanced Security:**
    - CodeQL analysis (already configured)
    - Secret scanning
    - Dependency review
 
-8. **Configure notifications:**
+2. **Configure notifications:**
    - Security alerts to team channel
    - Critical Trivy findings to on-call
    - SBOM updates to compliance team
 
-9. **Add API specs:**
+3. **Add API specs:**
    - Create `docs/apis/` directory
    - Add OpenAPI YAML files
    - Spectral workflow will auto-lint

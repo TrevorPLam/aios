@@ -16,7 +16,7 @@ Operations documentation includes:
 
 ### Operations Documentation Structure
 
-```
+```text
 docs/operations/
 ├── README.md                           # This file
 ├── runbooks/                           # Operational procedures
@@ -30,7 +30,7 @@ docs/operations/
     ├── logging.md                     # Logging strategy
     ├── metrics.md                     # Metrics strategy
     └── tracing.md                     # Distributed tracing
-```
+```text
 
 ## Who Should Use This Documentation?
 
@@ -42,38 +42,45 @@ docs/operations/
 ## Quick Links
 
 ### Emergency Procedures
+
 - [Escalation Guide](./oncall/escalation.md) - When and how to escalate
 - [Common Incidents](./runbooks/common_incidents.md) - Quick fixes for frequent issues
 
 ### Day-to-Day Operations
+
 - [Runbook Index](./runbooks/README.md) - All operational procedures
 - [Logging Strategy](./observability/logging.md) - How to use logs
 - [Metrics Dashboard](./observability/metrics.md) - What to monitor
 
 ### Post-Incident
+
 - [Postmortem Template](./oncall/postmortem_template.md) - Document incidents
 
 ## Key Operational Principles
 
 ### 1. Observability First
+
 - **Log Everything Important** - You can't debug what you can't see
 - **Metric What Matters** - Track KPIs and SLIs
 - **Trace Critical Paths** - Understand request flows
 - **Alert on Symptoms** - Not on causes
 
 ### 2. Automate Everything
+
 - **Runbooks → Scripts** - Automate repetitive tasks
 - **Self-Healing** - Systems recover automatically when possible
 - **Infrastructure as Code** - No manual server configuration
 - **CI/CD** - Automated testing and deployment
 
 ### 3. Fail Gracefully
+
 - **Expect Failures** - Design for resilience
 - **Degrade Gracefully** - Reduce functionality rather than crash
 - **Circuit Breakers** - Prevent cascading failures
 - **Rollback Quickly** - Have escape hatches
 
 ### 4. Blameless Culture
+
 - **Incidents Happen** - Focus on systems, not people
 - **Learn From Failures** - Every incident is a learning opportunity
 - **Share Knowledge** - Document everything
@@ -82,16 +89,19 @@ docs/operations/
 ## Service Level Objectives (SLOs)
 
 ### Availability
+
 - **Target:** 99.9% uptime (< 43 minutes downtime/month)
 - **Measurement:** Health check success rate
 - **Alert:** < 99.5% over 5-minute window
 
 ### Performance
+
 - **API Response Time:** P95 < 200ms, P99 < 500ms
 - **Measurement:** Response time metrics from API
 - **Alert:** P95 > 300ms for 5 minutes
 
 ### Error Rate
+
 - **Target:** < 0.1% of requests result in 5xx errors
 - **Measurement:** HTTP status code metrics
 - **Alert:** > 1% error rate over 5 minutes
@@ -108,6 +118,7 @@ docs/operations/
 ## Failure Modes
 
 ### Failure Mode 1: Alert Fatigue
+
 - **Symptom:** Too many alerts, team ignores them
 - **Impact:** Real incidents go unnoticed
 - **Detection:** Low alert response rate, incident discovery delays
@@ -119,6 +130,7 @@ docs/operations/
 - **Monitoring:** Alert volume, acknowledgment time
 
 ### Failure Mode 2: Missing Runbooks
+
 - **Symptom:** Incidents take long to resolve, repeated questions
 - **Impact:** Extended downtime, inconsistent responses
 - **Detection:** Post-incident reviews reveal knowledge gaps
@@ -130,6 +142,7 @@ docs/operations/
 - **Monitoring:** Time to resolution trends
 
 ### Failure Mode 3: Monitoring Blind Spots
+
 - **Symptom:** Issues discovered by users, not monitoring
 - **Impact:** Poor user experience before team awareness
 - **Detection:** User reports precede alerts
@@ -141,6 +154,7 @@ docs/operations/
 - **Monitoring:** User report rate, alert coverage
 
 ### Failure Mode 4: Knowledge Silos
+
 - **Symptom:** Only one person can fix certain issues
 - **Impact:** Slow incident response when that person unavailable
 - **Detection:** Incident requires specific person
@@ -152,6 +166,7 @@ docs/operations/
 - **Monitoring:** Bus factor analysis
 
 ### Failure Mode 5: Inadequate Rollback Procedures
+
 - **Symptom:** Can't quickly undo bad deployments
 - **Impact:** Extended outages from bad releases
 - **Detection:** Deployments can't be reversed quickly
@@ -165,6 +180,7 @@ docs/operations/
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Verify monitoring is working
 curl https://status.aios.example.com
@@ -180,9 +196,10 @@ npm run logs:tail
 
 # 5. Review runbooks for completeness
 ls docs/operations/runbooks/*.md
-```
+```text
 
 ### Automated Checks
+
 - [ ] All services have health checks
 - [ ] Logs are being collected
 - [ ] Metrics are being recorded
@@ -190,6 +207,7 @@ ls docs/operations/runbooks/*.md
 - [ ] Runbooks exist for critical services
 
 ### Success Criteria
+
 1. All services are monitored
 2. Alerts trigger within SLA timeframes
 3. Runbooks cover common incidents
@@ -199,6 +217,7 @@ ls docs/operations/runbooks/*.md
 ## Operational Best Practices
 
 ### Monitoring
+
 1. **Monitor user impact** - Not just system health
 2. **Use golden signals** - Latency, traffic, errors, saturation
 3. **Alert on symptoms** - Not on potential causes
@@ -206,6 +225,7 @@ ls docs/operations/runbooks/*.md
 5. **Test monitoring** - Verify alerts actually fire
 
 ### Incident Response
+
 1. **Communicate early** - Update status page immediately
 2. **Fix first, investigate later** - Restore service, then find root cause
 3. **Document everything** - Maintain incident timeline
@@ -213,6 +233,7 @@ ls docs/operations/runbooks/*.md
 5. **Share learnings** - Prevent future occurrences
 
 ### Documentation
+
 1. **Write runbooks** - For all operational tasks
 2. **Keep updated** - Update after every incident
 3. **Make discoverable** - Easy to find when needed
@@ -222,6 +243,7 @@ ls docs/operations/runbooks/*.md
 ## On-Call Expectations
 
 ### Responsibilities
+
 - **Respond to alerts** - Within 15 minutes
 - **Investigate incidents** - Diagnose and mitigate
 - **Communicate status** - Update stakeholders
@@ -229,6 +251,7 @@ ls docs/operations/runbooks/*.md
 - **Escalate appropriately** - Know when to ask for help
 
 ### Tools Access
+
 - **Production logs** - Access to logging system
 - **Metrics dashboards** - Grafana/Datadog
 - **Infrastructure** - AWS/Cloud provider console
@@ -236,6 +259,7 @@ ls docs/operations/runbooks/*.md
 - **Status page** - Ability to update
 
 ### Escalation Criteria
+
 - **Severity 1 (Critical)** - Service completely down
 - **Severity 2 (High)** - Major functionality impaired
 - **Severity 3 (Medium)** - Minor functionality affected

@@ -1,7 +1,7 @@
 # ADR-005: Analytics system architecture
 
-**Status:** Accepted  
-**Date:** 2026-01-18  
+**Status:** Accepted
+**Date:** 2026-01-18
 **Context:** PR #94 and earlier
 
 ## Context
@@ -49,12 +49,14 @@ Implement a custom analytics system (`client/analytics/`) with the following arc
 
 ### 1. Third-party Analytics (e.g., Mixpanel, Amplitude)
 
-**Pros:**
+#### Pros
+
 - Mature, battle-tested systems
 - Rich feature sets out of the box
 - Professional support
 
-**Cons:**
+### Cons
+
 - Vendor lock-in
 - Higher cost at scale
 - Less control over data privacy
@@ -64,12 +66,14 @@ Implement a custom analytics system (`client/analytics/`) with the following arc
 
 ### 2. Google Analytics / Firebase Analytics
 
-**Pros:**
+#### Pros (2)
+
 - Free for most use cases
 - Integration with other Google services
 - Mobile SDKs available
 
-**Cons:**
+### Cons (2)
+
 - Privacy concerns with data sharing
 - Limited customization
 - Complex API for advanced features
@@ -78,12 +82,14 @@ Implement a custom analytics system (`client/analytics/`) with the following arc
 
 ### 3. Basic logging to own backend
 
-**Pros:**
+#### Pros (3)
+
 - Full control
 - Simple implementation
 - No external dependencies
 
-**Cons:**
+### Cons (3)
+
 - No advanced features (funnels, A/B testing, etc.)
 - Manual implementation of all features
 - Requires significant development effort
@@ -119,12 +125,14 @@ Implement a custom analytics system (`client/analytics/`) with the following arc
 ## Implementation Notes
 
 Key files:
+
 - `client/analytics/client.ts` - Main analytics client
 - `client/analytics/advanced/` - Advanced analytics features
 - `client/analytics/devtools/` - Developer tooling
 - `client/analytics/__tests__/` - Test suite
 
 Dependencies:
+
 - TypeScript for type safety
 - React Navigation for screen tracking
 - AsyncStorage for queue persistence
@@ -142,5 +150,5 @@ Dependencies:
 
 ---
 
-**Accepted by:** Development team  
+**Accepted by:** Development team
 **Implementation:** Complete in client/analytics/

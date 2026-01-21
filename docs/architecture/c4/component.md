@@ -12,21 +12,21 @@ This diagram shows the internal structure of the mobile app and backend API—th
 graph TB
     subgraph "Mobile Application (client/)"
         AppEntry[App Entry Point<br/>App.tsx, index.js<br/>----<br/>Initialize app<br/>Setup providers]
-        
+
         Navigation[Navigation System<br/>navigation/<br/>----<br/>React Navigation<br/>Bottom tabs, Stack, Drawer]
-        
+
         Screens[Screen Components<br/>screens/<br/>----<br/>40+ screen components<br/>14 production modules]
-        
+
         CoreLibs[Core Libraries<br/>lib/<br/>----<br/>Storage, Query Client,<br/>Recommendation Engine,<br/>Context Engine, Search]
-        
+
         UIComponents[UI Components<br/>components/<br/>----<br/>Reusable components<br/>Buttons, Cards, Modals]
-        
+
         Hooks[Custom Hooks<br/>hooks/<br/>----<br/>Business logic hooks<br/>Data fetching]
-        
+
         Contexts[Context Providers<br/>context/<br/>----<br/>Global state<br/>Theme, Auth, Settings]
-        
+
         Models[Data Models<br/>models/<br/>----<br/>Local data structures<br/>View models]
-        
+
         AppEntry --> Navigation
         AppEntry --> Contexts
         Navigation --> Screens
@@ -37,7 +37,7 @@ graph TB
         Hooks --> CoreLibs
         CoreLibs --> Models
     end
-    
+
     style AppEntry fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
     style Navigation fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
     style Screens fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
@@ -46,7 +46,7 @@ graph TB
     style Hooks fill:#7ED321,stroke:#5FA319,stroke-width:2px
     style Contexts fill:#F5A623,stroke:#C77E0A,stroke-width:2px
     style Models fill:#7ED321,stroke:#5FA319,stroke-width:2px
-```
+```text
 
 ### Backend API Components
 
@@ -54,33 +54,33 @@ graph TB
 graph TB
     subgraph "Backend API (server/)"
         ServerEntry[Server Entry Point<br/>index.ts<br/>----<br/>Initialize Express<br/>Setup middleware<br/>Start HTTP server]
-        
+
         Routes[API Routes<br/>routes.ts<br/>----<br/>Endpoint definitions<br/>Request handlers<br/>Response formatting]
-        
+
         Middleware[Middleware<br/>middleware/<br/>----<br/>Authentication (JWT)<br/>Validation (Zod)<br/>Error handling]
-        
+
         Storage[Storage Layer<br/>storage.ts<br/>----<br/>Data access functions<br/>Drizzle ORM queries<br/>In-memory cache]
-        
+
         ServerEntry --> Middleware
         ServerEntry --> Routes
         Routes --> Middleware
         Routes --> Storage
     end
-    
+
     Database[(PostgreSQL<br/>Database)]
     SharedSchema[Shared Schema<br/>shared/schema.ts<br/>----<br/>Drizzle definitions<br/>TypeScript types<br/>Zod validators]
-    
+
     Storage --> Database
-    Routes -.->|Imports types| SharedSchema
-    Storage -.->|Imports schema| SharedSchema
-    
+ Routes -.-> | Imports types | SharedSchema
+ Storage -.-> | Imports schema | SharedSchema
+
     style ServerEntry fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
     style Routes fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
     style Middleware fill:#F5A623,stroke:#C77E0A,stroke-width:2px
     style Storage fill:#F5A623,stroke:#C77E0A,stroke-width:2px
     style Database fill:#7ED321,stroke:#5FA319,stroke-width:3px,color:#fff
     style SharedSchema fill:#F5A623,stroke:#C77E0A,stroke-width:2px
-```
+```text
 
 ### Component Details
 
@@ -90,11 +90,11 @@ graph TB
 
 ### 1. App Entry Point
 
-**Files:**
+#### Files
 - `client/App.tsx` - Root React component
 - `client/index.js` - Expo entry point
 
-**Responsibilities:**
+### Responsibilities
 - Initialize Expo app
 - Setup React Query provider
 - Configure error boundaries
@@ -103,13 +103,13 @@ graph TB
 - Handle splash screen
 - Load fonts and assets
 
-**Dependencies:**
+### Dependencies
 - React Native
 - Expo modules
 - All context providers
 - Navigation root
 
-**Code Example:**
+### Code Example
 ```typescript
 // client/App.tsx (conceptual)
 export default function App() {
@@ -127,15 +127,15 @@ export default function App() {
     </QueryClientProvider>
   );
 }
-```
+```text
 
 ### 2. Navigation System
 
-**Files:**
+#### Files (2)
 - `client/navigation/AppNavigator.tsx` - Main app navigation (bottom tabs, drawer)
 - `client/navigation/RootStackNavigator.tsx` - Root stack (auth, onboarding)
 
-**Responsibilities:**
+### Responsibilities (2)
 - Define navigation structure (tabs, stacks, drawer)
 - Handle deep linking
 - Manage navigation state
@@ -143,8 +143,8 @@ export default function App() {
 - Implement authentication flow routing
 - Handle back button behavior
 
-**Navigation Structure:**
-```
+### Navigation Structure
+```text
 RootStack
 ├── Onboarding (for new users)
 ├── Auth (Login/Register)
@@ -160,9 +160,9 @@ RootStack
         ├── TaskDetail
         ├── EventDetail
         └── Settings
-```
+```text
 
-**Key Navigation Patterns:**
+### Key Navigation Patterns
 - Stack navigation for hierarchical flows
 - Bottom tabs for main modules
 - Drawer for additional modules
@@ -174,7 +174,7 @@ RootStack
 
 **Count:** 40+ screen components
 
-**Production Modules (14):**
+### Production Modules (14)
 1. CommandCenter - Dashboard and overview
 2. Notebook - Notes management
 3. Planner - Tasks and projects
@@ -190,8 +190,8 @@ RootStack
 13. Budget - Budget tracking
 14. Integrations - External service integration
 
-**Key Screens:**
-```
+### Key Screens
+```text
 client/screens/
 ├── CommandCenterScreen.tsx       # Dashboard
 ├── NotebookScreen.tsx            # Note list
@@ -224,9 +224,9 @@ client/screens/
 ├── AIPreferencesScreen.tsx       # AI configuration
 ├── OnboardingWelcomeScreen.tsx   # First-time welcome
 └── OnboardingModuleSelectionScreen.tsx  # Module selection
-```
+```text
 
-**Responsibilities:**
+### Responsibilities (3)
 - Render UI for specific features
 - Handle user interactions
 - Fetch data via React Query
@@ -234,7 +234,7 @@ client/screens/
 - Navigate to related screens
 - Implement module-specific logic
 
-**Common Pattern:**
+### Common Pattern
 ```typescript
 export default function NotebookScreen({ navigation }) {
   const { data: notes, isLoading } = useQuery({
@@ -258,15 +258,15 @@ export default function NotebookScreen({ navigation }) {
     </View>
   );
 }
-```
+```text
 
 ### 4. Core Libraries
 
 **Directory:** `client/lib/`
 
-**Key Files:**
-
+### Key Files
 #### `storage.ts` - AsyncStorage Wrapper
+
 - Abstract AsyncStorage operations
 - Provide typed get/set functions
 - Handle JSON serialization
@@ -282,9 +282,10 @@ export async function getAuthToken(): Promise<string | null> {
 export async function setAuthToken(token: string): Promise<void> {
   await AsyncStorage.setItem('@aios/auth/token', token);
 }
-```
+```text
 
 #### `query-client.ts` - React Query Configuration
+
 - Configure React Query client
 - Set default options (stale time, cache time)
 - Configure retry logic
@@ -292,6 +293,7 @@ export async function setAuthToken(token: string): Promise<void> {
 - Add request interceptors (JWT)
 
 #### `recommendationEngine.ts` - AI Recommendations
+
 - Generate recommendations from user activity
 - Calculate confidence scores
 - Prioritize suggestions
@@ -299,30 +301,35 @@ export async function setAuthToken(token: string): Promise<void> {
 - Integrate with attention center
 
 #### `contextEngine.ts` - Cross-Module Context
+
 - Track user context across modules
 - Maintain activity history
 - Enable smart handoffs
 - Provide contextual suggestions
 
 #### `searchIndex.ts` - Universal Search
+
 - Index all user data for search
 - Full-text search implementation
 - Filter and rank results
 - Support omnisearch feature
 
 #### `moduleRegistry.ts` - Module Management
+
 - Register all modules
 - Manage module metadata
 - Handle module enable/disable
 - Support lazy loading
 
 #### `attentionManager.ts` - Attention Center
+
 - Aggregate alerts and notifications
 - Prioritize items needing attention
 - Track completion
 - Clear resolved items
 
 #### `eventBus.ts` - Event System
+
 - Publish/subscribe event bus
 - Inter-module communication
 - Decouple components
@@ -332,13 +339,13 @@ export async function setAuthToken(token: string): Promise<void> {
 
 **Directory:** `client/components/`
 
-**Responsibilities:**
+### Responsibilities (4)
 - Reusable UI elements
 - Consistent styling
 - Common interaction patterns
 - Accessibility support
 
-**Common Components (examples):**
+### Common Components (examples)
 - `Button.tsx` - Styled buttons
 - `Card.tsx` - Content cards
 - `Modal.tsx` - Modal dialogs
@@ -356,7 +363,7 @@ export async function setAuthToken(token: string): Promise<void> {
 
 **Purpose:** Encapsulate reusable logic
 
-**Common Hooks (examples):**
+### Common Hooks (examples)
 - `useAuth()` - Authentication state and actions
 - `useNotes()` - Notes CRUD operations
 - `useTasks()` - Tasks CRUD operations
@@ -371,13 +378,13 @@ export async function setAuthToken(token: string): Promise<void> {
 
 **Purpose:** Global state management
 
-**Contexts:**
+### Contexts
 - `AuthContext` - User authentication state
 - `ThemeContext` - Theme configuration
 - `SettingsContext` - User preferences
 - `ModuleContext` - Enabled modules
 
-**Pattern:**
+### Pattern
 ```typescript
 // client/context/AuthContext.tsx
 export const AuthContext = createContext<AuthContextType>(null);
@@ -395,13 +402,13 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
-```
+```text
 
 ### 8. Data Models
 
 **Directory:** `client/models/`
 
-**Purpose:**
+### Purpose
 - Local data structures
 - View models for UI
 - Transform server data
@@ -415,7 +422,7 @@ export function AuthProvider({ children }) {
 
 **File:** `server/index.ts`
 
-**Responsibilities:**
+### Responsibilities (5)
 - Create Express app instance
 - Configure middleware (JSON parsing, CORS)
 - Register routes
@@ -424,7 +431,7 @@ export function AuthProvider({ children }) {
 - Start listening on port
 - Handle graceful shutdown
 
-**Code Structure:**
+### Code Structure
 ```typescript
 // server/index.ts (simplified)
 import express from 'express';
@@ -435,17 +442,17 @@ app.use(express.json());
 
 const server = await registerRoutes(app);
 
-const PORT = process.env.PORT || 5000;
+ const PORT = process.env.PORT |  | 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-```
+```text
 
 ### 2. API Routes
 
 **File:** `server/routes.ts`
 
-**Responsibilities:**
+### Responsibilities (6)
 - Define all HTTP endpoints
 - Handle requests and responses
 - Call validation middleware
@@ -454,8 +461,8 @@ server.listen(PORT, () => {
 - Format JSON responses
 - Handle errors
 
-**Route Organization:**
-```
+### Route Organization
+```text
 Authentication:
   POST /api/auth/register
   POST /api/auth/login
@@ -506,9 +513,9 @@ Recommendations:
 
 Health:
   GET    /status
-```
+```text
 
-**Route Pattern:**
+### Route Pattern
 ```typescript
 app.get('/api/notes',
   authenticate,
@@ -528,7 +535,7 @@ app.post('/api/notes',
     res.status(201).json(note);
   })
 );
-```
+```text
 
 ### 3. Middleware
 
@@ -536,14 +543,14 @@ app.post('/api/notes',
 
 #### `auth.ts` - Authentication Middleware
 
-**Responsibilities:**
+### Responsibilities (7)
 - Generate JWT tokens
 - Validate JWT tokens
 - Extract user from token
 - Attach user to request object
 - Handle expired tokens
 
-**Functions:**
+### Functions
 ```typescript
 export function generateToken(userId: string): string {
   return jwt.sign({ userId }, SECRET, { expiresIn: '7d' });
@@ -561,18 +568,18 @@ export function authenticate(req, res, next) {
     res.status(401).json({ error: 'Invalid token' });
   }
 }
-```
+```text
 
 #### `validation.ts` - Request Validation
 
-**Responsibilities:**
+### Responsibilities (8)
 - Validate request body against Zod schema
 - Validate URL parameters
 - Validate query strings
 - Return 400 errors for invalid input
 - Provide detailed error messages
 
-**Functions:**
+### Functions (2)
 ```typescript
 export function validate(schema: z.ZodSchema) {
   return (req, res, next) => {
@@ -587,18 +594,18 @@ export function validate(schema: z.ZodSchema) {
 
 export function validateParams(schema: z.ZodSchema) { /* ... */ }
 export function validateQuery(schema: z.ZodSchema) { /* ... */ }
-```
+```text
 
 #### `errorHandler.ts` - Error Handling
 
-**Responsibilities:**
+### Responsibilities (9)
 - Catch unhandled errors
 - Log errors
 - Format error responses
 - Distinguish operational vs programmer errors
 - Return appropriate status codes
 
-**Classes & Functions:**
+### Classes & Functions
 ```typescript
 export class AppError extends Error {
   constructor(public statusCode: number, message: string) {
@@ -619,13 +626,13 @@ export function errorHandler(err, req, res, next) {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
 }
-```
+```text
 
 ### 4. Storage Layer
 
 **File:** `server/storage.ts`
 
-**Responsibilities:**
+### Responsibilities (10)
 - Abstract database operations
 - Provide typed data access functions
 - Execute Drizzle ORM queries
@@ -633,7 +640,7 @@ export function errorHandler(err, req, res, next) {
 - Handle data transformations
 - Filter all queries by userId
 
-**Functions (examples):**
+### Functions (examples)
 ```typescript
 // Notes
 export async function getUserNotes(userId: string): Promise<Note[]>
@@ -649,9 +656,9 @@ export async function createTask(data: InsertTask): Promise<Task>
 
 // Messages (with search)
 export async function searchMessages(userId: string, query: string, limit?: number): Promise<Message[]>
-```
+```text
 
-**Database Interaction:**
+### Database Interaction
 ```typescript
 import { db } from './db';
 import { notes } from '@shared/schema';
@@ -664,24 +671,24 @@ export async function getUserNotes(userId: string): Promise<Note[]> {
     .where(eq(notes.userId, userId))
     .orderBy(desc(notes.updatedAt));
 }
-```
+```text
 
 ### 5. Shared Schema
 
 **File:** `shared/schema.ts`
 
-**Used By:**
+### Used By
 - Backend storage layer (imports table definitions)
 - Backend routes (imports Zod validation schemas)
 - Frontend types (imports TypeScript types)
 
-**Contents:**
+### Contents
 - Drizzle table definitions (`pgTable`)
 - TypeScript type exports (inferred from tables)
 - Zod validation schemas (generated from tables)
 - Type inference helpers
 
-**Example:**
+### Example
 ```typescript
 // Database table
 export const notes = pgTable("notes", {
@@ -708,7 +715,7 @@ export const insertNoteSchema = createInsertSchema(notes).omit({
 });
 
 export const updateNoteSchema = insertNoteSchema.partial();
-```
+```text
 
 ## Component Interaction Flows
 
@@ -773,12 +780,12 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 **Problem**: Screen components don't clean up subscriptions or timers.
 
-**Impact:**
+### Impact
 - App slows down over time
 - Increased memory usage
 - Eventual crash
 
-**Mitigation:**
+### Mitigation
 - Use React hooks cleanup (`useEffect` return function)
 - Unsubscribe from event bus on unmount
 - Cancel pending promises on unmount
@@ -787,12 +794,12 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 **Problem**: Deep navigation nesting or circular navigation.
 
-**Impact:**
+### Impact (2)
 - Cannot go back
 - Memory pressure from many mounted screens
 - Confusing UX
 
-**Mitigation:**
+### Mitigation (2)
 - Use modal presentation for editors
 - Reset navigation stack after certain actions
 - Limit stack depth
@@ -801,12 +808,12 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 **Problem**: Loading related data triggers multiple database queries.
 
-**Impact:**
+### Impact (3)
 - Slow API responses
 - Database load increases
 - Poor user experience
 
-**Mitigation:**
+### Mitigation (3)
 - Use Drizzle's join capabilities
 - Batch requests where possible
 - Add caching for frequently accessed data
@@ -815,12 +822,12 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 **Problem**: Middleware applied in wrong order (e.g., validation before auth).
 
-**Impact:**
+### Impact (4)
 - Security vulnerabilities
 - Confusing error messages
 - Unexpected behavior
 
-**Mitigation:**
+### Mitigation (4)
 - Document middleware order requirements
 - Use naming conventions to clarify order
 - Test middleware composition
@@ -829,12 +836,12 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 **Problem**: Client and server diverge on data structure.
 
-**Impact:**
+### Impact (5)
 - Type errors at runtime
 - Data corruption
 - Validation failures
 
-**Mitigation:**
+### Mitigation (5)
 - Single source of truth in shared/schema.ts
 - TypeScript compilation catches mismatches
 - Integration tests verify contract
@@ -864,9 +871,9 @@ ls client/hooks/
 
 # 7. Test import paths work
 npm run check:types
-```
+```text
 
-### Backend API Components
+### Backend API Components (2)
 
 ```bash
 # 1. Verify server structure
@@ -876,7 +883,7 @@ ls server/{index.ts,routes.ts,storage.ts}
 ls server/middleware/{auth.ts,validation.ts,errorHandler.ts}
 
 # 3. Count API routes
-grep -E "app\.(get|post|put|delete)" server/routes.ts | wc -l
+ grep -E "app\.(get | post | put | delete)" server/routes.ts | wc -l
 
 # 4. Verify storage functions
 grep "export async function" server/storage.ts | wc -l
@@ -884,7 +891,7 @@ grep "export async function" server/storage.ts | wc -l
 # 5. Check shared schema imports
 grep "from '@shared/schema'" server/routes.ts
 grep "from '@shared/schema'" server/storage.ts
-```
+```text
 
 ### Component Interactions
 
@@ -893,7 +900,7 @@ grep "from '@shared/schema'" server/storage.ts
 grep -r "import.*from.*lib" client/screens/ | head -10
 
 # 2. Screen → Hook calls
-grep -r "use[A-Z]" client/screens/*.tsx | grep "=" | head -10
+ grep -r "use[A-Z]" client/screens/*.tsx | grep "=" | head -10
 
 # 3. Route → Middleware usage
 grep "authenticate" server/routes.ts | wc -l
@@ -904,7 +911,7 @@ grep "storage\." server/routes.ts | head -10
 
 # 5. Storage → Database queries
 grep "db\." server/storage.ts | head -10
-```
+```text
 
 ### Type Safety Across Components
 
@@ -920,7 +927,7 @@ grep "import.*from '@shared/schema'" server/*.ts | wc -l
 
 # 4. Verify Zod schema usage
 grep "Schema" server/routes.ts | head -10
-```
+```text
 
 ### Component Tests
 
@@ -936,7 +943,7 @@ npm test -- server/
 
 # 4. Check test coverage
 npm run test:coverage
-```
+```text
 
 ## Related Documentation
 
@@ -950,7 +957,7 @@ npm run test:coverage
 
 ## References
 
-- React Component Design: https://react.dev/learn/thinking-in-react
-- Express Middleware: https://expressjs.com/en/guide/using-middleware.html
-- React Query Architecture: https://tanstack.com/query/latest/docs/react/overview
-- Drizzle ORM: https://orm.drizzle.team/docs/overview
+- React Component Design: <https://react.dev/learn/thinking-in-react>
+- Express Middleware: <https://expressjs.com/en/guide/using-middleware.html>
+- React Query Architecture: <https://tanstack.com/query/latest/docs/react/overview>
+- Drizzle ORM: <https://orm.drizzle.team/docs/overview>

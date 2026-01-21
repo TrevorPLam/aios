@@ -1,4 +1,4 @@
-# TODO.md 
+# TODO.md
 
 Document Type: Workflow
 Last Updated: 2026-01-20
@@ -8,6 +8,7 @@ This file is the single source of truth for actionable work.
 If another document disagrees, the task record in this file wins (unless the Constitution overrides).
 
 ## Task schema (required)
+
 - **ID**: `T-###` (unique)
 - **Priority**: `P0 | P1 | P2 | P3`
 - **Type**: `SECURITY | RELEASE | DEPENDENCY | DOCS | QUALITY | BUG | FEATURE | CHORE`
@@ -21,12 +22,14 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: `S | M | L` (relative; explain if unclear)
 
 ### Priority meaning
+
 - **P0**: blocks production readiness or causes security/data loss
 - **P1**: high impact; do within 7 days
 - **P2**: important but not urgent; do within 30 days
 - **P3**: backlog/tech debt; do when convenient
 
 ### Ownership rule
+
 - **Owner: AGENT** = Responsible for all task execution across platforms and for architectural decisions.
 
 ---
@@ -35,7 +38,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 🔴 Critical Bugs
 
-**T-003A**
+#### T-003A
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
@@ -70,7 +74,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 📋 Planner Module Expansion
 
-**T-058**
+#### T-058
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -92,7 +97,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-059**
+### T-059
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -115,7 +121,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-060**
+### T-060
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -138,7 +145,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-061**
+### T-061
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -163,7 +171,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-082**
+### T-082
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -186,7 +195,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-083**
+### T-083
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -209,7 +219,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-084**
+### T-084
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -235,7 +246,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 📅 Calendar Module Expansion
 
-**T-062**
+#### T-062
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -258,7 +270,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-063**
+### T-063
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -280,7 +293,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-064**
+### T-064
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -302,7 +316,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-065**
+### T-065
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -323,7 +338,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-066**
+### T-066
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -344,7 +360,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-067**
+### T-067
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -366,7 +383,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-068**
+### T-068
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -388,7 +406,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-069**
+### T-069
+
 - **Priority**: P3
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -410,7 +429,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-070**
+### T-070
+
 - **Priority**: P3
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -431,7 +451,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-088**
+### T-088
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -453,7 +474,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-089**
+### T-089
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -479,7 +501,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 📋 Lists Module Expansion
 
-**T-076**
+#### T-076
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -503,7 +526,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-077**
+### T-077
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -527,7 +551,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-078**
+### T-078
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -550,7 +575,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-079**
+### T-079
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -572,7 +598,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-080**
+### T-080
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -595,7 +622,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-081**
+### T-081
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -617,7 +645,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-085**
+### T-085
+
 - **Priority**: P0
 - **Type**: QUALITY
 - **Owner**: AGENT
@@ -637,15 +666,16 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Test GDPR deletion (deleteUserAnalytics removes all events)
   - [ ] Test error handling (bad payload returns 400)
   - [ ] Test coverage >80%
-- **References**: 
+- **References**:
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5)
-  - server/__tests__/analytics.test.ts (NEW FILE)
+  - server/**tests**/analytics.test.ts (NEW FILE)
 - **Dependencies**: None (T-081-T-084 already complete)
 - **Effort**: M (4-6 hours)
 - **Note**: Last step for Phase 0. Once complete, unblocks Phase 1 (T-071).
 
-**T-086**
+### T-086
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -668,7 +698,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-087**
+### T-087
+
 - **Priority**: P3
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -690,7 +721,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: M
 
-**T-092**
+### T-092
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -716,7 +748,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 📧 Email Module Expansion
 
-**T-071**
+#### T-071
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -740,7 +773,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: None
 - **Effort**: L
 
-**T-072**
+### T-072
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -764,7 +798,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: T-071
 - **Effort**: L
 
-**T-073**
+### T-073
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -786,7 +821,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: T-071
 - **Effort**: M
 
-**T-074**
+### T-074
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -808,7 +844,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: T-071
 - **Effort**: M
 
-**T-075**
+### T-075
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -832,7 +869,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: T-072
 - **Effort**: M
 
-**T-090**
+### T-090
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -854,7 +892,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: T-071
 - **Effort**: M
 
-**T-091**
+### T-091
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -876,7 +915,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Dependencies**: T-071
 - **Effort**: M
 
-**T-001A**
+### T-001A
+
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: BUG
@@ -908,7 +948,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: S
 - **Completion Notes**: Time picker was already fully implemented in previous work. Verified functionality includes handleTimeChange, openTimePicker, and DateTimePicker component integration with haptic feedback.
 
-**T-001B**
+### T-001B
+
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: BUG
@@ -929,6 +970,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Completion Notes**: Added web-specific time input with validation and ensured swipe/selection logic remains intact for native platforms.
 
 **T-002A** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: BUG
@@ -951,7 +993,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Completion Notes**: Edge swipe gesture was already fully implemented in previous work. PanResponder handles gesture recognition, animation, haptic feedback, and edge cases. Comprehensive JSDoc documentation included.
 
-**T-002B**
+### T-002B
+
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: BUG
@@ -972,6 +1015,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Completion Notes**: Disabled swipe gesture on web while keeping the button entry point and native swipe behavior unchanged.
 
 **T-003** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: BUG
@@ -999,6 +1043,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 ### 🟡 Hidden Features (High Value)
 
 **T-004** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1015,13 +1060,13 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add search icon to header or CommandCenter (search button in CommandCenter header)
   - [x] Implement keyboard shortcut (Cmd+K / Ctrl+K) for web/desktop access
   - [x] Test search across all modules on iOS (navigation routing covers all 11 module types)
-- **References**: 
+- **References**:
   - client/screens/OmnisearchModalScreen.tsx (NEW)
   - client/navigation/AppNavigator.tsx:69, 234-243
   - client/screens/CommandCenterScreen.tsx:417-427
 - **Dependencies**: None
 - **Effort**: M
-- **Completion Notes**: 
+- **Completion Notes**:
   - Created OmnisearchModalScreen wrapper for navigation integration
   - Registered as modal screen in AppNavigator
   - Added search button between grid and bell icons in CommandCenter
@@ -1031,6 +1076,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Note**: Platform-agnostic implementation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-005** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1047,7 +1093,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add attention icon to header with badge count (deferred - already in CommandCenter)
   - [ ] Show attention indicators on BottomNav module buttons (deferred - future enhancement)
   - [ ] Test attention item display and dismissal on iOS (manual verification recommended)
-- **References**: 
+- **References**:
   - client/lib/attentionManager.ts
   - client/screens/AttentionCenterScreen.tsx
   - client/screens/SettingsMenuScreen.tsx:79-84 (NEW menu entry)
@@ -1061,6 +1107,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-006** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1078,7 +1125,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Real-time context change detection via contextEngine.onChange()
   - [ ] Test automatic context switching based on time/location on iOS (manual verification recommended)
   - [ ] Address TODOs at contextEngine.ts:165, 172, 331 (partially addressed - focus mode TODO remains)
-- **References**: 
+- **References**:
   - client/lib/contextEngine.ts
   - client/screens/AIPreferencesScreen.tsx:79-134 (CONTEXT_ZONES array)
   - client/screens/AIPreferencesScreen.tsx:214-227 (selectContextZone handler)
@@ -1095,7 +1142,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Context changes propagate to PersistentSidebar for module visibility
 - **Note**: Platform-agnostic logic. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-007**
+### T-007
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
@@ -1122,7 +1170,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - Confirmed history navigation stays reachable from Command Center secondary nav.
 - **Note**: Platform-agnostic logic. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-008**
+### T-008
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1154,6 +1203,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Completion Notes**: ModuleGrid accessible via grid icon in CommandCenter header and "All Modules" button in PersistentSidebar. Modal presentation configured.
 
 **T-009** ❌ REVERTED (2026-01-19)
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1170,7 +1220,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Set initialRouteName to "OnboardingWelcome" for new users (implemented)
   - [x] Add "skip onboarding" option with explanation (implemented in OnboardingWelcomeScreen.tsx:203-207)
   - [x] Test complete onboarding flow (verified working)
-- **References**: 
+- **References**:
   - REMOVED: client/screens/OnboardingWelcomeScreen.tsx
   - REMOVED: client/screens/OnboardingModuleSelectionScreen.tsx
   - REMOVED: client/lib/onboardingManager.ts
@@ -1178,7 +1228,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: S
 - **Completion Notes**: Onboarding system removed per user request. Future onboarding will focus on AI personality/behavior configuration (T-057), not module selection.
 
-**T-010**
+### T-010
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1199,7 +1250,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-011**
+### T-011
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1220,7 +1272,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-012**
+### T-012
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1241,7 +1294,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic memory management. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-013**
+### T-013
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1262,7 +1316,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: S
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-057**
+### T-057
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
@@ -1281,7 +1336,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Store preferences in user profile/context engine
   - [ ] Use preferences to configure AI behavior across all modules
   - [ ] Skip option that uses sensible defaults
-- **References**: 
+- **References**:
   - Previous onboarding: client/screens/OnboardingWelcomeScreen.tsx (removed)
   - AI preferences: client/screens/AIPreferencesScreen.tsx
   - Context engine: client/lib/contextEngine.ts
@@ -1294,6 +1349,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 ### 🔧 UX & Workflow Improvements
 
 **T-014** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1310,7 +1366,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Ensure all module settings screens have meaningful content (all have enable/disable toggles)
   - [x] Add "Module Settings" section in main Settings (already implemented in SettingsMenuScreen)
   - [x] Test settings navigation flow on iOS (manual verification recommended)
-- **References**: 
+- **References**:
   - client/components/HeaderNav.tsx:40-71 (HeaderRightNav enhanced)
   - client/screens/NotebookScreen.tsx:209
   - client/screens/PlannerScreen.tsx:342
@@ -1330,6 +1386,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-015** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1345,7 +1402,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] History accessible from System screen (already existed)
   - [ ] Consider adding history access from CommandCenter (deferred - Settings access sufficient)
   - [ ] Test history display and filtering on iOS (manual verification recommended)
-- **References**: 
+- **References**:
   - client/screens/HistoryScreen.tsx
   - client/screens/SettingsMenuScreen.tsx:86-92 (NEW menu entry)
   - client/screens/SystemScreen.tsx:79-88 (existing System → History path)
@@ -1358,7 +1415,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - HistoryScreen already registered in navigation and fully functional
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-016**
+### T-016
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: QUALITY
@@ -1379,7 +1437,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic error handling. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-017**
+### T-017
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
@@ -1401,7 +1460,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic UI patterns. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-018**
+### T-018
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
@@ -1422,7 +1482,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic network handling. AGENT can verify Android/Web compatibility in follow-up.
 
-**T-019**
+### T-019
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
@@ -1448,7 +1509,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 🎨 Design & Polish
 
-**T-020**
+#### T-020
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: CHORE
@@ -1470,7 +1532,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Theme refactoring. AGENT can verify Android/Web theme compatibility in follow-up.
 
-**T-021**
+### T-021
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: CHORE
@@ -1490,6 +1553,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 
 **T-022** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1512,7 +1576,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Note**: Platform-agnostic design system enhancement. AGENT can verify Android/Web compatibility in follow-up.
 - **Completion Notes**: Added h4 (16px/600), h5 (14px/600), h6 (12px/600) to Typography. Updated ThemedText component with new types. Documented usage guidelines with examples.
 
-**T-023**
+### T-023
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1533,7 +1598,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic theme refinement. AGENT can verify Android/Web contrast compatibility in follow-up.
 
-**T-024**
+### T-024
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1556,7 +1622,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic accessibility audit. AGENT can verify Android/Web accessibility features in follow-up.
 
-**T-025**
+### T-025
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1577,7 +1644,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic keyboard support. AGENT can verify Android/Web keyboard navigation in follow-up.
 
-**T-026**
+### T-026
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1598,7 +1666,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic animation optimization. AGENT can verify Android/Web animation performance in follow-up.
 
-**T-027**
+### T-027
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1624,6 +1693,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 ### 📊 Analytics Decision (Critical Business Decision)
 
 **T-028** ✅ COMPLETED (2026-01-20)
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P0
 - **Type**: CHORE
@@ -1641,7 +1711,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Create detailed implementation plan (docs/analytics/IMPLEMENTATION_PLAN.md)
   - [x] Document decision in ADR (docs/decisions/006-analytics-implementation-decision.md)
   - [x] Update TODO.md with phased subtasks (T-071 through T-080)
-- **References**: 
+- **References**:
   - docs/decisions/006-analytics-implementation-decision.md
   - docs/analytics/IMPLEMENTATION_PLAN.md
   - client/analytics/**/*, docs/analytics/*
@@ -1650,6 +1720,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Completion Notes**: Decision made to complete implementation based on 70% completion status, high-quality foundation, clear TODOs, business value, and active usage in app. Created comprehensive ADR-006 and implementation plan.
 
 **T-029** ❌ OBSOLETE (2026-01-20)
+
 - **Priority**: P1 → OBSOLETE
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -1664,6 +1735,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Note**: This task is replaced by specific phased implementation tasks below.
 
 **T-030** ❌ OBSOLETE (2026-01-20)
+
 - **Priority**: P1 → OBSOLETE
 - **Type**: CHORE
 - **Owner**: AGENT
@@ -1680,6 +1752,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 ### 🔐 Backend Infrastructure
 
 **T-031** ✅ COMPLETED (2026-01-19)
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
@@ -1697,7 +1770,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add structured logging with context (JSON format with metadata)
   - [x] Configure log levels for environments (LOG_LEVEL env var, NODE_ENV detection)
   - [x] Remove TODO at errorHandler.ts:28-30 (no TODO found, logger fully implemented)
-- **References**: 
+- **References**:
   - server/utils/logger.ts:1-115 (Winston logger implementation)
   - server/middleware/errorHandler.ts:30, 76, 90 (logger usage)
   - package.json:87 (Winston dependency)
@@ -1716,7 +1789,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 🧪 Testing & Quality Assurance
 
-**T-032**
+#### T-032
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1738,7 +1812,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic testing infrastructure. AGENT can verify Android/Web test compatibility in follow-up.
 
-**T-033**
+### T-033
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1760,7 +1835,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic end-to-end testing. AGENT can verify Android/Web workflow testing in follow-up.
 
-**T-034**
+### T-034
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1781,7 +1857,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic visual regression testing. AGENT can verify Android/Web screenshot comparison in follow-up.
 
-**T-035**
+### T-035
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1807,7 +1884,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 📚 Documentation Tasks
 
-**T-036**
+#### T-036
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -1828,7 +1906,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic library documentation. AGENT can verify Android/Web integration examples in follow-up.
 
-**T-037**
+### T-037
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -1850,7 +1929,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic component documentation. AGENT can verify Android/Web component compatibility in follow-up.
 
-**T-038**
+### T-038
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -1875,7 +1955,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 ### 🔁 TypeScript Type System Improvements
 
-**T-039**
+#### T-039
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
@@ -1896,7 +1977,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic event type system. AGENT can verify Android/Web event handling in follow-up.
 
-**T-040**
+### T-040
+
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
@@ -1918,7 +2000,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic theme hook migration. AGENT can verify Android/Web theme consistency in follow-up.
 
-**T-041**
+### T-041
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
@@ -1940,7 +2023,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic model interface audit. AGENT can verify Android/Web data model compatibility in follow-up.
 
-**T-042**
+### T-042
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
@@ -1961,7 +2045,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Effort**: M
 - **Note**: Platform-agnostic navigation patterns. AGENT can verify Android/Web navigation type safety in follow-up.
 
-**T-043**
+### T-043
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -1985,7 +2070,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Note**: Platform-agnostic component prop validation. AGENT can verify Android/Web component props in follow-up.
 - **Completion Notes**: Fixed ThemedText type="title" to "hero" in AlertsScreen. Changed AIAssistSheet context prop to module in BudgetScreen. Button interface confirmed correct.
 
-**T-044**
+### T-044
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -2012,14 +2098,15 @@ If another document disagrees, the task record in this file wins (unless the Con
 
 Following T-028 decision to COMPLETE analytics implementation, tasks broken down into phases:
 
-**NOTE:** Phase 0 (T-081 through T-085) must complete BEFORE Phase 1 (T-071) can begin.  
+**NOTE:** Phase 0 (T-081 through T-085) must complete BEFORE Phase 1 (T-071) can begin.
 **CRITICAL:** Analytics client POSTs to `/api/telemetry/events` but this endpoint doesn't exist!
 
 ---
 
 ### Phase 0: Server Foundation (BLOCKING) ⭐ NEW
 
-**T-081**
+#### T-081
+
 - **Priority**: P0
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2036,7 +2123,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [x] Indexes on: user_id, event_name, timestamp (DESC), session_id
   - [x] Timestamp with timezone for correct time handling
   - [x] Validation schemas (analyticsEventSchema, analyticsBatchSchema)
-- **References**: 
+- **References**:
   - shared/schema.ts:304-354
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.1)
@@ -2044,7 +2131,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: S (COMPLETE)
 - **Completion Date**: 2026-01-20
 
-**T-082**
+### T-082 (Instance 2)
+
 - **Priority**: P0
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2061,7 +2149,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [x] Add getAnalyticsEvents(userId, filters) for querying
   - [x] Add deleteUserAnalytics(userId) for GDPR deletion
   - [x] Error logging for monitoring
-- **References**: 
+- **References**:
   - server/storage.ts:748-850
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.2)
@@ -2069,7 +2157,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M (COMPLETE)
 - **Completion Date**: 2026-01-20
 
-**T-083**
+### T-083 (Instance 2)
+
 - **Priority**: P0
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2087,7 +2176,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [x] Call storage.saveAnalyticsEvents(events)
   - [x] Return 202 Accepted with confirmation
   - [x] Error handling for storage failures
-- **References**: 
+- **References**:
   - server/routes.ts:687-719
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.3)
@@ -2097,7 +2186,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Completion Date**: 2026-01-20
 - **Note**: Analytics now work end-to-end! Client → Server → Storage
 
-**T-084**
+### T-084 (Instance 2)
+
 - **Priority**: P0
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2115,7 +2205,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [x] Add analyticsBatchSchema (array of events, 1-100 limit)
   - [x] Schema compatible with client types
   - [x] Export for use in server validation
-- **References**: 
+- **References**:
   - shared/schema.ts:329-354
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.4)
@@ -2123,7 +2213,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: S (COMPLETE)
 - **Completion Date**: 2026-01-20
 
-**T-085**
+### T-085 (Instance 2)
+
 - **Priority**: P0
 - **Type**: QUALITY
 - **Owner**: AGENT
@@ -2142,20 +2233,21 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Test GDPR deletion (deleteUserAnalytics removes all events)
   - [ ] Test error handling (bad payload returns 400)
   - [ ] Test coverage >80%
-- **References**: 
+- **References**:
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5)
 - **Dependencies**: T-081, T-082, T-083, T-084 (all Phase 0 tasks)
 - **Effort**: M (4-6 hours)
 - **Note**: Validates Phase 0 complete. Unblocks Phase 1.
 
-**Phase 0 Total Effort:** 21-30 hours (1-1.5 weeks)  
+**Phase 0 Total Effort:** 21-30 hours (1-1.5 weeks)
 **Phase 0 Unblocks:** T-071 (Phase 1)
 
 ---
 
 ### Phase 1: Production Readiness (Client Features)
 
-**T-071**
+#### T-071
+
 - **Priority**: P0
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2173,7 +2265,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Task 1.4: Data Retention (15-20h) - Automatic cleanup
   - [ ] Task 1.5: Data Deletion API (10-15h) - User data deletion
   - [ ] Task 1.6: Testing & Documentation (10-20h) - 80%+ coverage
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Phase 1)
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Phase 1 details)
   - client/analytics/observability/inspector.ts
@@ -2185,7 +2277,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: L (80-120 hours total for Phase 1)
 - **Note**: Phase 1 is production-critical. Target: 53/100 → 70/100 score.
 
-**T-072**
+### T-072 (Instance 2)
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2201,14 +2294,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] User-to-group associations (multi-group support)
   - [ ] Group event tracking
   - [ ] Backend integration for group data
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.1)
   - client/analytics/advanced/groups.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables B2B analytics use cases.
 
-**T-073**
+### T-073 (Instance 2)
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2225,14 +2319,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Identify drop-off points
   - [ ] Time-to-convert metrics
   - [ ] Funnel comparison (A/B cohorts)
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.2)
   - client/analytics/advanced/funnels.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: High value for product optimization.
 
-**T-074**
+### T-074 (Instance 2)
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2248,14 +2343,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Experiment tracking (exposure, goals)
   - [ ] Statistical analysis
   - [ ] Experiment state management
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.3)
   - client/analytics/advanced/abTests.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables data-driven experimentation.
 
-**T-075**
+### T-075 (Instance 2)
+
 - **Priority**: P1
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2271,14 +2367,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Screen flow analysis (prev → current → next)
   - [ ] Entry/exit screens identification
   - [ ] Deep link tracking
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.4)
   - client/analytics/advanced/screenTracking.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (15-25 hours)
 - **Note**: Enhances useAnalyticsNavigation hook.
 
-**T-076**
+### T-076
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2294,14 +2391,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Auto-migration between versions
   - [ ] Breaking change detection
   - [ ] Schema evolution tracking
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.5)
   - client/analytics/schema/versioning.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (10-20 hours)
 - **Note**: Phase 2 target: 70/100 → 80/100 score.
 
-**T-077**
+### T-077 (Instance 2)
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2318,14 +2416,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] User targeting (by segment)
   - [ ] Kill switches
   - [ ] Flag exposure tracking
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.1)
   - client/analytics/production/featureFlags.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: L (30-40 hours)
 - **Note**: Enables safe feature rollouts.
 
-**T-078**
+### T-078 (Instance 2)
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2341,14 +2440,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Event transformation
   - [ ] Plugin enable/disable
   - [ ] Plugin error handling
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.2)
   - client/analytics/plugins/manager.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables custom analytics extensions.
 
-**T-079**
+### T-079 (Instance 2)
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2364,14 +2464,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Parallel sending
   - [ ] Destination-specific transforms
   - [ ] Destination error handling
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.3)
   - client/analytics/plugins/destinations.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (20-30 hours)
 - **Note**: Enables sending to multiple backends.
 
-**T-080**
+### T-080 (Instance 2)
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2387,14 +2488,15 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Sentry/PagerDuty integration
   - [ ] Automatic anomaly detection
   - [ ] Performance degradation alerts
-- **References**: 
+- **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.4)
   - client/analytics/production/monitoring.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: L (30-40 hours)
 - **Note**: Phase 3 target: 80/100 → 90/100 score. World-class infrastructure.
 
-**T-093**
+### T-093
+
 - **Priority**: P2
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2412,7 +2514,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Implement RuntimeValidator with type/range/enum checks
   - [ ] Schema-based validation at runtime
   - [ ] Add tests for sampling algorithms and validation rules
-- **References**: 
+- **References**:
   - client/analytics/quality/sampling.ts
   - client/analytics/quality/validation.ts
   - docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md (Data Quality section)
@@ -2420,7 +2522,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M (20-30 hours)
 - **Note**: Data quality improvements: 7/10 → 9/10 score
 
-**T-094**
+### T-094
+
 - **Priority**: P3
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2438,7 +2541,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Geographic routing with region detection
   - [ ] Nearest endpoint selection based on user location
   - [ ] Add tests for CLI commands and geo-routing logic
-- **References**: 
+- **References**:
   - client/analytics/devtools/cli.ts
   - client/analytics/devtools/ci.ts
   - client/analytics/performance/geoRouting.ts
@@ -2447,7 +2550,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M (25-35 hours)
 - **Note**: DX and performance improvements. Optional but high value.
 
-**T-095**
+### T-095
+
 - **Priority**: P3
 - **Type**: FEATURE
 - **Owner**: AGENT
@@ -2465,7 +2569,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Test utilities (assert event logged, get logged events)
   - [ ] Feature flag support (enable/disable analytics features)
   - [ ] Add tests for SLI calculations and mock client
-- **References**: 
+- **References**:
   - client/analytics/production/slo.ts
   - client/analytics/devtools/testing.ts
   - docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
@@ -2479,7 +2583,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 
 ### Documentation Consolidation (From Planning Docs)
 
-**T-045**
+#### T-045
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2500,7 +2605,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M
 - **Note**: Platform-agnostic documentation consolidation. AGENT can verify Android/Web documentation coverage in follow-up.
 
-**T-046**
+### T-046
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2521,7 +2627,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M
 - **Note**: Platform-agnostic security documentation. AGENT can verify Android/Web security practices in follow-up.
 
-**T-047**
+### T-047
+
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2542,7 +2649,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: S
 - **Note**: Platform-agnostic analysis documentation consolidation. AGENT can verify Android/Web analysis coverage in follow-up.
 
-**T-048**
+### T-048
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2563,7 +2671,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: S
 - **Note**: Platform-agnostic changelog. AGENT can verify Android/Web release notes in follow-up.
 
-**T-049**
+### T-049
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2584,7 +2693,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: S
 - **Note**: Platform-agnostic file naming conventions. AGENT can verify Android/Web file naming consistency in follow-up.
 
-**T-050**
+### T-050
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2608,7 +2718,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 
 ### Documentation Quality & Automation
 
-**T-051**
+#### T-051
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2629,7 +2740,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M
 - **Note**: Platform-agnostic getting started guide. AGENT can verify Android/Web setup instructions in follow-up.
 
-**T-052**
+### T-052
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2651,7 +2763,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic how-to guides. AGENT can verify Android/Web task documentation in follow-up.
 
-**T-053**
+### T-053
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
@@ -2674,7 +2787,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 
 ### Edge Cases & Testing Scenarios
 
-**T-054**
+#### T-054
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -2695,7 +2809,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M
 - **Note**: Platform-agnostic empty state design. AGENT can verify Android/Web empty states in follow-up.
 
-**T-055**
+### T-055
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -2716,7 +2831,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Effort**: M
 - **Note**: Platform-agnostic large dataset testing. AGENT can verify Android/Web performance at scale in follow-up.
 
-**T-056**
+### T-056
+
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
@@ -2740,6 +2856,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ---
 
 ## Notes
+
 - No automation is allowed to rewrite this file.
 - Optional scripts may generate `TODO.generated.md` for convenience; it is never authoritative.
 - This file was reorganized on 2025-01-18 to consolidate all tasks from:
@@ -2766,12 +2883,14 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **Remaining**: 75 tasks (19 analytics tasks: T-071-T-080, T-085, T-093-T-095; 1 new Lists task: T-092)
 
 **By Priority**:
+
 - P0 (Critical): 1 task (T-085 - analytics testing, ready to implement)
 - P1 (High): 18 tasks (7 complete: T-004, T-005, T-006, T-008, T-081, T-082, T-083, T-084; 1 reverted: T-009; 1 new: T-057; 5 blocked: T-071-T-076)
 - P2 (Medium): 40 tasks (8 complete: T-014, T-015, T-022, T-028, T-031; 5 blocked: T-077-T-080, T-093; 1 new: T-092)
 - P3 (Low): 20 tasks (2 complete: T-043; 2 obsolete: T-029, T-030; 2 blocked: T-094, T-095)
 
 **By Type**:
+
 - BUG: 2 (2 complete: T-002A, T-003)
 - FEATURE: 52 (10 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031, T-081, T-082, T-083, T-084; 1 reverted: T-009; 19 new analytics: T-057, T-071-T-080, T-093-T-095; 1 new lists: T-092)
 - QUALITY: 16 (2 complete: T-022, T-043; 1 new: T-085)
@@ -2781,12 +2900,14 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **Remaining**: 64 tasks
 
 **By Priority**:
+
 - P0 (Critical): 2 tasks (2 complete: T-002A, T-003)
 - P1 (High): 19 tasks (4 complete: T-004, T-005, T-006, T-008; 1 reverted: T-009; 7 new: T-057, T-076-T-081)
 - P2 (Medium): 35 tasks (4 complete: T-014, T-015, T-022, T-031)
 - P3 (Low): 16 tasks (1 complete: T-043)
 
 **By Type**:
+
 - BUG: 2 (2 complete: T-002A, T-003)
 - FEATURE: 37 (6 complete: T-004, T-005, T-006, T-008, T-014, T-015, T-031; 1 reverted: T-009; 7 new: T-057, T-076-T-081)
 - QUALITY: 14 (2 complete: T-022, T-043)
@@ -2797,9 +2918,11 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - DEPENDENCY: 1
 
 **By Owner**:
+
 - AGENT: 95 tasks (17 complete; includes platform work and external actions)
 
 **By Status**:
+
 - COMPLETE: 17 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-028, T-031, T-043, T-081, T-082, T-083, T-084)
 - READY: 57 tasks (includes T-085 - analytics testing ready to implement)
 - BLOCKED: 15 tasks (T-001B, T-002B blocked by iOS implementations; T-071-T-080 Phase 1-3 blocked by T-085; T-093-T-095 additional analytics blocked by Phase 1)
@@ -2809,11 +2932,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - OBSOLETE: 2 tasks (T-029, T-030)
 
 **By Effort**:
+
 - Small (S): 20 tasks (includes 4 complete Phase 0: T-081, T-084)
 - Medium (M): 65 tasks (includes T-082, T-083, T-085 complete; many Phase 1-3 analytics)
 - Large (L): 10 tasks (includes Phase 1 and 3 analytics: T-071, T-077, T-080)
 
 **Critical Path**:
+
 1. Fix critical bugs (T-001, T-002, T-003) ✅ COMPLETE
 2. Expose hidden features (T-004 through T-015) ✅ COMPLETE
 3. **Analytics Phase 0 (T-081-T-085) - Server Foundation ✅ 4/5 COMPLETE**
@@ -2833,6 +2958,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ## 🔴 Critical Priority - Bugs & Broken Functionality
 
 ### Fixed ✅
+
 - [x] Card component using undefined `type="h4"` in ThemedText
 - [x] AIAssistSheet duplicate object properties causing data corruption
 - [x] Undefined color constants (electric, electricBlue, deepSpace, slatePanel, textPrimary)
@@ -2841,6 +2967,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - [x] Hardcoded dark mode only (ignored system preference)
 
 ### Remaining Bugs
+
 - [x] **Attention Center Info Theme Property Missing** - FIXED (commit b832e21)
   - Files: AttentionCenterScreen.tsx, OnboardingWelcomeScreen.tsx
   - Code referenced `theme.info` which didn't exist in Colors
@@ -3286,6 +3413,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ## 📋 Status Summary
 
 ### ✅ Completed (6 items)
+
 - Critical bugs fixed
 - Light mode implemented
 - System color scheme detection added
@@ -3294,9 +3422,11 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - Comprehensive analysis report created
 
 ### 🔄 In Progress (0 items)
+
 - *Ready to start work on TODO items*
 
 ### ⏳ To Do (60+ items)
+
 - 2 remaining critical bugs
 - 8 major features hidden/not exposed
 - 80+ analytics TODOs
@@ -3311,12 +3441,14 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ## 🎯 Recommended Action Plan
 
 ### Phase 1: Critical Fixes (1-2 days)
+
 1. Fix Attention Center theme.info property
 2. Add info color to theme or replace with accent
 3. Fix module navigation error handling
 4. Test and fix any broken navigation flows
 
 ### Phase 2: Expose Hidden Features (3-5 days)
+
 1. Add Omnisearch to navigation (high user value)
 2. Add AttentionCenter to navigation
 3. Expose context switching in UI
@@ -3324,6 +3456,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 5. Connect Onboarding flow for new users
 
 ### Phase 3: Complete Workflows (5-7 days)
+
 1. Wire up all settings screens
 2. Add History and RecommendationHistory access
 3. Implement error boundaries at route level
@@ -3331,12 +3464,14 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 5. Test all user workflows end-to-end
 
 ### Phase 4: Polish & Performance (3-5 days)
+
 1. Replace hardcoded colors with theme
 2. Complete accessibility coverage
 3. Optimize animations and loading
 4. Add comprehensive testing
 
 ### Phase 5: Analytics Decision (1-2 days OR remove)
+
 1. Decide: Complete analytics or remove stubs
 2. If completing: Create detailed implementation plan
 3. If removing: Clean up all analytics code and references

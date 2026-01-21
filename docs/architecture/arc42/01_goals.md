@@ -13,17 +13,20 @@ This document defines what AIOS must do (functional requirements) and how well i
 AIOS must provide the following integrated modules with seamless data sharing:
 
 #### 1. Command Center
+
 - Display AI-powered recommendations as swipeable cards
 - Show confidence levels (high/medium/low) for each recommendation
 - Track user acceptance/decline actions
 - Provide evidence for recommendations
 - Support recommendation expiry and refresh
 
-**Files:**
+### Files
+
 - `/client/screens/CommandCenterScreen.tsx`
 - `/client/storage/database.ts` (recommendations methods)
 
 #### 2. Notebook
+
 - Create/edit/delete markdown notes
 - Parse and display tags (#tag) and links ([[link]])
 - Search across titles, body content, and tags
@@ -32,13 +35,15 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Detect similar notes using Jaccard similarity
 - 49 unit tests, 100% coverage
 
-**Files:**
+### Files (2)
+
 - `/client/screens/NoteEditorScreen.tsx`
 - `/client/screens/NotebookScreen.tsx`
 - `/client/storage/database.ts` (notes methods)
 - `/client/storage/__tests__/notebook.test.ts`
 
 #### 3. Planner
+
 - Create/edit/delete tasks with priorities (low/medium/high)
 - Organize tasks into projects
 - Support task hierarchies (parent/child relationships)
@@ -46,13 +51,15 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Track task dependencies
 - Advanced search and sorting
 
-**Files:**
+### Files (3)
+
 - `/client/screens/PlannerScreen.tsx`
 - `/client/screens/TaskDetailScreen.tsx`
 - `/client/screens/ProjectDetailScreen.tsx`
 - `/client/storage/database.ts` (tasks, projects methods)
 
 #### 4. Calendar
+
 - Create/edit/delete events
 - Multiple view modes (day/week/month/agenda)
 - Detect overlapping events (conflict detection)
@@ -61,13 +68,15 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Statistics dashboard (6 metrics)
 - 33 unit tests, 100% coverage
 
-**Files:**
+### Files (4)
+
 - `/client/screens/CalendarScreen.tsx`
 - `/client/screens/EventDetailScreen.tsx`
 - `/client/storage/database.ts` (events methods)
 - `/client/storage/__tests__/calendar.test.ts`
 
 #### 5. Email
+
 - List email threads with unread indicators
 - Search across subjects, senders, body, labels
 - Filter by status (all/unread/starred/important/archived)
@@ -76,12 +85,14 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Statistics dashboard
 - 28 database methods, 31 unit tests
 
-**Files:**
+### Files (5)
+
 - `/client/screens/EmailScreen.tsx`
 - `/client/screens/ThreadDetailScreen.tsx`
 - `/client/storage/database.ts` (email methods)
 
 #### 6. Messages
+
 - Direct and group conversations
 - Send/receive messages with attachments
 - Typing indicators and read receipts
@@ -90,47 +101,55 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Pin and mute conversations
 - AI assistance (draft messages, suggest responses, create tasks/events)
 
-**Files:**
+### Files (6)
+
 - `/client/screens/MessagesScreen.tsx`
 - `/client/screens/ConversationDetailScreen.tsx`
 - `/client/storage/database.ts` (conversations, messages methods)
 
 #### 7. Lists
+
 - Create/manage checklists with 7 categories (shopping, todo, etc.)
 - Templates for common list types
 - Priority levels
 - Item completion tracking
 - Share lists
 
-**Files:**
+### Files (7)
+
 - `/client/screens/ListsScreen.tsx`
 - `/client/screens/ListEditorScreen.tsx`
 - `/client/storage/database.ts` (lists methods)
 
 #### 8. Alerts
+
 - Create smart reminders with recurrence (daily/weekly/monthly)
 - Track effectiveness (snoozed/dismissed/acted)
 - Location-based alerts (future)
 - Multiple notification types
 
-**Files:**
+### Files (8)
+
 - `/client/screens/AlertsScreen.tsx`
 - `/client/screens/AlertDetailScreen.tsx`
 - `/client/storage/database.ts` (alerts methods)
 
 #### 9. Contacts
+
 - Integrate with native device contacts
 - Import from device contact list
 - Sharing preferences per contact
 - Search and filter
 - Contact details view
 
-**Files:**
+### Files (9)
+
 - `/client/screens/ContactsScreen.tsx`
 - `/client/screens/ContactDetailScreen.tsx`
 - `/client/storage/database.ts` (contacts methods)
 
 #### 10. Translator
+
 - Real-time translation between 12+ languages
 - Speech-to-text input
 - Text-to-speech output
@@ -138,24 +157,28 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Auto-translation with debouncing
 - Headphone detection
 
-**Files:**
+### Files (10)
+
 - `/client/screens/TranslatorScreen.tsx`
 - `/server/routes.ts` (translation API endpoint)
 
 #### 11. Photos
+
 - Gallery view with albums
 - Photo organization
 - Backup tracking
 - Import from device gallery
 - Basic editing capabilities
 
-**Files:**
+### Files (11)
+
 - `/client/screens/PhotosScreen.tsx`
 - `/client/screens/AlbumsScreen.tsx`
 - `/client/screens/PhotoDetailScreen.tsx`
 - `/client/storage/database.ts` (photos methods)
 
 #### 12. History
+
 - Activity log with filtering by type and date range
 - Search across activity messages
 - Statistics dashboard
@@ -163,28 +186,33 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - Bulk delete operations
 - 40+ unit tests
 
-**Files:**
+### Files (12)
+
 - `/client/screens/HistoryScreen.tsx`
 - `/client/storage/database.ts` (history methods)
 
 #### 13. Budget
+
 - Track income and expenses
 - Categorize transactions
 - Budget templates
 - Financial statistics
 - Recurring transaction support
 
-**Files:**
+### Files (13)
+
 - `/client/screens/BudgetScreen.tsx`
 - `/client/storage/database.ts` (budget methods)
 
 #### 14. Integrations
+
 - Connect third-party services
 - Health monitoring of integrations
 - OAuth support (future)
 - Webhook management
 
-**Files:**
+### Files (14)
+
 - `/client/screens/IntegrationsScreen.tsx`
 - `/client/screens/IntegrationDetailScreen.tsx`
 - `/client/storage/database.ts` (integrations methods)
@@ -192,22 +220,26 @@ AIOS must provide the following integrated modules with seamless data sharing:
 ### Cross-Cutting Requirements
 
 #### Navigation
+
 - Tab-based navigation for primary modules
 - Stack navigation for detail screens
 - Module handoff system with state preservation
 - Breadcrumb UI for navigation depth
 
-**Files:**
+### Files (15)
+
 - `/client/navigation/AppNavigator.tsx`
 - `/client/context/HandoffContext.tsx`
 
 #### Quick Capture
+
 - Global overlay for capturing notes, tasks, events, expenses
 - Accessible via long-press or button
 - Returns to exact context after capture
 - Mini-mode components for 5 modules
 
-**Files:**
+### Files (16)
+
 - `/client/components/QuickCaptureOverlay.tsx`
 - `/client/components/MiniCalendar.tsx`
 - `/client/components/MiniTask.tsx`
@@ -216,12 +248,14 @@ AIOS must provide the following integrated modules with seamless data sharing:
 - `/client/components/MiniContacts.tsx`
 
 #### Settings
+
 - General settings (theme, notifications, privacy)
 - Module-specific settings
 - AI preferences
 - System diagnostics
 
-**Files:**
+### Files (17)
+
 - `/client/screens/SettingsMenuScreen.tsx`
 - `/client/screens/GeneralSettingsScreen.tsx`
 - `/client/screens/AIPreferencesScreen.tsx`
@@ -234,21 +268,24 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 **Target:** Instant, responsive mobile experience with 60fps animations
 
-**Concrete Metrics:**
+### Concrete Metrics
+
 - Screen transitions: < 100ms
 - UI updates: < 16ms (60fps)
 - App launch: < 2 seconds
 - Search results: < 200ms
 - Background sync: Non-blocking
 
-**Architecture Decisions:**
+### Architecture Decisions
+
 - React Native Reanimated for 60fps animations
 - Lazy loading of screens and modules
 - AsyncStorage batch operations
 - useMemo/useCallback for render optimization
 - FlatList with virtualization for long lists
 
-**Verification:**
+### Verification
+
 ```bash
 # Performance profiling
 npm run expo:dev
@@ -260,9 +297,9 @@ npm run expo:static:build
 
 # Lighthouse audit (for web fallback)
 npm run start
-```
+```text
 
-**Files Implementing Performance:**
+### Files Implementing Performance
 - `/client/screens/*Screen.tsx` (useMemo, useCallback)
 - `/client/components/` (optimized components)
 - `/metro.config.js` (bundling optimization)
@@ -271,21 +308,21 @@ npm run start
 
 **Target:** Zero critical vulnerabilities, protect user privacy
 
-**Concrete Metrics:**
+### Concrete Metrics (2)
 - CodeQL scan: 0 critical/high vulnerabilities
 - npm audit: 0 critical vulnerabilities
 - JWT tokens: Secure with bcrypt hashing
 - Local storage: Encrypted AsyncStorage (future)
 - Third-party data sharing: Zero
 
-**Architecture Decisions:**
+### Architecture Decisions (2)
 - JWT authentication (see [ADR-003](../../decisions/003-jwt-auth.md))
 - bcrypt password hashing (10 rounds)
 - Local-first storage with AsyncStorage
 - No third-party analytics or tracking
 - HTTPS-only API communication
 
-**Verification:**
+### Verification (2)
 ```bash
 # Security scanning
 npm audit
@@ -296,9 +333,9 @@ npm run check:types
 
 # CodeQL scan (in CI/CD)
 # .github/workflows/codeql.yml
-```
+```text
 
-**Files Implementing Security:**
+## Files Implementing Security
 - `/server/middleware/auth.ts` (JWT validation)
 - `/server/middleware/validation.ts` (input validation)
 - `/server/routes.ts` (protected endpoints)
@@ -308,21 +345,21 @@ npm run check:types
 
 **Target:** Codebase that scales from 14 to 38+ modules
 
-**Concrete Metrics:**
+### Concrete Metrics (3)
 - New module development: < 3 days
 - Code duplication: < 5%
 - TypeScript coverage: 100%
 - Documentation coverage: 100% of public APIs
 - Cyclomatic complexity: < 10 per function
 
-**Architecture Decisions:**
+### Architecture Decisions (3)
 - Modular architecture with clear boundaries
 - Shared component library in `/client/components`
 - Consistent patterns across all modules
 - TypeScript strict mode enabled
 - Comprehensive inline documentation
 
-**Verification:**
+### Verification (3)
 ```bash
 # Type checking
 npm run check:types
@@ -335,9 +372,9 @@ npx jscpd client/ server/
 
 # Documentation
 npm run docs (if configured)
-```
+```text
 
-**Files Implementing Maintainability:**
+### Files Implementing Maintainability
 - `/client/components/` (reusable components)
 - `/client/hooks/` (custom hooks)
 - `/client/constants/` (centralized configuration)
@@ -348,21 +385,21 @@ npm run docs (if configured)
 
 **Target:** 100% test coverage on production modules
 
-**Concrete Metrics:**
+### Concrete Metrics (4)
 - Unit test coverage: 100% on production modules
 - Integration test coverage: 80%+
 - E2E test coverage: Critical user flows
 - Test execution time: < 30 seconds
 - CI/CD: All tests must pass
 
-**Architecture Decisions:**
+### Architecture Decisions (4)
 - Jest + React Native Testing Library
 - Unit tests for storage layer (100% on 14 modules)
 - Component tests for UI
 - E2E tests for critical flows
 - Automated testing in GitHub Actions
 
-**Verification:**
+### Verification (4)
 ```bash
 # Run all tests
 npm test
@@ -375,9 +412,9 @@ npm run test:watch
 
 # CI/CD
 # .github/workflows/test.yml
-```
+```text
 
-**Files Implementing Testability:**
+## Files Implementing Testability
 - `/client/storage/__tests__/*.test.ts` (storage tests)
 - `/server/__tests__/*.test.ts` (API tests)
 - `/jest.config.js` (Jest configuration)
@@ -387,21 +424,21 @@ npm run test:watch
 
 **Target:** Intuitive UI despite high complexity
 
-**Concrete Metrics:**
+### Concrete Metrics (5)
 - Onboarding completion: 90%+
 - Module adoption: 5+ modules per user within 1 month
 - Task completion time: < 3 taps for common tasks
 - Error rate: < 1% of user actions
 - App store rating: 4.5+
 
-**Architecture Decisions:**
+### Architecture Decisions (5)
 - Dark-first design with electric blue accent (#00D9FF)
 - Haptic feedback for all interactions
 - Smooth animations with React Native Reanimated
 - Progressive onboarding (start with 3 modules)
 - Context-aware UI with adaptive interface
 
-**Verification:**
+### Verification (5)
 ```bash
 # Visual regression testing (future)
 npm run test:visual
@@ -410,9 +447,9 @@ npm run test:visual
 npm run test:a11y
 
 # UX metrics (analytics dashboard)
-```
+```text
 
-**Files Implementing Usability:**
+## Files Implementing Usability
 - `/client/constants/theme.ts` (design system)
 - `/client/components/` (consistent UI components)
 - `/client/screens/OnboardingWelcomeScreen.tsx`
@@ -423,21 +460,21 @@ npm run test:a11y
 
 **Target:** 99.9% uptime with offline-first operation
 
-**Concrete Metrics:**
+### Concrete Metrics (6)
 - App crash rate: < 0.1%
 - Offline functionality: 100% of core features
 - Data sync success rate: 99%+
 - Network error recovery: Automatic retry with exponential backoff
 - State recovery: 100% after app restart
 
-**Architecture Decisions:**
+### Architecture Decisions (6)
 - Offline-first with AsyncStorage
 - Automatic retry logic for failed requests
 - Error boundaries to prevent app crashes
 - State persistence with AsyncStorage
 - Optimistic UI updates
 
-**Verification:**
+### Verification (6)
 ```bash
 # Test offline mode
 # 1. Start app
@@ -449,9 +486,9 @@ npm run monitor:errors
 
 # Crash reporting (future)
 # Sentry integration
-```
+```text
 
-**Files Implementing Reliability:**
+## Files Implementing Reliability
 - `/client/storage/database.ts` (offline storage)
 - `/client/utils/errorReporting.ts` (error handling)
 - `/client/App.tsx` (error boundaries)
@@ -464,6 +501,7 @@ npm run monitor:errors
 ### Performance Scenario
 
 **Scenario:** User navigates from Command Center to Notebook
+
 - **Source:** User tap on "View Notes" recommendation
 - **Stimulus:** Screen transition request
 - **Response:** Notebook screen renders with all notes visible
@@ -472,6 +510,7 @@ npm run monitor:errors
 ### Security Scenario
 
 **Scenario:** Unauthorized user attempts to access protected API endpoint
+
 - **Source:** Malicious client request
 - **Stimulus:** GET /api/notes without valid JWT token
 - **Response:** 401 Unauthorized error, no data exposed
@@ -480,6 +519,7 @@ npm run monitor:errors
 ### Maintainability Scenario
 
 **Scenario:** Developer adds new "Wallet" module
+
 - **Source:** Product requirement
 - **Stimulus:** New module implementation needed
 - **Response:** Module added with screen, storage methods, tests
@@ -488,6 +528,7 @@ npm run monitor:errors
 ### Testability Scenario
 
 **Scenario:** Developer modifies Notebook search logic
+
 - **Source:** Bug fix or feature enhancement
 - **Stimulus:** Code change in search method
 - **Response:** 49 existing tests run, new tests added
@@ -496,6 +537,7 @@ npm run monitor:errors
 ### Usability Scenario
 
 **Scenario:** New user completes onboarding
+
 - **Source:** First app launch
 - **Stimulus:** Onboarding flow starts
 - **Response:** User selects 3 modules, reaches home screen
@@ -504,6 +546,7 @@ npm run monitor:errors
 ### Reliability Scenario
 
 **Scenario:** User creates task while offline
+
 - **Source:** User action in airplane mode
 - **Stimulus:** Task creation request
 - **Response:** Task saved locally, syncs when online
@@ -527,21 +570,25 @@ npm run monitor:errors
 ## Failure Modes
 
 ### Performance Degradation
+
 - **Risk:** App becomes slow with 38+ modules
 - **Mitigation:** Lazy loading, code splitting, performance monitoring
 - **Detection:** Automated performance tests, user feedback
 
 ### Storage Overflow
+
 - **Risk:** AsyncStorage exceeds platform limits
 - **Mitigation:** Data pruning, archive strategies, SQLite migration
 - **Detection:** Storage monitoring, error tracking
 
 ### Test Coverage Regression
+
 - **Risk:** New features added without tests
 - **Mitigation:** CI/CD blocks merges without tests, code review process
 - **Detection:** Coverage reports in CI/CD
 
 ### Security Vulnerabilities
+
 - **Risk:** Dependencies introduce vulnerabilities
 - **Mitigation:** Automated dependency updates, CodeQL scanning
 - **Detection:** npm audit, CodeQL, security reviews
@@ -561,14 +608,14 @@ grep -r "export const" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
 
 # Check test coverage
 npm run test:coverage
-```
+```text
 
 ### Verify Quality Goals
 
 ```bash
 # Performance
 npm run expo:dev
-# Use React DevTools Profiler
+# Use React DevTools Profiler (2)
 
 # Security
 npm audit
@@ -584,7 +631,7 @@ npm run test:coverage
 
 # Reliability
 # Test offline mode manually
-```
+```text
 
 ### Verify Documentation Accuracy
 
@@ -592,7 +639,7 @@ npm run test:coverage
 # Check files mentioned in this document
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/CommandCenterScreen.tsx | head -20
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
-```
+```text
 
 ---
 

@@ -31,7 +31,7 @@ Each major documentation file includes a feedback section encouraging users to r
 
 ### Weekly Review Cycle
 
-**Schedule:**
+#### Schedule
 
 - **Monday 10 AM:** Review all feedback from previous week
 - **Assign:** Distribute to team members
@@ -39,11 +39,11 @@ Each major documentation file includes a feedback section encouraging users to r
 
 ### Triage Criteria
 
-| Priority   | Criteria                                                 | Response Time |
-|------------|----------------------------------------------------------|---------------|
-| **High**   | Blocks understanding, contains errors, security issue    | < 2 days      |
-| **Medium** | Unclear, missing context, could be improved              | < 1 week      |
-| **Low**    | Enhancement, nice-to-have, minor clarification           | < 1 month     |
+| Priority | Criteria | Response Time |
+| ------------ | ---------------------------------------------------------- | --------------- |
+| **High** | Blocks understanding, contains errors, security issue | < 2 days |
+| **Medium** | Unclear, missing context, could be improved | < 1 week |
+| **Low** | Enhancement, nice-to-have, minor clarification | < 1 month |
 
 ## Feedback Metrics
 

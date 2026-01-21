@@ -7,7 +7,7 @@
 
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
-**To make changes:**
+### To make changes
 1. Edit `docs/governance/constitution.md`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -19,28 +19,28 @@
 
 ### Client/Frontend Laws
 
-**1. TypeScript Strict Mode (Mandatory)**
+#### 1. TypeScript Strict Mode (Mandatory)
 - No `any` types without explicit justification and TODO
 - Full type coverage for all new code
 - Document exceptions with `// @ts-expect-error: reason`
 
-**2. Testing Requirements**
+### 2. Testing Requirements
 - All new features require tests (React Testing Library)
 - New components: 80% coverage minimum
 - Utility functions: 100% coverage expected
 - Test user flows, not implementation details
 
-**3. Error Handling**
+### 3. Error Handling
 - Use Error Boundaries for all screen-level components
 - User-facing errors must be friendly, not technical
 - Log errors for debugging but show friendly messages to users
 
-**4. Accessibility (a11y) Mandatory**
+### 4. Accessibility (a11y) Mandatory
 - All interactive elements must have accessibility props
 - Test with screen readers (VoiceOver, TalkBack)
 - Color contrast minimums: 4.5:1 for text, 3:1 for large text
 
-**5. Dependency Policy**
+### 5. Dependency Policy
 - Check security before adding dependencies
 - Large deps (>100kb) require ADR
 - Security-sensitive deps require ADR + security review
@@ -49,6 +49,6 @@
 
 ---
 
-**Source:** `docs/governance/constitution.md`  
-**Compiler:** `scripts/tools/compile-constitution.mjs`  
+**Source:** `docs/governance/constitution.md`
+**Compiler:** `scripts/tools/compile-constitution.mjs`
 **Last Generated:** 2026-01-21T00:44:46.238Z

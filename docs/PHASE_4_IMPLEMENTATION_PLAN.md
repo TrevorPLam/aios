@@ -1,7 +1,7 @@
 # Phase 4 Implementation Plan: Scale & Validation
 
-**Date:** January 16, 2026  
-**Status:** Planning  
+**Date:** January 16, 2026
+**Status:** Planning
 **Focus:** Tier-1 Module Addition & Infrastructure at Scale
 **Platform:** iOS-first implementation
 
@@ -16,12 +16,14 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 ## Goals
 
 ### Primary Objectives
+
 1. **Add Tier-1 Super App Modules** - Implement 6 essential super app modules
 2. **Validate IA at Scale** - Ensure Command Center, Sidebar, and Omnisearch work smoothly with 20+ modules
 3. **Implement User Testing Infrastructure** - Add telemetry and analytics for real-world feedback
 4. **Refine AI Predictions** - Improve recommendation accuracy with actual usage patterns
 
 ### Success Metrics
+
 - **Performance:** Module switching < 1s, search < 500ms
 - **Prediction Accuracy:** Command Center acceptance rate > 60%
 - **Cognitive Load:** User backtracks < 10% of actions
@@ -37,6 +39,7 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 **Goal:** Ensure app remains fast with 20+ modules
 
 #### Implementation Tasks
+
 - [ ] **Lazy Loading System**
   - Implement React.lazy() for module components
   - Create loading skeletons for each module type
@@ -62,6 +65,7 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
   - Test: Search results < 500ms
 
 #### Deliverables
+
 - `client/lib/lazyLoader.ts` - Module lazy loading system
 - `client/lib/prefetchEngine.ts` - Predictive prefetch logic
 - `client/lib/memoryManager.ts` - Memory optimization utilities
@@ -75,11 +79,12 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### Module 1: Wallet & Payments 💳
 
-**Purpose:** Digital wallet, P2P transfers, bill splitting  
-**Priority:** Critical for super app  
+**Purpose:** Digital wallet, P2P transfers, bill splitting
+**Priority:** Critical for super app
 **Complexity:** High (security, transactions)
 
 #### Core Features
+
 - [ ] Digital wallet with balance tracking
 - [ ] P2P money transfers
 - [ ] Bill splitting with contacts
@@ -88,12 +93,14 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - [ ] Request money functionality
 
 #### Implementation Files
+
 - `client/screens/WalletScreen.tsx`
 - `client/storage/wallet.ts` (database methods)
 - `client/models/types.ts` (Wallet, Transaction types)
 - `client/components/miniModes/WalletMiniMode.tsx`
 
 #### Security Requirements
+
 - PCI DSS compliance considerations
 - Encrypted storage for sensitive data
 - Transaction verification
@@ -101,23 +108,25 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - Audit logging
 
 #### Test Requirements
+
 - Unit tests for all database operations
 - Security tests for transaction flows
 - E2E tests for payment scenarios
 - Accessibility tests (WCAG 2.2 AA)
 
-**Estimated Effort:** 3-4 days  
+**Estimated Effort:** 3-4 days
 **Dependencies:** None
 
 ---
 
 ### Module 2: Marketplace & Commerce 🏪
 
-**Purpose:** User marketplace + business directory  
-**Priority:** High  
+**Purpose:** User marketplace + business directory
+**Priority:** High
 **Complexity:** Medium
 
-#### Core Features
+#### Core Features (2)
+
 - [ ] Product listing creation/editing
 - [ ] Browse marketplace by category
 - [ ] Search products and services
@@ -125,29 +134,32 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - [ ] User reviews and ratings
 - [ ] Favorite/bookmark items
 
-#### Implementation Files
+#### Implementation Files (2)
+
 - `client/screens/MarketplaceScreen.tsx`
 - `client/storage/marketplace.ts`
 - `client/models/types.ts` (Product, Listing types)
 - `client/components/miniModes/MarketplaceMiniMode.tsx`
 
 #### Integration Points
+
 - Wallet module (for payments)
 - Messages module (seller communication)
 - Photos module (product images)
 
-**Estimated Effort:** 2-3 days  
+**Estimated Effort:** 2-3 days
 **Dependencies:** None
 
 ---
 
 ### Module 3: Maps & Navigation 🗺️
 
-**Purpose:** Context-aware location intelligence  
-**Priority:** Critical  
+**Purpose:** Context-aware location intelligence
+**Priority:** Critical
 **Complexity:** High (external APIs)
 
-#### Core Features
+#### Core Features (3)
+
 - [ ] Location search and display
 - [ ] Directions and navigation
 - [ ] Saved places/favorites
@@ -155,34 +167,38 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - [ ] Nearby search (restaurants, etc.)
 - [ ] Route optimization
 
-#### Implementation Files
+#### Implementation Files (3)
+
 - `client/screens/MapsScreen.tsx`
 - `client/storage/maps.ts`
 - `client/models/types.ts` (Location, Route types)
 - `client/components/miniModes/MapsMiniMode.tsx`
 
 #### External Dependencies
+
 - MapKit (iOS) or similar mapping service
 - Geocoding API
 - Directions API
 
-#### Integration Points
+#### Integration Points (2)
+
 - Calendar module (event locations)
 - Food module (restaurant locations)
 - Ride module (pickup/dropoff)
 
-**Estimated Effort:** 4-5 days  
+**Estimated Effort:** 4-5 days
 **Dependencies:** MapKit integration
 
 ---
 
 ### Module 4: Events & Ticketing 🎫
 
-**Purpose:** Discover, book, coordinate events  
-**Priority:** Medium  
+**Purpose:** Discover, book, coordinate events
+**Priority:** Medium
 **Complexity:** Medium
 
-#### Core Features
+#### Core Features (4)
+
 - [ ] Event discovery and search
 - [ ] Ticket booking and management
 - [ ] Event calendar integration
@@ -190,30 +206,33 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - [ ] Event reminders
 - [ ] Social sharing
 
-#### Implementation Files
+#### Implementation Files (4)
+
 - `client/screens/EventsScreen.tsx`
 - `client/storage/events.ts` (expand existing)
 - `client/models/types.ts` (Ticket, RSVP types)
 - `client/components/miniModes/EventsMiniMode.tsx`
 
-#### Integration Points
+#### Integration Points (3)
+
 - Calendar module (add to calendar)
 - Wallet module (ticket purchase)
 - Maps module (event venue)
 - Contacts module (invite friends)
 
-**Estimated Effort:** 2-3 days  
+**Estimated Effort:** 2-3 days
 **Dependencies:** None
 
 ---
 
 ### Module 5: Food & Delivery 🍕
 
-**Purpose:** Unified restaurant ordering  
-**Priority:** High  
+**Purpose:** Unified restaurant ordering
+**Priority:** High
 **Complexity:** High (third-party APIs)
 
-#### Core Features
+#### Core Features (5)
+
 - [ ] Restaurant search and browse
 - [ ] Menu viewing
 - [ ] Order placement
@@ -221,33 +240,37 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - [ ] Favorites and past orders
 - [ ] Dietary preference filters
 
-#### Implementation Files
+#### Implementation Files (5)
+
 - `client/screens/FoodScreen.tsx`
 - `client/storage/food.ts`
 - `client/models/types.ts` (Restaurant, Order types)
 - `client/components/miniModes/FoodMiniMode.tsx`
 
-#### External Dependencies
+#### External Dependencies (2)
+
 - Restaurant API integration
 - Delivery service APIs
 
-#### Integration Points
+#### Integration Points (4)
+
 - Wallet module (payment)
 - Maps module (restaurant location, delivery address)
 - Calendar module (schedule delivery)
 
-**Estimated Effort:** 4-5 days  
+**Estimated Effort:** 4-5 days
 **Dependencies:** Restaurant API
 
 ---
 
 ### Module 6: Ride & Transportation 🚗
 
-**Purpose:** Multi-modal transport hub  
-**Priority:** Medium  
+**Purpose:** Multi-modal transport hub
+**Priority:** Medium
 **Complexity:** High (external APIs)
 
-#### Core Features
+#### Core Features (6)
+
 - [ ] Ride booking (taxi, rideshare)
 - [ ] Public transit directions
 - [ ] Multi-modal route planning
@@ -255,22 +278,25 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 - [ ] Favorite locations
 - [ ] Price comparison
 
-#### Implementation Files
+#### Implementation Files (6)
+
 - `client/screens/RideScreen.tsx`
 - `client/storage/rides.ts`
 - `client/models/types.ts` (Ride, Transit types)
 - `client/components/miniModes/RideMiniMode.tsx`
 
-#### External Dependencies
+#### External Dependencies (3)
+
 - Rideshare API integration
 - Transit data APIs
 
-#### Integration Points
+#### Integration Points (5)
+
 - Maps module (pickup/dropoff)
 - Wallet module (payment)
 - Calendar module (scheduled rides)
 
-**Estimated Effort:** 4-5 days  
+**Estimated Effort:** 4-5 days
 **Dependencies:** Rideshare/transit APIs
 
 ---
@@ -279,13 +305,15 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### 1. Command Center Validation
 
-**Test Scenarios:**
+#### Test Scenarios
+
 - [ ] Performance with 20+ modules
 - [ ] Recommendation accuracy with expanded module set
 - [ ] Quick actions display (top 5 recent from 20+ modules)
 - [ ] "All Modules" grid with 20+ items
 
-**Metrics:**
+### Metrics
+
 - Load time < 1s
 - Recommendation acceptance rate > 60%
 - No UI jank or stuttering
@@ -294,13 +322,15 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### 2. Sidebar Validation
 
-**Test Scenarios:**
+#### Test Scenarios (2)
+
 - [ ] Display top 10 modules by usage
 - [ ] "More" expansion with remaining modules
 - [ ] Smooth transitions between collapsed/expanded
 - [ ] Current module highlight persistence
 
-**Metrics:**
+### Metrics (2)
+
 - Animation smoothness (60fps)
 - Touch target accessibility (44pt minimum)
 - Contrast compliance (WCAG 2.2 AA)
@@ -309,13 +339,15 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### 3. Omnisearch Validation
 
-**Test Scenarios:**
+#### Test Scenarios (3)
+
 - [ ] Search across all 20+ modules
 - [ ] Result grouping by module
 - [ ] Relevance ranking across diverse content
 - [ ] Incremental search performance
 
-**Metrics:**
+### Metrics (3)
+
 - Search latency < 500ms
 - Relevance accuracy > 80%
 - Memory usage stable
@@ -324,13 +356,15 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### 4. User Testing Infrastructure
 
-**Implementation:**
+#### Implementation
+
 - [ ] Telemetry hooks in all new modules
 - [ ] Event tracking for module switches
 - [ ] Prediction accuracy logging
 - [ ] User journey tracking
 
-**Deliverables:**
+### Deliverables
+
 - `client/analytics/telemetry.ts` - Telemetry hooks
 - `docs/telemetry.md` - What we measure and why
 - Privacy-compliant data collection
@@ -342,7 +376,8 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### Documentation Updates
 
-**Required Updates:**
+#### Required Updates
+
 - [ ] README.md - Update feature list with Tier-1 modules
 - [ ] docs/architecture.md - Document scaling patterns
 - [ ] docs/ux.md - Update with new module flows
@@ -352,7 +387,8 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### Final Analysis Report
 
-**Contents:**
+#### Contents
+
 - What's built vs planned (Phase 1-4 summary)
 - UX wins and weak points
 - Security posture and risks
@@ -366,31 +402,37 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 ## Timeline
 
 ### Week 1: Infrastructure
+
 - Days 1-2: Lazy loading and suspense boundaries
 - Days 3-4: Predictive prefetch engine
 - Day 5: Memory optimization and profiling
 
 ### Week 2: Core Super App Modules
+
 - Days 1-2: Wallet & Payments (high priority, complex)
 - Days 3-4: Maps & Navigation (high priority, complex)
 - Day 5: Testing and refinement
 
 ### Week 3: Commerce & Lifestyle
+
 - Days 1-2: Marketplace & Commerce
 - Days 3-4: Food & Delivery
 - Day 5: Testing and refinement
 
 ### Week 4: Transportation & Events
+
 - Days 1-2: Ride & Transportation
 - Days 3-4: Events & Ticketing
 - Day 5: Integration testing
 
 ### Week 5: Validation
+
 - Days 1-2: Command Center, Sidebar, Omnisearch validation
 - Days 3-4: User testing infrastructure
 - Day 5: Performance profiling
 
 ### Week 6: Polish & Handoff
+
 - Days 1-3: Documentation updates
 - Days 4-5: Final analysis report
 - Day 6: Code review and handoff
@@ -400,6 +442,7 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 ## Risk Assessment
 
 ### High Risk
+
 - **Payment Security:** Wallet module requires strict security controls
   - **Mitigation:** Security review, encryption, audit logging
 - **Third-party API Dependencies:** Maps, Food, Ride depend on external services
@@ -408,12 +451,14 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
   - **Mitigation:** Early performance testing, lazy loading, prefetch
 
 ### Medium Risk
+
 - **UX Complexity:** More modules may overwhelm users
   - **Mitigation:** Progressive disclosure, smart recommendations
 - **Test Coverage:** New modules increase test surface area
   - **Mitigation:** Consistent test patterns, parallel testing
 
 ### Low Risk
+
 - **Code Quality:** Established patterns reduce risk
 - **Documentation:** Template-driven docs reduce effort
 
@@ -458,18 +503,21 @@ Phase 4 is considered complete when:
 ## Next Steps After Phase 4
 
 ### Immediate (Post-Phase 4)
+
 1. User testing with beta users
 2. Performance monitoring in production
 3. A/B testing of recommendations
 4. Iteration based on feedback
 
 ### Short-term (1-2 months)
+
 1. Tier-2 modules (Health, Learning, etc.)
 2. Advanced AI prediction refinements
 3. Cross-platform (Android) implementation
 4. International expansion features
 
 ### Long-term (3-6 months)
+
 1. Tier-3 innovative modules
 2. Enterprise features
 3. Plugin marketplace
@@ -477,6 +525,6 @@ Phase 4 is considered complete when:
 
 ---
 
-**Prepared by:** AIOS Development Team  
-**Date:** January 16, 2026  
+**Prepared by:** AIOS Development Team
+**Date:** January 16, 2026
 **Version:** 1.0 (Draft)

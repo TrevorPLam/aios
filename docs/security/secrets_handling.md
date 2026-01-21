@@ -1,11 +1,13 @@
 # Secrets Handling
 
 ## Plain English Summary
+
 Never put passwords, API keys, or other secrets directly in code. Use environment variables and secret management systems. Rotate secrets regularly. Never commit secrets to git.
 
 ## Best Practices
 
 ### DO
+
 - ✅ Store secrets in environment variables
 - ✅ Use AWS Secrets Manager / HashiCorp Vault in production
 - ✅ Use `.env.example` with placeholder values
@@ -13,7 +15,8 @@ Never put passwords, API keys, or other secrets directly in code. Use environmen
 - ✅ Rotate secrets every 90 days
 - ✅ Use different secrets per environment (dev/staging/prod)
 
-### DON'T  
+### DON'T
+
 - ❌ Commit secrets to git (check with git-secrets)
 - ❌ Hardcode secrets in code
 - ❌ Share secrets in Slack/email
@@ -39,7 +42,7 @@ if (!jwtSecret) {
 
 // ❌ BAD - Hardcoded
 const jwtSecret = 'my-secret-key-12345';
-```
+```text
 
 ## Rotation Procedure
 
@@ -52,11 +55,13 @@ const jwtSecret = 'my-secret-key-12345';
 ## Emergency Response
 
 If secret is leaked:
+
 1. **Immediate:** Rotate the secret
 2. **Within 1 hour:** Review access logs
 3. **Within 24 hours:** Complete postmortem
 4. **Notify affected parties** if customer data exposed
 
 ## Related
+
 - [Threat Model](./threat_model.md)
 - [Supply Chain Security](./supply_chain.md)

@@ -12,37 +12,37 @@ This document describes design principles and patterns that apply across the ent
 
 Every module follows the same pattern:
 
-```
+```text
 Module = Screen + Storage + Tests + Settings (optional)
-```
+```text
 
-**Example Pattern:**
+### Example Pattern
 ```typescript
 // All modules implement this interface (conceptually)
 interface Module {
   listScreen: React.Component;      // View all items
   detailScreen: React.Component;    // View/edit one item
   settingsScreen?: React.Component; // Module-specific settings
-  
+
   storage: {
     save: (item) => Promise<void>;
     get: () => Promise<Item[]>;
     update: (id, updates) => Promise<void>;
     delete: (id) => Promise<void>;
   };
-  
+
   tests: Jest.Suite; // 100% coverage
 }
-```
+```text
 
-**Files:**
+### Files
 - 14 modules × 2-3 screens = 43 screens
 - `/client/storage/database.ts` - All storage methods (200+)
 - `/client/storage/__tests__/` - One test file per module
 
 ### Data Model Patterns
 
-**Common Fields:**
+#### Common Fields
 ```typescript
 interface BaseEntity {
   id: string;            // UUID v4
@@ -50,9 +50,9 @@ interface BaseEntity {
   updatedAt: number;     // Unix timestamp
   userId?: string;       // Owner (future: multi-user)
 }
-```
+```text
 
-**Example:**
+### Example
 ```typescript
 interface Note extends BaseEntity {
   title: string;
@@ -65,11 +65,11 @@ interface Note extends BaseEntity {
 interface Task extends BaseEntity {
   title: string;
   description: string;
-  status: 'pending' | 'in-progress' | 'completed';
-  priority: 'low' | 'medium' | 'high';
+ status: 'pending' | 'in-progress' | 'completed';
+ priority: 'low' | 'medium' | 'high';
   projectId?: string;
 }
-```
+```text
 
 **Location:** `/client/models/types.ts`
 
@@ -79,7 +79,7 @@ interface Task extends BaseEntity {
 
 ### Colors
 
-**Palette:**
+#### Palette
 ```typescript
 // /client/constants/theme.ts
 export const Colors = {
@@ -87,41 +87,41 @@ export const Colors = {
   primary: '#00D9FF',        // Electric blue (brand color)
   primaryDark: '#00A8CC',    // Darker blue
   primaryLight: '#33E0FF',   // Lighter blue
-  
+
   // Background
   background: '#0A0E1A',     // Deep space (main background)
   surface: '#1A1F2E',        // Slate panel (cards, modals)
   surfaceLight: '#252B3E',   // Lighter surface
-  
+
   // Semantic
   success: '#00FF94',        // Green (positive actions)
   warning: '#FFB800',        // Orange (caution)
   error: '#FF3B5C',          // Red (errors, destructive actions)
   info: '#00D9FF',           // Blue (informational)
-  
+
   // Text
   text: '#FFFFFF',           // White (primary text)
   textSecondary: '#A0A8B8',  // Gray (secondary text)
   textDisabled: '#6B7280',   // Dark gray (disabled)
-  
+
   // UI
   border: '#2A3142',         // Border color
   borderLight: '#3A4152',    // Lighter border
   shadow: '#000000',         // Shadow
 };
-```
+```text
 
-**Usage:**
+### Usage
 ```typescript
 <View style={{ backgroundColor: Colors.surface }}>
   <Text style={{ color: Colors.text }}>Hello</Text>
   <Button style={{ backgroundColor: Colors.primary }} />
 </View>
-```
+```text
 
 ### Typography
 
-**Scale:**
+#### Scale
 ```typescript
 export const Typography = {
   hero: {
@@ -160,16 +160,16 @@ export const Typography = {
     lineHeight: 16,
   },
 };
-```
+```text
 
-**System Fonts:**
+### System Fonts
 - iOS: SF Pro
 - Android: Roboto
 - Fallback: System default
 
 ### Spacing
 
-**Scale:**
+#### Scale (2)
 ```typescript
 export const Spacing = {
   xs: 4,
@@ -179,19 +179,19 @@ export const Spacing = {
   xl: 32,
   xxl: 48,
 };
-```
+```text
 
-**Usage:**
+### Usage (2)
 ```typescript
 <View style={{ padding: Spacing.md, marginBottom: Spacing.lg }}>
   {/* Content */}
 </View>
-```
+```text
 
 ### Components
 
-**Shared Components:**
-```
+#### Shared Components
+```text
 /client/components/
 ├── Button.tsx           # Primary, secondary, text variants
 ├── Card.tsx             # Container with shadow
@@ -200,20 +200,20 @@ export const Spacing = {
 ├── Modal.tsx            # Full-screen or bottom-sheet modal
 ├── Badge.tsx            # Status badges
 └── ... (20+ more)
-```
+```text
 
-**Example - Button:**
+### Example - Button
 ```typescript
 <Button
   title="Save"
   onPress={handleSave}
-  variant="primary"        // primary | secondary | text
-  size="medium"            // small | medium | large
+ variant="primary"        // primary | secondary | text
+ size="medium"            // small | medium | large
   disabled={false}
   loading={isLoading}
   icon="check"             // Optional Feather icon
 />
-```
+```text
 
 ---
 
@@ -221,35 +221,35 @@ export const Spacing = {
 
 ### Client-Side Errors
 
-**Pattern:**
+#### Pattern
 ```typescript
 try {
   const result = await someOperation();
   return result;
 } catch (error) {
   console.error('Operation failed:', error);
-  
+
   // Log to error tracking (future)
   logError(error);
-  
+
   // Show user-friendly message
   Alert.alert(
     'Error',
     'Something went wrong. Please try again.',
     [{ text: 'OK' }]
   );
-  
+
   // Re-throw if critical
   throw error;
 }
-```
+```text
 
-**Error Utility:**
+### Error Utility
 ```typescript
 // /client/utils/errorReporting.ts
 export const logError = (error: Error, context?: any) => {
   console.error('Error:', error, context);
-  
+
   // Future: Send to Sentry
   // Sentry.captureException(error, { extra: context });
 };
@@ -257,27 +257,27 @@ export const logError = (error: Error, context?: any) => {
 export const showError = (message: string) => {
   Alert.alert('Error', message, [{ text: 'OK' }]);
 };
-```
+```text
 
 ### Server-Side Errors
 
-**Middleware:**
+#### Middleware
 ```typescript
 // /server/middleware/errorHandler.ts
 export const errorHandler = (err, req, res, next) => {
   console.error('Server error:', err);
-  
-  const status = err.status || 500;
-  const message = err.message || 'Internal server error';
-  
+
+ const status = err.status |  | 500;
+ const message = err.message |  | 'Internal server error';
+
   res.status(status).json({
     error: message,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 };
-```
+```text
 
-**Usage:**
+### Usage (3)
 ```typescript
 // /server/routes.ts
 app.get('/api/notes', async (req, res, next) => {
@@ -288,9 +288,9 @@ app.get('/api/notes', async (req, res, next) => {
     next(error); // Passes to errorHandler
   }
 });
-```
+```text
 
-**Error Types:**
+### Error Types
 ```typescript
 class ValidationError extends Error {
   status = 400;
@@ -303,7 +303,7 @@ class NotFoundError extends Error {
 class UnauthorizedError extends Error {
   status = 401;
 }
-```
+```text
 
 ---
 
@@ -311,7 +311,7 @@ class UnauthorizedError extends Error {
 
 ### Authentication Flow
 
-**Pattern:**
+#### Pattern (2)
 ```typescript
 // 1. User logs in
 const response = await fetch('/api/auth/login', {
@@ -330,9 +330,9 @@ const notesResponse = await fetch('/api/notes', {
     'Authorization': `Bearer ${token}`,
   },
 });
-```
+```text
 
-**JWT Structure:**
+### JWT Structure
 ```json
 {
   "header": { "alg": "HS256", "typ": "JWT" },
@@ -342,33 +342,33 @@ const notesResponse = await fetch('/api/notes', {
     "exp": 1640604800
   }
 }
-```
+```text
 
 ### Input Validation
 
-**Client-Side:**
+#### Client-Side
 ```typescript
 // Validate before sending
 const validateNote = (note: Partial<Note>): string[] => {
   const errors: string[] = [];
-  
-  if (!note.title || note.title.trim().length === 0) {
+
+ if (!note.title |  | note.title.trim().length === 0) {
     errors.push('Title is required');
   }
-  
+
   if (note.title && note.title.length > 200) {
     errors.push('Title must be less than 200 characters');
   }
-  
+
   if (note.body && note.body.length > 50000) {
     errors.push('Note is too long (max 50,000 characters)');
   }
-  
+
   return errors;
 };
-```
+```text
 
-**Server-Side:**
+### Server-Side
 ```typescript
 // /server/middleware/validation.ts
 import { z } from 'zod';
@@ -387,18 +387,18 @@ export const validateNote = (req, res, next) => {
     res.status(400).json({ error: 'Invalid note data', details: error });
   }
 };
-```
+```text
 
 ### Data Privacy
 
-**Principles:**
+#### Principles
 1. **Local-first:** Data stored on device by default
 2. **Minimal sync:** Only sync what user explicitly enables
 3. **No tracking:** Zero third-party analytics or tracking
 4. **User control:** User can export/delete all data
 5. **Encryption (future):** AsyncStorage encrypted, HTTPS for API
 
-**Implementation:**
+### Implementation
 ```typescript
 // All data stored locally
 await AsyncStorage.setItem('notes', JSON.stringify(notes));
@@ -406,7 +406,7 @@ await AsyncStorage.setItem('notes', JSON.stringify(notes));
 // Future: Encrypt before storage
 const encrypted = await encrypt(JSON.stringify(notes), userKey);
 await AsyncStorage.setItem('notes', encrypted);
-```
+```text
 
 ---
 
@@ -414,7 +414,7 @@ await AsyncStorage.setItem('notes', encrypted);
 
 ### Rendering Optimization
 
-**FlatList Virtualization:**
+#### FlatList Virtualization
 ```typescript
 <FlatList
   data={items}
@@ -426,9 +426,9 @@ await AsyncStorage.setItem('notes', encrypted);
   updateCellsBatchingPeriod={50} // Batch updates
   removeClippedSubviews={true}  // Memory optimization
 />
-```
+```text
 
-**Memoization:**
+### Memoization
 ```typescript
 // Expensive computation - memoize
 const sortedNotes = useMemo(() => {
@@ -441,9 +441,9 @@ const sortedNotes = useMemo(() => {
 const handlePress = useCallback((noteId: string) => {
   navigation.navigate('NoteEditor', { noteId });
 }, [navigation]);
-```
+```text
 
-**Code Splitting:**
+### Code Splitting
 ```typescript
 // Lazy load heavy screens
 const CalendarScreen = React.lazy(() => import('./CalendarScreen'));
@@ -453,21 +453,21 @@ const TranslatorScreen = React.lazy(() => import('./TranslatorScreen'));
 <Suspense fallback={<LoadingSpinner />}>
   <CalendarScreen />
 </Suspense>
-```
+```text
 
 ### Network Optimization
 
-**Debouncing:**
+#### Debouncing
 ```typescript
 // /client/hooks/useDebounce.ts
 export const useDebounce = <T>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  
+
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedValue(value), delay);
     return () => clearTimeout(handler);
   }, [value, delay]);
-  
+
   return debouncedValue;
 };
 
@@ -478,9 +478,9 @@ useEffect(() => {
     searchNotes(debouncedSearch);
   }
 }, [debouncedSearch]);
-```
+```text
 
-**Request Caching (Future):**
+### Request Caching (Future)
 ```typescript
 // Using React Query
 const { data, isLoading } = useQuery({
@@ -489,7 +489,7 @@ const { data, isLoading } = useQuery({
   staleTime: 5 * 60 * 1000,     // 5 minutes
   cacheTime: 10 * 60 * 1000,    // 10 minutes
 });
-```
+```text
 
 ---
 
@@ -497,7 +497,7 @@ const { data, isLoading } = useQuery({
 
 ### Haptic Feedback
 
-**Pattern:**
+#### Pattern (3)
 ```typescript
 import * as Haptics from 'expo-haptics';
 
@@ -513,18 +513,18 @@ Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 // Notification - for success/error
 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-```
+```text
 
-**Usage:**
+### Usage (4)
 ```typescript
 const handleDelete = async () => {
   // Heavy haptic before destructive action
   await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-  
+
   // Show confirmation
   Alert.alert('Delete Note', 'Are you sure?', [
     { text: 'Cancel', style: 'cancel' },
-    { 
+    {
       text: 'Delete',
       style: 'destructive',
       onPress: async () => {
@@ -535,11 +535,11 @@ const handleDelete = async () => {
     },
   ]);
 };
-```
+```text
 
 ### Loading States
 
-**Pattern:**
+#### Pattern (4)
 ```typescript
 const [loading, setLoading] = useState(false);
 
@@ -559,9 +559,9 @@ const loadData = async () => {
 if (loading) {
   return <ActivityIndicator size="large" color={Colors.primary} />;
 }
-```
+```text
 
-**Skeleton Screens:**
+### Skeleton Screens
 ```typescript
 // Show skeleton while loading
 {loading ? (
@@ -569,11 +569,11 @@ if (loading) {
 ) : (
   <FlatList data={items} renderItem={renderItem} />
 )}
-```
+```text
 
 ### Empty States
 
-**Pattern:**
+#### Pattern (5)
 ```typescript
 {items.length === 0 ? (
   <View style={styles.emptyState}>
@@ -584,11 +584,11 @@ if (loading) {
 ) : (
   <FlatList data={items} renderItem={renderItem} />
 )}
-```
+```text
 
 ### Error States
 
-**Pattern:**
+#### Pattern (6)
 ```typescript
 {error ? (
   <View style={styles.errorState}>
@@ -599,7 +599,7 @@ if (loading) {
 ) : (
   <Content />
 )}
-```
+```text
 
 ---
 
@@ -607,7 +607,7 @@ if (loading) {
 
 ### Unit Test Structure
 
-**Pattern:**
+#### Pattern (7)
 ```typescript
 // /client/storage/__tests__/module.test.ts
 describe('Module Storage', () => {
@@ -649,7 +649,7 @@ describe('Module Storage', () => {
     });
   });
 });
-```
+```text
 
 ### Component Test Pattern
 
@@ -665,7 +665,7 @@ describe('Button', () => {
   it('calls onPress when tapped', () => {
     const onPress = jest.fn();
     const { getByText } = render(<Button title="Click" onPress={onPress} />);
-    
+
     fireEvent.press(getByText('Click'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
@@ -675,12 +675,12 @@ describe('Button', () => {
     const { getByText } = render(
       <Button title="Click" onPress={onPress} disabled={true} />
     );
-    
+
     fireEvent.press(getByText('Click'));
     expect(onPress).not.toHaveBeenCalled();
   });
 });
-```
+```text
 
 ---
 
@@ -727,7 +727,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/constants/theme.ts
 
 # Ensure no hardcoded colors (should return nothing)
 grep -r "color.*#" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/ | grep -v "Colors\."
-```
+```text
 
 ### Verify Error Handling
 
@@ -737,7 +737,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/utils/errorReportin
 
 # Find try-catch blocks
 grep -r "try {" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
-```
+```text
 
 ### Verify Testing Patterns
 
@@ -750,7 +750,7 @@ npm run test:coverage
 
 # Verify all modules tested
 ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/__tests__/
-```
+```text
 
 ---
 

@@ -13,6 +13,7 @@ Preferred communication style: Simple, everyday language.
 ## System Architecture
 
 ### Frontend Architecture
+
 - **Framework**: React Native with Expo SDK 54, using the new architecture
 - **Navigation**: React Navigation with native stack navigator for smooth transitions
 - **State Management**: TanStack React Query for server state, local React state for UI
@@ -21,7 +22,9 @@ Preferred communication style: Simple, everyday language.
 - **Path Aliases**: `@/` maps to `./client/`, `@shared/` maps to `./shared/`
 
 ### Module Structure
+
 The app has five main modules, all accessible via a grid screen:
+
 1. **Command Center** - Swipeable AI recommendation cards with confidence meters and expiry indicators
 2. **Notebook** - Markdown editor with tag (#hashtag) and link ([[wikilink]]) parsing
 3. **Planner** - Tasks with priorities, due dates, projects, and AI-generated notes
@@ -29,13 +32,16 @@ The app has five main modules, all accessible via a grid screen:
 5. **Email** - UI mockup (no provider integration)
 
 ### Backend Architecture
+
 - **Server**: Express.js with TypeScript, running on port 5000
 - **API Pattern**: RESTful endpoints prefixed with `/api`
 - **Database**: Drizzle ORM configured for PostgreSQL, schema in `shared/schema.ts`
 - **Build**: esbuild for server bundling, outputs to `server_dist/`
 
 ### Local Data Storage
+
 The mobile app uses AsyncStorage for persistence with these data models:
+
 - Recommendations (AI cards with confidence, expiry, status)
 - Notes (markdown with tags/links)
 - Tasks & Projects (with priorities, dependencies)
@@ -45,6 +51,7 @@ The mobile app uses AsyncStorage for persistence with these data models:
 - AI Limits (usage tracking with 6-hour refresh cadence)
 
 ### AI Recommendation System
+
 - Cards have confidence levels (low/medium/high) displayed as HUD meters
 - Expiry timestamps show freshness
 - Users can accept/decline/dismiss cards
@@ -54,22 +61,26 @@ The mobile app uses AsyncStorage for persistence with these data models:
 ## External Dependencies
 
 ### Mobile/Client
+
 - **Expo**: Core framework with plugins for splash screen, haptics, blur effects, web browser
 - **React Navigation**: Native stack and bottom tabs navigation
 - **AsyncStorage**: Local data persistence
 - **TanStack React Query**: Server state management and caching
 
 ### Server
+
 - **Express**: HTTP server framework
 - **PostgreSQL + Drizzle ORM**: Database with type-safe queries
 - **Zod**: Schema validation with drizzle-zod integration
 
 ### Development
+
 - **TypeScript**: Full type safety across client and server
 - **ESLint + Prettier**: Code quality and formatting
 - **Babel**: Module resolution with path aliases
 
 ### Build & Deployment
+
 - Expo handles mobile builds (iOS/Android/Web)
 - Custom build script (`scripts/build.js`) for Replit deployment
 - Server builds via esbuild for production

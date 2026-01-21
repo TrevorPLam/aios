@@ -5,6 +5,7 @@ This document outlines a suggested implementation plan for the missing features 
 ## Phase 1: Foundation (MVP) - ~2-3 weeks
 
 ### 1.1 Testing Infrastructure (Priority: Critical) ✅
+
 **Estimated Time:** 2-3 days
 **Status:** COMPLETED
 
@@ -16,6 +17,7 @@ This document outlines a suggested implementation plan for the missing features 
 - [x] Update package.json scripts
 
 ### 1.2 Backend API Implementation (Priority: Critical) ✅
+
 **Estimated Time:** 1 week
 **Status:** COMPLETED
 
@@ -35,7 +37,8 @@ This document outlines a suggested implementation plan for the missing features 
 - [x] Add error handling middleware
 - [x] Add API documentation (Markdown format)
 
-**Files modified:**
+### Files modified
+
 - `server/routes.ts` - Added all route handlers
 - `server/storage.ts` - Implemented all CRUD operations
 - `server/middleware/auth.ts` - JWT authentication middleware
@@ -45,6 +48,7 @@ This document outlines a suggested implementation plan for the missing features 
 - `API_DOCUMENTATION.md` - Complete API documentation
 
 ### 1.3 Database Integration (Priority: Critical)
+
 **Estimated Time:** 3-4 days
 
 - [ ] Set up PostgreSQL connection
@@ -54,12 +58,14 @@ This document outlines a suggested implementation plan for the missing features 
 - [ ] Add database seeding script
 - [ ] Document database setup
 
-**Files to modify:**
+### Files to modify
+
 - `shared/schema.ts` - Add tables for all models
 - Create `server/db/` folder for migrations
 - Update `drizzle.config.ts` if needed
 
 ### 1.4 Environment Configuration (Priority: High)
+
 **Estimated Time:** 1 day
 
 - [ ] Create .env.example
@@ -68,13 +74,15 @@ This document outlines a suggested implementation plan for the missing features 
 - [ ] Generalize Replit-specific code
 - [ ] Add environment validation
 
-**Files to create:**
+### Files to create
+
 - `.env.example`
 - `docs/SETUP.md` (detailed setup guide)
 
 ## Phase 2: Core AI Features - ~2-3 weeks
 
 ### 2.1 AI Service Integration (Priority: Critical)
+
 **Estimated Time:** 1 week
 
 - [ ] Choose AI provider (OpenAI, Anthropic, local LLM)
@@ -84,11 +92,13 @@ This document outlines a suggested implementation plan for the missing features 
 - [ ] Add error handling for AI calls
 - [ ] Add fallback mechanisms
 
-**Files to create:**
+### Files to create (2)
+
 - `server/services/ai.ts`
 - `server/services/recommendations.ts`
 
 ### 2.2 Recommendation Generation (Priority: Critical)
+
 **Estimated Time:** 1 week
 
 - [ ] Implement context gathering from user data
@@ -99,16 +109,19 @@ This document outlines a suggested implementation plan for the missing features 
 - [ ] Add expiry management
 - [ ] Implement limit tier enforcement
 
-**Files to modify:**
+### Files to modify (2)
+
 - `server/services/recommendations.ts`
 - Create background job system for auto-refresh
 
 ### 2.3 AI Assist Actions (Priority: High)
+
 **Estimated Time:** 3-5 days
 
 Implement each AI assist action:
 
-**Notebook:**
+### Notebook
+
 - [ ] Grammar and spell check
 - [ ] Clarity improvement
 - [ ] Title suggestion
@@ -116,29 +129,34 @@ Implement each AI assist action:
 - [ ] Summarization
 - [ ] Checklist conversion
 
-**Planner:**
+### Planner
+
 - [ ] Priority suggestion
 - [ ] Due date recommendation
 - [ ] Task breakdown
 - [ ] Dependency identification
 
-**Calendar:**
+### Calendar
+
 - [ ] Focus time blocking
 - [ ] Conflict detection
 - [ ] Schedule optimization
 
-**Email:**
+### Email
+
 - [ ] Draft reply generation
 - [ ] Thread summarization
 - [ ] Follow-up drafting
 
-**Files to modify:**
+### Files to modify (3)
+
 - `client/components/AIAssistSheet.tsx` - Wire up actions
 - Create `server/services/ai-actions/` folder for each action
 
 ## Phase 3: Data Synchronization - ~1 week
 
 ### 3.1 Client-Server Sync (Priority: High)
+
 **Estimated Time:** 4-5 days
 
 - [ ] Implement sync strategy (optimistic updates, conflict resolution)
@@ -148,12 +166,14 @@ Implement each AI assist action:
 - [ ] Handle merge conflicts
 - [ ] Add background sync
 
-**Files to modify:**
+### Files to modify (4)
+
 - Create `client/services/sync.ts`
 - Update storage layer to use API
 - Add React Query mutations and queries
 
 ### 3.2 Real-time Updates (Priority: Medium)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Implement WebSocket connection
@@ -162,13 +182,15 @@ Implement each AI assist action:
 - [ ] Add connection status indicator
 - [ ] Handle reconnection logic
 
-**Files to modify:**
+### Files to modify (5)
+
 - `server/index.ts` - Add WebSocket server
 - Create `client/services/websocket.ts`
 
 ## Phase 4: Security & Authentication - ~1 week
 
 ### 4.1 Authentication System (Priority: Critical for Production)
+
 **Estimated Time:** 3-4 days
 
 - [ ] Implement JWT-based auth
@@ -179,13 +201,15 @@ Implement each AI assist action:
 - [ ] Add login/signup screens
 - [ ] Implement secure storage for tokens
 
-**Files to create:**
+### Files to create (3)
+
 - `client/screens/LoginScreen.tsx`
 - `client/screens/SignupScreen.tsx`
 - `server/middleware/auth.ts`
 - `client/services/auth.ts`
 
 ### 4.2 Data Security (Priority: High)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Implement input sanitization
@@ -198,6 +222,7 @@ Implement each AI assist action:
 ## Phase 5: Enhanced Features - ~2 weeks
 
 ### 5.1 Search Functionality (Priority: Medium)
+
 **Estimated Time:** 3-4 days
 
 - [ ] Add search to Notebook
@@ -208,6 +233,7 @@ Implement each AI assist action:
 - [ ] Add search filters and sorting
 
 ### 5.2 Advanced Task Management (Priority: Medium)
+
 **Estimated Time:** 3-4 days
 
 - [ ] Complete subtask implementation
@@ -218,6 +244,7 @@ Implement each AI assist action:
 - [ ] Implement task recurrence
 
 ### 5.3 Calendar Enhancements (Priority: Medium)
+
 **Estimated Time:** 3-4 days
 
 - [ ] Implement recurrence logic
@@ -227,6 +254,7 @@ Implement each AI assist action:
 - [ ] Add timezone support
 
 ### 5.4 Data Management (Priority: Medium)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Implement data export (JSON, CSV)
@@ -238,6 +266,7 @@ Implement each AI assist action:
 ## Phase 6: Quality & Polish - ~1 week
 
 ### 6.1 Accessibility (Priority: Medium)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Add accessibility labels
@@ -248,6 +277,7 @@ Implement each AI assist action:
 - [ ] Check color contrast (WCAG AA)
 
 ### 6.2 Performance Optimization (Priority: Medium)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Implement data pagination
@@ -258,6 +288,7 @@ Implement each AI assist action:
 - [ ] Add loading states and skeletons
 
 ### 6.3 Error Handling & Logging (Priority: Medium)
+
 **Estimated Time:** 2 days
 
 - [ ] Implement comprehensive error boundaries
@@ -268,6 +299,7 @@ Implement each AI assist action:
 - [ ] Add offline mode handling
 
 ### 6.4 Documentation (Priority: Medium)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Add JSDoc comments to components
@@ -280,6 +312,7 @@ Implement each AI assist action:
 ## Phase 7: DevOps & CI/CD - ~3-4 days
 
 ### 7.1 CI/CD Pipeline (Priority: High)
+
 **Estimated Time:** 2-3 days
 
 - [ ] Set up GitHub Actions
@@ -289,11 +322,13 @@ Implement each AI assist action:
 - [ ] Add automated builds
 - [ ] Add deployment automation
 
-**Files to create:**
+### Files to create (4)
+
 - `.github/workflows/ci.yml`
 - `.github/workflows/deploy.yml`
 
 ### 7.2 Pre-commit Hooks (Priority: Medium)
+
 **Estimated Time:** 1 day
 
 - [ ] Install husky
@@ -305,6 +340,7 @@ Implement each AI assist action:
 ## Ongoing Tasks
 
 ### Code Quality
+
 - [ ] Maintain test coverage above 70%
 - [ ] Regular dependency updates
 - [ ] Security vulnerability scanning
@@ -312,6 +348,7 @@ Implement each AI assist action:
 - [ ] Refactoring technical debt
 
 ### Monitoring
+
 - [ ] Set up error monitoring
 - [ ] Set up performance monitoring
 - [ ] Set up analytics (if needed)
@@ -336,12 +373,14 @@ These are small improvements that can be done independently:
 ## Resources Needed
 
 ### Third-party Services (Estimated costs)
+
 - **AI Provider** (OpenAI/Anthropic): $20-100/month depending on usage
 - **Database Hosting** (Supabase/Railway/Render): $0-25/month
 - **Error Monitoring** (Sentry): Free tier available
 - **Analytics** (Optional): Free tier available
 
 ### Team Skills Required
+
 - React Native / Expo development
 - Node.js / Express backend
 - PostgreSQL / SQL
@@ -378,5 +417,6 @@ Track these metrics to measure implementation progress:
 ## Completed Tasks
 
 ### Phase 1 Completions
+
 - ✅ **1.1 Testing Infrastructure** - Jest and React Native Testing Library configured with test coverage reporting
 - ✅ **1.2 Backend API Implementation** - Complete REST API with authentication, CRUD endpoints, validation, and error handling

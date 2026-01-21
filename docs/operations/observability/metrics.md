@@ -1,6 +1,6 @@
 # Metrics Strategy
 
-**Last Updated:** 2024-01-15  
+**Last Updated:** 2024-01-15
 **Owner:** Platform Team
 
 ## Plain English Summary
@@ -14,7 +14,8 @@ Metrics are numbers that tell us how our system is performing. Unlike logs (whic
 Based on Google SRE practices, measure these four signals:
 
 #### 1. Latency
-**What:** Time taken to service a request  
+
+**What:** Time taken to service a request
 **Why:** Slow responses mean poor user experience
 
 ```typescript
@@ -28,20 +29,21 @@ metrics.histogram('api.request.duration', duration, {
   path: req.route.path,
   status: res.statusCode,
 });
-```
+```text
 
-**Key Metrics:**
+### Key Metrics
 - P50 (median) response time
 - P95 response time
-- P99 response time  
+- P99 response time
 - Max response time
 
-**Targets:**
+### Targets
 - P95 < 200ms
 - P99 < 500ms
 
 #### 2. Traffic
-**What:** How much demand is on your system  
+
+**What:** How much demand is on your system
 **Why:** Understand usage patterns, capacity planning
 
 ```typescript
@@ -53,16 +55,17 @@ metrics.increment('api.requests', {
 
 // Track active connections
 metrics.gauge('api.active_connections', activeConnections);
-```
+```text
 
-**Key Metrics:**
+### Key Metrics (2)
 - Requests per second
 - Active connections
 - Concurrent users
 - Data transfer rate
 
 #### 3. Errors
-**What:** Rate of failed requests  
+
+**What:** Rate of failed requests
 **Why:** Errors directly impact users
 
 ```typescript
@@ -75,20 +78,21 @@ metrics.increment('api.errors', {
 
 // Track error rate
 metrics.gauge('api.error_rate', errorCount / totalRequests);
-```
+```text
 
-**Key Metrics:**
+### Key Metrics (3)
 - Error count
 - Error rate (errors / total requests)
 - Errors by endpoint
 - Errors by type
 
-**Targets:**
+### Targets (2)
 - Error rate < 0.1%
 - Zero 5xx errors
 
 #### 4. Saturation
-**What:** How "full" your service is  
+
+**What:** How "full" your service is
 **Why:** Predicts when you'll run out of capacity
 
 ```typescript
@@ -101,15 +105,15 @@ metrics.gauge('system.memory_usage', process.memoryUsage().heapUsed);
 // Database connections
 metrics.gauge('database.connections_used', pool.activeCount);
 metrics.gauge('database.connections_available', pool.idleCount);
-```
+```text
 
-**Key Metrics:**
+### Key Metrics (4)
 - CPU utilization
 - Memory utilization
 - Disk space used
 - Connection pool usage
 
-**Targets:**
+### Targets (3)
 - CPU < 70% sustained
 - Memory < 80%
 - Disk < 80%
@@ -120,14 +124,16 @@ metrics.gauge('database.connections_available', pool.idleCount);
 ### Application Metrics
 
 #### Authentication
+
 ```typescript
 metrics.increment('auth.login.attempts');
 metrics.increment('auth.login.success');
 metrics.increment('auth.login.failures', { reason: 'invalid_password' });
 metrics.histogram('auth.token.age', tokenAge);
-```
+```text
 
 #### Database
+
 ```typescript
 metrics.histogram('database.query.duration', duration, {
   query_type: 'SELECT',
@@ -137,24 +143,26 @@ metrics.increment('database.query.count', {
   table: 'users',
 });
 metrics.gauge('database.connection_pool.size', poolSize);
-```
+```text
 
 #### Cache
+
 ```typescript
 metrics.increment('cache.hits');
 metrics.increment('cache.misses');
 metrics.gauge('cache.hit_rate', hits / (hits + misses));
 metrics.gauge('cache.size', cacheSize);
-```
+```text
 
 #### Background Jobs
+
 ```typescript
 metrics.increment('jobs.started', { job_type: 'send_email' });
 metrics.increment('jobs.completed', { job_type: 'send_email' });
 metrics.increment('jobs.failed', { job_type: 'send_email' });
 metrics.histogram('jobs.duration', duration, { job_type: 'send_email' });
 metrics.gauge('jobs.queue_size', queueSize);
-```
+```text
 
 ### Business Metrics
 
@@ -174,12 +182,13 @@ metrics.histogram('feature.time_to_first_use', duration);
 // Revenue (if applicable)
 metrics.increment('purchases.completed', { product_type: 'subscription' });
 metrics.histogram('purchases.amount', amount, { currency: 'USD' });
-```
+```text
 
 ## Metric Types
 
 ### Counter
-**What:** A value that only increases  
+
+**What:** A value that only increases
 **When:** Counting events (requests, errors)
 
 ```typescript
@@ -188,19 +197,21 @@ metrics.counter('http_requests_total', {
   method: 'GET',
   status: '200',
 });
-```
+```text
 
 ### Gauge
-**What:** A value that can go up or down  
+
+**What:** A value that can go up or down
 **When:** Current state (memory usage, active connections)
 
 ```typescript
 // Current memory usage (goes up and down)
 metrics.gauge('memory_usage_bytes', process.memoryUsage().heapUsed);
-```
+```text
 
 ### Histogram
-**What:** Distribution of values  
+
+**What:** Distribution of values
 **When:** Measuring durations, sizes
 
 ```typescript
@@ -209,22 +220,23 @@ metrics.histogram('http_request_duration_seconds', duration, {
   method: 'POST',
   endpoint: '/api/users',
 });
-```
+```text
 
 ### Summary
-**What:** Similar to histogram, different calculation  
+
+**What:** Similar to histogram, different calculation
 **When:** Percentiles without histogram overhead
 
 ```typescript
 // Response time percentiles
 metrics.summary('http_response_time', duration);
-```
+```text
 
 ## Metric Naming Conventions
 
 Follow consistent naming:
 
-```
+```text
 <namespace>.<component>.<action>.<unit>
 
 Examples:
@@ -233,9 +245,9 @@ Examples:
 - cache.hit.count
 - system.memory.usage.bytes
 - job.send_email.duration.ms
-```
+```text
 
-**Rules:**
+### Rules
 - Use lowercase and underscores
 - Be specific but not verbose
 - Include units in name or labels
@@ -260,9 +272,9 @@ metrics.increment('api.requests', {
   request_id: req.id,           // ❌ Unique per request
   full_url: req.originalUrl,    // ❌ Too many variations
 });
-```
+```text
 
-**Label Guidelines:**
+### Label Guidelines
 - Low cardinality (< 100 unique values per label)
 - Finite set of values
 - Used for filtering and grouping
@@ -273,6 +285,7 @@ metrics.increment('api.requests', {
 ### Key Dashboards
 
 #### 1. System Health Dashboard
+
 - Error rate (all endpoints)
 - P95/P99 response times
 - Request rate
@@ -280,18 +293,21 @@ metrics.increment('api.requests', {
 - Active connections
 
 #### 2. API Performance Dashboard
+
 - Response time by endpoint
 - Error rate by endpoint
 - Request volume by endpoint
 - Slowest endpoints (P99)
 
 #### 3. Database Dashboard
+
 - Query duration (P95/P99)
 - Connection pool usage
 - Slow queries (> 1s)
 - Query count by type
 
 #### 4. Business Metrics Dashboard
+
 - Daily active users
 - Feature usage
 - Conversion rates
@@ -309,13 +325,13 @@ metrics.increment('api.requests', {
 
 ### Alert on Symptoms, Not Causes
 
-```
+```text
 ✅ GOOD: "Error rate > 5%" (symptom users experience)
 ❌ BAD: "CPU > 80%" (might not affect users)
 
 ✅ GOOD: "P95 response time > 500ms" (users see slowness)
 ❌ BAD: "Database connection count high" (might not cause issues yet)
-```
+```text
 
 ### Alert Rules
 
@@ -328,14 +344,14 @@ metrics.increment('api.requests', {
   for: 5m
   annotations:
     summary: "Error rate above 5% for 5 minutes"
-    
+
 # Service down
 - alert: ServiceDown
   expr: up{job="api-server"} == 0
   for: 1m
   annotations:
     summary: "Service is down"
-```
+```text
 
 #### Warning Alerts (Ticket)
 
@@ -346,14 +362,14 @@ metrics.increment('api.requests', {
   for: 10m
   annotations:
     summary: "Error rate above 1% for 10 minutes"
-    
+
 # High latency
 - alert: HighLatency
   expr: histogram_quantile(0.95, http_request_duration_seconds) > 0.5
   for: 10m
   annotations:
     summary: "P95 latency above 500ms"
-```
+```text
 
 ### Alert Fatigue Prevention
 
@@ -406,28 +422,28 @@ app.get('/metrics', async (req, res) => {
 // Middleware to track metrics
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
-    
+
     httpRequestsTotal.inc({
       method: req.method,
-      endpoint: req.route?.path || 'unknown',
+ endpoint: req.route?.path |  | 'unknown',
       status: res.statusCode,
     });
-    
+
     httpRequestDuration.observe(
       {
         method: req.method,
-        endpoint: req.route?.path || 'unknown',
+ endpoint: req.route?.path |  | 'unknown',
       },
       duration
     );
   });
-  
+
   next();
 });
-```
+```text
 
 ### StatsD / DataDog
 
@@ -457,11 +473,12 @@ metrics.histogram('request.duration', duration, {
 
 // Timing (convenience for duration)
 metrics.timing('database.query', queryDuration);
-```
+```text
 
 ## Best Practices
 
 ### 1. Cardinality Control
+
 ```typescript
 // ❌ BAD - Unbounded labels
 metrics.increment('requests', {
@@ -472,9 +489,10 @@ metrics.increment('requests', {
 metrics.increment('requests', {
   user_type: req.user.type,  // Just a few values: 'free', 'premium'
 });
-```
+```text
 
 ### 2. Consistent Naming
+
 ```typescript
 // ✅ GOOD - Consistent pattern
 'api.request.duration.ms'
@@ -485,9 +503,10 @@ metrics.increment('requests', {
 'api_request_time'
 'db-query-ms'
 'job_processing_duration_milliseconds'
-```
+```text
 
 ### 3. Include Units
+
 ```typescript
 // ✅ GOOD - Clear units
 'memory.usage.bytes'
@@ -497,9 +516,10 @@ metrics.increment('requests', {
 // ❌ BAD - Unclear units
 'memory.usage'  // Bytes? MB? Percent?
 'request.time'  // Seconds? Milliseconds?
-```
+```text
 
 ### 4. Measure at Source
+
 ```typescript
 // Measure where the work happens
 async function processPayment(payment) {
@@ -517,7 +537,7 @@ async function processPayment(payment) {
     metrics.histogram('payment.duration', Date.now() - start);
   }
 }
-```
+```text
 
 ## Related Documentation
 

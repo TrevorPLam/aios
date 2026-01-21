@@ -1,6 +1,6 @@
 # Logging Strategy
 
-**Last Updated:** 2024-01-15  
+**Last Updated:** 2024-01-15
 **Owner:** Platform Team
 
 ## Plain English Summary
@@ -14,15 +14,17 @@ This document describes how we log information in the AIOS system. Logs are like
 **✅ DO log:**
 
 1. **Application Start/Stop**
+
    ```typescript
    logger.info('Application starting', {
      version: packageInfo.version,
      environment: process.env.NODE_ENV,
      nodeVersion: process.version,
    });
-   ```
+   ```text
 
-2. **Incoming Requests** (API, significant events)
+1. **Incoming Requests** (API, significant events)
+
    ```typescript
    logger.info('API request', {
      method: req.method,
@@ -30,50 +32,55 @@ This document describes how we log information in the AIOS system. Logs are like
      userId: req.user?.id,
      requestId: req.id,
    });
-   ```
+   ```text
 
-3. **Outgoing Requests** (to external services)
+1. **Outgoing Requests** (to external services)
+
    ```typescript
    logger.info('External API call', {
      service: 'payment-processor',
      endpoint: '/charges',
      requestId: context.requestId,
    });
-   ```
+   ```text
 
-4. **Authentication Events**
+1. **Authentication Events**
+
    ```typescript
    logger.info('User login', {
      userId: user.id,
      email: user.email,
      ip: req.ip,
    });
-   
+
    logger.warn('Failed login attempt', {
      email: attemptedEmail,
      ip: req.ip,
      reason: 'invalid_password',
    });
-   ```
+   ```text
 
-5. **Authorization Failures**
+1. **Authorization Failures**
+
    ```typescript
    logger.warn('Authorization denied', {
      userId: user.id,
      resource: 'admin_panel',
      action: 'access',
    });
-   ```
+   ```text
 
-6. **Database Operations** (significant ones)
+1. **Database Operations** (significant ones)
+
    ```typescript
    logger.info('User created', {
      userId: newUser.id,
      method: 'email_registration',
    });
-   ```
+   ```text
 
-7. **Errors and Exceptions**
+1. **Errors and Exceptions**
+
    ```typescript
    logger.error('Database query failed', {
      error: error.message,
@@ -81,18 +88,20 @@ This document describes how we log information in the AIOS system. Logs are like
      query: sql,
      requestId: context.requestId,
    });
-   ```
+   ```text
 
-8. **Performance Issues**
+1. **Performance Issues**
+
    ```typescript
    logger.warn('Slow query detected', {
      query: 'SELECT * FROM users',
      duration: 5000, // milliseconds
      threshold: 1000,
    });
-   ```
+   ```text
 
-9. **State Changes** (important ones)
+1. **State Changes** (important ones)
+
    ```typescript
    logger.info('Order status changed', {
      orderId: order.id,
@@ -100,9 +109,10 @@ This document describes how we log information in the AIOS system. Logs are like
      to: 'completed',
      userId: user.id,
    });
-   ```
+   ```text
 
-10. **Background Job Status**
+1. **Background Job Status**
+
     ```typescript
     logger.info('Job completed', {
       jobId: job.id,
@@ -110,7 +120,7 @@ This document describes how we log information in the AIOS system. Logs are like
       duration: 1500,
       status: 'success',
     });
-    ```
+    ```text
 
 ### Never Log
 
@@ -138,15 +148,16 @@ logger.info('User login', {
   email: user.email,
   // No password logged
 });
-```
+```text
 
 ## Log Levels
 
 Use the correct log level for each message:
 
 ### ERROR
+
 **When:** Something failed that requires attention
-**Examples:**
+#### Examples
 - Unhandled exceptions
 - Failed external API calls
 - Database connection errors
@@ -159,11 +170,12 @@ logger.error('Payment processing failed', {
   amount: payment.amount,
   requestId: context.requestId,
 });
-```
+```text
 
 ### WARN
+
 **When:** Something unexpected but handled
-**Examples:**
+#### Examples (2)
 - Fallback to default behavior
 - Resource usage approaching limits
 - Failed login attempts
@@ -176,11 +188,12 @@ logger.warn('Rate limit approaching', {
   limit: 100,
   window: '1 minute',
 });
-```
+```text
 
 ### INFO
+
 **When:** Normal but significant events
-**Examples:**
+#### Examples (3)
 - Application start/stop
 - User registration/login
 - Important state changes
@@ -192,11 +205,12 @@ logger.info('User registered', {
   method: 'oauth',
   provider: 'google',
 });
-```
+```text
 
 ### DEBUG
+
 **When:** Detailed information for development
-**Examples:**
+#### Examples (4)
 - Function entry/exit
 - Variable values
 - Execution flow
@@ -208,7 +222,7 @@ logger.debug('Cache hit', {
   ttl: 300,
   requestId: context.requestId,
 });
-```
+```text
 
 **Note:** DEBUG logs disabled in production by default
 
@@ -227,7 +241,7 @@ logger.info('User login', {
   userAgent: req.headers['user-agent'],
   timestamp: new Date().toISOString(),
 });
-```
+```text
 
 ### Benefits of Structured Logging
 
@@ -252,9 +266,10 @@ interface StandardLogFields {
   environment: string;    // dev, staging, production
   version: string;        // App version
 }
-```
+```text
 
 Example:
+
 ```typescript
 logger.info('API request received', {
   requestId: 'req_abc123',
@@ -265,7 +280,7 @@ logger.info('API request received', {
   environment: 'production',
   version: '1.2.3',
 });
-```
+```text
 
 ## Request ID Tracing
 
@@ -293,9 +308,10 @@ axios.get(url, {
 
 // Return in response headers
 res.setHeader('X-Request-ID', requestId);
-```
+```text
 
 This allows tracing a single request across:
+
 - API server
 - Database queries
 - External API calls
@@ -305,16 +321,19 @@ This allows tracing a single request across:
 ## Log Rotation and Retention
 
 ### Rotation
+
 - **Local Development:** Console output, no rotation
 - **Staging:** Rotate daily, keep 7 days
 - **Production:** Rotate hourly, keep 1 day locally
 
 ### Retention
+
 - **Production Logs:** 90 days in log aggregation (e.g., DataDog, CloudWatch)
 - **Error Logs:** 1 year
 - **Audit Logs:** 7 years (compliance requirement)
 
 ### Storage
+
 - **Local:** `/var/log/aios/` (ephemeral)
 - **Centralized:** CloudWatch / DataDog / ELK Stack
 - **Archive:** S3 (for long-term retention)
@@ -337,7 +356,7 @@ const logger = winston.createLogger({
     }),
   ],
 });
-```
+```text
 
 ### Log Sampling
 
@@ -351,7 +370,7 @@ if (Math.random() < 0.01) {
     sampled: true,
   });
 }
-```
+```text
 
 ### Conditional DEBUG Logs
 
@@ -362,7 +381,7 @@ Only enable DEBUG in development or when investigating:
 const logLevel = process.env.NODE_ENV === 'production' ? 'info' : 'debug';
 
 logger.level = logLevel;
-```
+```text
 
 ## Implementation
 
@@ -372,7 +391,7 @@ logger.level = logLevel;
 import winston from 'winston';
 
 export const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+ level: process.env.LOG_LEVEL |  | 'info',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),
@@ -396,7 +415,7 @@ export const logger = winston.createLogger({
     new winston.transports.File({ filename: 'combined.log' }),
   ],
 });
-```
+```text
 
 ### Context Logger
 
@@ -415,7 +434,7 @@ const contextLogger = createContextLogger(req.id, req.user?.id);
 contextLogger.info('Processing payment', {
   amount: payment.amount,
 });
-```
+```text
 
 ## Querying Logs
 
@@ -434,13 +453,13 @@ fields @timestamp, query, duration
 | filter duration > 1000
 | sort duration desc
 | limit 20
-```
+```text
 
 ### DataDog
 
-```
+```text
 service:aios-api env:production status:error @userId:user_123
-```
+```text
 
 ## Assumptions
 
@@ -454,6 +473,7 @@ service:aios-api env:production status:error @userId:user_123
 ## Failure Modes
 
 ### Failure Mode 1: Log Flooding
+
 - **Symptom:** Too many logs, disk space exhausted, logs truncated
 - **Impact:** Can't find important logs, potential disk full
 - **Detection:** High log volume, disk space alerts
@@ -464,6 +484,7 @@ service:aios-api env:production status:error @userId:user_123
   - Increase retention storage
 
 ### Failure Mode 2: Sensitive Data in Logs
+
 - **Symptom:** PII, passwords, or tokens appear in logs
 - **Impact:** Security breach, compliance violation
 - **Detection:** Security audit, log review
@@ -474,6 +495,7 @@ service:aios-api env:production status:error @userId:user_123
   - Regular security audits
 
 ### Failure Mode 3: Missing Context
+
 - **Symptom:** Logs don't have enough information to debug issues
 - **Impact:** Extended incident resolution time
 - **Detection:** Engineers struggle to debug from logs
@@ -485,6 +507,7 @@ service:aios-api env:production status:error @userId:user_123
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # Check logs are being written
 tail -f /var/log/aios/combined.log
@@ -494,15 +517,17 @@ tail -1 /var/log/aios/combined.log | jq .
 
 # Check for sensitive data (should find nothing)
 grep -i "password" /var/log/aios/*.log
-```
+```text
 
 ### Automated Checks
+
 - [ ] All logs are JSON formatted
 - [ ] No sensitive data in logs
 - [ ] Request IDs present in all logs
 - [ ] Log aggregation receiving logs
 
 ### Success Criteria
+
 1. Can trace requests across system
 2. Can debug incidents from logs
 3. No sensitive data leaks

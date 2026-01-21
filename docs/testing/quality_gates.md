@@ -1,13 +1,15 @@
 # Quality Gates
 
 ## Plain English Summary
+
 Quality gates are automatic checks that must pass before code can be merged or deployed. They enforce our quality standards and prevent bugs from reaching production.
 
 ## CI Quality Gates
 
 ### Required for PR Merge
+
 - [ ] All unit tests pass
-- [ ] All integration tests pass  
+- [ ] All integration tests pass
 - [ ] Test coverage ≥ 80%
 - [ ] Linting passes (ESLint)
 - [ ] Type checking passes (TypeScript)
@@ -15,6 +17,7 @@ Quality gates are automatic checks that must pass before code can be merged or d
 - [ ] No high/critical security vulnerabilities
 
 ### Required for Deployment
+
 - [ ] All PR requirements pass
 - [ ] E2E tests pass
 - [ ] Performance tests pass
@@ -36,19 +39,20 @@ Quality gates are automatic checks that must pass before code can be merged or d
 
 - name: Security Audit
   run: npm audit --audit-level=high
-```
+```text
 
 ## Bypassing Gates
 
-**Never bypass for:**
+### Never bypass for
 - Security vulnerabilities
 - Failing tests
 - Build failures
 
-**May bypass with approval for:**
+### May bypass with approval for
 - Flaky test (must fix within 24h)
 - Emergency hotfix (fix forward after)
 
 ## Related
+
 - [Testing Strategy](./strategy.md)
 - [Test Pyramid](./test_pyramid.md)

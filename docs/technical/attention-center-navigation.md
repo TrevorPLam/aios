@@ -7,6 +7,7 @@ The Attention Center is now accessible from the Command Center header, displayin
 ## Features
 
 ### Badge Display
+
 - **Location**: Command Center header, next to clock and settings icons
 - **Icon**: Bell (Feather icon)
 - **Badge Count**: Displays urgent + attention priority items
@@ -14,6 +15,7 @@ The Attention Center is now accessible from the Command Center header, displayin
 - **Maximum Display**: Shows "99+" for counts over 99
 
 ### Navigation
+
 - **Tap**: Bell icon navigates to AttentionCenter screen
 - **Screen**: Full attention management interface with priority grouping
 - **Modal**: AttentionCenter opens as a modal overlay
@@ -21,21 +23,24 @@ The Attention Center is now accessible from the Command Center header, displayin
 ## Implementation Details
 
 ### Files Changed
-- `client/screens/CommandCenterScreen.tsx`: 
+
+- `client/screens/CommandCenterScreen.tsx`:
   - Added attention icon button (line 407)
   - Added badge component with count display
   - Added `attentionCount` state management
   - Integrated `attentionManager.getCounts()` in loadData()
 
 ### Badge Count Calculation
+
 ```typescript
 // Load attention counts - sum urgent and attention priority items
 const counts = attentionManager.getCounts();
 const totalCount = counts.urgent + counts.attention;
 setAttentionCount(totalCount);
-```
+```text
 
 ### Badge Styling
+
 ```typescript
 badge: {
   position: "absolute",
@@ -48,20 +53,23 @@ badge: {
   justifyContent: "center",
   paddingHorizontal: 4,
 }
-```
+```text
 
 ## User Experience
 
 ### Empty State
+
 - Badge is hidden when `attentionCount === 0`
 - Bell icon always visible for access
 
 ### Active State
+
 - Badge appears with count when items exist
 - Badge updates dynamically as items are added/dismissed
 - Red background indicates urgency
 
 ### Accessibility
+
 - Bell icon has proper accessibility labels
 - Badge text readable with high contrast
 - Navigation flow supports screen readers
@@ -69,6 +77,7 @@ badge: {
 ## Testing
 
 ### Manual Testing
+
 1. Open Command Center
 2. Verify bell icon in header
 3. Add urgent/attention items via other modules
@@ -77,6 +86,7 @@ badge: {
 6. Dismiss items - verify badge count updates
 
 ### Automated Testing
+
 - Attention manager tests: `client/lib/__tests__/attentionManager.test.ts`
 - All 25 tests passing, including `getCounts()` tests
 
@@ -95,12 +105,14 @@ badge: {
 - **Platform**: iOS
 
 ### Acceptance Criteria
+
 - [x] Add AttentionCenter to navigation stack (already existed)
 - [x] Add attention icon to header with badge count
 - [x] Show attention indicators on BottomNav module buttons (future enhancement)
 - [x] Test attention item display and dismissal on iOS
 
 ### Future Enhancements (AGENT)
+
 - [ ] Adapt badge styling for Android Material Design
 - [ ] Add web-responsive badge positioning
 - [ ] Test on Android and Web platforms

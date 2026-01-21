@@ -1,6 +1,6 @@
 # Threat Model
 
-**Last Updated:** 2024-01-15  
+**Last Updated:** 2024-01-15
 **Owner:** Security Team
 
 ## Plain English Summary
@@ -29,13 +29,15 @@ Who might attack:
 
 ### 1. Authentication & Authorization
 
-**Threats:**
+#### Threats
+
 - Credential stuffing attacks
 - Brute force login attempts
 - JWT token theft or manipulation
 - Session hijacking
 
-**Mitigations:**
+### Mitigations
+
 - Rate limiting on auth endpoints
 - Strong password requirements (min 8 chars)
 - JWT tokens with short expiration (7 days)
@@ -44,13 +46,15 @@ Who might attack:
 
 ### 2. API Security
 
-**Threats:**
+#### Threats (2)
+
 - SQL injection
 - Mass assignment vulnerabilities
 - API abuse/scraping
 - Denial of service (DoS)
 
-**Mitigations:**
+### Mitigations (2)
+
 - Parameterized queries (Drizzle ORM)
 - Input validation with Zod schemas
 - Rate limiting (100 req/min authenticated, 20 unauthenticated)
@@ -59,13 +63,15 @@ Who might attack:
 
 ### 3. Data Protection
 
-**Threats:**
+#### Threats (3)
+
 - Data exposure in logs
 - Unencrypted data at rest
 - Unencrypted data in transit
 - Backup data exposure
 
-**Mitigations:**
+### Mitigations (3)
+
 - Never log passwords or tokens
 - Database encryption at rest
 - HTTPS/TLS for all API calls
@@ -74,13 +80,15 @@ Who might attack:
 
 ### 4. Client Security
 
-**Threats:**
+#### Threats (4)
+
 - Man-in-the-middle attacks
 - Insecure data storage
 - Reverse engineering
 - Certificate pinning bypass
 
-**Mitigations:**
+### Mitigations (4)
+
 - Certificate pinning (mobile apps)
 - Secure storage for tokens (Keychain/KeyStore)
 - Code obfuscation (ProGuard for Android)
@@ -89,13 +97,15 @@ Who might attack:
 
 ### 5. Infrastructure
 
-**Threats:**
+#### Threats (5)
+
 - Unauthorized access to servers
 - Container/pod escape
 - Exposed management interfaces
 - Misconfigured security groups
 
-**Mitigations:**
+### Mitigations (5)
+
 - VPN for admin access
 - Security groups/firewall rules
 - Regular security updates
@@ -105,7 +115,7 @@ Who might attack:
 ## STRIDE Analysis
 
 | Threat | Example | Mitigation |
-|--------|---------|------------|
+| -------- | --------- | ------------ |
 | **Spoofing** | Attacker impersonates user | JWT authentication, HTTPS |
 | **Tampering** | Modified requests | Input validation, HTTPS |
 | **Repudiation** | User denies action | Audit logging |
@@ -116,6 +126,7 @@ Who might attack:
 ## Security Controls
 
 ### Authentication
+
 - [x] Password hashing with bcrypt (10 rounds)
 - [x] JWT tokens with expiration
 - [x] Rate limiting on auth endpoints
@@ -123,11 +134,13 @@ Who might attack:
 - [ ] OAuth 2.0 integration (planned)
 
 ### Authorization
+
 - [x] Role-based access control (RBAC)
 - [x] Resource-level permissions
 - [ ] Attribute-based access control (future)
 
 ### Data Protection
+
 - [x] HTTPS/TLS everywhere
 - [x] Database encryption at rest
 - [x] Secrets in environment variables
@@ -135,6 +148,7 @@ Who might attack:
 - [ ] Field-level encryption for PII (planned)
 
 ### Monitoring
+
 - [x] Failed login attempt tracking
 - [x] Error logging
 - [x] API access logs

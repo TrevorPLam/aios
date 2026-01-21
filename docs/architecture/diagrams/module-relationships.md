@@ -11,7 +11,7 @@ graph TB
     subgraph "Core Hub"
         CC[Command Center<br/>Recommendation Engine]
     end
-    
+
     subgraph "Productivity Modules"
         NB[Notebook<br/>72% Complete]
         PL[Planner<br/>72% Complete]
@@ -19,52 +19,52 @@ graph TB
         LST[Lists<br/>73% Complete]
         AL[Alerts<br/>72% Complete]
     end
-    
+
     subgraph "Communication Modules"
         EM[Email<br/>72% Complete]
         MSG[Messages<br/>72% Complete]
     end
-    
+
     subgraph "Personal Management"
         CT[Contacts<br/>69% Complete]
         BUD[Budget<br/>71% Complete]
         HIS[History<br/>71% Complete]
     end
-    
+
     subgraph "Media & Utility"
         PH[Photos<br/>69% Complete]
         TR[Translator<br/>71% Complete]
         INT[Integrations<br/>70% Complete]
     end
-    
-    CC -.->|Reads All| NB
-    CC -.->|Reads All| PL
-    CC -.->|Reads All| CAL
-    CC -.->|Reads All| EM
-    CC -.->|Reads All| AL
-    CC -.->|Reads All| LST
-    
-    PL -->|Creates| AL
-    CAL -->|Creates| AL
-    
-    NB -->|Links| CT
-    EM -->|Links| CT
-    MSG -->|Links| CT
-    
-    HIS -.->|Tracks| NB
-    HIS -.->|Tracks| PL
-    HIS -.->|Tracks| CAL
-    HIS -.->|Tracks| EM
-    
-    INT -.->|Connects| EM
-    INT -.->|Connects| CAL
-    INT -.->|Connects| BUD
-    
+
+ CC -.-> | Reads All | NB
+ CC -.-> | Reads All | PL
+ CC -.-> | Reads All | CAL
+ CC -.-> | Reads All | EM
+ CC -.-> | Reads All | AL
+ CC -.-> | Reads All | LST
+
+ PL --> | Creates | AL
+ CAL --> | Creates | AL
+
+ NB --> | Links | CT
+ EM --> | Links | CT
+ MSG --> | Links | CT
+
+ HIS -.-> | Tracks | NB
+ HIS -.-> | Tracks | PL
+ HIS -.-> | Tracks | CAL
+ HIS -.-> | Tracks | EM
+
+ INT -.-> | Connects | EM
+ INT -.-> | Connects | CAL
+ INT -.-> | Connects | BUD
+
     style CC fill:#00D9FF,color:#000
     style NB fill:#0099CC,color:#fff
     style PL fill:#0099CC,color:#fff
     style CAL fill:#0099CC,color:#fff
-```
+```text
 
 ## Data Sharing Patterns
 
@@ -74,15 +74,14 @@ The Command Center reads from all modules but doesn't write back. It's a pure co
 
 ```mermaid
 graph LR
-    A[Module Data] -->|Read Only| B[Command Center]
-    B -->|AI Analysis| C[Recommendations]
-    C -->|User Action| D[Target Module]
-    
+ A[Module Data] --> | Read Only | B[Command Center]
+ B --> | AI Analysis | C[Recommendations]
+ C --> | User Action | D[Target Module]
+
     style B fill:#00D9FF,color:#000
-```
+```text
 
-**Modules Feeding Command Center:**
-
+### Modules Feeding Command Center
 - Notebook → Recent notes, tags
 - Planner → Active tasks, priorities
 - Calendar → Upcoming events
@@ -99,13 +98,13 @@ graph TB
     A[Contacts Database] --> B[Email Module]
     A --> C[Messages Module]
     A --> D[Notebook Module]
-    
-    B -->|Display Name| B
-    C -->|Display Name| C
-    D -->|@mentions| D
-    
+
+ B --> | Display Name | B
+ C --> | Display Name | C
+ D --> | @mentions | D
+
     style A fill:#006699,color:#fff
-```
+```text
 
 ### Pattern 3: Cross-Module Creation (Alerts)
 
@@ -113,13 +112,13 @@ Planner and Calendar can create Alerts, establishing a parent-child relationship
 
 ```mermaid
 graph LR
-    A[Planner Task] -->|Create Reminder| B[Alert]
-    C[Calendar Event] -->|Create Reminder| B
-    B -->|Links Back| A
-    B -->|Links Back| C
-    
+ A[Planner Task] --> | Create Reminder | B[Alert]
+ C[Calendar Event] --> | Create Reminder | B
+ B --> | Links Back | A
+ B --> | Links Back | C
+
     style B fill:#FF6600,color:#fff
-```
+```text
 
 ### Pattern 4: Passive Tracking (History)
 
@@ -130,13 +129,13 @@ graph TB
     A[User Action in Any Module]
     B[History Event Logger]
     C[History Timeline]
-    
-    A -->|Emit Event| B
-    B -->|Store| C
-    C -.->|Analytics| D[Insights]
-    
+
+ A --> | Emit Event | B
+ B --> | Store | C
+ C -.-> | Analytics | D[Insights]
+
     style B fill:#006699,color:#fff
-```
+```text
 
 ### Pattern 5: External Integration (Integrations)
 
@@ -149,37 +148,36 @@ graph LR
     C[Email]
     D[Calendar]
     E[Budget]
-    
-    A <-->|OAuth/API| B
-    B -->|Sync| C
-    B -->|Sync| D
-    B -->|Sync| E
-    
+
+ A <--> | OAuth/API | B
+ B --> | Sync | C
+ B --> | Sync | D
+ B --> | Sync | E
+
     style B fill:#0099CC,color:#fff
     style A fill:#666,color:#fff
-```
+```text
 
 ## Module Communication Matrix
 
-| From/To         | CC | NB | PL  | CAL | EM  | MSG | LST | AL  | CT  | TR  | PH  | HIS | BUD | INT |
-|-----------------|----|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-| **Command Center**   | -  | ✅ | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ❌  | ❌  | ✅  | ✅  | ❌  |
-| **Notebook**         | ❌ | -  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | 🔗  | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **Planner**          | ❌ | ❌ | -   | ❌  | ❌  | ❌  | ❌  | ✅  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **Calendar**         | ❌ | ❌ | ❌  | -   | ❌  | ❌  | ❌  | ✅  | ❌  | ❌  | ❌  | ❌  | ❌  | 🔗  |
-| **Email**            | ❌ | ❌ | ❌  | ❌  | -   | ❌  | ❌  | ❌  | 🔗  | ❌  | ❌  | ❌  | ❌  | 🔗  |
-| **Messages**         | ❌ | ❌ | ❌  | ❌  | ❌  | -   | ❌  | ❌  | 🔗  | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **Lists**            | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **Alerts**           | ❌ | ❌ | 🔗  | 🔗  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **Contacts**         | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **Translator**       | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  | ❌  |
-| **Photos**           | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | ❌  | ❌  | ❌  |
-| **History**          | ❌ | ✅ | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | -   | ✅  | ✅  |
-| **Budget**           | ❌ | ❌ | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | -   | 🔗  |
-| **Integrations**     | ❌ | ❌ | ❌  | 🔗  | 🔗  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  | 🔗  | -   |
+| From/To | CC | NB | PL | CAL | EM | MSG | LST | AL | CT | TR | PH | HIS | BUD | INT |
+| ----------------- | ---- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- |
+| **Command Center** | - | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| **Notebook** | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔗 | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Planner** | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Calendar** | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔗 |
+| **Email** | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | 🔗 | ❌ | ❌ | ❌ | ❌ | 🔗 |
+| **Messages** | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | 🔗 | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Lists** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Alerts** | ❌ | ❌ | 🔗 | 🔗 | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Contacts** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Translator** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ | ❌ |
+| **Photos** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | ❌ | ❌ | ❌ |
+| **History** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ |
+| **Budget** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | - | 🔗 |
+| **Integrations** | ❌ | ❌ | ❌ | 🔗 | 🔗 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔗 | - |
 
-**Legend:**
-
+### Legend
 - ✅ = Reads data from target module
 - 🔗 = References entities in target module
 - ❌ = No direct interaction
@@ -196,13 +194,13 @@ graph TB
         C[Settings Context]
         D[Navigation Context]
     end
-    
+
     subgraph "All Modules"
         E[Module 1]
         F[Module 2]
         G[Module N]
     end
-    
+
     A --> E
     A --> F
     A --> G
@@ -215,12 +213,12 @@ graph TB
     D --> E
     D --> F
     D --> G
-    
+
     style A fill:#006699,color:#fff
     style B fill:#006699,color:#fff
     style C fill:#006699,color:#fff
     style D fill:#006699,color:#fff
-```
+```text
 
 ### Shared Utilities
 
@@ -243,14 +241,14 @@ graph TB
     B --> C2[Module Stack 1]
     B --> C3[Module Stack 2]
     B --> C14[Module Stack 14]
-    
+
     C1 --> D1[Command Center Screen]
     C2 --> D2[Module List]
     C2 --> D3[Module Detail]
     C2 --> D4[Module Edit]
-    
+
     style B fill:#00D9FF,color:#000
-```
+```text
 
 ## Module Independence Levels
 
@@ -294,12 +292,12 @@ graph LR
     B --> C[Load Tab Navigator]
     C --> D[Lazy Load Modules]
     D --> E{User Navigates?}
-    E -->|Yes| F[Load Module on Demand]
-    E -->|No| G[Keep in Memory]
-    
+ E --> | Yes | F[Load Module on Demand]
+ E --> | No | G[Keep in Memory]
+
     style B fill:#FF6600,color:#fff
     style D fill:#00D9FF,color:#000
-```
+```text
 
 ## Future Module Extensions
 

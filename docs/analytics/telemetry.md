@@ -22,6 +22,7 @@ The analytics system provides centralized, type-safe event tracking with two mod
 - **MODE B (Premium)**: "Ultimate Privacy-Respecting Data Compiler" - Privacy-first analytics with de-identification
 
 Key features:
+
 - ✅ Single instrumentation codebase for both modes
 - ✅ Strong TypeScript typing with compile-time validation
 - ✅ Offline queueing with automatic batching and retry
@@ -33,7 +34,8 @@ Key features:
 
 ### MODE A: Default Mode
 
-**What we collect:**
+#### What we collect
+
 - Stable user ID (if logged in)
 - Stable device/install ID
 - Full timestamps (ISO 8601)
@@ -44,13 +46,15 @@ Key features:
 
 ### MODE B: Privacy Mode
 
-**What we collect:**
+#### What we collect (2)
+
 - Ephemeral session ID (new each app launch)
 - Rotating pseudonymous ID (rotates daily)
 - Coarse time buckets (day of week, hour of day)
 - Event properties (bucketed/categorical only)
 
-**What we DON'T collect:**
+### What we DON'T collect
+
 - User ID
 - Device ID
 - Full timestamps
@@ -73,7 +77,7 @@ await analytics.disablePrivacyMode();
 
 // Check current mode
 const isPrivacy = analytics.isPrivacyModeEnabled();
-```
+```text
 
 When privacy mode is enabled, all subsequent events are processed with MODE B transformations. Events already queued are sanitized before being sent.
 
@@ -140,6 +144,7 @@ The canonical event taxonomy defines all events and their allowed properties. Ev
 The following types of data are **strictly forbidden** and automatically blocked:
 
 ### Content Data
+
 - ❌ Note text/bodies
 - ❌ Task titles/descriptions
 - ❌ Email subjects/bodies
@@ -149,6 +154,7 @@ The following types of data are **strictly forbidden** and automatically blocked
 - ❌ AI prompts or generated text
 
 ### Personal Information
+
 - ❌ Contact names
 - ❌ Email addresses
 - ❌ Phone numbers
@@ -156,11 +162,13 @@ The following types of data are **strictly forbidden** and automatically blocked
 - ❌ User-entered names or identifiers
 
 ### Media Data
+
 - ❌ Photo content or EXIF data
 - ❌ Precise location data
 - ❌ Voice recordings
 
 ### Identifiers
+
 - ❌ Advertising IDs
 - ❌ Cross-app tracking identifiers
 - ❌ Device fingerprints (in privacy mode)
@@ -168,6 +176,7 @@ The following types of data are **strictly forbidden** and automatically blocked
 ### What We DO Collect
 
 ✅ **Product telemetry only:**
+
 - Event names (what happened)
 - Module IDs (where it happened)
 - Item types (what kind of thing, not content)
@@ -181,24 +190,27 @@ The following types of data are **strictly forbidden** and automatically blocked
 When privacy mode is enabled, the following transformations are applied:
 
 ### 1. Identity Removal
+
 ```typescript
 // MODE A
 { user_id: "user_123", device_id: "device_456" }
 
 // MODE B (removed)
 { /* no stable IDs */ }
-```
+```text
 
 ### 2. Time Bucketing
+
 ```typescript
 // MODE A
 { occurred_at: "2026-01-16T14:32:15.123Z" }
 
 // MODE B
 { day_of_week: "friday", hour_of_day: 14 }
-```
+```text
 
 ### 3. Value Bucketing
+
 All numeric values are converted to categorical buckets:
 
 ```typescript
@@ -210,7 +222,7 @@ duration: 45 → duration_bucket: "5-30s"
 
 // Latency: <100ms, 100-300ms, 300ms-1s, 1-3s, 3s+
 latency: 250 → latency_bucket: "100-300ms"
-```
+```text
 
 ### 4. Property Allowlisting
 
@@ -222,8 +234,8 @@ Any property key matching forbidden patterns is automatically removed:
 
 ```typescript
 // These patterns trigger automatic removal:
-/text|body|content|title|subject|name|email|phone|address|message/i
-```
+ /text | body | content | title | subject | name | email | phone | address | message/i
+```text
 
 ## Module Registry
 
@@ -239,7 +251,7 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
   },
   // ... other modules
 };
-```
+```text
 
 This ensures consistency between navigation and analytics instrumentation.
 
@@ -253,7 +265,7 @@ Add the event name to `EventName` union in `types.ts`:
 export type EventName =
   | "existing_event"
   | "your_new_event"; // Add here
-```
+```text
 
 ### Step 2: Define Properties Interface
 
@@ -264,7 +276,7 @@ export interface YourNewEventProps {
   required_prop: string;
   optional_prop?: number;
 }
-```
+```text
 
 ### Step 3: Add to Event Props Map
 
@@ -275,7 +287,7 @@ export interface EventPropsMap {
   existing_event: ExistingEventProps;
   your_new_event: YourNewEventProps; // Add here
 }
-```
+```text
 
 ### Step 4: Add to Taxonomy
 
@@ -291,7 +303,7 @@ export const EVENT_TAXONOMY: Record<EventName, EventDefinition> = {
     optionalProps: ["optional_prop"],
   },
 };
-```
+```text
 
 ### Step 5: Add Convenience Method (Optional)
 
@@ -307,7 +319,7 @@ export async function trackYourNewEvent(
     optional_prop: optionalProp,
   });
 }
-```
+```text
 
 ### Step 6: Instrument
 
@@ -323,7 +335,7 @@ await analytics.trackYourNewEvent("value");
 await analytics.log("your_new_event", {
   required_prop: "value",
 });
-```
+```text
 
 ### Safety Checklist
 
@@ -342,7 +354,7 @@ Before adding a new event, verify:
 
 ```bash
 npm test client/analytics
-```
+```text
 
 ### Test Coverage
 
@@ -385,7 +397,7 @@ const isPrivacy = analytics.isPrivacyModeEnabled();
 
 // Shutdown (call before app exit)
 await analytics.shutdown();
-```
+```text
 
 ### Lifecycle Methods
 
@@ -394,7 +406,7 @@ await analytics.trackAppOpened(installAgeDays, networkState);
 await analytics.trackSessionStart();
 await analytics.trackSessionEnd();
 await analytics.trackAppBackgrounded();
-```
+```text
 
 ### Navigation Methods
 
@@ -407,7 +419,7 @@ await analytics.trackModulePinned(moduleId);
 await analytics.trackModuleUnpinned(moduleId);
 await analytics.trackModuleFocusStart(moduleId);
 await analytics.trackModuleFocusEnd(moduleId, durationSeconds);
-```
+```text
 
 ### CRUD Methods
 
@@ -417,7 +429,7 @@ await analytics.trackItemViewed(moduleId, itemType);
 await analytics.trackItemUpdated(moduleId, itemType);
 await analytics.trackItemDeleted(moduleId, itemType);
 await analytics.trackItemCompleted(moduleId, itemType);
-```
+```text
 
 ### AI Methods
 
@@ -428,7 +440,7 @@ await analytics.trackAISuggestionApplied(suggestionType, confidence);
 await analytics.trackAISuggestionRejected(suggestionType);
 await analytics.trackAIEditBeforeApply(suggestionType, editDistance);
 await analytics.trackAIAutoAction(actionType);
-```
+```text
 
 ### Performance Methods
 
@@ -436,14 +448,14 @@ await analytics.trackAIAutoAction(actionType);
 await analytics.trackScreenRenderTime(moduleId, renderTimeMs);
 await analytics.trackAPILatency(endpointKey, latencyMs);
 await analytics.trackErrorBoundaryHit(errorHash, moduleId?);
-```
+```text
 
 ### Settings Methods
 
 ```typescript
 await analytics.trackThemeChanged(themeId);
 await analytics.trackAccentColorChanged(accentColor);
-```
+```text
 
 ### Debug Methods
 
@@ -453,7 +465,7 @@ const stats = await analytics.getQueueStats();
 
 // Clear queue (testing only)
 await analytics.clearQueue();
-```
+```text
 
 ## Configuration
 
@@ -465,11 +477,11 @@ EXPO_PUBLIC_ANALYTICS_ENABLED=false
 
 # Custom endpoint (default: /api/telemetry/events)
 EXPO_PUBLIC_ANALYTICS_ENDPOINT=/custom/endpoint
-```
+```text
 
 ## Architecture
 
-```
+```text
 ┌─────────────────┐
 │  Instrumentation │
 │   (App code)     │
@@ -490,7 +502,7 @@ EXPO_PUBLIC_ANALYTICS_ENDPOINT=/custom/endpoint
                    │
                    ▼
             Backend endpoint
-```
+```text
 
 ## Backend Endpoint
 
@@ -516,7 +528,7 @@ The analytics system expects a POST endpoint at `/api/telemetry/events` (configu
     }
   ]
 }
-```
+```text
 
 ## Best Practices
 

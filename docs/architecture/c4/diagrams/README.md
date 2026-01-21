@@ -10,7 +10,8 @@ This guide explains how to edit the architecture diagrams in the C4 documentatio
 
 All C4 diagrams in this repository use **Mermaid** syntax embedded directly in markdown files. Mermaid is a text-based diagram language that GitHub renders natively.
 
-**Why Mermaid?**
+### Why Mermaid?
+
 - ✅ Renders in GitHub, GitLab, VS Code
 - ✅ Version control friendly (plain text)
 - ✅ PR diffs show diagram changes
@@ -18,7 +19,8 @@ All C4 diagrams in this repository use **Mermaid** syntax embedded directly in m
 - ✅ No external tools required
 - ✅ Accessible (text can be read by screen readers)
 
-**Alternative Considered:**
+### Alternative Considered
+
 - PlantUML (requires Java, external rendering)
 - Draw.io (binary files, harder to diff)
 - Lucidchart (proprietary, not in repo)
@@ -31,18 +33,17 @@ All C4 diagrams in this repository use **Mermaid** syntax embedded directly in m
 graph TB
     A[Component A] --> B[Component B]
     B --> C[Component C]
-```
+```text
 
 #### Graph Types
 
-**For C4 diagrams, we use `graph TB` (top to bottom):**
-
-```
+### For C4 diagrams, we use `graph TB` (top to bottom)
+```text
 graph TB    - Top to bottom (recommended)
 graph LR    - Left to right
 graph BT    - Bottom to top
 graph RL    - Right to left
-```
+```text
 
 #### Node Shapes
 
@@ -54,9 +55,9 @@ graph LR
     D{{Diamond - Decision}}
     E>Ribbon - External]
     F[[Subroutine]]
-```
+```text
 
-**In our C4 diagrams:**
+### In our C4 diagrams
 - `[Text]` - Systems, containers, components (rectangles)
 - `[(Text)]` - Databases (cylinders)
 - `([Text])` - Users/actors (rounded)
@@ -65,10 +66,10 @@ graph LR
 
 ```mermaid
 graph LR
-    A -->|Solid arrow<br/>with label| B
-    B -.->|Dotted arrow<br/>future/optional| C
-    C ==>|Thick arrow<br/>emphasis| D
-```
+ A --> | Solid arrow<br/>with label | B
+ B -.-> | Dotted arrow<br/>future/optional | C
+ C ==> | Thick arrow<br/>emphasis | D
+```text
 
 #### Subgraphs (Containers)
 
@@ -79,7 +80,7 @@ graph TB
         B[Component 2]
     end
     C[External System] --> A
-```
+```text
 
 #### Styling
 
@@ -87,12 +88,12 @@ graph TB
 graph LR
     A[Component A]
     B[Component B]
-    
+
     style A fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
     style B fill:#7ED321,stroke:#5FA319,stroke-width:3px
-```
+```text
 
-**Our Color Scheme:**
+### Our Color Scheme
 - Blue (#4A90E2) - Internal AIOS systems/components
 - Green (#7ED321) - Databases and storage
 - Orange (#F5A623) - Shared/library components
@@ -104,6 +105,7 @@ graph LR
 #### Step 1: Locate the Diagram
 
 Diagrams are embedded in markdown files:
+
 - System Context: `docs/architecture/c4/system_context.md`
 - Container: `docs/architecture/c4/container.md`
 - Component: `docs/architecture/c4/component.md`
@@ -117,47 +119,50 @@ Look for:
 ```mermaid
 graph TB
     ...diagram code...
-```
-````
+```text
+````text
 
 #### Step 3: Edit the Diagram
 
 Use any text editor:
+
 - VS Code (with Mermaid extension for preview)
 - GitHub web editor
 - Vim, Emacs, Nano, etc.
 
-**Example: Adding a new component**
+### Example: Adding a new component
 
 Before:
+
 ```mermaid
 graph TB
     A[Component A] --> B[Component B]
-```
+```text
 
 After:
+
 ```mermaid
 graph TB
     A[Component A] --> B[Component B]
     A --> C[New Component]
     style C fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px
-```
+```text
 
 #### Step 4: Preview
 
-**VS Code:**
+### VS Code
 1. Install "Markdown Preview Mermaid Support" extension
 2. Open markdown file
 3. Click preview button (Cmd+Shift+V or Ctrl+Shift+V)
 4. See rendered diagram
 
-**GitHub:**
+### GitHub
 1. Push changes to branch
 2. Open file in GitHub web interface
 3. Diagram renders automatically
 
-**Mermaid Live Editor:**
-1. Go to https://mermaid.live/
+### Mermaid Live Editor
+1. Go to <https://mermaid.live/>
 2. Copy/paste diagram code
 3. Edit and preview in real-time
 4. Copy back to file
@@ -172,7 +177,7 @@ npx -p @mermaid-js/mermaid-cli mmdc -i docs/architecture/c4/system_context.md -o
 git add docs/architecture/c4/system_context.md
 git commit -m "Update system context diagram to include new integration"
 git push
-```
+```text
 
 ### Common Editing Tasks
 
@@ -182,13 +187,13 @@ git push
 graph TB
     Existing[Existing System]
     New[New System<br/>Description<br/>----<br/>Technology]
-    
-    Existing --> New
-    
-    style New fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
-```
 
-**Steps:**
+    Existing --> New
+
+    style New fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
+```text
+
+### Steps
 1. Add node: `New[New System]`
 2. Add description lines with `<br/>`
 3. Add separator `----`
@@ -202,11 +207,11 @@ graph TB
 graph TB
     A[System A]
     B[System B]
-    
-    A -->|HTTPS<br/>JSON| B
-```
 
-**Format:** `A -->|Protocol<br/>Format| B`
+ A --> | HTTPS<br/>JSON | B
+```text
+
+ **Format:** `A --> | Protocol<br/>Format | B`
 
 #### Change Arrow Style
 
@@ -215,10 +220,10 @@ graph TB
     A[System A]
     B[System B]
     C[System C]
-    
-    A -->|Implemented| B
-    A -.->|Planned| C
-```
+
+ A --> | Implemented | B
+ A -.-> | Planned | C
+```text
 
 - `-->` Solid line (implemented, active)
 - `-.->` Dotted line (planned, future, optional)
@@ -229,11 +234,11 @@ graph TB
 ```mermaid
 graph TB
     A[Component]
-    
-    style A fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
-```
 
-**Parameters:**
+    style A fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
+```text
+
+### Parameters
 - `fill` - Background color
 - `stroke` - Border color
 - `stroke-width` - Border thickness (px)
@@ -248,9 +253,9 @@ graph TB
         B[Component 2]
         A --> B
     end
-    
+
     External[External] --> A
-```
+```text
 
 #### Multi-line Labels
 
@@ -259,7 +264,7 @@ Use `<br/>` for line breaks:
 ```mermaid
 graph TB
     A[Mobile Application<br/>React Native + Expo<br/>----<br/>iOS & Android]
-```
+```text
 
 ### Best Practices
 
@@ -299,27 +304,29 @@ graph TB
 
 **Problem:** GitHub shows code block instead of diagram.
 
-**Causes:**
+### Causes
 - Syntax error in Mermaid code
 - Missing closing backticks
 - Wrong language identifier
 
-**Fix:**
-1. Check syntax: https://mermaid.live/
+### Fix
+1. Check syntax: <https://mermaid.live/>
 2. Verify code block:
-   ````
+
+   ````text
    ```mermaid
    graph TB
        A --> B
-   ```
-   ````
-3. No extra spaces before closing backticks
+   ```text
+   ````text
+
+1. No extra spaces before closing backticks
 
 #### Arrows Point Wrong Direction
 
 **Problem:** Diagram layout is messy.
 
-**Fix:**
+### Fix (2)
 - Change graph direction: `graph TB` vs `graph LR`
 - Reorder node definitions
 - Use subgraphs to organize
@@ -328,7 +335,7 @@ graph TB
 
 **Problem:** Text overlaps with nodes/arrows.
 
-**Fix:**
+### Fix (3)
 - Use `<br/>` to break long labels
 - Shorten text
 - Increase spacing between nodes
@@ -337,7 +344,7 @@ graph TB
 
 **Problem:** Style statement doesn't work.
 
-**Fix:**
+### Fix (4)
 - Check node ID matches style ID
 - Put style statements after all nodes
 - Verify color format (#RRGGBB)
@@ -346,7 +353,7 @@ graph TB
 
 **Problem:** VS Code doesn't show diagram.
 
-**Fix:**
+### Fix (5)
 1. Install extension: "Markdown Preview Mermaid Support"
 2. Restart VS Code
 3. Open Command Palette (Cmd+Shift+P)
@@ -371,7 +378,7 @@ git add docs/architecture/c4/system_context.md
 git commit -m "Update system context diagram"
 git push
 # Open file in GitHub web interface
-```
+```text
 
 #### Automated Validation (Optional)
 
@@ -384,7 +391,7 @@ mmdc -i docs/architecture/c4/system_context.md -o /tmp/test.svg
 
 # If successful, syntax is valid
 # If error, fix syntax errors shown
-```
+```text
 
 ### Example Workflow
 
@@ -401,15 +408,15 @@ code docs/architecture/c4/system_context.md
 # Search for: ```mermaid
 
 # 4. Add new node
-# Before ExternalSystems line, add:
+# Before ExternalSystems line, add
 SlackAPI[Slack API<br/>----<br/>Webhook integration<br/>OAuth 2.0]
 
 # 5. Add connection
-# After existing connections, add:
-AIOS -.->|Future: Webhooks<br/>JSON| SlackAPI
+# After existing connections, add
+ AIOS -.-> | Future: Webhooks<br/>JSON | SlackAPI
 
 # 6. Add styling
-# After existing style statements, add:
+# After existing style statements, add
 style SlackAPI fill:#E8E8E8,stroke:#999,stroke-width:2px
 
 # 7. Preview in VS Code
@@ -425,7 +432,7 @@ gh pr create --title "Add Slack integration" --body "Adds Slack API to system co
 
 # 10. Review diagram in PR
 # GitHub will show rendered diagram in PR view
-```
+```text
 
 ## Assumptions
 
@@ -441,17 +448,17 @@ gh pr create --title "Add Slack integration" --body "Adds Slack API to system co
 
 **Problem**: GitHub stops supporting Mermaid rendering.
 
-**Impact:**
+### Impact
 - Diagrams no longer render
 - Code blocks shown instead
 - Documentation less useful
 
-**Mitigation:**
+### Mitigation
 - Monitor GitHub roadmap
 - Keep diagrams simple (easy to migrate)
 - Export to SVG/PNG as backup
 
-**Recovery:**
+### Recovery
 - Migrate to alternative format (PlantUML, SVG, images)
 - Keep text source for reference
 
@@ -459,17 +466,17 @@ gh pr create --title "Add Slack integration" --body "Adds Slack API to system co
 
 **Problem**: Diagram becomes too complex for Mermaid.
 
-**Impact:**
+### Impact (2)
 - Cluttered diagram
 - Arrows cross everywhere
 - Hard to understand
 
-**Mitigation:**
+### Mitigation (2)
 - Follow C4 principle: one page per level
 - Split into multiple focused diagrams
 - Use subgraphs for organization
 
-**Recovery:**
+### Recovery (2)
 - Simplify diagram
 - Create separate diagrams for subsystems
 
@@ -477,17 +484,17 @@ gh pr create --title "Add Slack integration" --body "Adds Slack API to system co
 
 **Problem**: Different diagrams use different colors/styles.
 
-**Impact:**
+### Impact (3)
 - Confusing for readers
 - Unprofessional appearance
 - Harder to navigate
 
-**Mitigation:**
+### Mitigation (3)
 - Document color scheme (done above)
 - Use consistent style snippets
 - Review in PRs
 
-**Recovery:**
+### Recovery (3)
 - Standardize styling across all diagrams
 - Create style guide (this document)
 
@@ -499,7 +506,7 @@ gh pr create --title "Add Slack integration" --body "Adds Slack API to system co
 # 1. Check GitHub rendering
 # Push to branch and view file on GitHub
 git push origin feature-branch
-# Open file in GitHub web interface
+# Open file in GitHub web interface (2)
 # Verify diagram renders (not code block)
 
 # 2. Check VS Code preview
@@ -512,14 +519,14 @@ code docs/architecture/c4/system_context.md
 # Copy diagram code from markdown
 # Paste into editor
 # Verify no syntax errors
-```
+```text
 
 ### All Diagrams Present
 
 ```bash
 # Check all C4 diagram files exist
 ls -1 docs/architecture/c4/*.md
-# Expected:
+# Expected
 # README.md
 # system_context.md (contains diagram)
 # container.md (contains diagram)
@@ -532,7 +539,7 @@ for file in docs/architecture/c4/{system_context,container,component,deployment}
     grep -c '```mermaid' "$file"
     # Should output 1 or more (number of diagrams in file)
 done
-```
+```text
 
 ### Styling Consistency
 
@@ -545,7 +552,7 @@ grep "fill:#50E3C2" docs/architecture/c4/*.md  # Teal - Users
 grep "fill:#E8E8E8" docs/architecture/c4/*.md  # Gray - External systems
 
 # Verify consistent usage
-```
+```text
 
 ### Documentation Up-to-Date
 
@@ -560,7 +567,7 @@ grep "fill:#E8E8E8" docs/architecture/c4/*.md  # Gray - External systems
 grep "client/" docs/architecture/c4/*.md | wc -l
 grep "server/" docs/architecture/c4/*.md | wc -l
 # Should reference actual code files
-```
+```text
 
 ## Related Documentation
 
@@ -572,9 +579,9 @@ grep "server/" docs/architecture/c4/*.md | wc -l
 
 ## References
 
-- Mermaid Documentation: https://mermaid.js.org/
-- Mermaid Live Editor: https://mermaid.live/
-- C4 Model: https://c4model.com/
-- GitHub Mermaid Support: https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/
-- VS Code Mermaid Extension: https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid
-- Mermaid CLI: https://github.com/mermaid-js/mermaid-cli
+- Mermaid Documentation: <https://mermaid.js.org/>
+- Mermaid Live Editor: <https://mermaid.live/>
+- C4 Model: <https://c4model.com/>
+- GitHub Mermaid Support: <https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/>
+- VS Code Mermaid Extension: <https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid>
+- Mermaid CLI: <https://github.com/mermaid-js/mermaid-cli>

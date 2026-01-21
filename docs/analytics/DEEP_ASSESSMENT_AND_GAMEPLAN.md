@@ -1,7 +1,7 @@
 # Analytics Deep Assessment & Implementation Game Plan
 
-**Created:** 2026-01-20  
-**Purpose:** Detailed technical assessment and concrete implementation roadmap  
+**Created:** 2026-01-20
+**Purpose:** Detailed technical assessment and concrete implementation roadmap
 **Related:** ADR-006, IMPLEMENTATION_PLAN.md, TODO.md T-071 through T-080
 
 ---
@@ -10,7 +10,8 @@
 
 **Critical Finding:** Analytics client is 70% complete and configured to POST to `/api/telemetry/events`, but **this server endpoint does not exist**. This is the primary blocker for production analytics.
 
-**Assessment Results:**
+### Assessment Results
+
 - ✅ **Client-side:** 70% complete, production-ready foundation
 - ❌ **Server-side:** 0% complete, missing telemetry API endpoint
 - ❌ **Database:** No analytics event storage schema
@@ -25,7 +26,7 @@
 **✅ Fully Implemented Components:**
 
 | Component | File | LOC | Status | Purpose |
-|-----------|------|-----|--------|---------|
+| ----------- | ------ | ----- | -------- | --------- |
 | **Core Client** | `client.ts` | 411 | ✅ Complete | Main orchestrator, lifecycle management |
 | **Public API** | `index.ts` | 490 | ✅ Complete | Convenience methods for all event types |
 | **Type System** | `types.ts` | 385 | ✅ Complete | Full type safety for 25+ event types |
@@ -47,7 +48,7 @@
 **📝 Stubbed Components (30%):**
 
 | Category | Files | TODOs | Priority | Phase |
-|----------|-------|-------|----------|-------|
+| ---------- | ------- | ------- | ---------- | ------- |
 | **Observability** | 2 | 11 | P0 | Phase 1 |
 | **Privacy/GDPR** | 3 | 12 | P0 | Phase 1 |
 | **Advanced** | 4 | 20 | P1 | Phase 2 |
@@ -128,8 +129,10 @@
 
 ### 2.1 Where Code Should Live
 
-**Client-Side (`client/analytics/`):**
+#### Client-Side (`client/analytics/`)
+
 ✅ **Keep Here:**
+
 - Event capture and sanitization
 - Offline queueing and batching
 - PII detection and bucketing
@@ -139,8 +142,10 @@
 - Privacy mode switching
 - Client-side aggregations (time on screen, etc.)
 
-**Server-Side (`server/`):**
+### Server-Side (`server/`)
+
 ✅ **Add Here:**
+
 - `/api/telemetry/events` endpoint (NEW)
 - Event persistence to database (NEW)
 - Batch insert optimization (NEW)
@@ -150,22 +155,26 @@
 - Event querying API (NEW)
 - Aggregation/reporting (FUTURE)
 
-**Database (`shared/schema.ts` + migrations):**
+### Database (`shared/schema.ts` + migrations)
+
 ✅ **Add Here:**
+
 - `analytics_events` table schema (NEW)
 - Indexes for performance (NEW)
 - User ID foreign key (NEW)
 - Retention policy support (NEW)
 
-**Shared (`shared/`):**
+### Shared (`shared/`)
+
 ✅ **Add Here:**
+
 - Analytics event types (shared between client/server)
 - Validation schemas (Zod)
 - Common utilities
 
 ### 2.2 Data Flow Architecture
 
-```
+```text
 [Client App]
     ↓
 [Analytics Client] (client/analytics/client.ts)
@@ -184,7 +193,7 @@
 [Query API] (future)
     ↓
 [Dashboard/Viz] (future - Grafana/Metabase)
-```
+```text
 
 **Critical Path:** Need to implement all ❌ MISSING components for analytics to work
 
@@ -197,12 +206,13 @@
 **Goal:** Make analytics work end-to-end
 
 #### Task 0.1: Create Database Schema (T-081) ⭐ NEW
-**File:** `server/migrations/XXXX_create_analytics_events.sql`  
-**Priority:** P0  
-**Effort:** 4-6 hours  
+
+**File:** `server/migrations/XXXX_create_analytics_events.sql`
+**Priority:** P0
+**Effort:** 4-6 hours
 **Dependencies:** None
 
-**Requirements:**
+### Requirements
 ```sql
 CREATE TABLE analytics_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -221,9 +231,9 @@ CREATE INDEX idx_analytics_user_id ON analytics_events(user_id);
 CREATE INDEX idx_analytics_event_name ON analytics_events(event_name);
 CREATE INDEX idx_analytics_timestamp ON analytics_events(timestamp DESC);
 CREATE INDEX idx_analytics_session ON analytics_events(session_id);
-```
+```text
 
-**Acceptance Criteria:**
+### Acceptance Criteria
 - [ ] Migration creates analytics_events table
 - [ ] Foreign key to users table
 - [ ] JSONB column for flexible properties
@@ -232,17 +242,18 @@ CREATE INDEX idx_analytics_session ON analytics_events(session_id);
 - [ ] Test migration up/down
 
 #### Task 0.2: Add Storage Methods (T-082) ⭐ NEW
-**File:** `server/storage.ts`  
-**Priority:** P0  
-**Effort:** 6-8 hours  
+
+**File:** `server/storage.ts`
+**Priority:** P0
+**Effort:** 6-8 hours
 **Dependencies:** T-081 (database schema)
 
-**Requirements:**
+### Requirements (2)
 ```typescript
 // Add to StorageInterface
 saveAnalyticsEvents(events: AnalyticsEvent[]): Promise<void>
 getAnalyticsEvents(
-  userId: string, 
+  userId: string,
   filters: {
     startDate?: Date,
     endDate?: Date,
@@ -251,15 +262,15 @@ getAnalyticsEvents(
   }
 ): Promise<AnalyticsEvent[]>
 deleteUserAnalytics(userId: string): Promise<void>
-```
+```text
 
-**Implementation Notes:**
+### Implementation Notes
 - Use batch insert for performance
 - Handle duplicate event IDs (idempotency)
 - Validate event structure
 - Log errors for monitoring
 
-**Acceptance Criteria:**
+### Acceptance Criteria (2)
 - [ ] Batch insert 50+ events efficiently
 - [ ] Handle duplicate IDs gracefully
 - [ ] Query by user, date range, event name
@@ -267,12 +278,13 @@ deleteUserAnalytics(userId: string): Promise<void>
 - [ ] Add unit tests for all methods
 
 #### Task 0.3: Create Telemetry Endpoint (T-083) ⭐ NEW
-**File:** `server/routes.ts`  
-**Priority:** P0  
-**Effort:** 4-6 hours  
+
+**File:** `server/routes.ts`
+**Priority:** P0
+**Effort:** 4-6 hours
 **Dependencies:** T-082 (storage methods)
 
-**Requirements:**
+### Requirements (3)
 ```typescript
 // POST /api/telemetry/events
 app.post(
@@ -282,22 +294,22 @@ app.post(
   asyncHandler(async (req, res) => {
     const { events, schemaVersion } = req.body;
     await storage.saveAnalyticsEvents(events);
-    res.status(202).json({ 
+    res.status(202).json({
       received: events.length,
       timestamp: new Date().toISOString()
     });
   })
 );
-```
+```text
 
-**Implementation Notes:**
+### Implementation Notes (2)
 - Use 202 Accepted (async processing)
 - Rate limit per user (e.g., 1000 events/min)
 - Validate schema version compatibility
 - Log batch size for monitoring
 - Handle storage errors gracefully
 
-**Acceptance Criteria:**
+### Acceptance Criteria (3)
 - [ ] Endpoint accepts batch payload
 - [ ] Validates event structure with Zod
 - [ ] Requires authentication
@@ -307,12 +319,13 @@ app.post(
 - [ ] Add integration test
 
 #### Task 0.4: Add Validation Schema (T-084) ⭐ NEW
-**File:** `shared/schema.ts`  
-**Priority:** P0  
-**Effort:** 3-4 hours  
+
+**File:** `shared/schema.ts`
+**Priority:** P0
+**Effort:** 3-4 hours
 **Dependencies:** None (can parallelize)
 
-**Requirements:**
+### Requirements (4)
 ```typescript
 export const analyticsEventSchema = z.object({
   eventId: z.string().uuid(),
@@ -331,9 +344,9 @@ export const analyticsBatchSchema = z.object({
   schemaVersion: z.string().default("1.0.0"),
   compressed: z.boolean().optional(),
 });
-```
+```text
 
-**Acceptance Criteria:**
+### Acceptance Criteria (4)
 - [ ] Schema validates event structure
 - [ ] Enforces required fields
 - [ ] Limits batch size (1-100 events)
@@ -341,18 +354,19 @@ export const analyticsBatchSchema = z.object({
 - [ ] Add schema tests
 
 #### Task 0.5: Integration Testing (T-085) ⭐ NEW
-**Priority:** P0  
-**Effort:** 4-6 hours  
+
+**Priority:** P0
+**Effort:** 4-6 hours
 **Dependencies:** T-081, T-082, T-083, T-084
 
-**Requirements:**
+### Requirements (5)
 - End-to-end test: Client → Server → Database
 - Test offline queueing and retry
 - Test batch sending
 - Test error handling
 - Test GDPR deletion
 
-**Acceptance Criteria:**
+### Acceptance Criteria (5)
 - [ ] E2E test sends events from client
 - [ ] Events persist to database
 - [ ] Queue handles offline mode
@@ -366,7 +380,7 @@ export const analyticsBatchSchema = z.object({
 
 ### Phase 1: Production Readiness (P0)
 
-**See IMPLEMENTATION_PLAN.md Phase 1 for details**
+#### See IMPLEMENTATION_PLAN.md Phase 1 for details
 
 Key tasks: Event Inspector, Metrics Collection, Consent Management, Data Retention, Data Deletion
 
@@ -376,7 +390,7 @@ Key tasks: Event Inspector, Metrics Collection, Consent Management, Data Retenti
 
 ### Phase 2: Product Features (P1)
 
-**See IMPLEMENTATION_PLAN.md Phase 2 for details**
+#### See IMPLEMENTATION_PLAN.md Phase 2 for details
 
 Key tasks: Group Analytics, Funnel Tracking, A/B Tests, Screen Tracking, Schema Versioning
 
@@ -386,7 +400,7 @@ Key tasks: Group Analytics, Funnel Tracking, A/B Tests, Screen Tracking, Schema 
 
 ### Phase 3: Advanced Features (P2)
 
-**See IMPLEMENTATION_PLAN.md Phase 3 for details**
+#### See IMPLEMENTATION_PLAN.md Phase 3 for details
 
 Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitoring
 
@@ -397,9 +411,10 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 ## 4. Critical Decisions Needed
 
 ### Decision 1: Authentication on Telemetry Endpoint
+
 **Question:** Should `/api/telemetry/events` require authentication?
 
-**Options:**
+### Options
 - **A) Require Auth (Recommended):**
   - ✅ Prevents abuse (spam events)
   - ✅ Ties events to users for deletion
@@ -417,9 +432,10 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 **Recommendation:** **Option A (Require Auth)** - Security and GDPR compliance outweigh complexity
 
 ### Decision 2: Database Storage Strategy
+
 **Question:** Store analytics events in PostgreSQL or use separate time-series DB?
 
-**Options:**
+### Options (2)
 - **A) PostgreSQL (Recommended for MVP):**
   - ✅ Already in use
   - ✅ Foreign keys to users
@@ -439,18 +455,19 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 **Recommendation:** **Option A (PostgreSQL)** for Phase 0-1, consider TimescaleDB extension for Phase 2+ if needed
 
 ### Decision 3: Event Retention Policy
+
 **Question:** How long to keep analytics events?
 
-**Options:**
+### Options (3)
 - **A) 90 days (Recommended):**
   - ✅ Sufficient for most analysis
   - ✅ Manageable storage
   - ✅ GDPR-friendly
-  
+
 - **B) 1 year:**
   - ✅ Longer trend analysis
   - ⚠️ More storage required
-  
+
 - **C) Forever:**
   - ❌ Storage grows indefinitely
   - ❌ GDPR concerns
@@ -459,15 +476,16 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 **Recommendation:** **Option A (90 days)** with automatic cleanup job
 
 ### Decision 4: Real-Time vs Batch Processing
+
 **Question:** Process events in real-time or batch?
 
-**Options:**
+### Options (4)
 - **A) Batch (Recommended for MVP):**
   - ✅ Client already batches (50 events)
   - ✅ Efficient database inserts
   - ✅ Simpler implementation
   - ⚠️ Not real-time
-  
+
 - **B) Real-Time:**
   - ✅ Immediate insights
   - ✅ Real-time dashboards
@@ -481,7 +499,8 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 
 ## 5. Success Metrics
 
-### Phase 0 Success Criteria:
+### Phase 0 Success Criteria
+
 - ✅ Client sends events to server successfully
 - ✅ Events persist to database
 - ✅ Offline queueing works
@@ -489,7 +508,8 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 - ✅ No data loss
 - ✅ <100ms p95 latency for batch insert
 
-### Phase 1 Success Criteria:
+### Phase 1 Success Criteria
+
 - ✅ Event Inspector shows real-time events
 - ✅ Metrics track throughput, latency, errors
 - ✅ Consent Management is GDPR compliant
@@ -497,14 +517,16 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 - ✅ GDPR deletion works
 - ✅ 80%+ test coverage
 
-### Phase 2 Success Criteria:
+### Phase 2 Success Criteria
+
 - ✅ Group analytics tracks companies
 - ✅ Funnels show conversion rates
 - ✅ A/B tests assign variants
 - ✅ Screen tracking captures flows
 - ✅ Schema versioning handles migrations
 
-### Phase 3 Success Criteria:
+### Phase 3 Success Criteria
+
 - ✅ Feature flags enable rollouts
 - ✅ Plugins extend functionality
 - ✅ Multi-destination sends to multiple backends
@@ -514,22 +536,26 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 
 ## 6. Risk Assessment
 
-### High-Risk Items:
+### High-Risk Items
+
 1. **Server endpoint missing** - P0 blocker, must implement first
 2. **Database schema** - Must get right to avoid migrations
 3. **GDPR compliance** - Legal requirement, must implement in Phase 1
 4. **Performance at scale** - May need to revisit storage strategy
 
-### Medium-Risk Items:
+### Medium-Risk Items
+
 1. **Authentication** - Need to decide early
 2. **Rate limiting** - Prevent abuse
 3. **Monitoring** - Need visibility into failures
 
-### Low-Risk Items:
+### Low-Risk Items
+
 1. **Advanced features** - Can defer to later phases
 2. **Visualization** - Can integrate existing tools
 
-### Mitigations:
+### Mitigations
+
 - Start with Phase 0 to unblock client
 - Use PostgreSQL for MVP (proven, simple)
 - Implement GDPR features in Phase 1 (not optional)
@@ -539,22 +565,22 @@ Key tasks: Feature Flags, Plugin System, Multi-Destination, Production Monitorin
 
 ## 7. Dependencies to Install
 
-**Client:**
+### Client
 ```bash
 npm install pako @types/pako  # For compression
-```
+```text
 
-**Server:**
+### Server
 ```bash
 # No new dependencies needed for Phase 0
 # PostgreSQL already in use
-```
+```text
 
-**Future (Phase 2+):**
+## Future (Phase 2+)
 ```bash
 # Optional: TimescaleDB extension for PostgreSQL
 # Optional: Grafana for visualization
-```
+```text
 
 ---
 
@@ -590,7 +616,7 @@ npm install pako @types/pako  # For compression
 
 ---
 
-**Created:** 2026-01-20  
-**Status:** Proposed  
-**Owner:** AGENT  
+**Created:** 2026-01-20
+**Status:** Proposed
+**Owner:** AGENT
 **Approval Needed:** Decisions 1-4, Phase 0 prioritization

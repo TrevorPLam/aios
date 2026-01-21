@@ -16,19 +16,21 @@
 
 ### Project Ownership
 
-**Repository Owner:** TrevorPowellLam  
-**Project Type:** Open Source (MIT License)  
+**Repository Owner:** TrevorPowellLam
+**Project Type:** Open Source (MIT License)
 **Governance Model:** Benevolent Dictator with Community Input
 
 ### Decision-Making Process
 
 #### 1. Minor Changes (Bug Fixes, Docs, Refactoring)
+
 - **Process:** Standard pull request workflow
 - **Review:** One maintainer approval required
 - **Timeline:** 24-48 hours for review
 - **Automation:** CI must pass (tests, lint, security scans)
 
 #### 2. Feature Additions
+
 - **Process:** Issue discussion → PR with tests → Review
 - **Review:** Maintainer approval + community feedback period
 - **Timeline:** 3-7 days
@@ -39,6 +41,7 @@
   - No breaking changes to existing modules
 
 #### 3. Breaking Changes
+
 - **Process:** RFC → Community discussion (14 days) → Implementation PR
 - **Review:** Maintainer approval + stakeholder sign-off
 - **Timeline:** 2-4 weeks minimum
@@ -49,6 +52,7 @@
   - Compatibility shims if feasible
 
 #### 4. Architecture Decisions
+
 - **Process:** ADR creation → Review → Approval
 - **Review:** Technical stakeholders + maintainer
 - **Documentation:** `docs/decisions/adr/`
@@ -61,6 +65,7 @@
 ### Review Requirements
 
 #### Code Review Checklist
+
 - [ ] CI passes (tests, lint, type-check, security)
 - [ ] Code follows existing patterns and style guide
 - [ ] Tests cover new/changed behavior
@@ -70,6 +75,7 @@
 - [ ] Breaking changes documented with migration path
 
 #### Documentation Review Checklist
+
 - [ ] Vale prose linting passes
 - [ ] Markdownlint passes
 - [ ] Links validated
@@ -82,6 +88,7 @@
 ### Roles and Responsibilities
 
 #### Maintainer(s)
+
 - Final approval on all changes
 - Security vulnerability coordination
 - Release management
@@ -91,6 +98,7 @@
 **Current Maintainer:** TrevorPowellLam
 
 #### Contributors
+
 - Submit pull requests
 - Participate in issue discussions
 - Report bugs and security issues
@@ -98,6 +106,7 @@
 - Review others' PRs (optional)
 
 #### Community Members
+
 - Use the software
 - Provide feedback
 - Participate in RFC discussions
@@ -127,13 +136,16 @@
 ### Succession Planning
 
 #### Maintainer Inactivity
+
 If maintainer is inactive (no response to critical issues/PRs for 60 days):
+
 1. Community nominates interim maintainer
 2. 7-day voting period (GitHub reactions on nomination issue)
 3. Nominee with most support takes over
 4. Original maintainer can return and reclaim role
 
 #### Adding Co-Maintainers
+
 - Consistent, high-quality contributions over 6+ months
 - Demonstrated understanding of codebase and vision
 - Community trust (reviewed 20+ PRs, resolved issues)
@@ -142,16 +154,19 @@ If maintainer is inactive (no response to critical issues/PRs for 60 days):
 ### Release Process
 
 #### Version Numbering (Semantic Versioning)
+
 - **Major (X.0.0):** Breaking changes
 - **Minor (0.X.0):** New features, backward compatible
 - **Patch (0.0.X):** Bug fixes, security patches
 
 #### Release Cadence
+
 - **Patch releases:** As needed (bug fixes, security)
 - **Minor releases:** Monthly or feature-driven
 - **Major releases:** Quarterly or when breaking changes accumulate
 
 #### Release Checklist
+
 - [ ] All CI checks pass
 - [ ] CHANGELOG.md updated
 - [ ] Version bumped in package.json
@@ -163,6 +178,7 @@ If maintainer is inactive (no response to critical issues/PRs for 60 days):
 ### Security Response
 
 See SECURITY.md for full details. Key points:
+
 - Private disclosure via GitHub Security Advisories
 - 48-hour acknowledgment
 - 30-day maximum time to patch
@@ -180,6 +196,7 @@ See SECURITY.md for full details. Key points:
 ### Contribution Agreement
 
 By contributing, you agree:
+
 - Your contributions are your original work
 - You have rights to submit the contribution
 - Your contribution is licensed under MIT (project license)
@@ -199,7 +216,7 @@ No CLA (Contributor License Agreement) required beyond implicit agreement above.
 ## Failure Modes
 
 | Failure Mode | Symptom | Mitigation |
-|--------------|---------|------------|
+| -------------- | --------- | ------------ |
 | Maintainer burnout | No reviews for weeks | Succession process, add co-maintainers |
 | Toxic community | COC violations increase | Strong moderation, explicit consequences |
 | Decision paralysis | Issues/PRs stall indefinitely | Deadline-driven decisions, maintain velocity |
@@ -209,7 +226,8 @@ No CLA (Contributor License Agreement) required beyond implicit agreement above.
 
 ## How to Verify
 
-**Check governance is followed:**
+### Check governance is followed
+
 ```bash
 # Recent PRs have required approvals
 gh pr list --state closed --limit 10 --json number,reviews
@@ -225,9 +243,9 @@ cat CODE_OF_CONDUCT.md
 
 # Recent releases follow semantic versioning
 gh release list --limit 10
-```
+```text
 
-**Verify you can contribute:**
+### Verify you can contribute
 ```bash
 # Fork and clone
 git clone https://github.com/YOUR_USERNAME/Mobile-Scaffold.git
@@ -242,7 +260,7 @@ npm run check:types
 npm test
 
 # Submit PR via GitHub UI
-```
+```text
 
 ---
 

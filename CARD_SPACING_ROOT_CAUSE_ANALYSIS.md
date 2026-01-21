@@ -1,7 +1,7 @@
 # Recommendation Card Spacing - Root Cause Analysis
 
-**Date**: 2026-01-19  
-**Issue**: Seventh request to fix card spacing in Command Center  
+**Date**: 2026-01-19
+**Issue**: Seventh request to fix card spacing in Command Center
 **Status**: ✅ ROOT CAUSE IDENTIFIED (Investigation Only - No Code Changes)
 
 ---
@@ -48,7 +48,7 @@ cardContainer: {
   alignSelf: "center",
   minHeight: 300,  // ← ROOT CAUSE: Forces 300px minimum height
 },
-```
+```text
 
 ---
 
@@ -64,7 +64,7 @@ The `minHeight: 300` style on the `cardContainer` wrapper forces each recommenda
 
 When a card's natural content height is less than 300px (e.g., 200px):
 
-```
+```text
 ┌─────────────────────────────────────┐
 │ Card Header (40px)                  │
 │ Card Title (30px)                   │
@@ -87,7 +87,7 @@ When a card's natural content height is less than 300px (e.g., 200px):
 │ to reach minHeight: 300             │
 │                                     │
 └─────────────────────────────────────┘
-```
+```text
 
 ### The Math
 
@@ -167,7 +167,7 @@ None checked for height constraints on the container wrapper.
   )}
   contentContainerStyle={styles.listContent}
 />
-```
+```text
 
 ### The Flow
 
@@ -209,7 +209,7 @@ cardContainer: {
   alignSelf: "center",
   minHeight: 300,  // ← THIS IS THE ROOT CAUSE
 },
-```
+```text
 
 ### Documentation Evidence
 
@@ -217,12 +217,13 @@ cardContainer: {
 
 ```markdown
 ### 1. Card Spacing Reduction
-**Before**: Cards had 4px spacing (Spacing.xs)  
-**After**: Cards have 2px spacing  
+**Before**: Cards had 4px spacing (Spacing.xs)
+**After**: Cards have 2px spacing
 **Visual Effect**: Cards appear stacked almost on top of each other
-```
+```text
 
 However, current code shows `CARD_SPACING = 0`, not 2px. This indicates:
+
 - Another change was made after this document was written
 - The spacing issue persisted despite this change
 - The real problem was never addressed
@@ -258,22 +259,25 @@ cardContainer: {
   alignSelf: "center",
 - minHeight: 300,
 },
-```
+```text
 
 ### Impact Analysis
 
 **Positive Effects**:
+
 - ✅ Cards will sit naturally based on content height
 - ✅ Visual gaps eliminated
 - ✅ Cards will appear "stacked" as designed
 - ✅ Resolves user's primary complaint
 
 **Potential Concerns**:
+
 - ⚠️ Very short cards might look too compact
 - ⚠️ FlatList performance might degrade slightly (unmeasured)
 - ⚠️ Layout might shift during loading
 
 **Mitigation**:
+
 - Cards have minimum content (header, title, summary, footer)
 - Natural height is ~180-250px, which is reasonable
 - Can add a smaller minHeight if needed (e.g., 180px)
@@ -288,7 +292,7 @@ cardContainer: {
   alignSelf: "center",
   minHeight: 180,  // Reduced from 300
 },
-```
+```text
 
 This allows tighter spacing while preventing overly compact cards.
 
@@ -297,17 +301,20 @@ This allows tighter spacing while preventing overly compact cards.
 ## Testing Plan (If Fix Is Implemented)
 
 ### Before Fix (Current State)
+
 - [ ] Measure actual spacing between cards (should be ~100px empty space)
 - [ ] Take screenshot showing large gaps
 - [ ] Measure total pixels from bottom of Card 1 content to top of Card 2 content
 
 ### After Fix (Expected State)
+
 - [ ] Cards should sit with minimal visual gap
 - [ ] No large empty spaces between card content
 - [ ] Shadow/glow effects still render correctly
 - [ ] Cards remain usable and readable
 
 ### Regression Testing
+
 - [ ] Card swipe gestures still work
 - [ ] Card tap navigation works
 - [ ] FlatList scrolling performance acceptable
@@ -326,6 +333,7 @@ This property forces each card container to be at least 300 pixels tall, creatin
 ### Why This Is the Seventh Attempt
 
 All six previous attempts focused on:
+
 - Separator height (CARD_SPACING constant)
 - Padding values (listContent, card padding)
 - Shadow properties (for visual effects)
@@ -350,6 +358,6 @@ This is a one-line change that will resolve the issue immediately.
 
 ---
 
-**Investigation completed by**: GitHub Copilot  
-**Status**: Ready for implementation (pending user approval)  
+**Investigation completed by**: GitHub Copilot
+**Status**: Ready for implementation (pending user approval)
 **Next Steps**: Present findings to user, await decision on code changes

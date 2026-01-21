@@ -15,19 +15,19 @@ The AIOS system uses RESTful HTTP APIs for communication between the client and 
 
 ### API Documentation Structure
 
-```
+```text
 docs/apis/
 ├── README.md                    # This file - API overview
 ├── openapi/                     # OpenAPI specifications
 │   ├── README.md               # OpenAPI documentation guide
 │   └── openapi.yaml            # Main API specification
 └── [future expansions]         # GraphQL, WebSockets, etc.
-```
+```text
 
 ## Available API Documentation
 
 | API Type | Description | Documentation |
-|----------|-------------|---------------|
+| ---------- | ------------- | --------------- |
 | **REST API** | Main HTTP API for client-server communication | [OpenAPI Spec](./openapi/openapi.yaml) |
 | **WebSocket** | Real-time bidirectional communication | _Future_ |
 | **GraphQL** | Flexible query API | _Future_ |
@@ -36,11 +36,11 @@ docs/apis/
 
 ### Base URL
 
-```
+```text
 Development:  http://localhost:3000/api
 Staging:      https://staging-api.aios.example.com/api
 Production:   https://api.aios.example.com/api
-```
+```text
 
 ### Authentication
 
@@ -48,31 +48,34 @@ All authenticated endpoints require a JWT token in the Authorization header:
 
 ```http
 Authorization: Bearer <your-jwt-token>
-```
+```text
 
 Tokens are obtained through the `/api/auth/login` endpoint and expire after 7 days.
 
 ### Common Headers
 
 #### Request Headers
+
 ```http
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer <token>
 X-Client-Version: 1.0.0
-```
+```text
 
 #### Response Headers
+
 ```http
 Content-Type: application/json
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
 X-RateLimit-Reset: 1640000000
-```
+```text
 
 ### Standard Response Format
 
 #### Success Response
+
 ```json
 {
   "data": {
@@ -83,9 +86,10 @@ X-RateLimit-Reset: 1640000000
     "requestId": "req_abc123"
   }
 }
-```
+```text
 
 #### Error Response
+
 ```json
 {
   "error": {
@@ -103,12 +107,12 @@ X-RateLimit-Reset: 1640000000
     "requestId": "req_abc123"
   }
 }
-```
+```text
 
 ### HTTP Status Codes
 
 | Code | Meaning | Usage |
-|------|---------|-------|
+| ------ | --------- | ------- |
 | 200 | OK | Successful GET, PUT, PATCH, DELETE |
 | 201 | Created | Successful POST creating new resource |
 | 204 | No Content | Successful DELETE with no response body |
@@ -136,7 +140,7 @@ List endpoints support pagination using query parameters:
 
 ```http
 GET /api/data?limit=20&offset=0
-```
+```text
 
 Response includes pagination metadata:
 
@@ -152,7 +156,7 @@ Response includes pagination metadata:
     }
   }
 }
-```
+```text
 
 ### Filtering and Sorting
 
@@ -160,7 +164,7 @@ List endpoints support filtering and sorting:
 
 ```http
 GET /api/data?filter[status]=active&sort=-createdAt
-```
+```text
 
 - `filter[field]=value` - Filter by field value
 - `sort=field` - Sort ascending by field
@@ -170,25 +174,26 @@ GET /api/data?filter[status]=active&sort=-createdAt
 
 The API uses URL-based versioning:
 
-```
+```text
 /api/v1/users
 /api/v2/users
-```
+```text
 
 Currently on v1. When breaking changes are needed, v2 will be introduced while maintaining v1 for backwards compatibility.
 
 ## Assumptions
 
 - **Assumption 1:** REST is sufficient for all client-server communication
-  - *If false:* Add WebSocket for real-time features, consider GraphQL for complex queries
+  - _If false:_ Add WebSocket for real-time features, consider GraphQL for complex queries
 - **Assumption 2:** JSON is the only content type needed
-  - *If false:* Support additional content types (XML, Protocol Buffers)
+  - _If false:_ Support additional content types (XML, Protocol Buffers)
 - **Assumption 3:** OpenAPI specification stays current with implementation
-  - *If false:* Implement automated OpenAPI generation from code
+  - _If false:_ Implement automated OpenAPI generation from code
 
 ## Failure Modes
 
 ### Failure Mode 1: API Contract Drift
+
 - **Symptom:** Client and server disagree on API structure, unexpected errors
 - **Impact:** Application bugs, data corruption, poor user experience
 - **Detection:** Integration tests fail, increased error rates
@@ -200,6 +205,7 @@ Currently on v1. When breaking changes are needed, v2 will be introduced while m
 - **Monitoring:** API validation errors, test failures
 
 ### Failure Mode 2: Breaking Changes Without Version Bump
+
 - **Symptom:** Old clients break when server is updated
 - **Impact:** App crashes, users can't access features
 - **Detection:** Spike in client errors after deployment
@@ -211,6 +217,7 @@ Currently on v1. When breaking changes are needed, v2 will be introduced while m
 - **Monitoring:** API version usage, error rates by client version
 
 ### Failure Mode 3: Undocumented Endpoints
+
 - **Symptom:** Endpoints exist but aren't in OpenAPI spec
 - **Impact:** Developers don't know endpoints exist, duplicated effort
 - **Detection:** Code review finds API handlers not in spec
@@ -222,6 +229,7 @@ Currently on v1. When breaking changes are needed, v2 will be introduced while m
 - **Monitoring:** Manual audits, automated spec validation
 
 ### Failure Mode 4: Inconsistent Error Responses
+
 - **Symptom:** Different endpoints return errors in different formats
 - **Impact:** Client error handling is complex and fragile
 - **Detection:** Integration tests, manual testing
@@ -232,6 +240,7 @@ Currently on v1. When breaking changes are needed, v2 will be introduced while m
 - **Monitoring:** Error response format validation
 
 ### Failure Mode 5: Security Vulnerabilities
+
 - **Symptom:** Endpoints expose sensitive data or allow unauthorized access
 - **Impact:** Data breaches, security incidents
 - **Detection:** Security audits, penetration testing
@@ -245,6 +254,7 @@ Currently on v1. When breaking changes are needed, v2 will be introduced while m
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Validate OpenAPI spec syntax
 npx @stoplight/spectral-cli lint docs/apis/openapi/openapi.yaml
@@ -257,9 +267,10 @@ npm run test:api-contract
 
 # 4. Start API mock server from spec
 npx prism mock docs/apis/openapi/openapi.yaml
-```
+```text
 
 ### Automated Checks
+
 - [ ] OpenAPI spec is valid YAML/JSON
 - [ ] OpenAPI spec passes linting: `spectral lint`
 - [ ] All endpoints are documented in spec
@@ -267,6 +278,7 @@ npx prism mock docs/apis/openapi/openapi.yaml
 - [ ] Integration tests validate against spec
 
 ### Success Criteria
+
 1. OpenAPI spec is valid and complete
 2. All endpoints are documented
 3. Examples work as documented
@@ -300,7 +312,7 @@ npx @redocly/cli build-docs docs/apis/openapi/openapi.yaml \
 
 # 5. Open in browser
 open docs/apis/openapi/docs.html
-```
+```text
 
 ### Adding a New Endpoint
 
@@ -322,26 +334,31 @@ See [OpenAPI Guide](./openapi/README.md) for detailed instructions.
 ## API Development Workflow
 
 ### 1. Design First
+
 - Write OpenAPI spec before implementing
 - Review with team
 - Get feedback from client developers
 
 ### 2. Implement
+
 - Generate server stubs from spec (optional)
 - Implement endpoint logic
 - Validate against spec in tests
 
 ### 3. Test
+
 - Unit tests for controllers
 - Integration tests against OpenAPI spec
 - Manual testing with Postman/Insomnia
 
 ### 4. Document
+
 - Ensure OpenAPI spec is up to date
 - Add examples and descriptions
 - Generate documentation
 
 ### 5. Deploy
+
 - Version appropriately
 - Monitor for errors
 - Collect usage metrics
@@ -358,6 +375,7 @@ See [OpenAPI Guide](./openapi/README.md) for detailed instructions.
 ## Best Practices
 
 ### API Design
+
 1. **Use RESTful conventions** - Standard HTTP methods and status codes
 2. **Be consistent** - Same patterns across all endpoints
 3. **Version your API** - Plan for breaking changes
@@ -365,6 +383,7 @@ See [OpenAPI Guide](./openapi/README.md) for detailed instructions.
 5. **Provide examples** - Request and response examples help developers
 
 ### Security
+
 1. **Authenticate everything** - Except deliberately public endpoints
 2. **Validate all input** - Never trust client data
 3. **Rate limit** - Prevent abuse
@@ -372,6 +391,7 @@ See [OpenAPI Guide](./openapi/README.md) for detailed instructions.
 5. **Don't leak info** - Error messages shouldn't reveal internal details
 
 ### Performance
+
 1. **Paginate lists** - Don't return thousands of records
 2. **Allow filtering** - Let clients request only what they need
 3. **Use caching** - Cache headers, ETags
@@ -379,6 +399,7 @@ See [OpenAPI Guide](./openapi/README.md) for detailed instructions.
 5. **Monitor performance** - Track response times
 
 ### Backwards Compatibility
+
 1. **Add, don't remove** - Adding fields is safe, removing isn't
 2. **Make optional** - New required fields break clients
 3. **Deprecate gradually** - Give clients time to migrate

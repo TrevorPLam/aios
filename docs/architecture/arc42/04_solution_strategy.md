@@ -13,7 +13,7 @@ The solution strategy maps our top quality goals to concrete architectural and t
 ### Quality Goal → Strategy Mapping
 
 | Priority | Quality Goal | Solution Strategy | Key Technologies |
-|----------|--------------|------------------|------------------|
+| ---------- | -------------- | ------------------ | ------------------ |
 | 1 | **Performance** | Native rendering + 60fps animations + lazy loading | React Native Reanimated, FlatList virtualization, useMemo/useCallback |
 | 2 | **Security** | Local-first storage + JWT auth + zero third-party tracking | AsyncStorage, JWT, bcrypt, CodeQL scans |
 | 3 | **Maintainability** | Modular architecture + TypeScript strict + shared components | Module boundaries, TypeScript 5.9, component library |
@@ -26,21 +26,25 @@ The solution strategy maps our top quality goals to concrete architectural and t
 ## Strategy 1: Performance Through Native Rendering and Optimization
 
 ### Goal
+
 Achieve 60fps animations, < 100ms screen transitions, instant UI responsiveness.
 
 ### Approach
 
 #### 1.1 Native Rendering with React Native
-**Decision:** Use React Native instead of web-based solutions (Ionic, Cordova)  
+
+**Decision:** Use React Native instead of web-based solutions (Ionic, Cordova)
 **Reference:** [ADR-002: React Native](../../decisions/002-react-native.md)
 
-**Rationale:**
+### Rationale
+
 - Renders to native iOS/Android components (not WebView)
 - Direct access to native APIs without bridge overhead
 - True 60fps animations on device GPU
 - Native gestures and haptic feedback
 
-**Implementation:**
+### Implementation
+
 ```typescript
 // /client/App.tsx - Native component tree
 import { View, Text, FlatList } from 'react-native';
@@ -49,17 +53,18 @@ import { View, Text, FlatList } from 'react-native';
 <View style={styles.container}>
   <Text>Native UI</Text>
 </View>
-```
+```text
 
 #### 1.2 60fps Animations with React Native Reanimated
+
 **Decision:** Use React Native Reanimated for all animations
 
-**Rationale:**
+### Rationale (2)
 - Runs animations on UI thread, not JavaScript thread
 - 60fps guaranteed even during heavy JS processing
 - Smooth transitions and gestures
 
-**Implementation:**
+### Implementation (2)
 ```typescript
 // /client/components/Card.tsx (example pattern)
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
@@ -67,38 +72,40 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 <Animated.View entering={FadeIn} exiting={FadeOut}>
   {/* Content */}
 </Animated.View>
-```
+```text
 
-**Files:**
+### Files
 - All screen components use Animated.View
 - `/client/components/` - Animated components
 - `/package.json` - "react-native-reanimated": "~4.1.1"
 
 #### 1.3 Lazy Loading and Code Splitting
+
 **Decision:** Load screens and modules on-demand
 
-**Rationale:**
+### Rationale (3)
 - Reduces initial bundle size
 - Faster app startup (< 2 seconds)
 - Memory efficiency
 
-**Implementation:**
+### Implementation (3)
 ```typescript
 // /client/navigation/AppNavigator.tsx (pattern)
 const NotebookScreen = React.lazy(() => import('../screens/NotebookScreen'));
 
 // Screens loaded when navigated to, not upfront
-```
+```text
 
 #### 1.4 FlatList Virtualization
+
 **Decision:** Use FlatList for all long lists (notes, tasks, messages)
 
-**Rationale:**
+### Rationale (4)
 - Only renders visible items + small buffer
 - Recycles components as user scrolls
 - Handles thousands of items without lag
 
-**Implementation:**
+### Implementation (4)
 ```typescript
 // Pattern used in all list screens
 <FlatList
@@ -107,26 +114,27 @@ const NotebookScreen = React.lazy(() => import('../screens/NotebookScreen'));
   keyExtractor={item => item.id}
   windowSize={10}  // Render 10 items ahead
 />
-```
+```text
 
-**Files:**
+### Files (2)
 - `/client/screens/NotebookScreen.tsx`
 - `/client/screens/PlannerScreen.tsx`
 - `/client/screens/EmailScreen.tsx`
 - All list-based screens
 
 #### 1.5 React Optimization Hooks
+
 **Decision:** Use useMemo and useCallback to prevent unnecessary re-renders
 
-**Rationale:**
+### Rationale (5)
 - Expensive computations cached
 - Callbacks stable across renders
 - Child components don't re-render unnecessarily
 
-**Implementation:**
+### Implementation (5)
 ```typescript
 // Pattern used throughout
-const sortedNotes = useMemo(() => 
+const sortedNotes = useMemo(() =>
   notes.sort((a, b) => b.updatedAt - a.updatedAt),
   [notes]
 );
@@ -134,9 +142,9 @@ const sortedNotes = useMemo(() =>
 const handlePress = useCallback((id: string) => {
   // Handler logic
 }, [dependencies]);
-```
+```text
 
-**Files:**
+### Files (3)
 - All screen components use these patterns
 - `/client/screens/*Screen.tsx`
 
@@ -153,9 +161,10 @@ npm run expo:dev
 
 # Check animation framerates
 # Use Expo Dev Tools > Performance tab
-```
+```text
 
 ### Metrics
+
 - Screen transitions: < 100ms (measured with React DevTools)
 - Animations: 60fps (Reanimated guarantee)
 - App launch: < 2 seconds (measured with Expo performance tools)
@@ -165,22 +174,24 @@ npm run expo:dev
 
 ## Strategy 2: Security Through Local-First and JWT Authentication
 
-### Goal
+### Goal (2)
+
 Zero critical vulnerabilities, protect user privacy, secure authentication.
 
-### Approach
+### Approach (2)
 
 #### 2.1 Local-First Storage with AsyncStorage
-**Decision:** Store all user data locally first, sync to cloud optionally  
+
+**Decision:** Store all user data locally first, sync to cloud optionally
 **Reference:** [ADR-001: AsyncStorage](../../decisions/001-use-asyncstorage.md)
 
-**Rationale:**
+### Rationale (6)
 - User data never leaves device without explicit consent
 - Works offline by default
 - No third-party analytics or tracking
 - Privacy-first architecture
 
-**Implementation:**
+### Implementation (6)
 ```typescript
 // /client/storage/database.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -189,22 +200,23 @@ export const saveNote = async (note: Note): Promise<void> => {
   // All data stored locally first
   await AsyncStorage.setItem(`note_${note.id}`, JSON.stringify(note));
 };
-```
+```text
 
-**Files:**
+### Files (4)
 - `/client/storage/database.ts` - All storage operations
 - 100% local until future sync enabled
 
 #### 2.2 JWT Authentication with bcrypt
-**Decision:** JWT tokens for authentication, bcrypt for password hashing  
+
+**Decision:** JWT tokens for authentication, bcrypt for password hashing
 **Reference:** [ADR-003: JWT Authentication](../../decisions/003-jwt-auth.md)
 
-**Rationale:**
+### Rationale (7)
 - Stateless authentication (no session storage)
 - Secure password hashing (bcrypt 10 rounds)
 - Token expiration and refresh (future)
 
-**Implementation:**
+### Implementation (7)
 ```typescript
 // /server/middleware/auth.ts
 import jwt from 'jsonwebtoken';
@@ -218,21 +230,22 @@ const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '7d' });
 
 // Token validation
 const decoded = jwt.verify(token, SECRET_KEY);
-```
+```text
 
-**Files:**
+### Files (5)
 - `/server/middleware/auth.ts` - JWT middleware
 - `/server/routes.ts` - Protected endpoints
 
 #### 2.3 Input Validation with Zod
+
 **Decision:** Validate all API inputs with Zod schemas
 
-**Rationale:**
+### Rationale (8)
 - Runtime type checking prevents injection attacks
 - Schema validation catches malformed data
 - Type-safe validation shared between client/server
 
-**Implementation:**
+### Implementation (8)
 ```typescript
 // /shared/schema.ts (pattern)
 import { z } from 'zod';
@@ -246,35 +259,36 @@ export const NoteSchema = z.object({
 
 // /server/middleware/validation.ts
 const validated = NoteSchema.parse(req.body);
-```
+```text
 
-**Files:**
+### Files (6)
 - `/shared/schema.ts` - Zod schemas
 - `/server/middleware/validation.ts` - Validation middleware
 
 #### 2.4 Security Scanning with CodeQL
+
 **Decision:** Run CodeQL scans on every commit
 
-**Rationale:**
+### Rationale (9)
 - Automated vulnerability detection
 - Catches security issues before production
 - GitHub Advanced Security integration
 
-**Implementation:**
+### Implementation (9)
 ```yaml
 # .github/workflows/codeql.yml
 - name: Initialize CodeQL
   uses: github/codeql-action/init@v2
-  
+
 - name: Perform CodeQL Analysis
   uses: github/codeql-action/analyze@v2
-```
+```text
 
-**Files:**
+### Files (7)
 - `.github/workflows/codeql.yml` - Security scanning
 - CI/CD blocks on critical issues
 
-### Verification
+### Verification (2)
 
 ```bash
 # Security audit
@@ -286,9 +300,10 @@ npm run check:types
 
 # Run CodeQL (in CI/CD)
 # Manually: gh actions run codeql.yml
-```
+```text
 
-### Metrics
+### Metrics (2)
+
 - npm audit: 0 critical/high vulnerabilities
 - CodeQL: 0 critical/high alerts
 - JWT tokens: Secure with bcrypt (10 rounds)
@@ -298,21 +313,23 @@ npm run check:types
 
 ## Strategy 3: Maintainability Through Modular Architecture
 
-### Goal
+### Goal (3)
+
 Add new modules in < 3 days, minimize code duplication, enable parallel development.
 
-### Approach
+### Approach (3)
 
 #### 3.1 Clear Module Boundaries
+
 **Decision:** Each module is self-contained with screen + storage + tests
 
-**Rationale:**
+### Rationale (10)
 - Changes isolated to module files
 - Parallel development possible
 - Easy to add/remove modules
 
-**Structure:**
-```
+### Structure
+```text
 Module: Notebook
 ├── /client/screens/NotebookScreen.tsx        (UI)
 ├── /client/screens/NoteEditorScreen.tsx      (Detail)
@@ -324,22 +341,23 @@ Module: Planner
 ├── /client/screens/TaskDetailScreen.tsx
 ├── /client/storage/database.ts               (Tasks methods)
 └── /client/storage/__tests__/tasks.test.ts
-```
+```text
 
-**Files:**
+### Files (8)
 - `/client/screens/` - 44 screen files (14 modules)
 - `/client/storage/database.ts` - Methods grouped by module
 - `/client/storage/__tests__/` - Tests per module
 
 #### 3.2 Shared Component Library
+
 **Decision:** Reusable components in `/client/components/`
 
-**Rationale:**
+### Rationale (11)
 - UI consistency across modules
 - Reduce code duplication
 - Single source of truth for design
 
-**Implementation:**
+### Implementation (10)
 ```typescript
 // /client/components/Button.tsx
 export const Button = ({ title, onPress }: ButtonProps) => {
@@ -348,23 +366,24 @@ export const Button = ({ title, onPress }: ButtonProps) => {
 
 // Used in all modules
 import { Button } from '@/components/Button';
-```
+```text
 
-**Files:**
+### Files (9)
 - `/client/components/Button.tsx`
 - `/client/components/Card.tsx`
 - `/client/components/QuickCaptureOverlay.tsx`
 - 20+ shared components
 
 #### 3.3 TypeScript Strict Mode
+
 **Decision:** Enable strict TypeScript across entire codebase
 
-**Rationale:**
+### Rationale (12)
 - Catch type errors at compile time
 - Self-documenting code with types
 - Refactoring safety
 
-**Configuration:**
+### Configuration
 ```json
 // /tsconfig.json
 {
@@ -375,33 +394,34 @@ import { Button } from '@/components/Button';
     "strictFunctionTypes": true
   }
 }
-```
+```text
 
-**Verification:**
+### Verification (3)
 ```bash
 npm run check:types
-```
+```text
 
 #### 3.4 Consistent Patterns
+
 **Decision:** Follow established patterns for all modules
 
-**Patterns:**
+### Patterns
 - **Storage:** `save*`, `get*`, `update*`, `delete*` methods
 - **Screens:** `*Screen.tsx` naming
 - **Components:** Functional components with TypeScript
 - **Hooks:** Custom hooks in `/client/hooks/`
 - **Tests:** `*.test.ts` with 100% coverage
 
-**Example:**
+### Example
 ```typescript
 // Storage pattern (every module follows this)
 export const saveNote = async (note: Note): Promise<void> => { /* ... */ };
 export const getNotes = async (): Promise<Note[]> => { /* ... */ };
 export const updateNote = async (id: string, updates: Partial<Note>): Promise<void> => { /* ... */ };
 export const deleteNote = async (id: string): Promise<void> => { /* ... */ };
-```
+```text
 
-### Verification
+### Verification (4)
 
 ```bash
 # Check code duplication
@@ -412,9 +432,10 @@ npm run lint
 
 # Type coverage
 npm run check:types
-```
+```text
 
-### Metrics
+### Metrics (3)
+
 - New module: < 3 days (estimate based on existing modules)
 - Code duplication: < 5% (jscpd)
 - TypeScript coverage: 100%
@@ -424,20 +445,22 @@ npm run check:types
 
 ## Strategy 4: Testability Through Comprehensive Testing
 
-### Goal
+### Goal (4)
+
 100% test coverage on production modules, automated CI/CD, regression prevention.
 
-### Approach
+### Approach (4)
 
 #### 4.1 Unit Tests for Storage Layer
+
 **Decision:** 100% coverage on all storage methods
 
-**Rationale:**
+### Rationale (13)
 - Storage is critical path (data loss prevention)
 - Pure functions easy to test
 - Fast execution (< 10 seconds)
 
-**Implementation:**
+### Implementation (11)
 ```typescript
 // /client/storage/__tests__/notebook.test.ts
 describe('Notebook Storage', () => {
@@ -454,9 +477,9 @@ describe('Notebook Storage', () => {
 
   // 49 tests total
 });
-```
+```text
 
-**Files:**
+### Files (10)
 - `/client/storage/__tests__/notebook.test.ts` (49 tests)
 - `/client/storage/__tests__/calendar.test.ts` (33 tests)
 - `/client/storage/__tests__/tasks.test.ts`
@@ -464,14 +487,15 @@ describe('Notebook Storage', () => {
 - 659 total tests passing (100% pass rate)
 
 #### 4.2 Component Tests with React Native Testing Library
+
 **Decision:** Test React components with RNTL
 
-**Rationale:**
+### Rationale (14)
 - User-centric testing (test behavior, not implementation)
 - Encourages accessible components
 - Integration testing without device
 
-**Implementation:**
+### Implementation (12)
 ```typescript
 // /client/components/__tests__/Button.test.tsx
 import { render, fireEvent } from '@testing-library/react-native';
@@ -479,16 +503,17 @@ import { render, fireEvent } from '@testing-library/react-native';
 it('calls onPress when tapped', () => {
   const onPress = jest.fn();
   const { getByText } = render(<Button title="Tap Me" onPress={onPress} />);
-  
+
   fireEvent.press(getByText('Tap Me'));
   expect(onPress).toHaveBeenCalledTimes(1);
 });
-```
+```text
 
 #### 4.3 E2E Tests for Critical Flows
+
 **Decision:** E2E tests for authentication, data sync
 
-**Implementation:**
+### Implementation (13)
 ```typescript
 // /server/__tests__/api.e2e.test.ts
 describe('Authentication Flow', () => {
@@ -497,39 +522,40 @@ describe('Authentication Flow', () => {
     const registerRes = await request(app)
       .post('/api/auth/register')
       .send({ email: 'test@example.com', password: 'password123' });
-    
+
     expect(registerRes.status).toBe(201);
-    
+
     // Login
     const loginRes = await request(app)
       .post('/api/auth/login')
       .send({ email: 'test@example.com', password: 'password123' });
-    
+
     expect(loginRes.body).toHaveProperty('token');
-    
+
     // Access protected route
     const notesRes = await request(app)
       .get('/api/notes')
       .set('Authorization', `Bearer ${loginRes.body.token}`);
-    
+
     expect(notesRes.status).toBe(200);
   });
 });
-```
+```text
 
-**Files:**
+### Files (11)
 - `/server/__tests__/api.e2e.test.ts`
 - `/server/__tests__/messages.quickwins.e2e.test.ts`
 
 #### 4.4 Automated CI/CD with GitHub Actions
+
 **Decision:** Run all tests on every commit and PR
 
-**Rationale:**
+### Rationale (15)
 - Catch regressions immediately
 - Block merges with failing tests
 - Automated quality gates
 
-**Implementation:**
+### Implementation (14)
 ```yaml
 # .github/workflows/test.yml
 name: Tests
@@ -543,13 +569,13 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run check:types
-```
+```text
 
-**Files:**
+### Files (12)
 - `.github/workflows/` - CI/CD workflows
 - Runs on every commit
 
-### Verification
+### Verification (5)
 
 ```bash
 # Run all tests
@@ -563,9 +589,10 @@ npm run test:watch
 
 # Specific module
 npm test -- notebook
-```
+```text
 
-### Metrics
+### Metrics (4)
+
 - Total tests: 659 passing (100% pass rate)
 - Coverage: 100% on 14 production modules
 - Test execution: < 30 seconds
@@ -575,41 +602,44 @@ npm test -- notebook
 
 ## Strategy 5: Usability Through Progressive Onboarding and Design System
 
-### Goal
+### Goal (5)
+
 90%+ onboarding completion, 5+ modules adopted per user, 4.5+ app store rating.
 
-### Approach
+### Approach (5)
 
 #### 5.1 Progressive Onboarding
+
 **Decision:** Start with 3 core modules, expand gradually
 
-**Rationale:**
+### Rationale (16)
 - Prevents user overwhelm
 - Learn app incrementally
 - Higher completion rate
 
-**Implementation:**
+### Implementation (15)
 ```typescript
 // /client/screens/OnboardingModuleSelectionScreen.tsx
 const suggestedModules = ['Command Center', 'Notebook', 'Planner'];
 
 // User selects 3 modules to start
 // Other modules unlocked later
-```
+```text
 
-**Files:**
+### Files (13)
 - `/client/screens/OnboardingWelcomeScreen.tsx`
 - `/client/screens/OnboardingModuleSelectionScreen.tsx`
 
 #### 5.2 Consistent Design System
+
 **Decision:** Dark-first theme with electric blue accent (#00D9FF)
 
-**Rationale:**
+### Rationale (17)
 - Consistent look across all modules
 - Reduces cognitive load
 - Futuristic "HUD" aesthetic
 
-**Implementation:**
+### Implementation (16)
 ```typescript
 // /client/constants/theme.ts
 export const Colors = {
@@ -626,22 +656,23 @@ export const Typography = {
   h1: { fontSize: 24, fontWeight: '600' },
   body: { fontSize: 16, fontWeight: '400' },
 };
-```
+```text
 
-**Files:**
+### Files (14)
 - `/client/constants/theme.ts` - Design tokens
 - `/docs/technical/design_guidelines.md` - Full spec
 - All components use theme constants
 
 #### 5.3 Haptic Feedback
+
 **Decision:** Tactile response for all interactions
 
-**Rationale:**
+### Rationale (18)
 - Physical confirmation of actions
 - Better mobile experience
 - Accessibility benefit
 
-**Implementation:**
+### Implementation (17)
 ```typescript
 import * as Haptics from 'expo-haptics';
 
@@ -650,26 +681,27 @@ const handlePress = () => {
   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   // Action logic
 };
-```
+```text
 
-**Files:**
+### Files (15)
 - All interactive components use haptics
 - Pattern consistent across modules
 
 #### 5.4 Context-Aware UI
+
 **Decision:** Adaptive interface based on context (work/personal modes future)
 
-**Current Implementation:**
+### Current Implementation
 - Quick Capture overlay (long-press anywhere)
 - Module handoff with breadcrumbs
 - Mini-mode components for common tasks
 
-**Files:**
+### Files (16)
 - `/client/components/QuickCaptureOverlay.tsx`
 - `/client/context/HandoffContext.tsx`
 - `/client/components/Mini*.tsx` - 5 mini-mode components
 
-### Verification
+### Verification (6)
 
 ```bash
 # Visual testing (manual)
@@ -679,9 +711,10 @@ npm run expo:dev
 
 # Accessibility audit (future)
 npm run test:a11y
-```
+```text
 
-### Metrics
+### Metrics (5)
+
 - Onboarding screens: 2 (welcome + module selection)
 - Design system: Fully implemented in `/client/constants/theme.ts`
 - Haptic feedback: 100% of interactive elements
@@ -691,21 +724,23 @@ npm run test:a11y
 
 ## Strategy 6: Reliability Through Offline-First and Error Handling
 
-### Goal
+### Goal (6)
+
 99.9% uptime, 100% offline functionality, automatic error recovery.
 
-### Approach
+### Approach (6)
 
 #### 6.1 Offline-First with AsyncStorage
-**Decision:** All operations work without network  
+
+**Decision:** All operations work without network
 **Reference:** [ADR-001: AsyncStorage](../../decisions/001-use-asyncstorage.md)
 
-**Rationale:**
+### Rationale (19)
 - Mobile connectivity unreliable
 - User actions never blocked by network
 - Sync to cloud when available (future)
 
-**Implementation:**
+### Implementation (18)
 ```typescript
 // /client/storage/database.ts
 // All operations local-first
@@ -713,12 +748,13 @@ export const saveNote = async (note: Note): Promise<void> => {
   await AsyncStorage.setItem(`note_${note.id}`, JSON.stringify(note));
   // Future: Queue for sync when online
 };
-```
+```text
 
 #### 6.2 Error Boundaries
+
 **Decision:** Catch React errors, prevent app crashes
 
-**Implementation:**
+### Implementation (19)
 ```typescript
 // /client/App.tsx (pattern)
 <ErrorBoundary
@@ -727,17 +763,18 @@ export const saveNote = async (note: Note): Promise<void> => {
 >
   <AppNavigator />
 </ErrorBoundary>
-```
+```text
 
 #### 6.3 Retry Logic for Network Requests
+
 **Decision:** Retry failed requests with exponential backoff (future with React Query)
 
-**Rationale:**
+### Rationale (20)
 - Handle transient network failures
 - Don't lose user actions
 - Automatic recovery
 
-**Future Implementation:**
+### Future Implementation
 ```typescript
 // /client/hooks/useQuery.ts (future)
 const { data } = useQuery({
@@ -746,17 +783,18 @@ const { data } = useQuery({
   retry: 3,
   retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30000),
 });
-```
+```text
 
 #### 6.4 State Persistence
+
 **Decision:** Persist app state across restarts
 
-**Implementation:**
+### Implementation (20)
 - All data in AsyncStorage
 - App resumes from last state
 - No data loss on crash/restart
 
-### Verification
+### Verification (7)
 
 ```bash
 # Test offline mode
@@ -772,9 +810,10 @@ npm test -- error
 # 1. Create data
 # 2. Force quit app
 # 3. Reopen, verify data present
-```
+```text
 
-### Metrics
+### Metrics (6)
+
 - Offline functionality: 100% of core features
 - AsyncStorage: All user data persisted
 - Error boundaries: Prevent app crashes
@@ -785,7 +824,7 @@ npm test -- error
 ## Technology Decision Summary
 
 | Category | Technology | Reason | Alternative Considered |
-|----------|------------|--------|----------------------|
+| ---------- | ------------ | -------- | ---------------------- |
 | **Mobile Framework** | React Native | Native performance, cross-platform | Flutter (less JS ecosystem), Native (2x development) |
 | **Development Platform** | Expo | Rapid development, OTA updates | Bare React Native (more config) |
 | **Local Storage** | AsyncStorage | Simple, offline-first | SQLite (more complex), Realm (third-party) |
@@ -866,7 +905,7 @@ ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/Onboarding*
 # Strategy 6: Reliability
 # Test offline mode manually
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
-```
+```text
 
 ---
 

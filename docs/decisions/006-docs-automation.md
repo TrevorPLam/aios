@@ -1,7 +1,7 @@
 # ADR-006: Documentation automation and quality enforcement
 
-**Status:** Accepted  
-**Date:** 2026-01-17  
+**Status:** Accepted
+**Date:** 2026-01-17
 **Context:** PR #94 - Documentation and automation system
 
 ## Context
@@ -21,11 +21,12 @@ Implement a comprehensive documentation automation system with multiple layers:
 
 ### 1. Markdown Linting
 
-**Tool:** markdownlint  
-**Config:** `.markdownlint.json`  
+**Tool:** markdownlint
+**Config:** `.markdownlint.json`
 **Workflow:** `.github/workflows/docs-markdownlint.yml`
 
 Enforces:
+
 - Consistent heading structure
 - Proper list formatting
 - No trailing spaces
@@ -33,11 +34,12 @@ Enforces:
 
 ### 2. Link Validation
 
-**Tool:** Lychee  
-**Config:** `.lycheeignore`  
+**Tool:** Lychee
+**Config:** `.lycheeignore`
 **Workflow:** `.github/workflows/docs-links.yml`
 
 Features:
+
 - Validates internal and external links
 - Weekly scheduled checks
 - Caching to reduce API calls
@@ -46,11 +48,12 @@ Features:
 
 ### 3. Spell Checking
 
-**Tool:** cspell  
-**Config:** `.cspell.json`  
+**Tool:** cspell
+**Config:** `.cspell.json`
 **Workflow:** `.github/workflows/docs-quality.yml`
 
 Features:
+
 - Project-specific dictionary
 - Catches typos before merge
 - Code-aware (ignores technical terms)
@@ -58,11 +61,12 @@ Features:
 
 ### 4. Prose Linting
 
-**Tool:** Vale  
-**Config:** `.vale.ini`, `.vale/Vocab/AIOS/`  
+**Tool:** Vale
+**Config:** `.vale.ini`, `.vale/Vocab/AIOS/`
 **Workflow:** `.github/workflows/docs-vale.yml`
 
 Features:
+
 - Style consistency (e.g., Microsoft Writing Style Guide)
 - Readability improvements
 - Terminology consistency
@@ -70,10 +74,11 @@ Features:
 
 ### 5. Documentation Metrics
 
-**Script:** `scripts/docs/update-documentation-metrics.mjs`  
+**Script:** `scripts/docs/update-documentation-metrics.mjs`
 **Workflow:** `.github/workflows/documentation-metrics.yml`
 
 Tracks:
+
 - Number of active docs
 - Average doc age
 - TODO count
@@ -82,7 +87,8 @@ Tracks:
 
 ### 6. Issue Automation
 
-**Workflows:**
+#### Workflows
+
 - `documentation-issue-automation.yml` - Auto-label and triage
 - `documentation-stale.yml` - Manage stale issues
 
@@ -90,11 +96,13 @@ Tracks:
 
 ### 1. Manual Review Only
 
-**Pros:**
+#### Pros
+
 - No tooling setup
 - Human judgment for context
 
-**Cons:**
+### Cons
+
 - Doesn't scale
 - Inconsistent enforcement
 - Reviewer fatigue
@@ -103,11 +111,13 @@ Tracks:
 
 ### 2. Single All-in-One Tool
 
-**Pros:**
+#### Pros (2)
+
 - Simpler configuration
 - Single workflow
 
-**Cons:**
+### Cons (2)
+
 - Less flexible
 - May miss edge cases
 - Vendor lock-in
@@ -116,11 +126,13 @@ Tracks:
 
 ### 3. Pre-commit Hooks Only
 
-**Pros:**
+#### Pros (3)
+
 - Catches issues locally
 - Immediate feedback
 
-**Cons:**
+### Cons (3)
+
 - Can be bypassed
 - Not enforced in CI
 - Inconsistent setup across contributors
@@ -191,6 +203,6 @@ Tracks:
 
 ---
 
-**Accepted by:** Development team  
-**Implementation:** Complete in PR #94  
+**Accepted by:** Development team
+**Implementation:** Complete in PR #94
 **Status checks:** Active and blocking on main/develop branches

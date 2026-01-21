@@ -15,7 +15,7 @@ npm run expo:rebuild:ios
 
 # Step 3: Start the app
 npm start
-```
+```text
 
 **Expected time:** 5-10 minutes
 
@@ -28,9 +28,9 @@ npm run expo:clean:full
 # Step 2: Rebuild the native iOS app
 npm run expo:rebuild:ios
 
-# Step 3: Start the app
+# Step 3: Start the app (2)
 npm start
-```
+```text
 
 **Expected time:** 10-15 minutes (includes npm install)
 
@@ -40,7 +40,7 @@ npm start
 # Step 1: Remove all caches and dependencies
 rm -rf node_modules/.cache .expo .metro-cache
 rm -rf node_modules package-lock.json
-watchman watch-del-all 2>/dev/null || true
+ watchman watch-del-all 2>/dev/null |  | true
 
 # Step 2: Remove native build folders (if they exist)
 rm -rf ios/build android/build
@@ -57,7 +57,7 @@ npx expo run:ios
 # Quit iOS Simulator from the menu bar
 # Then restart
 npm start
-```
+```text
 
 **Expected time:** 15-20 minutes
 
@@ -67,15 +67,18 @@ After running the fix, verify it worked:
 
 1. **Check for the error message**: The `WorkletsError` should no longer appear
 2. **Test animations**: Swipe gestures and animations should work smoothly
-3. **Run the check script**: 
+3. **Run the check script**:
+
    ```bash
    npm run check:worklets
-   ```
+   ```text
+
    Should show: `✅ Versions match! Everything looks good.`
 
 ## Why This Happens
 
 This error occurs when:
+
 - Dependabot or manual updates change `react-native-reanimated` or `react-native-worklets` versions
 - The JavaScript bundle gets the new version (0.7.2)
 - The native iOS/Android build still has the old version cached (0.5.1)
@@ -93,11 +96,11 @@ To prevent this issue in the future:
 Always run these commands after updating animation-related packages:
 
 ```bash
-# After updating react-native-reanimated, react-native-worklets,
-# react-native-gesture-handler, or react-native-draggable-flatlist:
+# After updating react-native-reanimated, react-native-worklets
+# react-native-gesture-handler, or react-native-draggable-flatlist
 npm run expo:clean:native
 npm run expo:rebuild:ios  # or android
-```
+```text
 
 ### 2. When Switching Branches
 
@@ -106,11 +109,12 @@ If switching to a branch with different dependency versions:
 ```bash
 npm run expo:clean:full
 npm run expo:rebuild:ios
-```
+```text
 
 ### 3. After Merging Dependabot PRs
 
 After merging any Dependabot PR that updates these packages:
+
 - `react-native-reanimated`
 - `react-native-worklets`
 - `react-native-gesture-handler`
@@ -118,23 +122,25 @@ After merging any Dependabot PR that updates these packages:
 - `react-native-keyboard-controller`
 
 Always rebuild:
+
 ```bash
 npm run expo:rebuild:ios
-```
+```text
 
 ### 4. Use the Check Script
 
 Before starting development work, verify versions match:
+
 ```bash
 npm run check:worklets
-```
+```text
 
 ## Related Commands
 
 Here's what each command does:
 
 | Command | What It Does | When to Use |
-|---------|-------------|-------------|
+| --------- | ------------- | ------------- |
 | `npm run expo:clean` | Clears Metro cache only | Changes not appearing in app |
 | `npm run expo:clean:native` | Clears all caches + watchman + reinstall | After dependency updates |
 | `npm run expo:clean:full` | Full clean including node_modules | Severe dependency issues |
@@ -146,11 +152,14 @@ Here's what each command does:
 If the error persists after all fixes:
 
 1. **Check app.json configuration:**
+
    ```bash
    # Verify react-native-reanimated plugin is present
    grep -A 5 '"plugins"' app.json | grep "react-native-reanimated"
-   ```
+   ```text
+
    If missing, add to `app.json`:
+
    ```json
    {
      "expo": {
@@ -159,36 +168,40 @@ If the error persists after all fixes:
        ]
      }
    }
-   ```
+   ```text
 
-2. **Check iOS Simulator:**
+1. **Check iOS Simulator:**
    - Quit the iOS Simulator app completely
    - In Simulator menu: Device → Erase All Content and Settings
    - Restart the simulator
 
 2. **Check Xcode (if installed):**
+
    ```bash
    # Clean Xcode derived data
    rm -rf ~/Library/Developer/Xcode/DerivedData
-   ```
+   ```text
 
-3. **Check for multiple versions:**
+1. **Check for multiple versions:**
+
    ```bash
    # This should only show ONE version
    npm list react-native-worklets
-   ```
+   ```text
 
-4. **Verify package-lock.json:**
+1. **Verify package-lock.json:**
+
    ```bash
    # Check what version is locked
    grep -A 5 '"react-native-worklets"' package-lock.json | head -10
-   ```
+   ```text
 
-5. **Check for conflicting dependencies:**
+1. **Check for conflicting dependencies:**
+
    ```bash
    # Look for peer dependency warnings
    npm install --legacy-peer-deps
-   ```
+   ```text
 
 ## Additional Resources
 
@@ -198,20 +211,20 @@ If the error persists after all fixes:
 
 ## Quick Reference
 
-**Most Common Fix:**
+### Most Common Fix
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios && npm start
-```
+```text
 
-**When That Doesn't Work:**
+### When That Doesn't Work
 ```bash
 npm run expo:clean:full && npm run expo:rebuild:ios && npm start
-```
+```text
 
-**Emergency Nuclear Option:**
+### Emergency Nuclear Option
 ```bash
 rm -rf node_modules package-lock.json .expo .metro-cache ios/build
 npm install
 npx expo prebuild --clean
 npx expo run:ios
-```
+```text

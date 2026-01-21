@@ -4,8 +4,8 @@
 
 This document outlines the security architecture, threat model, and mitigation strategies for the AIOS Super App system.
 
-**Last Updated:** January 16, 2026  
-**Version:** 1.0  
+**Last Updated:** January 16, 2026
+**Version:** 1.0
 **Status:** Production
 
 ---
@@ -123,7 +123,7 @@ We follow "defense in depth" - multiple layers of security so if one fails, othe
 
 ### Storage Security
 
-**AsyncStorage (Current Implementation)**
+#### AsyncStorage (Current Implementation)
 
 ```typescript
 // Plain English: AsyncStorage is encrypted at OS level on iOS,
@@ -140,9 +140,9 @@ We follow "defense in depth" - multiple layers of security so if one fails, othe
 - Use expo-secure-store for sensitive data
 - Add client-side encryption for high-value data
 - Implement data expiry for temporary data
-```
+```text
 
-**Planned Secure Storage**
+### Planned Secure Storage
 
 ```typescript
 import * as SecureStore from 'expo-secure-store';
@@ -158,12 +158,12 @@ async function saveSecret(key: string, value: string) {
 - Payment information
 - Biometric data
 - Encryption keys
-```
+```text
 
 ### Data Classification
 
 | Data Type | Sensitivity | Storage | Encryption |
-|-----------|-------------|---------|------------|
+| ----------- | ------------- | --------- | ------------ |
 | Notes | Medium-High | AsyncStorage | OS-level |
 | Tasks | Low-Medium | AsyncStorage | OS-level |
 | Events | Medium | AsyncStorage | OS-level |
@@ -190,7 +190,7 @@ async function saveSecret(key: string, value: string) {
 - Enable certificate pinning for API calls
 - Use WebSocket with TLS for real-time features
 - Implement request/response encryption for sensitive data
-```
+```text
 
 ---
 
@@ -204,28 +204,28 @@ async function saveSecret(key: string, value: string) {
 
 // Authentication: None (local-only app)
 // Authorization: None (single user)
-```
+```text
 
 ### Planned Implementation
 
 ```typescript
 /**
- * Authentication Strategy
- * 
- * Plain English: When we add server sync, we'll use:
- * 1. JWT tokens (short-lived access, long-lived refresh)
- * 2. Biometric authentication (Face ID, Touch ID)
- * 3. Device binding (one device = one session)
+* Authentication Strategy
+ *
+* Plain English: When we add server sync, we'll use:
+* 1. JWT tokens (short-lived access, long-lived refresh)
+* 2. Biometric authentication (Face ID, Touch ID)
+* 3. Device binding (one device = one session)
  */
 
 interface AuthStrategy {
   // Primary: Biometric
   biometric: {
-    method: 'faceId' | 'touchId' | 'fingerprint';
+ method: 'faceId' | 'touchId' | 'fingerprint';
     fallback: 'pin' | 'password';
     required: boolean;
   };
-  
+
   // Backend: JWT tokens
   jwt: {
     accessToken: {
@@ -237,36 +237,36 @@ interface AuthStrategy {
       storage: 'SecureStore'; // Encrypted storage
     };
   };
-  
+
   // Security: Device binding
   deviceBinding: {
     deviceId: 'unique per device';
     revocable: true; // User can revoke from any device
   };
 }
-```
+```text
 
 ### Authorization Model
 
 ```typescript
 /**
- * Authorization Strategy
- * 
- * Plain English: Who can access what data?
- * - Each user owns their data
- * - Modules can only access their own data
- * - Cross-module access requires explicit permission
+* Authorization Strategy
+ *
+* Plain English: Who can access what data?
+* - Each user owns their data
+* - Modules can only access their own data
+* - Cross-module access requires explicit permission
  */
 
 interface AuthorizationModel {
   // Data ownership
   ownership: 'user-scoped'; // All data belongs to user
-  
+
   // Module isolation
   moduleAccess: {
     // Modules can only access their own data
     default: 'own-data-only';
-    
+
     // Cross-module access requires permission
     crossModule: {
       calendar: ['maps', 'food', 'wallet'], // Calendar can share with these
@@ -274,7 +274,7 @@ interface AuthorizationModel {
       notes: ['planner', 'calendar'],
     };
   };
-  
+
   // Event bus access
   eventAccess: {
     emit: 'any-module'; // Any module can emit events
@@ -282,7 +282,7 @@ interface AuthorizationModel {
     // Security: Event data validation required
   };
 }
-```
+```text
 
 ---
 
@@ -292,13 +292,13 @@ interface AuthorizationModel {
 
 ```typescript
 /**
- * Input Validation
- * 
- * Plain English: Never trust user input. Always validate and sanitize.
- * 
- * Why it exists: Prevents injection attacks, data corruption, XSS.
- * 
- * Failure modes: Invalid data could crash app or corrupt database.
+* Input Validation
+ *
+* Plain English: Never trust user input. Always validate and sanitize.
+ *
+* Why it exists: Prevents injection attacks, data corruption, XSS.
+ *
+* Failure modes: Invalid data could crash app or corrupt database.
  */
 
 // Validation layers:
@@ -306,7 +306,7 @@ interface AuthorizationModel {
 2. Business logic: Range validation (min/max, allowed values)
 3. Storage layer: Type validation (string, number, boolean)
 4. Event bus: Payload structure validation
-```
+```text
 
 ### Validation Examples
 
@@ -314,58 +314,58 @@ interface AuthorizationModel {
 // Search query validation
 function validateSearchQuery(query: string): string {
   // Plain English: Limit query length, remove dangerous characters
-  
-  if (!query || typeof query !== 'string') {
+
+ if (!query |  | typeof query !== 'string') {
     throw new Error('Invalid search query');
   }
-  
+
   // Limit length (DoS prevention)
   if (query.length > 1000) {
     throw new Error('Search query too long');
   }
-  
+
   // Remove potential injection characters
   // Note: We use parameterized queries, but defense in depth
   const sanitized = query.replace(/[<>]/g, '');
-  
+
   return sanitized.trim();
 }
 
 // Event payload validation
 function validateEventPayload(payload: unknown): EventPayload {
   // Plain English: Ensure event has required fields and correct types
-  
-  if (!payload || typeof payload !== 'object') {
+
+ if (!payload |  | typeof payload !== 'object') {
     throw new Error('Invalid event payload');
   }
-  
+
   const p = payload as Record<string, unknown>;
-  
-  if (!p.eventType || typeof p.eventType !== 'string') {
+
+ if (!p.eventType |  | typeof p.eventType !== 'string') {
     throw new Error('Missing or invalid eventType');
   }
-  
-  if (!p.timestamp || typeof p.timestamp !== 'string') {
+
+ if (!p.timestamp |  | typeof p.timestamp !== 'string') {
     throw new Error('Missing or invalid timestamp');
   }
-  
-  if (!p.data || typeof p.data !== 'object') {
+
+ if (!p.data |  | typeof p.data !== 'object') {
     throw new Error('Missing or invalid data');
   }
-  
+
   return payload as EventPayload;
 }
 
 // User input sanitization
 function sanitizeUserInput(input: string): string {
   // Plain English: Remove dangerous HTML/script tags
-  
+
   // Remove HTML tags
   let sanitized = input.replace(/<[^>]*>/g, '');
-  
+
   // Remove script event handlers
   sanitized = sanitized.replace(/on\w+\s*=\s*["'][^"']*["']/gi, '');
-  
+
   // Encode special characters
   sanitized = sanitized
     .replace(/&/g, '&amp;')
@@ -373,10 +373,10 @@ function sanitizeUserInput(input: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;');
-  
+
   return sanitized;
 }
-```
+```text
 
 ---
 
@@ -386,14 +386,14 @@ function sanitizeUserInput(input: string): string {
 
 ```typescript
 /**
- * Output Encoding
- * 
- * Plain English: When showing user-generated content, encode it properly
- * to prevent malicious code from running.
- * 
- * Why it exists: Prevents XSS attacks where attacker's script runs in victim's app.
- * 
- * Failure modes: Without encoding, malicious note/message could steal data.
+* Output Encoding
+ *
+* Plain English: When showing user-generated content, encode it properly
+* to prevent malicious code from running.
+ *
+* Why it exists: Prevents XSS attacks where attacker's script runs in victim's app.
+ *
+* Failure modes: Without encoding, malicious note/message could steal data.
  */
 
 // React Native automatically encodes text in <Text> components
@@ -402,7 +402,7 @@ function sanitizeUserInput(input: string): string {
 - URLs (use encodeURIComponent)
 - JavaScript eval (NEVER use eval)
 - Dynamic require (validate module names)
-```
+```text
 
 ### Safe Rendering
 
@@ -424,7 +424,7 @@ eval(userInput); // NEVER DO THIS
 import DOMPurify from 'dompurify';
 const clean = DOMPurify.sanitize(userInput);
 <WebView source={{ html: clean }} />
-```
+```text
 
 ---
 
@@ -434,15 +434,15 @@ const clean = DOMPurify.sanitize(userInput);
 
 ```typescript
 /**
- * Event Bus Security
- * 
- * Plain English: Event bus allows modules to communicate.
- * Must ensure malicious module can't harm others.
- * 
- * Threats:
- * - Malicious event data (injection, XSS)
- * - Event flooding (DoS)
- * - Sensitive data leakage
+* Event Bus Security
+ *
+* Plain English: Event bus allows modules to communicate.
+* Must ensure malicious module can't harm others.
+ *
+* Threats:
+* - Malicious event data (injection, XSS)
+* - Event flooding (DoS)
+* - Sensitive data leakage
  */
 
 // Mitigations:
@@ -451,7 +451,7 @@ const clean = DOMPurify.sanitize(userInput);
 3. Sanitize event data before processing
 4. Isolate listener errors (one fails, others continue)
 5. Audit event emissions (track suspicious patterns)
-```
+```text
 
 ### Event Validation
 
@@ -463,15 +463,15 @@ class EventBus {
     if (!Object.values(EVENT_TYPES).includes(eventType)) {
       throw new Error(`Invalid event type: ${eventType}`);
     }
-    
+
     // 2. Validate data is object
-    if (!data || typeof data !== 'object') {
+ if (!data |  | typeof data !== 'object') {
       throw new Error('Event data must be object');
     }
-    
+
     // 3. Sanitize data (future enhancement)
     const sanitizedData = this.sanitizeEventData(data);
-    
+
     // 4. Create validated payload
     const payload: EventPayload = {
       eventType,
@@ -479,15 +479,15 @@ class EventBus {
       data: sanitizedData,
       moduleId: this.validateModuleId(moduleId),
     };
-    
+
     // 5. Emit to listeners with error isolation
     this.notifyListeners(payload);
   }
-  
+
   private sanitizeEventData(data: Record<string, unknown>): Record<string, unknown> {
     // Recursively sanitize object
     const sanitized: Record<string, unknown> = {};
-    
+
     for (const [key, value] of Object.entries(data)) {
       if (typeof value === 'string') {
         sanitized[key] = sanitizeUserInput(value);
@@ -497,11 +497,11 @@ class EventBus {
         sanitized[key] = value;
       }
     }
-    
+
     return sanitized;
   }
 }
-```
+```text
 
 ---
 
@@ -511,16 +511,16 @@ class EventBus {
 
 ```typescript
 /**
- * Module Isolation
- * 
- * Plain English: Each module should be independent and secure.
- * One compromised module shouldn't compromise others.
- * 
- * Isolation boundaries:
- * - Data storage (separate AsyncStorage keys)
- * - Event listeners (error isolation)
- * - Navigation state (separate stacks)
- * - Memory (garbage collection per module)
+* Module Isolation
+ *
+* Plain English: Each module should be independent and secure.
+* One compromised module shouldn't compromise others.
+ *
+* Isolation boundaries:
+* - Data storage (separate AsyncStorage keys)
+* - Event listeners (error isolation)
+* - Navigation state (separate stacks)
+* - Memory (garbage collection per module)
  */
 
 // Module data isolation
@@ -536,7 +536,7 @@ async function getModuleData(module: ModuleType, key: string) {
   const prefix = MODULE_STORAGE_PREFIX[module];
   return await AsyncStorage.getItem(`${prefix}${key}`);
 }
-```
+```text
 
 ---
 
@@ -546,15 +546,15 @@ async function getModuleData(module: ModuleType, key: string) {
 
 ```typescript
 /**
- * Data Minimization Principle
- * 
- * Plain English: Collect only what's needed, keep only what's used.
- * 
- * Guidelines:
- * - Don't log sensitive data (passwords, tokens, personal info)
- * - Don't send analytics without user consent
- * - Don't store data longer than necessary
- * - Don't access device features without permission
+* Data Minimization Principle
+ *
+* Plain English: Collect only what's needed, keep only what's used.
+ *
+* Guidelines:
+* - Don't log sensitive data (passwords, tokens, personal info)
+* - Don't send analytics without user consent
+* - Don't store data longer than necessary
+* - Don't access device features without permission
  */
 
 // Example: Analytics event (privacy-safe)
@@ -573,22 +573,22 @@ logger.error('Database error', {
   // noteId: REMOVED - Could identify user
   // stackTrace: SANITIZED - Remove PII
 });
-```
+```text
 
 ### User Controls
 
 ```typescript
 /**
- * Privacy Controls
- * 
- * Plain English: Users must control their privacy.
- * 
- * Required controls:
- * - Data export (download all data)
- * - Data deletion (delete all data)
- * - Analytics opt-out
- * - Telemetry opt-out
- * - Module permissions
+* Privacy Controls
+ *
+* Plain English: Users must control their privacy.
+ *
+* Required controls:
+* - Data export (download all data)
+* - Data deletion (delete all data)
+* - Analytics opt-out
+* - Telemetry opt-out
+* - Module permissions
  */
 
 interface PrivacySettings {
@@ -596,13 +596,13 @@ interface PrivacySettings {
     enabled: boolean; // User can disable
     dataTypes: ['usage', 'performance', 'errors']; // Transparent
   };
-  
+
   dataRetention: {
-    messages: '90 days' | '1 year' | 'forever';
-    events: '1 year' | '2 years' | 'forever';
+ messages: '90 days' | '1 year' | 'forever';
+ events: '1 year' | '2 years' | 'forever';
     notes: 'forever'; // User controls archival
   };
-  
+
   modulePermissions: {
     camera: boolean;
     location: boolean;
@@ -611,7 +611,7 @@ interface PrivacySettings {
     photos: boolean;
   };
 }
-```
+```text
 
 ---
 
@@ -643,7 +643,7 @@ interface PrivacySettings {
 - [ ] Secure storage used for credentials
 - [ ] Dependencies up to date
 - [ ] Tests cover security scenarios
-```
+```text
 
 ### CodeQL Analysis
 
@@ -664,15 +664,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: javascript, typescript
-      
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-```
+```text
 
 ---
 
@@ -682,17 +682,17 @@ jobs:
 
 ```typescript
 /**
- * Security Incident Response
- * 
- * Plain English: What to do if security breach discovered.
- * 
- * Steps:
- * 1. Detect: Monitor for anomalies
- * 2. Contain: Limit damage
- * 3. Investigate: Understand scope
- * 4. Remediate: Fix vulnerability
- * 5. Communicate: Notify affected users
- * 6. Learn: Prevent recurrence
+* Security Incident Response
+ *
+* Plain English: What to do if security breach discovered.
+ *
+* Steps:
+* 1. Detect: Monitor for anomalies
+* 2. Contain: Limit damage
+* 3. Investigate: Understand scope
+* 4. Remediate: Fix vulnerability
+* 5. Communicate: Notify affected users
+* 6. Learn: Prevent recurrence
  */
 
 interface IncidentResponse {
@@ -700,29 +700,29 @@ interface IncidentResponse {
     monitoring: ['error logs', 'usage anomalies', 'user reports'];
     alerting: ['email', 'slack', 'on-call'];
   };
-  
+
   containment: {
     immediate: ['disable feature', 'block access', 'rotate keys'];
     shortTerm: ['patch vulnerability', 'rollback release'];
   };
-  
+
   investigation: {
     scope: ['affected users', 'compromised data', 'attack vector'];
     forensics: ['logs', 'database', 'analytics'];
   };
-  
+
   remediation: {
     fix: ['code patch', 'dependency update', 'config change'];
     validation: ['security test', 'penetration test', 'audit'];
   };
-  
+
   communication: {
     internal: ['eng team', 'management', 'legal'];
     external: ['affected users', 'public disclosure (if required)'];
     timeline: 'within 72 hours of discovery';
   };
 }
-```
+```text
 
 ### Known Vulnerabilities
 
@@ -772,6 +772,6 @@ interface IncidentResponse {
 
 ---
 
-**Document Maintainer**: Security Team  
-**Review Frequency**: Quarterly  
+**Document Maintainer**: Security Team
+**Review Frequency**: Quarterly
 **Last Security Audit**: Not yet conducted (planned Q2 2026)

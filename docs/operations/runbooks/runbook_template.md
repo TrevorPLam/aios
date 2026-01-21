@@ -1,9 +1,9 @@
 # Runbook: [Incident/Task Name]
 
-**Severity:** [Critical | High | Medium | Low]  
-**Last Tested:** YYYY-MM-DD  
-**Owner:** [Team/Person]  
-**Response Time:** [Immediate | < 30 min | < 2 hours | Next business day]
+ **Severity:** [Critical | High | Medium | Low]
+**Last Tested:** YYYY-MM-DD
+**Owner:** [Team/Person]
+ **Response Time:** [Immediate | < 30 min | < 2 hours | Next business day]
 
 ## Plain English Summary
 
@@ -27,14 +27,17 @@ How do you know this incident is occurring?
 ## Impact
 
 ### User Impact
+
 - [What users experience] - e.g., "Cannot access application"
 - [Affected functionality] - e.g., "Login and data sync broken"
 
 ### System Impact
+
 - [What systems are affected] - e.g., "API server cannot connect to database"
 - [Cascading effects] - e.g., "Background jobs failing"
 
 ### Business Impact
+
 - [Revenue/business effect] - e.g., "Users cannot complete purchases"
 - [SLA impact] - e.g., "Violates 99.9% uptime SLA"
 
@@ -56,7 +59,7 @@ Before following this runbook, ensure you have:
 aws-cli >= 2.0
 kubectl >= 1.24
 psql >= 14.0
-```
+```text
 
 ### Required Permissions
 
@@ -72,12 +75,12 @@ psql >= 14.0
 # Check system health
 curl https://api.aios.example.com/health
 
-# Expected output:
+# Expected output
 # {"status": "ok"}
 
-# If failing, output will be:
+# If failing, output will be
 # {"status": "error", "database": "unreachable"}
-```
+```text
 
 ### Step 2: Check Monitoring
 
@@ -89,7 +92,7 @@ curl https://api.aios.example.com/health
 ### Step 3: Assess Severity
 
 | Condition | Severity | Action |
-|-----------|----------|--------|
+| ----------- | ---------- | -------- |
 | Complete outage | Critical | Continue with resolution |
 | Partial functionality | High | Continue with resolution |
 | Minor issues | Medium | Schedule during business hours |
@@ -103,24 +106,24 @@ Follow these steps in order. Don't skip ahead.
 
 **Goal:** [What this step accomplishes]
 
-**Commands:**
+### Commands
 ```bash
 # Command 1 with explanation
 kubectl get pods -n production
 
-# Expected output:
+# Expected output (2)
 # NAME                    READY   STATUS    RESTARTS   AGE
 # api-server-abc123       1/1     Running   0          5h
 
-# If pods are not running:
+# If pods are not running
 kubectl describe pod api-server-abc123 -n production
-```
+```text
 
-**Success Criteria:**
+### Success Criteria
 - [ ] [Measurable outcome 1]
 - [ ] [Measurable outcome 2]
 
-**If this doesn't work:**
+### If this doesn't work
 - Go to Step [alternative step number]
 - Or escalate to [team/person]
 
@@ -128,15 +131,15 @@ kubectl describe pod api-server-abc123 -n production
 
 **Goal:** [What this step accomplishes]
 
-**Commands:**
+### Commands (2)
 ```bash
 # Command with explanation
-```
+```text
 
-**Success Criteria:**
+## Success Criteria
 - [ ] [Measurable outcome]
 
-**If this doesn't work:**
+### If this doesn't work (2)
 - [Alternative approach]
 
 ### Step 3: [Third Action]
@@ -153,9 +156,9 @@ After completing resolution steps, verify the fix:
 # Verify service is responding
 curl https://api.aios.example.com/health
 
-# Should return:
+# Should return
 # {"status": "ok", "database": "connected"}
-```
+```text
 
 ### Step 2: Monitor Error Rates
 
@@ -173,7 +176,7 @@ curl -X POST https://api.aios.example.com/api/auth/login \
   -d '{"email":"test@example.com","password":"test"}'
 
 # Should return 200 with JWT token
-```
+```text
 
 ### Step 4: Confirm with Users
 
@@ -201,13 +204,13 @@ curl -X POST https://api.aios.example.com/api/auth/login \
 
 ### Example Status Update
 
-```
+```text
 INCIDENT UPDATE - [Timestamp]
 Status: Investigating / Identified / Monitoring / Resolved
 Impact: [Description of user impact]
 Action: [What we're doing to fix it]
 ETA: [When we expect resolution]
-```
+```text
 
 ## Rollback Procedure
 
@@ -220,7 +223,7 @@ If resolution steps don't work, rollback:
 kubectl rollout history deployment/api-server -n production
 
 # Identify last good revision (e.g., revision 42)
-```
+```text
 
 ### Step 2: Execute Rollback
 
@@ -228,9 +231,9 @@ kubectl rollout history deployment/api-server -n production
 # Rollback to previous version
 kubectl rollout undo deployment/api-server -n production
 
-# Or rollback to specific revision:
+# Or rollback to specific revision
 kubectl rollout undo deployment/api-server --to-revision=42 -n production
-```
+```text
 
 ### Step 3: Verify Rollback
 
@@ -240,7 +243,7 @@ kubectl rollout status deployment/api-server -n production
 
 # Verify health
 curl https://api.aios.example.com/health
-```
+```text
 
 ## Escalation
 
@@ -294,7 +297,7 @@ kubectl logs -n production deployment/api-server --tail=100 | grep ERROR
 
 # Check database performance
 psql $DATABASE_URL -c "SELECT * FROM pg_stat_activity;"
-```
+```text
 
 ## Post-Incident Actions
 
@@ -330,6 +333,7 @@ After resolving the incident:
 ## Failure Modes
 
 ### Failure Mode 1: [Name]
+
 - **Symptom:** [How this failure manifests]
 - **Impact:** [Effect on resolution]
 - **Detection:** [How to detect this failure]
@@ -350,9 +354,9 @@ To verify this runbook works:
 [check that issue is resolved]
 
 # 4. Update "Last Tested" date above
-```
+```text
 
-**Testing Schedule:** [Quarterly | Monthly | After major changes]
+ **Testing Schedule:** [Quarterly | Monthly | After major changes]
 
 ## Automation Candidate
 
@@ -362,14 +366,14 @@ This section identifies opportunities to automate this runbook.
 
 1. **Step [N]:** [Description of manual step]
    - **Automation approach:** [How it could be automated]
-   - **Effort:** [Small | Medium | Large]
-   - **Priority:** [High | Medium | Low]
+- **Effort:** [Small | Medium | Large]
+- **Priority:** [High | Medium | Low]
    - **Ticket:** [Link to automation ticket if created]
 
 2. **Step [N]:** [Another manual step]
    - **Automation approach:** [How it could be automated]
-   - **Effort:** [Small | Medium | Large]
-   - **Priority:** [High | Medium | Low]
+- **Effort:** [Small | Medium | Large]
+- **Priority:** [High | Medium | Low]
 
 ### Automation Plan
 
@@ -380,6 +384,7 @@ This section identifies opportunities to automate this runbook.
 ### Automation Criteria
 
 Automate this runbook if:
+
 - [ ] Executed more than once per month
 - [ ] Steps are deterministic and safe
 - [ ] No judgment calls required

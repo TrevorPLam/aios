@@ -1,7 +1,7 @@
 # ADR-007: Governance enforcement via CI pipeline
 
-**Status:** Accepted  
-**Date:** 2026-01-18  
+**Status:** Accepted
+**Date:** 2026-01-18
 **Context:** Current PR - Governance compliance implementation
 
 ## Context
@@ -28,13 +28,13 @@ Add `docs-validation` job to main CI that runs:
 - Markdown linting (markdownlint)
 - Enforces on all PRs
 - Blocks merge on failure
-```
+```text
 
 ### 2. Branch Protection Rules
 
 Require all CI checks to pass before merge:
 
-**Code checks:**
+### Code checks
 - TypeScript type checking
 - ESLint
 - Prettier formatting
@@ -43,7 +43,7 @@ Require all CI checks to pass before merge:
 - Client build
 - Server build
 
-**Documentation checks (NEW):**
+### Documentation checks (NEW)
 - docs-validation (spell + markdown)
 - Documentation workflows (links, quality)
 
@@ -51,17 +51,17 @@ Require all CI checks to pass before merge:
 
 ### 3. Phased Rollout Approach
 
-**Phase 1 (Current):**
+#### Phase 1 (Current)
 - Add docs-validation to main CI
 - Make core checks blocking
 - Vale set to advisory (suggestion level)
 
-**Phase 2 (After team familiarity):**
+### Phase 2 (After team familiarity)
 - Make Vale checks blocking
 - Add custom governance rules
 - Implement automated Diátaxis categorization check
 
-**Phase 3 (Future):**
+### Phase 3 (Future)
 - ADR requirement detection (when architecture files change)
 - Plain English Summary validation
 - Documentation coverage requirements
@@ -70,12 +70,12 @@ Require all CI checks to pass before merge:
 
 ### 1. Separate Documentation CI Pipeline
 
-**Pros:**
+#### Pros
 - Faster code-only PRs
 - Can evolve independently
 - Optional for documentation-only changes
 
-**Cons:**
+### Cons
 - Easy to ignore/bypass
 - Creates two classes of PRs
 - Doesn't enforce governance consistently
@@ -84,11 +84,11 @@ Require all CI checks to pass before merge:
 
 ### 2. Pre-merge Manual Checklist
 
-**Pros:**
+#### Pros (2)
 - Flexible for edge cases
 - Human judgment
 
-**Cons:**
+### Cons (2)
 - Not scalable
 - Easy to forget
 - Inconsistent across reviewers
@@ -97,11 +97,11 @@ Require all CI checks to pass before merge:
 
 ### 3. Git Hooks (Pre-commit/Pre-push)
 
-**Pros:**
+#### Pros (3)
 - Catches issues early
 - Fast feedback
 
-**Cons:**
+### Cons (3)
 - Can be bypassed (`--no-verify`)
 - Not enforced for all contributors
 - Doesn't work in web-based Git editors
@@ -110,11 +110,11 @@ Require all CI checks to pass before merge:
 
 ### 4. Post-merge Quality Checks
 
-**Pros:**
+#### Pros (4)
 - Doesn't block development
 - Can be more comprehensive
 
-**Cons:**
+### Cons (4)
 - Allows violations into main
 - Requires rollback/hotfixes
 - Breaks main branch
@@ -151,17 +151,20 @@ Require all CI checks to pass before merge:
 ## Implementation Strategy
 
 ### Stage 1: Foundation (Complete)
+
 - ✅ Add Vale configuration (`.vale.ini`)
 - ✅ Expand spell check dictionary (`.cspell.json`)
 - ✅ Add docs-validation job to main CI
 - ✅ Document branch protection requirements
 
 ### Stage 2: Enforcement (In Progress)
+
 - ⏳ Administrator configures branch protection
 - ⏳ Monitor for false positives
 - ⏳ Adjust rules based on feedback
 
 ### Stage 3: Enhancement (Future)
+
 - ⏸️ Add custom governance rules
 - ⏸️ Implement ADR enforcement
 - ⏸️ Add Plain English Summary validation
@@ -172,7 +175,7 @@ Require all CI checks to pass before merge:
 After implementation:
 
 | Governance Requirement | Before | After | Status |
-|------------------------|--------|-------|--------|
+| ------------------------ | -------- | ------- | -------- |
 | Markdownlint passes | Manual | Automated | ✅ Enforced |
 | Links validated | Separate | Automated | ✅ Enforced |
 | Spell check passes | Separate | Automated | ✅ Enforced |
@@ -199,7 +202,7 @@ After branch protection configuration:
 # Test 2: PR with broken markdown should be blocked
 # Test 3: PR with valid docs should pass
 # Test 4: Code-only PR should still require docs checks
-```
+```text
 
 ## References
 
@@ -210,6 +213,6 @@ After branch protection configuration:
 
 ---
 
-**Accepted by:** Development team  
-**Implementation:** In progress (awaiting branch protection configuration)  
+**Accepted by:** Development team
+**Implementation:** In progress (awaiting branch protection configuration)
 **Expected completion:** 2026-01-18

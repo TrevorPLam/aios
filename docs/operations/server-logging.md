@@ -11,7 +11,7 @@ The server uses Winston for structured logging with environment-specific formatt
 - `NODE_ENV`: Controls log format
   - `production`: JSON structured logs for parsing
   - `development`: Human-readable colored console logs
-  
+
 - `LOG_LEVEL`: Controls minimum log level (default: `info`)
   - `error`: Only errors
   - `warn`: Warnings and errors
@@ -29,7 +29,7 @@ NODE_ENV=production LOG_LEVEL=warn npm run server:prod
 
 # Debug mode
 LOG_LEVEL=debug npm run server:dev
-```
+```text
 
 ## Usage
 
@@ -50,17 +50,19 @@ try {
 } catch (error) {
   logger.error('Operation failed', { error });
 }
-```
+```text
 
 ## Log Format
 
 ### Development Format
-```
+
+```text
 2026-01-19 04:59:00 [info]: Server started { "port": 5000, "host": "0.0.0.0" }
 2026-01-19 04:59:01 [error]: Database connection failed { "error": "Connection timeout" }
-```
+```text
 
 ### Production Format (JSON)
+
 ```json
 {
   "level": "info",
@@ -79,7 +81,7 @@ try {
   "timestamp": "2026-01-19T04:59:01.000Z",
   "service": "aios-server"
 }
-```
+```text
 
 ## Error Handler Integration
 
@@ -97,16 +99,18 @@ The error handler automatically logs errors with request context:
 ## Migration from console.log
 
 Before:
+
 ```typescript
 console.log(`Server started on port ${port}`);
 console.error('Unexpected error:', err);
-```
+```text
 
 After:
+
 ```typescript
 logger.info('Server started', { port });
 logger.error('Unexpected error', { error: err, path: req.path });
-```
+```text
 
 ## Task Completion
 

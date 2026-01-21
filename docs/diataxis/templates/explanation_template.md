@@ -1,7 +1,7 @@
 # [Concept/Decision/Architecture] Explained
 
-> **Type:** Explanation (Understanding-Oriented)  
-> **Audience:** Architects, senior developers  
+> **Type:** Explanation (Understanding-Oriented)
+> **Audience:** Architects, senior developers
 > **Purpose:** Deep understanding of [topic]
 
 ## Plain English Summary
@@ -17,12 +17,14 @@
 
 [Describe the situation or problem that led to this decision/design]
 
-**Background:**
+### Background
+
 - [Historical context #1]
 - [Historical context #2]
 - [Business/technical constraints]
 
-**Problem Statement:**
+### Problem Statement
+
 [What problem were we trying to solve?]
 
 ---
@@ -31,10 +33,12 @@
 
 [Explain what we chose to do]
 
-**Summary:**
+### Summary
+
 [1-2 sentences on the high-level approach]
 
-**Key Principles:**
+#### Key Principles
+
 1. [Principle #1] - [Why it matters]
 2. [Principle #2] - [Why it matters]
 3. [Principle #3] - [Why it matters]
@@ -49,11 +53,13 @@
 
 [Detailed explanation of this component]
 
-**Responsibilities:**
+### Responsibilities
+
 - [Responsibility #1]
 - [Responsibility #2]
 
-**Interactions:**
+### Interactions
+
 - Calls: [what it calls]
 - Called by: [what calls it]
 - Data flow: [how data flows]
@@ -66,10 +72,10 @@
 
 ```mermaid
 graph TD
-    A[Component 1] -->|data| B[Component 2]
+ A[Component 1] --> | data | B[Component 2]
     B --> C[Component 3]
-    C -->|result| A
-```
+ C --> | result | A
+```text
 
 [Or link to architecture diagram]
 
@@ -79,17 +85,17 @@ graph TD
 
 ### Rationale
 
-**We chose this because:**
+#### We chose this because
 1. [Reason #1] - [Explanation with evidence]
 2. [Reason #2] - [Explanation with evidence]
 3. [Reason #3] - [Explanation with evidence]
 
-**Key Benefits:**
+### Key Benefits
 - ✅ [Benefit #1] - [Why it matters]
 - ✅ [Benefit #2] - [Why it matters]
 - ✅ [Benefit #3] - [Why it matters]
 
-**Trade-offs Accepted:**
+### Trade-offs Accepted
 - ⚠️ [Trade-off #1] - [Why acceptable]
 - ⚠️ [Trade-off #2] - [Why acceptable]
 
@@ -99,34 +105,34 @@ graph TD
 
 ### Alternative A: [Approach Name]
 
-**Description:**
+#### Description
 [What this alternative was]
 
-**Pros:**
+### Pros
 - [Advantage #1]
 - [Advantage #2]
 
-**Cons:**
+### Cons
 - [Disadvantage #1]
 - [Disadvantage #2]
 
-**Why we didn't choose it:**
+### Why we didn't choose it
 [Explanation]
 
 ---
 
 ### Alternative B: [Approach Name]
 
-**Description:**
+#### Description (2)
 [What this alternative was]
 
-**Pros:**
+### Pros (2)
 - [Advantage #1]
 
-**Cons:**
+### Cons (2)
 - [Disadvantage #1]
 
-**Why we didn't choose it:**
+### Why we didn't choose it (2)
 [Explanation]
 
 ---
@@ -141,7 +147,7 @@ graph TD
 
 **Because:** [Reasoning]
 
-**Impact:**
+### Impact
 - On performance: [Impact]
 - On developer experience: [Impact]
 - On users: [Impact]
@@ -158,12 +164,12 @@ graph TD
 
 ### For Developers
 
-**What this means for you:**
+#### What this means for you
 - [Implication #1]
 - [Implication #2]
 - [Implication #3]
 
-**Development patterns to follow:**
+### Development patterns to follow
 - [Pattern #1]
 - [Pattern #2]
 
@@ -171,7 +177,7 @@ graph TD
 
 ### For Users
 
-**User experience implications:**
+#### User experience implications
 - [Impact #1]
 - [Impact #2]
 
@@ -179,7 +185,7 @@ graph TD
 
 ### For Operations
 
-**Operational implications:**
+#### Operational implications
 - [Impact #1]
 - [Impact #2]
 
@@ -210,15 +216,18 @@ graph TD
 ### Evolution
 
 **Phase 1:** [Original approach]
+
 - Used from: [date/version]
 - Why: [reasoning]
 
 **Phase 2:** [First iteration]
+
 - Changed to: [new approach]
 - Why: [reasoning]
 - Migration: [how we transitioned]
 
 **Phase 3 (Current):** [Current approach]
+
 - Changed to: [new approach]
 - Why: [reasoning]
 - Migration: [how we transitioned]
@@ -234,14 +243,17 @@ graph TD
 ## Related Concepts
 
 ### Builds On
+
 - [Foundational concept #1] - [Why relevant]
 - [Foundational concept #2] - [Why relevant]
 
 ### Related To
+
 - [Related concept #1] - [Connection]
 - [Related concept #2] - [Connection]
 
 ### Enables
+
 - [What this makes possible #1]
 - [What this makes possible #2]
 
@@ -253,7 +265,7 @@ graph TD
 
 **Situation:** [Concrete scenario]
 
-**How the design handles it:**
+### How the design handles it
 [Detailed walkthrough]
 
 **Result:** [Outcome]
@@ -270,17 +282,18 @@ graph TD
 
 ### Potential Evolution
 
-**What might change:**
+#### What might change
 - [Possible change #1] - [Why/when]
 - [Possible change #2] - [Why/when]
 
-**What will remain stable:**
+### What will remain stable
 - [Stable aspect #1] - [Why]
 - [Stable aspect #2] - [Why]
 
 ### Migration Paths
 
 If we need to change this in the future:
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
@@ -289,16 +302,16 @@ If we need to change this in the future:
 
 ## Decision Log
 
-**Decision Date:** [Date]  
-**Decided By:** [People/role]  
-**Documented In:** [ADR link if applicable]  
+**Decision Date:** [Date]
+**Decided By:** [People/role]
+**Documented In:** [ADR link if applicable]
 **Status:** [Active/Deprecated/Superseded]
 
-**Stakeholders:**
+### Stakeholders
 - [Stakeholder #1] - [Role]
 - [Stakeholder #2] - [Role]
 
-**Review Schedule:**
+### Review Schedule
 - Next review: [Date]
 - Review frequency: [Quarterly/Annually/etc]
 
@@ -306,19 +319,19 @@ If we need to change this in the future:
 
 ## Related Documentation
 
-**ADRs:**
+### ADRs
 - [ADR that formalized this decision]
 
-**Reference:**
+### Reference
 - [API/component reference]
 
-**How-To:**
+### How-To
 - [How to implement using this design]
 
-**Tutorial:**
+### Tutorial
 - [Learning resource]
 
-**Architecture:**
+### Architecture
 - [Higher-level architecture doc]
 - [C4 diagrams]
 
@@ -333,31 +346,31 @@ If we need to change this in the future:
 ## Failure Modes
 
 | Failure | Cause | Mitigation |
-|---------|-------|------------|
+| --------- | ------- | ------------ |
 | [Failure] | [Why it happens] | [What we do] |
 
 ## How to Verify
 
-**Verify understanding:**
+### Verify understanding
 - Can you explain why we chose this approach?
 - Can you describe the trade-offs?
 - Can you name the alternatives considered?
 
-**Verify implementation:**
+### Verify implementation
 ```bash
 # Check if implementation matches design
 [commands to inspect]
-```
+```text
 
 ---
 
 ## Discussion
 
-**Open Questions:**
+### Open Questions
 - [Question #1 that remains]
 - [Question #2 that remains]
 
-**Known Issues:**
+### Known Issues
 - [Issue #1] - [Status/plan]
 - [Issue #2] - [Status/plan]
 
@@ -369,6 +382,6 @@ If we need to change this in the future:
 
 ---
 
-*Last Updated: [Date]*  
-*Reviewers: [Names]*  
+*Last Updated: [Date]*
+*Reviewers: [Names]*
 *Discussion: [Link to original discussion/RFC]*

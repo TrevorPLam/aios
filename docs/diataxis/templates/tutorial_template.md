@@ -1,8 +1,8 @@
 # [Tutorial Title] - Getting Started with [Feature/Module]
 
-> **Type:** Tutorial (Learning-Oriented)  
-> **Audience:** Beginners  
-> **Time:** ~XX minutes  
+> **Type:** Tutorial (Learning-Oriented)
+> **Audience:** Beginners
+> **Time:** ~XX minutes
 > **Prerequisites:** [List required knowledge]
 
 ## Plain English Summary
@@ -16,6 +16,7 @@
 ## What You'll Learn
 
 By completing this tutorial, you will be able to:
+
 - [ ] [Specific skill or concept #1]
 - [ ] [Specific skill or concept #2]
 - [ ] [Specific skill or concept #3]
@@ -29,20 +30,23 @@ Example: "A complete Notebook screen with note creation, editing, and tag suppor
 
 ## Prerequisites
 
-**Required:**
+### Required
+
 - [ ] [Prerequisite #1] - [Why needed]
 - [ ] [Prerequisite #2] - [Why needed]
 
-**Recommended:**
+### Recommended
+
 - [ ] [Helpful background #1]
 - [ ] [Helpful background #2]
 
-**Setup:**
+### Setup
+
 ```bash
 # Commands to verify prerequisites
 node --version  # Should be v20+
 npm --version
-```
+```text
 
 ---
 
@@ -51,18 +55,21 @@ npm --version
 [Brief introduction to what this step accomplishes]
 
 ### What we're doing
+
 [Explain the goal of this step in 1-2 sentences]
 
 ### Action
+
 ```bash
 # Concrete commands or code
 [command or code block]
-```
+```text
 
 ### What you should see
-```
+
+```text
 [Expected output]
-```
+```text
 
 **✅ Checkpoint:** [How to verify this step worked]
 
@@ -72,16 +79,19 @@ npm --version
 
 [Continue same pattern...]
 
-### What we're doing
+### What we're doing (2)
+
 [Goal explanation]
 
-### Action
+### Action (2)
+
 ```typescript
 // File: path/to/file.ts
 // Concrete code to add/modify
-```
+```text
 
-### What you should see
+### What you should see (2)
+
 [Expected result - screenshot, output, or description]
 
 **✅ Checkpoint:** [Verification step]
@@ -106,9 +116,9 @@ npm run test
 npm start
 # Navigate to [location]
 # You should see [expected behavior]
-```
+```text
 
-**Expected result:**
+## Expected result
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
 - [ ] [Criterion 3]
@@ -118,11 +128,13 @@ npm start
 ## What You Learned
 
 Congratulations! You've just:
+
 - ✅ [Accomplished goal #1]
 - ✅ [Accomplished goal #2]
 - ✅ [Accomplished goal #3]
 
 ### Key Concepts Covered
+
 1. **[Concept 1]:** [Brief explanation]
 2. **[Concept 2]:** [Brief explanation]
 3. **[Concept 3]:** [Brief explanation]
@@ -137,6 +149,7 @@ Ready to learn more? Try these tutorials next:
 - **[Related Tutorial 2]:** [What it teaches]
 
 Or dive deeper:
+
 - 📖 [Reference documentation] - Look up specific APIs and options
 - 🔍 [How-to guide] - Solve specific problems
 - 💡 [Explanation] - Understand the architecture
@@ -146,20 +159,23 @@ Or dive deeper:
 ## Troubleshooting
 
 ### Problem: [Common issue #1]
-**Symptom:** [What user sees]  
-**Solution:**
+
+**Symptom:** [What user sees]
+#### Solution
 ```bash
 [Fix commands or steps]
-```
+```text
 
 ### Problem: [Common issue #2]
-**Symptom:** [What user sees]  
-**Solution:**
+
+**Symptom:** [What user sees]
+#### Solution (2)
 ```bash
 [Fix commands or steps]
-```
+```text
 
 ### Still stuck?
+
 - Check [related documentation]
 - Search [GitHub issues](link)
 - Ask in [communication channel]
@@ -173,7 +189,7 @@ For reference, here's the complete code from this tutorial:
 ```typescript
 // File: path/to/complete/file.ts
 [Full working code]
-```
+```text
 
 You can also find this in: `[repo path to example]`
 
@@ -189,7 +205,7 @@ You can also find this in: `[repo path to example]`
 ## Failure Modes
 
 | Problem | Cause | Fix |
-|---------|-------|-----|
+| --------- | ------- | ----- |
 | [Issue] | [Why it happens] | [Solution] |
 
 ## How to Verify
@@ -197,7 +213,7 @@ You can also find this in: `[repo path to example]`
 ```bash
 # Run these commands to verify success
 [verification commands]
-```
+```text
 
 ---
 
@@ -207,5 +223,5 @@ Give yourself a pat on the back - you've learned [key skill]. These fundamentals
 
 ---
 
-*Last Updated: [Date]*  
+*Last Updated: [Date]*
 *Found an issue with this tutorial? [Report it](link)*

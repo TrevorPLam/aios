@@ -1,7 +1,7 @@
 # Documentation Best Practices & Standards
 
-**Date:** January 16, 2026  
-**Purpose:** Research-based guide for world-class documentation  
+**Date:** January 16, 2026
+**Purpose:** Research-based guide for world-class documentation
 **Status:** Active Standard
 
 ---
@@ -25,7 +25,7 @@
 
 ### The Documentation Pyramid (Google Standard)
 
-```
+```text
     ┌─────────────────┐
     │   Tutorials     │  (Learning-oriented)
     ├─────────────────┤
@@ -35,11 +35,11 @@
     ├─────────────────┤
     │   Reference     │  (Information-oriented)
     └─────────────────┘
-```
+```text
 
 **Source:** Divio Documentation System, adopted by Google, GitLab, and Stripe
 
-**Application to AIOS:**
+### Application to AIOS
 - ✅ Reference: F&F.md, MODULE_DETAILS.md, docs/technical/API_DOCUMENTATION.md
 - ✅ Explanation: docs/analysis/, docs/security/SECURITY.md
 - 🟡 How-To: README.md (partial), docs/technical/TESTING_INSTRUCTIONS.md
@@ -48,30 +48,35 @@
 ### Documentation Maturity Model
 
 **Level 1: Initial** (❌)
+
 - No documentation or ad-hoc
 - Knowledge exists only in people's heads
 
 **Level 2: Repeatable** (✅ Past state)
+
 - Documentation exists but disorganized
 - Multiple sources of truth
 - Hard to maintain
 
 **Level 3: Defined** (✅ Current state)
+
 - Organized structure
 - Clear ownership
 - Maintainable
 
 **Level 4: Managed** (🎯 Target)
+
 - Automated quality checks
 - Metrics tracked
 - Regular reviews
 
 **Level 5: Optimizing** (🌟 Future)
+
 - Continuous improvement
 - User feedback loops
 - AI-assisted documentation
 
-**AIOS Current Level:** 3 (Defined)  
+**AIOS Current Level:** 3 (Defined)
 **Target Level:** 4 (Managed)
 
 ---
@@ -82,7 +87,7 @@
 
 **Purpose:** First impression, quick start, entry point
 
-**Best Practices (GitHub Standard):**
+### Best Practices (GitHub Standard)
 - ✅ Project name and tagline (first H1)
 - ✅ Badges (build status, coverage, version)
 - ✅ Quick start (< 5 minutes to "Hello World")
@@ -93,7 +98,7 @@
 - ✅ License information
 - ✅ Support/contact information
 
-**Quality Metrics:**
+### Quality Metrics
 - Length: 200-600 lines (AIOS: 560 ✅)
 - Reading time: < 5 minutes
 - External links: < 10
@@ -106,7 +111,7 @@
 
 **Purpose:** Lower barrier to contribution, set expectations
 
-**Best Practices (Open Source Standard):**
+### Best Practices (Open Source Standard)
 - Code of conduct (or link to one)
 - Development setup instructions
 - Testing requirements
@@ -115,7 +120,7 @@
 - Review criteria
 - Recognition/attribution
 
-**Quality Metrics:**
+### Quality Metrics (2)
 - Completeness: All contribution types covered
 - Clarity: Step-by-step instructions
 - Examples: Sample PR, commit messages
@@ -127,7 +132,7 @@
 
 **Purpose:** Security vulnerability reporting, build trust
 
-**Best Practices (GitHub Standard):**
+### Best Practices (GitHub Standard) (2)
 - ✅ Supported versions table
 - ✅ How to report vulnerabilities
 - ✅ Expected response time
@@ -135,7 +140,7 @@
 - Security measures overview
 - Contact information
 
-**Quality Metrics:**
+### Quality Metrics (3)
 - Response time: < 48 hours (stated)
 - Clarity: Non-technical users can report
 - Completeness: All scenarios covered
@@ -146,7 +151,7 @@
 
 **Purpose:** Track changes, help users upgrade
 
-**Best Practices (Keep a Changelog Standard):**
+### Best Practices (Keep a Changelog Standard)
 ```markdown
 # Changelog
 
@@ -170,11 +175,11 @@
 - Vulnerabilities fixed
 
 ## [1.0.0] - 2026-01-16
-### Added
+### Added (2)
 - Initial release
-```
+```text
 
-**Quality Metrics:**
+### Quality Metrics (4)
 - Semantic versioning used
 - Date format: YYYY-MM-DD
 - Grouped by change type
@@ -186,13 +191,13 @@
 
 **Purpose:** Define usage rights, legal clarity
 
-**Best Practices:**
+### Best Practices
 - Use standard license (MIT, Apache 2.0, GPL)
 - Include full license text
 - Add copyright notice
 - Don't modify standard licenses
 
-**Popular Choices:**
+### Popular Choices
 - **MIT:** Permissive, simple (GitHub default)
 - **Apache 2.0:** Permissive, patent protection
 - **GPL v3:** Copyleft, viral
@@ -204,7 +209,7 @@
 
 **Purpose:** Create welcoming environment, set behavior expectations
 
-**Best Practices:**
+### Best Practices (2)
 - Use Contributor Covenant (industry standard)
 - Define unacceptable behavior
 - Explain enforcement process
@@ -244,12 +249,12 @@
 
 ### Readability Metrics
 
-**Target Scores:**
+#### Target Scores
 - **Flesch Reading Ease:** 60-70 (standard)
 - **Flesch-Kincaid Grade:** 8-10 (easy to read)
 - **Gunning Fog Index:** < 12 (accessible)
 
-**Tools:**
+### Tools
 - Hemingway Editor (free, online)
 - Grammarly (spelling, grammar)
 - Vale (linter for prose)
@@ -258,35 +263,35 @@
 
 ### Content Formatting
 
-**Headings:**
+#### Headings
 ```markdown
 # H1: Document Title (once per document)
 ## H2: Major Section
 ### H3: Subsection
 #### H4: Minor subsection (rarely needed)
-```
+```text
 
-**Lists:**
+### Lists
 - Use bulleted lists for unordered items
 - Use numbered lists for sequences/steps
 - Keep parallel structure
 - Start each item with same part of speech
 
-**Code Blocks:**
+### Code Blocks
 ```markdown
 Use ```language for syntax highlighting
 Include context before code
 Show expected output after code
 Keep examples < 50 lines
-```
+```text
 
-**Tables:**
+### Tables
 - Use for structured data
 - Keep < 5 columns when possible
 - Align columns appropriately
 - Include header row
 
-**Images:**
+### Images
 - Alt text for accessibility
 - Captions for context
 - Compress for faster loading
@@ -298,7 +303,7 @@ Keep examples < 50 lines
 
 ### The Docs-as-Code Approach
 
-**Principles:**
+#### Principles
 1. **Version Control:** Documentation in Git
 2. **Review Process:** PRs for doc changes
 3. **Automated Testing:** Link checking, spell checking
@@ -309,32 +314,33 @@ Keep examples < 50 lines
 
 ### Directory Structure Standards
 
-**Flat vs. Hierarchical:**
-
+#### Flat vs. Hierarchical
 ❌ **Flat (< 10 files):**
-```
+
+```text
 docs/
 ├── api.md
 ├── guide.md
 ├── tutorial.md
 └── reference.md
-```
+```text
 
 ✅ **Hierarchical (> 10 files):**
-```
+
+```text
 docs/
 ├── getting-started/
 ├── guides/
 ├── reference/
 ├── api/
 └── tutorials/
-```
+```text
 
 **AIOS Status:** ✅ Excellent hierarchical structure
 
 ### Naming Conventions
 
-**Files:**
+#### Files
 - Lowercase with hyphens: `api-reference.md`
 - Or UPPERCASE: `README.md`, `CONTRIBUTING.md`
 - Be consistent within project
@@ -344,24 +350,27 @@ docs/
 
 ### Internal Linking Strategy
 
-**Link Types:**
-
+#### Link Types
 1. **Relative Links (Preferred):**
+
    ```markdown
    [API Docs](../api/reference.md)
-   ```
+   ```text
+
    ✅ Work offline
    ✅ Work on any domain
    ✅ Version-control friendly
 
-2. **Absolute Links (External only):**
+1. **Absolute Links (External only):**
+
    ```markdown
    [GitHub](https://github.com/user/repo)
-   ```
+   ```text
+
    ✅ For external resources
    ❌ For internal docs
 
-**Best Practices:**
+### Best Practices (3)
 - ✅ Use relative links internally
 - ✅ Include file extension
 - ✅ Use anchor links for sections: `[Security](#security)`
@@ -375,16 +384,16 @@ docs/
 
 ### Link Validation
 
-**Manual Validation:**
+#### Manual Validation
 ```bash
 # Find all markdown links
 grep -r "\[.*\](.*)" docs/
 
 # Find broken relative links
 find docs -name "*.md" -exec grep -l "](.*\.md)" {} \;
-```
+```text
 
-**Automated Validation:**
+### Automated Validation
 - **markdown-link-check** (npm package)
 - **lychee** (Rust-based, fast)
 - **GitHub Actions:** Check links on PR
@@ -393,7 +402,7 @@ find docs -name "*.md" -exec grep -l "](.*\.md)" {} \;
 
 ### Link Rot Prevention
 
-**Strategies:**
+#### Strategies
 1. **Prefer internal over external** links
 2. **Use archived versions** for critical external links (Internet Archive)
 3. **Pin versions** for library docs: `https://example.com/v2.0/docs`
@@ -401,7 +410,7 @@ find docs -name "*.md" -exec grep -l "](.*\.md)" {} \;
 
 ### Anchor Link Standards
 
-**Best Practices:**
+#### Best Practices
 ```markdown
 ✅ GOOD:
 [See Security](#security)
@@ -412,7 +421,7 @@ find docs -name "*.md" -exec grep -l "](.*\.md)" {} \;
 
 ❌ BAD:
 [See docs](./docs) (no file extension)
-```
+```text
 
 ---
 
@@ -420,12 +429,12 @@ find docs -name "*.md" -exec grep -l "](.*\.md)" {} \;
 
 ### Documentation Debt
 
-**Similar to Technical Debt:**
+#### Similar to Technical Debt
 - Outdated docs are worse than no docs
 - Accumulates over time
 - Requires intentional paydown
 
-**Prevention:**
+### Prevention
 1. **"Last Updated" dates** on major docs
 2. **Version numbers** where appropriate
 3. **Review cadence** (monthly/quarterly)
@@ -435,46 +444,47 @@ find docs -name "*.md" -exec grep -l "](.*\.md)" {} \;
 
 ### Review Cadence (Recommended)
 
-**Daily:**
+#### Daily
 - README.md (if actively developing)
 
-**Weekly:**
+### Weekly
 - Getting started guides
 - API documentation (if actively changing)
 
-**Monthly:**
+### Monthly
 - Technical guides
 - How-to documents
 - Link validation
 
-**Quarterly:**
+### Quarterly
 - Comprehensive review all docs
 - Archive outdated content
 - Update statistics/metrics
 - Competitive analysis
 
-**Annually:**
+### Annually
 - Major reorganization (if needed)
 - Archive cleanup
 - Documentation strategy review
 
 ### Archiving Strategy
 
-**When to Archive:**
+#### When to Archive
 - Content no longer relevant
 - Superseded by newer docs
 - Historical value only
 
-**How to Archive:**
+### How to Archive
 ✅ **AIOS Approach:**
-```
+
+```text
 docs/archive/YYYY-MM-description/
   - Organized by date and category
   - Indexed for discoverability
   - Preserved for historical context
-```
+```text
 
-**Best Practices:**
+### Best Practices (4)
 - ✅ Keep original filenames
 - ✅ Add README explaining archive
 - ✅ Reference in main index
@@ -486,30 +496,30 @@ docs/archive/YYYY-MM-description/
 
 ### Documentation Generators
 
-**For API Docs:**
+#### For API Docs
 - **TypeDoc** (TypeScript)
 - **JSDoc** (JavaScript)
 - **Swagger/OpenAPI** (REST APIs)
 - **GraphQL Playground** (GraphQL)
 
-**For General Docs:**
+### For General Docs
 - **Docusaurus** (Facebook/Meta)
 - **VuePress** (Vue.js ecosystem)
 - **MkDocs** (Python ecosystem)
 - **GitBook** (commercial)
 
-**Recommendation for AIOS:**
+### Recommendation for AIOS
 - Consider Docusaurus for future public documentation site
 - Current markdown structure is compatible
 
 ### Linting & Quality
 
-**Prose Linters:**
+#### Prose Linters
 - **Vale:** Style guide enforcement
 - **markdownlint:** Markdown formatting
 - **write-good:** Readability checker
 
-**Example Vale Configuration:**
+### Example Vale Configuration
 ```yaml
 # .vale.ini
 StylesPath = styles
@@ -517,22 +527,21 @@ MinAlertLevel = suggestion
 
 [*.md]
 BasedOnStyles = Vale, Microsoft, Google
-```
+```text
 
-**Link Checkers:**
+### Link Checkers
 - **markdown-link-check** (npm)
 - **lychee** (fast, Rust)
 - **linkcheck** (Python)
 
-**Spell Checkers:**
+### Spell Checkers
 - **cspell** (code-aware)
 - **aspell** (traditional)
 - **GitHub Actions:** typos
 
 ### CI/CD Integration
 
-**Recommended GitHub Actions:**
-
+#### Recommended GitHub Actions
 ```yaml
 name: Documentation
 
@@ -549,9 +558,9 @@ jobs:
         uses: gaurav-nelson/github-action-markdown-link-check@v1
       - name: Spell Check
         uses: streetsidesoftware/cspell-action@v2
-```
+```text
 
-**Benefits:**
+### Benefits
 - Catch issues before merge
 - Maintain quality automatically
 - Reduce review burden
@@ -562,8 +571,7 @@ jobs:
 
 ### WCAG 2.1 for Documentation
 
-**Key Principles:**
-
+#### Key Principles
 1. **Perceivable:**
    - ✅ Alt text for images
    - ✅ Sufficient color contrast
@@ -586,14 +594,14 @@ jobs:
 
 ### Inclusive Language
 
-**Avoid:**
+#### Avoid
 - ❌ Master/slave → primary/replica
 - ❌ Whitelist/blacklist → allowlist/denylist
 - ❌ Guys → everyone, folks, team
 - ❌ Man-hours → person-hours, work-hours
 - ❌ Sanity check → confidence check, verification
 
-**Use:**
+### Use
 - ✅ Gender-neutral pronouns (they/them or rephrase)
 - ✅ Cultural sensitivity
 - ✅ Plain language over jargon
@@ -602,7 +610,7 @@ jobs:
 
 ### Internationalization (i18n)
 
-**Considerations:**
+#### Considerations
 - Avoid idioms ("piece of cake")
 - Use simple sentence structure
 - Consider right-to-left languages
@@ -617,18 +625,18 @@ jobs:
 
 **Concept:** Documentation that updates automatically from code
 
-**Examples:**
+### Examples
 - API docs from TypeScript types
 - Database schema docs from migrations
 - Test coverage from test runs
 - Architecture diagrams from code analysis
 
-**Tools:**
+### Tools (2)
 - **TypeDoc:** Generate from TypeScript
 - **Storybook:** Component documentation
 - **Swagger:** API documentation from annotations
 
-**Application to AIOS:**
+### Application to AIOS (2)
 - Consider generating API docs from TypeScript types
 - Auto-update test coverage in MODULE_DETAILS.md
 
@@ -636,13 +644,13 @@ jobs:
 
 **Concept:** Write documentation before code
 
-**Process:**
+### Process
 1. Write desired API documentation
 2. Review with stakeholders
 3. Implement to match documentation
 4. Update docs based on implementation reality
 
-**Benefits:**
+### Benefits (2)
 - Better API design
 - Stakeholder alignment
 - Forces thinking about UX
@@ -650,13 +658,13 @@ jobs:
 
 ### 3. Interactive Documentation
 
-**Examples:**
+#### Examples
 - **RunKit:** Live JavaScript examples
 - **CodeSandbox:** Full environment sandboxes
 - **Swagger UI:** Try API endpoints
 - **asciinema:** Terminal recordings
 
-**Application to AIOS:**
+### Application to AIOS (3)
 - Consider interactive API explorer
 - Video tutorials for complex features
 - Animated GIFs for UI flows
@@ -665,7 +673,7 @@ jobs:
 
 **Concept:** Code examples in docs are actual tests
 
-**Example:**
+### Example
 ```markdown
 <!-- Example -->
 ```typescript
@@ -673,14 +681,14 @@ import { api } from './api';
 
 const result = await api.getData();
 expect(result).toBeDefined();
-```
+```text
 
-**Tools:**
+### Tools (3)
 - **Doctest** (Python)
 - **Rustdoc** (Rust)
 - Custom jest configuration
 
-**Benefits:**
+### Benefits (3)
 - Examples always work
 - Documentation always up-to-date
 - Prevents documentation rot
@@ -689,7 +697,7 @@ expect(result).toBeDefined();
 
 **Concept:** Show complexity gradually
 
-**Example Structure:**
+### Example Structure
 ```markdown
 ## Quick Start (Simple)
 npm install && npm start
@@ -702,7 +710,7 @@ npm install && npm start
 ### Custom configuration
 ### Environment variables
 ### Production deployment
-```
+```text
 
 **AIOS Status:** ✅ Good (README has quick start, then detail)
 
@@ -710,7 +718,7 @@ npm install && npm start
 
 **Purpose:** Document why decisions were made
 
-**Format:**
+### Format
 ```markdown
 # ADR-001: Use AsyncStorage for Local Storage
 
@@ -726,25 +734,25 @@ Use AsyncStorage...
 ## Consequences
 Positive: ...
 Negative: ...
-```
+```text
 
 **Recommendation:** Consider adding docs/decisions/ for major architectural choices
 
 ### 7. Documentation Analytics
 
-**Track:**
+#### Track
 - Most viewed pages
 - Search queries
 - Time on page
 - Bounce rate
 - User feedback
 
-**Tools:**
+### Tools (4)
 - Google Analytics
 - Hotjar (heatmaps)
 - Built-in search analytics
 
-**Use Insights:**
+### Use Insights
 - Improve popular but confusing pages
 - Add content for common searches
 - Restructure based on usage patterns
@@ -828,8 +836,7 @@ Negative: ...
 
 ### Documentation Health Score
 
-**Metrics to Track:**
-
+#### Metrics to Track
 1. **Completeness (30%)**
    - All required docs present
    - No "TODO" sections
@@ -855,7 +862,8 @@ Negative: ...
    - Easy to update
    - Version controlled
 
-**AIOS Current Score: 97/100**
+### AIOS Current Score: 97/100
+
 - Completeness: 30/30 (core files and templates in place)
 - Accuracy: 25/25 (recent updates, links fixed)
 - Accessibility: 18/20 (good structure, could add more examples)
@@ -867,17 +875,20 @@ Negative: ...
 ## Resources & Further Reading
 
 ### Books
+
 - **"Docs for Developers"** by Jared Bhatti et al. (Apress, 2021)
 - **"The Product is Docs"** by Christopher Gales (Splunk)
 - **"Every Page is Page One"** by Mark Baker
 
 ### Online Resources
+
 - **Write the Docs:** writethedocs.org (community)
 - **Google Developer Documentation Style Guide**
 - **Microsoft Writing Style Guide**
 - **GitLab Documentation Style Guide**
 
-### Tools
+### Tools (5)
+
 - **Vale:** vale.sh (prose linter)
 - **Docusaurus:** docusaurus.io (documentation site generator)
 - **Hemingway Editor:** hemingwayapp.com (readability)
@@ -897,7 +908,7 @@ This guide provides the roadmap for continuous improvement and world-class docum
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** January 17, 2026  
-**Maintained By:** Documentation Team  
+**Document Version:** 1.0
+**Last Updated:** January 17, 2026
+**Maintained By:** Documentation Team
 **Next Review:** April 2026

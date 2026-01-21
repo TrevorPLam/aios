@@ -1,9 +1,9 @@
 # Postmortem: [Incident Title]
 
-**Date:** YYYY-MM-DD  
-**Authors:** [Names of postmortem authors]  
-**Status:** [Draft | Under Review | Final]  
-**Severity:** [1-Critical | 2-High | 3-Medium | 4-Low]
+**Date:** YYYY-MM-DD
+**Authors:** [Names of postmortem authors]
+ **Status:** [Draft | Under Review | Final]
+ **Severity:** [1-Critical | 2-High | 3-Medium | 4-Low]
 
 ## Plain English Summary
 
@@ -12,7 +12,7 @@
 ## Incident Overview
 
 | Field | Value |
-|-------|-------|
+| ------- | ------- |
 | **Incident ID** | INC-YYYY-MM-DD-NNN |
 | **Start Time** | YYYY-MM-DD HH:MM:SS UTC |
 | **End Time** | YYYY-MM-DD HH:MM:SS UTC |
@@ -30,13 +30,14 @@
 - **Geographic Impact:** [Which regions affected]
 - **Feature Impact:** [Which features were unavailable]
 
-**Example:**
-```
+### Example
+
+```text
 - Users Affected: ~10,000 users (~25% of active users)
 - User-Facing Impact: Unable to log in, existing sessions logged out
 - Geographic Impact: All regions
 - Feature Impact: Complete authentication unavailable
-```
+```text
 
 ### Business Impact
 
@@ -53,10 +54,10 @@
 
 ## Timeline
 
-**All times in UTC**
+### All times in UTC
 
 | Time | Event | Who |
-|------|-------|-----|
+| ------ | ------- | ----- |
 | HH:MM | [Event description] | [Person/System] |
 | HH:MM | Alert fired: "DatabaseConnectionFailed" | Monitoring |
 | HH:MM | On-call engineer acknowledged | Engineer A |
@@ -76,37 +77,37 @@
 
 [Detailed technical explanation of what caused the incident. Be specific.]
 
-**Example:**
-```
-In deployment v1.2.3, we introduced a change to the database connection 
-handling in `server/src/services/database.ts`. The new code acquired 
-connections from the pool but failed to release them in error scenarios 
-due to missing `finally` blocks. Over 30 minutes, all 100 connections 
-in the pool were exhausted, causing all new requests to fail with 
+### Example (2)
+```text
+In deployment v1.2.3, we introduced a change to the database connection
+handling in `server/src/services/database.ts`. The new code acquired
+connections from the pool but failed to release them in error scenarios
+due to missing `finally` blocks. Over 30 minutes, all 100 connections
+in the pool were exhausted, causing all new requests to fail with
 "Connection pool timeout" errors.
-```
+```text
 
 ### Trigger
 
 [What specific event triggered the incident?]
 
-**Example:**
-```
+### Example (3)
+```text
 The incident was triggered by the deployment of v1.2.3 to production at
 14:30 UTC. Traffic patterns were normal, but the connection leak caused
 gradual degradation until complete failure at 15:00 UTC.
-```
+```text
 
 ### Detection
 
 [How did we discover the incident?]
 
-**Example:**
-```
+### Example (4)
+```text
 - 14:58 UTC: PagerDuty alert fired: "High Error Rate (>10%)"
 - 15:00 UTC: PagerDuty alert fired: "Database Connection Pool Exhausted"
 - 15:02 UTC: First user report received via support
-```
+```text
 
 **Detection Gap:** [If users reported before alerts, explain why]
 
@@ -114,14 +115,14 @@ gradual degradation until complete failure at 15:00 UTC.
 
 [How did we fix it?]
 
-**Example:**
-```
+### Example (5)
+```text
 1. Rolled back deployment from v1.2.3 to v1.2.2
 2. Restarted all API pods to clear connection pools
 3. Monitored for 30 minutes to confirm resolution
 4. Applied hotfix to v1.2.3 with proper finally blocks
 5. Re-deployed fixed version v1.2.4
-```
+```text
 
 ## What Went Wrong
 
@@ -135,8 +136,8 @@ gradual degradation until complete failure at 15:00 UTC.
    - **Why it mattered:** [Impact on incident]
    - **Could we have known?** [Yes/No and why]
 
-**Example:**
-```
+### Example (6)
+```text
 1. Missing finally blocks in new code
    - Why it mattered: Connections not released on errors
    - Could we have known? Yes - code review should have caught this
@@ -148,7 +149,7 @@ gradual degradation until complete failure at 15:00 UTC.
 3. Slow alert response
    - Why it mattered: 20 minute delay from error spike to alert
    - Could we have known? Yes - alert threshold too high
-```
+```text
 
 ## What Went Right
 
@@ -157,14 +158,14 @@ gradual degradation until complete failure at 15:00 UTC.
 1. **Right 1:** [What went well]
 2. **Right 2:** [What went well]
 
-**Example:**
-```
+### Example (7)
+```text
 1. Monitoring detected issue before complete outage
 2. Rollback procedure worked smoothly
 3. Team communication was clear and frequent
 4. Runbook for database issues was helpful
 5. Post-incident verification prevented recurrence
-```
+```text
 
 ## Action Items
 
@@ -203,26 +204,26 @@ gradual degradation until complete failure at 15:00 UTC.
 1. **Lesson 1:** [Insight gained from incident]
 2. **Lesson 2:** [Another insight]
 
-**Example:**
-```
+### Example (8)
+```text
 1. Integration tests must cover error paths, not just happy paths
 2. Connection pools need active monitoring, not just alerts at exhaustion
 3. Code review checklist should include resource management
 4. Rollback procedures work well when practiced regularly
 5. Status page updates early reduce support burden
-```
+```text
 
 ### Where We Got Lucky
 
 [Be honest about what could have been worse]
 
-**Example:**
-```
+### Example (9)
+```text
 - Incident occurred during business hours, not at 3 AM
 - Rollback worked on first try (could have had rollback issues)
 - No data loss occurred (connection exhaustion could have caused corruption)
 - Monitoring caught issue before 100% failure (could have been worse UX)
-```
+```text
 
 ## Supporting Information
 
@@ -230,11 +231,11 @@ gradual degradation until complete failure at 15:00 UTC.
 
 [Include relevant log excerpts]
 
-```
+```text
 2024-01-15 15:00:12 ERROR [Database] Connection pool timeout after 30000ms
 2024-01-15 15:00:15 ERROR [API] Unable to acquire database connection
 2024-01-15 15:00:18 ERROR [API] Request failed: DatabaseConnectionError
-```
+```text
 
 ### Metrics
 
@@ -270,24 +271,25 @@ async function executeQuery(sql: string) {
     pool.release(connection); // Always released
   }
 }
-```
+```text
 
 ## Assumptions
 
 - **Assumption 1:** [What we assumed during incident]
   - *If false:* [What actually was true and impact]
 
-**Example:**
-```
+### Example (10)
+```text
 - Assumption 1: Database was the problem (initially)
   - If false: Actually was connection pool exhaustion in application layer
-```
+```text
 
 ## Failure Modes
 
 [Document specific failure modes discovered]
 
 ### Failure Mode 1: [Name]
+
 - **Symptom:** [How it manifests]
 - **Impact:** [Effect on system]
 - **Detection:** [How to detect]
@@ -298,18 +300,21 @@ async function executeQuery(sql: string) {
 [If this incident recurs, how do we verify the fix worked?]
 
 ### Manual Verification
+
 ```bash
 # Check connection pool metrics
 # Monitor for connection leaks
 # Verify finally blocks present
-```
+```text
 
 ### Automated Checks
+
 - [ ] Integration test covers error paths
 - [ ] Connection pool monitoring in place
 - [ ] Alert fires before complete exhaustion
 
 ### Success Criteria
+
 1. No connection pool exhaustion in 30 days
 2. Connection pool metrics stable
 3. Similar code patterns reviewed and fixed
@@ -323,9 +328,9 @@ async function executeQuery(sql: string) {
 
 ## Postmortem Meeting
 
-**Date:** YYYY-MM-DD  
-**Attendees:** [List of attendees]  
-**Recording:** [Link if recorded]  
+**Date:** YYYY-MM-DD
+**Attendees:** [List of attendees]
+**Recording:** [Link if recorded]
 **Notes:** [Key discussion points]
 
 ### Discussion Points
@@ -346,7 +351,7 @@ This postmortem is **blameless**. We're analyzing the system and process failure
 ## Sign-off
 
 | Role | Name | Date | Signature |
-|------|------|------|-----------|
+| ------ | ------ | ------ | ----------- |
 | **Incident Commander** | [Name] | YYYY-MM-DD | Approved |
 | **Engineering Manager** | [Name] | YYYY-MM-DD | Approved |
 | **Action Item Owner** | [Name] | YYYY-MM-DD | Committed |
@@ -364,5 +369,5 @@ This postmortem is **blameless**. We're analyzing the system and process failure
 
 ---
 
-**Template Version:** 1.0  
+**Template Version:** 1.0
 **Last Updated:** 2024-01-15

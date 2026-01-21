@@ -1,14 +1,16 @@
 # Testing Strategy
 
 ## Plain English Summary
+
 Testing ensures code works correctly and prevents bugs from reaching users. Our strategy uses multiple test types: unit tests for individual functions, integration tests for APIs, and E2E tests for complete user flows.
 
 ## Test Types
 
 ### Unit Tests (80% of tests)
-**What:** Test individual functions in isolation  
-**When:** Every function with business logic  
-**Tool:** Jest  
+
+**What:** Test individual functions in isolation
+**When:** Every function with business logic
+**Tool:** Jest
 **Location:** `*.test.ts` next to source files
 
 ```typescript
@@ -18,12 +20,13 @@ describe('slugify', () => {
     expect(slugify('Hello World!')).toBe('hello-world');
   });
 });
-```
+```text
 
 ### Integration Tests (15% of tests)
-**What:** Test API endpoints and database operations  
-**When:** Every API endpoint  
-**Tool:** Jest + Supertest  
+
+**What:** Test API endpoints and database operations
+**When:** Every API endpoint
+**Tool:** Jest + Supertest
 **Location:** `tests/integration/`
 
 ```typescript
@@ -37,12 +40,13 @@ describe('POST /api/users', () => {
     expect(res.body.email).toBe('test@example.com');
   });
 });
-```
+```text
 
 ### E2E Tests (5% of tests)
-**What:** Test complete user journeys  
-**When:** Critical user flows  
-**Tool:** Detox (React Native)  
+
+**What:** Test complete user journeys
+**When:** Critical user flows
+**Tool:** Detox (React Native)
 **Location:** `e2e/`
 
 ```typescript
@@ -55,12 +59,12 @@ describe('User registration flow', () => {
     await expect(element(by.id('home-screen'))).toBeVisible();
   });
 });
-```
+```text
 
 ## Test Coverage Goals
 
 | Type | Coverage Target |
-|------|-----------------|
+| ------ | ----------------- |
 | Unit Tests | 80%+ |
 | Integration Tests | All API endpoints |
 | E2E Tests | Critical user flows |
@@ -79,15 +83,17 @@ npm test -- path/to/test.spec.ts
 
 # Watch mode
 npm test -- --watch
-```
+```text
 
 ## CI/CD Integration
 
 Tests run on every:
+
 - Pull request
 - Merge to main
 - Deployment
 
 ## Related
+
 - [Test Pyramid](./test_pyramid.md)
 - [Quality Gates](./quality_gates.md)

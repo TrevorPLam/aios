@@ -13,6 +13,7 @@ Architecture Decision Records (ADRs) document significant architectural decision
 **ADR Location:** `/docs/decisions/`
 
 **Format:** Each ADR includes:
+
 - **Title:** Brief, descriptive name
 - **Status:** Proposed, Accepted, Deprecated, Superseded
 - **Context:** Problem and constraints
@@ -29,7 +30,8 @@ Architecture Decision Records (ADRs) document significant architectural decision
 
 **Status:** Accepted
 
-**Summary:**
+### Summary
+
 - **Decision:** Use @react-native-async-storage/async-storage for local data persistence
 - **Context:** Need offline-first storage for mobile app
 - **Alternatives:** SQLite, Realm, MMKV
@@ -42,20 +44,22 @@ Architecture Decision Records (ADRs) document significant architectural decision
   - ❌ No complex queries (must load all, filter in JS)
   - ❌ May need migration to SQLite for large datasets
 
-**Impact:**
+### Impact
+
 - All 14 modules use AsyncStorage
 - Storage layer in `/client/storage/database.ts`
 - 659 unit tests for storage operations
 - Future migration path to SQLite/PostgreSQL if limits exceeded
 
-**Verification:**
+### Verification
+
 ```bash
 # Check AsyncStorage usage
 grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
 
 # Verify in package.json
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep async-storage
-```
+```text
 
 ---
 
@@ -65,7 +69,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep async-
 
 **Status:** Accepted
 
-**Summary:**
+### Summary (2)
 - **Decision:** Use React Native with Expo for mobile app development
 - **Context:** Need cross-platform mobile app (iOS + Android)
 - **Alternatives:** Flutter, Native iOS/Android, Ionic/Capacitor
@@ -80,13 +84,13 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep async-
   - ❌ Some native features require custom modules
   - ❌ Bridge overhead (mitigated by new architecture)
 
-**Impact:**
+### Impact (2)
 - 43 screens built with React Native
 - 25 shared components
 - Expo SDK 54 for managed services
 - React Native Reanimated for 60fps animations
 
-**Verification:**
+### Verification (2)
 ```bash
 # Check React Native version
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep react-native
@@ -96,7 +100,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep "\"exp
 
 # List screens
 ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
-```
+```text
 
 ---
 
@@ -106,7 +110,7 @@ ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
 
 **Status:** Accepted
 
-**Summary:**
+### Summary (3)
 - **Decision:** Use JSON Web Tokens (JWT) with bcrypt password hashing for authentication
 - **Context:** Need secure authentication for API endpoints
 - **Alternatives:** Session-based auth, OAuth, Firebase Auth
@@ -120,20 +124,20 @@ ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
   - ❌ Must implement refresh token logic
   - ❌ Token in localStorage vulnerable to XSS (mitigated by AsyncStorage on mobile)
 
-**Impact:**
+### Impact (3)
 - JWT middleware in `/server/middleware/auth.ts`
 - bcrypt hashing (10 rounds) in auth routes
 - Token stored in AsyncStorage on client
 - 7-day token expiry (configurable)
 
-**Verification:**
+### Verification (3)
 ```bash
 # Check JWT implementation
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
 
 # Check bcrypt usage
 grep -r "bcrypt" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
-```
+```text
 
 ---
 
@@ -143,7 +147,7 @@ grep -r "bcrypt" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
 
 **Status:** Accepted
 
-**Summary:**
+### Summary (4)
 - **Decision:** Use structured documentation with Diátaxis framework (Tutorials, How-To Guides, Reference, Explanation)
 - **Context:** Need organized, maintainable documentation
 - **Alternatives:** Single README, Wiki, Unstructured docs
@@ -156,18 +160,18 @@ grep -r "bcrypt" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
   - ❌ Requires discipline to maintain structure
   - ❌ More upfront work than single README
 
-**Impact:**
+### Impact (4)
 - `/docs/` directory structured by Diátaxis
 - `/docs/architecture/` for arc42 docs
 - `/docs/decisions/` for ADRs
 - `/docs/technical/` for technical reference
 - `/docs/vision/` for product vision
 
-**Verification:**
+### Verification (4)
 ```bash
 # Check documentation structure
 tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
-```
+```text
 
 ---
 
@@ -177,12 +181,12 @@ tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 
 **Status:** Proposed
 
-**Context:**
+### Context
 - AsyncStorage approaching limits (6-10MB)
 - Need complex queries (joins, aggregations)
 - Multi-device sync requires server database
 
-**Options:**
+### Options
 1. **SQLite on mobile:** Local relational DB
    - ✅ No size limits, complex queries
    - ✅ Offline-first still works
@@ -203,7 +207,7 @@ tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 
 **Proposed Decision:** Hybrid approach (SQLite + PostgreSQL)
 
-**Consequences:**
+### Consequences
 - Migrate AsyncStorage to SQLite (preserves offline-first)
 - Add PostgreSQL for cloud sync (multi-device)
 - Implement conflict resolution (last-write-wins initially, CRDT future)
@@ -213,11 +217,11 @@ tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 
 **Status:** Proposed
 
-**Context:**
+### Context (2)
 - Command Center needs AI recommendations
 - Multiple AI providers available (OpenAI, Anthropic, Google)
 
-**Options:**
+### Options (2)
 1. **OpenAI GPT-4:**
    - ✅ Most capable, well-documented
    - ❌ Expensive, vendor lock-in
@@ -240,12 +244,12 @@ tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 
 **Status:** Proposed
 
-**Context:**
+### Context (3)
 - Complex state logic emerging (Quick Capture, Module Handoff)
 - React Context + useState/useReducer used currently
 - Need predictable state updates
 
-**Options:**
+### Options (3)
 1. **Continue with React Context:**
    - ✅ Built-in, no dependencies
    - ❌ Verbose, re-render issues
@@ -278,12 +282,13 @@ None yet. When decisions are superseded, they will be listed here with links to 
 ### When to Create an ADR
 
 Create an ADR for decisions that:
+
 1. **Impact multiple modules** (not just one feature)
 2. **Are hard to reverse** (require significant refactoring to change)
 3. **Have tradeoffs** (no clear "correct" answer)
 4. **Affect architecture** (technology choices, patterns, constraints)
 
-**Examples:**
+### Examples
 - ✅ Choice of database (impacts all modules)
 - ✅ Authentication method (affects security, scalability)
 - ✅ State management library (affects all components)
@@ -296,7 +301,7 @@ Create an ADR for decisions that:
 # ADR-XXX: [Brief Title]
 
 ## Status
-[Proposed | Accepted | Deprecated | Superseded by ADR-YYY]
+ [Proposed | Accepted | Deprecated | Superseded by ADR-YYY]
 
 ## Context
 [Describe the problem and constraints]
@@ -330,7 +335,7 @@ Create an ADR for decisions that:
 
 ## Verification
 [How to verify this decision is implemented correctly]
-```
+```text
 
 ### Review Process
 
@@ -358,18 +363,21 @@ Create an ADR for decisions that:
 ## Failure Modes
 
 ### Undocumented Decisions
+
 - **Risk:** Important decisions made without ADRs
 - **Impact:** Future developers don't understand why system is built this way
 - **Mitigation:** Code review process requires ADR for architectural changes
 - **Recovery:** Retroactively create ADR documenting historical decision
 
 ### Outdated Decisions
+
 - **Risk:** ADRs become stale as system evolves
 - **Impact:** Documentation doesn't match reality
 - **Mitigation:** Supersede old ADRs with new ones (don't modify)
 - **Recovery:** Create new ADR marking old one as superseded
 
 ### Inconsistent Implementation
+
 - **Risk:** Code doesn't follow ADR
 - **Impact:** Decisions not actually implemented
 - **Mitigation:** Link ADRs in code comments, code review checks
@@ -385,13 +393,13 @@ Create an ADR for decisions that:
 # List all ADRs
 ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/decisions/
 
-# Should see:
+# Should see
 # 001-use-asyncstorage.md
 # 002-react-native.md
 # 003-jwt-auth.md
 # 004-docs-structure.md
 # README.md
-```
+```text
 
 ### Verify ADR Implementation
 
@@ -407,7 +415,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts 
 
 # ADR-004: Check docs structure
 tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
-```
+```text
 
 ### Verify ADR Format
 
@@ -415,12 +423,12 @@ tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 # Each ADR should have required sections
 for adr in /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/decisions/*.md; do
   echo "Checking $adr"
-  grep -q "## Status" "$adr" && echo "✓ Has Status section" || echo "✗ Missing Status"
-  grep -q "## Context" "$adr" && echo "✓ Has Context section" || echo "✗ Missing Context"
-  grep -q "## Decision" "$adr" && echo "✓ Has Decision section" || echo "✗ Missing Decision"
-  grep -q "## Consequences" "$adr" && echo "✓ Has Consequences section" || echo "✗ Missing Consequences"
+ grep -q "## Status" "$adr" && echo "✓ Has Status section" |  | echo "✗ Missing Status"
+ grep -q "## Context" "$adr" && echo "✓ Has Context section" |  | echo "✗ Missing Context"
+ grep -q "## Decision" "$adr" && echo "✓ Has Decision section" |  | echo "✗ Missing Decision"
+ grep -q "## Consequences" "$adr" && echo "✓ Has Consequences section" |  | echo "✗ Missing Consequences"
 done
-```
+```text
 
 ---
 

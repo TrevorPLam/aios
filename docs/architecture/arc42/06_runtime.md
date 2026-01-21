@@ -14,9 +14,9 @@ This document shows how AIOS works in action through key user scenarios. It trac
 
 **Preconditions:** App installed, user on NotebookScreen
 
-**Steps:**
+### Steps
 
-```
+```text
 ┌──────┐          ┌─────────────┐      ┌──────────┐      ┌──────────────┐
 │ User │          │ NotebookScreen│      │ database │      │ AsyncStorage │
 └──┬───┘          └──────┬──────┘      └────┬─────┘      └──────┬───────┘
@@ -70,9 +70,9 @@ This document shows how AIOS works in action through key user scenarios. It trac
    │ 15. See new note     │                   │                   │
    │     in list          │                   │                   │
    │<─────────────────────│                   │                   │
-```
+```text
 
-**Key Points:**
+### Key Points
 - Fully offline - no network required
 - Data saved immediately to AsyncStorage
 - UUID generated client-side
@@ -80,13 +80,13 @@ This document shows how AIOS works in action through key user scenarios. It trac
 - Haptic feedback on save
 - Optimistic UI update
 
-**Files Involved:**
+### Files Involved
 - `/client/screens/NotebookScreen.tsx`
 - `/client/screens/NoteEditorScreen.tsx`
 - `/client/storage/database.ts` (saveNote, getNotes)
 - `@react-native-async-storage/async-storage`
 
-**Performance:**
+### Performance
 - Save operation: < 50ms
 - Screen transition: < 100ms
 - Total flow: < 2 seconds
@@ -101,9 +101,8 @@ This document shows how AIOS works in action through key user scenarios. It trac
 
 **Preconditions:** User on CalendarScreen, has existing event 2pm-3pm
 
-**Steps:**
-
-```
+### Steps (2)
+```text
 User → CalendarScreen → database → AsyncStorage
 │
 │ 1. Taps "Add Event"
@@ -133,9 +132,9 @@ User → CalendarScreen → database → AsyncStorage
 │     └─> 13. Success, navigate back
 │
 └─> 14. See both events, conflict indicator shown
-```
+```text
 
-**Conflict Detection Logic:**
+### Conflict Detection Logic
 ```typescript
 // Simplified from /client/storage/database.ts
 const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
@@ -144,19 +143,19 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
     const newEnd = newEvent.endTime;
     const existingStart = event.startTime;
     const existingEnd = event.endTime;
-    
+
     // Check overlap: event starts before new ends AND ends after new starts
     return newStart < existingEnd && newEnd > existingStart;
   });
 };
-```
+```text
 
-**Files Involved:**
+### Files Involved (2)
 - `/client/screens/CalendarScreen.tsx`
 - `/client/screens/EventDetailScreen.tsx`
 - `/client/storage/database.ts` (saveEvent, detectConflicts, getEventsForDate)
 
-**Performance:**
+### Performance (2)
 - Conflict detection: < 10ms (even with 1000+ events)
 - Save + conflict check: < 100ms
 
@@ -170,9 +169,8 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
 
 **Preconditions:** User has account, first app launch
 
-**Steps:**
-
-```
+### Steps (3)
+```text
 ┌──────┐     ┌────────┐     ┌─────────┐     ┌──────────┐
 │ User │     │ Client │     │ Backend │     │ Database │
 └──┬───┘     └───┬────┘     └────┬────┘     └────┬─────┘
@@ -229,9 +227,9 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
    │     synced  │                                 │
    │     data    │                                 │
    │<────────────│                                 │
-```
+```text
 
-**JWT Token Structure:**
+### JWT Token Structure
 ```json
 {
   "header": {
@@ -245,9 +243,9 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
   },
   "signature": "..."
 }
-```
+```text
 
-**Files Involved:**
+### Files Involved (3)
 - `/client/screens/LoginScreen.tsx` (future)
 - `/server/routes.ts` (POST /api/auth/login)
 - `/server/middleware/auth.ts` (JWT validation)
@@ -265,9 +263,8 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
 
 **Preconditions:** User on TranslatorScreen
 
-**Steps:**
-
-```
+### Steps (4)
+```text
 ┌──────┐  ┌────────┐  ┌─────────┐  ┌─────────────┐  ┌────────┐
 │ User │  │ Client │  │ Backend │  │ Translation │  │ Device │
 │      │  │        │  │         │  │     API     │  │  APIs  │
@@ -333,15 +330,15 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
    │ 17. Hear │                                           │
    │   "Hola" │                                           │
    │<─────────│<────────────────────────────────────────│
-```
+```text
 
-**Files Involved:**
+### Files Involved (4)
 - `/client/screens/TranslatorScreen.tsx`
 - `/server/routes.ts` (POST /api/translate)
 - `expo-av` (audio recording)
 - `expo-speech` (text-to-speech)
 
-**API Call:**
+### API Call
 ```typescript
 // Client → Backend
 const response = await fetch('/api/translate', {
@@ -356,7 +353,7 @@ const translateResponse = await fetch('https://libretranslate.com/translate', {
   method: 'POST',
   body: JSON.stringify({ q: text, source: 'en', target: targetLang }),
 });
-```
+```text
 
 ---
 
@@ -368,9 +365,8 @@ const translateResponse = await fetch('https://libretranslate.com/translate', {
 
 **Preconditions:** User reading an email
 
-**Steps:**
-
-```
+### Steps (5)
+```text
 User → EmailScreen → QuickCaptureOverlay → MiniNote → NotebookScreen
 │
 │ 1. Long-press anywhere on email
@@ -402,9 +398,9 @@ User → EmailScreen → QuickCaptureOverlay → MiniNote → NotebookScreen
 │     │
 │     └─> 12. Navigate to NotebookScreen
 │         (Note highlighted, filters applied)
-```
+```text
 
-**Handoff Context:**
+### Handoff Context
 ```typescript
 // /client/context/HandoffContext.tsx
 interface HandoffState {
@@ -421,15 +417,15 @@ interface HandoffState {
   timestamp: Date.now(),
   data: { noteId: 'note-123', emailThreadId: 'thread-456' }
 }
-```
+```text
 
-**Files Involved:**
+### Files Involved (5)
 - `/client/components/QuickCaptureOverlay.tsx`
 - `/client/components/MiniNote.tsx`
 - `/client/context/HandoffContext.tsx`
 - `/client/storage/database.ts` (saveNote, saveHandoffBreadcrumb)
 
-**Performance:**
+### Performance (3)
 - Overlay animation: 300ms
 - Save operation: < 50ms
 - Return to context: < 100ms
@@ -444,9 +440,8 @@ interface HandoffState {
 
 **Preconditions:** Background task runs AI analysis
 
-**Steps:**
-
-```
+### Steps (6)
+```text
 Background Task → AI Service → Backend → Client → User Action → Feedback Loop
 │
 │ 1. Analyze user data
@@ -482,29 +477,29 @@ Background Task → AI Service → Backend → Client → User Action → Feedba
 │ 8. AI learns: Similar recommendations should have high confidence
 │
 │ 9. Recommendation archived with outcome metrics
-```
+```text
 
-**AI Recommendation Structure:**
+### AI Recommendation Structure
 ```typescript
 interface Recommendation {
   id: string;
   title: string;
   description: string;
-  confidence: 'low' | 'medium' | 'high';
+ confidence: 'low' | 'medium' | 'high';
   evidence: string[];
   suggestedActions: Action[];
-  status: 'pending' | 'accepted' | 'declined' | 'expired';
+ status: 'pending' | 'accepted' | 'declined' | 'expired';
   expiresAt: number;
   createdAt: number;
 }
 
 interface Action {
-  type: 'create_event' | 'create_task' | 'create_note';
+ type: 'create_event' | 'create_task' | 'create_note';
   data: any;
 }
-```
+```text
 
-**Files Involved:**
+### Files Involved (6)
 - `/client/screens/CommandCenterScreen.tsx`
 - `/client/storage/database.ts` (recommendations methods)
 - `/server/routes.ts` (POST /api/recommendations)
@@ -517,7 +512,7 @@ interface Action {
 ## Performance Metrics
 
 | Scenario | Critical Path | Target | Measured |
-|----------|--------------|--------|----------|
+| ---------- | -------------- | -------- | ---------- |
 | Create Note | Save to AsyncStorage | < 100ms | ~30ms |
 | Schedule Event | Conflict detection + save | < 200ms | ~80ms |
 | Authentication | Login API call | < 1000ms | ~500ms (backend) |
@@ -586,7 +581,7 @@ npm run expo:dev
 # 3. Verify conflict warning
 # 4. Save anyway
 # 5. Verify both events show conflict indicator
-```
+```text
 
 ### Run Automated Tests
 
@@ -600,7 +595,7 @@ npm test -- api.e2e
 
 # Test Quick Capture
 npm test -- QuickCapture
-```
+```text
 
 ### Performance Testing
 
@@ -614,7 +609,7 @@ npm run expo:dev
 # Measure AsyncStorage performance
 npm test -- database.test.ts
 # Check test output for timing
-```
+```text
 
 ---
 

@@ -1,22 +1,25 @@
 # Product Roadmap
 
-**Last Updated:** 2024-01-15  
+**Last Updated:** 2024-01-15
 **Status:** Active Planning
 
 ## Plain English Summary
+
 This roadmap shows what we're building over the next 6-12 months. It's a living document that changes based on user feedback, business priorities, and technical constraints.
 
 ## Q1 2024 (Current)
 
 ### Theme: Foundation & Core Features
 
-**MVP Launch**
+#### MVP Launch
+
 - [x] User authentication (email/password)
 - [x] Basic user profile
 - [x] Core data CRUD operations
 - [ ] Mobile app (iOS/Android) - 80% complete
 
-**Infrastructure**
+### Infrastructure
+
 - [x] CI/CD pipeline
 - [x] Monitoring and logging
 - [ ] Automated testing framework - 60% complete
@@ -25,13 +28,15 @@ This roadmap shows what we're building over the next 6-12 months. It's a living 
 
 ### Theme: Growth & Engagement
 
-**User Features**
+#### User Features
+
 - [ ] Social login (Google, Apple)
 - [ ] Push notifications
 - [ ] Offline mode with sync
 - [ ] Search functionality
 
-**Platform**
+### Platform
+
 - [ ] Performance optimization
 - [ ] Advanced analytics
 - [ ] A/B testing framework
@@ -40,13 +45,15 @@ This roadmap shows what we're building over the next 6-12 months. It's a living 
 
 ### Theme: Scale & Reliability
 
-**Features**
+#### Features
+
 - [ ] Multi-language support (i18n)
 - [ ] Advanced permissions
 - [ ] Data export
 - [ ] Admin dashboard
 
-**Technical**
+### Technical
+
 - [ ] Database optimization
 - [ ] Caching layer (Redis)
 - [ ] Rate limiting improvements
@@ -56,13 +63,15 @@ This roadmap shows what we're building over the next 6-12 months. It's a living 
 
 ### Theme: Enterprise & Polish
 
-**Features**
+#### Features (2)
+
 - [ ] Team collaboration
 - [ ] Advanced reporting
 - [ ] Integrations (Slack, etc.)
 - [ ] Mobile web support
 
-**Polish**
+### Polish
+
 - [ ] UI/UX improvements
 - [ ] Accessibility (WCAG 2.1)
 - [ ] Performance tuning
@@ -85,6 +94,7 @@ This roadmap shows what we're building over the next 6-12 months. It's a living 
 5. **Effort vs. Impact** - Is ROI favorable?
 
 ## Related
+
 - [Decisions Backlog](./decisions_backlog.md)
 - [PRD Directory](../product/)
 - [ADR Directory](../decisions/)

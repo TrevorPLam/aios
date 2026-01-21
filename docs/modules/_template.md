@@ -1,9 +1,9 @@
 # [Module Name]
 
-**Location:** `[path/to/module/]`  
-**Language:** [Primary language(s)]  
-**Framework:** [Main framework or runtime]  
-**Status:** [Active | Deprecated | Experimental]
+**Location:** `[path/to/module/]`
+**Language:** [Primary language(s)]
+**Framework:** [Main framework or runtime]
+ **Status:** [Active | Deprecated | Experimental]
 
 ## Plain English Summary
 
@@ -12,12 +12,15 @@
 ## Purpose
 
 ### What This Module Does
+
 [Describe the primary responsibilities]
 
 ### What This Module Does NOT Do
+
 [Explicitly state what's out of scope]
 
 ### Key Use Cases
+
 1. [Use case 1]
 2. [Use case 2]
 3. [Use case 3]
@@ -26,7 +29,7 @@
 
 ### Architecture Overview
 
-```
+```text
 [module-name]/
 ├── src/
 │   ├── components/     # [Description]
@@ -36,34 +39,36 @@
 ├── tests/
 ├── package.json
 └── tsconfig.json
-```
+```text
 
 ### Key Components
 
 #### Component 1: [Name]
-**Location:** `[path/to/component]`  
-**Purpose:** [What it does]  
-**Interface:**
+
+**Location:** `[path/to/component]`
+**Purpose:** [What it does]
+### Interface
 ```typescript
 // Example interface or key functions
 export interface Example {
   // ...
 }
-```
+```text
 
 #### Component 2: [Name]
-**Location:** `[path/to/component]`  
-**Purpose:** [What it does]  
-**Interface:**
+
+**Location:** `[path/to/component]`
+**Purpose:** [What it does]
+### Interface (2)
 ```typescript
 // Example interface or key functions
-```
+```text
 
 ### Data Flow
 
-```
+```text
 [User/System] → [Component A] → [Component B] → [Result]
-```
+```text
 
 [Explain the typical flow of data through this module]
 
@@ -80,18 +85,20 @@ export interface Example {
 ### Public API
 
 #### Exported Functions
+
 ```typescript
 // List key exported functions with signatures
 export function keyFunction(param: Type): ReturnType;
-```
+```text
 
 #### Exported Types
+
 ```typescript
 // List key exported types
 export interface ImportantType {
   // ...
 }
-```
+```text
 
 ### Internal APIs
 
@@ -102,7 +109,7 @@ export interface ImportantType {
 [If this module emits or listens for events, document them]
 
 | Event Name | Payload | When Fired |
-|------------|---------|------------|
+| ------------ | --------- | ------------ |
 | `event:name` | `{ data }` | When X happens |
 
 ## Dependencies
@@ -110,7 +117,7 @@ export interface ImportantType {
 ### External Dependencies
 
 | Package | Version | Purpose |
-|---------|---------|---------|
+| --------- | --------- | --------- |
 | `package-name` | `^1.0.0` | [Why we use it] |
 
 ### Internal Dependencies
@@ -138,17 +145,17 @@ npm run build
 
 # Run tests
 npm test
-```
+```text
 
 ### Configuration
 
-**Environment Variables:**
+#### Environment Variables
 ```bash
 MODULE_VAR_1=value    # [Description]
 MODULE_VAR_2=value    # [Description]
-```
+```text
 
-**Configuration Files:**
+### Configuration Files
 - `config/[file].json` - [Purpose]
 - `.env.example` - [Purpose]
 
@@ -159,7 +166,7 @@ MODULE_VAR_2=value    # [Description]
 ```bash
 # Deployment commands
 npm run deploy
-```
+```text
 
 ## Common Tasks
 
@@ -167,34 +174,34 @@ npm run deploy
 
 **Goal:** [What this accomplishes]
 
-**Steps:**
+### Steps
 ```bash
 # Step 1
 command-one
 
 # Step 2
 command-two
-```
+```text
 
 ### Task 2: [Another Common Task]
 
 **Goal:** [What this accomplishes]
 
-**Steps:**
+### Steps (2)
 ```bash
 # Commands
-```
+```text
 
 ## Testing
 
 ### Test Structure
 
-```
+```text
 tests/
 ├── unit/           # Unit tests
 ├── integration/    # Integration tests
 └── fixtures/       # Test data
-```
+```text
 
 ### Running Tests
 
@@ -207,7 +214,7 @@ npm test -- path/to/test.spec.ts
 
 # Run with coverage
 npm run test:coverage
-```
+```text
 
 ### Test Coverage Goals
 
@@ -218,14 +225,17 @@ npm run test:coverage
 ## Performance Considerations
 
 ### Performance Characteristics
+
 - [Metric 1]: [Expected value]
 - [Metric 2]: [Expected value]
 
 ### Optimization Strategies
+
 1. [Strategy 1]
 2. [Strategy 2]
 
 ### Known Performance Issues
+
 - [Issue 1]: [Description and mitigation]
 
 ## Assumptions
@@ -240,6 +250,7 @@ npm run test:coverage
 ## Failure Modes
 
 ### Failure Mode 1: [Name]
+
 - **Symptom:** [How this failure manifests]
 - **Impact:** [Effect on system/users]
 - **Detection:** [How to detect this failure]
@@ -247,6 +258,7 @@ npm run test:coverage
 - **Monitoring:** [Metrics or logs to watch]
 
 ### Failure Mode 2: [Name]
+
 - **Symptom:** [How this failure manifests]
 - **Impact:** [Effect on system/users]
 - **Detection:** [How to detect this failure]
@@ -254,6 +266,7 @@ npm run test:coverage
 - **Monitoring:** [Metrics or logs to watch]
 
 ### Failure Mode 3: [Name]
+
 - **Symptom:** [How this failure manifests]
 - **Impact:** [Effect on system/users]
 - **Detection:** [How to detect this failure]
@@ -263,18 +276,21 @@ npm run test:coverage
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # Commands to verify module is working correctly
 npm run verify
-```
+```text
 
 ### Automated Checks
+
 - [ ] All tests pass: `npm test`
 - [ ] Build succeeds: `npm run build`
 - [ ] Linting passes: `npm run lint`
 - [ ] Type checking passes: `npm run type-check`
 
 ### Success Criteria
+
 1. [Measurable criterion 1]
 2. [Measurable criterion 2]
 3. [Measurable criterion 3]
@@ -284,25 +300,27 @@ npm run verify
 ```bash
 # Command to check module health
 npm run health-check
-```
+```text
 
 ## Troubleshooting
 
 ### Problem 1: [Common Issue]
-**Symptoms:** [What you see]  
-**Cause:** [Why it happens]  
-**Solution:**
+
+**Symptoms:** [What you see]
+**Cause:** [Why it happens]
+### Solution
 ```bash
 # Fix commands
-```
+```text
 
 ### Problem 2: [Another Common Issue]
-**Symptoms:** [What you see]  
-**Cause:** [Why it happens]  
-**Solution:**
+
+**Symptoms:** [What you see]
+**Cause:** [Why it happens]
+### Solution (2)
 ```bash
-# Fix commands
-```
+# Fix commands (2)
+```text
 
 ## Migration and Upgrade Guides
 
@@ -326,11 +344,13 @@ npm run health-check
 ## Maintenance and Support
 
 ### Module Owner
+
 - **Team:** [Team name]
 - **Primary Contact:** [Name/Role]
 - **Slack Channel:** #[channel-name]
 
 ### SLA Commitments
+
 - [Response time commitments]
 - [Availability targets]
 

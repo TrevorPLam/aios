@@ -17,12 +17,12 @@ The AIOS system uses PostgreSQL as its primary database, managed through Drizzle
 
 ### Data Documentation Structure
 
-```
+```text
 docs/data/
 ├── README.md                # This file - data overview
 └── schemas/                 # Schema documentation
     └── README.md           # Schema documentation guide
-```
+```text
 
 ### Database Technology Stack
 
@@ -37,7 +37,7 @@ docs/data/
 
 ### High-Level Structure
 
-```
+```text
 ┌─────────────┐
 │   Client    │
 │  (Mobile)   │
@@ -54,7 +54,7 @@ docs/data/
 │ PostgreSQL  │
 │  Database   │
 └─────────────┘
-```
+```text
 
 ### Data Layers
 
@@ -67,12 +67,12 @@ docs/data/
 ### Core Data Entities
 
 | Entity | Description | Schema File |
-|--------|-------------|-------------|
+| -------- | ------------- | ------------- |
 | **Users** | User accounts and authentication | `server/src/models/users.ts` |
 | **Sessions** | User session management | `server/src/models/sessions.ts` |
 | **Data** | Application-specific data | `server/src/models/data.ts` |
 
-_(Expand this table as your data model grows)_
+### (Expand this table as your data model grows)
 
 ## Data Access Patterns
 
@@ -93,7 +93,7 @@ const data = await db
   .limit(limit)
   .offset(offset)
   .orderBy(desc(dataTable.createdAt));
-```
+```text
 
 ### Write Operations
 
@@ -118,7 +118,7 @@ await db
 await db
   .delete(users)
   .where(eq(users.id, userId));
-```
+```text
 
 ### Transaction Operations
 
@@ -136,7 +136,7 @@ await db.transaction(async (tx) => {
     .insert(dataTable)
     .values({ userId: user.id, ... });
 });
-```
+```text
 
 ## Data Consistency
 
@@ -159,7 +159,7 @@ await db.transaction(async (tx) => {
 
 Validation happens at multiple levels:
 
-```
+```text
 ┌──────────────┐
 │ 1. Client    │ - User experience (immediate feedback)
 └──────┬───────┘
@@ -175,7 +175,7 @@ Validation happens at multiple levels:
 ┌──────────────┐
 │ 4. Database  │ - Constraints (final enforcement)
 └──────────────┘
-```
+```text
 
 ## Schema Management
 
@@ -202,7 +202,7 @@ git commit -m "feat: add new data model"
 
 # 7. Deploy to production
 npm run db:migrate:production
-```
+```text
 
 ### Migration Best Practices
 
@@ -215,12 +215,14 @@ npm run db:migrate:production
 ### Breaking vs. Non-Breaking Changes
 
 #### Non-Breaking (Safe)
+
 - Adding new tables
 - Adding nullable columns
 - Adding indexes
 - Creating new constraints (with existing data handling)
 
 #### Breaking (Requires Coordination)
+
 - Removing columns/tables
 - Renaming columns/tables
 - Adding NOT NULL to existing columns
@@ -241,7 +243,7 @@ export const users = pgTable('users', {
   // Explicit index for queries filtering by createdAt
   createdAtIdx: index('users_created_at_idx').on(table.createdAt),
 }));
-```
+```text
 
 ### Query Optimization
 
@@ -255,7 +257,7 @@ export const users = pgTable('users', {
 
 ```sql
 -- Find slow queries (PostgreSQL)
-SELECT 
+SELECT
   mean_exec_time,
   calls,
   query
@@ -264,27 +266,28 @@ ORDER BY mean_exec_time DESC
 LIMIT 10;
 
 -- Check index usage
-SELECT 
+SELECT
   schemaname,
   tablename,
   indexname,
   idx_scan
 FROM pg_stat_user_indexes
 WHERE idx_scan = 0;
-```
+```text
 
 ## Assumptions
 
 - **Assumption 1:** PostgreSQL is sufficient for all data needs
-  - *If false:* Add Redis for caching, consider read replicas
+  - _If false:_ Add Redis for caching, consider read replicas
 - **Assumption 2:** Single database instance handles the load
-  - *If false:* Implement connection pooling, read replicas, sharding
+  - _If false:_ Implement connection pooling, read replicas, sharding
 - **Assumption 3:** Referential integrity is always enforced
-  - *If false:* Document exceptions, add application-level checks
+  - _If false:_ Document exceptions, add application-level checks
 
 ## Failure Modes
 
 ### Failure Mode 1: Database Connection Lost
+
 - **Symptom:** All queries fail, application can't access data
 - **Impact:** Complete application outage
 - **Detection:** Connection errors, health check fails
@@ -296,6 +299,7 @@ WHERE idx_scan = 0;
 - **Monitoring:** Connection pool metrics, query error rate
 
 ### Failure Mode 2: Migration Failure
+
 - **Symptom:** Migration script fails halfway through
 - **Impact:** Database in inconsistent state, application may break
 - **Detection:** Migration command errors
@@ -307,6 +311,7 @@ WHERE idx_scan = 0;
 - **Monitoring:** Migration logs, database schema version
 
 ### Failure Mode 3: Data Corruption
+
 - **Symptom:** Invalid data in database, constraint violations
 - **Impact:** Application errors, incorrect behavior
 - **Detection:** Constraint violation errors, data validation checks
@@ -318,6 +323,7 @@ WHERE idx_scan = 0;
 - **Monitoring:** Constraint violation rate, data validation errors
 
 ### Failure Mode 4: Slow Queries
+
 - **Symptom:** API endpoints timeout or are very slow
 - **Impact:** Poor user experience, potential timeouts
 - **Detection:** High query response times, timeout errors
@@ -329,6 +335,7 @@ WHERE idx_scan = 0;
 - **Monitoring:** Query performance metrics, slow query log
 
 ### Failure Mode 5: Database Running Out of Space
+
 - **Symptom:** Write operations fail with disk full errors
 - **Impact:** Can't store new data, potential data loss
 - **Detection:** Disk space monitoring alerts
@@ -342,6 +349,7 @@ WHERE idx_scan = 0;
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Check database connection
 npm run db:check
@@ -357,9 +365,10 @@ npm run db:analyze
 
 # 5. Test migrations on copy
 npm run db:test-migration
-```
+```text
 
 ### Automated Checks
+
 - [ ] Database connection works
 - [ ] All migrations applied
 - [ ] Schema matches model definitions
@@ -368,6 +377,7 @@ npm run db:test-migration
 - [ ] Indexes exist on critical fields
 
 ### Success Criteria
+
 1. Database is accessible and responsive
 2. Schema matches code definitions
 3. All constraints are enforced
@@ -391,7 +401,7 @@ const userOwnedData = await db
   .select()
   .from(dataTable)
   .where(eq(dataTable.userId, currentUserId)); // Only user's data
-```
+```text
 
 ### Audit Logging
 
@@ -406,7 +416,7 @@ export const auditLog = pgTable('audit_log', {
   timestamp: timestamp('timestamp').notNull().defaultNow(),
   ipAddress: text('ip_address'),
 });
-```
+```text
 
 ## Backup and Recovery
 
@@ -433,7 +443,7 @@ psql recovery_db -c "SELECT COUNT(*) FROM users;"
 # Update DATABASE_URL in environment
 
 # 5. Monitor for issues
-```
+```text
 
 ## Related Documentation
 
@@ -446,6 +456,7 @@ psql recovery_db -c "SELECT COUNT(*) FROM users;"
 ## Best Practices
 
 ### Schema Design
+
 1. **Normalize** - Reduce redundancy, use proper relationships
 2. **Use constraints** - Enforce data integrity at DB level
 3. **Index wisely** - Index frequently queried fields
@@ -453,6 +464,7 @@ psql recovery_db -c "SELECT COUNT(*) FROM users;"
 5. **Document everything** - Clear naming and documentation
 
 ### Query Writing
+
 1. **Be specific** - Select only needed columns
 2. **Use prepared statements** - Prevent SQL injection
 3. **Limit results** - Always paginate large datasets
@@ -460,6 +472,7 @@ psql recovery_db -c "SELECT COUNT(*) FROM users;"
 5. **Monitor performance** - Track slow queries
 
 ### Data Management
+
 1. **Version control** - All schema changes in migrations
 2. **Test migrations** - On copy of production data
 3. **Backup regularly** - Automated, tested backups

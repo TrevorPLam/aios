@@ -19,12 +19,12 @@ graph TB
         A --> A3
         A --> A4
     end
-    
+
     subgraph "Communication Layer"
         B[REST API]
         C[WebSocket]
     end
-    
+
     subgraph "Server Layer"
         D[Express Server]
         D1[Middleware]
@@ -34,45 +34,43 @@ graph TB
         D --> D2
         D --> D3
     end
-    
+
     subgraph "Storage Layer"
         E[AsyncStorage<br/>Local First]
         F[PostgreSQL<br/>Server DB]
     end
-    
+
     subgraph "External Services"
         G[AI Engine]
         H[Analytics]
     end
-    
-    A -->|HTTP Requests| B
-    A -->|Real-time| C
+
+ A --> | HTTP Requests | B
+ A --> | Real-time | C
     B --> D
     C --> D
     A --> E
     D --> F
-    A -.->|Optional| G
-    A -.->|Telemetry| H
-    
+ A -.-> | Optional | G
+ A -.-> | Telemetry | H
+
     style A fill:#00D9FF,color:#000
     style D fill:#0099CC,color:#fff
     style E fill:#006699,color:#fff
     style F fill:#006699,color:#fff
-```
+```text
 
 ## Component Details
 
 ### Client Layer (React Native)
 
-**Technologies:**
-
+#### Technologies
 - React Native 0.81.5
 - React 19.1.0
 - Expo 54
 - TypeScript 5.9
 
-**Key Components:**
-
+### Key Components
 - **Screens:** 40+ screen components (14 modules)
 - **Navigation:** React Navigation (bottom tabs + native stack)
 - **State:** Context API + React Query
@@ -82,15 +80,13 @@ graph TB
 
 ### Server Layer (Express)
 
-**Technologies:**
-
+#### Technologies (2)
 - Express 4.21
 - TypeScript
 - JWT for authentication
 - WebSocket support (ws 8.18)
 
-**Responsibilities:**
-
+### Responsibilities
 - API endpoints for data sync
 - Authentication & authorization
 - Business logic processing
@@ -98,15 +94,13 @@ graph TB
 
 ### Storage Layer
 
-**Local Storage (AsyncStorage):**
-
+#### Local Storage (AsyncStorage)
 - Primary data store (privacy-first)
 - Offline-first architecture
 - Key-value store
 - JSON serialization
 
-**Server Database (PostgreSQL):**
-
+### Server Database (PostgreSQL)
 - Drizzle ORM 0.39
 - Optional sync target
 - Backup and cross-device sync
@@ -137,18 +131,18 @@ graph TB
 
 ## Technology Stack Summary
 
-| Layer             | Technology             | Version |
-|-------------------|------------------------|---------|
-| Client Framework  | React Native           | 0.81.5  |
-| UI Library        | Expo                   | 54      |
-| Language          | TypeScript             | 5.9     |
-| Server            | Express                | 4.21    |
-| Local DB          | AsyncStorage           | 2.2     |
-| Server DB         | PostgreSQL + Drizzle   | 0.39    |
-| Auth              | JWT                    | 9.0     |
-| Real-time         | WebSocket              | 8.18    |
-| State             | React Query            | 5.90    |
-| Animation         | Reanimated             | 4.1     |
+| Layer | Technology | Version |
+| ------------------- | ------------------------ | --------- |
+| Client Framework | React Native | 0.81.5 |
+| UI Library | Expo | 54 |
+| Language | TypeScript | 5.9 |
+| Server | Express | 4.21 |
+| Local DB | AsyncStorage | 2.2 |
+| Server DB | PostgreSQL + Drizzle | 0.39 |
+| Auth | JWT | 9.0 |
+| Real-time | WebSocket | 8.18 |
+| State | React Query | 5.90 |
+| Animation | Reanimated | 4.1 |
 
 ## Scalability Considerations
 

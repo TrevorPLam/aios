@@ -1,6 +1,6 @@
 # How to [task]
 
-**Time:** [X] minutes  
+**Time:** [X] minutes
 **Difficulty:** [Easy/Medium/Hard]
 
 ## Prerequisites

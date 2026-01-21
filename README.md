@@ -10,8 +10,8 @@ An iOS-native super app with Android/Web compatibility, built with React Native 
 
 AIOS (AI Operating System) is not just another productivity app. It's a **privacy-first super app** that aims to replace 38+ specialized applications with a single, intelligent, seamlessly integrated platform.
 
-**Current State:** 14 production-ready modules (72% avg completion)  
-**Vision:** 38+ modules spanning productivity, commerce, health, entertainment, and innovation  
+**Current State:** 14 production-ready modules (72% avg completion)
+**Vision:** 38+ modules spanning productivity, commerce, health, entertainment, and innovation
 **Philosophy:** Intelligence over complexity, privacy over profit, integration over isolation
 
 ## 🚀 Current Features (v1.0)
@@ -50,6 +50,7 @@ AIOS (AI Operating System) is not just another productivity app. It's a **privac
 ## 🔮 Future Vision: The Super App
 
 ### Tier 1: Super App Essentials (Next Phase)
+
 - 💳 **Wallet & Payments** - Digital wallet, P2P transfers, bill splitting
 - 🏪 **Marketplace & Commerce** - User marketplace + business directory
 - 🗺️ **Maps & Navigation** - Context-aware location intelligence
@@ -58,6 +59,7 @@ AIOS (AI Operating System) is not just another productivity app. It's a **privac
 - 🚗 **Ride & Transportation** - Multi-modal transport hub
 
 ### Tier 2: Life Management
+
 - 🏥 **Health & Wellness** - Holistic health tracking beyond fitness
 - 🎓 **Learning & Education** - Personalized learning system
 - 💼 **Professional Services** - On-demand expert help (lawyers, accountants, therapists)
@@ -66,6 +68,7 @@ AIOS (AI Operating System) is not just another productivity app. It's a **privac
 - 📚 **Library & Reading** - Complete reading ecosystem
 
 ### Tier 3: Innovative Edge (No One Else Building These)
+
 - 🧠 **Memory Bank** - AI-powered searchable life history
 - 🤝 **Relationship Manager** - CRM for personal relationships
 - 🎯 **Life Goals & Vision** - Long-term goal achievement system
@@ -97,6 +100,7 @@ Building a super app requires breaking traditional UI/UX rules. AIOS introduces 
 AIOS has successfully completed **Phase 3** of the revolutionary UX system with iOS-first development:
 
 **✅ Completed:**
+
 - **Module Handoff System** - State-preserving navigation between modules
   - iOS-specific breadcrumb UI with blur backdrop
   - AsyncStorage persistence across app lifecycle
@@ -120,8 +124,8 @@ AIOS has successfully completed **Phase 3** of the revolutionary UX system with 
   - BlurView backdrops
   - Native animations and transitions
 
-**📊 Testing Coverage:** 659 tests passing (100% pass rate)  
-**🔒 Security:** 0 vulnerabilities (CodeQL verified)  
+**📊 Testing Coverage:** 659 tests passing (100% pass rate)
+**🔒 Security:** 0 vulnerabilities (CodeQL verified)
 **✅ Status:** Phase 3 Complete, Ready for Phase 4
 
 **Complete Details:** See [docs/PHASE_3_COMPLETION_SUMMARY.md](docs/PHASE_3_COMPLETION_SUMMARY.md) for implementation summary.
@@ -135,28 +139,32 @@ AIOS has successfully completed **Phase 3** of the revolutionary UX system with 
 ## 🛠️ Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/TrevorPowellLam/Mobile-Scaffold.git
    cd Mobile-Scaffold
-   ```
+   ```text
 
-2. **Install dependencies**
+1. **Install dependencies**
+
    ```bash
    npm install
-   ```
+   ```text
 
-3. **Set up environment variables** (optional for Replit)
+1. **Set up environment variables** (optional for Replit)
+
    ```bash
    # For Replit deployment
    export REPLIT_DEV_DOMAIN=your-domain.repl.co
    export EXPO_PUBLIC_DOMAIN=your-domain.repl.co:5000
-   ```
+   ```text
 
 ## 🤖 Development Model: Unified AGENT Ownership
 
 AIOS uses a **Unified AGENT Model** for platform development:
 
 ### AGENT
+
 - **Role:** Builds and adapts all features, screens, and components
 - **Platform:** iOS, Android, and Web
 - **Responsibilities:**
@@ -166,6 +174,7 @@ AIOS uses a **Unified AGENT Model** for platform development:
   - Tests on relevant target platforms
 
 ### Workflow
+
 1. AGENT receives the task from TODO.md
 2. AGENT implements the feature with platform compatibility in mind
 3. AGENT tests on the required platforms
@@ -177,16 +186,18 @@ AIOS uses a **Unified AGENT Model** for platform development:
 
 ### Development Mode
 
-**Start the mobile app:**
+#### Start the mobile app
+
 ```bash
 npm run expo:dev
-```
+```text
+
 > **Note:** This starts Expo in iOS mode for mobile development. The app is built iOS-first with Android compatibility via adaptation layer - web platform is disabled.
 
-**Start the backend server:**
+### Start the backend server
 ```bash
 npm run server:dev
-```
+```text
 
 **Run both concurrently:** Open two terminal windows and run each command in a separate window.
 
@@ -196,10 +207,10 @@ npm run server:dev
 
 **If you see this error:** `WorkletsError: Mismatch between JavaScript part and native part of Worklets`
 
-**Quick Fix:**
+### Quick Fix
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios
-```
+```text
 
 **📖 See [URGENT_WORKLETS_FIX.md](./URGENT_WORKLETS_FIX.md) for detailed instructions**
 
@@ -209,70 +220,79 @@ This is common after Dependabot updates. The fix takes 5-10 minutes and rebuilds
 
 ### Troubleshooting
 
-**Changes not appearing in Expo?** 
+#### Changes not appearing in Expo?
 Clear the Metro bundler cache:
+
 ```bash
 npm run expo:clean
-```
+```text
+
 This removes all cache files and restarts Expo with a fresh bundle.
 
-**Native dependency issues (e.g., WorkletsError version mismatch)?**
+### Native dependency issues (e.g., WorkletsError version mismatch)?
 Clean native module caches and reinstall:
+
 ```bash
 npm run expo:clean:native
-```
+```text
+
 For severe issues with native dependencies:
+
 ```bash
 npm run expo:clean:full
-```
+```text
 
-**If you see "Mismatch between JavaScript part and native part of Worklets":**
+### If you see "Mismatch between JavaScript part and native part of Worklets"
 ~~This is a common issue after dependency updates (especially Dependabot PRs).~~
 **✅ PERMANENT FIX APPLIED** - The root cause (missing `react-native-reanimated` plugin in `app.json`) has been fixed in the repository.
 
-**ONE-TIME ACTION REQUIRED (if you see this error):**
+### ONE-TIME ACTION REQUIRED (if you see this error)
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios
-```
+```text
 
 This rebuilds your app with the correct configuration. After this one-time rebuild, the issue should NOT reoccur.
 
 **📖 Complete Fix Guide:** See **[URGENT_WORKLETS_FIX.md](URGENT_WORKLETS_FIX.md)** for:
+
 - What was fixed and why it was happening
 - One-time rebuild instructions
 - Verification steps
 
 **🛡️ Prevention Guide:** See **[WORKLETS_PREVENTION.md](WORKLETS_PREVENTION.md)** for:
+
 - Automated prevention measures (post-install hooks, CI checks)
 - Best practices to avoid future issues
 - Monitoring and alert setup
 
 Also see [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch) for detailed troubleshooting.
 
-**Seeing a web version instead of native iOS?**
+### Seeing a web version instead of native iOS?
+
 - Ensure you're using `npm run expo:dev` (which forces iOS mode)
 - Press `i` in the Expo CLI to explicitly open iOS simulator
 - If using Expo Go, make sure you're on a physical iOS device or iOS Simulator
 
-**Using the web build for alerts?**
+### Using the web build for alerts?
+
 - Web builds rely on a manual 24-hour time input (HH:MM) on the Alert detail screen because native time pickers are not available on web.
 
 ### Building for Production
 
-**Build the mobile app:**
+#### Build the mobile app
 ```bash
 npm run expo:static:build
-```
+```text
 
-**Build the server:**
+### Build the server
 ```bash
 npm run server:build
-```
+```text
 
-**Run production server:**
+### Run production server
 ```bash
 npm run server:prod
-```
+```text
 
 ## 📱 Testing the App
 
@@ -294,29 +314,29 @@ npm run server:prod
 
 The project includes a comprehensive test suite powered by Jest and React Native Testing Library.
 
-**Run all tests:**
+### Run all tests
 ```bash
 npm test
-```
+```text
 
-**Run tests in watch mode (for development):**
+### Run tests in watch mode (for development)
 ```bash
 npm run test:watch
-```
+```text
 
-**Generate coverage report:**
+### Generate coverage report
 ```bash
 npm run test:coverage
-```
+```text
 
-**Test coverage includes:**
+### Test coverage includes
 - Component tests (Button, etc.)
 - Storage layer tests (database operations)
 - Current coverage: ~48% for storage, growing as more tests are added
 
 ## 🏗️ Project Structure
 
-```
+```text
 Mobile-Scaffold/
 ├── client/                 # React Native mobile app
 │   ├── components/         # Reusable UI components
@@ -338,7 +358,7 @@ Mobile-Scaffold/
 ├── scripts/                # Build and deployment scripts
 ├── package.json            # Dependencies and scripts
 └── tsconfig.json           # TypeScript configuration
-```
+```text
 
 ## 🎨 Design System
 
@@ -354,8 +374,9 @@ Mobile-Scaffold/
 ### Typography
 
 Using system fonts with the following scale:
+
 - Hero: 32px Bold
-- H1: 24px Semibold  
+- H1: 24px Semibold
 - H2: 20px Semibold
 - H3: 18px Semibold
 - Body: 16px Regular
@@ -365,23 +386,28 @@ Using system fonts with the following scale:
 ## 🔧 Available Scripts
 
 ### Development
+
 - `npm run expo:dev` - Start Expo development server
 - `npm run server:dev` - Start backend in development mode
 
 ### Building
+
 - `npm run expo:static:build` - Build static Expo app
 - `npm run server:build` - Bundle server with esbuild
 - `npm run server:prod` - Run production server
 
 ### Database
+
 - `npm run db:push` - Push schema changes to database
 
 ### Testing
+
 - `npm test` - Run all tests
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Run tests with coverage report
 
 ### Code Quality
+
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues
 - `npm run check:types` - TypeScript type checking
@@ -389,6 +415,7 @@ Using system fonts with the following scale:
 - `npm run format` - Format code with Prettier
 
 ### Maintenance & Cleanup
+
 - `npm run expo:clean` - Clear Metro bundler cache
 - `npm run expo:clean:native` - Clean native module caches and reinstall
 - `npm run expo:clean:full` - Full clean (remove node_modules and reinstall)
@@ -396,6 +423,7 @@ Using system fonts with the following scale:
 - `npm run expo:rebuild:android` - Rebuild Android native app from scratch
 
 ### Diagnostics
+
 - `npm run check:worklets` - Check react-native-worklets version consistency
 
 ## 🗄️ Data Models
@@ -421,11 +449,13 @@ The app uses AsyncStorage for local persistence with the following models:
 The server now includes a complete REST API with authentication and CRUD endpoints for all modules:
 
 ### Authentication
+
 - JWT-based authentication with bcrypt password hashing
 - User registration and login
 - Protected routes with Bearer token authentication
 
 ### Available Endpoints
+
 - **Authentication:** `/api/auth/*` (register, login, logout, me)
 - **Recommendations:** `/api/recommendations/*` (GET, POST, PUT, DELETE)
 - **Notes:** `/api/notes/*` (GET, POST, PUT, DELETE)
@@ -437,6 +467,7 @@ The server now includes a complete REST API with authentication and CRUD endpoin
 - **Settings:** `/api/settings/*` (GET, PUT)
 
 ### Features
+
 - Request validation using Zod schemas
 - Error handling middleware
 - User-specific data isolation
@@ -449,6 +480,7 @@ See [API_DOCUMENTATION.md](./docs/technical/API_DOCUMENTATION.md) for detailed A
 The messaging module provides internal app communication with advanced features:
 
 ### Core Features
+
 - **Direct & Group Chat** - One-on-one or multi-participant conversations
 - **Real-time Typing Indicators** - See when others are composing messages
 - **Message Attachments** - Share photos, videos, audio clips, files, and GIFs
@@ -458,7 +490,9 @@ The messaging module provides internal app communication with advanced features:
 - **Pin & Mute** - Manage conversation priorities
 
 ### AI-Powered Features
+
 The messaging module includes AI assistance capabilities:
+
 - **Draft Messages** - AI helps compose messages
 - **Suggest Responses** - Smart reply recommendations for incoming messages
 - **Create Tasks** - Convert conversation items into actionable tasks
@@ -467,12 +501,14 @@ The messaging module includes AI assistance capabilities:
 - **Relationship Reminders** - AI may remind you to connect with contacts
 
 ### Data Models
+
 - **Conversation** - Thread metadata with participants, status, and activity
 - **Message** - Individual messages with content, attachments, and metadata
 - **ConversationParticipant** - User info with online status and activity
 
 ### API Endpoints
-```
+
+```text
 GET    /api/conversations              # List user's conversations
 POST   /api/conversations              # Create new conversation
 GET    /api/conversations/:id          # Get conversation details
@@ -483,18 +519,21 @@ GET    /api/conversations/:id/messages # Get messages in conversation
 POST   /api/conversations/:id/messages # Send new message
 PUT    /api/messages/:id               # Edit message
 DELETE /api/messages/:id               # Delete message
-```
+```text
 
 ### Future Enhancements
+
 - 📹 Video chat with audio/video toggle
 - 🌐 WebSocket for real-time message delivery
 - 📤 Media upload/download endpoints
 - 🖼️ Media viewer screens
+
 ## 🌐 Translator Module
 
 The Translator module provides real-time language translation with voice input/output capabilities:
 
-### Features
+### Features (2)
+
 - **Text Translation**: Translate between 12+ languages in real-time
 - **Speech-to-Text**: Tap the microphone to speak in your source language
 - **Text-to-Speech**: Tap the speaker icon to hear the translation
@@ -503,15 +542,19 @@ The Translator module provides real-time language translation with voice input/o
 - **Headphone Detection**: Optimized audio output when headphones are connected
 
 ### Supported Languages
+
 English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese, Arabic, Hindi
 
 ### Translation API
+
 The module uses LibreTranslate (open-source) for translations. To use a different service:
+
 1. Update the `/api/translate` endpoint in `server/routes.ts`
 2. Configure your API key (Google Translate, DeepL, etc.)
 3. Adjust the request/response format as needed
 
 ### Voice Features
+
 - **Speech-to-Text**: Requires microphone permissions (placeholder implementation ready for full integration)
 - **Text-to-Speech**: Uses expo-speech for natural voice output
 - **Audio Setup**: Configures audio mode for optimal playback
@@ -519,6 +562,7 @@ The module uses LibreTranslate (open-source) for translations. To use a differen
 ## 🤖 AI Integration (Scaffold)
 
 The app is designed to support AI-powered recommendations with:
+
 - Confidence levels (low/medium/high)
 - Expiry timestamps
 - Evidence-based suggestions
@@ -526,6 +570,7 @@ The app is designed to support AI-powered recommendations with:
 - Usage limits with tier system
 
 To integrate AI:
+
 1. Add your AI service (OpenAI, Anthropic, etc.) in `server/`
 2. Implement recommendation generation logic
 3. Connect via existing API endpoints (`/api/recommendations`)
@@ -557,7 +602,8 @@ See [MISSING_FEATURES.md](./docs/planning/MISSING_FEATURES.md) for a complete an
 
 The Email module has been transformed from a basic UI mockup into a professional email management system with advanced features:
 
-### Features
+### Features (3)
+
 - **Real-Time Search** - Search across subjects, senders, message bodies, and labels with instant results
 - **Advanced Filtering** - Filter by all, unread, starred, important, or archived threads
 - **Multiple Sort Options** - Sort by date, sender, or subject with ascending/descending order
@@ -573,6 +619,7 @@ The Email module has been transformed from a basic UI mockup into a professional
 - **Smooth Animations** - FadeInDown animations and modal transitions
 
 ### Technical Details
+
 - 28 new database methods for comprehensive email operations
 - 31 comprehensive unit tests covering all functionality
 - Full backward compatibility with existing email data
@@ -587,7 +634,8 @@ See [EMAIL_MODULE_ENHANCEMENTS.md](./EMAIL_MODULE_ENHANCEMENTS.md) for complete 
 
 The Calendar module has been transformed into a production-ready calendar management system with comprehensive features and 100% test coverage:
 
-### Features
+### Features (4)
+
 - **Multiple View Modes** - Day, Week, Month, and Agenda views for flexible event visualization
 - **Advanced Date Queries** - Query events by date, week, month, date range, or upcoming period
 - **Conflict Detection** - Automatically detect overlapping events with visual feedback ready
@@ -600,7 +648,8 @@ The Calendar module has been transformed into a production-ready calendar manage
 - **Haptic Feedback** - Tactile response throughout all interactions
 - **Empty States** - Context-aware messages for different view modes
 
-### Technical Details
+### Technical Details (2)
+
 - 18 comprehensive database methods for date-based queries and filtering
 - 33 comprehensive unit tests with 100% method coverage
 - 0 security vulnerabilities (CodeQL verified)
@@ -610,6 +659,7 @@ The Calendar module has been transformed into a production-ready calendar manage
 - 1,016 lines of production-ready code (database + screen)
 
 ### Advanced Capabilities
+
 - **Smart Filtering** - Filter by date range, location, recurrence, and all-day status
 - **Conflict Detection** - Detect overlapping events for scheduling conflict prevention
 - **Statistics Computation** - Real-time calculation of event metrics across multiple dimensions
@@ -622,7 +672,8 @@ See [CALENDAR_MODULE_COMPLETION_SUMMARY.md](./CALENDAR_MODULE_COMPLETION_SUMMARY
 
 The History module has been significantly enhanced from a basic activity log into a comprehensive tracking and analysis tool:
 
-### Features
+### Features (5)
+
 - **Advanced Filtering** - Filter by type (AI, archived, banked, deprecated, system) and date range (today, week, month)
 - **Real-time Search** - Search across messages and types with instant results
 - **Activity Statistics** - View total entries, breakdowns by type, and tracking duration
@@ -630,7 +681,8 @@ The History module has been significantly enhanced from a basic activity log int
 - **Export Functionality** - Export history to JSON for backup or analysis
 - **Enhanced UI** - Type badges, relative timestamps, metadata indicators, smooth animations
 
-### Technical Details
+### Technical Details (3)
+
 - 8 new database methods for filtering, search, and statistics
 - 40+ comprehensive unit tests
 - Full backward compatibility
@@ -643,7 +695,8 @@ See [HISTORY_MODULE_ENHANCEMENTS.md](./HISTORY_MODULE_ENHANCEMENTS.md) for compl
 
 The Notebook module has been completed with comprehensive database methods and full test coverage, achieving production-ready status:
 
-### Features
+### Features (6)
+
 - **Advanced Search** - Search across note titles, body content, and tags with instant results
 - **Flexible Sorting** - Sort by recent, alphabetical, tag count, or word count with bidirectional order
 - **Comprehensive Statistics** - 10 metrics including total words, unique tags, notes with links
@@ -655,7 +708,8 @@ The Notebook module has been completed with comprehensive database methods and f
 - **Pin/Archive System** - Organize notes with priority and lifecycle management
 - **Multi-tag Support** - Filter by any combination of tags
 
-### Technical Details
+### Technical Details (4)
+
 - 29 comprehensive database methods (625% increase from baseline)
 - 49 comprehensive unit tests with 100% coverage
 - 0 security vulnerabilities (CodeQL verified)
@@ -663,7 +717,8 @@ The Notebook module has been completed with comprehensive database methods and f
 - Full TypeScript type safety
 - Extensive JSDoc documentation
 
-### Advanced Capabilities
+### Advanced Capabilities (2)
+
 - **Smart Filtering** - Combine search with tag filters for precise results
 - **Pinned-First Sorting** - Pinned notes always appear first regardless of sort criteria
 - **Bulk Tag Operations** - Add/remove tags across multiple notes efficiently
@@ -676,6 +731,7 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 ## 📚 Tech Stack
 
 ### Frontend
+
 - **React Native** - Mobile framework
 - **Expo SDK 54** - Development platform
 - **React Navigation** - Navigation library
@@ -684,13 +740,15 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 - **AsyncStorage** - Local persistence
 - **TypeScript** - Type safety
 
-### Backend  
+### Backend
+
 - **Express** - HTTP server
 - **PostgreSQL** - Database (configured)
 - **Drizzle ORM** - Type-safe database queries
 - **Zod** - Schema validation
 
-### Development
+### Development (2)
+
 - **TypeScript** - Full type safety
 - **ESLint + Prettier** - Code quality
 - **esbuild** - Fast bundling
@@ -703,7 +761,7 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-**Essential Reading:**
+### Essential Reading
 - [BESTPR.md](BESTPR.md) - Token-optimized best practices guide for AI agents
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Full contribution guidelines
 - [Code of Conduct](CODE_OF_CONDUCT.md)
@@ -712,34 +770,41 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 ## 📚 Documentation
 
 ### Quick Start
+
 - **[README.md](./README.md)** - This file! Installation and quick start
 - **[BESTPR.md](./BESTPR.md)** - Token-optimized best practices guide for AI agents
 - **[DOCUMENTATION_GUIDE.md](./DOCUMENTATION_GUIDE.md)** - Navigation guide to all documentation
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute to the project
 
 ### Core Documentation
+
 - **[F&F.md](./F&F.md)** - Features & Functionality overview (main reference)
 - **[MODULE_DETAILS.md](./MODULE_DETAILS.md)** - Technical implementation details
 
 ### Technical Documentation
+
 - **[docs/technical/API_DOCUMENTATION.md](./docs/technical/API_DOCUMENTATION.md)** - API endpoints and usage
 - **[docs/technical/TESTING_INSTRUCTIONS.md](./docs/technical/TESTING_INSTRUCTIONS.md)** - How to test the application
 - **[docs/technical/design_guidelines.md](./docs/technical/design_guidelines.md)** - UI/UX design specifications
 - **[docs/technical/IMPLEMENTATION_ROADMAP.md](./docs/technical/IMPLEMENTATION_ROADMAP.md)** - Development roadmap
 
 ### Analysis & Planning
+
 - **[docs/analysis/COMPETITIVE_ANALYSIS.md](./docs/analysis/COMPETITIVE_ANALYSIS.md)** - Market positioning & competitive landscape
 - **[docs/planning/MISSING_FEATURES.md](./docs/planning/MISSING_FEATURES.md)** - Known limitations and roadmap
 
 ### Vision & Strategy
+
 - **[docs/vision/SUPER_APP_MODULE_EXPANSION.md](./docs/vision/SUPER_APP_MODULE_EXPANSION.md)** - 24 proposed modules for super app transformation
 - **[docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md](./docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md)** - New UI/UX paradigms for managing 38+ modules
 
 ### Security
+
 - **[SECURITY.md](./SECURITY.md)** - Security policy and vulnerability reporting
 - **[docs/security/SECURITY.md](./docs/security/SECURITY.md)** - Comprehensive security documentation
 
 ### Archive
+
 - **[docs/archive/](./docs/archive/)** - Historical documentation and analysis reports
 
 ## 📄 License
@@ -749,6 +814,7 @@ This project is available as open source under the terms of your chosen license.
 ## 📞 Support
 
 For questions or issues:
+
 - Open an issue on GitHub
 - Check [DOCUMENTATION_GUIDE.md](./DOCUMENTATION_GUIDE.md) to find relevant documentation
 - Review [F&F.md](./F&F.md) for feature status
@@ -766,20 +832,26 @@ For questions or issues:
 ## 🎯 What Makes AIOS Different?
 
 ### 1. Privacy-First Super App
+
 Unlike WeChat or other super apps, AIOS prioritizes user privacy:
+
 - **Local-first storage** - Your data stays on your device
 - **No data mining** - We don't sell or analyze your personal data
 - **User control** - Choose what syncs to cloud
 - **End-to-end encryption** - Secure by default
 
 ### 2. Cross-Module Intelligence
+
 AI that understands your entire life, not just isolated tasks:
+
 - Command Center analyzes data across ALL modules
 - Actions in one module trigger smart suggestions in others
 - True holistic view of productivity, finance, health, and relationships
 
 ### 3. Revolutionary UI/UX
+
 Breaking traditional rules to manage complexity intelligently:
+
 - **Start with 3 modules**, grow to 38+ organically
 - **AI predicts** which modules you need now
 - **Context-aware** interface (work mode vs personal mode)
@@ -787,14 +859,18 @@ Breaking traditional rules to manage complexity intelligently:
 - **Zero overwhelm** despite infinite capabilities
 
 ### 4. Open Ecosystem
+
 Built for developers and power users:
+
 - Developer API for custom integrations
 - Plugin marketplace (planned)
 - Data export freedom
 - Transparent and extensible
 
 ### 5. Zero Dark Patterns
+
 User-first design philosophy:
+
 - Transparent pricing (core features free)
 - No manipulation tactics
 - AI suggests, never forces

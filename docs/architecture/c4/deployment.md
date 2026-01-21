@@ -14,31 +14,31 @@ graph TB
         iOS[iPhone/iPad<br/>iOS 13+<br/>----<br/>AIOS Mobile App<br/>React Native bundle]
         Android[Android Phone/Tablet<br/>Android 10+<br/>----<br/>AIOS Mobile App<br/>React Native bundle]
     end
-    
+
     subgraph "Application Server (Node.js)"
         AppServer[Application Server<br/>Node.js 18+<br/>----<br/>Express API<br/>Port 5000]
         StaticFiles[Static Assets<br/>----<br/>Expo web build<br/>Images, fonts]
     end
-    
+
     subgraph "Database Server"
         PostgreSQL[(PostgreSQL 14+<br/>----<br/>Primary database<br/>Port 5432)]
         PGBackup[(Backup Storage<br/>----<br/>Daily backups<br/>Point-in-time recovery)]
     end
-    
+
     subgraph "External Services"
         EmailSMTP[Email Servers<br/>SMTP/IMAP<br/>Port 587/993]
         CloudStorage[Cloud Storage<br/>S3/equivalent<br/>Photos, attachments]
     end
-    
-    iOS -->|HTTPS<br/>REST API<br/>443| AppServer
-    Android -->|HTTPS<br/>REST API<br/>443| AppServer
-    
-    AppServer -->|SQL<br/>Drizzle ORM<br/>5432| PostgreSQL
-    AppServer -.->|Future<br/>SMTP| EmailSMTP
-    AppServer -.->|Future<br/>HTTPS| CloudStorage
-    
-    PostgreSQL -->|Backup job<br/>pg_dump| PGBackup
-    
+
+ iOS --> | HTTPS<br/>REST API<br/>443 | AppServer
+ Android --> | HTTPS<br/>REST API<br/>443 | AppServer
+
+ AppServer --> | SQL<br/>Drizzle ORM<br/>5432 | PostgreSQL
+ AppServer -.-> | Future<br/>SMTP | EmailSMTP
+ AppServer -.-> | Future<br/>HTTPS | CloudStorage
+
+ PostgreSQL --> | Backup job<br/>pg_dump | PGBackup
+
     style iOS fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
     style Android fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
     style AppServer fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
@@ -47,7 +47,7 @@ graph TB
     style PGBackup fill:#7ED321,stroke:#5FA319,stroke-width:2px,color:#fff
     style EmailSMTP fill:#E8E8E8,stroke:#999,stroke-width:2px
     style CloudStorage fill:#E8E8E8,stroke:#999,stroke-width:2px
-```
+```text
 
 ### Development Environment Diagram
 
@@ -55,32 +55,32 @@ graph TB
 graph TB
     subgraph "Developer Machine"
         DevEnv[Development Environment<br/>macOS/Linux/Windows<br/>----<br/>VS Code, Git<br/>Node.js 18+]
-        
+
         ExpoServer[Expo Dev Server<br/>Metro bundler<br/>----<br/>Port 8081<br/>Hot reload enabled]
-        
+
         LocalAPI[Local API Server<br/>tsx watch mode<br/>----<br/>Port 5000<br/>Auto-restart on changes]
-        
+
         LocalDB[(Local PostgreSQL<br/>or Docker container<br/>----<br/>Port 5432)]
-        
+
         DevEnv --> ExpoServer
         DevEnv --> LocalAPI
         LocalAPI --> LocalDB
     end
-    
+
     subgraph "Test Devices"
         iOSSim[iOS Simulator<br/>Xcode]
         AndroidEmu[Android Emulator<br/>Android Studio]
         PhysicalDevice[Physical Device<br/>Connected or<br/>same network]
     end
-    
-    ExpoServer -->|Expo Go app<br/>or Dev Client<br/>LAN/USB| iOSSim
-    ExpoServer -->|Expo Go app<br/>or Dev Client<br/>LAN/USB| AndroidEmu
-    ExpoServer -->|Expo Go app<br/>or Dev Client<br/>LAN/USB| PhysicalDevice
-    
-    iOSSim -->|HTTP<br/>localhost:5000| LocalAPI
-    AndroidEmu -->|HTTP<br/>10.0.2.2:5000| LocalAPI
-    PhysicalDevice -->|HTTP<br/>192.168.x.x:5000| LocalAPI
-    
+
+ ExpoServer --> | Expo Go app<br/>or Dev Client<br/>LAN/USB | iOSSim
+ ExpoServer --> | Expo Go app<br/>or Dev Client<br/>LAN/USB | AndroidEmu
+ ExpoServer --> | Expo Go app<br/>or Dev Client<br/>LAN/USB | PhysicalDevice
+
+ iOSSim --> | HTTP<br/>localhost:5000 | LocalAPI
+ AndroidEmu --> | HTTP<br/>10.0.2.2:5000 | LocalAPI
+ PhysicalDevice --> | HTTP<br/>192.168.x.x:5000 | LocalAPI
+
     style DevEnv fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
     style ExpoServer fill:#F5A623,stroke:#C77E0A,stroke-width:2px
     style LocalAPI fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
@@ -88,7 +88,7 @@ graph TB
     style iOSSim fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
     style AndroidEmu fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
     style PhysicalDevice fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
-```
+```text
 
 ### Deployment Details
 
@@ -100,33 +100,33 @@ graph TB
 
 #### iOS Devices (iPhone/iPad)
 
-**Requirements:**
+### Requirements
 - iOS 13.0 or later
 - Internet connection (WiFi or cellular)
 - ~100 MB storage for app
 - Camera, contacts, photo library permissions
 
-**App Distribution:**
+### App Distribution
 - App Store (production)
 - TestFlight (beta testing)
 - Enterprise distribution (internal)
 
-**App Installation:**
-```
+### App Installation
+```text
 1. User downloads from App Store
 2. iOS extracts and installs app bundle
 3. App requests permissions (camera, contacts, etc.)
 4. User opens app
 5. App loads from local storage
-```
+```text
 
-**Runtime Environment:**
+### Runtime Environment
 - JavaScriptCore (iOS JS engine)
 - Native modules bridged via React Native
 - AsyncStorage → iOS UserDefaults
 - File system → iOS Documents directory
 
-**Network Configuration:**
+### Network Configuration
 - HTTPS to production API endpoint
 - Certificate pinning (recommended)
 - Handles cellular and WiFi transitions
@@ -134,33 +134,33 @@ graph TB
 
 #### Android Devices
 
-**Requirements:**
+### Requirements (2)
 - Android 10 (API 29) or later
 - Internet connection (WiFi or cellular)
 - ~100 MB storage for app
 - Camera, contacts, storage permissions
 
-**App Distribution:**
+### App Distribution (2)
 - Google Play Store (production)
 - Internal testing track (beta)
 - APK sideloading (internal)
 
-**App Installation:**
-```
+### App Installation (2)
+```text
 1. User downloads from Play Store
 2. Android installs APK
 3. App requests permissions at runtime
 4. User opens app
 5. App loads from local storage
-```
+```text
 
-**Runtime Environment:**
+### Runtime Environment (2)
 - Hermes JS engine (or JSC)
 - Native modules bridged via React Native
 - AsyncStorage → Android SharedPreferences
 - File system → Android app-specific storage
 
-**Network Configuration:**
+### Network Configuration (2)
 - HTTPS to production API endpoint
 - Respects Android network security config
 - Handles network changes
@@ -168,10 +168,10 @@ graph TB
 
 ### Application Server
 
-**Infrastructure Options:**
-
+#### Infrastructure Options
 #### Option 1: Replit (Current Development)
-```
+
+```text
 Platform: Replit (Linux container)
 Node.js: v18+
 Process: Persistent Node process
@@ -179,21 +179,22 @@ Port: 5000 (mapped externally)
 Domain: *.replit.dev (or custom)
 SSL: Automatic (Replit-provided)
 Database: External PostgreSQL or Replit DB
-```
+```text
 
-**Pros:**
+### Pros
 - Zero infrastructure management
 - Automatic HTTPS
 - Easy deployment (git push)
 - Built-in environment variables
 
-**Cons:**
+### Cons
 - Resource limits
 - Cold starts on free tier
 - Less control over infrastructure
 
 #### Option 2: Cloud Platform (AWS, GCP, Azure)
-```
+
+```text
 Platform: AWS EC2 / GCP Compute / Azure VM
 OS: Ubuntu 22.04 LTS
 Node.js: v18+ (via nvm or package manager)
@@ -202,18 +203,18 @@ Port: 5000 (behind reverse proxy)
 Reverse Proxy: Nginx or Caddy
 SSL: Let's Encrypt via Certbot
 Database: Managed PostgreSQL (RDS/Cloud SQL/Azure DB)
-```
+```text
 
-**Deployment:**
+### Deployment
 ```bash
 # On server
 git pull origin main
 npm install --production
 npm run server:build
 pm2 restart aios-api
-```
+```text
 
-**Nginx Configuration:**
+### Nginx Configuration
 ```nginx
 server {
     listen 443 ssl http2;
@@ -233,19 +234,20 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
-```
+```text
 
 #### Option 3: Container Orchestration (Docker/Kubernetes)
-```
+
+```text
 Platform: Kubernetes cluster (EKS, GKE, AKS) or Docker Swarm
 Container: aios-api:latest (Node.js + app)
 Replicas: 2-3 (for HA)
 Load Balancer: Cloud LB or Ingress controller
 Database: Managed PostgreSQL
 Monitoring: Prometheus + Grafana
-```
+```text
 
-**Dockerfile:**
+### Dockerfile
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -255,9 +257,9 @@ COPY . .
 RUN npm run server:build
 EXPOSE 5000
 CMD ["npm", "run", "server:prod"]
-```
+```text
 
-**Kubernetes Deployment (example):**
+### Kubernetes Deployment (example)
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -284,14 +286,14 @@ spec:
             secretKeyRef:
               name: aios-secrets
               key: database-url
-```
+```text
 
 ### Database Server
 
-**Production Configuration:**
-
+#### Production Configuration
 #### Managed PostgreSQL (Recommended)
-```
+
+```text
 Provider: AWS RDS, GCP Cloud SQL, Azure Database, or Supabase
 Version: PostgreSQL 14 or later
 Instance Type: t3.small (or equivalent) for <1000 users
@@ -299,29 +301,30 @@ Storage: 20 GB SSD, auto-scaling enabled
 Backups: Automated daily, 7-day retention
 Multi-AZ: Yes (for high availability)
 Encryption: At rest and in transit
-```
+```text
 
-**Connection:**
-```
+### Connection
+```text
 DATABASE_URL=postgresql://username:password@db.example.com:5432/aios?sslmode=require
-```
+```text
 
-**Security:**
+### Security
 - SSL/TLS required
 - Firewall rules: Allow only app server IPs
 - Strong password or IAM authentication
 - Principle of least privilege (dedicated user)
 
 #### Self-Hosted PostgreSQL
-```
+
+```text
 OS: Ubuntu 22.04 LTS
 PostgreSQL: 14+ (via apt)
 Configuration: /etc/postgresql/14/main/postgresql.conf
 Data Directory: /var/lib/postgresql/14/main
 Port: 5432 (not exposed publicly)
-```
+```text
 
-**Setup:**
+### Setup
 ```bash
 # Install PostgreSQL
 sudo apt update
@@ -338,9 +341,9 @@ GRANT ALL PRIVILEGES ON DATABASE aios TO aios_user;
 # host    aios    aios_user    10.0.1.0/24    scram-sha-256
 
 sudo systemctl restart postgresql
-```
+```text
 
-**Backup Strategy:**
+### Backup Strategy
 ```bash
 # Daily backup script
 #!/bin/bash
@@ -350,22 +353,22 @@ pg_dump -U aios_user -h localhost aios | gzip > $BACKUP_DIR/aios_$DATE.sql.gz
 
 # Retention: Keep 7 daily, 4 weekly, 12 monthly
 find $BACKUP_DIR -name "aios_*.sql.gz" -mtime +7 -delete
-```
+```text
 
 ### Monitoring & Logging
 
-**Application Monitoring:**
+#### Application Monitoring
 - Health check endpoint: `GET /status`
 - Metrics: Request count, response time, error rate
 - Tools: New Relic, Datadog, or custom Prometheus
 
-**Database Monitoring:**
+### Database Monitoring
 - Connection pool usage
 - Query performance
 - Disk space, IOPS
 - Tools: pgAdmin, DataGrip, or cloud provider tools
 
-**Logging:**
+### Logging
 ```javascript
 // server/index.ts
 import winston from 'winston';
@@ -384,9 +387,9 @@ if (process.env.NODE_ENV !== 'production') {
     format: winston.format.simple(),
   }));
 }
-```
+```text
 
-**Log Aggregation:**
+### Log Aggregation
 - CloudWatch Logs (AWS)
 - Stackdriver (GCP)
 - ELK Stack (Elasticsearch, Logstash, Kibana)
@@ -398,7 +401,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 ### Developer Machine Setup
 
-**Prerequisites:**
+#### Prerequisites
 ```bash
 # 1. Install Node.js 18+
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -421,9 +424,9 @@ npm install
 # 5. Setup environment variables
 cp .env.example .env
 # Edit .env with local database URL
-```
+```text
 
-**Environment Variables (`.env`):**
+## Environment Variables (`.env`)
 ```bash
 # Database
 DATABASE_URL=postgresql://postgres:password@localhost:5432/aios_dev
@@ -436,11 +439,12 @@ PORT=5000
 
 # Expo
 EXPO_PUBLIC_API_URL=http://localhost:5000
-```
+```text
 
 ### Local Database Setup
 
-**Option 1: Native PostgreSQL**
+#### Option 1: Native PostgreSQL
+
 ```bash
 # macOS (Homebrew)
 brew install postgresql@14
@@ -453,9 +457,10 @@ sudo -u postgres createdb aios_dev
 
 # Create schema
 npm run db:push
-```
+```text
 
-**Option 2: Docker**
+### Option 2: Docker
+
 ```bash
 # docker-compose.yml
 version: '3.8'
@@ -479,49 +484,54 @@ docker-compose up -d
 
 # Initialize schema
 npm run db:push
-```
+```text
 
 ### Running Development Servers
 
-**Terminal 1: Backend API**
+#### Terminal 1: Backend API
+
 ```bash
 npm run server:dev
-# Output:
+# Output
 # Server running on port 5000
 # Database connected
-```
+```text
 
-**Terminal 2: Expo Dev Server**
+## Terminal 2: Expo Dev Server
+
 ```bash
 npm run start
-# Or for Expo Go:
+# Or for Expo Go
 npm run expo:dev
 
-# Output:
+# Output (2)
 # › Metro waiting on exp://192.168.1.100:8081
 # › Scan the QR code above with Expo Go (Android) or the Camera app (iOS)
-```
+```text
 
-**Terminal 3: TypeScript Watching (Optional)**
+## Terminal 3: TypeScript Watching (Optional)
+
 ```bash
 npm run check:types -- --watch
-```
+```text
 
 ### Testing on Devices
 
 #### iOS Simulator (macOS only)
+
 ```bash
 # Install Xcode from Mac App Store
 # Open Simulator
 open -a Simulator
 
 # In Expo dev server terminal, press 'i'
-# Or:
+# Or
 npm run start
 # Then press 'i' when prompted
-```
+```text
 
 #### Android Emulator
+
 ```bash
 # Install Android Studio
 # Create AVD (Android Virtual Device)
@@ -530,40 +540,41 @@ npm run start
 ~/Library/Android/sdk/emulator/emulator -avd Pixel_4_API_30
 
 # In Expo dev server terminal, press 'a'
-# Or:
+# Or (2)
 npm run start
 # Then press 'a' when prompted
-```
+```text
 
 #### Physical Device (Expo Go)
+
 ```bash
 # 1. Install Expo Go from App Store (iOS) or Play Store (Android)
 # 2. Ensure device on same WiFi as dev machine
 # 3. Scan QR code from Expo dev server terminal
 # 4. App loads and connects to local API
-```
+```text
 
-**Network Configuration:**
+## Network Configuration
 - iOS Simulator: Uses `localhost:5000`
 - Android Emulator: Uses `10.0.2.2:5000` (emulator loopback)
 - Physical Device: Uses `192.168.x.x:5000` (LAN IP)
 
-**Troubleshooting:**
+### Troubleshooting
 ```bash
 # Check local network IP
-# macOS/Linux:
+# macOS/Linux
 ifconfig | grep "inet "
-# Windows:
+# Windows
 ipconfig
 
 # Update EXPO_PUBLIC_API_URL if needed
 export EXPO_PUBLIC_API_URL=http://192.168.1.100:5000
 npm run start
-```
+```text
 
 ### Development Workflow
 
-```
+```text
 1. Create feature branch: git checkout -b feature/new-feature
 2. Make changes to client/ or server/
 3. Changes hot-reload in Expo (client) or auto-restart (server via tsx)
@@ -574,7 +585,7 @@ npm run start
 8. Commit: git commit -m "Add new feature"
 9. Push: git push origin feature/new-feature
 10. Create PR on GitHub
-```
+```text
 
 ## Assumptions
 
@@ -595,24 +606,24 @@ npm run start
 
 **Problem**: Physical or virtual server hosting API crashes or becomes unresponsive.
 
-**Impact:**
+### Impact
 - API unavailable
 - Users cannot sync data
 - New logins fail
 - App works offline only
 
-**Symptoms:**
+### Symptoms
 - HTTP timeout errors
 - "Cannot connect to server"
 - Health check fails
 
-**Mitigation:**
+### Mitigation
 - Use managed platform with auto-restart (Replit, cloud platform)
 - Multi-instance deployment (load balancer + 2+ instances)
 - Health checks with automatic failover
 - Monitoring alerts
 
-**Recovery:**
+### Recovery
 - Automatic: Platform restarts instance
 - Manual: SSH in and restart service
 - Fallback: Deploy to backup server
@@ -621,52 +632,52 @@ npm run start
 
 **Problem**: PostgreSQL server crashes, disk failure, or data corruption.
 
-**Impact:**
+### Impact (2)
 - Complete service outage
 - Data potentially lost if no backups
 - Long recovery time
 
-**Symptoms:**
+### Symptoms (2)
 - API returns 500 errors
 - Database connection errors in logs
 - Cannot read/write any data
 
-**Mitigation:**
+### Mitigation (2)
 - Automated backups (daily, retained 7-30 days)
 - Multi-AZ deployment (cloud managed DB)
 - Replication (primary + standby)
 - Regular backup testing
 
-**Recovery:**
+### Recovery (2)
 1. Attempt to restart database service
 2. If corruption, restore from latest backup
 3. Replay transaction logs (point-in-time recovery)
 4. Notify users of potential data loss window
 
-**RTO (Recovery Time Objective):** 1-4 hours  
+**RTO (Recovery Time Objective):** 1-4 hours
 **RPO (Recovery Point Objective):** Up to 24 hours (daily backups)
 
 ### Network Partition
 
 **Problem**: Network connectivity lost between app server and database server.
 
-**Impact:**
+### Impact (3)
 - API can't read/write data
 - Users see errors
 - Service effectively down
 
-**Symptoms:**
+### Symptoms (3)
 - Database connection timeouts
 - "Cannot connect to database" logs
 - API health check fails
 
-**Mitigation:**
+### Mitigation (3)
 - Place app server and database in same VPC/network
 - Use private networking (not public internet)
 - Connection pooling with retry logic
 - Monitor network latency
 
-**Recovery:**
+### Recovery (3)
 - Network infrastructure typically recovers automatically
 - Check firewall rules
 - Verify security groups allow traffic
@@ -675,22 +686,22 @@ npm run start
 
 **Problem**: HTTPS certificate expires.
 
-**Impact:**
+### Impact (4)
 - Mobile apps cannot connect (certificate validation fails)
 - Users see "insecure connection" errors
 - Service effectively down for mobile users
 
-**Symptoms:**
+### Symptoms (4)
 - SSL handshake errors
 - "Certificate expired" in logs/browser
 - Mobile app network requests fail
 
-**Mitigation:**
+### Mitigation (4)
 - Use automatic renewal (Let's Encrypt, cloud provider)
 - Set expiration alerts (30, 7, 1 days before)
 - Monitor certificate validity daily
 
-**Recovery:**
+### Recovery (4)
 - Renew certificate immediately
 - Restart web server (Nginx, Caddy)
 - Test from mobile devices
@@ -699,23 +710,23 @@ npm run start
 
 **Problem**: Server or database runs out of disk space.
 
-**Impact:**
+### Impact (5)
 - Cannot write logs
 - Cannot write to database
 - App crashes or errors
 
-**Symptoms:**
+### Symptoms (5)
 - "No space left on device" errors
 - Write operations fail
 - Log files stop growing
 
-**Mitigation:**
+### Mitigation (5)
 - Set disk space alerts (80%, 90% usage)
 - Log rotation (delete old logs)
 - Database cleanup (archived data)
 - Auto-scaling storage (cloud managed disk)
 
-**Recovery:**
+### Recovery (5)
 1. Delete old log files
 2. Clean up temp files
 3. Archive old database data
@@ -725,22 +736,22 @@ npm run start
 
 **Problem**: After inactivity, first request takes very long (serverless/Replit).
 
-**Impact:**
+### Impact (6)
 - Poor user experience
 - Perceived as "app broken"
 - Timeout errors
 
-**Symptoms:**
+### Symptoms (6)
 - First request after idle period takes 10-30 seconds
 - Subsequent requests fast
 
-**Mitigation:**
+### Mitigation (6)
 - Keep-alive ping (health check every 5 minutes)
 - Warm-up requests on deploy
 - Use dedicated server (not serverless)
 - Display loading indicator in app
 
-**Recovery:**
+### Recovery (6)
 - Wait for cold start to complete
 - Retry request
 - Subsequent requests will be fast
@@ -749,23 +760,23 @@ npm run start
 
 **Problem**: Mobile app version doesn't match API version.
 
-**Impact:**
+### Impact (7)
 - API errors
 - Data validation failures
 - Missing features or broken UI
 
-**Symptoms:**
+### Symptoms (7)
 - Schema validation errors (Zod)
 - Unexpected API responses
 - "Unsupported version" errors
 
-**Mitigation:**
+### Mitigation (7)
 - API versioning (/api/v1/, /api/v2/)
 - Backward compatibility for N-1 version
 - Forced update mechanism in app
 - Gradual rollout of breaking changes
 
-**Recovery:**
+### Recovery (7)
 - Users update mobile app from store
 - Server maintains backward compatibility during transition
 - Clear communication about required updates
@@ -797,7 +808,7 @@ curl -I http://api.aios.example.com
 # 6. Check logs
 tail -f /var/log/aios/combined.log
 # Or cloud logging dashboard
-```
+```text
 
 ### Development Environment
 
@@ -829,7 +840,7 @@ cat .env | grep -v "^#"
 # 7. Verify schema is up to date
 npm run db:push
 # Should say "No schema changes"
-```
+```text
 
 ### Mobile App Deployment
 
@@ -848,7 +859,7 @@ eas submit --platform android
 
 # 5. Verify app connects to production API
 # (Manual test on physical device after install)
-```
+```text
 
 ### Database Backup Verification
 
@@ -864,7 +875,7 @@ psql -h localhost -U postgres -d aios_test -c "SELECT COUNT(*) FROM users;"
 
 # 4. Cleanup test database
 dropdb aios_test
-```
+```text
 
 ### Load Testing
 
@@ -876,11 +887,11 @@ sudo apt install apache2-utils
 ab -n 1000 -c 10 -H "Authorization: Bearer $TOKEN" \
   https://api.aios.example.com/api/notes
 
-# Results to check:
+# Results to check
 # - Requests per second (should be >100 for simple endpoints)
 # - Failed requests (should be 0)
 # - 95th percentile latency (should be <500ms)
-```
+```text
 
 ### Monitoring Checks
 
@@ -902,7 +913,7 @@ free -h
 
 # 6. Check CPU usage
 top -bn1 | head -20
-```
+```text
 
 ## Related Documentation
 
@@ -915,9 +926,9 @@ top -bn1 | head -20
 
 ## References
 
-- Expo Deployment: https://docs.expo.dev/distribution/introduction/
-- Express Production Best Practices: https://expressjs.com/en/advanced/best-practice-performance.html
-- PostgreSQL High Availability: https://www.postgresql.org/docs/current/high-availability.html
-- AWS RDS Best Practices: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html
-- Docker Multi-stage Builds: https://docs.docker.com/build/building/multi-stage/
-- Kubernetes Deployments: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+- Expo Deployment: <https://docs.expo.dev/distribution/introduction/>
+- Express Production Best Practices: <https://expressjs.com/en/advanced/best-practice-performance.html>
+- PostgreSQL High Availability: <https://www.postgresql.org/docs/current/high-availability.html>
+- AWS RDS Best Practices: <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html>
+- Docker Multi-stage Builds: <https://docs.docker.com/build/building/multi-stage/>
+- Kubernetes Deployments: <https://kubernetes.io/docs/concepts/workloads/controllers/deployment/>

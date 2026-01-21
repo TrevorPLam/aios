@@ -27,14 +27,16 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 
 **Role:** Full-stack feature delivery across platforms
 
-**Responsibilities:**
+### Responsibilities
+
 - Builds all original features, screens, components, and business logic
 - Delivers iOS, Android, and Web compatibility as needed
 - Owns architectural decisions
 - Adds platform-specific adaptations when required
 - Tests on the platforms relevant to the task scope
 
-**Workflow:**
+### Workflow
+
 1. Receives task from TODO.md (Owner: AGENT)
 2. Implements the feature with platform compatibility in mind
 3. Tests on required platforms
@@ -42,12 +44,14 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 
 ### For Human Contributors
 
-**If you're contributing features:**
+#### If you're contributing features
+
 - Follow the unified AGENT workflow
 - Keep platform compatibility requirements in scope from the start
 - Document platform-specific decisions and test coverage
 
-**See also:**
+### See also
+
 - [Constitution - Agent Responsibility Model](docs/governance/constitution.md)
 - [Best Practices Guide](BESTPR.md) - Token-optimized quick reference for agents
 - [AI Contribution Policy](docs/ai/ai_contribution_policy.md)
@@ -67,34 +71,39 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 
 1. Fork the repository
 2. Clone your fork:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/Mobile-Scaffold.git
    cd Mobile-Scaffold
-   ```
+   ```text
 
 3. Add upstream remote:
+
    ```bash
    git remote add upstream https://github.com/TrevorPowellLam/Mobile-Scaffold.git
-   ```
+   ```text
 
 4. Install dependencies:
+
    ```bash
    npm install
-   ```
+   ```text
 
 5. Copy environment variables:
+
    ```bash
    cp .env.example .env
-   ```
+   ```text
 
 6. Start development:
+
    ```bash
    # Terminal 1 - Start mobile app
    npm run expo:dev
 
    # Terminal 2 - Start server
    npm run server:dev
-   ```
+   ```text
 
 ## Development Workflow
 
@@ -110,14 +119,14 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 
 ```bash
 git checkout -b feature/your-feature-name develop
-```
+```text
 
 ### Keeping Your Branch Updated
 
 ```bash
 git fetch upstream
 git rebase upstream/develop
-```
+```text
 
 ## Coding Standards
 
@@ -150,7 +159,7 @@ We use ESLint and Prettier for code formatting. Before committing:
 ```bash
 npm run lint:fix
 npm run format
-```
+```text
 
 ### Component Structure
 
@@ -169,12 +178,12 @@ interface MyComponentProps {
 export default function MyComponent({ title, onPress }: MyComponentProps) {
   // Hooks first
   const [state, setState] = useState('');
-  
+
   // Event handlers
   const handlePress = () => {
     onPress?.();
   };
-  
+
   // Render
   return (
     <View>
@@ -189,7 +198,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-```
+```text
 
 ### Design System
 
@@ -205,13 +214,13 @@ Follow the design guidelines in `design_guidelines.md`:
 
 ### Commit Message Format
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
 
 <footer>
-```
+```text
 
 ### Types
 
@@ -232,39 +241,41 @@ Add ability to sort tasks by priority level in the planner view.
 Includes new sorting toggle in header.
 
 Closes #123
-```
+```text
 
 ```bash
 fix(calendar): correct timezone handling
 
 Fix incorrect timezone conversion for all-day events.
 Events now display correctly across different timezones.
-```
+```text
 
 ## Pull Request Process
 
 ### Before Submitting
 
 1. **Update from upstream:**
+
    ```bash
    git fetch upstream
    git rebase upstream/develop
-   ```
+   ```text
 
-2. **Run checks:**
+1. **Run checks:**
+
    ```bash
    npm run lint
    npm run check:types
    npm run check:format
-   ```
+   ```text
 
-3. **Test your changes:**
+1. **Test your changes:**
    - Test on iOS simulator/device
    - Test on Android emulator/device
    - Verify no console errors
    - Test edge cases
 
-4. **Update documentation:**
+2. **Update documentation:**
    - Update README if needed
    - Add JSDoc comments to new functions
    - Update relevant .md files
@@ -272,13 +283,14 @@ Events now display correctly across different timezones.
 ### Creating the PR
 
 1. Push your branch:
+
    ```bash
    git push origin feature/your-feature-name
-   ```
+   ```text
 
-2. Go to GitHub and create a Pull Request
+1. Go to GitHub and create a Pull Request
 
-3. Fill out the PR template:
+2. Fill out the PR template:
    - **Title:** Clear, concise description
    - **Description:** What changes and why
    - **Screenshots:** For UI changes
@@ -308,7 +320,7 @@ Add screenshots for UI changes
 
 ## Related Issues
 Closes #123
-```
+```text
 
 ### Review Process
 
@@ -318,7 +330,7 @@ Closes #123
 - Keep the PR focused and small
 - Be responsive to feedback
 
-## Testing
+## Testing (2)
 
 ### Running Tests
 
@@ -331,7 +343,7 @@ npm test -- --watch
 
 # Run tests with coverage
 npm test -- --coverage
-```
+```text
 
 ### Writing Tests
 
@@ -348,27 +360,27 @@ describe('MyComponent', () => {
   it('should render correctly', () => {
     // Arrange
     const props = { title: 'Test' };
-    
+
     // Act
     const { getByText } = render(<MyComponent {...props} />);
-    
+
     // Assert
     expect(getByText('Test')).toBeTruthy();
   });
-  
+
   it('should call onPress when pressed', () => {
     // Arrange
     const onPress = jest.fn();
     const { getByText } = render(<MyComponent title="Test" onPress={onPress} />);
-    
+
     // Act
     fireEvent.press(getByText('Test'));
-    
+
     // Assert
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 });
-```
+```text
 
 ## Documentation
 
@@ -378,18 +390,19 @@ Use JSDoc for functions and complex logic:
 
 ```typescript
 /**
- * Formats a date relative to now (e.g., "2 hours ago")
- * @param date - ISO date string
- * @returns Formatted relative date string
+* Formats a date relative to now (e.g., "2 hours ago")
+* @param date - ISO date string
+* @returns Formatted relative date string
  */
 export function formatRelativeDate(date: string): string {
   // implementation
 }
-```
+```text
 
 ### Documentation Files
 
 Update relevant documentation:
+
 - `README.md` - For user-facing changes
 - `MISSING_FEATURES.md` - When implementing missing features
 - `IMPLEMENTATION_ROADMAP.md` - When completing roadmap items
@@ -403,13 +416,13 @@ Update relevant documentation:
 
 ### Documentation review process
 
-**PR requirements:**
+#### PR requirements
 - [ ] Documentation changes pass the docs-quality GitHub Actions workflow
 - [ ] Links validate (no broken links)
 - [ ] Spelling checks pass or are documented
 - [ ] Screenshots included for UI-related documentation updates
 
-**Review checklist:**
+### Review checklist
 - [ ] Accurate and up to date
 - [ ] Clear and concise
 - [ ] Consistent with the style guide
@@ -421,6 +434,7 @@ Update relevant documentation:
 Check out these areas where we especially need help:
 
 ### High Priority
+
 - [ ] Backend API implementation
 - [ ] AI integration
 - [ ] Test coverage
@@ -428,6 +442,7 @@ Check out these areas where we especially need help:
 - [ ] Authentication system
 
 ### Medium Priority
+
 - [ ] Search functionality
 - [ ] Data export/import
 - [ ] Accessibility improvements
@@ -435,6 +450,7 @@ Check out these areas where we especially need help:
 - [ ] Error handling
 
 ### Low Priority
+
 - [ ] Additional themes
 - [ ] Animations and transitions
 - [ ] AI personality onboarding (see TODO.md T-057)
@@ -450,6 +466,7 @@ Check out these areas where we especially need help:
 ## Recognition
 
 Contributors will be recognized in:
+
 - README.md contributors section
 - Release notes
 - GitHub contributors page

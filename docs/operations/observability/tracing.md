@@ -1,6 +1,6 @@
 # Tracing Strategy
 
-**Last Updated:** 2024-01-15  
+**Last Updated:** 2024-01-15
 **Owner:** Platform Team
 
 ## Plain English Summary
@@ -19,6 +19,7 @@ Imagine a user taps "Login" in the mobile app. That single action triggers:
 6. Response back to client
 
 Tracing lets us see:
+
 - **How long each step took**
 - **Which step was slowest**
 - **Where errors occurred**
@@ -27,34 +28,37 @@ Tracing lets us see:
 ## Key Concepts
 
 ### Trace
+
 A complete journey of a request through the system
 
-```
+```text
 Trace ID: abc123
 Duration: 245ms
 Spans: 5
 Status: Success
-```
+```text
 
 ### Span
+
 A single operation within a trace (one step in the journey)
 
-```
+```text
 Span: Database Query
 Parent: API Handler
 Duration: 125ms
 Operation: SELECT * FROM users WHERE email = ?
-```
+```text
 
 ### Span Relationship
-```
+
+```text
 Trace: User Login
 ├── Span: HTTP Request         (200ms total)
 │   ├── Span: Validate JWT     (5ms)
 │   ├── Span: Database Query   (125ms) ← Slowest!
 │   ├── Span: Hash Comparison  (50ms)
 │   └── Span: Create Session   (20ms)
-```
+```text
 
 ## What to Trace
 
@@ -78,23 +82,23 @@ Include these attributes in spans:
   'http.url': '/api/users',
   'http.status_code': 201,
   'http.user_agent': 'AIOS-Mobile/1.0',
-  
+
   // Custom attributes
   'user.id': 'user_123',
   'user.type': 'premium',
   'request.id': 'req_abc123',
-  
+
   // Database
   'db.system': 'postgresql',
   'db.operation': 'SELECT',
   'db.statement': 'SELECT * FROM users WHERE id = $1',
   'db.rows_affected': 1,
-  
+
   // Result
   'result.cache_hit': false,
   'result.items_returned': 25,
 }
-```
+```text
 
 ## Implementation
 
@@ -123,7 +127,7 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
-```
+```text
 
 ### Manual Instrumentation
 
@@ -143,18 +147,18 @@ async function processPayment(payment) {
       'payment.currency': payment.currency,
     },
   });
-  
+
   try {
     // Call external payment API
     const childSpan = tracer.startSpan('payment_api_call', {
       parent: span,
     });
-    
+
     const result = await externalPaymentAPI.charge(payment);
-    
+
     childSpan.setAttribute('payment.status', result.status);
     childSpan.end();
-    
+
     span.setAttribute('result', 'success');
     return result;
   } catch (error) {
@@ -166,7 +170,7 @@ async function processPayment(payment) {
     span.end();
   }
 }
-```
+```text
 
 ### Trace Context Propagation
 
@@ -186,7 +190,7 @@ await axios.get(url, {
     ...propagation.inject(traceContext, {}),
   },
 });
-```
+```text
 
 ## Trace Sampling
 
@@ -212,19 +216,20 @@ const sampler = {
     return { decision: Math.random() < 0.1 ? 1 : 0 };
   },
 };
-```
+```text
 
 ## Using Traces
 
 ### Finding Slow Requests
 
-```
+```text
 Query: duration > 1s
 Sort by: duration desc
 Result: Top 10 slowest traces
-```
+```text
 
 Look for:
+
 - Which span took the most time?
 - Are there many spans (N+1 queries)?
 - Are spans sequential or parallel?
@@ -232,12 +237,13 @@ Look for:
 
 ### Debugging Errors
 
-```
+```text
 Query: status = error AND service = aios-api
 Filter: last 1 hour
-```
+```text
 
 Click on trace to see:
+
 - Which span failed?
 - What was the error message?
 - What happened before the error?
@@ -245,13 +251,14 @@ Click on trace to see:
 
 ### Analyzing Performance
 
-```
+```text
 Query: endpoint = /api/users AND method = POST
 Aggregate: avg(duration), p95(duration), p99(duration)
 Group by: time
-```
+```text
 
 Identify:
+
 - Performance trends over time
 - Impact of deployments
 - Slowest operations
@@ -261,63 +268,66 @@ Identify:
 
 ### Database N+1 Problem
 
-**Symptom in trace:**
-```
+#### Symptom in trace
+```text
 Trace: Get User Posts
 ├── Span: Get Posts (10ms)
 ├── Span: Get Author 1 (15ms) ← Repeated!
 ├── Span: Get Author 2 (15ms) ← Repeated!
 ├── Span: Get Author 3 (15ms) ← Repeated!
 └── ...100 more author queries
-```
+```text
 
 **Solution:** Use joins or DataLoader
 
 ### Sequential vs Parallel
 
-**Bad - Sequential (slow):**
-```
+#### Bad - Sequential (slow)
+```text
 Trace: User Dashboard
 ├── Span: Get User (50ms)
 └── Span: Get Posts (100ms)  ← After user
     └── Span: Get Comments (75ms)  ← After posts
 Total: 225ms
-```
+```text
 
-**Good - Parallel (fast):**
-```
+### Good - Parallel (fast)
+```text
 Trace: User Dashboard
 ├── Span: Get User (50ms)
 ├── Span: Get Posts (100ms)  ← Parallel!
 └── Span: Get Comments (75ms)  ← Parallel!
 Total: 100ms (longest span)
-```
+```text
 
 ### Cache Hit/Miss
 
-```
+```text
 Trace: Get User Profile
 ├── Span: Check Cache (5ms)
 │   Attribute: cache.hit = false
 └── Span: Database Query (125ms)  ← Cache miss, fetch from DB
     └── Span: Update Cache (10ms)
-```
+```text
 
 ## Visualization
 
 ### Jaeger UI
+
 - Timeline view of spans
 - Service dependency graph
 - Latency percentiles
 - Error rates
 
 ### DataDog APM
+
 - Flame graphs
 - Service map
 - Infrastructure correlation
 - Profiling integration
 
 ### Grafana Tempo
+
 - Integrated with metrics
 - LogQL query language
 - Correlation with logs
@@ -334,7 +344,7 @@ span.setName('database');
 // ✅ GOOD - Descriptive
 span.setName('create_user');
 span.setName('database.users.select');
-```
+```text
 
 ### 2. Add Context
 
@@ -347,7 +357,7 @@ span.setAttribute('user.id', user.id);
 span.setAttribute('user.type', user.type);
 span.setAttribute('query.duration_ms', duration);
 span.setAttribute('query.rows_affected', rowCount);
-```
+```text
 
 ### 3. Error Handling
 
@@ -362,7 +372,7 @@ try {
   span.setAttribute('error.type', error.constructor.name);
   throw error;
 }
-```
+```text
 
 ### 4. Don't Trace Everything
 
@@ -372,7 +382,7 @@ function calculateTotal(items) {
   const span1 = tracer.startSpan('loop_start');
   items.forEach(item => {
     const span2 = tracer.startSpan('process_item');
-    // ... 
+    // ...
     span2.end();
   });
   span1.end();
@@ -385,13 +395,14 @@ function calculateTotal(items) {
   // ... entire calculation
   span.end();
 }
-```
+```text
 
 ## Performance Considerations
 
 ### Overhead
 
 Tracing adds overhead:
+
 - **CPU:** 1-5% per instrumented operation
 - **Memory:** ~1KB per span
 - **Network:** Bandwidth to send spans
@@ -410,30 +421,31 @@ const exporter = new JaegerExporter({
   maxQueueSize: 1000,
   scheduledDelayMillis: 5000, // Batch every 5 seconds
 });
-```
+```text
 
 ## Troubleshooting with Traces
 
 ### Scenario: API Endpoint is Slow
 
 1. **Find slow traces**
-   ```
-   Query: endpoint = /api/data AND duration > 1s
-   ```
 
-2. **Identify slowest span**
+   ```text
+   Query: endpoint = /api/data AND duration > 1s
+   ```text
+
+1. **Identify slowest span**
    - Database query taking 900ms
    - Operation: SELECT with JOIN
 
-3. **Check span attributes**
+2. **Check span attributes**
    - No index used
    - Full table scan
 
-4. **Solution**
+3. **Solution**
    - Add database index
    - Optimize query
 
-5. **Verify**
+4. **Verify**
    - New traces show 50ms query time
    - Problem resolved
 
@@ -449,6 +461,7 @@ const exporter = new JaegerExporter({
 ## Failure Modes
 
 ### Failure Mode 1: Missing Spans
+
 - **Symptom:** Incomplete traces, gaps in execution flow
 - **Impact:** Can't identify slow operations
 - **Detection:** Traces missing expected operations
@@ -458,6 +471,7 @@ const exporter = new JaegerExporter({
   - Check sampling configuration
 
 ### Failure Mode 2: High Overhead
+
 - **Symptom:** Application performance degraded after enabling tracing
 - **Impact:** Poor user experience
 - **Detection:** CPU/memory usage increased
@@ -468,6 +482,7 @@ const exporter = new JaegerExporter({
   - Batch span export
 
 ### Failure Mode 3: Lost Context
+
 - **Symptom:** Spans not connected, each operation shows as separate trace
 - **Impact:** Can't see full request path
 - **Detection:** Many single-span traces
@@ -479,6 +494,7 @@ const exporter = new JaegerExporter({
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Check tracing is enabled
 curl http://localhost:3000/health | jq .tracing
@@ -494,9 +510,10 @@ open http://localhost:16686
 # 4. Search for recent traces
 # Filter by service: aios-api
 # Should see complete trace with multiple spans
-```
+```text
 
 ### Automated Checks
+
 - [ ] Tracing SDK is initialized
 - [ ] HTTP requests create spans
 - [ ] Database queries create spans
@@ -504,6 +521,7 @@ open http://localhost:16686
 - [ ] Spans contain required attributes
 
 ### Success Criteria
+
 1. All services create traces
 2. Traces contain all expected spans
 3. Context propagates correctly

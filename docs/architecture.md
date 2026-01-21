@@ -4,7 +4,7 @@
 
 This document describes the technical architecture of the AIOS Super App UI/UX system. AIOS breaks traditional mobile UI rules to manage 38+ modules through intelligent, adaptive interfaces.
 
-**Last Updated:** January 16, 2026  
+**Last Updated:** January 16, 2026
 **Version:** 1.0
 
 ---
@@ -49,7 +49,7 @@ React Native (Expo SDK 54) mobile app with event-driven architecture, lazy modul
 
 ### Architectural Pattern
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         Presentation Layer              │
 │  (Screens, Components, Navigation)      │
@@ -76,7 +76,7 @@ React Native (Expo SDK 54) mobile app with event-driven architecture, lazy modul
 │  • Module Databases (notes, tasks, etc)│
 │  • Usage Analytics                      │
 └─────────────────────────────────────────┘
-```
+```text
 
 ### Key Principles
 
@@ -94,17 +94,17 @@ React Native (Expo SDK 54) mobile app with event-driven architecture, lazy modul
 
 **Purpose:** Enables modules to communicate without tight coupling.
 
-**Plain English:**  
+### Plain English (2)
 When something important happens (e.g., calendar event created), any interested module can be notified and react. Calendar doesn't need to know Maps exists - Maps just listens for calendar events.
 
-**Technical:**
+#### Technical
 - Singleton observer pattern
 - Synchronous event delivery
 - Error isolation (one listener failure doesn't break others)
 - Event history for debugging (last 100 events)
 - Typed event system with `EVENT_TYPES` enum
 
-**Event Types:**
+### Event Types
 ```typescript
 - CALENDAR_EVENT_CREATED / UPDATED / DELETED
 - TASK_CREATED / COMPLETED / UPDATED / DELETED
@@ -114,9 +114,9 @@ When something important happens (e.g., calendar event created), any interested 
 - CONTEXT_CHANGED
 - USER_ACTION
 - SEARCH_PERFORMED
-```
+```text
 
-**Usage Example:**
+### Usage Example
 ```typescript
 // Module A emits event
 eventBus.emit(EVENT_TYPES.CALENDAR_EVENT_CREATED, {
@@ -133,9 +133,9 @@ const unsubscribe = eventBus.on(
     suggestDirections(payload.data.location);
   }
 );
-```
+```text
 
-**Failure Modes:**
+### Failure Modes
 - Listeners must be fast (synchronous) - no long-running operations
 - Memory leaks if listeners not unsubscribed
 - Event payload must match expected structure
@@ -146,17 +146,17 @@ const unsubscribe = eventBus.on(
 
 **Purpose:** Automatically adapts UI based on user's current life context.
 
-**Plain English:**  
+### Plain English (3)
 During work hours (9am-5pm weekdays), shows work-related modules (Email, Calendar, Planner). In evening, shows personal modules (Messages, Photos, Budget). User can override anytime.
 
-**Technical:**
+#### Technical (2)
 - Rule-based context detection (time-of-day, day-of-week)
 - Priority-ordered rules (higher priority wins)
 - User override support
 - Module visibility filtering
 - Smooth transitions with event notifications
 
-**Context Zones:**
+### Context Zones
 ```typescript
 enum ContextZone {
   WORK       // Mon-Fri 9am-5pm: Email, Calendar, Planner, Notebook
@@ -167,9 +167,9 @@ enum ContextZone {
   WEEKEND    // Sat-Sun: Leisure, Personal projects
   AUTO       // Let AI decide
 }
-```
+```text
 
-**Context Detection Rules:**
+### Context Detection Rules
 1. **Focus Mode** (priority 100) - User manual toggle
 2. **Weekend** (priority 50) - Saturday or Sunday
 3. **Work Hours** (priority 40) - Mon-Fri 9am-5pm
@@ -177,7 +177,7 @@ enum ContextZone {
 5. **Social Hours** (priority 25) - Lunch (12-1pm) or after work (5-6pm)
 6. **Personal** (priority 0) - Default fallback
 
-**Usage Example:**
+### Usage Example (2)
 ```typescript
 // Get current context
 const detection = contextEngine.detectContext();
@@ -194,9 +194,9 @@ contextEngine.onChange((detection) => {
 
 // User override
 contextEngine.setUserOverride(ContextZone.FOCUS);
-```
+```text
 
-**Extension Points:**
+### Extension Points
 - Add new context zones (e.g., COMMUTE, GYM, TRAVEL)
 - Add location-based rules (home, office, gym)
 - Add calendar-based rules (during meeting, before deadline)
@@ -208,18 +208,18 @@ contextEngine.setUserOverride(ContextZone.FOCUS);
 
 **Purpose:** Search everything in the app from one place.
 
-**Plain English:**  
+### Plain English (4)
 Type "doctor" once and see results from Calendar (appointments), Contacts (doctors you know), Notes (medical notes), Budget (medical expenses). No need to remember which module has what.
 
-**Technical:**
+#### Technical (3)
 - Parallel search across all registered modules
 - Relevance scoring algorithm
 - Recency boosting
 - Grouped results by module
 - Recent searches tracking
 
-**Search Algorithm:**
-```
+### Search Algorithm
+```text
 Relevance Score (0-100) calculated as:
 1. Text Matching:
    - Exact match: 100 points
@@ -239,9 +239,9 @@ Relevance Score (0-100) calculated as:
    - Older: +0 points
 
 Final Score = (Text Score * Field Multiplier) + Recency Boost
-```
+```text
 
-**Searchable Modules:**
+### Searchable Modules
 - **Notebook**: Title, body, tags
 - **Planner**: Task title, description
 - **Calendar**: Event title, description, location
@@ -251,7 +251,7 @@ Final Score = (Text Score * Field Multiplier) + Recency Boost
 - **Email**: Subject, sender, body (future)
 - **Messages**: Conversation name, message content (future)
 
-**Usage Example:**
+### Usage Example (3)
 ```typescript
 const results = await omnisearch.search('doctor', {
   maxResultsPerModule: 5,
@@ -287,16 +287,16 @@ const results = await omnisearch.search('doctor', {
     ...
   ]
 }
-```
+```text
 
-**Performance Considerations:**
+### Performance Considerations
 - Target: <500ms for typical searches
 - Parallel module queries
 - Debounced input (300ms)
 - Result limiting (5 per module default)
 - Minimum relevance threshold to filter noise
 
-**Extension Points:**
+### Extension Points (2)
 - Add fuzzy matching (typo tolerance)
 - Add synonym support ("physician" → "doctor")
 - Add search filters (date range, module type)
@@ -310,17 +310,17 @@ const results = await omnisearch.search('doctor', {
 
 **Purpose:** Single source of truth for all modules in the app.
 
-**Plain English:**  
+### Plain English (5)
 Central catalog defining what modules exist, their icons, colors, and metadata. When you add a new module, add it here and everything else (sidebar, command center, search) automatically knows about it.
 
-**Technical:**
+#### Technical (4)
 - Singleton pattern
 - Module metadata storage
 - Usage tracking (open count, last opened)
 - Favorites management
 - Smart module sorting for sidebar
 
-**Module Definition:**
+### Module Definition
 ```typescript
 interface ModuleDefinition {
   id: ModuleType;
@@ -329,21 +329,21 @@ interface ModuleDefinition {
   icon: string;                    // Feather icon name
   color: string;                   // Hex color
   routeName: keyof AppStackParamList;  // Navigation route
-  tier: ModuleTier;                // core | tier1 | tier2 | tier3
-  category: ModuleCategory;        // productivity | communication | etc.
+ tier: ModuleTier;                // core | tier1 | tier2 | tier3
+ category: ModuleCategory;        // productivity | communication | etc.
   isCore: boolean;                 // Part of 14 production modules
   requiresOnboarding: boolean;     // Show in initial selection
   tags: string[];                  // For search and categorization
 }
-```
+```text
 
-**Module Tiers:**
+### Module Tiers
 - **Core**: 14 production-ready modules (Command, Notebook, Planner, etc.)
 - **Tier 1**: Super app essentials (Wallet, Maps, Food, Ride)
 - **Tier 2**: Life management (Health, Education, Professional Services)
 - **Tier 3**: Innovation edge (Memory Bank, Future Predictor)
 
-**Usage Tracking:**
+### Usage Tracking
 ```typescript
 interface ModuleUsage {
   moduleId: ModuleType;
@@ -352,9 +352,9 @@ interface ModuleUsage {
   totalTimeSpent: number; // seconds
   favorited: boolean;
 }
-```
+```text
 
-**Usage Example:**
+### Usage Example (4)
 ```typescript
 // Get all core modules
 const coreModules = moduleRegistry.getCoreModules();
@@ -372,19 +372,19 @@ const sidebarModules = moduleRegistry.getModulesForSidebar();
 // Search modules
 const results = moduleRegistry.searchModules('notes');
 // Returns: [{ id: 'notebook', name: 'Notebook', ... }]
-```
+```text
 
-**Sidebar Logic:**
-```
+### Sidebar Logic
+```text
 Sidebar shows up to 10 modules:
 1. Command Center (always first)
 2. Favorited modules
 3. Most-used modules
 4. Recently-used modules
 5. Fill with core modules if space remains
-```
+```text
 
-**Extension Points:**
+### Extension Points (3)
 - Add module dependencies (e.g., Wallet requires Contacts)
 - Add module permissions
 - Add module onboarding tutorials
@@ -399,7 +399,7 @@ Sidebar shows up to 10 modules:
 
 **Scenario:** User creates a dinner calendar event
 
-```
+```text
 1. User creates event in Calendar module
    ↓
 2. Calendar saves event to database
@@ -418,11 +418,11 @@ Sidebar shows up to 10 modules:
 6. Selecting suggestion navigates to that module
    ↓
 7. Module handoff preserves context
-```
+```text
 
 ### Search Flow
 
-```
+```text
 1. User types in omnisearch
    ↓
 2. Input debounced (300ms delay)
@@ -443,11 +443,11 @@ Sidebar shows up to 10 modules:
 7. UI displays grouped results
    ↓
 8. User taps result → navigates to item
-```
+```text
 
 ### Context Switch Flow
 
-```
+```text
 1. Time changes (e.g., 5pm arrives)
    ↓
 2. Context Engine detects new context
@@ -463,7 +463,7 @@ Sidebar shows up to 10 modules:
 7. Smooth transition animation
    ↓
 8. User sees evening-appropriate modules
-```
+```text
 
 ---
 
@@ -471,12 +471,11 @@ Sidebar shows up to 10 modules:
 
 ### Lazy Loading Strategy
 
-**Plain English:**  
+#### Plain English
 Don't load everything at startup. Load Command Center and core services immediately. Load other modules only when user opens them. Pre-load likely next modules in background.
 
-**Technical Implementation:**
-
-```
+### Technical Implementation
+```text
 App Start (< 2 seconds):
 ┌────────────────────────────────────┐
 │ ALWAYS LOADED                      │
@@ -507,49 +506,46 @@ Predictive Prefetch (background):
 │ • Based on time of day             │
 │ • Based on current module          │
 └────────────────────────────────────┘
-```
+```text
 
-**Prefetch Strategy:**
-
+### Prefetch Strategy
 ```typescript
 // Pseudo-code for predictive prefetch
 function getPrefetchModules(currentModule, timeOfDay) {
   const rules = [
     // If in Calendar, likely to open:
     { from: 'calendar', predict: ['planner', 'notebook', 'contacts'] },
-    
+
     // If in Messages, likely to open:
     { from: 'messages', predict: ['contacts', 'calendar', 'photos'] },
-    
+
     // Morning (6am-9am), likely to open:
     { time: 'morning', predict: ['calendar', 'email', 'planner'] },
-    
+
     // Evening (6pm-9pm), likely to open:
     { time: 'evening', predict: ['messages', 'photos', 'lists'] },
   ];
-  
+
   // Combine rule-based + usage-based predictions
   return selectTop3(rules, userUsageHistory);
 }
-```
+```text
 
-**Memory Management:**
-
-```
+### Memory Management
+```text
 Max Memory Budget: 200 MB
 ├─ App Shell: 20 MB
 ├─ Core Services: 30 MB
 ├─ Current Module: 50 MB
 ├─ Prefetched Modules: 60 MB (3 modules × 20 MB)
 └─ Overhead: 40 MB
-```
+```text
 
-**Module Lifecycle:**
-
-```
+### Module Lifecycle
+```text
 UNLOADED → PREFETCHING → LOADED → ACTIVE → BACKGROUND → UNLOADED
    ↑_______________________________________________|
-```
+```text
 
 ---
 
@@ -558,7 +554,7 @@ UNLOADED → PREFETCHING → LOADED → ACTIVE → BACKGROUND → UNLOADED
 ### Targets
 
 | Metric | Target | Measurement |
-|--------|--------|-------------|
+| -------- | -------- | ------------- |
 | App Launch | < 2 seconds | Time to interactive |
 | Module Switch | < 500ms | Perceived latency |
 | Search Response | < 500ms | Query to results |
@@ -592,7 +588,7 @@ interface PerformanceMetrics {
   frameDrops: number;
   errorRate: number;
 }
-```
+```text
 
 ---
 
@@ -601,6 +597,7 @@ interface PerformanceMetrics {
 ### Adding a New Module
 
 1. **Add to Module Registry** (`client/lib/moduleRegistry.ts`):
+
 ```typescript
 {
   id: 'wallet',
@@ -615,28 +612,30 @@ interface PerformanceMetrics {
   requiresOnboarding: true,
   tags: ['payments', 'money', 'transactions'],
 }
-```
+```text
 
-2. **Create Module Screen** (`client/screens/WalletScreen.tsx`)
+1. **Create Module Screen** (`client/screens/WalletScreen.tsx`)
 
-3. **Add Route to Navigator** (`client/navigation/AppNavigator.tsx`)
+2. **Add Route to Navigator** (`client/navigation/AppNavigator.tsx`)
 
-4. **Implement Search** (add to omnisearch):
+3. **Implement Search** (add to omnisearch):
+
 ```typescript
 private async searchWallet(query: string, maxResults: number) {
   // Search wallet transactions
 }
-```
+```text
 
-5. **Emit Events** (in module code):
+1. **Emit Events** (in module code):
+
 ```typescript
 eventBus.emit(EVENT_TYPES.PAYMENT_COMPLETED, {
   amount: 50,
   recipient: 'John',
 });
-```
+```text
 
-6. **Done!** Module automatically appears in:
+1. **Done!** Module automatically appears in:
    - Sidebar (if used frequently)
    - Omnisearch results
    - Module grid
@@ -645,6 +644,7 @@ eventBus.emit(EVENT_TYPES.PAYMENT_COMPLETED, {
 ### Adding a New Context Zone
 
 1. **Add to ContextEngine** (`client/lib/contextEngine.ts`):
+
 ```typescript
 enum ContextZone {
   // ... existing
@@ -671,9 +671,9 @@ enum ContextZone {
   },
   reason: 'Commute detected',
 }
-```
+```text
 
-2. **Done!** Context automatically affects:
+1. **Done!** Context automatically affects:
    - Sidebar module visibility
    - Command Center recommendations
    - Notification priorities
@@ -684,7 +684,7 @@ enum ContextZone {
 
 See [docs/security.md](./security.md) for detailed security documentation.
 
-**Key Security Principles:**
+### Key Security Principles
 1. **Local-First Storage**: Sensitive data stays on device
 2. **Minimal Permissions**: Request only what's needed
 3. **No Secrets in Client**: API keys, tokens server-side only
@@ -698,7 +698,7 @@ See [docs/security.md](./security.md) for detailed security documentation.
 
 See [docs/accessibility.md](./accessibility.md) for detailed accessibility documentation.
 
-**Key Accessibility Features:**
+### Key Accessibility Features
 1. **Keyboard Navigation**: All features accessible via keyboard
 2. **Screen Reader**: Proper labels, roles, states
 3. **Focus Management**: Correct focus for overlays, modals
@@ -711,28 +711,33 @@ See [docs/accessibility.md](./accessibility.md) for detailed accessibility docum
 ## Testing Strategy
 
 ### Unit Tests
+
 - Event Bus (✅ Complete)
 - Context Engine (In Progress)
 - Omnisearch (In Progress)
 - Module Registry (In Progress)
 
 ### Integration Tests
+
 - Command Center with Event Bus
 - Sidebar with Context Engine
 - Omnisearch with all modules
 
 ### End-to-End Tests
+
 - Complete user flows
 - Module handoffs
 - Context switches
 - Search → navigate → action
 
 ### Accessibility Tests
+
 - Automated: axe, lighthouse
 - Manual: keyboard navigation, screen reader
 - Focus management tests
 
 ### Performance Tests
+
 - Load time benchmarks
 - Module switch latency
 - Search response time
@@ -746,31 +751,31 @@ See [docs/accessibility.md](./accessibility.md) for detailed accessibility docum
 
 **Purpose:** Enable seamless transitions between modules while preserving state and providing clear navigation paths.
 
-**Plain English:**  
+### Plain English (6)
 When you need to jump from Calendar to Maps for directions, then to Food for restaurant booking, the handoff system keeps track of where you came from and lets you return with one tap. Your scroll position, filters, and selections are preserved in both modules.
 
-**Technical:**  
+#### Technical (5)
 State-preserving navigation manager with breadcrumb UI, iOS-specific storage via AsyncStorage, and event-driven updates. Supports deep chains (up to 5 levels) with circular reference prevention.
 
 ### Components
 
 #### 1. Module Handoff Manager (`client/lib/moduleHandoff.ts`)
 
-**Responsibilities:**
+### Responsibilities
 - Track handoff chain (module → module → module)
 - Serialize/deserialize module state
 - Persist state across iOS app lifecycle
 - Emit events for UI updates
 - Enforce depth limits to prevent infinite chains
 
-**Key Features:**
+### Key Features
 - **State Preservation**: Saves scroll positions, filters, selections per module
 - **iOS Lifecycle Handling**: Persists to AsyncStorage (survives backgrounding)
 - **Depth Limiting**: Max 5 handoffs prevents memory issues
 - **Circular Prevention**: Cannot handoff from module A → A
 - **Breadcrumb Trail**: Generates UI-friendly navigation path
 
-**API:**
+### API
 ```typescript
 // Start handoff from Calendar to Maps
 handoffManager.startHandoff(
@@ -798,9 +803,9 @@ const result = handoffManager.returnFromHandoff(
 
 // Cancel entire chain (return to root)
 handoffManager.cancelHandoff();
-```
+```text
 
-**State Structure:**
+### State Structure
 ```typescript
 {
   id: 'handoff_1234567890_abc123',
@@ -823,24 +828,25 @@ handoffManager.cancelHandoff();
     presentationStyle: 'push'
   }
 }
-```
+```text
 
 #### 2. Handoff Breadcrumb UI (`client/components/HandoffBreadcrumb.tsx`)
 
 **Purpose:** Visual breadcrumb bar showing navigation path with back button.
 
 **iOS Features:**
+
 - BlurView backdrop (iOS 13+ style)
 - Safe area inset handling (notch, dynamic island)
 - Native haptic feedback on interactions
 - SF Symbols-inspired icon design
 - 44pt height (iOS standard navigation bar)
 
-**Variants:**
+### Variants
 - **Full Breadcrumb**: Shows back button + full path
 - **Compact Breadcrumb**: Path only (embeddable in headers)
 
-**Usage:**
+### Usage
 ```tsx
 // Automatic mode (shows/hides based on handoff state)
 <HandoffBreadcrumb />
@@ -850,21 +856,21 @@ handoffManager.cancelHandoff();
 
 // Compact variant
 <CompactBreadcrumb />
-```
+```text
 
-**Visual Appearance (iOS):**
-```
+### Visual Appearance (iOS)
+```text
 ┌────────────────────────────────────────┐
 │ ← Calendar    Calendar › Maps › Food   │ ← Blur backdrop
 └────────────────────────────────────────┘
   ↑ Back button  ↑ Breadcrumb trail
-```
+```text
 
 #### 3. React Hook (`useModuleHandoff`)
 
 **Purpose:** React-friendly API for handoff operations.
 
-**Usage:**
+### Usage (2)
 ```tsx
 const {
   startHandoff,
@@ -889,7 +895,7 @@ const result = returnFromHandoff({ data: 'xyz' }, 'complete');
 if (isInHandoff) {
   // Show breadcrumb UI
 }
-```
+```text
 
 ### Integration Examples
 
@@ -922,15 +928,15 @@ const handleGetDirections = (event) => {
     },
     { presentationStyle: 'push' }
   );
-  
+
   navigation.navigate('Maps', {
     destination: event.location,
     fromHandoff: true
   });
 };
-```
+```text
 
-**In MapsScreen.tsx:**
+### In MapsScreen.tsx
 ```tsx
 const { returnFromHandoff, isInHandoff } = useModuleHandoff();
 
@@ -939,10 +945,10 @@ const handleBackToCalendar = () => {
     { selectedRoute: currentRoute },
     'complete'
   );
-  
+
   // Navigate back with restored state
   navigation.goBack();
-  
+
   // CalendarScreen will receive result.moduleState
   // and restore its scrollY, selectedDate, viewMode
 };
@@ -954,7 +960,7 @@ return (
     {/* Maps content */}
   </View>
 );
-```
+```text
 
 ### iOS-Specific Considerations
 
@@ -980,13 +986,13 @@ return (
 
 ### Performance
 
-**Metrics:**
+#### Metrics
 - State serialization: <10ms per module
 - AsyncStorage write: <50ms
 - Handoff initiation: <100ms
 - Memory per chain: <5KB
 
-**Optimizations:**
+### Optimizations
 - Depth limit prevents unbounded growth
 - State is JSON-serialized (compact)
 - Old chains auto-cleared after 24h
@@ -995,6 +1001,7 @@ return (
 ### Testing
 
 **Unit Tests:** 22 tests covering:
+
 - Handoff start/return/cancel
 - State preservation
 - Depth limits
@@ -1004,28 +1011,28 @@ return (
 
 **Test Coverage:** 100% of handoff manager logic
 
-**Example Tests:**
+### Example Tests
 ```typescript
 it('should preserve state when returning from handoff', () => {
   handoffManager.startHandoff(
     { moduleId: 'calendar', state: { scrollY: 100 } },
     { moduleId: 'maps' }
   );
-  
+
   const result = handoffManager.returnFromHandoff();
-  
+
   expect(result.moduleState.scrollY).toBe(100);
 });
 
 it('should enforce max depth limit', () => {
   // Create 5-level chain
   // ...
-  
+
   // Attempt 6th level should fail
   const success = handoffManager.startHandoff(module5, module6);
   expect(success).toBe(false);
 });
-```
+```text
 
 ### Security Considerations
 

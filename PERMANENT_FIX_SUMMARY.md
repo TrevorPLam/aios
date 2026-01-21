@@ -1,7 +1,7 @@
 # ✅ PERMANENT FIX - Worklets Error Resolved
 
-**Date:** January 19, 2026  
-**Issue:** WorkletsError: Mismatch between JavaScript part and native part of Worklets (0.7.2 vs 0.5.1)  
+**Date:** January 19, 2026
+**Issue:** WorkletsError: Mismatch between JavaScript part and native part of Worklets (0.7.2 vs 0.5.1)
 **Status:** ✅ ROOT CAUSE FIXED IN REPOSITORY
 
 ---
@@ -23,7 +23,7 @@
     ]
   }
 }
-```
+```text
 
 ---
 
@@ -31,7 +31,7 @@
 
 Since the configuration is now fixed in the repository, you need to rebuild your app **ONCE** to apply the fix:
 
-### On Replit (After Pulling This Fix):
+### On Replit (After Pulling This Fix)
 
 ```bash
 # Step 1: Pull the latest code (includes this fix)
@@ -42,7 +42,7 @@ npm run expo:clean:native && npm run expo:rebuild:ios
 
 # Step 3: Start the app
 npm start
-```
+```text
 
 **Expected Time:** 5-10 minutes for the rebuild
 
@@ -53,21 +53,27 @@ npm start
 After rebuilding, verify the fix worked:
 
 1. **Check Expo Config:**
+
    ```bash
    npm run check:expo-config
-   ```
+   ```text
+
    Should show: `✅ react-native-reanimated plugin: Configured`
 
-2. **Check Worklets Version:**
+1. **Check Worklets Version:**
+
    ```bash
    npm run check:worklets
-   ```
+   ```text
+
    Should show: `✅ Versions match! Everything looks good.`
 
-3. **Run the App:**
+1. **Run the App:**
+
    ```bash
    npm start
-   ```
+   ```text
+
    The WorkletsError should be GONE.
 
 ---
@@ -76,7 +82,7 @@ After rebuilding, verify the fix worked:
 
 ### The Root Cause (NOW FIXED)
 
-**Missing Expo Plugin Configuration:**
+#### Missing Expo Plugin Configuration
 - The `react-native-reanimated` plugin was missing from `app.json`
 - Expo uses this plugin to configure native iOS/Android code during prebuild
 - Without it, the native code was never properly configured
@@ -115,9 +121,9 @@ The missing plugin meant step 3 failed every time because Expo couldn't configur
 If you update `react-native-reanimated` or `react-native-worklets` in the future:
 
 ```bash
-# After updating these packages, rebuild:
+# After updating these packages, rebuild
 npm run expo:rebuild:ios
-```
+```text
 
 But the configuration issue that was causing persistent errors is now FIXED.
 
@@ -162,23 +168,28 @@ All scripts pass ✅
 If after rebuilding you still see the error:
 
 1. **Try the full clean option:**
+
    ```bash
    npm run expo:clean:full && npm run expo:rebuild:ios
-   ```
+   ```text
 
-2. **Verify the plugin is in app.json:**
+1. **Verify the plugin is in app.json:**
+
    ```bash
    grep -A 5 '"plugins"' app.json | grep "react-native-reanimated"
-   ```
+   ```text
+
    Should output: `"react-native-reanimated",`
 
-3. **Check for multiple worklets versions:**
+1. **Check for multiple worklets versions:**
+
    ```bash
    npm list react-native-worklets
-   ```
+   ```text
+
    Should only show ONE version
 
-4. **See WORKLETS_FIX_GUIDE.md for nuclear option** (manual deep clean)
+1. **See WORKLETS_FIX_GUIDE.md for nuclear option** (manual deep clean)
 
 ---
 
@@ -189,8 +200,7 @@ If after rebuilding you still see the error:
 - ✅ **Issue resolved:** The persistent WorkletsError will NOT reoccur
 - ✅ **Workflow restored:** Copilot → Replit → Expo now works correctly
 
-**This was the FIFTH time you saw this error. It will NOT be the sixth.**
-
+### This was the FIFTH time you saw this error. It will NOT be the sixth
 ---
 
 **Questions?** Check the documentation links above or see [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)

@@ -30,18 +30,22 @@ Successfully implemented a comprehensive analytics/telemetry system ("Data Compi
 ## Hard Requirements Compliance
 
 ### ✅ Requirement 1: Single Instrumentation
+
 - One canonical event schema used across entire app
 - Strong TypeScript typing ensures consistency
 - `analytics.log(eventName, props)` provides unified API
 
 ### ✅ Requirement 2: Same Events, Different Modes
+
 - MODE A (default): Full timestamps, stable IDs
 - MODE B (privacy): De-identified, bucketed, coarse time
 - Both modes log identical event names with same semantic meaning
 - Privacy transformations applied automatically without code duplication
 
 ### ✅ Requirement 3: Only Allowed Data
-**What we collect:**
+
+#### What we collect
+
 - ✅ Event names (product telemetry)
 - ✅ Module IDs (where events occur)
 - ✅ Item types (not content)
@@ -50,7 +54,8 @@ Successfully implemented a comprehensive analytics/telemetry system ("Data Compi
 - ✅ AI effectiveness metrics (confidence, latency - NO prompts/outputs)
 - ✅ Navigation patterns (sources, transitions)
 
-**What we DON'T collect:**
+### What we DON'T collect
+
 - ❌ Raw content (note bodies, email text, messages)
 - ❌ Titles, subjects, descriptions
 - ❌ Contact identifiers (names, emails, phones)
@@ -60,13 +65,15 @@ Successfully implemented a comprehensive analytics/telemetry system ("Data Compi
 - ❌ Cross-app tracking IDs
 - ❌ AI prompts or generated text
 
-**Enforcement:**
+### Enforcement
+
 - Automatic forbidden field detection with regex patterns
 - Per-event property allowlists
 - Debug warnings for policy violations
 - Tests verify no forbidden fields in taxonomy
 
 ### ✅ Requirement 4: Clean API
+
 ```typescript
 // Type-safe generic log
 await analytics.log("item_created", { module_id: "notebook", item_type: "note" });
@@ -75,23 +82,24 @@ await analytics.log("item_created", { module_id: "notebook", item_type: "note" }
 await analytics.trackModuleOpened("planner", "dock");
 await analytics.trackItemCreated("notebook", "note");
 await analytics.trackAIOpened("planner", "has_selection");
-```
+```text
 
-**Type Safety:**
+### Type Safety
 - EventName union type (compile-time validation)
 - EventPropsMap ensures correct props per event
 - TypeScript strict mode enabled
 - No `any` types in public API
 
 ### ✅ Requirement 5: Offline Queue + Batching
-**Queue Features:**
+
+#### Queue Features
 - Persistent AsyncStorage storage
 - Max size: 1,000 events (configurable)
 - Automatic compaction at 90% capacity (removes oldest 20%)
 - Backpressure: returns false when full
 - Retry counting per event
 
-**Batching:**
+### Batching
 - Auto-flush every 30 seconds
 - Flush on app foreground/background
 - Batch size: 50 events (configurable)
@@ -102,7 +110,8 @@ await analytics.trackAIOpened("planner", "has_selection");
 - Server errors (5xx) do retry
 
 ### ✅ Requirement 6: Privacy Mode Toggle
-**Runtime Switching:**
+
+#### Runtime Switching
 ```typescript
 // Enable privacy mode (premium feature)
 await analytics.enablePrivacyMode();
@@ -112,21 +121,22 @@ const isPrivacy = analytics.isPrivacyModeEnabled();
 
 // Disable privacy mode
 await analytics.disablePrivacyMode();
-```
+```text
 
-**Safe Migration:**
+### Safe Migration
 - Preference persisted to AsyncStorage
 - Already-queued events sanitized on flush if mode changed
 - Identity provider automatically switched
 - Mode switch itself logged as event
 
-**UI Integration:**
+### UI Integration
 - Toggle in PersonalizationScreen (Settings)
 - Clear description: "Privacy-Respecting Analytics (Premium)"
 - Haptic feedback on toggle
 
 ### ✅ Requirement 7: Module Registry
-**Centralized Metadata:**
+
+#### Centralized Metadata
 ```typescript
 export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
   notebook: {
@@ -137,23 +147,24 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
   },
   // ... 11 more modules
 };
-```
+```text
 
-**Usage:**
+### Usage
 - Navigation system uses routes
 - Analytics uses module_ids
 - Single source of truth
 - Helper functions: `getModuleMetadata()`, `getAllModuleIds()`
 
 ### ✅ Requirement 8: Tests
-**Test Coverage:**
+
+#### Test Coverage
 - ✅ Bucket helpers (all edge cases)
 - ✅ Sanitizer (forbidden fields, allowlists, time bucketing)
 - ✅ Queue (enqueue, dequeue, backpressure, compaction, retry)
 - ✅ Taxonomy (all events defined, no forbidden fields)
 - ✅ Type safety (EventPropsMap, strong typing)
 
-**Test Files:**
+### Test Files
 1. `buckets.test.ts` - 140+ assertions across 7 bucket types
 2. `sanitizer.test.ts` - Privacy transformations, forbidden field detection
 3. `queue.test.ts` - Queue behavior, persistence, edge cases
@@ -161,7 +172,7 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────┐
 │  Instrumentation    │  ← App.tsx, Screens, Components
 └──────────┬──────────┘
@@ -194,12 +205,13 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
                      ▼
               Backend Endpoint
               (/api/telemetry/events)
-```
+```text
 
 ## Files Added/Modified
 
 ### New Files
-**Core Analytics:**
+
+#### Core Analytics
 - `client/analytics/types.ts` - Type definitions (400+ lines)
 - `client/analytics/taxonomy.ts` - Event definitions (350+ lines)
 - `client/analytics/registry.ts` - Module registry (100+ lines)
@@ -210,20 +222,21 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
 - `client/analytics/client.ts` - Main orchestrator (400+ lines)
 - `client/analytics/index.ts` - Public API (450+ lines)
 
-**Tests:**
+### Tests
 - `client/analytics/__tests__/buckets.test.ts` (230+ lines)
 - `client/analytics/__tests__/sanitizer.test.ts` (200+ lines)
 - `client/analytics/__tests__/queue.test.ts` (180+ lines)
 - `client/analytics/__tests__/taxonomy.test.ts` (160+ lines)
 
-**Hooks:**
+### Hooks
 - `client/hooks/useAnalyticsNavigation.ts` - Navigation tracking (90+ lines)
 
-**Documentation:**
+### Documentation
 - `docs/telemetry.md` - Comprehensive guide (500+ lines)
 
 ### Modified Files
-**Instrumentation:**
+
+#### Instrumentation
 - `client/App.tsx` - Lifecycle tracking
 - `client/components/AIAssistSheet.tsx` - AI events
 - `client/components/ErrorBoundary.tsx` - Error tracking
@@ -236,7 +249,7 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
 
 ### 1. Privacy Modes
 
-**MODE A (Default):**
+#### MODE A (Default)
 ```json
 {
   "event_name": "item_created",
@@ -248,9 +261,9 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
   "module_id": "notebook",
   "props": { "item_type": "note" }
 }
-```
+```text
 
-**MODE B (Privacy):**
+### MODE B (Privacy)
 ```json
 {
   "event_name": "item_created",
@@ -262,7 +275,7 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
   "module_id": "notebook",
   "props": { "item_type": "note" }
 }
-```
+```text
 
 ### 2. Bucket Helpers
 
@@ -274,13 +287,13 @@ duration: 45 → "5-30s"
 latency: 250 → "100-300ms"
 amount: 150 → "101-500"
 installAge: 15 → "8-30d"
-```
+```text
 
 ### 3. Automatic Forbidden Field Detection
 
 ```typescript
 // These patterns trigger automatic removal:
-/text|body|content|title|subject|name|email|phone|address|message|prompt|output/i
+ /text | body | content | title | subject | name | email | phone | address | message | prompt | output/i
 
 // Example:
 const props = {
@@ -289,37 +302,37 @@ const props = {
   title: "Secret",        // ❌ Removed automatically
   content: "Private"      // ❌ Removed automatically
 };
-```
+```text
 
 ### 4. Instrumentation Points
 
-**App Lifecycle:**
+#### App Lifecycle
 - App opened (with install age bucket)
 - Session start/end
 - App backgrounded
 - Onboarding flow (if exists)
 
-**Navigation:**
+### Navigation
 - Module opened (with source: dock/grid/ai/contextual)
 - Module switch (from/to)
 - Module focus timing (duration bucketed)
 
-**CRUD Operations:**
+### CRUD Operations
 - Item created/viewed/updated/deleted/completed
 - Works across all modules (notebook, planner, etc.)
 
-**AI Interactions:**
+### AI Interactions
 - AI sheet opened (with context module, selection state)
 - Suggestion applied/rejected
 - Edit before apply (with edit distance bucket)
 - NO prompts or outputs logged
 
-**Performance:**
+### Performance
 - Screen render time (bucketed)
 - API latency (bucketed)
 - Error boundary hits (hashed)
 
-**Settings:**
+### Settings
 - Theme changed
 - Accent color changed
 - Privacy mode enabled/disabled
@@ -327,6 +340,7 @@ const props = {
 ## Security & Privacy
 
 ### Security Measures
+
 1. ✅ **No credentials in analytics** - Never log API keys, tokens, passwords
 2. ✅ **Forbidden field patterns** - Automatic blocking of sensitive keys
 3. ✅ **Per-event allowlists** - Only defined properties accepted
@@ -335,6 +349,7 @@ const props = {
 6. ✅ **CodeQL verified** - Zero security vulnerabilities found
 
 ### Privacy Guarantees (MODE B)
+
 1. ✅ **No stable identifiers** - user_id and device_id removed
 2. ✅ **Ephemeral sessions** - New session ID per app launch
 3. ✅ **Rotating pseudonyms** - anon_id changes daily
@@ -345,6 +360,7 @@ const props = {
 ## Usage Examples
 
 ### Basic Event Logging
+
 ```typescript
 import analytics from "@/analytics";
 
@@ -352,17 +368,18 @@ import analytics from "@/analytics";
 await analytics.initialize();
 
 // Log generic event
-await analytics.log("module_opened", { 
-  module_id: "planner", 
-  source: "dock" 
+await analytics.log("module_opened", {
+  module_id: "planner",
+  source: "dock"
 });
 
 // Use convenience methods
 await analytics.trackItemCreated("notebook", "note");
 await analytics.trackModuleSwitch("planner", "calendar");
-```
+```text
 
 ### Privacy Mode
+
 ```typescript
 // Check mode
 const isPrivacy = analytics.isPrivacyModeEnabled();
@@ -370,9 +387,10 @@ const isPrivacy = analytics.isPrivacyModeEnabled();
 // Toggle privacy mode
 await analytics.enablePrivacyMode();  // Logs privacy_mode_enabled
 await analytics.disablePrivacyMode(); // Logs privacy_mode_disabled
-```
+```text
 
 ### Navigation Tracking
+
 ```typescript
 // Automatic via useAnalyticsNavigation hook
 // No manual instrumentation needed
@@ -382,9 +400,10 @@ function MyNavigator() {
   useAnalyticsNavigation(); // That's it!
   // Tracks: module_opened, module_switch, module_focus_start/end
 }
-```
+```text
 
 ### AI Tracking
+
 ```typescript
 // Track AI sheet opening
 analytics.trackAIOpened("notebook", "has_selection");
@@ -394,16 +413,18 @@ analytics.trackAISuggestionApplied("grammar", "high");
 
 // Track suggestion rejected
 analytics.trackAISuggestionRejected("clarity");
-```
+```text
 
 ## Testing
 
 ### Running Tests
+
 ```bash
 npm test client/analytics
-```
+```text
 
 ### Test Results
+
 - ✅ All bucket helpers work correctly
 - ✅ Privacy transformations verified
 - ✅ Queue behavior tested (backpressure, compaction, retry)
@@ -413,6 +434,7 @@ npm test client/analytics
 ## Documentation
 
 Comprehensive documentation in `docs/telemetry.md` includes:
+
 - Overview of both modes
 - Complete event taxonomy
 - Forbidden data policy
@@ -432,7 +454,7 @@ EXPO_PUBLIC_ANALYTICS_ENABLED=false
 
 # Custom endpoint
 EXPO_PUBLIC_ANALYTICS_ENDPOINT=/custom/endpoint
-```
+```text
 
 ## Performance
 
@@ -445,6 +467,7 @@ EXPO_PUBLIC_ANALYTICS_ENDPOINT=/custom/endpoint
 ## Future Enhancements
 
 Potential improvements (not in scope):
+
 1. Debug screen to view last N events
 2. Event sampling for high-volume events
 3. Custom endpoint per event type
@@ -455,6 +478,7 @@ Potential improvements (not in scope):
 ## Conclusion
 
 Successfully delivered a production-ready, privacy-conscious analytics system that:
+
 - ✅ Meets all 8 hard requirements
 - ✅ Passes security review (CodeQL)
 - ✅ Provides strong type safety

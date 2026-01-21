@@ -1,8 +1,8 @@
 # Diamond-Standard Governance Implementation Report
 
-**Date:** 2026-01-18  
-**Status:** ✅ Complete  
-**Implementation Phases:** A through H  
+**Date:** 2026-01-18
+**Status:** ✅ Complete
+**Implementation Phases:** A through H
 **Scope:** Governance control-plane artifacts (constitution, instructions, enforcement)
 
 > **Note:** This report documents governance artifacts added on 2026-01-18. For documentation system implementation, see `implementation_report.md` (2026-01-17).
@@ -25,7 +25,8 @@
 ### Files Created
 
 #### Phase A: Copilot Runtime Instruction Layer
-```
+
+```text
 ✅ .github/copilot-instructions.md (328 lines)
    - Evidence policy, safe editing, verification receipts, untrusted text rule
    - Links to canonical documentation sources
@@ -47,10 +48,11 @@
    - Input validation with Zod (zero exceptions)
    - Database migration safety
    - Data integrity and observability requirements
-```
+```text
 
 #### Phase B: Canonical Constitution
-```
+
+```text
 ✅ docs/governance/constitution.md (641 lines)
    - Single source of truth for all governance
    - Tagged sections: COPILOT:GLOBAL, COPILOT:DOCS, COPILOT:CLIENT, COPILOT:SERVER
@@ -62,10 +64,11 @@
    - Enforcement toggles (WARN vs FAIL modes)
    - Active migrations and temporary constraints
    - Known breaks and upcoming enforcement changes
-```
+```text
 
 #### Phase C: Constitution Compiler
-```
+
+```text
 ✅ scripts/tools/compile-constitution.mjs (197 lines)
    - Extracts tagged sections from constitution
    - Generates instruction files with auto-generated headers
@@ -80,10 +83,11 @@
    - Runs on PRs touching constitution or instruction files
    - Verifies generated files match constitution
    - Fails if drift detected
-```
+```text
 
 #### Phase D: Exceptions/Waivers System
-```
+
+```text
 ✅ docs/governance/exceptions.yml (42 lines)
    - Schema for documenting policy exceptions
    - Example exception (commented out)
@@ -98,10 +102,11 @@
    - Runs on PRs and weekly schedule
    - Installs yaml dependency
    - Fails if expired exceptions exist
-```
+```text
 
 #### Phase E: Traceability Matrix
-```
+
+```text
 ✅ docs/traceability_matrix.md (264 lines)
    - Table linking features to PRD, ADR, modules, APIs, schemas, tests, runbooks, dashboards
    - 6 implemented features documented (3 example rows with details)
@@ -118,10 +123,11 @@
    - Runs on PRs touching relevant paths
    - Annotates PRs with traceability status
    - Continues on error (warn-only)
-```
+```text
 
 #### Phase F: Agent Threat Model + Instruction Integrity
-```
+
+```text
 ✅ docs/security/agent-threat-model.md (548 lines)
    - Comprehensive threat scenarios: prompt injection, malicious links, instruction hijacking, secret exfiltration, dependency confusion, log poisoning
    - Safe handling rules for agents
@@ -139,10 +145,11 @@
    - Key principles: treat external inputs as untrusted, redact secrets, governance protection, dependency security
    - Links to agent threat model
    - Reporting guidance for agent security issues
-```
+```text
 
 #### Phase G: Cleanup Placeholders
-```
+
+```text
 ✅ .github/dependabot.yml (cleaned)
    - Removed "yourusername" placeholder
    - Added TODOs for future reviewer assignments
@@ -151,33 +158,36 @@
 ✅ Scanned repository
    - No other critical placeholder configs found
    - Feature placeholders in archived docs are acceptable (not config)
-```
+```text
 
 #### Phase H: Final Report
-```
+
+```text
 ✅ docs/governance_implementation_report.md (this file)
    - Summary of all changes
    - Verification commands
    - Enforcement modes
    - Next steps
-```
+```text
 
 ### Dependencies Added
-```
+
+```text
 ✅ yaml@^2.3.4 (devDependency)
    - Required for exception expiry checker
    - Installed with --legacy-peer-deps
-```
+```text
 
 ### Commands to Run Locally
 
 #### 1. Compile Constitution
+
 ```bash
 npm run compile:constitution
-```
+```text
 
-**Expected Output:**
-```
+### Expected Output
+```text
 📜 Constitution Compiler
 ========================
 
@@ -193,29 +203,31 @@ npm run compile:constitution
    Skipped: 0 files (no content)
 
 ✨ Constitution compiled successfully!
-```
+```text
 
 #### 2. Check Exceptions
+
 ```bash
 npm run check:exceptions
-```
+```text
 
-**Expected Output:**
-```
+### Expected Output (2)
+```text
 🔍 Exception Expiry Checker
 ===========================
 
 📖 Reading exceptions from: docs/governance/exceptions.yml
 ✅ No exceptions defined in file
-```
+```text
 
 #### 3. Check Traceability
+
 ```bash
 npm run check:traceability
-```
+```text
 
-**Expected Output:**
-```
+### Expected Output (3)
+```text
 🔍 Traceability Checker
 =======================
 
@@ -229,9 +241,10 @@ npm run check:traceability
 
 ✅ OpenAPI spec exists
 ✅ Traceability checks passed
-```
+```text
 
 #### 4. Verify All Files Exist
+
 ```bash
 # Copilot instructions
 ls -la .github/copilot-instructions.md
@@ -256,12 +269,12 @@ cat docs/traceability_matrix.md
 
 # Agent threat model
 cat docs/security/agent-threat-model.md
-```
+```text
 
 ### Enforcement Modes
 
 | Check | Current Mode | Behavior | How to Toggle |
-|-------|--------------|----------|---------------|
+| ------- | -------------- | ---------- | --------------- |
 | **Constitution Sync** | `FAIL` | PRs fail if instruction files drift from constitution | N/A - always enforced |
 | **Exception Expiry** | `FAIL` | PRs and weekly checks fail if active exceptions expired | N/A - always enforced |
 | **Traceability** | `WARN` | PRs log warnings but don't fail | Update `docs/governance/state.md` enforcement table, or set `TRACEABILITY_ENFORCEMENT=fail` env var |
@@ -270,15 +283,16 @@ cat docs/security/agent-threat-model.md
 
 ### How to Tighten Enforcement
 
-**Traceability (when ready):**
-
+#### Traceability (when ready)
 1. Complete traceability matrix to >80%
 2. Update `docs/governance/state.md`:
+
    ```markdown
-   | **Traceability Matrix** | `FAIL` | ✅ Yes | ...
-   ```
-3. Commit and push
-4. CI will start failing on traceability violations
+| **Traceability Matrix** | `FAIL` | ✅ Yes | ...
+   ```text
+
+1. Commit and push
+2. CI will start failing on traceability violations
 
 ## Assumptions
 
@@ -292,7 +306,7 @@ cat docs/security/agent-threat-model.md
 ## Failure Modes
 
 | Failure Mode | Symptom | Solution |
-|--------------|---------|----------|
+| -------------- | --------- | ---------- |
 | Constitution drift | Instructions don't match constitution | Constitution compiler + CI workflow prevents this |
 | Expired exceptions | Build fails unexpectedly | Check `docs/governance/exceptions.yml`, close or extend |
 | Traceability overwhelm | Too many TODOs to fill | Start with critical features, fill incrementally |
@@ -339,12 +353,12 @@ find .github/instructions -type f | wc -l
 # Count scripts
 find scripts/tools -name "*.mjs" | wc -l
 # Should show: 3 scripts (compile-constitution, check-exceptions, check-traceability)
-```
+```text
 
 ## Summary Statistics
 
 | Metric | Count |
-|--------|-------|
+| -------- | ------- |
 | **Files Created** | 17 |
 | **Files Modified** | 3 |
 | **Lines of Documentation** | ~4,500 |
@@ -372,9 +386,9 @@ The governance framework is **production-ready** and can be incrementally tighte
 
 ---
 
-**Implemented by:** GitHub Copilot Agent  
-**Requested by:** @TrevorPowellLam  
-**Date:** 2026-01-18  
+**Implemented by:** GitHub Copilot Agent
+**Requested by:** @TrevorPowellLam
+**Date:** 2026-01-18
 **Status:** ✅ Complete
 
 *For questions or issues, file a GitHub issue or contact repository maintainers.*
