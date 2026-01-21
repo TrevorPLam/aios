@@ -255,7 +255,7 @@ npx drizzle-kit introspect:pg
 - [Data Overview](../README.md) - Overall data architecture
 - [Server Module](../../modules/server.md) - Database access code
 - [API Documentation](../../apis/README.md) - APIs exposing this data
-- [ADR: Database Choice](../../decisions/0003-database-choice.md) - Why PostgreSQL
+- [ADR: Database Choice](../../decisions/003-jwt-auth.md) - Database architecture decision
 
 ## Notes
 
