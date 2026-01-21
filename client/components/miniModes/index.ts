@@ -20,11 +20,7 @@
  */
 
 import { miniModeRegistry, MiniModeProvider } from "../../lib/miniMode";
-import { CalendarMiniMode } from "./CalendarMiniMode";
-import { TaskMiniMode } from "./TaskMiniMode";
-import { NoteMiniMode } from "./NoteMiniMode";
-import { BudgetMiniMode } from "./BudgetMiniMode";
-import { ContactsMiniMode } from "./ContactsMiniMode";
+import { createLazyMiniModeComponent } from "./lazyMiniMode";
 
 /**
  * All available mini-mode providers
@@ -37,31 +33,36 @@ const miniModeProviders: MiniModeProvider[] = [
     id: "calendar",
     displayName: "Calendar Event",
     description: "Quickly create a calendar event",
-    component: CalendarMiniMode,
+    // Lazy load to keep initial bundle size small (mini-modes are optional).
+    component: createLazyMiniModeComponent("calendar"),
   },
   {
     id: "planner",
     displayName: "Task",
     description: "Quickly create a task",
-    component: TaskMiniMode,
+    // Lazy load because tasks are not always opened at app launch.
+    component: createLazyMiniModeComponent("planner"),
   },
   {
     id: "notebook",
     displayName: "Note",
     description: "Quickly capture a note",
-    component: NoteMiniMode,
+    // Lazy load to avoid eager bundling of note editor dependencies.
+    component: createLazyMiniModeComponent("notebook"),
   },
   {
     id: "budget",
     displayName: "Transaction",
     description: "Quickly log an expense or income",
-    component: BudgetMiniMode,
+    // Lazy load because budget mini-mode is used infrequently.
+    component: createLazyMiniModeComponent("budget"),
   },
   {
     id: "contacts",
     displayName: "Contact",
     description: "Quickly select a contact",
-    component: ContactsMiniMode,
+    // Lazy load to skip importing expo-contacts until needed.
+    component: createLazyMiniModeComponent("contacts"),
   },
 ];
 
@@ -110,8 +111,4 @@ export function unregisterAllMiniModes(): void {
 }
 
 // Re-export individual mini-modes for direct use if needed
-export { CalendarMiniMode } from "./CalendarMiniMode";
-export { TaskMiniMode } from "./TaskMiniMode";
-export { NoteMiniMode } from "./NoteMiniMode";
-export { BudgetMiniMode } from "./BudgetMiniMode";
-export { ContactsMiniMode } from "./ContactsMiniMode";
+export { createLazyMiniModeComponent, getMiniModeLoader } from "./lazyMiniMode";

@@ -23,7 +23,7 @@
  * - Performance: Lazy load mini-mode components when possible
  */
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -47,8 +47,8 @@ import {
   MiniModeProvider,
   MiniModeResult,
 } from "../lib/miniMode";
-import { Colors } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
+import { ThemedText } from "./ThemedText";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -189,12 +189,25 @@ export function MiniModeContainer() {
             exiting={SlideOutDown.duration(200)}
             style={styles.miniModeCard}
           >
-            <MiniModeComponent
-              initialData={currentConfig.initialData}
-              onComplete={handleComplete}
-              onDismiss={handleDismiss}
-              source={currentConfig.source}
-            />
+            <Suspense
+              fallback={
+                <View style={styles.loadingState}>
+                  <ThemedText type="h4" style={styles.loadingTitle}>
+                    Loading mini mode
+                  </ThemedText>
+                  <ThemedText type="body" style={styles.loadingMessage}>
+                    Preparing quick action…
+                  </ThemedText>
+                </View>
+              }
+            >
+              <MiniModeComponent
+                initialData={currentConfig.initialData}
+                onComplete={handleComplete}
+                onDismiss={handleDismiss}
+                source={currentConfig.source}
+              />
+            </Suspense>
           </Animated.View>
         </View>
       </KeyboardAvoidingView>
@@ -234,5 +247,19 @@ const createStyles = (theme: ReturnType<typeof useTheme>) => StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  loadingState: {
+    minHeight: 200,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 24,
+    gap: 8,
+  },
+  loadingTitle: {
+    textAlign: "center",
+  },
+  loadingMessage: {
+    textAlign: "center",
+    opacity: 0.7,
   },
 });
