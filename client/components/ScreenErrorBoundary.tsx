@@ -9,9 +9,12 @@
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "./ThemedText";
 import { useTheme } from "@/hooks/useTheme";
 import { errorReporting } from "@/utils/errorReporting";
+import { AppStackParamList } from "@/navigation/AppNavigator";
 
 interface Props {
   children: React.ReactNode;
@@ -21,6 +24,8 @@ interface Props {
 interface State {
   error: Error | null;
 }
+
+type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
 /**
  * Screen Error Boundary Component
@@ -56,6 +61,47 @@ export class ScreenErrorBoundary extends React.Component<Props, State> {
   }
 }
 
+function getScreenLabel(screenName: string) {
+  const trimmedName = screenName.trim();
+  return trimmedName.length > 0 ? trimmedName : "this";
+}
+
+function ScreenErrorActionButton({
+  label,
+  onPress,
+  variant,
+}: {
+  label: string;
+  onPress: () => void;
+  variant: "primary" | "secondary";
+}) {
+  const { theme } = useTheme();
+  const isPrimary = variant === "primary";
+
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.button,
+        isPrimary ? styles.buttonPrimary : styles.buttonSecondary,
+        {
+          backgroundColor: isPrimary ? theme.accent : theme.backgroundDefault,
+          borderColor: isPrimary ? theme.accent : theme.border,
+        },
+        pressed && styles.buttonPressed,
+      ]}
+      accessibilityRole="button"
+    >
+      <ThemedText
+        type="body"
+        style={[styles.buttonText, { color: isPrimary ? "#FFFFFF" : theme.text }]}
+      >
+        {label}
+      </ThemedText>
+    </Pressable>
+  );
+}
+
 /**
  * Error Fallback UI shown when a screen crashes
  */
@@ -69,6 +115,7 @@ function ScreenErrorFallback({
   onReset: () => void;
 }) {
   const { theme } = useTheme();
+  const screenLabel = getScreenLabel(screenName);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
@@ -81,20 +128,9 @@ function ScreenErrorFallback({
         Something went wrong
       </ThemedText>
       <ThemedText type="body" style={styles.message}>
-        The {screenName} screen encountered an error.
+        The {screenLabel} screen encountered an error.
       </ThemedText>
-      <Pressable
-        onPress={onReset}
-        style={({ pressed }) => [
-          styles.button,
-          { backgroundColor: theme.accent },
-          pressed && styles.buttonPressed,
-        ]}
-      >
-        <ThemedText type="body" style={styles.buttonText}>
-          Try Again
-        </ThemedText>
-      </Pressable>
+      <ScreenErrorActions onReset={onReset} />
       {__DEV__ && (
         <ThemedText
           type="caption"
@@ -103,6 +139,43 @@ function ScreenErrorFallback({
           {error.message}
         </ThemedText>
       )}
+    </View>
+  );
+}
+
+function ScreenErrorActions({ onReset }: { onReset: () => void }) {
+  const navigation = useNavigation<NavigationProp>();
+  const canGoBack = navigation.canGoBack?.() ?? false;
+
+  const handleGoBack = () => {
+    if (canGoBack) {
+      navigation.goBack();
+    }
+  };
+
+  const handleGoHome = () => {
+    navigation.navigate("CommandCenter");
+  };
+
+  return (
+    <View style={styles.actions}>
+      <ScreenErrorActionButton
+        label="Try Again"
+        onPress={onReset}
+        variant="primary"
+      />
+      {canGoBack && (
+        <ScreenErrorActionButton
+          label="Go Back"
+          onPress={handleGoBack}
+          variant="secondary"
+        />
+      )}
+      <ScreenErrorActionButton
+        label="Go Home"
+        onPress={handleGoHome}
+        variant="secondary"
+      />
     </View>
   );
 }
@@ -124,16 +197,29 @@ const styles = StyleSheet.create({
     textAlign: "center",
     opacity: 0.8,
   },
+  actions: {
+    width: "100%",
+    gap: 12,
+    alignItems: "center",
+  },
   button: {
+    width: "80%",
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 8,
+    borderWidth: 1,
+    alignItems: "center",
+  },
+  buttonPrimary: {
+    borderColor: "transparent",
+  },
+  buttonSecondary: {
+    borderColor: "transparent",
   },
   buttonPressed: {
     opacity: 0.8,
   },
   buttonText: {
-    color: "#FFFFFF",
     fontWeight: "600",
   },
   errorText: {

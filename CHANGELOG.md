@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reusable ScreenStateMessage component for consistent loading/error messaging
 - ListEditor validation utilities covering title, item length, duplicates, and list size warnings
 - ThemedText typography variant coverage tests for h4-h6 rendering
+- Screen-level error recovery actions (try again, go back, go home) for route error boundaries
 
 ### Changed
 - Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
