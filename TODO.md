@@ -3084,11 +3084,12 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Convert all to alias imports for consistency
   - **Action**: Update import path guidelines in documentation
 
-- [ ] **Add Missing Typography Variants**
+- [x] **Add Missing Typography Variants**
   - Current: Only h1, h2, h3 defined (no h4, h5, h6)
   - Impact: Limited text hierarchy options
   - **Action**: Add h4, h5, h6 to Typography constants
   - **Action**: Document typography scale usage
+  - **Completed**: Confirmed h4-h6 definitions and added ThemedText coverage tests (2026-01-20)
 
 - [ ] **Enhance Color Palette for Light Mode**
   - Current: Basic light mode implemented but could be refined
