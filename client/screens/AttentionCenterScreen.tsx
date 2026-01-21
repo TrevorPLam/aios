@@ -46,22 +46,9 @@ import {
   AttentionBundle,
   AttentionPriority,
 } from "@/lib/attentionManager";
+import { getAttentionPriorityColor } from "@/lib/attentionPriorityColor";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
-
-/**
- * Priority badge colors
- */
-const getPriorityColor = (priority: AttentionPriority, theme: any) => {
-  switch (priority) {
-    case "urgent":
-      return theme.error;
-    case "attention":
-      return theme.warning;
-    case "fyi":
-      return theme.info;
-  }
-};
 
 /**
  * Priority icons
@@ -148,7 +135,9 @@ function AttentionItemCard({
         <View
           style={[
             styles.priorityIndicator,
-            { backgroundColor: getPriorityColor(item.priority, theme) },
+            {
+              backgroundColor: getAttentionPriorityColor(item.priority, theme),
+            },
           ]}
         />
 
@@ -172,14 +161,19 @@ function AttentionItemCard({
               style={[
                 styles.actionButton,
                 {
-                  backgroundColor: `${getPriorityColor(item.priority, theme)}15`,
+                  backgroundColor: `${getAttentionPriorityColor(
+                    item.priority,
+                    theme,
+                  )}15`,
                 },
               ]}
             >
               <ThemedText
                 style={[
                   styles.actionButtonText,
-                  { color: getPriorityColor(item.priority, theme) },
+                  {
+                    color: getAttentionPriorityColor(item.priority, theme),
+                  },
                 ]}
               >
                 {item.actionLabel}
@@ -187,7 +181,7 @@ function AttentionItemCard({
               <Feather
                 name="arrow-right"
                 size={14}
-                color={getPriorityColor(item.priority, theme)}
+                color={getAttentionPriorityColor(item.priority, theme)}
               />
             </Pressable>
           )}
