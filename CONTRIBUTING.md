@@ -21,62 +21,31 @@ Be respectful, inclusive, and professional in all interactions. Please read and 
 
 ## Agent Responsibility Model
 
-AIOS uses a **Primary-Secondary Agent Architecture** for development. Understanding this model is essential for all contributors.
+AIOS uses a **Unified AGENT Ownership** model for development. Understanding this model is essential for all contributors.
 
-### GitHub Copilot (Primary Agent)
+### AGENT
 
-**Role:** Original Development (iOS-Only)
-
-**Responsibilities:**
-- Builds ALL original features, screens, components, and business logic
-- Targets iOS platform exclusively
-- Owns all architectural decisions
-- Cannot add Android or Web-specific code
-- Must not include `Platform.OS === 'android'` or `Platform.OS === 'web'` checks
-- Uses iOS-native components and patterns
-- Creates follow-up tasks for Codex Agent when Android/Web compatibility is needed
-
-**Workflow:**
-1. Receives task from TODO.md (Owner: GitHub Agent (Primary))
-2. Develops feature for iOS platform
-3. Tests on iOS simulator/device
-4. Merges PR with iOS implementation
-5. Creates follow-up task for Codex Agent (if multi-platform support needed)
-
-### Codex Agent (Secondary Agent)
-
-**Role:** Platform Adaptation (Android/Web Only)
+**Role:** Full-stack feature delivery across platforms
 
 **Responsibilities:**
-- Adapts Copilot's completed iOS implementations for Android/Web compatibility ONLY
-- Cannot create original features, screens, or components
-- Cannot make architectural decisions
-- Only adds platform-specific adaptations (Material Design, web layouts, etc.)
-- Must reference Copilot's completed work (commit hash or PR number) in all contributions
-- Must preserve iOS functionality while adding Android/Web support
-- Cannot modify core business logic, only add platform adaptations
+- Builds all original features, screens, components, and business logic
+- Delivers iOS, Android, and Web compatibility as needed
+- Owns architectural decisions
+- Adds platform-specific adaptations when required
+- Tests on the platforms relevant to the task scope
 
 **Workflow:**
-1. Receives task from TODO.md (Owner: Codex Agent (Secondary), Dependencies: GitHub Agent task)
-2. Reviews Copilot's iOS implementation (PR/commit reference required)
-3. Adds Android/Web platform adaptations without modifying core logic
-4. Tests on Android/Web platforms
-5. Merges PR with platform compatibility additions
+1. Receives task from TODO.md (Owner: AGENT)
+2. Implements the feature with platform compatibility in mind
+3. Tests on required platforms
+4. Merges PR with implementation and documentation updates
 
 ### For Human Contributors
 
-**If you're contributing original features:**
-- Follow the GitHub Copilot (Primary) workflow
-- Build for iOS first
-- Create comprehensive documentation
-- If your feature needs Android/Web support, create a follow-up issue for adaptation
-
-**If you're contributing Android/Web adaptations:**
-- Follow the Codex Agent (Secondary) workflow
-- Reference the original iOS implementation (PR/commit)
-- Preserve all iOS functionality
-- Add only platform-specific adaptations
-- Document what was adapted and why
+**If you're contributing features:**
+- Follow the unified AGENT workflow
+- Keep platform compatibility requirements in scope from the start
+- Document platform-specific decisions and test coverage
 
 **See also:**
 - [Constitution - Agent Responsibility Model](docs/governance/constitution.md)

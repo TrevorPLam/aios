@@ -92,7 +92,7 @@ badge: {
 - **Priority**: P1 (High)
 - **Type**: FEATURE
 - **Status**: COMPLETE
-- **Platform**: iOS (Primary implementation)
+- **Platform**: iOS
 
 ### Acceptance Criteria
 - [x] Add AttentionCenter to navigation stack (already existed)
@@ -100,7 +100,7 @@ badge: {
 - [x] Show attention indicators on BottomNav module buttons (future enhancement)
 - [x] Test attention item display and dismissal on iOS
 
-### Future Enhancements (for Codex Agent - Secondary)
+### Future Enhancements (AGENT)
 - [ ] Adapt badge styling for Android Material Design
 - [ ] Add web-responsive badge positioning
 - [ ] Test on Android and Web platforms

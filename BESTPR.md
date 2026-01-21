@@ -8,7 +8,7 @@
 
 - This guide provides token-optimized best practices for AIOS development
 - Focus on evidence-based development with verification receipts
-- Follow Primary-Secondary agent architecture (iOS-first, then Android/Web)
+- Follow unified AGENT ownership across platforms
 - Use constitutional governance model with strict validation
 - All code must pass TypeScript strict mode, tests, lint, and security checks
 - Never delete working code; make minimal, surgical changes
@@ -24,7 +24,7 @@
 Before making ANY changes:
 
 - [ ] Read constitutional laws in `docs/governance/constitution.md`
-- [ ] Check if you're primary (iOS) or secondary (Android/Web) agent
+- [ ] Confirm task ownership is AGENT in TODO.md
 - [ ] Review existing patterns in similar files before creating new ones
 - [ ] Run `npm run check:types && npm run lint` to understand current state
 - [ ] Verify tests pass: `npm test`
@@ -94,30 +94,11 @@ npm run check:types   # Types check
 
 ## 🎯 Agent Responsibility Model
 
-### GitHub Copilot (Primary Agent)
-**Role:** Original Development - iOS ONLY
+### AGENT
+**Role:** Unified delivery across platforms
 
 ```typescript
-// ✅ DO: iOS-first implementation
-export default function MyScreen() {
-  return <ThemedView>...</ThemedView>
-}
-
-// ❌ DON'T: Platform checks in primary agent code
-if (Platform.OS === 'android') { /* NO */ }
-```
-
-**Workflow:**
-1. Build feature for iOS exclusively
-2. Use iOS-native patterns
-3. Merge PR when iOS works
-4. Create follow-up task: "Adapt [feature] for Android/Web"
-
-### Codex Agent (Secondary Agent)
-**Role:** Platform Adaptation - Android/Web ONLY
-
-```typescript
-// ✅ DO: Add platform adaptations
+// ✅ DO: Platform-aware implementation when required
 export default function MyScreen() {
   return (
     <ThemedView>
@@ -128,10 +109,10 @@ export default function MyScreen() {
 ```
 
 **Workflow:**
-1. Reference Copilot's PR/commit
-2. Add Android/Web adaptations
-3. Preserve iOS functionality
-4. No architectural changes
+1. Implement the feature with platform compatibility in mind
+2. Use platform-appropriate patterns where needed
+3. Test on required platforms
+4. Merge PR with documentation updates
 
 ---
 
@@ -462,11 +443,11 @@ export type ModuleType = "command" | "notebook" | ...
 
 ### 1. Platform Checks
 ```typescript
-// ❌ DON'T: Add platform checks as primary agent
+// ❌ DON'T: Add platform checks without need or testing
 if (Platform.OS === 'android') { /* NO */ }
 
-// ✅ DO: Create follow-up task for Codex Agent
-// "Adapt [feature] for Android/Web compatibility"
+// ✅ DO: Use platform checks intentionally and test all targets
+// Document platform-specific behavior in the task notes
 ```
 
 ### 2. Hardcoded Colors
@@ -676,7 +657,7 @@ await analytics.trackAction(...) // NO! (unless critical)
 Before committing ANY changes:
 
 - [ ] Read relevant constitutional laws
-- [ ] Understand Primary-Secondary agent model
+- [ ] Understand unified AGENT ownership model
 - [ ] Review similar existing code
 - [ ] Make minimal, surgical changes
 - [ ] Use theme tokens (no hardcoded colors)

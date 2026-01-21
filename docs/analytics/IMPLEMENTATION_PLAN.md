@@ -2,7 +2,7 @@
 
 **Status:** Proposed  
 **Created:** 2026-01-20  
-**Owner:** GitHub Agent (Primary)  
+**Owner:** AGENT  
 **Related:** ADR-006, TODO.md T-029
 
 ## Overview
@@ -531,4 +531,4 @@ npm install --save-dev @types/pako
 **Created:** 2026-01-20  
 **Last Updated:** 2026-01-20  
 **Status:** Proposed  
-**Owner:** GitHub Agent (Primary)
+**Owner:** AGENT
