@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -23,6 +23,7 @@ import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { List, ListItem, ListCategory, ListItemPriority } from "@/models/types";
 import { generateId } from "@/utils/helpers";
+import { validateListDraft } from "@/utils/listValidation";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 type ListEditorRouteProp = RouteProp<AppStackParamList, "ListEditor">;
@@ -80,21 +81,169 @@ export default function ListEditorScreen() {
   const isNewList = !listId;
 
   useEffect(() => {
-    if (listId) {
-      const loadList = async () => {
-        const data = await db.lists.get(listId);
-        if (data) {
-          setList(data);
-          setTitle(data.title);
-          setCategory(data.category || "general");
-          setColor(data.color || "#00D9FF");
-          setItems(data.items);
-          await db.lists.updateLastOpened(listId);
-        }
-      };
-      loadList();
+    if (!listId) {
+      return;
     }
+
+    const loadList = async () => {
+      try {
+        const data = await db.lists.get(listId);
+        if (!data) {
+          Alert.alert("List Not Found", "This list could not be loaded.");
+          return;
+        }
+
+        setList(data);
+        setTitle(data.title);
+        setCategory(data.category || "general");
+        setColor(data.color || "#00D9FF");
+        setItems(data.items);
+        await db.lists.updateLastOpened(listId);
+      } catch (error) {
+        console.error("Failed to load list.", error);
+        Alert.alert(
+          "List Load Error",
+          "We couldn't load this list. Please try again.",
+        );
+      }
+    };
+
+    loadList();
   }, [listId]);
+
+  const buildListPayload = useCallback(
+    (timestamp: string): List => ({
+      id: list?.id || generateId(),
+      title: title.trim(),
+      category,
+      color,
+      items,
+      isArchived: list?.isArchived,
+      isTemplate: list?.isTemplate,
+      createdAt: list?.createdAt || timestamp,
+      lastOpenedAt: timestamp,
+      updatedAt: timestamp,
+    }),
+    [
+      category,
+      color,
+      items,
+      list?.createdAt,
+      list?.id,
+      list?.isArchived,
+      list?.isTemplate,
+      title,
+    ],
+  );
+
+  const formatValidationMessage = useCallback(
+    (messages: string[]): string =>
+      messages.map((message, index) => `${index + 1}. ${message}`).join("\n"),
+    [],
+  );
+
+  const persistList = useCallback(async () => {
+    const timestamp = new Date().toISOString();
+    const listData = buildListPayload(timestamp);
+
+    try {
+      await db.lists.save(listData);
+      navigation.goBack();
+    } catch (error) {
+      console.error("Failed to save list.", error);
+      Alert.alert(
+        "Save Failed",
+        "We couldn't save this list. Please try again.",
+      );
+    }
+  }, [buildListPayload, navigation]);
+
+  const confirmSaveWithWarnings = useCallback(
+    (warnings: string[]) => {
+      const warningMessage = formatValidationMessage(warnings);
+
+      if (Platform.OS === "web") {
+        if (confirm(`Review List Warnings:\n\n${warningMessage}`)) {
+          void persistList();
+        }
+        return;
+      }
+
+      Alert.alert("Review List Warnings", warningMessage, [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Save Anyway",
+          style: "default",
+          onPress: () => {
+            void persistList();
+          },
+        },
+      ]);
+    },
+    [formatValidationMessage, persistList],
+  );
+
+  const handleSave = useCallback(() => {
+    const validation = validateListDraft({ title, items });
+
+    if (validation.errors.length > 0) {
+      Alert.alert(
+        "Fix List Details",
+        formatValidationMessage(validation.errors),
+      );
+      return;
+    }
+
+    if (validation.warnings.length > 0) {
+      confirmSaveWithWarnings(validation.warnings);
+      return;
+    }
+
+    void persistList();
+  }, [
+    confirmSaveWithWarnings,
+    formatValidationMessage,
+    items,
+    persistList,
+    title,
+  ]);
+
+  const handleDelete = useCallback(() => {
+    if (!listId) {
+      return;
+    }
+
+    const deleteList = async () => {
+      try {
+        await db.lists.delete(listId);
+        navigation.goBack();
+      } catch (error) {
+        console.error("Failed to delete list.", error);
+        Alert.alert(
+          "Delete Failed",
+          "We couldn't delete this list. Please try again.",
+        );
+      }
+    };
+
+    if (Platform.OS === "web") {
+      if (confirm("Are you sure you want to delete this list?")) {
+        void deleteList();
+      }
+      return;
+    }
+
+    Alert.alert("Delete List", "Are you sure you want to delete this list?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          void deleteList();
+        },
+      },
+    ]);
+  }, [listId, navigation]);
 
   const toggleItem = (itemId: string) => {
     if (Platform.OS !== "web") {
@@ -150,62 +299,11 @@ export default function ListEditorScreen() {
   };
 
   React.useLayoutEffect(() => {
-    const handleSaveInternal = async () => {
-      if (!title.trim()) {
-        Alert.alert("Title Required", "Please enter a title for your list.");
-        return;
-      }
-
-      const now = new Date().toISOString();
-      const listData: List = {
-        id: list?.id || generateId(),
-        title: title.trim(),
-        category,
-        color,
-        items,
-        isArchived: list?.isArchived,
-        isTemplate: list?.isTemplate,
-        createdAt: list?.createdAt || now,
-        lastOpenedAt: now,
-        updatedAt: now,
-      };
-
-      await db.lists.save(listData);
-      navigation.goBack();
-    };
-
-    const handleDeleteInternal = () => {
-      if (Platform.OS === "web") {
-        if (confirm("Are you sure you want to delete this list?")) {
-          if (listId) {
-            db.lists.delete(listId).then(() => navigation.goBack());
-          }
-        }
-      } else {
-        Alert.alert(
-          "Delete List",
-          "Are you sure you want to delete this list?",
-          [
-            { text: "Cancel", style: "cancel" },
-            {
-              text: "Delete",
-              style: "destructive",
-              onPress: () => {
-                if (listId) {
-                  db.lists.delete(listId).then(() => navigation.goBack());
-                }
-              },
-            },
-          ],
-        );
-      }
-    };
-
     navigation.setOptions({
       headerRight: () => (
         <View style={styles.headerButtons}>
           <Pressable
-            onPress={handleSaveInternal}
+            onPress={handleSave}
             style={({ pressed }) => [
               styles.headerButton,
               pressed && { opacity: 0.7 },
@@ -215,7 +313,7 @@ export default function ListEditorScreen() {
           </Pressable>
           {!isNewList && (
             <Pressable
-              onPress={handleDeleteInternal}
+              onPress={handleDelete}
               style={({ pressed }) => [
                 styles.headerButton,
                 pressed && { opacity: 0.7 },
@@ -227,20 +325,7 @@ export default function ListEditorScreen() {
         </View>
       ),
     });
-  }, [
-    navigation,
-    theme,
-    title,
-    category,
-    color,
-    items,
-    isNewList,
-    list?.id,
-    list?.createdAt,
-    list?.isArchived,
-    list?.isTemplate,
-    listId,
-  ]);
+  }, [handleDelete, handleSave, isNewList, navigation, theme.accent, theme.error]);
 
   return (
     <ThemedView style={styles.container}>
