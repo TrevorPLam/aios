@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Navigation performance hooks that connect prefetching and memory tracking to module transitions
 - Lazy-loaded Photos and Photo Editor screens with Suspense fallback messaging for faster startup
 - Lazy-loaded mini-mode components with Suspense fallback messaging to reduce initial bundle size
+- Attention Center header button with live badge count for quick access
 
 ### Changed
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Pressable, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -6,6 +6,13 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "@/hooks/useTheme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
 import { Spacing, BorderRadius } from "@/constants/theme";
+import { ThemedText } from "@/components/ThemedText";
+import {
+  formatAttentionBadgeLabel,
+  getAttentionBadgeCount,
+} from "@/lib/attentionBadge";
+import { attentionManager } from "@/lib/attentionManager";
+import { logger } from "@/utils/logger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -45,7 +52,64 @@ export interface HeaderRightNavProps {
   settingsRoute?: keyof AppStackParamList;
 }
 
-export function HeaderRightNav({ settingsRoute }: HeaderRightNavProps = {}) {
+const useAttentionBadgeCount = () => {
+  const [badgeCount, setBadgeCount] = useState(0);
+
+  useEffect(() => {
+    const updateBadgeCount = () => {
+      try {
+        // Pull counts synchronously so header stays in sync with attention updates.
+        const counts = attentionManager.getCounts();
+        setBadgeCount(getAttentionBadgeCount(counts));
+      } catch (error) {
+        // Explicitly handle unexpected errors so header UI never crashes.
+        logger.warn("HeaderNav", "Failed to update attention badge", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        setBadgeCount(0);
+      }
+    };
+
+    updateBadgeCount();
+    const unsubscribe = attentionManager.subscribe(updateBadgeCount);
+
+    return () => unsubscribe();
+  }, []);
+
+  return badgeCount;
+};
+
+function AttentionHeaderButton() {
+  const { theme } = useTheme();
+  const navigation = useNavigation<NavigationProp>();
+  const badgeCount = useAttentionBadgeCount();
+  const badgeLabel = formatAttentionBadgeLabel(badgeCount);
+
+  return (
+    <Pressable
+      onPress={() => navigation.navigate("AttentionCenter")}
+      style={({ pressed }) => [
+        styles.iconButton,
+        { opacity: pressed ? 0.7 : 1 },
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={
+        badgeLabel
+          ? `Open Attention Center, ${badgeLabel} new items`
+          : "Open Attention Center"
+      }
+    >
+      <Feather name="bell" size={24} color={theme.text} />
+      {badgeLabel ? (
+        <View style={[styles.badge, { backgroundColor: theme.error }]}>
+          <ThemedText style={styles.badgeText}>{badgeLabel}</ThemedText>
+        </View>
+      ) : null}
+    </Pressable>
+  );
+}
+
+function SettingsHeaderButton({ settingsRoute }: HeaderRightNavProps) {
   const { theme } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
@@ -76,8 +140,22 @@ export function HeaderRightNav({ settingsRoute }: HeaderRightNavProps = {}) {
   );
 }
 
+export function HeaderRightNav({ settingsRoute }: HeaderRightNavProps = {}) {
+  return (
+    <View style={styles.headerRight}>
+      <AttentionHeaderButton />
+      <SettingsHeaderButton settingsRoute={settingsRoute} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+  },
+  headerRight: {
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.xs,
@@ -86,5 +164,21 @@ const styles = StyleSheet.create({
     padding: 8,
     alignItems: "center",
     justifyContent: "center",
+  },
+  badge: {
+    position: "absolute",
+    top: 4,
+    right: 2,
+    minWidth: 18,
+    height: 18,
+    borderRadius: BorderRadius.full,
+    paddingHorizontal: 4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
 });

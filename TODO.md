@@ -3109,7 +3109,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Set initialRouteName to "OnboardingWelcome" for new users
   - **Action**: Add "skip onboarding" option with explanation
 
-- [ ] **Attention Center Not Easily Accessible**
+- [x] **Attention Center Not Easily Accessible**
   - Screen: AttentionCenterScreen (registered in navigation at line 407)
   - Issue: No clear navigation path for users to access it
   - Missing: Header icon with badge count, settings link, or CommandCenter card
@@ -3117,6 +3117,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - Fix: Show notification badge count when attention items exist
   - **Action**: Add "Attention" icon to header with badge count
   - **Action**: Add link from Settings or CommandCenter
+  - **Completed**: Added header Attention Center icon with live badge count (2026-01-20)
 
 - [x] **No Way to Access Module Grid**
   - Screen: ModuleGridScreen (shows all 38+ modules)
