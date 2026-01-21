@@ -736,7 +736,6 @@ kill $SERVER_PID
 - [Deployment Diagram](./deployment.md) - Runtime infrastructure
 - [C4 Overview](./README.md) - How to read these diagrams
 - [../README.md](../README.md) - Architecture documentation hub
-- [../../technical/api.md](../../technical/api.md) - API documentation (if exists)
 - [shared/schema.ts](/shared/schema.ts) - Database schema source code
 - [server/routes.ts](/server/routes.ts) - API routes source code
 - [client/lib/query-client.ts](/client/lib/query-client.ts) - React Query configuration

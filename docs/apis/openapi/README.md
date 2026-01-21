@@ -516,5 +516,5 @@ Think of the OpenAPI spec as the blueprint for your API.
 
 - [OpenAPI Specification](https://spec.openapis.org/oas/v3.0.3)
 - [OpenAPI Best Practices](https://swagger.io/resources/articles/best-practices-in-api-design/)
-- [OpenAPI Style Guide](https://www.asyncapi.com/docs/style-guide)
+- [AsyncAPI Style Guide](https://www.asyncapi.com/docs/community/011-styleguide)
 - [API Design Patterns](https://cloud.google.com/apis/design)

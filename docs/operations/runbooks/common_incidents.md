@@ -562,7 +562,7 @@ This error occurs when:
 - **[WORKLETS_PREVENTION.md](../../../WORKLETS_PREVENTION.md)** - Prevention strategies and automation
 - [react-native-worklets troubleshooting](https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting) - Official docs
 - [Expo prebuild](https://docs.expo.dev/workflow/prebuild/) - Understanding native builds
-- [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation) - Reanimated setup
+- [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) - Reanimated setup
 
 ### Automation Candidate
 - **Priority:** Medium (can automate detection and warnings)

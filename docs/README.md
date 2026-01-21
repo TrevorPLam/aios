@@ -57,7 +57,7 @@ Practical steps to accomplish specific goals.
 
 Conceptual clarity on how things work and why.
 - [Architecture Overview](./architecture/README.md)
-- [Architecture Decision Records](./adr/README.md)
+- [Architecture Decision Records](./decisions/README.md)
 - [Security Model](./security/threat_model.md)
 
 ### 4. **Information-Oriented (Reference)**
@@ -87,7 +87,7 @@ docs/
 │   ├── arc42/                  # arc42 documentation spine
 │   └── diagrams/               # Visual diagrams (existing)
 │
-├── adr/                        # Architecture Decision Records
+├── decisions/                  # Architecture Decision Records
 │   ├── README.md
 │   └── [numbered ADRs]
 │
@@ -474,4 +474,4 @@ mkdocs serve
 ---
 
 *Last Updated: {{ git_revision_date }}*  
-*Found an issue? [Open an issue](https://github.com/TrevorPowellLam/Mobile-Scaffold/issues/new) or submit a PR.*
+*Found an issue? [Open an issue](https://github.com/TrevorPLam/aios/issues/new) or submit a PR.*

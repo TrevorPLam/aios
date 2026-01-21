@@ -767,7 +767,7 @@ interface IncidentResponse {
 
 - [OWASP Mobile Security Testing Guide](https://owasp.org/www-project-mobile-security-testing-guide/)
 - [React Native Security Best Practices](https://reactnative.dev/docs/security)
-- [Expo Security Considerations](https://docs.expo.dev/guides/security/)
+- [Expo Security Considerations](https://docs.expo.dev/app-signing/security/)
 - [NIST Mobile Application Security Guide](https://www.nist.gov/cybersecurity)
 
 ---

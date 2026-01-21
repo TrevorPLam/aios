@@ -912,12 +912,11 @@ top -bn1 | head -20
 - [C4 Overview](./README.md) - How to read C4 diagrams
 - [SECURITY.md](/SECURITY.md) - Security policies and practices
 - [CONTRIBUTING.md](/CONTRIBUTING.md) - Development workflow
-- [../../technical/deployment.md](../../technical/deployment.md) - Detailed deployment guide (if exists)
 
 ## References
 
 - Expo Deployment: https://docs.expo.dev/distribution/introduction/
-- Express Production Best Practices: https://expressjs.com/en/advanced/best-practice-production.html
+- Express Production Best Practices: https://expressjs.com/en/advanced/best-practice-performance.html
 - PostgreSQL High Availability: https://www.postgresql.org/docs/current/high-availability.html
 - AWS RDS Best Practices: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html
 - Docker Multi-stage Builds: https://docs.docker.com/build/building/multi-stage/

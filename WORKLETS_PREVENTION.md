@@ -197,7 +197,7 @@ npm run check:worklets
 **Share these resources:**
 - [WORKLETS_FIX_GUIDE.md](../WORKLETS_FIX_GUIDE.md) - Complete fix guide
 - [URGENT_WORKLETS_FIX.md](../URGENT_WORKLETS_FIX.md) - Quick reference
-- [Common Incidents Runbook](../docs/operations/runbooks/common_incidents.md) - Detailed troubleshooting
+- [Common Incidents Runbook](./docs/operations/runbooks/common_incidents.md) - Detailed troubleshooting
 
 ### Onboarding Checklist
 

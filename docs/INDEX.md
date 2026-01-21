@@ -231,9 +231,9 @@ This index provides direct links to all active documentation in the repository.
 
 ## 🔗 External Links
 
-- **GitHub Repository:** [TrevorPowellLam/Mobile-Scaffold](https://github.com/TrevorPowellLam/Mobile-Scaffold)
-- **Issues:** [GitHub Issues](https://github.com/TrevorPowellLam/Mobile-Scaffold/issues)
-- **Pull Requests:** [GitHub PRs](https://github.com/TrevorPowellLam/Mobile-Scaffold/pulls)
+- **GitHub Repository:** [TrevorPLam/aios](https://github.com/TrevorPLam/aios)
+- **Issues:** [GitHub Issues](https://github.com/TrevorPLam/aios/issues)
+- **Pull Requests:** [GitHub PRs](https://github.com/TrevorPLam/aios/pulls)
 
 ---
 

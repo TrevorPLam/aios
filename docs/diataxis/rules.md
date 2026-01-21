@@ -330,5 +330,5 @@ find docs/modules/ -name "architecture.md"
 
 **References:**
 - [Diátaxis Official Site](https://diataxis.fr/)
-- [Why Diátaxis Works](https://diataxis.fr/how-it-works/)
+- [Why Diátaxis Works](https://diataxis.fr/)
 - [AIOS Documentation Home](../README.md)

@@ -598,7 +598,7 @@ See [Security Documentation](../security/threat_model.md) for full threat model.
 - [API Documentation](../apis/README.md) - REST API contracts
 - [Shared Module](./shared.md) - Shared code used by client
 - [Tutorial: Building Your First Feature](../diataxis/tutorials/building-your-first-feature.md)
-- [ADR-0002: Use React Native](../decisions/0002-use-react-native.md) - Why React Native
+- [ADR-002: Use React Native](../decisions/002-react-native.md) - Why React Native
 
 ## Maintenance and Support
 

@@ -11,7 +11,7 @@ This glossary defines technical terms, acronyms, and project-specific concepts u
 ### ADR (Architecture Decision Record)
 **Plain English:** A document that explains why we made important design choices  
 **Technical:** Lightweight document format for capturing architectural decisions, including context, decision, consequences, and alternatives considered  
-**See:** [docs/adr/README.md](./adr/README.md)
+**See:** [docs/decisions/README.md](./decisions/README.md)
 
 ### AIOS (AI Operating System)
 **Plain English:** The name of this project - a mobile super app that combines many apps into one  
@@ -270,4 +270,4 @@ When adding a term:
 
 **Last Updated:** January 2026  
 **Maintainer:** Documentation team  
-**Found a missing term?** [Open an issue](https://github.com/TrevorPowellLam/Mobile-Scaffold/issues/new?title=Glossary:%20Add%20term)
+**Found a missing term?** [Open an issue](https://github.com/TrevorPLam/aios/issues/new?title=Glossary:%20Add%20term)
