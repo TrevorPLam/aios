@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
 - Enhanced UX consistency across modules with unified navigation pattern
+- Strengthened module navigation safety by validating routes before navigating in BottomNav and ModuleGrid
 - Recommendation cards now surface reasoning and evidence previews for faster decision-making (T-007)
 - Standardized overlay colors and quick-capture action accents through theme tokens
 - Disabled sidebar edge-swipe gesture on web while preserving the button entry point (T-002B)

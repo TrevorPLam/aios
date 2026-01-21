@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
+  Alert,
   Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -29,6 +30,10 @@ import {
   ModuleViewMode,
   ModuleArrangement,
 } from "@/models/types";
+import {
+  getNavigationErrorMessage,
+  validateRouteRegistration,
+} from "@/utils/navigationValidation";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
@@ -207,17 +212,63 @@ export default function ModuleGridScreen() {
     setModules(orderedModules);
   };
 
+  const showNavigationError = (moduleName?: string) => {
+    Alert.alert("Navigation Error", getNavigationErrorMessage(moduleName), [
+      { text: "OK" },
+    ]);
+  };
+
+  const logNavigationError = (
+    context: string,
+    error: unknown,
+    metadata: Record<string, unknown>,
+  ) => {
+    console.error(`[ModuleGrid] ${context}:`, error, {
+      ...metadata,
+      timestamp: new Date().toISOString(),
+    });
+  };
+
   const handleModulePress = async (module: ModuleItem) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    // Track module usage
-    await db.settings.trackModuleUsage(module.id);
 
-    navigation.goBack();
-    setTimeout(() => {
-      navigation.navigate(module.route as any);
-    }, MODAL_CLOSE_DELAY_MS);
+    const routeNames = navigation.getState()?.routeNames ?? [];
+    const validation = validateRouteRegistration({
+      routeName: module.route,
+      routeNames,
+      moduleName: module.name,
+    });
+
+    // If the route isn't registered, alert the user instead of failing silently.
+    if (!validation.isValid) {
+      logNavigationError("Navigation Error", validation.error, {
+        moduleId: module.id,
+        moduleName: module.name,
+        route: module.route,
+      });
+      showNavigationError(module.name);
+      return;
+    }
+
+    try {
+      // Track module usage so ordering stays meaningful for returning users.
+      await db.settings.trackModuleUsage(module.id);
+
+      navigation.goBack();
+      setTimeout(() => {
+        navigation.navigate(module.route as any);
+      }, MODAL_CLOSE_DELAY_MS);
+    } catch (error) {
+      // We still want a visible error if persistence or navigation fails.
+      logNavigationError("Navigation failed", error, {
+        moduleId: module.id,
+        moduleName: module.name,
+        route: module.route,
+      });
+      showNavigationError(module.name);
+    }
   };
 
   const handleViewModeChange = async (mode: ModuleViewMode) => {
@@ -253,6 +304,23 @@ export default function ModuleGridScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+
+    const routeNames = navigation.getState()?.routeNames ?? [];
+    const validation = validateRouteRegistration({
+      routeName: "CommandCenter",
+      routeNames,
+      moduleName: "Command Center",
+    });
+
+    // Keep the home shortcut safe if navigation state is stale.
+    if (!validation.isValid) {
+      logNavigationError("Navigation Error", validation.error, {
+        route: "CommandCenter",
+      });
+      showNavigationError("Command Center");
+      return;
+    }
+
     navigation.goBack();
     setTimeout(() => {
       navigation.navigate("CommandCenter");
