@@ -683,7 +683,7 @@ See [Security Documentation](../security/threat_model.md) for complete threat mo
 - [Client Module](./client.md) - API consumer
 - [Shared Module](./shared.md) - Shared code
 - [Operations Runbooks](../operations/runbooks/) - Operational procedures
-- [ADR: Database Choice](../decisions/003-jwt-auth.md)
+- [ADR: AsyncStorage for Local Persistence](../decisions/001-use-asyncstorage.md)
 
 ## Maintenance and Support
 
