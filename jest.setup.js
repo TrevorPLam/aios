@@ -36,3 +36,12 @@ jest.mock("expo-constants", () => ({
     },
   },
 }));
+
+jest.mock("@expo/vector-icons", () => {
+  const React = require("react");
+  const { Text } = require("react-native");
+
+  return {
+    Feather: ({ name, ...props }) => React.createElement(Text, props, name),
+  };
+});

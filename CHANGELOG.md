@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Manual "Refresh Recommendations" button in Command Center with disabled state handling (T-007)
 - Recommendation tools in AI Preferences for refreshing suggestions and opening recommendation history
 - Web-friendly alert time input with validation for AlertDetailScreen (T-001B)
+- Loading/error state messaging for Integrations and Integration Detail screens with retry actions
+- Reusable ScreenStateMessage component for consistent loading/error messaging
 
 ### Changed
 - Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recommendation cards now surface reasoning and evidence previews for faster decision-making (T-007)
 - Standardized overlay colors and quick-capture action accents through theme tokens
 - Disabled sidebar edge-swipe gesture on web while preserving the button entry point (T-002B)
+- Added navigation coverage tests for module grid, history, and integration detail access
 
 ### Technical
 - Implemented scroll-aware animations using React Native Reanimated shared values

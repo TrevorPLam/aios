@@ -229,6 +229,7 @@ export default function SettingsMenuScreen() {
             <Pressable
               key={item.id}
               onPress={() => handleMenuPress(item.route)}
+              testID={`settings-menu-${item.id}`}
               style={[
                 styles.menuRow,
                 index < SETTINGS_MENU.length - 1 && {
@@ -269,6 +270,7 @@ export default function SettingsMenuScreen() {
             <Pressable
               key={item.id}
               onPress={() => handleModuleSettingsPress(item)}
+              testID={`module-settings-${item.id}`}
               style={[
                 styles.menuRow,
                 index < MODULE_SETTINGS.length - 1 && {

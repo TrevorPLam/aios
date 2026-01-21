@@ -62,6 +62,7 @@ import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { ScreenStateMessage } from "@/components/ScreenStateMessage";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
@@ -143,6 +144,7 @@ function IntegrationCard({
     <Animated.View entering={FadeInDown.delay(index * 30).springify()}>
       <Pressable
         onPress={onPress}
+        testID={`integration-card-${integration.id}`}
         style={({ pressed }) => [
           styles.integrationCard,
           { backgroundColor: theme.backgroundDefault },
@@ -228,6 +230,19 @@ function IntegrationCard({
   );
 }
 
+const EMPTY_STATISTICS = {
+  totalIntegrations: 0,
+  connectedCount: 0,
+  disconnectedCount: 0,
+  errorCount: 0,
+  syncingCount: 0,
+  enabledCount: 0,
+  totalSyncs: 0,
+  totalDataItemsSynced: 0,
+  averageSyncDuration: 0,
+  totalErrors: 0,
+};
+
 export default function IntegrationsScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -238,6 +253,8 @@ export default function IntegrationsScreen() {
   const [selectedCategory, setSelectedCategory] = useState<
     IntegrationCategory | "all"
   >("all");
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [statistics, setStatistics] = useState<{
     totalIntegrations: number;
     connectedCount: number;
@@ -257,6 +274,8 @@ export default function IntegrationsScreen() {
    * Includes error handling for statistics loading
    */
   const loadIntegrations = useCallback(async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
     try {
       // Load sorted integrations for display
       const data = await db.integrations.getAllSorted();
@@ -267,19 +286,13 @@ export default function IntegrationsScreen() {
       setStatistics(stats);
     } catch (error) {
       console.error("Error loading integrations:", error);
-      // Set empty statistics on error to prevent UI issues
-      setStatistics({
-        totalIntegrations: 0,
-        connectedCount: 0,
-        disconnectedCount: 0,
-        errorCount: 0,
-        syncingCount: 0,
-        enabledCount: 0,
-        totalSyncs: 0,
-        totalDataItemsSynced: 0,
-        averageSyncDuration: 0,
-        totalErrors: 0,
-      });
+      setIntegrations([]);
+      setStatistics(EMPTY_STATISTICS);
+      setErrorMessage(
+        "We couldn't load integrations right now. Please try again.",
+      );
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -323,6 +336,34 @@ export default function IntegrationsScreen() {
   );
 
   const categories = Object.keys(groupedIntegrations) as IntegrationCategory[];
+
+  if (isLoading) {
+    return (
+      <ThemedView style={styles.container}>
+        <ScreenStateMessage
+          title="Loading integrations"
+          description="Fetching connected services and status updates."
+          isLoading
+          testID="integrations-loading"
+        />
+      </ThemedView>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <ThemedView style={styles.container}>
+        <ScreenStateMessage
+          title="Unable to load integrations"
+          description={errorMessage}
+          icon="alert-circle"
+          actionLabel="Try again"
+          onActionPress={loadIntegrations}
+          testID="integrations-error"
+        />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>

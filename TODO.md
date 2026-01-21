@@ -2990,13 +2990,14 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Add "Attention" icon to header with badge count
   - **Action**: Add link from Settings or CommandCenter
 
-- [ ] **No Way to Access Module Grid**
+- [x] **No Way to Access Module Grid**
   - Screen: ModuleGridScreen (shows all 38+ modules)
   - Current: Registered in navigation but no UI button to access it
   - Impact: Users can't discover all available modules
   - **Action**: Add "All Modules" button in BottomNav or Settings
   - **Action**: Add module grid access from sidebar "More" button
   - **Action**: Consider adding to CommandCenter as a card
+  - **Completed**: Verified Settings menu access and added navigation coverage tests (2026-01-20)
 
 - [ ] **Settings Screens Not Fully Wired**
   - Exist: NotebookSettings, PlannerSettings, CalendarSettings, EmailSettings, ContactsSettings
@@ -3006,12 +3007,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Ensure all module settings screens have meaningful content
   - **Action**: Add "Module Settings" section in main Settings
 
-- [ ] **History Screen Not Accessible**
+- [x] **History Screen Not Accessible**
   - Screen: HistoryScreen (shows system history log)
   - Current: Registered but no navigation path
   - Impact: Users can't view app history or debug issues
   - **Action**: Add History to System screen or Settings menu
   - **Action**: Consider adding history access from CommandCenter
+  - **Completed**: Added navigation coverage tests for Settings menu History access (2026-01-20)
 
 - [x] **Recommendation History Not Accessible**
   - Screen: RecommendationHistoryScreen
@@ -3021,11 +3023,12 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Link from AIPreferences screen
   - **Completed**: Added AI Preferences recommendation tools section with history access (2026-01-20)
 
-- [ ] **Integration Details Not Linked**
+- [x] **Integration Details Not Linked**
   - Screens: IntegrationsScreen, IntegrationDetailScreen
   - Current: Settings path exists but integration cards may not navigate properly
   - **Action**: Test integration navigation flow
   - **Action**: Ensure proper navigation to detail screen
+  - **Completed**: Added integration card navigation tests with retry/error states (2026-01-20)
 
 ### Silent Failures & Error Handling
 

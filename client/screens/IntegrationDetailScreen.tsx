@@ -62,6 +62,7 @@ import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { ScreenStateMessage } from "@/components/ScreenStateMessage";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { AppStackParamList } from "@/navigation/AppNavigator";
@@ -86,78 +87,135 @@ export default function IntegrationDetailScreen() {
   const { integrationId } = route.params;
 
   const [integration, setIntegration] = useState<Integration | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loadIntegration = useCallback(async () => {
-    const data = await db.integrations.getById(integrationId);
-    setIntegration(data);
+    setIsLoading(true);
+    setErrorMessage(null);
+    try {
+      const data = await db.integrations.getById(integrationId);
+      if (!data) {
+        setIntegration(null);
+        setErrorMessage("This integration could not be found.");
+        return;
+      }
+      setIntegration(data);
+    } catch (error) {
+      console.error("Error loading integration:", error);
+      setIntegration(null);
+      setErrorMessage("We couldn't load this integration. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }, [integrationId]);
 
   useEffect(() => {
     loadIntegration();
   }, [loadIntegration]);
 
+  const handleActionError = useCallback((error: unknown, message: string) => {
+    console.error("Integration action failed:", error);
+    setErrorMessage(message);
+    if (Platform.OS === "web") {
+      if (typeof alert === "function") {
+        alert(message);
+      }
+      return;
+    }
+    Alert.alert("Integration Error", message);
+  }, []);
+
   const handleToggleEnabled = async () => {
     if (!integration) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    try {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
 
-    await db.integrations.toggleEnabled(integrationId);
-    await loadIntegration();
+      await db.integrations.toggleEnabled(integrationId);
+      await loadIntegration();
+    } catch (error) {
+      handleActionError(
+        error,
+        "We couldn't update this integration. Please try again.",
+      );
+    }
   };
 
   const handleToggleSync = async () => {
     if (!integration) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    try {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
 
-    const updated = {
-      ...integration,
-      config: {
-        ...integration.config,
-        syncEnabled: !integration.config.syncEnabled,
-      },
-      updatedAt: new Date().toISOString(),
-    };
-    await db.integrations.save(updated);
-    await loadIntegration();
+      const updated = {
+        ...integration,
+        config: {
+          ...integration.config,
+          syncEnabled: !integration.config.syncEnabled,
+        },
+        updatedAt: new Date().toISOString(),
+      };
+      await db.integrations.save(updated);
+      await loadIntegration();
+    } catch (error) {
+      handleActionError(
+        error,
+        "We couldn't update sync settings. Please try again.",
+      );
+    }
   };
 
   const handleToggleNotifications = async () => {
     if (!integration) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    try {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
 
-    const updated = {
-      ...integration,
-      config: {
-        ...integration.config,
-        notificationsEnabled: !integration.config.notificationsEnabled,
-      },
-      updatedAt: new Date().toISOString(),
-    };
-    await db.integrations.save(updated);
-    await loadIntegration();
+      const updated = {
+        ...integration,
+        config: {
+          ...integration.config,
+          notificationsEnabled: !integration.config.notificationsEnabled,
+        },
+        updatedAt: new Date().toISOString(),
+      };
+      await db.integrations.save(updated);
+      await loadIntegration();
+    } catch (error) {
+      handleActionError(
+        error,
+        "We couldn't update notifications. Please try again.",
+      );
+    }
   };
 
   const handleToggleTwoWaySync = async () => {
     if (!integration) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    try {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
 
-    const updated = {
-      ...integration,
-      config: {
-        ...integration.config,
-        twoWaySync: !integration.config.twoWaySync,
-      },
-      updatedAt: new Date().toISOString(),
-    };
-    await db.integrations.save(updated);
-    await loadIntegration();
+      const updated = {
+        ...integration,
+        config: {
+          ...integration.config,
+          twoWaySync: !integration.config.twoWaySync,
+        },
+        updatedAt: new Date().toISOString(),
+      };
+      await db.integrations.save(updated);
+      await loadIntegration();
+    } catch (error) {
+      handleActionError(
+        error,
+        "We couldn't update sync direction. Please try again.",
+      );
+    }
   };
 
   /**
@@ -166,33 +224,37 @@ export default function IntegrationDetailScreen() {
    */
   const handleSync = async () => {
     if (!integration) return;
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    try {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }
 
-    // Set status to syncing
-    await db.integrations.updateStatus(integrationId, "syncing");
-    await loadIntegration();
-
-    // Simulate sync with random duration and items
-    const syncStartTime = Date.now();
-    setTimeout(async () => {
-      const syncDuration = Date.now() - syncStartTime;
-      const itemsSynced =
-        Math.floor(Math.random() * MAX_SYNC_ITEMS_RANGE) + MIN_SYNC_ITEMS;
-
-      // Use new triggerSync method with tracking
-      await db.integrations.triggerSync(
-        integrationId,
-        syncDuration,
-        itemsSynced,
-      );
+      // Set status to syncing
+      await db.integrations.updateStatus(integrationId, "syncing");
       await loadIntegration();
 
-      if (Platform.OS !== "web") {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }
-    }, SYNC_DURATION_MS);
+      // Simulate sync with random duration and items
+      const syncStartTime = Date.now();
+      setTimeout(async () => {
+        const syncDuration = Date.now() - syncStartTime;
+        const itemsSynced =
+          Math.floor(Math.random() * MAX_SYNC_ITEMS_RANGE) + MIN_SYNC_ITEMS;
+
+        // Use new triggerSync method with tracking
+        await db.integrations.triggerSync(
+          integrationId,
+          syncDuration,
+          itemsSynced,
+        );
+        await loadIntegration();
+
+        if (Platform.OS !== "web") {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }
+      }, SYNC_DURATION_MS);
+    } catch (error) {
+      handleActionError(error, "Sync failed. Please try again.");
+    }
   };
 
   const handleDisconnect = () => {
@@ -259,15 +321,42 @@ export default function IntegrationDetailScreen() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <ThemedView style={styles.container}>
+        <ScreenStateMessage
+          title="Loading integration"
+          description="Fetching configuration and sync details."
+          isLoading
+          testID="integration-loading"
+        />
+      </ThemedView>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <ThemedView style={styles.container}>
+        <ScreenStateMessage
+          title="Integration unavailable"
+          description={errorMessage}
+          icon="alert-circle"
+          actionLabel="Try again"
+          onActionPress={loadIntegration}
+          testID="integration-error"
+        />
+      </ThemedView>
+    );
+  }
+
   if (!integration) {
     return (
       <ThemedView style={styles.container}>
-        <View style={styles.emptyState}>
-          <Feather name="package" size={48} color={theme.textMuted} />
-          <ThemedText type="body" muted style={styles.emptyText}>
-            Integration not found
-          </ThemedText>
-        </View>
+        <ScreenStateMessage
+          title="Integration missing"
+          description="This integration could not be found."
+          icon="package"
+        />
       </ThemedView>
     );
   }
@@ -611,15 +700,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: Spacing.lg,
     gap: Spacing.lg,
-  },
-  emptyState: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: Spacing["5xl"],
-  },
-  emptyText: {
-    marginTop: Spacing.lg,
   },
   headerCard: {
     padding: Spacing.xl,
