@@ -21,8 +21,6 @@ Control when automated checks transition from warn-only to fail-on-violation:
 | Check | Status | Fail on Violation | Notes |
 | ------- | -------- | ------------------- | ------- |
 | **Traceability Matrix** | `WARN` | ❌ No (warnings only) | Matrix is incomplete. Toggle to `FAIL` when >80% complete. See: `docs/traceability_matrix.md` |
-| **Exception Expiry** | `FAIL` | ✅ Yes | Active. Expired exceptions block builds. See: `.github/workflows/exceptions-expiry.yml` |
-| **Constitution Sync** | `FAIL` | ✅ Yes | Active. Copilot instructions must match constitution. See: `.github/workflows/constitution-sync.yml` |
 | **Documentation Quality** | `FAIL` | ✅ Yes | Active. Vale, markdownlint, link checks enforced. See: `.github/workflows/docs-*.yml` |
 | **Security Scanning** | `FAIL` | ✅ Yes | Active. CodeQL, Trivy, SBOM required. See: `.github/workflows/codeql.yml`, `trivy.yml` |
 | **AGENT Ownership Consistency** | `WARN` | ❌ No (not yet enforced) | Ensures TODO ownership uses AGENT-only assignments. Toggle to `FAIL` when enforcement script ready. |

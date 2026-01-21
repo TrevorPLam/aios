@@ -20,7 +20,6 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 - **docs/governance/constitution.md** — Highest-authority governance source of truth; contains immutable rules, AI agent laws, and enforcement requirements.
 - **docs/governance/state.md** — Living document for temporary constraints, enforcement toggles, and active governance migrations.
 - **docs/governance/exceptions.yml** — Structured exception/waiver registry with expiry requirements for policy deviations.
-- **docs/governance_implementation_report.md** — Audit-style report of governance control-plane artifacts implemented, including enforcement mechanisms.
 - **ARCHITECTURE_DECISIONS.md** — Root-level ADRs that document accepted architectural decisions and rationale.
 - **docs/decisions/README.md** — Index and guidance for Architecture Decision Records (ADRs) in `docs/decisions/`.
 - **docs/decisions/0001-record-architecture-decisions.md** — ADR establishing ADR usage (meta-governance for decisions).
@@ -55,13 +54,6 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 - **.github/workflows/docs-links.yml** — Link validation to prevent documentation rot.
 - **.github/workflows/docs-vale.yml** — Prose linting for documentation quality.
 - **.github/workflows/api-spectral.yml** — OpenAPI spec linting to enforce API contract quality.
-- **.github/workflows/constitution-sync.yml** — Ensures Copilot instructions match the constitution (governance enforcement).
-- **.github/workflows/exceptions-expiry.yml** — Enforces expiry of governance exceptions/waivers.
-- **.github/workflows/traceability-check.yml** — Validates traceability matrix completeness (warn/fail based on state).
-- **.github/workflows/documentation-metrics.yml** — Generates documentation metrics for governance reporting.
-- **.github/workflows/documentation-stale.yml** — Flags stale docs to prevent governance drift.
-- **.github/workflows/documentation-issue-automation.yml** — Automates issue creation and tracking for documentation governance.
-- **.github/workflows/agent-platform-check.yml** — Enforcement workflow for AGENT ownership consistency in TODO assignments.
 - **docs/github-actions-guide.md** — Detailed documentation for workflow usage and troubleshooting.
 - **.github/dependabot.yml** — Automated dependency update policy and scheduling.
 

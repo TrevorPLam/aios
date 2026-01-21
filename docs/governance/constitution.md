@@ -307,7 +307,6 @@ npm run check:types
 2. **Enforcement:**
    - CI checks for expired exceptions (`scripts/tools/check-exceptions.mjs`)
    - Build fails if exceptions are expired
-   - Weekly scheduled check in `.github/workflows/exceptions-expiry.yml`
 
 3. **No permanent exceptions:**
    - If exception can't be resolved, policy must change
