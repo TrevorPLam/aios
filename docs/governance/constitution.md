@@ -53,6 +53,7 @@
 - Current state: `docs/governance/state.md`
 - Governance: `GOVERNANCE.md`
 - Contributing: `CONTRIBUTING.md`
+- Best Practices: `BESTPR.md` (token-optimized agent guide)
 - AI policies: `docs/ai/`
 - Security: `docs/security/`, `SECURITY.md`
 - Testing: `docs/testing/`

@@ -712,10 +712,17 @@ See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+**Essential Reading:**
+- [BESTPR.md](BESTPR.md) - Token-optimized best practices guide for AI agents
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Full contribution guidelines
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Constitution](docs/governance/constitution.md) - Repository governance
+
 ## 📚 Documentation
 
 ### Quick Start
 - **[README.md](./README.md)** - This file! Installation and quick start
+- **[BESTPR.md](./BESTPR.md)** - Token-optimized best practices guide for AI agents
 - **[DOCUMENTATION_GUIDE.md](./DOCUMENTATION_GUIDE.md)** - Navigation guide to all documentation
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute to the project
 

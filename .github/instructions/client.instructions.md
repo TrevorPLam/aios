@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: docs/governance/constitution.md -->
-<!-- Generated: 2026-01-19 -->
+<!-- Generated: 2026-01-21 -->
 <!-- To update: edit constitution.md and run `npm run compile:constitution` -->
 
 # Client/Frontend Path Instructions
@@ -51,4 +51,4 @@
 
 **Source:** `docs/governance/constitution.md`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-19T04:22:30.642Z
+**Last Generated:** 2026-01-21T00:44:46.238Z
