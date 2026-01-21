@@ -41,6 +41,7 @@ AIOS (AI Operating System) is not just another productivity app. It's a **privac
 - 💾 **Local-first storage** using AsyncStorage (privacy-first)
 - 🤖 **AI-powered recommendations** with cross-module intelligence
 - 🧭 **AI Preferences tools** for refreshing recommendations and reviewing history
+- 🔔 **Attention Center badge** in headers for quick access to notifications
 - 🎨 **Theme-driven overlays** for consistent light/dark translucency
 - 🔄 **Real-time updates** ready (WebSocket configured)
 - ⌨️ **Web keyboard shortcut** - Use Cmd/Ctrl+K to open Omnisearch on web
