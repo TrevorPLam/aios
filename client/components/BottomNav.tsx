@@ -58,6 +58,10 @@ import { ThemedText } from "./ThemedText";
 import { db } from "@/storage/database";
 import { ModuleType } from "@/models/types";
 import { useNavigationContext } from "@/context/NavigationContext";
+import {
+  getNavigationErrorMessage,
+  validateRouteRegistration,
+} from "@/utils/navigationValidation";
 
 export type ModuleItem = {
   id: ModuleType;
@@ -170,9 +174,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   const showNavigationError = (moduleName?: string) => {
     Alert.alert(
       "Navigation Error",
-      moduleName
-        ? `The ${moduleName} module is not available. Please ensure all modules are properly configured.`
-        : "Unable to navigate to the selected module. Please try again.",
+      getNavigationErrorMessage(moduleName),
       [{ text: "OK" }],
     );
   };
@@ -207,12 +209,6 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
    *   navigation.navigate("Notebook");
    * }
    */
-  const isValidRoute = (routeName: keyof AppStackParamList): boolean => {
-    const state = navigation.getState();
-    const routeExists = state.routeNames.includes(routeName);
-    return routeExists;
-  };
-
   /**
    * Handles navigation to a module with comprehensive validation and error handling.
    *
@@ -231,9 +227,16 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
    * await handleNavigation({ id: "notebook", name: "Notebook", route: "Notebook", icon: "book-open" });
    */
   const handleNavigation = async (module: ModuleItem) => {
-    // Validate that the route exists in the navigation stack
-    if (!isValidRoute(module.route)) {
-      const errorMessage = `Cannot navigate to ${module.name}. Route "${module.route}" is not registered.`;
+    const routeNames = navigation.getState()?.routeNames ?? [];
+    const validation = validateRouteRegistration({
+      routeName: module.route,
+      routeNames,
+      moduleName: module.name,
+    });
+
+    // Stop early if the route is missing to avoid silent navigation failures.
+    if (!validation.isValid) {
+      const errorMessage = validation.error;
 
       // Log error for debugging
       logNavigationError("Navigation Error", errorMessage, {
