@@ -379,6 +379,6 @@ Think of escalation as calling for backup - sometimes you need it.
 
 ## References
 
-- [PagerDuty Escalation Best Practices](https://www.pagerduty.com/resources/learn/call-escalation-rotations/)
+- [PagerDuty Escalation Best Practices](https://ownership.pagerduty.com/escalations/)
 - [Google SRE: Incident Management](https://sre.google/sre-book/managing-incidents/)
 - [Atlassian Incident Escalation](https://www.atlassian.com/incident-management/on-call/escalation-policies)

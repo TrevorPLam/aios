@@ -916,7 +916,7 @@ top -bn1 | head -20
 ## References
 
 - Expo Deployment: https://docs.expo.dev/distribution/introduction/
-- Express Production Best Practices: https://expressjs.com/en/advanced/best-practice-production.html
+- Express Production Best Practices: https://expressjs.com/en/advanced/best-practice-performance.html
 - PostgreSQL High Availability: https://www.postgresql.org/docs/current/high-availability.html
 - AWS RDS Best Practices: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html
 - Docker Multi-stage Builds: https://docs.docker.com/build/building/multi-stage/
