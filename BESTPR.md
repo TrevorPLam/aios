@@ -231,7 +231,7 @@ moduleHandoffManager.returnFromHandoff()
 
 ---
 
-## 🎨 Theme System
+## 🎨 Design System
 
 ### Color Tokens (ALWAYS use these)
 ```typescript
@@ -250,6 +250,51 @@ const styles = StyleSheet.create({
     color: Colors.dark.accent,                    // #00D9FF (electric blue)
   }
 })
+```
+
+### Spacing Tokens (ALWAYS use these)
+```typescript
+import { Spacing } from '@/constants/theme'
+
+const styles = StyleSheet.create({
+  container: {
+    padding: Spacing.md,        // 16
+    marginBottom: Spacing.lg,   // 24
+    gap: Spacing.sm,            // 8
+  }
+})
+
+// Available: xs (4), sm (8), md (16), lg (24), xl (32), 2xl (48)
+```
+
+### Border Radius Tokens
+```typescript
+import { BorderRadius } from '@/constants/theme'
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: BorderRadius.lg,     // 12
+  },
+  button: {
+    borderRadius: BorderRadius.full,   // 9999 (fully rounded)
+  }
+})
+
+// Available: xs (4), sm (8), md (12), lg (16), xl (20), 2xl (32), full (9999)
+```
+
+### Typography Tokens
+```typescript
+import { Typography } from '@/constants/theme'
+
+const styles = StyleSheet.create({
+  title: Typography.h1,        // fontSize: 24, fontWeight: '600'
+  subtitle: Typography.h3,     // fontSize: 18, fontWeight: '600'
+  body: Typography.body,       // fontSize: 16, fontWeight: '400'
+  caption: Typography.caption, // fontSize: 14, fontWeight: '400'
+})
+
+// Available: hero (32/700), h1-h6, body (16), caption (14), small (12)
 ```
 
 ### Semantic Color Tokens
@@ -274,8 +319,8 @@ import { ThemedText } from '@/components/ThemedText'
   <ThemedText style={styles.title}>Title</ThemedText>
 </ThemedView>
 
-// ❌ DON'T: Use raw View/Text
-<View><Text>Title</Text></View>
+// ❌ DON'T: Use raw View/Text or hardcoded values
+<View style={{ padding: 16 }}><Text>Title</Text></View> // NO!
 ```
 
 ---
