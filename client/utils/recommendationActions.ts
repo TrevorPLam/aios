@@ -1,3 +1,5 @@
+import { RecommendationEngine } from "../lib/recommendationEngine";
+
 export type RecommendationRefreshStatus = "disabled" | "success" | "error";
 
 export interface RecommendationRefreshOutcome {
@@ -33,7 +35,7 @@ export async function refreshRecommendationsWithFeedback({
   }
 
   try {
-    const rawCount = await refresh();
+    const rawCount = await refresh.call(RecommendationEngine);
     const safeCount = Number.isFinite(rawCount)
       ? Math.max(0, Math.floor(rawCount))
       : 0;
