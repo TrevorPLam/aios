@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Manual "Refresh Recommendations" button in Command Center with disabled state handling (T-007)
 - Recommendation tools in AI Preferences for refreshing suggestions and opening recommendation history
 - Web-friendly alert time input with validation for AlertDetailScreen (T-001B)
+- Web keyboard shortcut (Cmd/Ctrl+K) to open Omnisearch from anywhere
+- Focus indicators on Omnisearch interactive controls for keyboard navigation
 - Loading/error state messaging for Integrations and Integration Detail screens with retry actions
 - Reusable ScreenStateMessage component for consistent loading/error messaging
 - ListEditor validation utilities covering title, item length, duplicates, and list size warnings

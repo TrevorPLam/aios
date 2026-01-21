@@ -158,10 +158,13 @@ export function OmnisearchScreen({
       <Animated.View entering={FadeInDown.delay(50)}>
         <Pressable
           onPress={() => handleResultPress(item)}
-          style={({ pressed }) => [
+          focusable
+          style={({ pressed, focused }) => [
             styles.resultItem,
+            styles.focusRingBase,
             { backgroundColor: theme.backgroundTertiary },
             pressed && styles.resultItemPressed,
+            focused && { borderColor: theme.accent },
           ]}
           accessibilityRole="button"
           accessibilityLabel={`Open ${item.title} in ${module?.name}`}
@@ -294,10 +297,13 @@ export function OmnisearchScreen({
           <Pressable
             key={index}
             onPress={() => handleRecentPress(recent)}
-            style={({ pressed }) => [
+            focusable
+            style={({ pressed, focused }) => [
               styles.recentItem,
+              styles.focusRingBase,
               { backgroundColor: theme.backgroundTertiary },
               pressed && styles.resultItemPressed,
+              focused && { borderColor: theme.accent },
             ]}
             accessibilityRole="button"
             accessibilityLabel={`Search for ${recent}`}
@@ -337,6 +343,12 @@ export function OmnisearchScreen({
           {query.length > 0 && (
             <Pressable
               onPress={() => setQuery("")}
+              focusable
+              style={({ focused }) => [
+                styles.clearButton,
+                styles.focusRingBase,
+                focused && { borderColor: theme.accent },
+              ]}
               hitSlop={10}
               accessibilityRole="button"
               accessibilityLabel="Clear search"
@@ -349,7 +361,12 @@ export function OmnisearchScreen({
         {/* Close Button */}
         <Pressable
           onPress={onClose}
-          style={styles.closeButton}
+          focusable
+          style={({ focused }) => [
+            styles.closeButton,
+            styles.focusRingBase,
+            focused && { borderColor: theme.accent },
+          ]}
           accessibilityRole="button"
           accessibilityLabel="Close search"
         >
@@ -419,6 +436,10 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.xs,
+    borderRadius: BorderRadius.sm,
+  },
+  clearButton: {
+    borderRadius: BorderRadius.sm,
   },
   content: {
     flex: 1,
@@ -490,6 +511,10 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     marginBottom: Spacing.xs,
     gap: Spacing.sm,
+  },
+  focusRingBase: {
+    borderWidth: 2,
+    borderColor: "transparent",
   },
   resultItemPressed: {
     opacity: 0.7,

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, AppState } from "react-native";
+import { StyleSheet, AppState, Platform } from "react-native";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -15,6 +15,10 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { NavigationProvider } from "@/context/NavigationContext";
 import { Colors } from "@/constants/theme";
+import {
+  isOmnisearchShortcut,
+  shouldIgnoreShortcutTarget,
+} from "@/utils/keyboardShortcuts";
 import analytics from "@/analytics";
 
 const AIOSTheme = {
@@ -57,6 +61,34 @@ export default function App() {
       analytics.shutdown();
     };
   }, []);
+
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof window === "undefined") {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isOmnisearchShortcut(event)) {
+        return;
+      }
+
+      if (shouldIgnoreShortcutTarget(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (navigationRef.isReady()) {
+        navigationRef.navigate("Omnisearch");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigationRef]);
 
   return (
     <ThemeProvider>

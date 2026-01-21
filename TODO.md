@@ -1020,7 +1020,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Acceptance Criteria**:
   - [x] Add Omnisearch to navigation stack with modal presentation (AppNavigator.tsx)
   - [x] Add search icon to header or CommandCenter (search button in CommandCenter header)
-  - [ ] Implement keyboard shortcut (Cmd+K / Ctrl+K) for iOS (deferred - mobile-first, no global keyboard shortcut support)
+  - [x] Implement keyboard shortcut (Cmd+K / Ctrl+K) for web/desktop access
   - [x] Test search across all modules on iOS (navigation routing covers all 11 module types)
 - **References**: 
   - client/screens/OmnisearchModalScreen.tsx (NEW)
@@ -1033,7 +1033,7 @@ For new features requiring multi-platform support, use sequential tasks:
   - Registered as modal screen in AppNavigator
   - Added search button between grid and bell icons in CommandCenter
   - Navigation routing handles all 11 module types with fallback
-  - Keyboard shortcut deferred - React Native mobile doesn't support global shortcuts
+  - Added web keyboard shortcut (Cmd/Ctrl+K) with input-safe handling
   - Recommended for future iPad-specific enhancement
 - **Note**: Platform-agnostic implementation. Codex Agent can verify Android/Web compatibility in follow-up.
 
@@ -3107,11 +3107,12 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Test with screen readers (VoiceOver, TalkBack)
   - **Action**: Add accessibility documentation
 
-- [ ] **Keyboard Navigation Support**
+- [x] **Keyboard Navigation Support**
   - Current: Touch-first interface, limited keyboard support
   - **Action**: Add keyboard shortcuts documentation
   - **Action**: Ensure tab navigation works properly
   - **Action**: Add keyboard focus indicators
+  - **Completed**: Added web Omnisearch shortcut and focus indicators for search controls (2026-01-20)
 
 - [ ] **Color Contrast Validation**
   - **Action**: Run WCAG contrast checker on all text/background combinations
