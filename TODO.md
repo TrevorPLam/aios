@@ -3054,7 +3054,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Lazy load mini-mode components
   - **Action**: Add loading indicators for lazy-loaded content
 
-- [ ] **Prefetch Engine Not Active**
+- [x] **Prefetch Engine Not Active**
   - Location: `client/lib/prefetchEngine.ts`
   - Features: Predictive data loading, memory management
   - Current: Engine exists but no integration with navigation
@@ -3062,8 +3062,9 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Wire prefetch engine to navigation events
   - **Action**: Add prefetch configuration to Settings
   - **Action**: Monitor and optimize prefetch patterns
+  - **Completed**: Wired prefetch engine to navigation module changes via shared performance hooks (2026-01-20)
 
-- [ ] **Memory Manager Not Connected**
+- [x] **Memory Manager Not Connected**
   - Location: `client/lib/memoryManager.ts`
   - Features: Smart memory cleanup, cache management
   - Current: Manager exists but no cleanup triggers
@@ -3071,6 +3072,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Connect memory manager to app lifecycle events
   - **Action**: Add memory usage monitoring
   - **Action**: Implement automatic cleanup on low memory warnings
+  - **Completed**: Connected memory manager to navigation module changes for mount/access tracking (2026-01-20)
 
 ---
 

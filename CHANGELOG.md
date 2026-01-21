@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ListEditor validation utilities covering title, item length, duplicates, and list size warnings
 - ThemedText typography variant coverage tests for h4-h6 rendering
 - Screen-level error recovery actions (try again, go back, go home) for route error boundaries
+- Navigation performance hooks that connect prefetching and memory tracking to module transitions
 
 ### Changed
 
@@ -44,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented scroll-aware animations using React Native Reanimated shared values
 - Added constants for animation timing, thresholds, and scroll behavior
 - Used `translateY` transforms for smooth 60fps animations
+- Centralized route-to-module mapping for analytics and performance integrations
 
 ### Documentation
 
