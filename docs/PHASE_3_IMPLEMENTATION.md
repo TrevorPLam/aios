@@ -4,8 +4,8 @@
 
 Phase 3 of the AIOS Build Orchestration focuses on **Refinement** - advanced UI patterns and performance optimization to create a seamless, intelligent user experience across 38+ modules.
 
-**Status:** In Progress  
-**Completion:** ~20%  
+**Status:** In Progress
+**Completion:** ~20%
 **Last Updated:** January 16, 2026
 
 ---
@@ -14,18 +14,21 @@ Phase 3 of the AIOS Build Orchestration focuses on **Refinement** - advanced UI 
 
 ### 1. Mini-Mode Composable UI Pattern ✅
 
-**Plain English:**  
+#### Plain English
+
 Mini-modes allow users to perform quick actions from one module without leaving their current screen. For example, creating a calendar event while in the messages app, or capturing a note while viewing photos.
 
-**Technical Implementation:**
+### Technical Implementation
+
 - **Registry System** (`client/lib/miniMode.ts`): Central registration and lifecycle management
 - **Container Component** (`client/components/MiniModeContainer.tsx`): Modal rendering with animations
 - **Provider Components** (`client/components/miniModes/`):
   - `CalendarMiniMode.tsx` - Quick event creation
-  - `TaskMiniMode.tsx` - Quick task creation  
+  - `TaskMiniMode.tsx` - Quick task creation
   - `NoteMiniMode.tsx` - Quick note capture
 
-**Key Features:**
+### Key Features
+
 - Self-contained mini-mode components (no navigation dependency)
 - Callback-based result handling (onComplete, onDismiss)
 - Subscription system for UI updates
@@ -34,7 +37,8 @@ Mini-modes allow users to perform quick actions from one module without leaving 
 
 **Test Coverage:** 18 unit tests, 100% passing
 
-**Usage Example:**
+### Usage Example
+
 ```typescript
 import { useMiniMode } from '../lib/miniMode';
 
@@ -57,19 +61,19 @@ function MessagesScreen() {
 
   return <Button onPress={handleAddEvent} label="Add to Calendar" />;
 }
-```
+```text
 
 ### 2. Quick Capture Overlay ✅
 
-**Plain English:**  
+#### Plain English (2)
 A global menu accessible from anywhere that lets users quickly capture notes, tasks, events, expenses, or photos without losing their place in the app.
 
-**Technical Implementation:**
+### Technical Implementation (2)
 - **Overlay Component** (`client/components/QuickCaptureOverlay.tsx`): Modal menu with action grid
 - **Context Hook** (`client/hooks/useQuickCapture.ts`): Global state management
 - **Integration** with mini-mode system for seamless capture flows
 
-**Key Features:**
+### Key Features (2)
 - Modal overlay with animated appearance (zoom + fade)
 - Grid layout with 5 capture actions (note, task, event, expense, photo)
 - Color-coded actions with icons
@@ -77,7 +81,7 @@ A global menu accessible from anywhere that lets users quickly capture notes, ta
 - Source tracking for analytics
 - Accessibility labels and hints
 
-**Usage Example:**
+### Usage Example (2)
 ```typescript
 import { useQuickCapture } from '../hooks/useQuickCapture';
 
@@ -93,7 +97,7 @@ function HeaderNav() {
     </TouchableOpacity>
   );
 }
-```
+```text
 
 ---
 
@@ -101,16 +105,16 @@ function HeaderNav() {
 
 ### 3. Module Handoff with Breadcrumbs 🚧
 
-**Plain English:**  
+#### Plain English (3)
 When jumping between modules (e.g., Calendar → Maps for directions), show where you are and let you return with one tap. Your scroll position and state are preserved in both places.
 
-**Planned Implementation:**
+### Planned Implementation
 - **Navigation Stack Manager**: Serialize/deserialize module state
 - **Breadcrumb Component**: Visual indicator of navigation path
 - **State Preservation**: Save scroll position, filters, selections
 - **Handoff API**: Module-to-module communication protocol
 
-**Target Modules:**
+### Target Modules
 - Calendar → Maps (directions to event location)
 - Messages → Calendar (schedule from chat)
 - Planner → Calendar (add task deadline as event)
@@ -124,7 +128,7 @@ When jumping between modules (e.g., Calendar → Maps for directions), show wher
 
 ### 4. Status-Aware UI Polish ⏸️
 
-**Goals:**
+#### Goals
 - Visual indicators for attention urgency levels (urgent/attention/fyi)
 - Color-coded priority system
 - Smart bundling visualization
@@ -133,7 +137,7 @@ When jumping between modules (e.g., Calendar → Maps for directions), show wher
 
 ### 5. Performance Optimization ⏸️
 
-**Goals:**
+#### Goals (2)
 - Predictive prefetch implementation (<2s module load)
 - Lazy loading for modules (React.lazy)
 - Search optimization (<500ms target)
@@ -160,7 +164,7 @@ export default function App() {
 
   return <YourAppContent />;
 }
-```
+```text
 
 ### Step 2: Add MiniModeContainer to App Root
 
@@ -177,7 +181,7 @@ export default function App() {
     </>
   );
 }
-```
+```text
 
 ### Step 3: Add QuickCaptureProvider and Overlay
 
@@ -210,7 +214,7 @@ export default function App() {
     </QuickCaptureProvider>
   );
 }
-```
+```text
 
 ### Step 4: Add Long-Press Gesture (Optional)
 
@@ -239,7 +243,7 @@ function AppWithGestures() {
     </GestureHandlerRootView>
   );
 }
-```
+```text
 
 ---
 
@@ -248,11 +252,12 @@ function AppWithGestures() {
 ### Unit Tests
 
 Run mini-mode tests:
+
 ```bash
 npm test -- client/lib/__tests__/miniMode.test.ts
-```
+```text
 
-**Coverage:**
+### Coverage
 - Registration and unregistration
 - Opening and closing mini-modes
 - Completing actions
@@ -335,7 +340,7 @@ npm test -- client/lib/__tests__/miniMode.test.ts
 
 **Decision:** Render mini-modes as modals, not navigation screens.
 
-**Rationale:**
+### Rationale
 - Preserves navigation stack (user doesn't lose place)
 - Faster to open/close (no navigation animation)
 - Can be dismissed easily (tap outside)
@@ -346,7 +351,7 @@ npm test -- client/lib/__tests__/miniMode.test.ts
 
 **Decision:** Mini-modes use their own subscription system, not the global event bus.
 
-**Rationale:**
+### Rationale (2)
 - Event bus uses typed enums (EVENT_TYPES) which don't fit mini-mode events well
 - Mini-mode events are UI-only (don't need cross-module coordination)
 - Simpler API for React components (subscribe/unsubscribe)
@@ -357,7 +362,7 @@ npm test -- client/lib/__tests__/miniMode.test.ts
 
 **Decision:** Mini-modes use callbacks (onComplete, onDismiss) not Promises.
 
-**Rationale:**
+### Rationale (3)
 - Callbacks are more React-idiomatic
 - User might keep mini-mode open for a while (Promise would pend)
 - Allows separate success and cancel handlers
@@ -405,6 +410,7 @@ npm test -- client/lib/__tests__/miniMode.test.ts
 ## Contact & Support
 
 For questions or issues with Phase 3 implementation:
+
 - Review this guide first
 - Check existing tests for usage examples
 - Consult architecture.md for system design

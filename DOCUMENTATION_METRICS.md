@@ -36,6 +36,7 @@
 | Bounce rate | Single-page sessions | Track trend | TBD | Requires analytics |
 
 ## Collection cadence
+
 - Update monthly in the first week.
 - Capture CI pass rate per release.
 - Review trends quarterly.

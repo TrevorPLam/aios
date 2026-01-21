@@ -15,6 +15,7 @@ This directory captures architectural decisions for AIOS.
 ## Format
 
 Each ADR uses the template in `docs/.templates/adr-template.md`:
+
 - Title
 - Status (Proposed, Accepted, Deprecated, Superseded)
 - Context

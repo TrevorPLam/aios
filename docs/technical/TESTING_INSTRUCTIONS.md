@@ -1,33 +1,39 @@
 # Testing Instructions for Mobile-First Configuration
 
 ## Overview
+
 These instructions help verify that the mobile-first configuration changes are working correctly.
 
 ## Before Testing
 
 ### Prerequisites
+
 1. Ensure all dependencies are installed:
+
    ```bash
    npm install
-   ```
+   ```text
 
-2. Have iOS Simulator installed (Xcode) or access to Expo Go on an iOS device
+1. Have iOS Simulator installed (Xcode) or access to Expo Go on an iOS device
 
 ## Test 1: Verify Metro Configuration
 
 **Purpose:** Ensure Metro is configured to only bundle for iOS and Android
 
-**Steps:**
+### Steps
+
 1. Check metro.config.js exists:
+
    ```bash
    ls -la metro.config.js
-   ```
-   
-2. Verify platforms configuration:
+   ```text
+
+1. Verify platforms configuration:
+
    ```bash
    node -p "require('./metro.config.js').resolver.platforms"
-   ```
-   
+   ```text
+
 **Expected Result:** Should output `[ 'ios', 'android' ]`
 
 **Pass/Fail:** ___________
@@ -36,18 +42,22 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Ensure web platform is removed from app.json
 
-**Steps:**
+### Steps (2)
+
 1. Check for web configuration:
+
    ```bash
    grep -i '"web"' app.json
-   ```
-   
-2. List expo config keys:
+   ```text
+
+1. List expo config keys:
+
    ```bash
    node -p "Object.keys(require('./app.json').expo)"
-   ```
+   ```text
 
-**Expected Result:** 
+### Expected Result
+
 - First command should return nothing (no "web" key found)
 - Second command should NOT include "web" in the list
 
@@ -57,11 +67,13 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Ensure expo:dev starts in iOS mode by default
 
-**Steps:**
+### Steps (3)
+
 1. Check the expo:dev script:
+
    ```bash
    npm run expo:dev --dry-run 2>&1 | grep "expo start"
-   ```
+   ```text
 
 **Expected Result:** Should see `--ios` flag in the command
 
@@ -71,25 +83,30 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Verify Expo starts correctly with iOS-first configuration
 
-**Steps:**
+### Steps (4)
+
 1. Clear any existing cache:
+
    ```bash
    npm run expo:clean
-   ```
+   ```text
 
-2. In a separate terminal, start the development server:
+1. In a separate terminal, start the development server:
+
    ```bash
    npm run expo:dev
-   ```
+   ```text
 
-3. Observe the output:
+1. Observe the output:
+
    - Should see Metro bundler starting
    - Should see iOS as the primary target
    - Should NOT see "Press w to open in web browser"
 
-4. Press `i` (or it should auto-open iOS simulator)
+1. Press `i` (or it should auto-open iOS simulator)
 
-**Expected Result:** 
+### Expected Result (2)
+
 - Expo starts successfully
 - iOS simulator opens (or QR code for iOS device)
 - No web option available
@@ -101,30 +118,36 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Ensure the cache clearing script works
 
-**Steps:**
+### Steps (5)
+
 1. Create some cache (by running expo once):
+
    ```bash
    npm run expo:dev
    # Wait for it to start, then stop with Ctrl+C
-   ```
+   ```text
 
-2. Check cache directories exist:
+1. Check cache directories exist:
+
    ```bash
    ls -la .expo .metro-cache node_modules/.cache 2>/dev/null
-   ```
+   ```text
 
-3. Run cache clear:
+1. Run cache clear:
+
    ```bash
    npm run expo:clean
    # Stop with Ctrl+C after it starts
-   ```
+   ```text
 
-4. Check cache directories are removed:
+1. Check cache directories are removed:
+
    ```bash
    ls -la .expo .metro-cache node_modules/.cache 2>/dev/null
-   ```
+   ```text
 
-**Expected Result:** 
+### Expected Result (3)
+
 - Cache directories exist after step 1
 - Cache directories are removed after step 3
 - Expo starts with `--clear` flag
@@ -135,21 +158,24 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Ensure changes appear when refreshing the app
 
-**Steps:**
+### Steps (6)
+
 1. Start Expo:
+
    ```bash
    npm run expo:dev
-   ```
+   ```text
 
-2. Open the app in iOS simulator
+1. Open the app in iOS simulator
 
-3. Make a visible change in any screen file (e.g., change text in `client/screens/ModuleGridScreen.tsx`)
+1. Make a visible change in any screen file (e.g., change text in `client/screens/ModuleGridScreen.tsx`)
 
-4. Save the file
+1. Save the file
 
-5. In the iOS simulator, press `Cmd+R` to reload, or shake device and tap "Reload"
+1. In the iOS simulator, press `Cmd+R` to reload, or shake device and tap "Reload"
 
-**Expected Result:** 
+### Expected Result (4)
+
 - Change appears immediately after reload
 - No need to restart Metro
 - No need to clear cache for simple changes
@@ -160,18 +186,21 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Ensure the app knows it's running on iOS, not web
 
-**Steps:**
+### Steps (7)
+
 1. Add a temporary Platform check in `client/App.tsx`:
+
    ```typescript
    import { Platform } from 'react-native';
    console.log('Platform:', Platform.OS);
    console.log('Is iOS:', Platform.OS === 'ios');
    console.log('Is Web:', Platform.OS === 'web');
-   ```
+   ```text
 
-2. Start Expo and check Metro bundler logs
+1. Start Expo and check Metro bundler logs
 
-**Expected Result:**
+### Expected Result (5)
+
 - `Platform: ios`
 - `Is iOS: true`
 - `Is Web: false`
@@ -182,7 +211,8 @@ These instructions help verify that the mobile-first configuration changes are w
 
 **Purpose:** Verify screenshots show native iOS rendering
 
-**Steps:**
+### Steps (8)
+
 1. Start Expo with the app running in iOS simulator
 
 2. Navigate to any screen (e.g., Command Center)
@@ -198,8 +228,10 @@ These instructions help verify that the mobile-first configuration changes are w
    - No web browser chrome
    - No mouse cursor (should have mobile touch targets)
 
-**Expected Result:** 
+### Expected Result (6)
+
 Screenshot shows native iOS rendering with:
+
 - iOS status bar at top
 - Native iOS fonts
 - Native iOS UI elements
@@ -211,17 +243,20 @@ Screenshot shows native iOS rendering with:
 
 **Purpose:** Ensure Metro doesn't create unnecessary web bundles
 
-**Steps:**
+### Steps (9)
+
 1. Start Expo:
+
    ```bash
    npm run expo:dev
-   ```
+   ```text
 
-2. Check Metro bundler output for any web-related messages
+1. Check Metro bundler output for any web-related messages
 
-3. Try pressing `w` (for web) in the Expo CLI
+1. Try pressing `w` (for web) in the Expo CLI
 
-**Expected Result:**
+### Expected Result (7)
+
 - No web bundle messages in Metro output
 - Pressing `w` should do nothing or show "unsupported platform" message
 - Only iOS and Android bundles available
@@ -232,18 +267,22 @@ Screenshot shows native iOS rendering with:
 
 **Purpose:** Verify static build also excludes web
 
-**Steps:**
+### Steps (10)
+
 1. Run static build:
+
    ```bash
    npm run expo:static:build
-   ```
+   ```text
 
-2. Check build output directory:
+1. Check build output directory:
+
    ```bash
    ls -la static-build/
-   ```
+   ```text
 
-**Expected Result:**
+### Expected Result (8)
+
 - Only `ios` and `android` directories created
 - No `web` directory
 - Build completes successfully
@@ -253,16 +292,19 @@ Screenshot shows native iOS rendering with:
 ## Troubleshooting
 
 ### If Test 4 Fails (Expo Won't Start)
+
 1. Clear all caches: `npm run expo:clean`
 2. Reinstall dependencies: `rm -rf node_modules && npm install`
 3. Check Node version: `node --version` (should be 18+)
 
 ### If Test 6 Fails (Changes Don't Appear)
+
 1. Clear cache: `npm run expo:clean`
 2. Enable Fast Refresh in Expo Dev Tools
 3. Check for syntax errors in the file you changed
 
 ### If Test 8 Fails (Still Looks Like Web)
+
 1. Verify metro.config.js exists and has correct content
 2. Verify app.json has no "web" section
 3. Stop and restart Expo completely
@@ -274,7 +316,8 @@ After completing all tests:
 
 **Total Passed:** _____ / 10
 
-**Configuration Status:**
+### Configuration Status
+
 - [ ] All tests passed - Ready to use
 - [ ] Some tests failed - See troubleshooting above
 - [ ] Major issues - Contact support

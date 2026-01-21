@@ -12,7 +12,7 @@
 
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios
-```
+```text
 
 This will rebuild your native app with the correct configuration. **You only need to do this ONCE** now that the configuration is fixed in the repository.
 
@@ -34,7 +34,7 @@ This will rebuild your native app with the correct configuration. **You only nee
 
 ```bash
 npm run expo:clean:full && npm run expo:rebuild:ios
-```
+```text
 
 This is more aggressive - it removes node_modules entirely and reinstalls everything.
 
@@ -49,42 +49,46 @@ See [WORKLETS_FIX_GUIDE.md](./WORKLETS_FIX_GUIDE.md) for manual deep clean instr
 After running the fix:
 
 1. **Start your app:**
+
    ```bash
    npm start
-   ```
+   ```text
 
-2. **Check for the error:** The `WorkletsError` should be gone
+1. **Check for the error:** The `WorkletsError` should be gone
 
-3. **Verify versions match:**
+2. **Verify versions match:**
+
    ```bash
    npm run check:worklets
-   ```
+   ```text
+
    Should show: `✅ Versions match! Everything looks good.`
 
 ## Prevent This From Happening Again
 
-**After ANY Dependabot PR that updates these packages:**
+### After ANY Dependabot PR that updates these packages
 - `react-native-reanimated`
 - `react-native-worklets`
 - `react-native-gesture-handler`
 - `react-native-draggable-flatlist`
 - `react-native-keyboard-controller`
 
-**ALWAYS run:**
+### ALWAYS run
 ```bash
 npm run expo:rebuild:ios
-```
+```text
 
-**Before starting work each day:**
+### Before starting work each day
 ```bash
 npm run check:worklets
-```
+```text
 
 This checks if your versions are in sync and warns you before you run into runtime errors.
 
 ## Complete Documentation
 
 For detailed explanation, prevention strategies, and troubleshooting:
+
 - **[WORKLETS_FIX_GUIDE.md](./WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
 - **[README.md#troubleshooting](./README.md#troubleshooting)** - Quick troubleshooting section
 - **[Common Incidents Runbook](./docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)** - Detailed runbook
@@ -101,6 +105,7 @@ I've added these tools to help you:
 ## Why This WAS Happening (NOW FIXED)
 
 **The root cause (FIXED):** The `react-native-reanimated` plugin was missing from `app.json`, which meant:
+
 - ✅ JavaScript bundle had correct worklets version (0.7.2)
 - ❌ Native iOS/Android code was never properly configured by Expo
 - ❌ This caused persistent version mismatches no matter what you tried
@@ -116,34 +121,37 @@ I've added these tools to help you:
    - Run the fix again
 
 2. **Check for multiple worklets versions:**
+
    ```bash
    npm list react-native-worklets
-   ```
+   ```text
+
    Should only show ONE version
 
-3. **Clear Xcode cache (if Xcode installed):**
+1. **Clear Xcode cache (if Xcode installed):**
+
    ```bash
    rm -rf ~/Library/Developer/Xcode/DerivedData
-   ```
+   ```text
 
-4. **See WORKLETS_FIX_GUIDE.md for more troubleshooting**
+1. **See WORKLETS_FIX_GUIDE.md for more troubleshooting**
 
 ## Summary
 
-**Quick Fix:**
+### Quick Fix
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios && npm start
-```
+```text
 
-**Prevent Future Issues:**
+### Prevent Future Issues
 ```bash
-# After any Dependabot update to animation libs:
+# After any Dependabot update to animation libs
 npm run expo:rebuild:ios
 
-# Before starting work:
+# Before starting work
 npm run check:worklets
-```
+```text
 
-**Get Help:**
+### Get Help
 - WORKLETS_FIX_GUIDE.md
 - docs/operations/runbooks/common_incidents.md

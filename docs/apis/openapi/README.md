@@ -28,11 +28,11 @@ OpenAPI (formerly Swagger) is a specification for describing REST APIs. It defin
 
 ### File Structure
 
-```
+```text
 docs/apis/openapi/
 ├── README.md          # This file
 └── openapi.yaml       # Main OpenAPI 3.0 specification
-```
+```text
 
 ### OpenAPI Specification Format
 
@@ -64,23 +64,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-```
+```text
 
 ### Key Sections
 
 #### 1. Info Section
+
 Metadata about the API (title, version, description, contact)
 
 #### 2. Servers Section
+
 Base URLs for different environments (dev, staging, production)
 
 #### 3. Paths Section
+
 All API endpoints with their operations (GET, POST, etc.)
 
 #### 4. Components Section
+
 Reusable schemas, responses, parameters, security schemes
 
 #### 5. Security Section
+
 Authentication/authorization requirements
 
 ## Using the OpenAPI Spec
@@ -88,6 +93,7 @@ Authentication/authorization requirements
 ### Viewing the Documentation
 
 #### Option 1: Swagger UI (Interactive)
+
 ```bash
 # Install globally
 npm install -g swagger-ui-watcher
@@ -96,9 +102,10 @@ npm install -g swagger-ui-watcher
 swagger-ui-watcher docs/apis/openapi/openapi.yaml
 
 # Open http://localhost:8000
-```
+```text
 
 #### Option 2: Redoc (Beautiful Static Docs)
+
 ```bash
 # Generate HTML documentation
 npx @redocly/cli build-docs docs/apis/openapi/openapi.yaml \
@@ -106,10 +113,11 @@ npx @redocly/cli build-docs docs/apis/openapi/openapi.yaml \
 
 # Open in browser
 open docs/apis/openapi/api-docs.html
-```
+```text
 
 #### Option 3: Online Swagger Editor
-1. Go to https://editor.swagger.io/
+
+1. Go to <https://editor.swagger.io/>
 2. File → Import File → Select `openapi.yaml`
 3. Edit and validate in real-time
 
@@ -121,25 +129,27 @@ npx @stoplight/spectral-cli lint docs/apis/openapi/openapi.yaml
 
 # Check for common issues
 npx @redocly/cli lint docs/apis/openapi/openapi.yaml
-```
+```text
 
 ### Generating Code
 
 #### Generate TypeScript Client
+
 ```bash
 npx @openapitools/openapi-generator-cli generate \
   -i docs/apis/openapi/openapi.yaml \
   -g typescript-axios \
   -o client/src/generated/api
-```
+```text
 
 #### Generate Node.js Server Stubs
+
 ```bash
 npx @openapitools/openapi-generator-cli generate \
   -i docs/apis/openapi/openapi.yaml \
   -g nodejs-express-server \
   -o server/src/generated
-```
+```text
 
 ### Creating a Mock Server
 
@@ -151,7 +161,7 @@ npx prism mock docs/apis/openapi/openapi.yaml
 
 # Mock server runs on http://localhost:4010
 # Automatically returns example responses from spec
-```
+```text
 
 ## Editing the OpenAPI Spec
 
@@ -196,9 +206,9 @@ paths:
                     $ref: '#/components/schemas/PaginationMeta'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-```
+```text
 
-2. **Add schema to components:**
+1. **Add schema to components:**
 
 ```yaml
 components:
@@ -232,13 +242,13 @@ components:
           type: string
           format: date-time
           example: "2024-01-15T12:00:00Z"
-```
+```text
 
-3. **Validate:**
+1. **Validate:**
 
 ```bash
 npx @stoplight/spectral-cli lint docs/apis/openapi/openapi.yaml
-```
+```text
 
 ### Defining Request Bodies
 
@@ -276,7 +286,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-```
+```text
 
 ### Documenting Error Responses
 
@@ -310,7 +320,7 @@ components:
                         message:
                           type: string
                           example: "Invalid email format"
-```
+```text
 
 Reference in endpoints:
 
@@ -322,7 +332,7 @@ responses:
     $ref: '#/components/responses/UnauthorizedError'
   '404':
     $ref: '#/components/responses/NotFoundError'
-```
+```text
 
 ## Assumptions
 
@@ -336,6 +346,7 @@ responses:
 ## Failure Modes
 
 ### Failure Mode 1: Spec Out of Sync with Code
+
 - **Symptom:** Spec describes endpoints that don't exist or are different in implementation
 - **Impact:** Confusion, broken code generation, failed contract tests
 - **Detection:** Contract tests fail, manual testing finds discrepancies
@@ -347,6 +358,7 @@ responses:
 - **Monitoring:** Contract test results
 
 ### Failure Mode 2: Invalid OpenAPI Syntax
+
 - **Symptom:** Spec validation fails, tools can't parse spec
 - **Impact:** Can't generate docs or code, spec is unusable
 - **Detection:** Linting tools report errors
@@ -357,6 +369,7 @@ responses:
 - **Monitoring:** CI validation checks
 
 ### Failure Mode 3: Incomplete Documentation
+
 - **Symptom:** Endpoints exist but are poorly documented
 - **Impact:** Developers confused, incorrect API usage
 - **Detection:** Code review, documentation review
@@ -367,6 +380,7 @@ responses:
 - **Monitoring:** Documentation coverage metrics
 
 ### Failure Mode 4: Breaking Changes Without Version Bump
+
 - **Symptom:** Spec changes in ways that break clients
 - **Impact:** Client applications break after deployment
 - **Detection:** Integration tests fail after spec update
@@ -379,6 +393,7 @@ responses:
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Validate spec syntax
 npx @stoplight/spectral-cli lint docs/apis/openapi/openapi.yaml
@@ -395,9 +410,10 @@ open /tmp/api-docs.html
 # 4. Start mock server and test
 npx prism mock docs/apis/openapi/openapi.yaml &
 curl http://localhost:4010/api/users/me
-```
+```text
 
 ### Automated Checks
+
 - [ ] Spec is valid OpenAPI 3.0: `spectral lint`
 - [ ] No breaking changes without version bump: `oasdiff`
 - [ ] All endpoints have examples
@@ -405,6 +421,7 @@ curl http://localhost:4010/api/users/me
 - [ ] Contract tests pass
 
 ### Success Criteria
+
 1. Spec validates without errors
 2. Documentation generates successfully
 3. Mock server works with all endpoints
@@ -414,6 +431,7 @@ curl http://localhost:4010/api/users/me
 ## Best Practices
 
 ### General
+
 1. **Be descriptive** - Use clear summaries and descriptions
 2. **Provide examples** - Real examples help developers understand
 3. **Use refs** - Don't repeat yourself, use `$ref` for reusable components
@@ -421,6 +439,7 @@ curl http://localhost:4010/api/users/me
 5. **Version properly** - Break changes need version bumps
 
 ### Schemas
+
 1. **Required fields** - Mark required fields explicitly
 2. **Constraints** - Add min/max, patterns, formats
 3. **Examples** - Include realistic example values
@@ -428,11 +447,12 @@ curl http://localhost:4010/api/users/me
 5. **Types** - Use proper types and formats
 
 ### Examples
+
 ```yaml
 # Good - Specific and realistic
 example: "user@example.com"
 
-# Bad - Generic and unhelpful  
+# Bad - Generic and unhelpful
 example: "string"
 
 # Good - Shows actual structure
@@ -445,9 +465,10 @@ example:
 example:
   id: "string"
   name: "string"
-```
+```text
 
 ### Security
+
 ```yaml
 # Define security schemes
 components:
@@ -460,9 +481,10 @@ components:
 # Apply to endpoints
 security:
   - bearerAuth: []
-```
+```text
 
 ### Responses
+
 1. **Document all codes** - 200, 400, 401, 404, 500, etc.
 2. **Use refs** - Reference common error responses
 3. **Include examples** - Show success and error responses
@@ -471,25 +493,30 @@ security:
 ## Tools and Resources
 
 ### Editing
+
 - [Swagger Editor](https://editor.swagger.io/) - Online editor
 - [VS Code Extension](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi) - OpenAPI editing in VS Code
 - [IntelliJ Plugin](https://plugins.jetbrains.com/plugin/14394-openapi-swagger-editor) - For IntelliJ/WebStorm
 
 ### Validation
+
 - [Spectral](https://stoplight.io/open-source/spectral) - Linting and validation
 - [Redocly CLI](https://redocly.com/docs/cli/) - Linting and bundling
 - [OAS Diff](https://github.com/tufin/oasdiff) - Detect breaking changes
 
 ### Documentation Generation
+
 - [Redoc](https://github.com/Redocly/redoc) - Beautiful API docs
 - [Swagger UI](https://swagger.io/tools/swagger-ui/) - Interactive docs
 - [RapiDoc](https://mrin9.github.io/RapiDoc/) - Alternative UI
 
 ### Code Generation
+
 - [OpenAPI Generator](https://openapi-generator.tech/) - Generate clients/servers in many languages
 - [Swagger Codegen](https://swagger.io/tools/swagger-codegen/) - Original code generator
 
 ### Testing
+
 - [Prism](https://stoplight.io/open-source/prism) - Mock servers and contract testing
 - [Dredd](https://dredd.org/) - HTTP API testing
 - [Schemathesis](https://schemathesis.readthedocs.io/) - Property-based API testing

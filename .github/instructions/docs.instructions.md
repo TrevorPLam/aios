@@ -7,7 +7,7 @@
 
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
-**To make changes:**
+### To make changes
 1. Edit `docs/governance/constitution.md`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -19,13 +19,13 @@
 
 ### Documentation Laws
 
-**1. Diátaxis Framework (Mandatory)**
+#### 1. Diátaxis Framework (Mandatory)
 - Tutorials (learning): `docs/diataxis/tutorials/`
 - How-to guides (tasks): `docs/operations/runbooks/`, module-specific
 - Reference (facts): `docs/apis/`, `docs/modules/`
 - Explanation (understanding): `docs/architecture/`, `docs/decisions/`
 
-**2. Document Structure (Required Sections)**
+### 2. Document Structure (Required Sections)
 Every document must include:
 - Plain English Summary (5-12 bullets, non-technical)
 - Technical Detail (structured content)
@@ -33,7 +33,7 @@ Every document must include:
 - Failure Modes (what breaks, symptoms, solutions)
 - How to Verify (runnable commands)
 
-**3. Voice & Style**
+### 3. Voice & Style
 - Use active voice
 - Be specific with file paths and commands
 - Cite evidence, not assumptions
@@ -41,17 +41,17 @@ Every document must include:
 - No marketing language ("revolutionary", "amazing", etc.)
 - Link to related docs rather than duplicating
 
-**4. Link Discipline**
+### 4. Link Discipline
 - ALWAYS use relative links: `[Doc](../path/doc.md)`
 - NEVER use absolute GitHub URLs
 - CI validates all links
 
-**5. Templates (Mandatory)**
+### 5. Templates (Mandatory)
 - ADRs: `docs/.templates/adr-template.md`
 - Runbooks: `docs/.templates/runbook-template.md`
 - Modules: `docs/.templates/module-template.md`
 
-**6. No Doc Landfill**
+### 6. No Doc Landfill
 - Outdated docs move to `docs/archive/` with deprecation notice
 - Never delete docs - history is valuable
 - Update all references when archiving
@@ -59,6 +59,6 @@ Every document must include:
 
 ---
 
-**Source:** `docs/governance/constitution.md`  
-**Compiler:** `scripts/tools/compile-constitution.mjs`  
+**Source:** `docs/governance/constitution.md`
+**Compiler:** `scripts/tools/compile-constitution.mjs`
 **Last Generated:** 2026-01-21T00:44:46.238Z

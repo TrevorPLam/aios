@@ -4,53 +4,59 @@ This document provides detailed information about the AIOS Backend API endpoints
 
 ## Base URL
 
-```
+```text
 http://localhost:5000/api
-```
+```text
 
 ## Authentication
 
 Most endpoints require authentication using JWT (JSON Web Token). Include the token in the Authorization header:
 
-```
+```text
 Authorization: Bearer <your-token>
-```
+```text
 
 ## Response Format
 
 ### Success Response
+
 ```json
 {
   "data": { ... }
 }
-```
+```text
 
 ### Error Response
+
 ```json
 {
   "status": "error",
   "message": "Error message"
 }
-```
+```text
 
 ## Endpoints
 
 ### Authentication
 
 #### Register
+
 Create a new user account.
 
 - **URL:** `/api/auth/register`
 - **Method:** `POST`
 - **Auth Required:** No
 - **Request Body:**
+
   ```json
   {
     "username": "string (min 3 characters)",
     "password": "string (min 6 characters)"
   }
-  ```
+  ```text
+
 - **Success Response (201):**
+
   ```json
   {
     "token": "jwt-token",
@@ -59,22 +65,26 @@ Create a new user account.
       "username": "string"
     }
   }
-  ```
+  ```text
 
 #### Login
+
 Authenticate an existing user.
 
 - **URL:** `/api/auth/login`
 - **Method:** `POST`
 - **Auth Required:** No
 - **Request Body:**
+
   ```json
   {
     "username": "string",
     "password": "string"
   }
-  ```
+  ```text
+
 - **Success Response (200):**
+
   ```json
   {
     "token": "jwt-token",
@@ -83,40 +93,45 @@ Authenticate an existing user.
       "username": "string"
     }
   }
-  ```
+  ```text
 
 #### Get Current User
+
 Get the currently authenticated user's information.
 
 - **URL:** `/api/auth/me`
 - **Method:** `GET`
 - **Auth Required:** Yes
 - **Success Response (200):**
+
   ```json
   {
     "id": "uuid",
     "username": "string"
   }
-  ```
+  ```text
 
 #### Logout
+
 Logout the current user (client-side token removal).
 
 - **URL:** `/api/auth/logout`
 - **Method:** `POST`
 - **Auth Required:** Yes
 - **Success Response (200):**
+
   ```json
   {
     "message": "Logged out successfully"
   }
-  ```
+  ```text
 
 ---
 
 ### Recommendations
 
 #### List Recommendations
+
 Get all recommendations for the authenticated user.
 
 - **URL:** `/api/recommendations`
@@ -125,6 +140,7 @@ Get all recommendations for the authenticated user.
 - **Success Response (200):** Array of recommendation objects
 
 #### Get Recommendation
+
 Get a specific recommendation by ID.
 
 - **URL:** `/api/recommendations/:id`
@@ -137,6 +153,7 @@ Get a specific recommendation by ID.
 ### Notes
 
 #### List Notes
+
 Get all notes for the authenticated user.
 
 - **URL:** `/api/notes`
@@ -145,6 +162,7 @@ Get all notes for the authenticated user.
 - **Success Response (200):** Array of note objects
 
 #### Get Note
+
 Get a specific note by ID.
 
 - **URL:** `/api/notes/:id`
@@ -153,12 +171,14 @@ Get a specific note by ID.
 - **Success Response (200):** Note object
 
 #### Create Note
+
 Create a new note.
 
 - **URL:** `/api/notes`
 - **Method:** `POST`
 - **Auth Required:** Yes
 - **Request Body:**
+
   ```json
   {
     "title": "string",
@@ -166,10 +186,12 @@ Create a new note.
     "tags": ["string"],
     "links": ["string"]
   }
-  ```
+  ```text
+
 - **Success Response (201):** Created note object
 
 #### Update Note
+
 Update an existing note.
 
 - **URL:** `/api/notes/:id`
@@ -179,6 +201,7 @@ Update an existing note.
 - **Success Response (200):** Updated note object
 
 #### Delete Note
+
 Delete a note.
 
 - **URL:** `/api/notes/:id`
@@ -191,6 +214,7 @@ Delete a note.
 ### Tasks
 
 #### List Tasks
+
 Get all tasks for the authenticated user.
 
 - **URL:** `/api/tasks`
@@ -199,6 +223,7 @@ Get all tasks for the authenticated user.
 - **Success Response (200):** Array of task objects
 
 #### Get Task
+
 Get a specific task by ID.
 
 - **URL:** `/api/tasks/:id`
@@ -207,29 +232,33 @@ Get a specific task by ID.
 - **Success Response (200):** Task object
 
 #### Create Task
+
 Create a new task.
 
 - **URL:** `/api/tasks`
 - **Method:** `POST`
 - **Auth Required:** Yes
 - **Request Body:**
+
   ```json
   {
     "title": "string",
     "userNotes": "string",
     "aiNotes": ["string"],
-    "priority": "low" | "medium" | "high" | "urgent",
+ "priority": "low" | "medium" | "high" | "urgent",
     "dueDate": "ISO 8601 timestamp" | null,
-    "status": "pending" | "in_progress" | "completed" | "cancelled",
-    "recurrenceRule": "none" | "daily" | "weekly" | "monthly" | "custom",
+ "status": "pending" | "in_progress" | "completed" | "cancelled",
+ "recurrenceRule": "none" | "daily" | "weekly" | "monthly" | "custom",
     "projectId": "uuid" | null,
     "parentTaskId": "uuid" | null,
     "dependencyIds": ["uuid"]
   }
-  ```
+  ```text
+
 - **Success Response (201):** Created task object
 
 #### Update Task
+
 Update an existing task.
 
 - **URL:** `/api/tasks/:id`
@@ -239,6 +268,7 @@ Update an existing task.
 - **Success Response (200):** Updated task object
 
 #### Delete Task
+
 Delete a task.
 
 - **URL:** `/api/tasks/:id`
@@ -251,6 +281,7 @@ Delete a task.
 ### Projects
 
 #### List Projects
+
 Get all projects for the authenticated user.
 
 - **URL:** `/api/projects`
@@ -259,6 +290,7 @@ Get all projects for the authenticated user.
 - **Success Response (200):** Array of project objects
 
 #### Get Project
+
 Get a specific project by ID.
 
 - **URL:** `/api/projects/:id`
@@ -267,22 +299,26 @@ Get a specific project by ID.
 - **Success Response (200):** Project object
 
 #### Create Project
+
 Create a new project.
 
 - **URL:** `/api/projects`
 - **Method:** `POST`
 - **Auth Required:** Yes
 - **Request Body:**
+
   ```json
   {
     "name": "string",
     "description": "string",
     "taskIds": ["uuid"]
   }
-  ```
+  ```text
+
 - **Success Response (201):** Created project object
 
 #### Update Project
+
 Update an existing project.
 
 - **URL:** `/api/projects/:id`
@@ -292,6 +328,7 @@ Update an existing project.
 - **Success Response (200):** Updated project object
 
 #### Delete Project
+
 Delete a project.
 
 - **URL:** `/api/projects/:id`
@@ -304,6 +341,7 @@ Delete a project.
 ### Events
 
 #### List Events
+
 Get all calendar events for the authenticated user.
 
 - **URL:** `/api/events`
@@ -312,6 +350,7 @@ Get all calendar events for the authenticated user.
 - **Success Response (200):** Array of event objects
 
 #### Get Event
+
 Get a specific event by ID.
 
 - **URL:** `/api/events/:id`
@@ -320,12 +359,14 @@ Get a specific event by ID.
 - **Success Response (200):** Event object
 
 #### Create Event
+
 Create a new calendar event.
 
 - **URL:** `/api/events`
 - **Method:** `POST`
 - **Auth Required:** Yes
 - **Request Body:**
+
   ```json
   {
     "title": "string",
@@ -335,15 +376,17 @@ Create a new calendar event.
     "endAt": "ISO 8601 timestamp",
     "allDay": boolean,
     "timezone": "string",
-    "recurrenceRule": "none" | "daily" | "weekly" | "monthly" | "custom",
+ "recurrenceRule": "none" | "daily" | "weekly" | "monthly" | "custom",
     "exceptions": ["ISO 8601 timestamp"],
     "overrides": {},
     "source": "LOCAL"
   }
-  ```
+  ```text
+
 - **Success Response (201):** Created event object
 
 #### Update Event
+
 Update an existing event.
 
 - **URL:** `/api/events/:id`
@@ -353,6 +396,7 @@ Update an existing event.
 - **Success Response (200):** Updated event object
 
 #### Delete Event
+
 Delete an event.
 
 - **URL:** `/api/events/:id`
@@ -365,40 +409,45 @@ Delete an event.
 ### Settings
 
 #### Get Settings
+
 Get settings for the authenticated user.
 
 - **URL:** `/api/settings`
 - **Method:** `GET`
 - **Auth Required:** Yes
 - **Success Response (200):** Settings object
+
   ```json
   {
     "id": "uuid",
     "userId": "uuid",
     "aiName": "string",
     "enabledModules": ["command", "notebook", "planner", "calendar", "email"],
-    "aiLimitTier": 0 | 1 | 2 | 3,
+ "aiLimitTier": 0 | 1 | 2 | 3,
     "darkMode": boolean,
     "createdAt": "ISO 8601 timestamp",
     "updatedAt": "ISO 8601 timestamp"
   }
-  ```
+  ```text
 
 #### Update Settings
+
 Update settings for the authenticated user.
 
 - **URL:** `/api/settings`
 - **Method:** `PUT`
 - **Auth Required:** Yes
 - **Request Body:** Partial settings object (any fields to update)
+
   ```json
   {
     "aiName": "string",
     "enabledModules": ["string"],
-    "aiLimitTier": 0 | 1 | 2 | 3,
+ "aiLimitTier": 0 | 1 | 2 | 3,
     "darkMode": boolean
   }
-  ```
+  ```text
+
 - **Success Response (200):** Updated settings object
 
 ---
@@ -406,41 +455,49 @@ Update settings for the authenticated user.
 ### Translation
 
 #### Translate Text
+
 Translate text from one language to another.
 
 - **URL:** `/api/translate`
 - **Method:** `POST`
 - **Auth Required:** No
 - **Request Body:**
+
   ```json
   {
     "text": "string (text to translate)",
     "sourceLang": "string (source language code, e.g., 'en')",
     "targetLang": "string (target language code, e.g., 'es')"
   }
-  ```
+  ```text
+
 - **Success Response (200):**
+
   ```json
   {
     "translatedText": "string (translated text)"
   }
-  ```
+  ```text
+
 - **Error Response (400):**
+
   ```json
   {
     "status": "error",
     "message": "Missing required fields: text, sourceLang, targetLang"
   }
-  ```
+  ```text
+
 - **Error Response (500):**
+
   ```json
   {
     "status": "error",
     "message": "Translation service unavailable"
   }
-  ```
+  ```text
 
-**Supported Language Codes:**
+### Supported Language Codes
 - `en` - English
 - `es` - Spanish
 - `fr` - French

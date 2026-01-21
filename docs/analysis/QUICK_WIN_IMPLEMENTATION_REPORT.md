@@ -14,23 +14,28 @@
 ## Quick Wins Implemented
 
 ### Messaging (Data Layer)
+
 - **Message search** across content, sender name, and attachment metadata.
 - **Message editing support** with edited flag, updated timestamps, and conversation preview refresh.
 - **Conversation preview sync** when the latest message is deleted.
 
 ### History (Data Layer)
+
 - **Scheduled export job hook** with frequency tracking, next-run scheduling, and export payload generation.
 - **Pattern recognition analytics hook** for day/hour clustering and top activity types.
 
 ### Calendar (Data Layer)
+
 - **Recurring event expansion** into concrete instances for scheduling.
 - **Reminder scheduling hooks** driven by event-level offsets.
 
 ### Alerts (Data Layer)
+
 - **Notification scheduling hooks** that compute upcoming trigger windows.
 - **Sound/vibration presets** exposed via centralized helpers.
 
 ### Translator (Data Layer)
+
 - **Translation retention policies** for max entries, age windows, and favorites preservation.
 - **Phrasebook tagging** support for saved phrases, including tag search and tagging helpers.
 

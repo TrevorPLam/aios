@@ -1,8 +1,8 @@
 # Client Module (Mobile App)
 
-**Location:** `client/`  
-**Language:** TypeScript, JavaScript  
-**Framework:** React Native (Expo)  
+**Location:** `client/`
+**Language:** TypeScript, JavaScript
+**Framework:** React Native (Expo)
 **Status:** Active
 
 ## Plain English Summary
@@ -12,6 +12,7 @@ The client module is the mobile application that users interact with on their iO
 ## Purpose
 
 ### What This Module Does
+
 - Renders the mobile UI for iOS and Android platforms
 - Manages user interactions and navigation
 - Handles authentication and user sessions
@@ -21,12 +22,14 @@ The client module is the mobile application that users interact with on their iO
 - Integrates device features (camera, location, etc.)
 
 ### What This Module Does NOT Do
+
 - Does NOT store sensitive data persistently without encryption
 - Does NOT perform complex business logic (that belongs in `server/`)
 - Does NOT directly access databases (all data comes through API)
 - Does NOT trust user input (validation happens on both sides)
 
 ### Key Use Cases
+
 1. User authentication and registration
 2. Displaying real-time data from the server
 3. Offline-first data access with sync when online
@@ -37,7 +40,7 @@ The client module is the mobile application that users interact with on their iO
 
 ### Architecture Overview
 
-```
+```text
 client/
 ├── src/
 │   ├── components/         # Reusable UI components
@@ -54,14 +57,15 @@ client/
 ├── App.tsx               # Root component
 ├── package.json
 └── tsconfig.json
-```
+```text
 
 ### Key Components
 
 #### Component 1: API Service
-**Location:** `client/src/services/api.ts`  
-**Purpose:** Centralized HTTP client for backend communication  
-**Interface:**
+
+**Location:** `client/src/services/api.ts`
+**Purpose:** Centralized HTTP client for backend communication
+### Interface
 ```typescript
 export class ApiService {
   get<T>(endpoint: string): Promise<T>;
@@ -69,12 +73,13 @@ export class ApiService {
   put<T>(endpoint: string, data: unknown): Promise<T>;
   delete<T>(endpoint: string): Promise<T>;
 }
-```
+```text
 
 #### Component 2: Authentication Context
-**Location:** `client/src/store/AuthContext.tsx`  
-**Purpose:** Manages user authentication state across the app  
-**Interface:**
+
+**Location:** `client/src/store/AuthContext.tsx`
+**Purpose:** Manages user authentication state across the app
+### Interface (2)
 ```typescript
 export interface AuthContextType {
   user: User | null;
@@ -83,12 +88,13 @@ export interface AuthContextType {
   logout: () => Promise<void>;
   register: (userData: UserData) => Promise<void>;
 }
-```
+```text
 
 #### Component 3: Navigation
-**Location:** `client/src/navigation/RootNavigator.tsx`  
-**Purpose:** Defines app navigation structure and routing  
-**Interface:**
+
+**Location:** `client/src/navigation/RootNavigator.tsx`
+**Purpose:** Defines app navigation structure and routing
+### Interface (3)
 ```typescript
 // Stack-based navigation with type-safe routes
 export type RootStackParamList = {
@@ -97,17 +103,17 @@ export type RootStackParamList = {
   Settings: undefined;
   // ... more routes
 };
-```
+```text
 
 ### Data Flow
 
-```
+```text
 [User Action] → [Component] → [Hook/Service] → [API Client] → [Server]
                      ↓                                              ↓
                 [Local State]                                 [Response]
                      ↓                                              ↓
                 [Re-render] ←──────────────────────────────────────┘
-```
+```text
 
 1. User interacts with a component
 2. Component calls a hook or service
@@ -144,7 +150,7 @@ try {
   }
   throw error;
 }
-```
+```text
 
 ## APIs and Interfaces
 
@@ -153,20 +159,22 @@ try {
 The client module doesn't expose a traditional API, but it does export reusable components and utilities:
 
 #### Exported Components
+
 ```typescript
 // Reusable UI components
 export { Button } from './components/Button';
 export { Card } from './components/Card';
 export { Input } from './components/Input';
-```
+```text
 
 #### Exported Hooks
+
 ```typescript
 // Custom hooks for common patterns
 export { useAuth } from './hooks/useAuth';
 export { useApi } from './hooks/useApi';
 export { useDebounce } from './hooks/useDebounce';
-```
+```text
 
 ### Internal APIs
 
@@ -179,7 +187,7 @@ POST   /api/auth/login         // Login
 POST   /api/auth/register      // Register
 GET    /api/data               // Fetch data
 POST   /api/data               // Create data
-```
+```text
 
 See [API Documentation](../apis/README.md) for full REST API specification.
 
@@ -188,7 +196,7 @@ See [API Documentation](../apis/README.md) for full REST API specification.
 The app responds to system and custom events:
 
 | Event Name | Payload | When Fired |
-|------------|---------|------------|
+| ------------ | --------- | ------------ |
 | `app:backgrounded` | `{ timestamp }` | App goes to background |
 | `auth:logout` | `{ reason }` | User logs out |
 | `sync:completed` | `{ recordCount }` | Offline sync completes |
@@ -199,7 +207,7 @@ The app responds to system and custom events:
 ### External Dependencies
 
 | Package | Version | Purpose |
-|---------|---------|---------|
+| --------- | --------- | --------- |
 | `expo` | `~50.0.0` | Expo framework and tooling |
 | `react-native` | `0.73.0` | React Native framework |
 | `@react-navigation/native` | `^6.1.0` | Navigation library |
@@ -249,20 +257,20 @@ npm run type-check
 
 # Lint code
 npm run lint
-```
+```text
 
 ### Configuration
 
-**Environment Variables:**
+#### Environment Variables
 ```bash
 # Create .env file in client/ directory
 API_URL=https://api.example.com      # Backend API URL
 API_TIMEOUT=30000                     # Request timeout (ms)
 ENABLE_ANALYTICS=true                 # Analytics flag
 SENTRY_DSN=https://...               # Error tracking
-```
+```text
 
-**Configuration Files:**
+### Configuration Files
 - `app.json` - Expo app configuration (name, version, icons, etc.)
 - `eas.json` - Expo Application Services build configuration
 - `.env.example` - Example environment variables
@@ -281,7 +289,7 @@ eas submit --platform ios
 
 # Submit to Google Play
 eas submit --platform android
-```
+```text
 
 ## Common Tasks
 
@@ -289,7 +297,7 @@ eas submit --platform android
 
 **Goal:** Create a new screen/page in the app
 
-**Steps:**
+### Steps
 ```bash
 # 1. Create screen component
 touch client/src/screens/NewScreen.tsx
@@ -302,13 +310,13 @@ touch client/src/screens/NewScreen.tsx
 
 # 4. Test navigation
 npm run ios  # or npm run android
-```
+```text
 
 ### Task 2: Add a New API Endpoint Call
 
 **Goal:** Connect to a new backend endpoint
 
-**Steps:**
+### Steps (2)
 ```typescript
 // 1. Define types in shared/types (if new types needed)
 // shared/types/api.ts
@@ -333,13 +341,13 @@ export const useNewData = () => {
 // 4. Use in component
 // client/src/screens/SomeScreen.tsx
 const { data, isLoading, error } = useNewData();
-```
+```text
 
 ### Task 3: Debug Network Issues
 
 **Goal:** Diagnose API communication problems
 
-**Steps:**
+### Steps (3)
 ```bash
 # 1. Check API URL configuration
 cat client/.env
@@ -352,13 +360,13 @@ npm install -g react-native-debugger
 
 # 4. Check server is running
 curl http://localhost:3000/health
-```
+```text
 
 ## Testing
 
 ### Test Structure
 
-```
+```text
 client/tests/
 ├── unit/                    # Component and utility tests
 │   ├── components/
@@ -366,7 +374,7 @@ client/tests/
 │   └── utils/
 ├── integration/            # Multi-component tests
 └── e2e/                    # End-to-end tests (Detox)
-```
+```text
 
 ### Running Tests
 
@@ -382,7 +390,7 @@ npm run test:coverage
 
 # Run E2E tests
 npm run test:e2e
-```
+```text
 
 ### Test Coverage Goals
 
@@ -393,11 +401,13 @@ npm run test:e2e
 ## Performance Considerations
 
 ### Performance Characteristics
+
 - **App Launch Time:** Target < 3 seconds to interactive
 - **Screen Transition:** Target 60 FPS (16.67ms per frame)
 - **API Response Rendering:** Target < 100ms from response to render
 
 ### Optimization Strategies
+
 1. Use `React.memo` for expensive components
 2. Lazy load screens with `React.lazy` and `Suspense`
 3. Implement virtual lists for long data lists (FlatList)
@@ -405,6 +415,7 @@ npm run test:e2e
 5. Cache API responses with React Query
 
 ### Known Performance Issues
+
 - **Large Lists:** Lists with > 1000 items may scroll slowly
   - Mitigation: Use `FlatList` with `windowSize` optimization
 - **Image Loading:** Large images can cause memory pressure
@@ -422,10 +433,11 @@ npm run test:e2e
 ## Failure Modes
 
 ### Failure Mode 1: Network Connectivity Loss
+
 - **Symptom:** API calls fail with network errors, UI shows loading states indefinitely
 - **Impact:** Users cannot access server data, operations fail
 - **Detection:** Network error exceptions, timeout errors
-- **Mitigation:** 
+- **Mitigation:**
   - Implement offline detection using NetInfo
   - Cache data locally with React Query
   - Show clear offline indicator in UI
@@ -433,6 +445,7 @@ npm run test:e2e
 - **Monitoring:** Track network error rate in analytics
 
 ### Failure Mode 2: Authentication Token Expiration
+
 - **Symptom:** API calls return 401 Unauthorized errors
 - **Impact:** User is unexpectedly logged out, loses context
 - **Detection:** 401 status codes from API
@@ -444,6 +457,7 @@ npm run test:e2e
 - **Monitoring:** Track authentication errors
 
 ### Failure Mode 3: App Crashes
+
 - **Symptom:** App terminates unexpectedly, returns to home screen
 - **Impact:** Poor user experience, data loss, negative reviews
 - **Detection:** Error boundary catches, crash reporting service
@@ -455,6 +469,7 @@ npm run test:e2e
 - **Monitoring:** Crash rate, error types in Sentry
 
 ### Failure Mode 4: Version Incompatibility
+
 - **Symptom:** App cannot communicate with server due to API changes
 - **Impact:** App becomes unusable until updated
 - **Detection:** API version mismatch errors
@@ -466,6 +481,7 @@ npm run test:e2e
 - **Monitoring:** Track app versions in use
 
 ### Failure Mode 5: Slow API Responses
+
 - **Symptom:** UI shows loading states for extended periods
 - **Impact:** Poor user experience, perception of broken app
 - **Detection:** High API response times in monitoring
@@ -479,6 +495,7 @@ npm run test:e2e
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Clean install
 cd client
@@ -499,15 +516,17 @@ npm run build
 
 # 6. Test on real device
 npm run ios  # or npm run android
-```
+```text
 
 ### Automated Checks
+
 - [ ] All tests pass: `npm test`
 - [ ] Type checking passes: `npm run type-check`
 - [ ] Linting passes: `npm run lint`
 - [ ] App builds successfully: `expo build:ios` / `expo build:android`
 
 ### Success Criteria
+
 1. App launches without errors on iOS and Android
 2. All navigation flows work correctly
 3. API communication works on both platforms
@@ -522,14 +541,15 @@ npm start
 
 # In another terminal, run smoke tests
 npm run test:smoke
-```
+```text
 
 ## Troubleshooting
 
 ### Problem 1: "Unable to resolve module" Error
-**Symptoms:** App fails to start, Metro bundler shows module resolution errors  
-**Cause:** Missing dependency or incorrect import path  
-**Solution:**
+
+**Symptoms:** App fails to start, Metro bundler shows module resolution errors
+**Cause:** Missing dependency or incorrect import path
+### Solution
 ```bash
 # Clear Metro cache
 npm start -- --reset-cache
@@ -539,12 +559,13 @@ rm -rf node_modules
 npm install
 
 # Check import paths are correct
-```
+```text
 
 ### Problem 2: Build Fails on iOS
-**Symptoms:** `eas build` or `pod install` fails with errors  
-**Cause:** CocoaPods dependencies out of sync  
-**Solution:**
+
+**Symptoms:** `eas build` or `pod install` fails with errors
+**Cause:** CocoaPods dependencies out of sync
+### Solution (2)
 ```bash
 # Clean iOS build
 cd client/ios
@@ -554,12 +575,13 @@ cd ../..
 
 # Or use Expo to rebuild
 eas build --platform ios --clear-cache
-```
+```text
 
 ### Problem 3: Slow Development Server
-**Symptoms:** Metro bundler takes minutes to refresh changes  
-**Cause:** Large node_modules, many files being watched  
-**Solution:**
+
+**Symptoms:** Metro bundler takes minutes to refresh changes
+**Cause:** Large node_modules, many files being watched
+### Solution (3)
 ```bash
 # Add to .watchmanconfig to ignore files
 {
@@ -568,7 +590,7 @@ eas build --platform ios --clear-cache
 
 # Restart watchman
 watchman watch-del-all
-```
+```text
 
 ## Migration and Upgrade Guides
 
@@ -603,11 +625,13 @@ See [Security Documentation](../security/threat_model.md) for full threat model.
 ## Maintenance and Support
 
 ### Module Owner
+
 - **Team:** Mobile Engineering
 - **Primary Contact:** Mobile Tech Lead
 - **Slack Channel:** #mobile-dev
 
 ### SLA Commitments
+
 - **Critical Bugs:** Response within 4 hours
 - **Feature Requests:** Reviewed within 1 week
 - **Dependency Updates:** Monthly security updates

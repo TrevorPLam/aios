@@ -1,17 +1,20 @@
 # AIOS UX Flows Documentation
 
 ## Purpose
+
 This document describes the user experience flows for the AIOS Super App UI/UX system. It translates the technical architecture into plain English user journeys, explaining how users interact with the intelligent entry point, attention management, and progressive onboarding systems.
 
 ---
 
 ## 1. First-Time User Experience (Progressive Onboarding)
 
-### Plain English:
+### Plain English
+
 New users start with just 3 modules instead of being overwhelmed by 38. As they use the app, more modules automatically unlock based on their behavior. This makes the app feel simple at first but infinitely capable over time.
 
-### Technical Flow:
-```
+### Technical Flow
+
+```text
 User Opens App (Stage: not_started)
   ↓
 Welcome Screen
@@ -53,9 +56,10 @@ Completion Tip: "You've unlocked 10 modules! Ready to see everything?"
   ↓
 If "Continue Gradually": Keep auto-unlocking
 If "Unlock All": Onboarding State: completed
-```
+```text
 
-### Key Rules:
+### Key Rules
+
 - **Start Small**: Always 3 modules initially (plus Command Center)
 - **Usage-Driven**: Unlock every 3 module uses
 - **Daily Limit**: Max 2 auto-unlocks per day (prevents overwhelm)
@@ -63,25 +67,28 @@ If "Unlock All": Onboarding State: completed
 - **User Control**: Can always manually unlock or skip entirely
 - **Welcome Tips**: Each unlock shows a contextual tip (expires in 24 hours)
 
-### Skip Flow:
-```
+### Skip Flow
+
+```text
 User Sees "Skip Onboarding" Button
   ↓
 Confirmation: "This will unlock all 38 modules. Continue?"
   ↓
 [Yes] → All modules unlocked, Onboarding State: completed
 [No] → Return to guided onboarding
-```
+```text
 
 ---
 
 ## 2. Attention Management (Notification Intelligence)
 
-### Plain English:
+### Plain English (2)
+
 Instead of showing 38 notification badges (one per module), the app intelligently groups notifications into three levels: urgent (needs action today), attention (needs action soon), and FYI (nice to know). Similar notifications bundle together to reduce clutter.
 
-### Technical Flow:
-```
+### Technical Flow (2)
+
+```text
 Task Created: "Submit report by 5pm" (due in 2 hours)
   ↓
 Attention Manager: Classify Priority
@@ -111,10 +118,11 @@ User Gets Notification:
   Title: "New Task"
   Summary: "Submit report by 5pm"
   [View Task]
-```
+```text
 
-### Bundling Flow:
-```
+### Bundling Flow
+
+```text
 5 Messages Received (within 10 minutes):
   1. "Hey!" from Alice (3:00 PM)
   2. "Are you free?" from Alice (3:01 PM)
@@ -140,10 +148,11 @@ User Sees ONE Notification:
   Badge: 🟡 (attention)
   Title: "5 Messages updates"
   [View All] → Opens bundled view
-```
+```text
 
-### Focus Mode Flow:
-```
+### Focus Mode Flow
+
+```text
 User Activates Focus Mode
   ↓
 Focus Mode Settings:
@@ -159,10 +168,11 @@ New Attention Items Filtered:
   ↓
 User Sees Only Critical Notifications
 Deep Work Protected
-```
+```text
 
-### Priority Classification Rules:
-```
+### Priority Classification Rules
+
+```text
 URGENT (requires action today):
   - Tasks due today or overdue
   - Events within 1 hour
@@ -180,17 +190,19 @@ FYI (nice to know):
   - Non-urgent notifications
   - Background sync events
   - Informational tips
-```
+```text
 
 ---
 
 ## 3. Command Center (Intelligent Entry Point)
 
-### Plain English:
+### Plain English (3)
+
 When you open the app, instead of a wall of 38 modules, you see 3-5 AI-recommended actions based on what you need right now. It learns your patterns and surfaces the right tool at the right time.
 
-### Technical Flow (Placeholder - Not Yet Implemented):
-```
+### Technical Flow (Placeholder - Not Yet Implemented)
+
+```text
 User Opens App
   ↓
 Command Center Loads
@@ -205,33 +217,35 @@ Recommendation Engine Analyzes:
 Generate Recommendations:
   1. "Meeting in 45 min - Review notes?" (HIGH confidence)
      → Opens Notebook with meeting note template
-  
+
   2. "3 urgent tasks today" (HIGH confidence)
      → Opens Planner filtered to urgent
-  
+
   3. "Schedule focus time for tasks" (MEDIUM confidence)
      → Opens Calendar to block time
-  
+
   4. Quick Actions Bar:
      [📝 Planner] [📅 Calendar] [📧 Email] [💬 Messages] [📋 Lists]
-  
+
   5. [All Modules >] (tertiary option)
   ↓
 User Taps Recommendation #1
   → Navigates to Notebook
   → Creates meeting note
   → Records usage for future recommendations
-```
+```text
 
 ---
 
 ## 4. Sidebar Navigation (Persistent Access)
 
-### Plain English:
+### Plain English (4)
+
 A collapsible sidebar shows your most-used modules. Swipe from the left edge (or tap button) to access any module without losing your current screen.
 
-### Technical Flow:
-```
+### Technical Flow (3)
+
+```text
 User on Calendar Screen
   ↓
 Swipes from Left Edge (or taps Menu button)
@@ -261,17 +275,19 @@ User Taps "Planner"
 Sidebar Collapses (animated)
 Navigation: Calendar → Planner
 Context Preserved: Can return via breadcrumb
-```
+```text
 
 ---
 
 ## 5. Omnisearch (Universal Search)
 
-### Plain English:
+### Plain English (5)
+
 One search box finds anything across all modules. Type "doctor" and see appointments, contacts, notes, expenses - all grouped by type and ranked by relevance.
 
-### Technical Flow:
-```
+### Technical Flow (4)
+
+```text
 User Opens Search (⌘K or tap search icon)
   ↓
 Types: "doctor"
@@ -308,10 +324,11 @@ User Taps "Dr. Smith Appointment"
 Navigation: Search → Calendar → Event Detail
 Breadcrumb: [Search] > [Calendar] > [Event]
 [← Back to Search]
-```
+```text
 
-### Relevance Scoring:
-```
+### Relevance Scoring
+
+```text
 Score = (textMatch * 0.7) + (recencyBoost * 0.3)
 
 textMatch:
@@ -326,17 +343,19 @@ recencyBoost:
   - < 1 month old: 0.6
   - < 1 year old: 0.4
   - > 1 year old: 0.2
-```
+```text
 
 ---
 
 ## 6. Context Zones (Adaptive Interface)
 
-### Plain English:
+### Plain English (6)
+
 The app automatically adjusts what you see based on time, location, and calendar. During work hours, work tools appear. In the evening, personal and entertainment tools appear.
 
-### Technical Flow (From Phase 1 - Already Implemented):
-```
+### Technical Flow (From Phase 1 - Already Implemented)
+
+```text
 Monday 9:00 AM
   ↓
 Context Engine Evaluates Rules:
@@ -366,17 +385,19 @@ Module Registry Filters:
   Hidden: [Work Email, Professional Services]
   ↓
 User Sees: Personal-focused interface
-```
+```text
 
 ---
 
 ## 7. Module Handoff (State Preservation)
 
-### Plain English:
+### Plain English (7)
+
 When you jump from one module to another (like Calendar → Maps), the app shows where you are and lets you return with one tap. Your scroll position and state are preserved in both places.
 
-### Technical Flow (Placeholder - Not Yet Implemented):
-```
+### Technical Flow (Placeholder - Not Yet Implemented) (2)
+
+```text
 User in Calendar: Viewing "Dinner with Sarah at 7pm"
   ↓
 Taps: "Get Directions"
@@ -411,17 +432,19 @@ Restore Calendar State:
   ↓
 User Returns to Exact Same State
 No Context Loss
-```
+```text
 
 ---
 
 ## 8. Quick Capture Overlay
 
-### Plain English:
+### Plain English (8)
+
 From any screen, long-press to quickly capture a note, task, expense, or photo without losing your place. When done, you return to exactly where you were.
 
-### Technical Flow (Placeholder - Not Yet Implemented):
-```
+### Technical Flow (Placeholder - Not Yet Implemented) (3)
+
+```text
 User in Messages: Scrolled down, reading conversation
   ↓
 Long Press Anywhere on Screen
@@ -460,33 +483,38 @@ User Returns to Messages
 Scroll Position: Preserved
 Conversation: Still there
 No Context Loss
-```
+```text
 
 ---
 
 ## Design Principles Summary
 
 ### 1. Zero Overwhelm
+
 - Start small (3 modules)
 - Grow gradually (auto-unlock)
 - Hide what's not needed (context zones)
 
 ### 2. Intelligent Surface
+
 - AI recommends (Command Center)
 - Priority filters (Attention Management)
 - Context adapts (Work/Personal modes)
 
 ### 3. Always Accessible
+
 - Sidebar (swipe from edge)
 - Search (⌘K anywhere)
 - Quick Capture (long press)
 
 ### 4. State Preservation
+
 - Module Handoff (breadcrumbs)
 - Scroll positions saved
 - Context never lost
 
 ### 5. User Control
+
 - Manual overrides everywhere
 - Skip onboarding option
 - Focus mode preferences
@@ -496,23 +524,28 @@ No Context Loss
 
 ## Success Metrics
 
-### Onboarding Success:
+### Onboarding Success
+
 - **Target**: 80% of users unlock ≥10 modules within 30 days
 - **Measure**: `onboardingManager.getStats().unlockedCount`
 
-### Attention Management Success:
+### Attention Management Success
+
 - **Target**: <15% of users feel overwhelmed by notifications
 - **Measure**: User surveys + dismiss rates
 
-### Context Switch Friction:
+### Context Switch Friction
+
 - **Target**: <1 second perceived module transitions
 - **Measure**: Performance monitoring
 
-### Discovery Rate:
+### Discovery Rate
+
 - **Target**: Users discover 75% of relevant features organically
 - **Measure**: Module unlock reasons (auto vs manual)
 
-### Cognitive Load Proxy:
+### Cognitive Load Proxy
+
 - **Target**: Search frequency decreases over time (users learn)
 - **Measure**: Search usage patterns
 
@@ -520,19 +553,22 @@ No Context Loss
 
 ## Future Enhancements
 
-### Short Term (Phase 3):
+### Short Term (Phase 3)
+
 1. Implement Mini-Mode for modules
 2. Add Module Handoff with breadcrumbs
 3. Create Quick Capture overlay
 4. Build Attention Center UI screen
 
-### Medium Term (Phase 4):
+### Medium Term (Phase 4)
+
 1. Add ML-based recommendation ranking
 2. Implement predictive prefetch
 3. Create usage pattern learning
 4. Add smart notification bundling improvements
 
-### Long Term:
+### Long Term
+
 1. Voice-based quick capture
 2. Cross-device state sync
 3. Collaborative module sharing
@@ -540,13 +576,14 @@ No Context Loss
 
 ---
 
-**Document Version:** 1.1  
-**Last Updated:** January 16, 2026  
+**Document Version:** 1.1
+**Last Updated:** January 16, 2026
 **Status:** Phase 2 Implementation COMPLETE - Onboarding, Attention Management, and Recommendation Engine Implemented
 
 ## Implementation Status
 
 ### ✅ Implemented (Phase 3)
+
 - **Module Handoff System** (`client/lib/moduleHandoff.ts`)
   - State-preserving navigation between modules
   - iOS-specific AsyncStorage persistence
@@ -570,6 +607,7 @@ No Context Loss
   - Native haptic feedback
 
 ### ✅ Implemented (Phase 2)
+
 - **Progressive Onboarding System** (`client/lib/onboardingManager.ts`)
   - 3-module initial selection with auto-unlock
   - Usage-based module unlocking (every 3 uses)
@@ -581,7 +619,7 @@ No Context Loss
   - Priority classification (urgent/attention/fyi)
   - Smart bundling of related notifications
   - Focus mode with whitelist
-  - AsyncStorage persistence  
+  - AsyncStorage persistence
   - 25/25 tests passing
 
 - **Recommendation Engine** (`client/lib/recommendationEngine.ts`)
@@ -592,16 +630,18 @@ No Context Loss
   - 17/17 tests passing
 
 ### 🚧 Partially Implemented (Phase 1)
+
 - **Context Zones** - Framework exists, needs UI integration
 - **Omnisearch** - Engine complete, needs UI screens
 - **Module Registry** - Core system complete, needs usage tracking UI
 - **Event Bus** - Complete and tested (19/19 tests)
 
 ### ⏳ Planned (Phase 3 Remaining)
+
 - **Status-Aware UI** - Urgency-based visual system
 - **Performance Optimization** - Lazy loading and prefetch
 - **Command Center UI** - Recommendation display screen
-- **Attention Center UI** - Notification management screen  
+- **Attention Center UI** - Notification management screen
 - **Onboarding Screens** - Module selection and welcome flow
 - **Predictive Prefetch** - Background module loading
 
@@ -611,11 +651,11 @@ No Context Loss
 
 ### Flow 1: Calendar → Maps (Get Directions)
 
-**Plain English:**  
+#### Plain English
 User sees "Dinner at 7pm at Downtown Restaurant" in Calendar. Taps "Directions" button. Maps opens with destination pre-filled. When done, taps back arrow to return to Calendar with original scroll position preserved.
 
-**Technical Flow:**
-```
+### Technical Flow (5)
+```text
 User in: CalendarScreen
   Current State: { scrollY: 500, date: '2026-01-16', view: 'week' }
   ↓
@@ -644,15 +684,15 @@ CalendarScreen restores:
   - Date selection to '2026-01-16'
   - View mode to 'week'
   - Optional: Shows toast "Directions saved for event"
-```
+```text
 
 ### Flow 2: Messages → Calendar → Food (Dinner Plans)
 
-**Plain English:**  
+#### Plain English (2)
 Friend texts "Dinner at 7?" User taps inline calendar icon, picks time, then taps food icon, picks restaurant. All without leaving Messages. Returns to chat with summary card.
 
-**Technical Flow:**
-```
+### Technical Flow (6)
+```text
 User in: MessagesScreen (Conversation with Sarah)
   ↓
 User taps: Calendar icon in message compose bar
@@ -686,15 +726,15 @@ MessagesScreen restores:
   - Scroll position preserved
   - Conversation in view
   - Shows summary card: "Dinner at Downtown Restaurant, 7pm"
-```
+```text
 
 ### Flow 3: Deep Chain (Calendar → Maps → Food → Wallet)
 
-**Plain English:**  
+#### Plain English (3)
 User creates event → Gets directions → Books restaurant → Sets up bill split. Each step remembers previous context.
 
-**Technical Flow:**
-```
+### Technical Flow (7)
+```text
 Chain: Calendar → Maps → Food → Wallet
 
 Step 1: Calendar → Maps
@@ -713,20 +753,20 @@ Return Flow:
   Wallet → Food: Restores food={ restaurant: 'X' }
   Food → Maps: Restores maps={ zoom: 15, route: 'A' }
   Maps → Calendar: Restores calendar={ scrollY: 500 }
-```
+```text
 
-**Depth Limit Enforcement:**
+### Depth Limit Enforcement
 - Max 5 levels: Calendar → Maps → Food → Wallet → Messages
 - 6th handoff rejected with warning
 - User must complete or cancel current chain first
 
 ### Flow 4: Handoff Cancellation (Error Recovery)
 
-**Plain English:**  
+#### Plain English (4)
 User deep in a handoff chain (Calendar → Maps → Food) encounters error. Taps "Cancel All" to return to Calendar instantly.
 
-**Technical Flow:**
-```
+### Technical Flow (8)
+```text
 Current Chain: Calendar → Maps → Food
 User in: FoodScreen (3 levels deep)
   ↓
@@ -742,7 +782,7 @@ Handoff Manager: cancelHandoff()
 CalendarScreen restores:
   - Exact state from before handoff started
   - No data from Maps or Food
-```
+```text
 
 ### iOS-Specific UX Details
 
@@ -782,6 +822,7 @@ CalendarScreen restores:
 ## Testing Coverage
 
 All Phase 2 & 3 components have comprehensive unit tests:
+
 - `client/lib/__tests__/moduleHandoff.test.ts` - 22 tests ✅
 - `client/lib/__tests__/onboardingManager.test.ts` - 29 tests ✅
 - `client/lib/__tests__/attentionManager.test.ts` - 25 tests ✅
@@ -789,4 +830,3 @@ All Phase 2 & 3 components have comprehensive unit tests:
 - `client/lib/__tests__/eventBus.test.ts` - 19 tests ✅
 
 **Total Phase 1, 2 & 3:** 112/112 tests passing (100% pass rate)
-

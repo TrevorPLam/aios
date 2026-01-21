@@ -1,6 +1,7 @@
 # Home Management — Module Scaffolding Stub
 
 ## Source Snapshot (from SUPER_APP_MODULE_EXPANSION.md)
+
 - **Purpose:** Organize home tasks, assets, warranties, and providers.
 - **MVP Feature Set:** Maintenance schedule + reminders; home inventory with photos; service provider directory; warranty tracker.
 - **Data Model Draft:** `HomeAsset`, `MaintenanceTask`, `ServiceProvider`, `Warranty`.
@@ -10,9 +11,11 @@
 - **Open Questions:** Smart home device support; receipt import flow.
 
 ## Scope & Intent
+
 This stub defines the Home Management module’s foundations and integration points, following patterns used in mature modules (lists, planner, calendar) without any UI/UX implementation.
 
 ## Core Functional Areas (Planned)
+
 1. **Home Inventory**
    - Asset catalog with photos and metadata.
    - Warranty and purchase details.
@@ -26,12 +29,14 @@ This stub defines the Home Management module’s foundations and integration poi
    - Expiration alerts and document references.
 
 ## Data & Domain Modeling Notes
+
 - **HomeAsset:** Name, category, serial, photo refs.
 - **MaintenanceTask:** Asset ref, schedule, status, notes.
 - **ServiceProvider:** Contact info, service type, ratings.
 - **Warranty:** Asset ref, coverage dates, document link.
 
 ## Integration Touchpoints
+
 - **Calendar:** Maintenance schedule events.
 - **Contacts:** Provider details.
 - **Photos:** Inventory imagery.
@@ -39,37 +44,46 @@ This stub defines the Home Management module’s foundations and integration poi
 - **Alerts:** Warranty and maintenance reminders.
 
 ## External Service Considerations
+
 - Smart home integrations (future) via device adapter layer.
 - Receipt and invoice importers (email/scan).
 
 ## Analytics & Telemetry (Planned)
+
 - Maintenance completion rate.
 - Asset replacement cycle metrics.
 - Warranty expiry compliance.
 
 ## Security & Privacy Baselines
+
 - Secure storage for asset metadata and warranty docs.
 - Access controls for household sharing (future).
 
 ## Iterative Reasoning (No Implementation Yet)
+
 ### Iteration 1 — Minimal Viable Scaffold
+
 - Define inventory, maintenance, provider, warranty models.
 - Establish reminders pipeline via Alerts.
 
 ### Iteration 2 — Cross-Module Cohesion
+
 - Link maintenance events to Calendar.
 - Sync provider entries with Contacts.
 
 ### Iteration 3 — External Integration Readiness
+
 - Add smart-home adapter interface placeholders.
 - Define receipt import and metadata parsing stubs.
 
 ## Proposed File Scaffolding (No Code Yet)
+
 - `shared/models/home/` — home domain types
 - `server/services/home/` — provider/import adapters
 - `client/modules/home/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/HOME_MANAGEMENT.md` — this plan
 
 ## Open Questions to Resolve
+
 - Smart home device scope and providers.
 - Receipt ingestion sources and OCR needs.

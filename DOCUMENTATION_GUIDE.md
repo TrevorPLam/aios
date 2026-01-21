@@ -1,6 +1,6 @@
 # AIOS Documentation Navigation Guide
 
-**Last Updated:** January 16, 2026 (Post-Consolidation)  
+**Last Updated:** January 16, 2026 (Post-Consolidation)
 **Version:** 3.0 - Reorganized Structure
 
 This guide helps you find the right documentation in our newly organized structure.
@@ -10,14 +10,18 @@ This guide helps you find the right documentation in our newly organized structu
 ## 🎯 Quick Start - Which Document Do I Need?
 
 ### For Quick Reference
+
 → **[F&F.md](./F&F.md)** - Start here!
+
 - Module status at a glance
 - Feature lists (what's implemented vs. planned)
 - Development priorities
 - Quick reference tables
 
 ### For Technical Deep-Dive
+
 → **[MODULE_DETAILS.md](./MODULE_DETAILS.md)**
+
 - Database layer implementation
 - Test coverage metrics
 - Quality assessments
@@ -25,14 +29,18 @@ This guide helps you find the right documentation in our newly organized structu
 - Recent enhancements
 
 ### For Market Positioning
+
 → **[docs/analysis/COMPETITIVE_ANALYSIS.md](./docs/analysis/COMPETITIVE_ANALYSIS.md)**
+
 - Feature comparison matrices
 - Unique advantages
 - Target market analysis
 - Strategic recommendations
 
 ### For Development Setup
+
 → **[README.md](./README.md)**
+
 - Installation instructions
 - Running the app
 - Tech stack
@@ -42,12 +50,14 @@ This guide helps you find the right documentation in our newly organized structu
 
 ## 📊 Documentation Consolidation Results
 
-**Before Consolidation (January 2026):**
+### Before Consolidation (January 2026)
+
 - Total files: 79 markdown files
 - Root directory: 72 files (chaos!)
 - Organized: 3 files in /docs
 
-**After Consolidation (January 16, 2026):**
+### After Consolidation (January 16, 2026)
+
 - Total active files: ~25 files
 - Root directory: 10 files (clean!)
 - Organized: 15+ files properly structured in /docs
@@ -60,7 +70,8 @@ This guide helps you find the right documentation in our newly organized structu
 ## 🗂️ New Documentation Structure
 
 ### F&F.md - Features & Functionality (Core Reference)
-```
+
+```text
 ├── Quick Reference (module status table)
 ├── Module Status Overview (14 modules)
 │   ├── Purpose
@@ -70,10 +81,11 @@ This guide helps you find the right documentation in our newly organized structu
 ├── Development Priorities
 ├── Competitive Benchmarking (summary)
 └── Key Differentiators
-```
+```text
 
 ### MODULE_DETAILS.md - Technical Implementation
-```
+
+```text
 ├── Module Implementation Details (9 modules)
 │   ├── Database Layer
 │   ├── Key Features
@@ -81,10 +93,11 @@ This guide helps you find the right documentation in our newly organized structu
 │   ├── Quality Metrics
 │   └── Recent Enhancements
 └── Quality Standards
-```
+```text
 
 ### /docs/analysis/COMPETITIVE_ANALYSIS.md - Market Positioning
-```
+
+```text
 ├── Command Center vs. Notion AI, Motion, Superhuman
 ├── Notebook vs. Notion, Obsidian, Bear, Evernote
 ├── Lists vs. Todoist, Microsoft To Do, Any.do
@@ -93,10 +106,11 @@ This guide helps you find the right documentation in our newly organized structu
 ├── Integrations vs. Zapier, IFTTT, Make
 ├── Overall Market Position
 └── Development Priorities Based on Competitive Gaps
-```
+```text
 
 ### /docs/ Directory Structure
-```
+
+```text
 docs/
 ├── technical/              # Technical implementation guides
 │   ├── API_DOCUMENTATION.md
@@ -125,31 +139,38 @@ docs/
     ├── analysis/              (12 files)
     ├── security/              (9 files)
     └── project-management/    (5 files)
-```
+```text
 
 ---
 
 ## 🎓 Use Cases
 
 ### "I want to know what features are available"
+
 → [F&F.md](./F&F.md) - See module completion status and feature lists
 
 ### "I want to understand how a module works"
+
 → [MODULE_DETAILS.md](./MODULE_DETAILS.md) - See database methods and architecture
 
 ### "I want to know how we compare to competitors"
+
 → [docs/analysis/COMPETITIVE_ANALYSIS.md](./docs/analysis/COMPETITIVE_ANALYSIS.md) - Feature matrices
 
 ### "I want to contribute to development"
+
 → [F&F.md](./F&F.md) (Development Priorities) + [README.md](./README.md)
 
 ### "I want technical documentation"
+
 → [docs/technical/](./docs/technical/) - All technical guides
 
 ### "I want security information"
+
 → [SECURITY.md](./SECURITY.md) (reporting) or [docs/security/SECURITY.md](./docs/security/SECURITY.md) (detailed)
 
 ### "I want to see historical analysis"
+
 → [docs/archive/](./docs/archive/) - Organized by category
 
 ---
@@ -157,6 +178,7 @@ docs/
 ## 📈 Benefits of New Structure
 
 ### Before (Scattered Documentation)
+
 - ❌ 72 files in root - overwhelming to navigate
 - ❌ Mixed concerns (reference + technical + competitive + historical)
 - ❌ Hard to find specific information
@@ -164,6 +186,7 @@ docs/
 - ❌ Maintenance nightmare (update 6+ files)
 
 ### After (Organized Documentation)
+
 - ✅ 10 files in root - clean and focused
 - ✅ Separated concerns with clear categories
 - ✅ Quick navigation with logical structure
@@ -177,40 +200,40 @@ docs/
 
 ### Single Source of Truth
 
-**Module Status & Features:**
+#### Module Status & Features
 1. **F&F.md** (PRIMARY) - Quick reference, status table
 2. **MODULE_DETAILS.md** (SECONDARY) - Technical details
 3. **README.md** (TERTIARY) - High-level overview only
 
-**Technical Documentation:**
+### Technical Documentation
 1. **/docs/technical/** (PRIMARY) - Detailed guides
 2. **README.md** (SECONDARY) - Quick start only
 
-**Security:**
+### Security
 1. **/docs/security/SECURITY.md** (PRIMARY) - Detailed status
 2. **Root SECURITY.md** (SECONDARY) - Reporting process
 
-**Planning:**
+### Planning
 1. **/docs/planning/MISSING_FEATURES.md** (PRIMARY) - What's missing
 2. **/docs/technical/IMPLEMENTATION_ROADMAP.md** (SECONDARY) - How to implement
 
 ### When to Update Documentation
 
-**For New Features:**
+#### For New Features
 - [ ] Update F&F.md (module status & feature list)
 - [ ] Update MODULE_DETAILS.md (if database/technical changes)
 - [ ] Update README.md (if affects quick start)
 - [ ] Update /docs/planning/MISSING_FEATURES.md (remove if implemented)
 
-**For Bug Fixes:**
+### For Bug Fixes
 - [ ] Update relevant technical documentation
 - [ ] Update release notes
 
-**For Security Fixes:**
+### For Security Fixes
 - [ ] Update /docs/security/SECURITY.md
 - [ ] Document in release notes
 
-**For Documentation Changes:**
+### For Documentation Changes
 - [ ] Update "Last Updated" date
 - [ ] Check all cross-references
 - [ ] Update this guide if structure changed
@@ -220,6 +243,7 @@ docs/
 ## 📝 Quick Edit Guide
 
 ### Adding a New Feature to a Module
+
 1. **Update F&F.md:**
    - Move from "Planned" to "Implemented" section
    - Update completion percentage
@@ -238,7 +262,7 @@ docs/
 ## 🎯 Documentation Cheat Sheet
 
 | I Need... | Go To... |
-|-----------|----------|
+| ----------- | ---------- |
 | Feature status | F&F.md |
 | Completion % | F&F.md (Quick Reference table) |
 | What's implemented | F&F.md (Module sections) |
@@ -278,10 +302,10 @@ docs/
 
 ---
 
-**Last Updated:** January 16, 2026  
-**Consolidation Version:** 3.0  
-**Root Files:** 10 (down from 72)  
-**Active Docs:** ~25 (down from 79)  
+**Last Updated:** January 16, 2026
+**Consolidation Version:** 3.0
+**Root Files:** 10 (down from 72)
+**Active Docs:** ~25 (down from 79)
 **Archived Docs:** 45+
 
 ---

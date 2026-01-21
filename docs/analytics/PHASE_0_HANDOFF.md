@@ -1,8 +1,8 @@
 # Phase 0 Implementation Handoff Document
 
-**Created:** 2026-01-20  
-**Status:** 4 of 5 tasks complete  
-**Next Agent:** Can pick up at T-085 (testing) or move to Phase 1  
+**Created:** 2026-01-20
+**Status:** 4 of 5 tasks complete
+**Next Agent:** Can pick up at T-085 (testing) or move to Phase 1
 **Commit:** a757125
 
 ---
@@ -10,6 +10,7 @@
 ## Executive Summary
 
 **Phase 0 is 80% complete.** The analytics system is now functional end-to-end:
+
 - ✅ Database schema created
 - ✅ Storage methods implemented
 - ✅ Server endpoint added
@@ -26,7 +27,8 @@
 
 **File:** `shared/schema.ts` (+57 lines)
 
-**Added:**
+### Added
+
 ```typescript
 export const analyticsEvents = pgTable(
   "analytics_events",
@@ -49,16 +51,16 @@ export const analyticsEvents = pgTable(
     sessionIdIdx: index("analytics_session_id_idx").on(table.sessionId),
   }),
 );
-```
+```text
 
-**Features:**
+### Features
 - UUID primary key with auto-generation
 - JSONB column for flexible event properties
 - Timestamp with timezone for correct time handling
 - 4 indexes for performant queries
 - `userId` can be NULL (supports privacy mode)
 
-**Database Migration:**
+### Database Migration
 - Drizzle ORM will auto-generate migration
 - Run `npx drizzle-kit generate:pg` to create migration
 - Run `npx drizzle-kit push:pg` to apply to database
@@ -70,31 +72,32 @@ export const analyticsEvents = pgTable(
 
 **File:** `server/storage.ts` (+109 lines)
 
-**Added to IStorage interface:**
+### Added to IStorage interface
 ```typescript
 saveAnalyticsEvents(events: Array<{...}>): Promise<void>
 getAnalyticsEvents(userId, filters?): Promise<AnalyticsEvent[]>
 deleteUserAnalytics(userId: string): Promise<void>
-```
+```text
 
-**Implementation in MemStorage class:**
+### Implementation in MemStorage class
+#### 1. `saveAnalyticsEvents(events)`
 
-**1. `saveAnalyticsEvents(events)`**
 ```typescript
 // Batch insert with idempotency
 // - Skips duplicate event IDs
 // - Handles up to 100 events per batch
 // - Logs saved count
 await storage.saveAnalyticsEvents([...events]);
-```
+```text
 
-**Features:**
+### Features (2)
 - **Idempotency**: Checks `event.eventId` and skips duplicates
 - **Batch processing**: Efficient for 50+ events
 - **Validation**: Assumes events are pre-validated
 - **Logging**: Logs duplicate skips and save count
 
-**2. `getAnalyticsEvents(userId, filters)`**
+### 2. `getAnalyticsEvents(userId, filters)`
+
 ```typescript
 // Query events with filters
 const events = await storage.getAnalyticsEvents("user-123", {
@@ -103,22 +106,23 @@ const events = await storage.getAnalyticsEvents("user-123", {
   eventNames: ["app_opened", "module_opened"],
   limit: 100,
 });
-```
+```text
 
-**Features:**
+### Features (3)
 - Filters by userId (required)
 - Optional date range filtering
 - Optional event name filtering
 - Optional limit for pagination
 - Returns sorted by timestamp (newest first)
 
-**3. `deleteUserAnalytics(userId)`**
+### 3. `deleteUserAnalytics(userId)`
+
 ```typescript
 // GDPR deletion - removes all user events
 await storage.deleteUserAnalytics("user-123");
-```
+```text
 
-**Features:**
+### Features (4)
 - Deletes ALL events for a user
 - Logs deletion count
 - Required for GDPR compliance
@@ -129,7 +133,7 @@ await storage.deleteUserAnalytics("user-123");
 
 **File:** `server/routes.ts` (+31 lines)
 
-**Added endpoint:**
+### Added endpoint
 ```typescript
 POST /api/telemetry/events
 Authorization: Bearer <jwt-token>
@@ -154,18 +158,18 @@ Content-Type: application/json
   "schemaVersion": "1.0.0",
   "mode": "default"
 }
-```
+```text
 
-**Response (202 Accepted):**
+### Response (202 Accepted)
 ```json
 {
   "received": 50,
   "timestamp": "2026-01-20T01:17:18.863Z",
   "schemaVersion": "1.0.0"
 }
-```
+```text
 
-**Features:**
+### Features (5)
 - **Authentication**: Requires JWT token via `authenticate` middleware
 - **Validation**: Uses `analyticsBatchSchema` for request validation
 - **Idempotency**: Duplicate events skipped by storage layer
@@ -175,7 +179,7 @@ Content-Type: application/json
   - 401 for authentication failures
   - 500 for storage errors
 
-**Event Mapping:**
+### Event Mapping
 - Maps client format (`eventId`, `eventName`, etc.) to storage format
 - Preserves all fields
 - Handles optional fields gracefully
@@ -186,9 +190,9 @@ Content-Type: application/json
 
 **File:** `shared/schema.ts` (+38 lines within T-081 changes)
 
-**Added schemas:**
+### Added schemas
+#### 1. `analyticsEventSchema`
 
-**1. `analyticsEventSchema`**
 ```typescript
 {
   eventId: z.string().uuid(),
@@ -203,18 +207,19 @@ Content-Type: application/json
   appVersion: z.string().optional(),
   platform: z.string().optional(),
 }
-```
+```text
 
-**2. `analyticsBatchSchema`**
+### 2. `analyticsBatchSchema`
+
 ```typescript
 {
   events: z.array(analyticsEventSchema).min(1).max(100),
   schemaVersion: z.string().default("1.0.0"),
   mode: z.enum(["default", "privacy"]).optional(),
 }
-```
+```text
 
-**Features:**
+### Features (6)
 - Full Zod validation for type safety
 - UUID validation for eventId and userId
 - Datetime validation for timestamps
@@ -222,23 +227,23 @@ Content-Type: application/json
 - Schema version tracking
 - Privacy mode support
 
-**Exported Types:**
+### Exported Types
 ```typescript
 export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
 export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;
 export type AnalyticsEventPayload = z.infer<typeof analyticsEventSchema>;
 export type AnalyticsBatchPayload = z.infer<typeof analyticsBatchSchema>;
-```
+```text
 
 ---
 
 ## What Remains: T-085 (Integration Testing)
 
-**Priority:** P0  
-**Effort:** 4-6 hours  
-**Status:** Not started  
+**Priority:** P0
+**Effort:** 4-6 hours
+**Status:** Not started
 
-**Requirements:**
+### Requirements
 1. **End-to-end test**: Client sends events → Server receives → Storage persists
 2. **Offline queueing test**: Events queue when server is down
 3. **Retry logic test**: Events retry on failure
@@ -246,15 +251,14 @@ export type AnalyticsBatchPayload = z.infer<typeof analyticsBatchSchema>;
 5. **GDPR deletion test**: `deleteUserAnalytics()` removes all events
 6. **Error handling test**: Bad payload returns 400
 
-**How to Test Manually:**
-
-**1. Start the server:**
+### How to Test Manually
+#### 1. Start the server
 ```bash
 cd /home/runner/work/Mobile-Scaffold/Mobile-Scaffold
 npm run dev
-```
+```text
 
-**2. Send test event from client:**
+### 2. Send test event from client
 ```typescript
 // In client code (e.g., App.tsx)
 import analytics from "@/analytics";
@@ -262,14 +266,14 @@ import analytics from "@/analytics";
 // App should already be calling this:
 await analytics.initialize();
 await analytics.trackAppOpened(0, "wifi");
-```
+```text
 
-**3. Verify in server logs:**
-```
+### 3. Verify in server logs
+```text
 [Analytics] Saved 1 events
-```
+```text
 
-**4. Test query (add to server endpoint for testing):**
+### 4. Test query (add to server endpoint for testing)
 ```typescript
 // Temporary test endpoint
 app.get("/api/telemetry/debug", authenticate, async (req, res) => {
@@ -278,16 +282,15 @@ app.get("/api/telemetry/debug", authenticate, async (req, res) => {
   });
   res.json(events);
 });
-```
+```text
 
-**5. Test GDPR deletion:**
+### 5. Test GDPR deletion
 ```typescript
 await storage.deleteUserAnalytics("user-id");
 // Should log: [Analytics] Deleted N events for user user-id
-```
+```text
 
-**Automated Testing:**
-
+### Automated Testing
 Create file: `server/__tests__/analytics.test.ts`
 
 ```typescript
@@ -314,7 +317,7 @@ describe("Analytics Storage", () => {
 
     await storage.saveAnalyticsEvents(events);
     const saved = await storage.getAnalyticsEvents("user-1");
-    
+
     expect(saved).toHaveLength(1);
     expect(saved[0].eventName).toBe("app_opened");
   });
@@ -339,7 +342,7 @@ describe("Analytics Storage", () => {
   test("should filter events by date range", async () => {
     const now = new Date();
     const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    
+
     await storage.saveAnalyticsEvents([
       {
         eventId: randomUUID(),
@@ -385,32 +388,34 @@ describe("Analytics Storage", () => {
 
     await storage.deleteUserAnalytics("user-1");
     const events = await storage.getAnalyticsEvents("user-1");
-    
+
     expect(events).toHaveLength(0);
   });
 });
-```
+```text
 
-**Run tests:**
+### Run tests
 ```bash
 npm test server/__tests__/analytics.test.ts
-```
+```text
 
 ---
 
 ## Known Issues and Limitations
 
 ### 1. In-Memory Storage
-**Issue:** Events stored in memory, lost on server restart  
-**Impact:** Not production-ready for persistent analytics  
-**Solution:** Phase 1 or 2 should add database persistence (PostgreSQL with Drizzle ORM)  
+
+**Issue:** Events stored in memory, lost on server restart
+**Impact:** Not production-ready for persistent analytics
+**Solution:** Phase 1 or 2 should add database persistence (PostgreSQL with Drizzle ORM)
 **Workaround:** Acceptable for MVP/testing
 
 ### 2. No Rate Limiting
-**Issue:** No per-user rate limit on telemetry endpoint  
-**Impact:** Potential abuse (spam events)  
-**Solution:** Add rate limiting middleware  
-**Example:**
+
+**Issue:** No per-user rate limit on telemetry endpoint
+**Impact:** Potential abuse (spam events)
+**Solution:** Add rate limiting middleware
+### Example
 ```typescript
 import rateLimit from "express-rate-limit";
 
@@ -420,37 +425,40 @@ const analyticsLimiter = rateLimit({
   message: "Too many analytics events, please slow down",
 });
 
-app.post("/api/telemetry/events", 
-  authenticate, 
+app.post("/api/telemetry/events",
+  authenticate,
   analyticsLimiter, // Add rate limiter
   validate(analyticsBatchSchema),
   asyncHandler(async (req, res) => { ... })
 );
-```
+```text
 
 ### 3. No Compression Detection
-**Issue:** Server doesn't check for `Content-Encoding: gzip` header  
-**Impact:** Compressed payloads may not decompress correctly  
-**Solution:** Add compression middleware or check header  
+
+**Issue:** Server doesn't check for `Content-Encoding: gzip` header
+**Impact:** Compressed payloads may not decompress correctly
+**Solution:** Add compression middleware or check header
 **Status:** Client has compression but may not be sending gzipped payloads yet
 
 ### 4. No Background Job for Cleanup
-**Issue:** Old events never deleted automatically  
-**Impact:** Memory grows indefinitely  
-**Solution:** Add cleanup job in Phase 1  
-**Example:**
+
+**Issue:** Old events never deleted automatically
+**Impact:** Memory grows indefinitely
+**Solution:** Add cleanup job in Phase 1
+### Example (2)
 ```typescript
 // Run daily cleanup
 setInterval(() => {
   const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000); // 90 days
   // Delete events older than cutoff
 }, 24 * 60 * 60 * 1000);
-```
+```text
 
 ### 5. No Event Streaming
-**Issue:** Can't stream events in real-time  
-**Impact:** Event Inspector (Phase 1) can't show live events  
-**Solution:** Add WebSocket or Server-Sent Events in Phase 1  
+
+**Issue:** Can't stream events in real-time
+**Impact:** Event Inspector (Phase 1) can't show live events
+**Solution:** Add WebSocket or Server-Sent Events in Phase 1
 **Status:** Not blocking for Phase 0
 
 ---
@@ -458,6 +466,7 @@ setInterval(() => {
 ## Next Steps
 
 ### Immediate (T-085)
+
 1. **Write automated tests** (see testing section above)
 2. **Test end-to-end** (client → server → storage)
 3. **Verify GDPR deletion** works correctly
@@ -465,37 +474,44 @@ setInterval(() => {
 5. **Test offline queueing** (stop server, send events, restart server)
 
 ### Phase 1 (T-071) - After T-085
+
 **Estimated effort:** 80-120 hours over 3 months
 
-**Task 1.1: Event Inspector UI (20-30h)**
+### Task 1.1: Event Inspector UI (20-30h)
+
 - React component showing real-time event stream
 - Filters by event type, module, date range
 - Shows validation errors
 - Search functionality
 
-**Task 1.2: Metrics Collection (20-30h)**
+### Task 1.2: Metrics Collection (20-30h)
+
 - Throughput metrics (events/sec, events/min)
 - Latency tracking (p50, p95, p99)
 - Error rate calculation
 - Dashboard integration
 
-**Task 1.3: Consent Management (15-20h)**
+### Task 1.3: Consent Management (15-20h)
+
 - Consent categories (necessary, analytics, marketing)
 - Granular consent per category
 - GDPR-compliant opt-in
 - Consent change tracking
 
-**Task 1.4: Data Retention (15-20h)**
+### Task 1.4: Data Retention (15-20h)
+
 - Configurable retention periods
 - Automatic cleanup job
 - Backend enforcement
 
-**Task 1.5: Data Deletion API (10-15h)**
+### Task 1.5: Data Deletion API (10-15h)
+
 - User data deletion endpoint
 - Export before deletion
 - Audit logging
 
-**Task 1.6: Testing & Documentation (10-20h)**
+### Task 1.6: Testing & Documentation (10-20h)
+
 - Comprehensive tests
 - Usage documentation
 - Integration guide
@@ -506,39 +522,43 @@ setInterval(() => {
 
 ### Problem: Events not reaching server
 
-**Symptoms:**
+#### Symptoms
 - Client logs show events being sent
 - Server logs don't show "Saved N events"
 - No errors visible
 
-**Diagnosis:**
+### Diagnosis
 1. Check client transport configuration:
+
    ```typescript
    // In client/analytics/client.ts
    endpoint: "/api/telemetry/events", // Should match server
-   ```
+   ```text
 
-2. Check server is running:
+1. Check server is running:
+
    ```bash
    curl http://localhost:5000/status
    # Should return: {"status":"ok","timestamp":"..."}
-   ```
+   ```text
 
-3. Check authentication:
+1. Check authentication:
+
    ```typescript
    // Client must send JWT token
    headers: {
      "Authorization": `Bearer ${token}`,
    }
-   ```
+   ```text
 
-4. Check network errors in client:
+1. Check network errors in client:
+
    ```typescript
    // In client/analytics/transport.ts
    // Add console.log to see actual error
-   ```
+   ```text
 
-**Solution:**
+### Solution
 - Verify endpoint path matches
 - Ensure JWT token is valid
 - Check CORS if applicable
@@ -548,27 +568,29 @@ setInterval(() => {
 
 ### Problem: Duplicate events being saved
 
-**Symptoms:**
+#### Symptoms (2)
 - Same event ID appearing multiple times
 - Storage showing more events than sent
 
-**Diagnosis:**
+### Diagnosis (2)
 1. Check if idempotency is working:
+
    ```typescript
    // In server/storage.ts, line ~765
    if (this.analyticsEvents.has(event.eventId)) {
      console.log(`[Analytics] Skipping duplicate event: ${event.eventId}`);
      continue;
    }
-   ```
+   ```text
 
-2. Check if client is generating unique IDs:
+1. Check if client is generating unique IDs:
+
    ```typescript
    // In client/analytics/client.ts
    event_id: randomUUID(), // Should be unique per event
-   ```
+   ```text
 
-**Solution:**
+### Solution (2)
 - Ensure `randomUUID()` is used for each event
 - Check server logs for "Skipping duplicate event" messages
 - If duplicates persist, check if Map.has() is working correctly
@@ -577,27 +599,29 @@ setInterval(() => {
 
 ### Problem: GDPR deletion not working
 
-**Symptoms:**
+#### Symptoms (3)
 - `deleteUserAnalytics()` called but events still exist
 - Query returns events after deletion
 
-**Diagnosis:**
+### Diagnosis (3)
 1. Check if user ID matches:
+
    ```typescript
    // userId must match exactly
    const events = await storage.getAnalyticsEvents("user-123");
    await storage.deleteUserAnalytics("user-123"); // Same ID
-   ```
+   ```text
 
-2. Check deletion logic:
+1. Check deletion logic:
+
    ```typescript
    // In server/storage.ts, line ~831
    const eventsToDelete = Array.from(this.analyticsEvents.values()).filter(
      (event) => event.userId === userId,
    );
-   ```
+   ```text
 
-**Solution:**
+### Solution (3)
 - Verify user ID format (UUID vs string)
 - Check if userId field is populated (may be NULL in privacy mode)
 - Add logging to see how many events are being deleted
@@ -606,12 +630,13 @@ setInterval(() => {
 
 ### Problem: Validation errors on endpoint
 
-**Symptoms:**
+#### Symptoms (4)
 - 400 Bad Request
 - Error message about validation failure
 
-**Diagnosis:**
+### Diagnosis (4)
 1. Check event format matches schema:
+
    ```typescript
    {
      eventId: "uuid", // Must be valid UUID
@@ -623,18 +648,19 @@ setInterval(() => {
        sessionId: "string", // Optional string
      },
    }
-   ```
+   ```text
 
-2. Check batch format:
+1. Check batch format:
+
    ```typescript
    {
      events: [...], // Array of 1-100 events
      schemaVersion: "1.0.0", // String
      mode: "default", // Optional: "default" or "privacy"
    }
-   ```
+   ```text
 
-**Solution:**
+### Solution (4)
 - Use exact schema from `shared/schema.ts`
 - Validate locally before sending
 - Check Zod error messages for specific field issues
@@ -643,7 +669,7 @@ setInterval(() => {
 
 ## File Structure Reference
 
-```
+```text
 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
 ├── shared/
 │   └── schema.ts                          # Database schema + validation ✅ MODIFIED
@@ -663,7 +689,7 @@ setInterval(() => {
         ├── DEEP_ASSESSMENT_AND_GAMEPLAN.md
         ├── IMPLEMENTATION_PLAN.md
         └── WORLD_CLASS_ANALYTICS_ROADMAP.md
-```
+```text
 
 ---
 
@@ -671,47 +697,51 @@ setInterval(() => {
 
 ### Key Functions Implemented
 
-**1. Server Endpoint**
+#### 1. Server Endpoint
+
 ```typescript
 // File: server/routes.ts, line ~687
 app.post("/api/telemetry/events", authenticate, validate(analyticsBatchSchema), ...)
-```
+```text
 
-**2. Storage Methods**
+### 2. Storage Methods
+
 ```typescript
 // File: server/storage.ts
 saveAnalyticsEvents(events)      // Line ~751
 getAnalyticsEvents(userId, filters)  // Line ~790
 deleteUserAnalytics(userId)      // Line ~831
-```
+```text
 
-**3. Database Schema**
+### 3. Database Schema
+
 ```typescript
 // File: shared/schema.ts, line ~303
 export const analyticsEvents = pgTable("analytics_events", {...})
-```
+```text
 
-**4. Validation Schemas**
+### 4. Validation Schemas
+
 ```typescript
 // File: shared/schema.ts, line ~328
 export const analyticsEventSchema = z.object({...})
 export const analyticsBatchSchema = z.object({...})
-```
+```text
 
 ### Client Configuration
 
-**Endpoint Configuration:**
+#### Endpoint Configuration
 ```typescript
 // File: client/analytics/client.ts, line ~32
 endpoint: "/api/telemetry/events",  // Matches server
-```
+```text
 
-**Transport Layer:**
+### Transport Layer
 ```typescript
 // File: client/analytics/transport.ts, line ~145
 method: "POST",
 body: JSON.stringify(payload),
-```
+```text
 
 ---
 
@@ -727,7 +757,7 @@ Phase 0 is considered **COMPLETE** when:
 - ⏸️ **GDPR deletion test passes** (all events removed)
 - ⏸️ **Idempotency test passes** (duplicates skipped)
 
-**Current Status:** 4/5 complete (80%)  
+**Current Status:** 4/5 complete (80%)
 **Remaining:** T-085 testing
 
 ---
@@ -757,7 +787,7 @@ If you have questions about this handoff:
 
 ## Summary
 
-**What works:**
+### What works
 - ✅ Client can POST events to `/api/telemetry/events`
 - ✅ Server validates events with Zod
 - ✅ Events persist in memory storage
@@ -766,21 +796,21 @@ If you have questions about this handoff:
 - ✅ Idempotency prevents duplicates
 - ✅ Batch processing (up to 100 events)
 
-**What needs work:**
+### What needs work
 - ⏸️ Automated tests (T-085)
 - 🔜 Rate limiting (security)
 - 🔜 Database persistence (PostgreSQL)
 - 🔜 Background cleanup job (retention)
 - 🔜 Real-time streaming (WebSocket)
 
-**Next agent should:**
+### Next agent should
 1. Write automated tests for T-085
 2. Test end-to-end flow manually
 3. Begin Phase 1 (T-071) after tests pass
 
 ---
 
-**Created:** 2026-01-20  
-**Last Updated:** 2026-01-20  
-**Version:** 1.0  
+**Created:** 2026-01-20
+**Last Updated:** 2026-01-20
+**Version:** 1.0
 **Status:** Ready for handoff

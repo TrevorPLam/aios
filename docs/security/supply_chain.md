@@ -1,6 +1,7 @@
 # Supply Chain Security
 
-## Plain English Summary  
+## Plain English Summary
+
 Supply chain attacks compromise the tools and dependencies we use to build software. Protect against malicious npm packages, compromised build systems, and dependency confusion attacks.
 
 ## Threats
@@ -13,18 +14,21 @@ Supply chain attacks compromise the tools and dependencies we use to build softw
 ## Mitigations
 
 ### Package Verification
+
 - Verify package names before installing
 - Review package contents after installing
 - Use package lock files (package-lock.json)
 - Enable 2FA on npm account
 
 ### Build Security
+
 - Use trusted CI/CD (GitHub Actions)
 - Sign commits with GPG
 - Verify container image signatures
 - Scan containers for vulnerabilities
 
 ### Access Control
+
 - Limit npm publish access
 - Use scoped packages for internal code
 - Implement private npm registry if needed
@@ -33,6 +37,7 @@ Supply chain attacks compromise the tools and dependencies we use to build softw
 ## Incident Response
 
 If compromised dependency detected:
+
 1. Remove dependency immediately
 2. Scan for malicious code execution
 3. Rotate all secrets
@@ -47,5 +52,6 @@ If compromised dependency detected:
 - **Socket.dev** - Supply chain protection
 
 ## Related
+
 - [Dependency Policy](./dependency_policy.md)
 - [Threat Model](./threat_model.md)

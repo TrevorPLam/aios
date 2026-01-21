@@ -4,7 +4,7 @@
 
 AIOS follows WCAG 2.2 AA standards to ensure accessibility for all users, regardless of abilities.
 
-**Last Updated:** January 16, 2026  
+**Last Updated:** January 16, 2026
 **Target**: WCAG 2.2 Level AA Compliance
 
 ---
@@ -47,7 +47,7 @@ AIOS follows WCAG 2.2 AA standards to ensure accessibility for all users, regard
   accessibilityLabel="Notebook module"
   accessibilityState={{ selected: isActive }}
 >
-```
+```text
 
 ### Focus Management ✅ Implemented
 
@@ -58,6 +58,7 @@ AIOS follows WCAG 2.2 AA standards to ensure accessibility for all users, regard
 ### Gesture Alternatives ✅ Implemented
 
 Every gesture has a button alternative:
+
 - Edge swipe → "Open sidebar" button
 - Long press → Context menu button
 - Swipe to dismiss → "Close" button
@@ -81,7 +82,7 @@ useEffect(() => {
 
 // Disable animations if user prefers reduced motion
 const animationConfig = reduceMotion ? { duration: 0 } : { duration: 300 };
-```
+```text
 
 ---
 

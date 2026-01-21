@@ -1,6 +1,6 @@
 # AIOS Documentation Home
 
-**Welcome to the AIOS Documentation System**
+## Welcome to the AIOS Documentation System
 
 This is the central hub for all documentation in the AIOS (AI Operating System) repository. Whether you're a new contributor, experienced developer, product manager, or curious user, this guide will help you find what you need.
 
@@ -16,10 +16,10 @@ This is the central hub for all documentation in the AIOS (AI Operating System) 
 
 ## 🚀 Quick Start
 
-**I want to...**
+### I want to
 
 | Goal | Start Here |
-|------|-----------|
+| ------ | ----------- |
 | Understand what AIOS is | [Project README](../README.md) |
 | Set up the development environment | [Getting Started Tutorial](./diataxis/tutorials/getting-started.md) *(TODO)* |
 | Contribute code or docs | [CONTRIBUTING.md](../CONTRIBUTING.md) |
@@ -37,33 +37,41 @@ This is the central hub for all documentation in the AIOS (AI Operating System) 
 Our documentation is organized following the **Diátaxis framework** for clarity and findability:
 
 ### 1. **Learning-Oriented (Tutorials)**
+
 *Location: `docs/diataxis/tutorials/` (TODO)*
 
 Step-by-step lessons for newcomers. Start here if you're new.
+
 - Getting started with AIOS development
 - Building your first module
 - Setting up testing environment
 
 ### 2. **Task-Oriented (How-To Guides)**
+
 *Location: `docs/operations/runbooks/` and module-specific guides*
 
 Practical steps to accomplish specific goals.
+
 - How to add a new module
 - How to debug React Native issues
 - How to deploy to production
 
 ### 3. **Understanding-Oriented (Explanation)**
+
 *Location: `docs/architecture/`, `docs/decisions/`*
 
 Conceptual clarity on how things work and why.
+
 - [Architecture Overview](./architecture/README.md)
 - [Architecture Decision Records](./decisions/README.md)
 - [Security Model](./security/threat_model.md)
 
 ### 4. **Information-Oriented (Reference)**
+
 *Location: `docs/apis/`, `docs/modules/`, technical specs*
 
 Dry, accurate facts. Look things up here.
+
 - [API Documentation](./apis/README.md)
 - [Module Reference](./modules/README.md) *(TODO)*
 - [Glossary](./glossary.md)
@@ -71,7 +79,8 @@ Dry, accurate facts. Look things up here.
 ## 🗺️ Complete Navigation Map
 
 ### Core Documentation
-```
+
+```text
 docs/
 ├── README.md (you are here)
 ├── INDEX.md (legacy index, see this file instead)
@@ -134,7 +143,7 @@ docs/
 └── roadmaps/                   # Future plans
     ├── roadmap.md
     └── decisions_backlog.md
-```
+```text
 
 ## 🔧 How Documentation Works
 
@@ -166,7 +175,7 @@ docs/
 
 We use **MkDocs** with Material theme to generate a searchable, browsable documentation site from these markdown files.
 
-**Build locally:**
+### Build locally
 ```bash
 # Install MkDocs
 pip install mkdocs-material
@@ -176,7 +185,7 @@ mkdocs serve
 
 # Build static site
 mkdocs build
-```
+```text
 
 **View online:** *(TODO: Add deployment URL)*
 
@@ -196,7 +205,7 @@ Every document must include:
 ```markdown
 # Title
 
-## Plain English Summary
+## Plain English Summary (2)
 - 5-12 bullet points
 - Non-technical language
 - What, why, when to use this doc
@@ -212,7 +221,7 @@ Every document must include:
 
 ## How to Verify
 (Commands to check/test)
-```
+```text
 
 ### Documentation Checklist
 
@@ -232,13 +241,13 @@ Every document must include:
 ```bash
 # Same process as code changes
 git checkout -b docs/improve-api-reference
-# ... make changes ...
+# ... make changes
 npm run lint:docs  # Run doc linters (TODO)
 git add docs/
 git commit -m "docs: improve API reference examples"
 git push origin docs/improve-api-reference
 # Open PR on GitHub
-```
+```text
 
 ## 🔍 Finding Information
 
@@ -252,19 +261,19 @@ git push origin docs/improve-api-reference
 
 ### Common Questions
 
-**Q: Where is the API documentation?**  
+#### Q: Where is the API documentation?
 A: [docs/apis/README.md](./apis/README.md) and existing [technical/API_DOCUMENTATION.md](./technical/API_DOCUMENTATION.md)
 
-**Q: How do I understand module X?**  
+### Q: How do I understand module X?
 A: Start with [MODULE_DETAILS.md](../MODULE_DETAILS.md), then check `docs/modules/` for deep dives
 
-**Q: What testing strategy do we use?**  
+#### Q: What testing strategy do we use?
 A: See [docs/testing/strategy.md](./testing/strategy.md)
 
-**Q: Who decides on changes?**  
+### Q: Who decides on changes?
 A: See [GOVERNANCE.md](../GOVERNANCE.md) and [ADR process](./adr/README.md)
 
-**Q: How do I report security issues?**  
+#### Q: How do I report security issues?
 A: See [SECURITY.md](../SECURITY.md) - use private disclosure
 
 ## 📊 Documentation Health
@@ -282,6 +291,7 @@ A: See [SECURITY.md](../SECURITY.md) - use private disclosure
 ### Quality Gates (CI)
 
 All documentation changes must pass:
+
 - ✅ Vale prose linting
 - ✅ Markdownlint formatting
 - ✅ Link checking
@@ -291,28 +301,33 @@ All documentation changes must pass:
 ## 🎯 High-Leverage Documentation Features
 
 ### 1. Documentation Coverage Map
-**Location:** [docs/coverage.md](./coverage.md)  
-**Purpose:** Makes documentation completeness measurable  
+
+**Location:** [docs/coverage.md](./coverage.md)
+**Purpose:** Makes documentation completeness measurable
 **How it works:** Lists all modules/services with required documentation and tracks completion
 
 ### 2. Decision-to-Docs Binding
-**Location:** ADR template requires links to affected docs  
-**Purpose:** Prevents decisions from becoming disconnected from implementation  
+
+**Location:** ADR template requires links to affected docs
+**Purpose:** Prevents decisions from becoming disconnected from implementation
 **How it works:** Every ADR must link to module docs, APIs, and migration guides
 
 ### 3. Runbook-to-Automation Ladder
-**Location:** Runbook template includes "Automation Candidate" section  
-**Purpose:** Turns manual ops into an automation backlog  
+
+**Location:** Runbook template includes "Automation Candidate" section
+**Purpose:** Turns manual ops into an automation backlog
 **How it works:** Each runbook identifies automation opportunities with triggers and guardrails
 
 ### 4. Plain English Contract Blocks
-**Location:** Standardized callout blocks in all docs  
-**Purpose:** Makes repo usable by non-coders and stakeholders  
+
+**Location:** Standardized callout blocks in all docs
+**Purpose:** Makes repo usable by non-coders and stakeholders
 **How it works:** Every doc starts with plain-language summary
 
 ### 5. Standardized Verification
-**Location:** [docs/verification.md](./verification.md)  
-**Purpose:** Stops "it works on my machine" documentation  
+
+**Location:** [docs/verification.md](./verification.md)
+**Purpose:** Stops "it works on my machine" documentation
 **How it works:** Canonical commands for lint, test, build, deploy
 
 ## 🆘 Getting Help
@@ -325,22 +340,26 @@ All documentation changes must pass:
 ## 📝 Documentation Standards
 
 ### File Naming
+
 - Use kebab-case: `user-authentication.md`
 - Be descriptive: `oauth-implementation-guide.md` not `auth.md`
 - Version if needed: `api-v2-migration.md`
 
 ### Linking
+
 - Use relative links: `[ADR](./adr/README.md)` not absolute URLs
 - Link to specific sections: `[Setup](#setup)`
 - Test all links in CI
 
 ### Code Examples
+
 - Include language hints: ` ```typescript `
 - Show complete, runnable examples
 - Include expected output
 - Reference actual files: `// See: client/App.tsx`
 
 ### Diagrams
+
 - Use Mermaid for architecture diagrams (renders in GitHub)
 - Store sources in `architecture/diagrams/`
 - Include alt text for accessibility
@@ -348,13 +367,13 @@ All documentation changes must pass:
 
 ## 🔐 Security & Sensitive Information
 
-**NEVER include in documentation:**
+### NEVER include in documentation
 - API keys, tokens, passwords
 - Real user data or PII
 - Internal infrastructure details (IPs, hostnames)
 - Unpatched vulnerability details
 
-**Safe to include:**
+### Safe to include
 - Example/dummy credentials clearly marked as fake
 - Public API endpoints
 - General architecture patterns
@@ -365,20 +384,23 @@ See [SECURITY.md](../SECURITY.md) for full policy.
 ## 📅 Documentation Maintenance
 
 ### Regular Reviews
+
 - **Monthly:** Check for broken links and outdated content
 - **Per Release:** Update changelogs, migration guides, version numbers
 - **Per ADR:** Update affected documentation
 - **Per Module:** Keep module docs in sync with code
 
 ### Archival Process
+
 - Move outdated docs to `docs/archive/`
 - Add deprecation notice at top of old doc
 - Link to replacement documentation
 - Never delete (for historical reference)
 
-## Technical Detail
+## Technical Detail (2)
 
 ### Tech Stack
+
 - **Format:** Markdown (CommonMark)
 - **Site Generator:** MkDocs with Material theme
 - **Prose Linting:** Vale (`.vale.ini`)
@@ -388,6 +410,7 @@ See [SECURITY.md](../SECURITY.md) for full policy.
 - **CI/CD:** GitHub Actions
 
 ### Local Development
+
 ```bash
 # Install dependencies
 pip install mkdocs-material
@@ -400,17 +423,18 @@ vale docs/
 # Serve docs site
 mkdocs serve  # Visit http://localhost:8000
 
-# Build static site
+# Build static site (2)
 mkdocs build  # Output in site/
-```
+```text
 
 ### CI Workflows
+
 - `.github/workflows/docs-vale.yml` - Prose linting
 - `.github/workflows/docs-markdownlint.yml` - Markdown linting
 - `.github/workflows/docs-links.yml` - Link validation
 - `.github/workflows/docs-quality.yml` - Overall quality (existing)
 
-## Assumptions
+## Assumptions (2)
 
 - Contributors have basic Markdown knowledge
 - Git and GitHub workflows are understood
@@ -418,10 +442,10 @@ mkdocs build  # Output in site/
 - Readers prefer clear explanations over jargon
 - English is the primary language (translations TODO)
 
-## Failure Modes
+## Failure Modes (2)
 
 | Failure Mode | Symptom | Solution |
-|--------------|---------|----------|
+| -------------- | --------- | ---------- |
 | Docs out of sync | Code and docs contradict | Enforce doc updates in PR template |
 | Broken links | 404s everywhere | Automated link checking in CI |
 | Inconsistent style | Hard to read/find info | Vale + markdownlint + templates |
@@ -429,9 +453,9 @@ mkdocs build  # Output in site/
 | Stale content | Docs describe old versions | Regular review schedule + CHANGELOG |
 | Inaccessible | Can't find/understand docs | Search, glossary, plain English summaries |
 
-## How to Verify
+## How to Verify (2)
 
-**Check documentation structure:**
+### Check documentation structure
 ```bash
 # All required directories exist
 ls -la docs/architecture docs/adr docs/apis docs/operations
@@ -441,9 +465,9 @@ cat mkdocs.yml
 
 # Linting configs exist
 cat .vale.ini .markdownlint.json
-```
+```text
 
-**Verify documentation quality:**
+### Verify documentation quality
 ```bash
 # Run all doc checks
 npm run lint:docs  # TODO: Add this script
@@ -456,14 +480,14 @@ vale docs/
 
 # Lint markdown
 markdownlint "docs/**/*.md"
-```
+```text
 
-**Build documentation site:**
+### Build documentation site
 ```bash
 mkdocs serve
 # Open http://localhost:8000
 # Navigate through docs, test search
-```
+```text
 
 ---
 
@@ -473,5 +497,5 @@ mkdocs serve
 
 ---
 
-*Last Updated: {{ git_revision_date }}*  
+*Last Updated: {{ git_revision_date }}*
 *Found an issue? [Open an issue](https://github.com/TrevorPLam/aios/issues/new) or submit a PR.*

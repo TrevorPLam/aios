@@ -1,8 +1,8 @@
 # Server Module (Backend API)
 
-**Location:** `server/`  
-**Language:** TypeScript, JavaScript  
-**Framework:** Node.js, Express  
+**Location:** `server/`
+**Language:** TypeScript, JavaScript
+**Framework:** Node.js, Express
 **Status:** Active
 
 ## Plain English Summary
@@ -12,6 +12,7 @@ The server module is the backend REST API that powers the mobile application. Bu
 ## Purpose
 
 ### What This Module Does
+
 - Provides REST API endpoints for client applications
 - Manages authentication and authorization
 - Implements business logic and data validation
@@ -22,12 +23,14 @@ The server module is the backend REST API that powers the mobile application. Bu
 - Manages background jobs and scheduled tasks
 
 ### What This Module Does NOT Do
+
 - Does NOT render UI (that's the client's job)
 - Does NOT trust client-side validation (always validates server-side)
 - Does NOT store passwords in plain text (uses hashing)
 - Does NOT expose internal implementation details in API responses
 
 ### Key Use Cases
+
 1. User authentication and session management
 2. CRUD operations for application data
 3. File upload and processing
@@ -38,7 +41,7 @@ The server module is the backend REST API that powers the mobile application. Bu
 
 ### Architecture Overview
 
-```
+```text
 server/
 ├── src/
 │   ├── routes/            # Express route definitions
@@ -56,14 +59,15 @@ server/
 ├── server.ts              # Entry point
 ├── package.json
 └── tsconfig.json
-```
+```text
 
 ### Key Components
 
 #### Component 1: Express Application
-**Location:** `server/src/server.ts`  
-**Purpose:** Main Express app configuration and startup  
-**Interface:**
+
+**Location:** `server/src/server.ts`
+**Purpose:** Main Express app configuration and startup
+### Interface
 ```typescript
 // Express app with middleware
 const app = express();
@@ -71,12 +75,13 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use('/api', routes);
-```
+```text
 
 #### Component 2: Authentication Middleware
-**Location:** `server/src/middleware/auth.ts`  
-**Purpose:** Validates JWT tokens and protects routes  
-**Interface:**
+
+**Location:** `server/src/middleware/auth.ts`
+**Purpose:** Validates JWT tokens and protects routes
+### Interface (2)
 ```typescript
 export const authenticateUser = async (
   req: Request,
@@ -86,38 +91,40 @@ export const authenticateUser = async (
   // Validates JWT from Authorization header
   // Attaches user to req.user
 };
-```
+```text
 
 #### Component 3: Database Service
-**Location:** `server/src/services/database.ts`  
-**Purpose:** Database connection and query execution  
-**Interface:**
+
+**Location:** `server/src/services/database.ts`
+**Purpose:** Database connection and query execution
+### Interface (3)
 ```typescript
 export class DatabaseService {
   query<T>(sql: string, params: unknown[]): Promise<T[]>;
   transaction<T>(callback: (tx: Transaction) => Promise<T>): Promise<T>;
 }
-```
+```text
 
 #### Component 4: API Controllers
-**Location:** `server/src/controllers/`  
-**Purpose:** Handle HTTP requests, call services, return responses  
-**Interface:**
+
+**Location:** `server/src/controllers/`
+**Purpose:** Handle HTTP requests, call services, return responses
+### Interface (4)
 ```typescript
 export class UserController {
   async getUser(req: Request, res: Response): Promise<Response>;
   async updateUser(req: Request, res: Response): Promise<Response>;
   async deleteUser(req: Request, res: Response): Promise<Response>;
 }
-```
+```text
 
 ### Data Flow
 
-```
+```text
 [Client Request] → [Express Router] → [Middleware] → [Controller] → [Service] → [Database]
                                                                           ↓
                    [JSON Response] ←──────────────────────────────────────┘
-```
+```text
 
 1. Client sends HTTP request
 2. Express routes to appropriate controller
@@ -129,6 +136,7 @@ export class UserController {
 ### State Management
 
 The server is stateless - each request is independent:
+
 - **Authentication:** JWT tokens (client stores, server validates)
 - **Session Data:** Stored in database, not in memory
 - **Caching:** Redis for frequently accessed data
@@ -140,19 +148,19 @@ The server is stateless - each request is independent:
 // Centralized error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error('Unhandled error:', err);
-  
+
   if (err instanceof ValidationError) {
     return res.status(400).json({ error: err.message, details: err.details });
   }
-  
+
   if (err instanceof AuthenticationError) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   // Default to 500 for unknown errors
   return res.status(500).json({ error: 'Internal server error' });
 });
-```
+```text
 
 ## APIs and Interfaces
 
@@ -161,30 +169,33 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 The server exposes a REST API documented with OpenAPI:
 
 #### Authentication Endpoints
+
 ```typescript
 POST   /api/auth/register       // Register new user
 POST   /api/auth/login          // Login
 POST   /api/auth/logout         // Logout
 POST   /api/auth/refresh        // Refresh token
 POST   /api/auth/reset-password // Password reset
-```
+```text
 
 #### User Endpoints
+
 ```typescript
 GET    /api/users/me            // Get current user
 PUT    /api/users/me            // Update current user
 DELETE /api/users/me            // Delete account
 GET    /api/users/:id           // Get user by ID (admin)
-```
+```text
 
 #### Data Endpoints
+
 ```typescript
 GET    /api/data                // List data
 POST   /api/data                // Create data
 GET    /api/data/:id            // Get specific data
 PUT    /api/data/:id            // Update data
 DELETE /api/data/:id            // Delete data
-```
+```text
 
 See [OpenAPI Specification](../apis/openapi/openapi.yaml) for complete API documentation.
 
@@ -200,14 +211,14 @@ export class UserService {
   async updateUser(id: string, data: UpdateUserDTO): Promise<User>;
   async deleteUser(id: string): Promise<void>;
 }
-```
+```text
 
 ### Events
 
 The server emits events for background processing:
 
 | Event Name | Payload | When Fired |
-|------------|---------|------------|
+| ------------ | --------- | ------------ |
 | `user:registered` | `{ userId, email }` | New user signs up |
 | `data:created` | `{ dataId }` | New data created |
 | `file:uploaded` | `{ fileId, path }` | File upload completes |
@@ -218,7 +229,7 @@ The server emits events for background processing:
 ### External Dependencies
 
 | Package | Version | Purpose |
-|---------|---------|---------|
+| --------- | --------- | --------- |
 | `express` | `^4.18.0` | Web framework |
 | `drizzle-orm` | `^0.29.0` | Database ORM |
 | `jsonwebtoken` | `^9.0.0` | JWT authentication |
@@ -271,14 +282,14 @@ npm run type-check
 
 # Lint code
 npm run lint
-```
+```text
 
 ### Configuration
 
-**Environment Variables:**
+#### Environment Variables
 ```bash
 # Server configuration
-NODE_ENV=production              # Environment (development|production|test)
+ NODE_ENV=production              # Environment (development | production | test)
 PORT=3000                        # Server port
 HOST=0.0.0.0                    # Bind address
 
@@ -303,9 +314,9 @@ S3_BUCKET_NAME=...
 # Monitoring
 SENTRY_DSN=https://...          # Error tracking
 LOG_LEVEL=info                  # Logging level
-```
+```text
 
-**Configuration Files:**
+### Configuration Files
 - `server/src/config/database.ts` - Database configuration
 - `server/src/config/auth.ts` - Auth configuration
 - `.env.example` - Example environment variables
@@ -322,7 +333,7 @@ docker run -p 3000:3000 --env-file .env aios-server
 # Or deploy to cloud platform
 # (Heroku, Railway, Render, etc.)
 git push heroku main
-```
+```text
 
 ## Common Tasks
 
@@ -330,7 +341,7 @@ git push heroku main
 
 **Goal:** Create a new REST endpoint
 
-**Steps:**
+### Steps
 ```bash
 # 1. Define route
 # server/src/routes/data.routes.ts
@@ -362,13 +373,13 @@ export const createItemSchema = z.object({
 
 # 5. Update OpenAPI spec
 # docs/apis/openapi/openapi.yaml
-```
+```text
 
 ### Task 2: Run Database Migration
 
 **Goal:** Apply schema changes to database
 
-**Steps:**
+### Steps (2)
 ```bash
 # 1. Create migration
 npm run db:generate
@@ -381,13 +392,13 @@ npm run db:migrate
 
 # 4. Verify schema
 npm run db:studio  # Opens Drizzle Studio
-```
+```text
 
 ### Task 3: Debug Production Issue
 
 **Goal:** Investigate issue in production
 
-**Steps:**
+### Steps (3)
 ```bash
 # 1. Check logs
 npm run logs:production
@@ -404,13 +415,13 @@ logger.debug('Debugging info:', { context });
 # 5. Deploy fix and verify
 npm run deploy
 npm run logs:tail
-```
+```text
 
 ## Testing
 
 ### Test Structure
 
-```
+```text
 server/tests/
 ├── unit/                   # Unit tests for services, utils
 │   ├── services/
@@ -419,7 +430,7 @@ server/tests/
 ├── integration/            # API endpoint tests
 │   └── routes/
 └── e2e/                    # Full end-to-end tests
-```
+```text
 
 ### Running Tests
 
@@ -438,7 +449,7 @@ npm run test:integration
 
 # Run with watch mode
 npm test -- --watch
-```
+```text
 
 ### Test Coverage Goals
 
@@ -449,11 +460,13 @@ npm test -- --watch
 ## Performance Considerations
 
 ### Performance Characteristics
+
 - **API Response Time:** Target P95 < 200ms, P99 < 500ms
 - **Throughput:** Target 1000 req/sec on single instance
 - **Database Queries:** Target < 50ms for most queries
 
 ### Optimization Strategies
+
 1. Use database indexes on frequently queried fields
 2. Implement Redis caching for expensive operations
 3. Use connection pooling for database
@@ -462,6 +475,7 @@ npm test -- --watch
 6. Use asynchronous operations for non-critical tasks
 
 ### Known Performance Issues
+
 - **N+1 Queries:** Can occur with nested data - use joins or DataLoader
 - **Large Payloads:** Endpoints returning large arrays can be slow
   - Mitigation: Implement pagination with `limit` and `offset`
@@ -480,6 +494,7 @@ npm test -- --watch
 ## Failure Modes
 
 ### Failure Mode 1: Database Connection Loss
+
 - **Symptom:** All API requests fail with 500 errors, "Cannot connect to database"
 - **Impact:** Complete application outage
 - **Detection:** Health check endpoint fails, error rate spikes
@@ -491,6 +506,7 @@ npm test -- --watch
 - **Monitoring:** Database connection pool metrics, query error rate
 
 ### Failure Mode 2: Memory Leak
+
 - **Symptom:** Server memory usage grows continuously until OOM crash
 - **Impact:** Server becomes unresponsive, eventual crash
 - **Detection:** Memory metrics show upward trend, process restarts
@@ -502,6 +518,7 @@ npm test -- --watch
 - **Monitoring:** Process memory usage, garbage collection metrics
 
 ### Failure Mode 3: Authentication Token Compromise
+
 - **Symptom:** Unauthorized access to user accounts
 - **Impact:** Security breach, data exposure
 - **Detection:** Unusual activity patterns, security audit findings
@@ -514,6 +531,7 @@ npm test -- --watch
 - **Monitoring:** Failed auth attempts, access patterns
 
 ### Failure Mode 4: External Service Outage
+
 - **Symptom:** Third-party API calls fail (email, storage, etc.)
 - **Impact:** Dependent features don't work (email notifications, file uploads)
 - **Detection:** Third-party API errors in logs
@@ -525,6 +543,7 @@ npm test -- --watch
 - **Monitoring:** Third-party API success rate, response times
 
 ### Failure Mode 5: Rate Limiting Triggered
+
 - **Symptom:** Legitimate users receive 429 Too Many Requests
 - **Impact:** Users cannot use the application
 - **Detection:** High rate of 429 responses
@@ -538,6 +557,7 @@ npm test -- --watch
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Health check
 curl http://localhost:3000/health
@@ -552,9 +572,10 @@ curl -X POST http://localhost:3000/api/auth/register \
 
 # 4. Run smoke tests
 npm run test:smoke
-```
+```text
 
 ### Automated Checks
+
 - [ ] Server starts: `npm start`
 - [ ] All tests pass: `npm test`
 - [ ] Type checking passes: `npm run type-check`
@@ -563,6 +584,7 @@ npm run test:smoke
 - [ ] Health endpoint returns 200: `curl http://localhost:3000/health`
 
 ### Success Criteria
+
 1. Server starts without errors
 2. Database migrations apply successfully
 3. All API endpoints return expected responses
@@ -583,14 +605,15 @@ Response:
   "redis": "connected",
   "version": "1.0.0"
 }
-```
+```text
 
 ## Troubleshooting
 
 ### Problem 1: Port Already in Use
-**Symptoms:** Server fails to start with "EADDRINUSE" error  
-**Cause:** Another process using port 3000  
-**Solution:**
+
+**Symptoms:** Server fails to start with "EADDRINUSE" error
+**Cause:** Another process using port 3000
+### Solution
 ```bash
 # Find process using port
 lsof -i :3000
@@ -600,12 +623,13 @@ kill -9 <PID>
 
 # Or use different port
 PORT=3001 npm start
-```
+```text
 
 ### Problem 2: Database Migration Fails
-**Symptoms:** Migration command errors, schema out of sync  
-**Cause:** Migration file conflicts, invalid SQL  
-**Solution:**
+
+**Symptoms:** Migration command errors, schema out of sync
+**Cause:** Migration file conflicts, invalid SQL
+### Solution (2)
 ```bash
 # Check migration status
 npm run db:check
@@ -619,12 +643,13 @@ npm run db:migrate
 
 # If all else fails, reset (DEV ONLY!)
 npm run db:reset
-```
+```text
 
 ### Problem 3: Slow API Responses
-**Symptoms:** Endpoints taking seconds to respond  
-**Cause:** Unoptimized queries, missing indexes  
-**Solution:**
+
+**Symptoms:** Endpoints taking seconds to respond
+**Cause:** Unoptimized queries, missing indexes
+### Solution (3)
 ```bash
 # Enable query logging
 DATABASE_LOGGING=true npm run dev
@@ -636,7 +661,7 @@ DATABASE_LOGGING=true npm run dev
 # Monitor with tools
 npm install -g clinic
 clinic doctor -- node dist/server.js
-```
+```text
 
 ## Migration and Upgrade Guides
 
@@ -651,6 +676,7 @@ clinic doctor -- node dist/server.js
 ### Database Schema Changes
 
 Always use migrations:
+
 ```bash
 # Never edit schema directly in production
 # Always generate migration
@@ -661,7 +687,7 @@ npm run db:migrate
 
 # Apply to production
 npm run db:migrate:production
-```
+```text
 
 ## Security Considerations
 
@@ -688,11 +714,13 @@ See [Security Documentation](../security/threat_model.md) for complete threat mo
 ## Maintenance and Support
 
 ### Module Owner
+
 - **Team:** Backend Engineering
 - **Primary Contact:** Backend Tech Lead
 - **Slack Channel:** #backend-dev
 
 ### SLA Commitments
+
 - **Critical Bugs:** Response within 2 hours
 - **API Uptime:** 99.9% target
 - **Security Patches:** Within 24 hours of disclosure
@@ -700,6 +728,7 @@ See [Security Documentation](../security/threat_model.md) for complete threat mo
 ### Deprecation Policy
 
 APIs follow semantic versioning:
+
 - Breaking changes → Major version bump
 - Deprecation warnings → 3 months before removal
 - Backwards compatibility → Maintained for 1 major version

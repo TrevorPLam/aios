@@ -1,8 +1,8 @@
 # How to [Accomplish Specific Task]
 
-> **Type:** How-To Guide (Task-Oriented)  
-> **Audience:** Developers with AIOS experience  
-> **Time:** ~XX minutes  
+> **Type:** How-To Guide (Task-Oriented)
+> **Audience:** Developers with AIOS experience
+> **Time:** ~XX minutes
 > **Difficulty:** [Beginner/Intermediate/Advanced]
 
 ## Plain English Summary
@@ -17,12 +17,14 @@
 
 [Describe the problem or goal this how-to solves]
 
-**When to use this guide:**
+### When to use this guide
+
 - When you need to [scenario 1]
 - When you want to [scenario 2]
 - When you're seeing [error/issue]
 
-**When NOT to use this guide:**
+### When NOT to use this guide
+
 - If you're learning basics → See [Tutorial link]
 - If you need reference info → See [Reference link]
 - If you want to understand why → See [Explanation link]
@@ -30,16 +32,18 @@
 ## Prerequisites
 
 Before starting, ensure you have:
+
 - [ ] [Required setup/knowledge #1]
 - [ ] [Required setup/knowledge #2]
 - [ ] [Required tools installed]
 - [ ] [Access/permissions needed]
 
-**Verify prerequisites:**
+### Verify prerequisites
+
 ```bash
 # Quick checks
 [command to verify]
-```
+```text
 
 ---
 
@@ -48,6 +52,7 @@ Before starting, ensure you have:
 ### Overview
 
 Here's what we'll do:
+
 1. [Step 1 summary]
 2. [Step 2 summary]
 3. [Step 3 summary]
@@ -64,7 +69,7 @@ Here's what we'll do:
 ```bash
 # Commands or code
 [concrete implementation]
-```
+```text
 
 **Why this works:** [Brief explanation if not obvious]
 
@@ -75,9 +80,9 @@ Here's what we'll do:
 ```typescript
 // File: path/to/file.ts
 [code changes]
-```
+```text
 
-**Key points:**
+### Key points
 - [Important note #1]
 - [Important note #2]
 
@@ -100,9 +105,9 @@ npm run lint
 
 # Manual verification
 [steps to manually verify]
-```
+```text
 
-**Expected result:**
+### Expected result
 - [ ] [Success criterion #1]
 - [ ] [Success criterion #2]
 - [ ] [Success criterion #3]
@@ -116,7 +121,7 @@ Here's the complete solution:
 ```typescript
 // Full working example
 [complete code]
-```
+```text
 
 **See also:** [Link to working example in repo]
 
@@ -125,16 +130,20 @@ Here's the complete solution:
 ## Options and Variations
 
 ### Option A: [Alternative approach]
+
 Use this when [scenario]:
+
 ```typescript
 [alternative code]
-```
+```text
 
 ### Option B: [Another alternative]
+
 Better for [different scenario]:
+
 ```typescript
 [alternative code]
-```
+```text
 
 ---
 
@@ -142,30 +151,30 @@ Better for [different scenario]:
 
 ### Issue: [Common problem #1]
 
-**Symptoms:**
+#### Symptoms
 - [What you see]
 - [Error messages]
 
 **Cause:** [Why this happens]
 
-**Solution:**
+### Solution
 ```bash
 [fix commands]
-```
+```text
 
 ---
 
 ### Issue: [Common problem #2]
 
-**Symptoms:**
+#### Symptoms (2)
 - [What you see]
 
 **Cause:** [Why this happens]
 
-**Solution:**
+### Solution (2)
 ```bash
 [fix commands]
-```
+```text
 
 ---
 
@@ -198,19 +207,19 @@ Better for [different scenario]:
 
 ## Related Resources
 
-**How-To Guides:**
+### How-To Guides
 - [Related how-to #1]
 - [Related how-to #2]
 
-**Reference:**
+### Reference
 - [API/config reference]
 - [Type definitions]
 
-**Explanation:**
+### Explanation
 - [Architecture explanation]
 - [Concept deep-dive]
 
-**Tutorials:**
+### Tutorials
 - [Beginner tutorial]
 
 ---
@@ -225,7 +234,7 @@ Better for [different scenario]:
 ## Failure Modes
 
 | Failure | Symptom | Resolution |
-|---------|---------|------------|
+| --------- | --------- | ------------ |
 | [Failure #1] | [What happens] | [How to fix] |
 | [Failure #2] | [What happens] | [How to fix] |
 
@@ -237,7 +246,7 @@ Better for [different scenario]:
 
 # Expected output
 [what success looks like]
-```
+```text
 
 ---
 
@@ -245,7 +254,7 @@ Better for [different scenario]:
 
 **Could this be automated?** [Yes/No]
 
-**If yes:**
+### If yes
 - **Trigger:** [What would trigger automation]
 - **Commands:** [Commands to automate]
 - **Guardrails:** [Safety checks needed]
@@ -260,6 +269,6 @@ Better for [different scenario]:
 
 ---
 
-*Last Updated: [Date]*  
-*Tested on: [AIOS version]*  
+*Last Updated: [Date]*
+*Tested on: [AIOS version]*
 *Found an issue? [Report it](link)*

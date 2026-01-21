@@ -11,40 +11,40 @@ This diagram shows AIOS from a bird's-eye view. It illustrates who uses the syst
 ```mermaid
 graph TB
     User[Mobile User<br/>iOS & Android]
-    
+
     AIOS[AIOS<br/>AI Operating System<br/>Personal productivity & organization platform<br/>React Native + Node.js + PostgreSQL]
-    
+
     EmailServices[External Email Services<br/>SMTP/IMAP<br/>Gmail, Outlook, etc.]
     CalendarServices[External Calendar Services<br/>CalDAV/iCal<br/>Google Calendar, iCloud, etc.]
     ContactServices[Contact Providers<br/>Device contacts, CardDAV]
     CloudStorage[Cloud Storage<br/>Photos & file storage<br/>Local + potential cloud sync]
-    
-    User -->|Uses mobile app for<br/>notes, tasks, calendar,<br/>messages, planning| AIOS
-    
-    AIOS -->|Sends/receives email<br/>SMTP/IMAP| EmailServices
-    AIOS -->|Syncs calendar events<br/>CalDAV| CalendarServices
-    AIOS -->|Imports/syncs contacts<br/>vCard| ContactServices
-    AIOS -->|Stores photos<br/>Local file system| CloudStorage
-    
+
+ User --> | Uses mobile app for<br/>notes, tasks, calendar,<br/>messages, planning | AIOS
+
+ AIOS --> | Sends/receives email<br/>SMTP/IMAP | EmailServices
+ AIOS --> | Syncs calendar events<br/>CalDAV | CalendarServices
+ AIOS --> | Imports/syncs contacts<br/>vCard | ContactServices
+ AIOS --> | Stores photos<br/>Local file system | CloudStorage
+
     style AIOS fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
     style User fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
     style EmailServices fill:#E8E8E8,stroke:#999,stroke-width:2px
     style CalendarServices fill:#E8E8E8,stroke:#999,stroke-width:2px
     style ContactServices fill:#E8E8E8,stroke:#999,stroke-width:2px
     style CloudStorage fill:#E8E8E8,stroke:#999,stroke-width:2px
-```
+```text
 
 ### System Overview
 
 **AIOS (AI Operating System)** is a personal productivity and organization platform delivered as a mobile-first application. It provides an integrated suite of 14 modules for managing various aspects of daily life and work.
 
-**Core Value Proposition:**
+### Core Value Proposition
 - Unified interface for notes, tasks, calendar, email, messages, and more
 - AI-powered recommendations and insights
 - Offline-first with server synchronization
 - Cross-module context awareness and handoffs
 
-**Technology Stack:**
+### Technology Stack
 - **Frontend**: React Native (v0.81.5), Expo (v54)
 - **Backend**: Node.js, Express (v4.21)
 - **Database**: PostgreSQL with Drizzle ORM
@@ -53,14 +53,14 @@ graph TB
 
 ### System Boundary
 
-**What's Inside AIOS:**
+#### What's Inside AIOS
 - Mobile application (iOS/Android)
 - Backend API server
 - PostgreSQL database
 - Authentication system
 - File storage (photos, attachments)
 
-**What's Outside AIOS:**
+### What's Outside AIOS
 - User devices (smartphones, tablets)
 - External email servers
 - External calendar services
@@ -84,18 +84,21 @@ graph TB
 ### External Systems
 
 #### Email Services (Future Integration)
+
 - **Purpose**: Send and receive email through user's existing accounts
 - **Protocol**: SMTP (sending), IMAP/POP3 (receiving)
 - **Examples**: Gmail, Outlook, custom mail servers
 - **Status**: Placeholder for future implementation
 
 #### Calendar Services (Future Integration)
+
 - **Purpose**: Sync events with external calendar providers
 - **Protocol**: CalDAV, iCal
 - **Examples**: Google Calendar, iCloud Calendar, Office 365
 - **Status**: Placeholder for future implementation
 
 #### Contact Services
+
 - **Purpose**: Import and sync contact information
 - **Protocol**: Device contacts API, vCard format
 - **Examples**: iOS Contacts, Android Contacts, CardDAV servers
@@ -103,6 +106,7 @@ graph TB
 - **Code**: `client/screens/ContactsScreen.tsx`
 
 #### Cloud Storage (Future Integration)
+
 - **Purpose**: Store and sync photos and file attachments
 - **Protocol**: RESTful APIs, WebDAV
 - **Examples**: iCloud, Google Drive, Dropbox
@@ -145,23 +149,23 @@ graph TB
 
 **Problem**: External email, calendar, or contact services become unavailable.
 
-**Impact:**
+### Impact
 - Email module cannot fetch new messages or send
 - Calendar sync fails, events may be stale
 - Contact import fails
 
-**Symptoms:**
+### Symptoms
 - Timeout errors in integration screens
 - Stale data displayed
 - Sync indicators show errors
 
-**Mitigation:**
+### Mitigation
 - Cache last successful sync data locally
 - Display user-friendly error messages with retry options
 - Implement exponential backoff for retries
 - Allow offline operation with cached data
 
-**Recovery:**
+### Recovery
 - System automatically retries when service becomes available
 - User can manually trigger sync
 - No data loss due to offline-first architecture
@@ -170,23 +174,23 @@ graph TB
 
 **Problem**: User cannot authenticate (wrong credentials, expired token, server unavailable).
 
-**Impact:**
+### Impact (2)
 - User locked out of app
 - Cannot access any data (if token expired)
 - Sync operations fail
 
-**Symptoms:**
+### Symptoms (2)
 - Login screen shows error
 - Token refresh fails
 - API calls return 401 Unauthorized
 
-**Mitigation:**
+### Mitigation (2)
 - Store encrypted credentials for automatic retry
 - Graceful token refresh before expiration
 - Offline mode allows access to cached data
 - Clear error messages guide user to re-authenticate
 
-**Recovery:**
+### Recovery (2)
 - User re-enters credentials
 - Token refresh succeeds
 - System resumes normal operation
@@ -195,23 +199,23 @@ graph TB
 
 **Problem**: Mobile device loses internet connection.
 
-**Impact:**
+### Impact (3)
 - Cannot sync with backend
 - Cannot access non-cached data
 - Integration features unavailable
 
-**Symptoms:**
+### Symptoms (3)
 - Sync indicators show offline status
 - Some screens show stale data warnings
 - Write operations queued locally
 
-**Mitigation:**
+### Mitigation (3)
 - AsyncStorage provides offline data cache
 - UI clearly indicates offline status
 - Read-only access to cached data
 - Queue write operations for later sync
 
-**Recovery:**
+### Recovery (3)
 - Automatic sync when connectivity restored
 - Queued operations processed in order
 - Conflict resolution for concurrent edits (simple last-write-wins)
@@ -220,23 +224,23 @@ graph TB
 
 **Problem**: Users misunderstand what AIOS can and cannot do regarding external services.
 
-**Impact:**
+### Impact (4)
 - Frustration when expected integrations don't work
 - Support burden explaining system limitations
 - Poor user experience
 
-**Symptoms:**
+### Symptoms (4)
 - Users expect automatic email/calendar sync that doesn't exist
 - Confusion about what data lives where
 - Requests for features that are out of scope
 
-**Mitigation:**
+### Mitigation (4)
 - Clear documentation of current capabilities
 - Integration screens show "Coming Soon" for planned features
 - Onboarding explains AIOS scope
 - Feature discovery guides users to available functionality
 
-**Recovery:**
+### Recovery (4)
 - Documentation updates
 - UI improvements to clarify boundaries
 - Roadmap visibility for planned features
@@ -264,13 +268,13 @@ grep "pgTable" shared/schema.ts       # Should list all tables
 ls server/middleware/auth.ts          # JWT auth middleware
 grep "generateToken" server/middleware/auth.ts
 grep "authenticate" server/middleware/auth.ts
-```
+```text
 
 ### User Interactions
 
 ```bash
 # 1. Check all module screens exist (14 production modules)
-ls client/screens/ | grep -E "(CommandCenter|Notebook|Planner|Calendar|Email|Messages|Lists|Alerts|Contacts|Translator|Photos|History|Budget|Integrations)Screen.tsx"
+ ls client/screens/ | grep -E "(CommandCenter | Notebook | Planner | Calendar | Email | Messages | Lists | Alerts | Contacts | Translator | Photos | History | Budget | Integrations)Screen.tsx"
 
 # 2. Verify navigation structure
 cat client/navigation/AppNavigator.tsx    # Bottom tabs, drawer
@@ -279,7 +283,7 @@ cat client/navigation/RootStackNavigator.tsx  # Stack navigation
 # 3. Check authentication flow
 grep -r "login" client/screens/            # Login UI
 grep -r "/api/auth" client/                # Auth API calls
-```
+```text
 
 ### External System Integrations
 
@@ -299,9 +303,9 @@ ls client/screens/CalendarScreen.tsx
 # 4. Check for external API integrations in code
 grep -r "fetch.*http" server/              # Outbound HTTP calls
 grep -r "axios" server/                     # HTTP client library (if used)
-```
+```text
 
-### Trust Boundaries
+### Trust Boundaries (2)
 
 ```bash
 # 1. Verify JWT authentication middleware
@@ -317,7 +321,7 @@ grep "ssl" server/                        # SSL certificate handling
 # 4. Check user data isolation
 grep "userId" server/routes.ts | head -10  # Should filter by user
 grep "req.user" server/routes.ts | head -10  # Should use authenticated user
-```
+```text
 
 ### System Boundary Validation
 
@@ -334,9 +338,9 @@ cat app.json                              # Expo configuration
 grep "react-native" package.json          # RN version
 
 # 4. Check for external service configurations
-grep -i "smtp\|imap\|caldav" server/      # Email/calendar config
+ grep -i "smtp\ | imap\ | caldav" server/      # Email/calendar config
 grep "integration" shared/schema.ts       # Integration data model
-```
+```text
 
 ### Smoke Test
 
@@ -361,7 +365,7 @@ curl -X POST http://localhost:5000/api/auth/register \
 
 # 5. Cleanup
 kill $SERVER_PID
-```
+```text
 
 ## Related Documentation
 
@@ -374,9 +378,9 @@ kill $SERVER_PID
 
 ## References
 
-- C4 Model: https://c4model.com/
+- C4 Model: <https://c4model.com/>
 - AIOS Repository: `/home/runner/work/Mobile-Scaffold/Mobile-Scaffold`
-- React Native: https://reactnative.dev/
-- Expo: https://expo.dev/
-- Express: https://expressjs.com/
-- PostgreSQL: https://www.postgresql.org/
+- React Native: <https://reactnative.dev/>
+- Expo: <https://expo.dev/>
+- Express: <https://expressjs.com/>
+- PostgreSQL: <https://www.postgresql.org/>

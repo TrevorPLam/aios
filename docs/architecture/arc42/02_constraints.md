@@ -11,26 +11,27 @@ This document lists the technical and organizational rules we must follow when b
 ### Platform Constraints
 
 | Constraint | Description | Rationale | Impact |
-|------------|-------------|-----------|--------|
+| ------------ | ------------- | ----------- | -------- |
 | **Mobile-First** | iOS and Android are primary platforms | Target users are mobile-first; web is secondary fallback | All features must work natively on mobile |
 | **iOS 13+** | Minimum iOS version 13 | Covers 95%+ of iPhone users, enables modern APIs | Can use latest React Native features |
 | **Android 10+** | Minimum Android SDK 29 | Covers 85%+ of Android users, modern APIs | Can use modern Android features |
 | **No Web Platform** | Web is disabled in Expo config | Focus on native mobile experience | Simplified development, better performance |
 | **ARM Architecture** | Must run on ARM processors (iOS/Android) | All mobile devices use ARM | No x86-specific optimizations |
 
-**Verification:**
+### Verification
+
 ```bash
 # Check Expo config
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/app.json | grep platforms
 
 # Check minimum versions
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 5 "expo"
-```
+```text
 
 ### Technology Stack Constraints
 
 | Technology | Version | Constraint | Decision Reference |
-|------------|---------|------------|-------------------|
+| ------------ | --------- | ------------ | ------------------- |
 | **React Native** | 0.81.5 | Mobile client framework | [ADR-002](../../decisions/002-react-native.md) |
 | **Expo** | 54.0.23 | Development platform, OTA updates | Required for rapid development |
 | **Node.js** | 18+ | Backend runtime | Server-side JavaScript |
@@ -44,14 +45,14 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 5 "
 | **Zod** | 3.24.2 | Schema validation | Runtime type checking |
 | **Jest** | 30.2.0 | Testing framework | Unit and integration tests |
 
-**Rationale:**
+### Rationale
 - **React Native:** Cross-platform mobile development with native performance (see [ADR-002](../../decisions/002-react-native.md))
 - **Expo:** Simplifies mobile development, provides managed services, enables OTA updates
 - **TypeScript:** Type safety prevents runtime errors, improves maintainability
 - **AsyncStorage:** Simple key-value storage for local-first approach (see [ADR-001](../../decisions/001-use-asyncstorage.md))
 - **PostgreSQL + Drizzle:** Scalable relational database with type-safe ORM
 
-**Files:**
+### Files
 - `/package.json` - Dependency versions
 - `/tsconfig.json` - TypeScript configuration
 - `/babel.config.js` - Babel transpilation config
@@ -60,32 +61,32 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 5 "
 ### Storage Constraints
 
 | Constraint | Limit | Impact | Mitigation |
-|------------|-------|--------|-----------|
+| ------------ | ------- | -------- | ----------- |
 | **AsyncStorage Limit** | 6MB (Android), 10MB (iOS) | Local data must fit within limits | Data pruning, archive strategies, future SQLite migration |
 | **SQLite Support** | Not yet implemented | No complex queries in local storage | Use PostgreSQL for backend, consider Expo SQLite for mobile |
 | **No File System Access** | Sandboxed storage only | Can't write to arbitrary paths | Use Expo FileSystem API for documents |
 | **Cloud Sync Not Implemented** | MVP is local-only | No multi-device sync yet | Planned for Phase 4+ |
 
-**Verification:**
+### Verification (2)
 ```bash
 # Check AsyncStorage usage
 grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
 
 # Check storage configuration
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
-```
+```text
 
 ### Development Environment Constraints
 
 | Constraint | Description | Rationale |
-|------------|-------------|-----------|
+| ------------ | ------------- | ----------- |
 | **macOS for iOS** | iOS development requires macOS + Xcode | Apple requirement |
 | **Android Studio** | Android development requires Android Studio + SDK | Google requirement |
 | **Expo Go** | Testing on physical devices requires Expo Go app | Simplifies testing |
 | **Node.js 18+** | Modern JavaScript features, ESM support | LTS version |
 | **Git** | Version control required | Standard practice |
 
-**Files:**
+### Files (2)
 - `/.github/` - GitHub Actions workflows
 - `/scripts/` - Build and deployment scripts
 - `/package.json` - npm scripts
@@ -97,14 +98,14 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
 ### Development Process Constraints
 
 | Constraint | Description | Rationale | Impact |
-|------------|-------------|-----------|--------|
+| ------------ | ------------- | ----------- | -------- |
 | **Git Flow** | Feature branches, PRs, code review | Quality assurance | All changes reviewed before merge |
 | **CI/CD Required** | All tests must pass in GitHub Actions | Automated quality gates | Broken tests block deployment |
 | **Test Coverage** | 100% coverage on production modules | Quality standard | New features require tests |
 | **Documentation Required** | All modules must be documented | Knowledge sharing | Features incomplete without docs |
 | **Security Scans** | CodeQL must pass with 0 critical issues | Security standard | Vulnerabilities block release |
 
-**Verification:**
+### Verification (3)
 ```bash
 # Check CI/CD configuration
 ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/.github/workflows/
@@ -114,19 +115,19 @@ npm test
 npm run lint
 npm run check:types
 npm audit
-```
+```text
 
 ### Documentation Constraints
 
 | Constraint | Standard | Location | Purpose |
-|------------|----------|----------|---------|
+| ------------ | ---------- | ---------- | --------- |
 | **Architecture Decisions** | ADR format | `/docs/decisions/` | Capture key technical decisions |
 | **API Documentation** | OpenAPI/Swagger (future) | `/docs/technical/API_DOCUMENTATION.md` | API contract |
 | **Code Comments** | JSDoc for public APIs | Inline in code | Code-level documentation |
 | **Architecture Documentation** | arc42 template | `/docs/architecture/arc42/` | System architecture |
 | **Glossary** | Standardized terms | `/docs/glossary.md` | Common vocabulary |
 
-**Files:**
+### Files (3)
 - `/docs/decisions/README.md` - ADR index
 - `/docs/architecture/README.md` - Architecture docs overview
 - `/docs/glossary.md` - Terminology
@@ -134,7 +135,7 @@ npm audit
 ### Security Constraints
 
 | Constraint | Requirement | Verification | Impact |
-|------------|-------------|--------------|--------|
+| ------------ | ------------- | -------------- | -------- |
 | **Authentication** | JWT with bcrypt hashing | [ADR-003](../../decisions/003-jwt-auth.md) | All protected endpoints require valid tokens |
 | **Password Hashing** | bcrypt with 10+ rounds | Server code | No plaintext passwords |
 | **HTTPS Only** | All API calls over HTTPS | Network config | HTTP blocked in production |
@@ -142,7 +143,7 @@ npm audit
 | **Dependency Audits** | Regular npm audit checks | CI/CD | Vulnerable dependencies blocked |
 | **CodeQL Scanning** | GitHub Advanced Security | CI/CD | Critical issues block release |
 
-**Verification:**
+### Verification (4)
 ```bash
 # Check authentication implementation
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
@@ -153,7 +154,7 @@ npm audit fix
 
 # Check for secrets in code (should return nothing)
 grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/ | grep -v test
-```
+```text
 
 ---
 
@@ -162,13 +163,13 @@ grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/ 
 ### TypeScript Constraints
 
 | Constraint | Configuration | Rationale | Impact |
-|------------|--------------|-----------|--------|
+| ------------ | -------------- | ----------- | -------- |
 | **Strict Mode** | `"strict": true` | Maximum type safety | No implicit `any`, null checks required |
 | **ES Module Interop** | `"esModuleInterop": true` | Import compatibility | Can import CommonJS modules |
 | **Path Aliases** | `@/*` for client, `@shared/*` for shared | Clean imports | Shorter import paths |
 | **No `any` Types** | Lint rule | Type safety | All types must be explicit |
 
-**Configuration:**
+### Configuration
 ```json
 // /tsconfig.json
 {
@@ -181,31 +182,31 @@ grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/ 
     }
   }
 }
-```
+```text
 
-**Verification:**
+### Verification (5)
 ```bash
 # Type checking
 npm run check:types
 
 # Show TypeScript config
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/tsconfig.json
-```
+```text
 
 ### Linting and Formatting Constraints
 
 | Tool | Configuration | Purpose | Enforcement |
-|------|--------------|---------|-------------|
+| ------ | -------------- | --------- | ------------- |
 | **ESLint** | `eslint.config.js` | Code quality | CI/CD blocks on errors |
 | **Prettier** | `prettier.config.js` | Code formatting | Pre-commit hook |
 | **Expo Lint** | Built-in rules | React Native best practices | `npm run lint` |
 
-**Configuration:**
+### Configuration (2)
 - `/eslint.config.js` - ESLint rules
 - `/.prettierrc` - Prettier configuration (if exists)
 - `/package.json` - Scripts for linting
 
-**Verification:**
+### Verification (6)
 ```bash
 # Run linting
 npm run lint
@@ -216,7 +217,7 @@ npm run check:format
 # Auto-fix
 npm run lint:fix
 npm run format
-```
+```text
 
 ---
 
@@ -225,26 +226,26 @@ npm run format
 ### Mobile Performance Requirements
 
 | Constraint | Target | Rationale | Measurement |
-|------------|--------|-----------|-------------|
+| ------------ | -------- | ----------- | ------------- |
 | **60 FPS Animations** | 16ms frame time | Smooth user experience | React DevTools Profiler |
 | **Screen Transition** | < 100ms | Perceived instant response | Performance monitoring |
 | **App Launch Time** | < 2 seconds | User retention | Expo performance monitor |
 | **Search Response** | < 200ms | Real-time feel | Performance tests |
 | **Bundle Size** | < 10MB (optimized) | Fast downloads, storage | Build analysis |
 
-**Implementation:**
+### Implementation
 - React Native Reanimated for 60fps animations
 - Lazy loading of screens
 - FlatList virtualization
 - useMemo/useCallback optimization
 - Image optimization with Expo Image
 
-**Files:**
+### Files (4)
 - `/metro.config.js` - Bundling optimization
 - `/client/components/` - Optimized components
 - `/client/screens/` - Performance best practices
 
-**Verification:**
+### Verification (7)
 ```bash
 # Check bundle size
 npm run expo:static:build
@@ -252,24 +253,24 @@ npm run expo:static:build
 # Profile performance
 npm run expo:dev
 # Use React DevTools > Profiler tab
-```
+```text
 
 ### Network Constraints
 
 | Constraint | Requirement | Rationale | Impact |
-|------------|-------------|-----------|--------|
+| ------------ | ------------- | ----------- | -------- |
 | **Offline-First** | Core features work without network | Mobile connectivity unreliable | AsyncStorage for local data |
 | **Request Timeout** | 10 seconds | Prevent hanging requests | User experience |
 | **Retry Logic** | 3 attempts with exponential backoff | Handle transient failures | Reliability |
 | **Optimistic Updates** | UI updates before server confirmation | Perceived performance | Better UX |
 
-**Implementation:**
+### Implementation (2)
 - AsyncStorage for offline data
 - TanStack React Query for caching and retries
 - Optimistic updates in UI
 - Network state monitoring
 
-**Files:**
+### Files (5)
 - `/client/storage/database.ts` - Offline storage
 - `/client/hooks/` - Network-aware hooks
 
@@ -350,7 +351,7 @@ ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
 
 # Verify build configuration
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/metro.config.js
-```
+```text
 
 ### Verify Organizational Constraints
 
@@ -366,12 +367,12 @@ ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 
 # Verify security implementation
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
-```
+```text
 
 ### Verify Code Quality Constraints
 
 ```bash
-# Type checking
+# Type checking (2)
 npm run check:types
 
 # Linting
@@ -385,7 +386,7 @@ npm audit
 
 # Run tests
 npm test
-```
+```text
 
 ### Verify Performance Constraints
 
@@ -399,7 +400,7 @@ npm run expo:dev
 
 # Check bundle analysis (if configured)
 npx expo export --dev
-```
+```text
 
 ---
 

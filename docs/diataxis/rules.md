@@ -15,7 +15,7 @@
 
 ### The Four Documentation Types
 
-```
+```text
                     LEARNING-ORIENTED          TASK-ORIENTED
                     ┌──────────────────┐      ┌──────────────────┐
     PRACTICAL       │                  │      │                  │
@@ -29,16 +29,16 @@
                     │                  │      │                  │
                     └──────────────────┘      └──────────────────┘
                     UNDERSTANDING-ORIENTED     INFORMATION-ORIENTED
-```
+```text
 
 ### 1. Tutorials (Learning-Oriented)
 
-**Purpose:** Teach a beginner through practical steps  
-**Audience:** New contributors, new users  
-**Goal:** Learning by doing  
+**Purpose:** Teach a beginner through practical steps
+**Audience:** New contributors, new users
+**Goal:** Learning by doing
 **Location:** `docs/diataxis/tutorials/` or module-specific tutorial sections
 
-**Characteristics:**
+### Characteristics
 - Focused on **teaching**
 - Takes the user **through a series of steps**
 - Ensures **reliable results** (everything works if followed correctly)
@@ -46,7 +46,7 @@
 - **Inspires confidence** through early success
 - Covers **one clear objective**
 
-**Writing Rules:**
+### Writing Rules
 - [ ] Start with a clear learning objective
 - [ ] Provide complete, working examples
 - [ ] Test every step personally
@@ -56,7 +56,7 @@
 - [ ] Include "Prerequisites" section
 - [ ] End with "Next steps" pointing to related docs
 
-**Example Topics:**
+### Example Topics
 - "Getting Started with AIOS Development"
 - "Building Your First Module"
 - "Creating a Component from Scratch"
@@ -67,12 +67,12 @@
 
 ### 2. How-To Guides (Task-Oriented)
 
-**Purpose:** Solve a specific problem  
-**Audience:** Experienced users with a specific goal  
-**Goal:** Accomplish a task  
+**Purpose:** Solve a specific problem
+**Audience:** Experienced users with a specific goal
+**Goal:** Accomplish a task
 **Location:** `docs/operations/runbooks/`, module guides, or task-specific docs
 
-**Characteristics:**
+### Characteristics (2)
 - Focused on **achieving a goal**
 - Shows **how to solve a problem**
 - Assumes **user knows basics**
@@ -80,7 +80,7 @@
 - Results-focused
 - Addresses **a specific use case**
 
-**Writing Rules:**
+### Writing Rules (2)
 - [ ] Clear title starting with "How to..."
 - [ ] List prerequisites/assumptions
 - [ ] Numbered steps or clear sequence
@@ -90,7 +90,7 @@
 - [ ] Show expected outcomes
 - [ ] Keep focused on one task
 
-**Example Topics:**
+### Example Topics (2)
 - "How to Add a New Module"
 - "How to Debug WebSocket Connection Issues"
 - "How to Deploy to Production"
@@ -101,12 +101,12 @@
 
 ### 3. Reference (Information-Oriented)
 
-**Purpose:** Provide accurate technical facts  
-**Audience:** Anyone looking up specifics  
-**Goal:** Look up information  
+**Purpose:** Provide accurate technical facts
+**Audience:** Anyone looking up specifics
+**Goal:** Look up information
 **Location:** `docs/apis/`, `docs/modules/`, technical specifications
 
-**Characteristics:**
+### Characteristics (3)
 - Focused on **information**
 - Provides **dry, factual descriptions**
 - Structured like a **dictionary or encyclopedia**
@@ -114,7 +114,7 @@
 - Accurate and **up-to-date**
 - **Comprehensive coverage**
 
-**Writing Rules:**
+### Writing Rules (3)
 - [ ] Consistent structure across all reference docs
 - [ ] Accurate, technical language
 - [ ] Complete coverage (no gaps)
@@ -124,7 +124,7 @@
 - [ ] Include code examples
 - [ ] Link to related references
 
-**Example Topics:**
+### Example Topics (3)
 - "API Endpoint Reference"
 - "Configuration Options"
 - "Module Props and Methods"
@@ -135,12 +135,12 @@
 
 ### 4. Explanation (Understanding-Oriented)
 
-**Purpose:** Explain concepts, decisions, and context  
-**Audience:** Users wanting to understand "why" and "how it works"  
-**Goal:** Deepen understanding  
+**Purpose:** Explain concepts, decisions, and context
+**Audience:** Users wanting to understand "why" and "how it works"
+**Goal:** Deepen understanding
 **Location:** `docs/architecture/`, `docs/adr/`, concept docs
 
-**Characteristics:**
+### Characteristics (4)
 - Focused on **understanding**
 - Provides **context and background**
 - Explains **design decisions**
@@ -148,7 +148,7 @@
 - Discusses **implications**
 - Makes **connections** to broader concepts
 
-**Writing Rules:**
+### Writing Rules (4)
 - [ ] Explain the "why" behind decisions
 - [ ] Provide context and history
 - [ ] Discuss alternatives considered
@@ -158,7 +158,7 @@
 - [ ] Connect to broader architectural concepts
 - [ ] No step-by-step instructions (link to How-To)
 
-**Example Topics:**
+### Example Topics (4)
 - "Why We Chose React Native"
 - "Authentication Architecture Explained"
 - "Module Boundary Design"
@@ -171,7 +171,7 @@
 
 Use this to choose the right documentation type:
 
-```
+```text
 START: What is the purpose of this document?
 
 ├─ To teach a beginner? → TUTORIAL
@@ -181,7 +181,7 @@ START: What is the purpose of this document?
 ├─ To look up facts and specs? → REFERENCE
 │
 └─ To understand concepts/decisions? → EXPLANATION
-```
+```text
 
 Or ask yourself:
 
@@ -198,7 +198,7 @@ Or ask yourself:
 
 For each module, create all four types:
 
-```
+```text
 docs/modules/notebook/
 ├── README.md (overview + links)
 ├── tutorial.md (learning-oriented)
@@ -208,11 +208,12 @@ docs/modules/notebook/
 │   └── export-notes.md
 ├── reference.md (API, props, types)
 └── architecture.md (explanation)
-```
+```text
 
 ### Documentation Audit Checklist
 
 When reviewing documentation:
+
 - [ ] Document fits clearly into one category
 - [ ] Title/header indicates the type
 - [ ] Content matches the type's characteristics
@@ -263,6 +264,7 @@ When reviewing documentation:
 ### In Pull Requests
 
 Reviewers should check:
+
 - [ ] New docs use appropriate Diátaxis category
 - [ ] Docs follow the correct template
 - [ ] Docs don't mix categories
@@ -271,6 +273,7 @@ Reviewers should check:
 ### In Documentation Coverage Map
 
 Track for each module:
+
 - [ ] Has tutorial
 - [ ] Has how-to guides (at least 3)
 - [ ] Has reference documentation
@@ -288,7 +291,7 @@ Track for each module:
 ## Failure Modes
 
 | Failure Mode | Symptom | Solution |
-|--------------|---------|----------|
+| -------------- | --------- | ---------- |
 | Category confusion | Docs mix types | Template enforcement, review checklist |
 | Missing category | No tutorials or only reference | Coverage map, requirements |
 | Wrong audience | Beginners get reference first | Clear navigation, "Start here" guides |
@@ -296,29 +299,29 @@ Track for each module:
 
 ## How to Verify
 
-**Check structure exists:**
+### Check structure exists
 ```bash
 ls -la docs/diataxis/
 ls -la docs/diataxis/templates/
-```
+```text
 
-**Audit a document:**
+### Audit a document
 ```bash
-# Read the document and ask:
+# Read the document and ask
 # 1. Which category is this?
 # 2. Does it fit the category rules?
 # 3. Does it follow the template?
 # 4. Does it link to other categories?
-```
+```text
 
-**Check coverage:**
+## Check coverage
 ```bash
 # For each module, verify all four types exist
 find docs/modules/ -name "tutorial.md"
 find docs/modules/ -name "howto/"
 find docs/modules/ -name "reference.md"
 find docs/modules/ -name "architecture.md"
-```
+```text
 
 ---
 
@@ -328,7 +331,7 @@ find docs/modules/ -name "architecture.md"
 
 ---
 
-**References:**
+### References
 - [Diátaxis Official Site](https://diataxis.fr/)
 - [Why Diátaxis Works](https://diataxis.fr/)
 - [AIOS Documentation Home](../README.md)

@@ -17,7 +17,7 @@ The C4 model breaks down software architecture into four hierarchical levels:
 
 ### AIOS C4 Documentation Structure
 
-```
+```text
 docs/architecture/c4/
 ├── README.md                    # This file - overview and reading guide
 ├── system_context.md            # Level 1: System in context
@@ -27,20 +27,20 @@ docs/architecture/c4/
 └── diagrams/
     ├── README.md               # How to edit diagrams
     └── *.mmd                   # Mermaid diagram sources (embedded in docs)
-```
+```text
 
 ### Reading the Diagrams
 
 All diagrams use Mermaid syntax and render directly in GitHub. Each diagram follows consistent conventions:
 
-**Notation:**
+### Notation
 - **Rectangles**: Software systems, containers, or components
 - **Cylinders/Databases**: Data stores
 - **Persons/Actors**: Human users or external systems
 - **Arrows**: Dependencies, data flow, or interactions
 - **Labels**: Technology choices, protocols, or descriptions
 
-**Color Coding:**
+### Color Coding
 - Blue: Internal AIOS components
 - Gray: External systems
 - Green: Data stores
@@ -48,18 +48,16 @@ All diagrams use Mermaid syntax and render directly in GitHub. Each diagram foll
 
 ### How to Use This Documentation
 
-**For Different Audiences:**
-
+#### For Different Audiences
 | Audience | Start With | Focus On |
-|----------|-----------|----------|
+| ---------- | ----------- | ---------- |
 | Business stakeholders | System Context | Who uses the system, what value it provides |
 | Architects | All levels | Overall structure and key decisions |
 | Developers | Container + Component | Technical structure and responsibilities |
 | DevOps/SRE | Deployment | Runtime environment and infrastructure |
 | Security engineers | All levels | Trust boundaries, data flow, attack surface |
 
-**Navigation:**
-
+### Navigation
 1. Start with [System Context](./system_context.md) for the 30,000-foot view
 2. Drill into [Container](./container.md) to see major technical components
 3. Explore [Component](./component.md) for internal architecture details
@@ -90,12 +88,12 @@ All diagrams are embedded in their respective markdown files using Mermaid synta
 
 **Problem**: Diagrams become outdated as code evolves.
 
-**Symptoms:**
+### Symptoms
 - Diagrams show modules or components that no longer exist
 - New features aren't reflected in architecture documentation
 - Technology stack changes aren't updated
 
-**Mitigation:**
+### Mitigation
 - Review and update diagrams during major feature additions
 - Include architecture review in PR checklists for significant changes
 - Tag documentation issues when code changes affect architecture
@@ -104,12 +102,12 @@ All diagrams are embedded in their respective markdown files using Mermaid synta
 
 **Problem**: Diagrams become too detailed and hard to understand.
 
-**Symptoms:**
+### Symptoms (2)
 - Single diagram tries to show too much information
 - Arrows crisscross making relationships unclear
 - Newcomers find diagrams overwhelming rather than helpful
 
-**Mitigation:**
+### Mitigation (2)
 - Follow C4 principle: each level should fit on one page
 - Create separate focused diagrams for complex subsystems
 - Use consistent abstraction levels within each diagram
@@ -118,12 +116,12 @@ All diagrams are embedded in their respective markdown files using Mermaid synta
 
 **Problem**: Diagrams are too abstract to be useful.
 
-**Symptoms:**
+### Symptoms (3)
 - Developers can't map diagrams to actual code
 - Deployment diagrams don't reflect actual infrastructure
 - Component boundaries don't match code organization
 
-**Mitigation:**
+### Mitigation (3)
 - Include file paths and concrete examples in documentation text
 - Cross-reference actual code locations (see "How to Verify")
 - Validate diagrams against running system
@@ -132,12 +130,12 @@ All diagrams are embedded in their respective markdown files using Mermaid synta
 
 **Problem**: Diagram format becomes difficult to maintain or doesn't render properly.
 
-**Symptoms:**
+### Symptoms (4)
 - Mermaid syntax errors prevent rendering
 - GitHub stops supporting current diagram format
 - Local editing becomes difficult
 
-**Mitigation:**
+### Mitigation (4)
 - Use standard Mermaid syntax (widely supported)
 - Keep diagram source in markdown (plain text, VCS-friendly)
 - Test rendering in multiple environments (GitHub, VS Code, local tools)
@@ -158,14 +156,14 @@ grep -r "shared/" docs/architecture/c4/*.md
 ls client/screens/*Screen.tsx | wc -l  # Should match module count
 
 # 3. Check API routes in server
-grep "app\.(get|post|put|delete)" server/routes.ts | wc -l
+ grep "app\.(get | post | put | delete)" server/routes.ts | wc -l
 
 # 4. Verify database tables
 grep "pgTable" shared/schema.ts
 
 # 5. Confirm authentication middleware exists
 ls server/middleware/auth.ts
-```
+```text
 
 ### Diagram Rendering
 
@@ -174,11 +172,12 @@ Verify diagrams render correctly:
 1. **GitHub**: View any `.md` file in this directory on GitHub - Mermaid diagrams should render
 2. **VS Code**: Install "Markdown Preview Mermaid Support" extension and preview any diagram file
 3. **Command line**: Use `mmdc` (Mermaid CLI) to validate syntax:
+
    ```bash
    npm install -g @mermaid-js/mermaid-cli
    # Extract and validate a diagram
    mmdc -i docs/architecture/c4/system_context.md -o /tmp/test.png
-   ```
+   ```text
 
 ### Cross-Reference to Code
 
@@ -198,7 +197,7 @@ cat shared/schema.ts | head -50
 # Check authentication flow
 cat server/middleware/auth.ts
 cat client/lib/storage.ts  # JWT token storage
-```
+```text
 
 ### Completeness Check
 
@@ -207,7 +206,7 @@ Ensure all C4 levels are documented:
 ```bash
 # All required files should exist
 ls -1 docs/architecture/c4/
-# Expected output:
+# Expected output
 # README.md
 # system_context.md
 # container.md
@@ -218,13 +217,13 @@ ls -1 docs/architecture/c4/
 # Each doc should have required sections
 for file in docs/architecture/c4/*.md; do
   echo "=== $file ==="
-  grep "^## Plain English Summary" "$file" && echo "✓ Summary" || echo "✗ Missing Summary"
-  grep "^## Technical Detail" "$file" && echo "✓ Technical" || echo "✗ Missing Technical"
-  grep "^## Assumptions" "$file" && echo "✓ Assumptions" || echo "✗ Missing Assumptions"
-  grep "^## Failure Modes" "$file" && echo "✓ Failure Modes" || echo "✗ Missing Failure Modes"
-  grep "^## How to Verify" "$file" && echo "✓ Verification" || echo "✗ Missing Verification"
+ grep "^## Plain English Summary" "$file" && echo "✓ Summary" |  | echo "✗ Missing Summary"
+ grep "^## Technical Detail" "$file" && echo "✓ Technical" |  | echo "✗ Missing Technical"
+ grep "^## Assumptions" "$file" && echo "✓ Assumptions" |  | echo "✗ Missing Assumptions"
+ grep "^## Failure Modes" "$file" && echo "✓ Failure Modes" |  | echo "✗ Missing Failure Modes"
+ grep "^## How to Verify" "$file" && echo "✓ Verification" |  | echo "✗ Missing Verification"
 done
-```
+```text
 
 ## Related Documentation
 
@@ -239,5 +238,5 @@ done
 ## Revision History
 
 | Date | Author | Changes |
-|------|--------|---------|
+| ------ | -------- | --------- |
 | 2025-01-17 | AI Assistant | Initial creation of comprehensive C4 model documentation |

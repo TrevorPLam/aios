@@ -38,7 +38,7 @@ The system provides the following core capabilities:
 ### Business Goals
 
 | Goal | Description | Success Metric |
-|------|-------------|----------------|
+| ------ | ------------- | ---------------- |
 | **Super App Platform** | Create a unified platform that replaces 38+ specialized apps | User retention across 5+ modules |
 | **Privacy-First** | Maintain user privacy with local-first storage | Zero user data sold to third parties |
 | **Mobile-First Excellence** | Deliver best-in-class mobile UX | 4.5+ app store rating |
@@ -52,7 +52,7 @@ The system provides the following core capabilities:
 The following quality attributes drive architectural decisions, ranked by priority:
 
 | Priority | Quality Attribute | Motivation | Scenario |
-|----------|------------------|------------|----------|
+| ---------- | ------------------ | ------------ | ---------- |
 | 1 | **Performance** | Mobile apps must feel instant and responsive | Screen transitions < 100ms, UI updates < 16ms (60fps) |
 | 2 | **Security** | User data and privacy must be protected | Zero critical vulnerabilities, local-first storage, E2E encryption ready |
 | 3 | **Maintainability** | Codebase must scale from 14 to 38+ modules | New module added in < 3 days, code changes isolated to modules |
@@ -62,37 +62,43 @@ The following quality attributes drive architectural decisions, ranked by priori
 
 ### Quality Attribute Details
 
-**Performance:**
+#### Performance
+
 - Target: 60fps animations using React Native Reanimated
 - Lazy loading of modules and screens
 - AsyncStorage optimization with batch operations
 - Background task processing for AI recommendations
 
-**Security:**
+### Security
+
 - JWT-based authentication with bcrypt password hashing
 - Local-first storage (AsyncStorage) before cloud sync
 - CodeQL security scanning in CI/CD pipeline
 - Zero third-party data sharing
 
-**Maintainability:**
+### Maintainability
+
 - Modular architecture with clear boundaries
 - Shared component library in `/client/components`
 - Consistent patterns across all modules
 - Comprehensive TypeScript typing
 
-**Testability:**
+### Testability
+
 - Jest + React Native Testing Library
 - Unit tests for storage layer (100% coverage on production modules)
 - E2E tests for critical user flows
 - Automated testing in CI/CD
 
-**Usability:**
+### Usability
+
 - Dark-first design with high contrast
 - Haptic feedback for all interactions
 - Smooth animations and transitions
 - Progressive onboarding (start with 3 modules, expand gradually)
 
-**Reliability:**
+### Reliability
+
 - Offline-first with AsyncStorage
 - Automatic retry logic for network requests
 - Error boundaries to prevent app crashes
@@ -103,7 +109,7 @@ The following quality attributes drive architectural decisions, ranked by priori
 ## Stakeholders
 
 | Role | Name/Type | Expectations | Contact/Notes |
-|------|-----------|--------------|---------------|
+| ------ | ----------- | -------------- | --------------- |
 | **End Users** | Mobile users (iOS/Android) | Fast, intuitive app that replaces many apps with one | Primary stakeholder |
 | **Developers** | Internal development team | Maintainable codebase, clear patterns, good documentation | Repository: `/home/runner/work/Mobile-Scaffold/Mobile-Scaffold` |
 | **Product Owner** | AIOS product team | Feature delivery, super app vision execution | Vision: docs/vision/ |
@@ -162,42 +168,46 @@ The following quality attributes drive architectural decisions, ranked by priori
 ### Documentation Accuracy
 
 1. **Verify Architecture Matches Code:**
+
    ```bash
    # Check repository structure matches documentation
    ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
-   
+
    # Verify module screens exist
    ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
-   
+
    # Check storage layer
    ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
-   ```
+   ```text
 
-2. **Verify Quality Metrics:**
+1. **Verify Quality Metrics:**
+
    ```bash
    # Run tests to verify coverage
    npm test -- --coverage
-   
+
    # Check security vulnerabilities
    npm audit
-   
+
    # Run linting
    npm run lint
-   
+
    # Type checking
    npm run check:types
-   ```
+   ```text
 
-3. **Verify Dependencies:**
+1. **Verify Dependencies:**
+
    ```bash
    # Check package.json matches documentation
    cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 50 "dependencies"
-   ```
+   ```text
 
-4. **Verify ADRs Exist:**
+1. **Verify ADRs Exist:**
+
    ```bash
    ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/decisions/
-   ```
+   ```text
 
 ### Business Goals Verification
 

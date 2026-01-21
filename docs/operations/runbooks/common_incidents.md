@@ -1,6 +1,6 @@
 # Common Incidents Runbook
 
-**Last Updated:** 2024-01-15  
+**Last Updated:** 2024-01-15
 **Purpose:** Quick reference for frequently occurring incidents
 
 ## Plain English Summary
@@ -17,7 +17,7 @@ This runbook contains quick fixes for common incidents that occur regularly in t
 ## Incident Index
 
 | Incident | Severity | Avg Resolution Time |
-|----------|----------|---------------------|
+| ---------- | ---------- | --------------------- |
 | [Database Connection Pool Exhausted](#database-connection-pool-exhausted) | High | 5 minutes |
 | [API High Latency](#api-high-latency) | High | 10 minutes |
 | [Out of Memory (OOM) Errors](#out-of-memory-oom-errors) | Critical | 15 minutes |
@@ -33,6 +33,7 @@ This runbook contains quick fixes for common incidents that occur regularly in t
 ## Database Connection Pool Exhausted
 
 ### Symptoms
+
 - API returning 500 errors
 - Logs show "Connection pool exhausted" or "Too many connections"
 - Database connection metrics maxed out
@@ -56,19 +57,22 @@ kubectl rollout restart deployment/api-server -n production
 
 # 4. Verify
 curl https://api.aios.example.com/health
-```
+```text
 
 ### Verification
+
 - [ ] API health check returns 200
 - [ ] Error rate drops below 1%
 - [ ] Database connections < 80% of max
 
 ### Root Cause Investigation
+
 - Check for connection leaks in recent deployments
 - Review slow queries that might hold connections
 - Consider increasing connection pool size
 
 ### Automation Candidate
+
 - **Priority:** High
 - **Approach:** Auto-detect and restart affected pods
 - **Ticket:** [Create ticket for automation]
@@ -77,12 +81,13 @@ curl https://api.aios.example.com/health
 
 ## API High Latency
 
-### Symptoms
+### Symptoms (2)
+
 - P95 response time > 500ms
 - P99 response time > 1000ms
 - Users reporting slow application
 
-### Quick Fix
+### Quick Fix (2)
 
 ```bash
 # 1. Check recent deployments
@@ -112,19 +117,22 @@ redis-cli FLUSHDB
 
 # 6. Verify
 curl -w "@curl-format.txt" https://api.aios.example.com/api/users/me
-```
+```text
 
-### Verification
+### Verification (2)
+
 - [ ] P95 response time < 300ms
 - [ ] P99 response time < 500ms
 - [ ] No slow query warnings
 
-### Root Cause Investigation
+### Root Cause Investigation (2)
+
 - Profile slow endpoints
 - Check for N+1 query problems
 - Review database indexes
 
-### Automation Candidate
+### Automation Candidate (2)
+
 - **Priority:** Medium
 - **Approach:** Auto-rollback on latency spike
 - **Ticket:** [Create ticket]
@@ -133,12 +141,13 @@ curl -w "@curl-format.txt" https://api.aios.example.com/api/users/me
 
 ## Out of Memory (OOM) Errors
 
-### Symptoms
+### Symptoms (3)
+
 - Pods restarting frequently
 - Logs show "Out of memory" errors
 - Memory metrics show 100% usage
 
-### Quick Fix
+### Quick Fix (3)
 
 ```bash
 # 1. Identify memory-heavy pods
@@ -156,22 +165,25 @@ kubectl rollout undo deployment/api-server -n production
 # 5. Restart problematic pods
 kubectl delete pod <pod-name> -n production
 
-# 6. Verify
+# 6. Verify (2)
 kubectl get pods -n production
 kubectl top pods -n production
-```
+```text
 
-### Verification
+### Verification (3)
+
 - [ ] Pods not restarting
 - [ ] Memory usage < 80%
 - [ ] No OOM errors in logs
 
-### Root Cause Investigation
+### Root Cause Investigation (3)
+
 - Profile memory usage in recent code
 - Check for memory leaks
 - Review object retention patterns
 
-### Automation Candidate
+### Automation Candidate (3)
+
 - **Priority:** High
 - **Approach:** Auto-scale on high memory
 - **Ticket:** [Create ticket]
@@ -180,12 +192,13 @@ kubectl top pods -n production
 
 ## Authentication Failures
 
-### Symptoms
+### Symptoms (4)
+
 - Users can't log in
 - "Invalid token" or "Unauthorized" errors
 - Auth endpoints returning 401
 
-### Quick Fix
+### Quick Fix (4)
 
 ```bash
 # 1. Check JWT secret configuration
@@ -206,23 +219,26 @@ psql $DATABASE_URL -c "
 # 5. If auth service down, restart
 kubectl rollout restart deployment/auth-service -n production
 
-# 6. Verify
+# 6. Verify (3)
 curl -X POST https://api.aios.example.com/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"test"}'
-```
+```text
 
-### Verification
+### Verification (4)
+
 - [ ] Login endpoint returns 200
 - [ ] Valid tokens are accepted
 - [ ] Error rate < 1%
 
-### Root Cause Investigation
+### Root Cause Investigation (4)
+
 - Check for JWT secret rotation issues
 - Review recent auth code changes
 - Verify time sync across servers
 
-### Automation Candidate
+### Automation Candidate (4)
+
 - **Priority:** Medium
 - **Approach:** Auto-restart auth service on health check failure
 - **Ticket:** [Create ticket]
@@ -231,12 +247,13 @@ curl -X POST https://api.aios.example.com/api/auth/login \
 
 ## Failed Deployment
 
-### Symptoms
+### Symptoms (5)
+
 - Deployment stuck in "Progressing" state
 - New pods not reaching "Ready" status
 - Health checks failing for new version
 
-### Quick Fix
+### Quick Fix (5)
 
 ```bash
 # 1. Check deployment status
@@ -256,20 +273,23 @@ kubectl rollout status deployment/api-server -n production
 
 # 6. Check health
 curl https://api.aios.example.com/health
-```
+```text
 
-### Verification
+### Verification (5)
+
 - [ ] All pods are "Running" and "Ready"
 - [ ] Health checks passing
 - [ ] No error spikes
 
-### Root Cause Investigation
+### Root Cause Investigation (5)
+
 - Review deployment logs for specific error
 - Check for missing environment variables
 - Verify database migrations ran successfully
 - Review container image build
 
-### Automation Candidate
+### Automation Candidate (5)
+
 - **Priority:** High
 - **Approach:** Auto-rollback on failed health checks
 - **Ticket:** [Create ticket]
@@ -278,12 +298,13 @@ curl https://api.aios.example.com/health
 
 ## Disk Space Full
 
-### Symptoms
+### Symptoms (6)
+
 - "No space left on device" errors
 - Disk usage metrics at 100%
 - Pods evicted due to disk pressure
 
-### Quick Fix
+### Quick Fix (6)
 
 ```bash
 # 1. Check disk usage
@@ -296,7 +317,7 @@ kubectl exec -it <pod-name> -n production -- sh -c "
 "
 
 # 3. Clear Docker/containerd cache (on node)
-# SSH to node, then:
+# SSH to node, then
 docker system prune -af
 # or
 crictl rmi --prune
@@ -307,22 +328,25 @@ kubectl exec -it <pod-name> -n production -- rm -rf /tmp/*
 # 5. Restart affected pods
 kubectl delete pod <pod-name> -n production
 
-# 6. Verify
+# 6. Verify (4)
 kubectl exec -it <pod-name> -n production -- df -h
-```
+```text
 
-### Verification
+### Verification (6)
+
 - [ ] Disk usage < 80%
 - [ ] Pods not evicted
 - [ ] No disk pressure warnings
 
-### Root Cause Investigation
+### Root Cause Investigation (6)
+
 - Identify what's consuming space
 - Check log rotation configuration
 - Review file upload handling
 - Implement disk monitoring alerts
 
-### Automation Candidate
+### Automation Candidate (6)
+
 - **Priority:** High
 - **Approach:** Auto-cleanup of old logs/temp files
 - **Ticket:** [Create ticket]
@@ -331,12 +355,13 @@ kubectl exec -it <pod-name> -n production -- df -h
 
 ## Rate Limiting Triggered
 
-### Symptoms
+### Symptoms (7)
+
 - Users receiving 429 "Too Many Requests" errors
 - Rate limit metrics showing high hit rate
 - Legitimate users being blocked
 
-### Quick Fix
+### Quick Fix (7)
 
 ```bash
 # 1. Check rate limit metrics
@@ -356,23 +381,26 @@ redis-cli DEL "ratelimit:user:<user-id>"
 # 5. Or identify and block malicious IPs
 # Add to firewall/WAF rules
 
-# 6. Verify
+# 6. Verify (5)
 curl -I https://api.aios.example.com/api/users/me
 # Check X-RateLimit-Remaining header
-```
+```text
 
-### Verification
+### Verification (7)
+
 - [ ] Legitimate users can access API
 - [ ] Rate limit hit rate normalized
 - [ ] No user complaints
 
-### Root Cause Investigation
+### Root Cause Investigation (7)
+
 - Distinguish between attack and legitimate spike
 - Review rate limit thresholds
 - Check for client-side retry loops
 - Investigate traffic patterns
 
-### Automation Candidate
+### Automation Candidate (7)
+
 - **Priority:** Medium
 - **Approach:** Auto-adjust limits based on patterns
 - **Ticket:** [Create ticket]
@@ -381,12 +409,13 @@ curl -I https://api.aios.example.com/api/users/me
 
 ## Background Job Failures
 
-### Symptoms
+### Symptoms (8)
+
 - Job queue growing
 - Jobs failing repeatedly
 - Job processing delayed
 
-### Quick Fix
+### Quick Fix (8)
 
 ```bash
 # 1. Check job queue status
@@ -410,20 +439,23 @@ redis-cli DEL "bull:jobs:failed"
 
 # 7. Verify
 redis-cli LLEN "bull:jobs:waiting"
-```
+```text
 
-### Verification
+### Verification (8)
+
 - [ ] Job queue length decreasing
 - [ ] Failed job count not growing
 - [ ] Workers processing jobs
 
-### Root Cause Investigation
+### Root Cause Investigation (8)
+
 - Review job failure logs
 - Check for external service issues
 - Verify job timeout configurations
 - Test job logic in staging
 
-### Automation Candidate
+### Automation Candidate (8)
+
 - **Priority:** Medium
 - **Approach:** Auto-restart workers on failure spike
 - **Ticket:** [Create ticket]
@@ -436,41 +468,42 @@ redis-cli LLEN "bull:jobs:waiting"
 
 ```bash
 npm run expo:clean:native && npm run expo:rebuild:ios
-```
+```text
 
 **📖 Complete fix guide with 3 options:** See **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)**
 
 ---
 
-### Symptoms
-- App crashes on startup with `WorkletsError` 
+### Symptoms (9)
+
+- App crashes on startup with `WorkletsError`
 - Error message: "Mismatch between JavaScript part and native part of Worklets (X.X.X vs Y.Y.Y)"
   - Example: "Mismatch between JavaScript part and native part of Worklets (0.7.2 vs 0.5.1)"
 - iOS/Android app fails to load
 - Metro bundler shows worklets-related errors
 - Commonly occurs after Dependabot updates or manual dependency upgrades
 
-### Quick Fix
+### Quick Fix (9)
 
-**Option 1: Standard Fix (Works 80% of the time)**
+#### Option 1: Standard Fix (Works 80% of the time)
 
 ```bash
 # 1. Clean all caches and reinstall dependencies
 npm run expo:clean:native
 
 # 2. Rebuild the native app (REQUIRED for development builds)
-# For iOS:
+# For iOS
 npm run expo:rebuild:ios
 
-# For Android:
+# For Android
 npm run expo:rebuild:android
 
 # 3. Verify
 npm run check:worklets
 # App should start without WorkletsError
-```
+```text
 
-**Option 2: Deep Clean (If Option 1 doesn't work)**
+## Option 2: Deep Clean (If Option 1 doesn't work)
 
 ```bash
 # 1. Full clean including node_modules
@@ -479,11 +512,11 @@ npm run expo:clean:full
 # 2. Rebuild the native app
 npm run expo:rebuild:ios  # or :android
 
-# 3. Verify
+# 3. Verify (2)
 npm run check:worklets
-```
+```text
 
-**Option 3: Manual Nuclear Option (Last resort - see WORKLETS_FIX_GUIDE.md)**
+### Option 3: Manual Nuclear Option (Last resort - see WORKLETS_FIX_GUIDE.md)
 
 ### Manual Steps (if scripts fail)
 
@@ -504,9 +537,10 @@ rm -rf ios/build android/build
 # 5. For custom development builds
 npx expo prebuild --clean
 npx expo run:ios  # or npx expo run:android
-```
+```text
 
-### Verification
+### Verification (9)
+
 - [ ] App starts without WorkletsError
 - [ ] No version mismatch warnings in logs
 - [ ] Animations and gestures work correctly
@@ -515,7 +549,9 @@ npx expo run:ios  # or npx expo run:android
 - [ ] `app.json` includes `"react-native-reanimated"` in plugins array
 
 ### Root Cause
+
 This error occurs when:
+
 - The JavaScript bundle has a different version of `react-native-worklets` than the native iOS/Android code
 - **Most common trigger:** Dependabot updates that change `react-native-reanimated` or `react-native-worklets` versions
 - Native builds cached old version (e.g., 0.5.1) while JS bundle updated to new version (e.g., 0.7.2)
@@ -526,7 +562,8 @@ This error occurs when:
 **Key insight:** JavaScript updates instantly via Metro bundler, but native iOS/Android code requires a complete rebuild. Additionally, Expo requires the `react-native-reanimated` plugin in `app.json` to properly integrate native dependencies during prebuild.
 
 ### Prevention
-**After any of these events, ALWAYS run: `npm run expo:rebuild:ios`**
+
+#### After any of these events, ALWAYS run: `npm run expo:rebuild:ios`
 
 1. **After Dependabot/dependency updates** involving:
    - `react-native-reanimated`
@@ -538,16 +575,19 @@ This error occurs when:
 2. **After merging PRs** that update animation dependencies
 
 3. **When switching branches** with different dependency versions:
+
    ```bash
    npm run expo:clean:full && npm run expo:rebuild:ios
-   ```
+   ```text
 
-4. **Before starting work** (proactive check):
+1. **Before starting work** (proactive check):
+
    ```bash
    npm run check:worklets
-   ```
+   ```text
 
-5. **Add to your workflow:**
+1. **Add to your workflow:**
+
    ```bash
    # After pulling main
    git pull origin main
@@ -555,18 +595,20 @@ This error occurs when:
    npm run check:worklets  # Check for mismatches
    # If mismatch detected, run:
    npm run expo:rebuild:ios
-   ```
+   ```text
 
 ### Related Documentation
+
 - **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
 - **[WORKLETS_PREVENTION.md](../../../WORKLETS_PREVENTION.md)** - Prevention strategies and automation
 - [react-native-worklets troubleshooting](https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting) - Official docs
 - [Expo prebuild](https://docs.expo.dev/workflow/prebuild/) - Understanding native builds
 - [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) - Reanimated setup
 
-### Automation Candidate
+### Automation Candidate (9)
+
 - **Priority:** Medium (can automate detection and warnings)
-- **Approach:** 
+- **Approach:**
   - Post-install hook that runs `check:worklets` automatically
   - Pre-commit hook to detect dependency version changes
   - CI check to verify versions match before merging PRs
@@ -579,6 +621,7 @@ This error occurs when:
 If the incident doesn't match any above:
 
 ### 1. Check Recent Changes
+
 ```bash
 # Deployments
 kubectl rollout history deployment/api-server -n production
@@ -586,9 +629,10 @@ kubectl rollout history deployment/api-server -n production
 # Configuration
 kubectl get configmap -n production
 kubectl describe configmap <name> -n production
-```
+```text
 
 ### 2. Check Dependencies
+
 ```bash
 # Database
 psql $DATABASE_URL -c "SELECT 1;"
@@ -598,27 +642,30 @@ redis-cli PING
 
 # External services
 curl https://external-api.example.com/health
-```
+```text
 
 ### 3. Review Logs
+
 ```bash
 # Application logs
 kubectl logs -n production deployment/api-server --tail=100
 
 # System logs (on node)
 journalctl -u kubelet --since "1 hour ago"
-```
+```text
 
 ### 4. Check Resource Usage
+
 ```bash
 # Pods
 kubectl top pods -n production
 
 # Nodes
 kubectl top nodes
-```
+```text
 
 ### 5. When Stuck
+
 - Don't guess - escalate
 - Document what you've tried
 - Preserve evidence (logs, metrics)

@@ -3,13 +3,15 @@
 **Last Updated:** 2024-01-15
 
 ## Plain English Summary
+
 Not all architectural decisions need to be made immediately. This backlog tracks decisions we know we'll need to make eventually, along with when we should make them and what triggers the decision.
 
 ## Pending Decisions
 
 ### High Priority (Next Quarter)
 
-**Decision: Add Caching Layer**
+#### Decision: Add Caching Layer
+
 - **Status:** Not Started
 - **Trigger:** When database queries > 1000/min
 - **Impact:** High - affects performance
@@ -17,7 +19,8 @@ Not all architectural decisions need to be made immediately. This backlog tracks
 - **Owner:** Backend Team
 - **Deadline:** Q2 2024
 
-**Decision: Implement Real-time Features**
+### Decision: Implement Real-time Features
+
 - **Status:** Researching
 - **Trigger:** User request for live updates
 - **Impact:** Medium - new capability
@@ -27,7 +30,8 @@ Not all architectural decisions need to be made immediately. This backlog tracks
 
 ### Medium Priority (6-12 Months)
 
-**Decision: GraphQL vs REST**
+#### Decision: GraphQL vs REST
+
 - **Status:** Deferred
 - **Trigger:** When mobile data usage concerns increase
 - **Impact:** Medium - affects API design
@@ -35,7 +39,8 @@ Not all architectural decisions need to be made immediately. This backlog tracks
 - **Owner:** API Team
 - **Deadline:** Q3 2024
 
-**Decision: Microservices Architecture**
+### Decision: Microservices Architecture
+
 - **Status:** Monitoring
 - **Trigger:** When monolith becomes hard to maintain or deploy
 - **Impact:** High - major architectural change
@@ -45,7 +50,8 @@ Not all architectural decisions need to be made immediately. This backlog tracks
 
 ### Low Priority (12+ Months)
 
-**Decision: Multi-Region Deployment**
+#### Decision: Multi-Region Deployment
+
 - **Status:** Future
 - **Trigger:** International user growth
 - **Impact:** High - infrastructure complexity
@@ -53,7 +59,8 @@ Not all architectural decisions need to be made immediately. This backlog tracks
 - **Owner:** DevOps Team
 - **Deadline:** 2025
 
-**Decision: Mobile Tech Stack Evolution**
+### Decision: Mobile Tech Stack Evolution
+
 - **Status:** Future
 - **Trigger:** React Native limitations or better alternatives
 - **Impact:** High - complete mobile rewrite
@@ -75,6 +82,7 @@ When decision time comes, use this template:
 Then create ADR in `docs/decisions/`
 
 ## Related
+
 - [Roadmap](./roadmap.md)
 - [ADR Directory](../decisions/)
 - [Architecture Documentation](../architecture/)

@@ -14,6 +14,7 @@
 ### Matrix Purpose
 
 The traceability matrix ensures:
+
 1. **No orphaned code:** Every feature has docs
 2. **No orphaned docs:** Every doc references actual code
 3. **Testability:** Every feature has tests
@@ -23,7 +24,7 @@ The traceability matrix ensures:
 ### Column Definitions
 
 | Column | Description | Example |
-|--------|-------------|---------|
+| -------- | ------------- | --------- |
 | **Feature/Capability** | Name of the feature | "User Authentication" |
 | **PRD Link** | Product requirements doc | `docs/product/auth-requirements.md` |
 | **ADR Link** | Architecture decision record | `docs/decisions/003-jwt-auth.md` |
@@ -37,31 +38,34 @@ The traceability matrix ensures:
 
 ### How to Use
 
-**Adding a new feature:**
+#### Adding a new feature
+
 1. Create row in this matrix
 2. Fill in known columns
 3. Mark unknowns as TODO with expected completion date
 4. Link to tracking issue if needed
 5. Update as you implement
 
-**Finding feature documentation:**
+### Finding feature documentation
+
 1. Search this file for feature name
 2. Follow links to relevant docs/code
 3. Use as navigation map
 
-**Auditing completeness:**
+### Auditing completeness
+
 ```bash
 # Count TODOs
 grep -o "TODO" docs/traceability_matrix.md | wc -l
 
 # Check enforcement mode
 grep "Traceability" docs/governance/state.md
-```
+```text
 
 ## Traceability Matrix
 
 | Feature/Capability | PRD Link | ADR Link | Modules | APIs | Data Schemas | Tests | Runbooks | Dashboards | Notes |
-|-------------------|----------|----------|---------|------|--------------|-------|----------|------------|-------|
+| ------------------- | ---------- | ---------- | --------- | ------ | -------------- | ------- | ---------- | ------------ | ------- |
 | **User Authentication** | TODO: `docs/product/` | [ADR-003](decisions/003-jwt-auth.md) | `server/middleware/auth.ts`, `server/routes.ts:45-89` | `POST /api/login`, `POST /api/register`, `GET /api/me` | `users` table (see `server/storage.ts:20`) | `server/__tests__/auth.test.ts` | TODO: `docs/operations/runbooks/` | TODO: Auth metrics | Status: Implemented. Missing: PRD, runbook, metrics |
 | **Data Persistence** | TODO | [ADR-001](decisions/001-use-asyncstorage.md) | `client/storage/`, `server/storage.ts` | N/A (local) | `users`, `settings`, `analytics_events` tables | `server/__tests__/storage.test.ts`, TODO: client tests | TODO | TODO | Status: Implemented. AsyncStorage for client, PostgreSQL for server |
 | **Analytics Tracking** | TODO | [ADR-005](decisions/005-analytics-architecture.md) | `client/analytics/`, `server/routes.ts:analytics` | `POST /api/analytics/events` | `analytics_events` table | TODO: Integration tests | TODO | TODO | Status: Implemented. Missing: comprehensive tests, runbook, dashboard |
@@ -72,7 +76,7 @@ grep "Traceability" docs/governance/state.md
 ## Planned Features (Not Yet Implemented)
 
 | Feature/Capability | PRD Link | ADR Link | Modules | APIs | Data Schemas | Tests | Runbooks | Dashboards | Notes |
-|-------------------|----------|----------|---------|------|--------------|-------|----------|------------|-------|
+| ------------------- | ---------- | ---------- | --------- | ------ | -------------- | ------- | ---------- | ------------ | ------- |
 | **Push Notifications** | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | Planned for Q2 2026 |
 | **Offline Sync** | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | Under consideration |
 
@@ -87,7 +91,7 @@ grep "Traceability" docs/governance/state.md
 ## Failure Modes
 
 | Failure Mode | Symptom | Solution |
-|--------------|---------|----------|
+| -------------- | --------- | ---------- |
 | Matrix is stale | Docs don't match implementation | Require matrix update in PR template |
 | Too many TODOs | Matrix is overwhelming | Start with critical features, expand gradually |
 | Broken links | Links 404 | CI link checker validates all links |
@@ -96,45 +100,45 @@ grep "Traceability" docs/governance/state.md
 
 ## How to Verify
 
-**Check matrix completeness:**
+### Check matrix completeness
 ```bash
 # Count total rows
-grep "^\|" docs/traceability_matrix.md | grep -v "Feature/Capability" | grep -v "\-\-\-" | wc -l
+ grep "^\ | " docs/traceability_matrix.md | grep -v "Feature/Capability" | grep -v "\-\-\-" | wc -l
 
 # Count TODOs (automated check provides accurate count)
 grep -o "TODO" docs/traceability_matrix.md | wc -l
 
 # Run automated traceability checker for current status
 npm run check:traceability
-```
+```text
 
-**Run traceability checker:**
+### Run traceability checker
 ```bash
 node scripts/tools/check-traceability.mjs
 # Should pass in warn mode, may fail in enforce mode if TODOs present
-```
+```text
 
-**Validate links:**
+## Validate links
 ```bash
 # Check all links in matrix resolve
 lychee docs/traceability_matrix.md
-```
+```text
 
-**Find features missing tests:**
+### Find features missing tests
 ```bash
 # Look for rows where Tests column has TODO
 grep "TODO" docs/traceability_matrix.md | grep "Tests"
-```
+```text
 
 ---
 
-**Current Status:**
+### Current Status
 - Total features: 6 implemented, 2 planned
 - Completion: ~30% (many TODOs remain)
 - Enforcement mode: WARN (see `docs/governance/state.md`)
 - Target: 80% completion by 2026-03-01
 
-**Next Actions:**
+### Next Actions
 1. Add PRD links for existing features
 2. Create runbooks for auth and analytics
 3. Add comprehensive tests for analytics
@@ -143,6 +147,6 @@ grep "TODO" docs/traceability_matrix.md | grep "Tests"
 
 ---
 
-*Last Updated: 2026-01-18*  
-*Maintained by: Repository maintainers*  
+*Last Updated: 2026-01-18*
+*Maintained by: Repository maintainers*
 *Enforcement: Warn-only (toggle to fail when >80% complete)*

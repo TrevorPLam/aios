@@ -10,10 +10,10 @@ This directory contains comprehensive architecture documentation for AIOS using 
 
 AIOS (AI Operating System) is a mobile super app built with React Native and Node.js. This documentation explains the system's architecture using the arc42 template, a proven framework for documenting software architectures.
 
-**Project:** AIOS - AI Operating System  
-**Repository:** `/home/runner/work/Mobile-Scaffold/Mobile-Scaffold`  
-**Technology Stack:** React Native, Expo, Node.js, Express, TypeScript, AsyncStorage, PostgreSQL (future)  
-**Documentation Standard:** arc42 (https://arc42.org)
+**Project:** AIOS - AI Operating System
+**Repository:** `/home/runner/work/Mobile-Scaffold/Mobile-Scaffold`
+**Technology Stack:** React Native, Expo, Node.js, Express, TypeScript, AsyncStorage, PostgreSQL (future)
+**Documentation Standard:** arc42 (<https://arc42.org>)
 
 ---
 
@@ -23,7 +23,7 @@ AIOS (AI Operating System) is a mobile super app built with React Native and Nod
 
 The arc42 documentation is organized into 13 sections, each addressing a specific architectural concern:
 
-```
+```text
 docs/architecture/arc42/
 ├── 00_intro.md              # Introduction and goals
 ├── 01_goals.md              # Requirements and quality goals
@@ -38,7 +38,7 @@ docs/architecture/arc42/
 ├── 10_quality.md            # Quality requirements
 ├── 11_risks.md              # Risks and technical debt
 └── 12_glossary.md           # Glossary (links to main glossary)
-```
+```text
 
 ---
 
@@ -46,17 +46,20 @@ docs/architecture/arc42/
 
 ### For New Team Members
 
-**Day 1: Understand the System**
+#### Day 1: Understand the System
+
 1. Read [00_intro.md](arc42/00_intro.md) - What is AIOS? Who are the stakeholders?
 2. Read [01_goals.md](arc42/01_goals.md) - What must the system do? What are the quality priorities?
 3. Read [03_context.md](arc42/03_context.md) - What external systems does AIOS interact with?
 
-**Day 2: Understand the Architecture**
+### Day 2: Understand the Architecture
+
 1. Read [04_solution_strategy.md](arc42/04_solution_strategy.md) - How do we achieve quality goals?
 2. Read [05_building_blocks.md](arc42/05_building_blocks.md) - How is the system organized?
 3. Read [06_runtime.md](arc42/06_runtime.md) - How do key scenarios work?
 
-**Day 3: Understand Decisions and Quality**
+### Day 3: Understand Decisions and Quality
+
 1. Read [09_decisions.md](arc42/09_decisions.md) - Why did we choose React Native, AsyncStorage, JWT?
 2. Read [10_quality.md](arc42/10_quality.md) - How do we measure success?
 3. Browse [11_risks.md](arc42/11_risks.md) - What could go wrong?
@@ -64,7 +67,7 @@ docs/architecture/arc42/
 ### For Specific Questions
 
 | Question | Read This |
-|----------|-----------|
+| ---------- | ----------- |
 | **Why did we choose React Native?** | [09_decisions.md](arc42/09_decisions.md) → ADR-002 |
 | **How does offline-first work?** | [04_solution_strategy.md](arc42/04_solution_strategy.md) → Strategy 6 |
 | **What are the quality targets?** | [10_quality.md](arc42/10_quality.md) → Quality Tree |
@@ -83,7 +86,7 @@ docs/architecture/arc42/
 
 **Purpose:** Provide high-level overview of AIOS
 
-**Contains:**
+### Contains
 - What is AIOS? (Super app vision, 14 production modules)
 - Business goals (privacy-first, cross-module intelligence)
 - Quality goals (performance, security, maintainability)
@@ -97,7 +100,7 @@ docs/architecture/arc42/
 
 **Purpose:** Define what AIOS must do and how well
 
-**Contains:**
+### Contains (2)
 - Functional requirements (14 modules, features)
 - Quality goals (6 priorities: performance, security, maintainability, testability, usability, reliability)
 - Quality metrics (< 100ms transitions, 60fps, 100% test coverage)
@@ -110,7 +113,7 @@ docs/architecture/arc42/
 
 **Purpose:** Document limitations and rules we must follow
 
-**Contains:**
+### Contains (3)
 - Technical constraints (React Native, AsyncStorage, TypeScript)
 - Platform constraints (iOS 13+, Android 10+)
 - Organizational constraints (CI/CD, testing, documentation)
@@ -124,7 +127,7 @@ docs/architecture/arc42/
 
 **Purpose:** Show AIOS's place in the larger ecosystem
 
-**Contains:**
+### Contains (4)
 - System overview (mobile client ↔ backend ↔ database)
 - External entities (users, device APIs, third-party services)
 - Use cases (10 primary user flows)
@@ -138,7 +141,7 @@ docs/architecture/arc42/
 
 **Purpose:** Explain high-level approach to achieving quality goals
 
-**Contains:**
+### Contains (5)
 - 6 solution strategies (one per quality goal)
 - Technology decisions summary
 - Implementation patterns
@@ -152,7 +155,7 @@ docs/architecture/arc42/
 
 **Purpose:** Show internal structure - components and organization
 
-**Contains:**
+### Contains (6)
 - Level 1: System overview (mobile client, backend, shared code)
 - Level 2: Mobile client architecture (UI, business logic, storage layers)
 - Level 3: Module decomposition (pattern all 14 modules follow)
@@ -166,7 +169,7 @@ docs/architecture/arc42/
 
 **Purpose:** Show the system in action through key scenarios
 
-**Contains:**
+### Contains (7)
 - 6 scenarios with sequence diagrams:
   1. Create note (offline)
   2. Schedule event with conflict detection
@@ -184,7 +187,7 @@ docs/architecture/arc42/
 
 **Purpose:** Describe where and how AIOS runs
 
-**Contains:**
+### Contains (8)
 - Development environment setup
 - Mobile app deployment (iOS, Android)
 - Backend server deployment (current: local, future: cloud)
@@ -199,7 +202,7 @@ docs/architecture/arc42/
 
 **Purpose:** Document patterns that apply across all modules
 
-**Contains:**
+### Contains (9)
 - Domain concepts (module structure, data models)
 - Design system (colors, typography, components)
 - Error handling patterns
@@ -216,7 +219,7 @@ docs/architecture/arc42/
 
 **Purpose:** Link to all Architecture Decision Records (ADRs)
 
-**Contains:**
+### Contains (10)
 - ADR-001: AsyncStorage for local persistence
 - ADR-002: React Native for mobile client
 - ADR-003: JWT for authentication
@@ -231,7 +234,7 @@ docs/architecture/arc42/
 
 **Purpose:** Define measurable quality standards with test scenarios
 
-**Contains:**
+### Contains (11)
 - Quality tree (6 quality attributes, each with sub-metrics)
 - 15+ concrete quality scenarios (with source, stimulus, response, measure)
 - Quality metrics dashboard (current status vs. targets)
@@ -245,7 +248,7 @@ docs/architecture/arc42/
 
 **Purpose:** Identify potential problems and shortcuts that need fixing
 
-**Contains:**
+### Contains (12)
 - 7 major risks (AsyncStorage limits, performance degradation, security, etc.)
 - 4 technical debt items (in-memory storage, no cloud sync, no E2E tests, incomplete types)
 - Mitigation strategies for each risk
@@ -260,7 +263,7 @@ docs/architecture/arc42/
 
 **Purpose:** Define terms used in architecture documentation
 
-**Contains:**
+### Contains (13)
 - Architecture-specific terms (arc42, ADR, building block, etc.)
 - Technology terms (Drizzle ORM, Expo, JWT, React Native, etc.)
 - Architecture patterns (offline-first, modular architecture, etc.)
@@ -294,18 +297,19 @@ All arc42 documents follow the same format:
 ### Verification
 
 Each document includes "How to Verify" section with commands to check:
+
 - Code matches documentation
 - Metrics are accurate
 - Files exist at documented paths
 
-**Example:**
+### Example
 ```bash
 # Verify AsyncStorage usage
 grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
 
 # Verify test coverage
 npm run test:coverage
-```
+```text
 
 ---
 
@@ -346,7 +350,7 @@ npm run test:coverage
 
 ### Reviewing Documentation
 
-**Monthly Review Checklist:**
+#### Monthly Review Checklist
 - [ ] Run all verification commands
 - [ ] Check links (no 404s)
 - [ ] Verify code paths exist
@@ -359,7 +363,7 @@ npm run test:coverage
 ## Document Status
 
 | Document | Last Updated | Reviewed By | Status |
-|----------|-------------|-------------|--------|
+| ---------- | ------------- | ------------- | -------- |
 | 00_intro.md | 2024-01-17 | Architecture Team | ✅ Current |
 | 01_goals.md | 2024-01-17 | Architecture Team | ✅ Current |
 | 02_constraints.md | 2024-01-17 | Architecture Team | ✅ Current |
@@ -385,7 +389,7 @@ npm run test:coverage
 
 ---
 
-**Next Steps:**
+### Next Steps
 1. Start with [00_intro.md](arc42/00_intro.md) for system overview
 2. Browse sections based on your needs (see Quick Start guide above)
 3. Use verification commands to explore the actual codebase

@@ -12,7 +12,7 @@ This document shows how AIOS fits into the bigger picture - what external system
 
 AIOS (AI Operating System) is a mobile super app that consolidates 14+ productivity modules into a single unified platform. It operates as a mobile-first system with local storage and optional cloud sync.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      External World                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -61,12 +61,12 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 │         └─────────────────────────────┘                     │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### External Entities
 
 | Entity | Type | Description | Interface | Data Flow |
-|--------|------|-------------|-----------|-----------|
+| -------- | ------ | ------------- | ----------- | ----------- |
 | **iOS Users** | Human | Users on iPhone/iPad devices | Touch UI, gestures, haptics | Input: taps, swipes, text<br>Output: visual feedback, haptics |
 | **Android Users** | Human | Users on Android phones/tablets | Touch UI, gestures, haptics | Input: taps, swipes, text<br>Output: visual feedback, haptics |
 | **Backend Server** | System | Node.js/Express API server | REST API (HTTPS) | JSON payloads via HTTP |
@@ -115,22 +115,22 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 
 #### Supporting Use Cases
 
-7. **Authentication**
+1. **Authentication**
    - **Actor:** Mobile user
    - **Flow:** User logs in/registers, receives JWT token
    - **Systems:** AIOS Mobile → Backend API (JWT auth)
 
-8. **Data Synchronization**
+2. **Data Synchronization**
    - **Actor:** System (automated)
    - **Flow:** Local data syncs to backend when online
    - **Systems:** AIOS Mobile → Backend API → PostgreSQL
 
-9. **Offline Operation**
+3. **Offline Operation**
    - **Actor:** Mobile user
    - **Flow:** User performs actions while offline, syncs when reconnected
    - **Systems:** AIOS Mobile → AsyncStorage → (queued for sync)
 
-10. **Quick Capture**
+4. **Quick Capture**
     - **Actor:** Mobile user
     - **Flow:** User long-presses, captures note/task/event, returns to context
     - **Systems:** AIOS Mobile → AsyncStorage → Return to previous screen
@@ -141,7 +141,7 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 
 ### System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                   Mobile Device (iOS/Android)                │
 ├─────────────────────────────────────────────────────────────┤
@@ -241,14 +241,14 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 │  • Synced data (notes, tasks, events, etc.)                  │
 │  • Integrations and settings                                 │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### Technology Stack Details
 
 #### Client-Side Technologies
 
 | Layer | Technology | Purpose | Location |
-|-------|------------|---------|----------|
+| ------- | ------------ | --------- | ---------- |
 | **UI Framework** | React Native 0.81.5 | Mobile rendering | `/client/screens/`, `/client/components/` |
 | **Development Platform** | Expo 54.0.23 | Build tools, managed services | Root, `app.json` |
 | **Navigation** | React Navigation 7.x | Screen routing | `/client/navigation/AppNavigator.tsx` |
@@ -262,7 +262,7 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 #### Server-Side Technologies
 
 | Layer | Technology | Purpose | Location |
-|-------|------------|---------|----------|
+| ------- | ------------ | --------- | ---------- |
 | **Runtime** | Node.js 18+ | JavaScript runtime | Server process |
 | **Web Framework** | Express 4.21.2 | HTTP server | `/server/index.ts` |
 | **Authentication** | JWT (jsonwebtoken 9.0.3) | Token-based auth | `/server/middleware/auth.ts` |
@@ -275,7 +275,7 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 #### External Integrations
 
 | Service | Purpose | Integration Point | Status |
-|---------|---------|------------------|--------|
+| --------- | --------- | ------------------ | -------- |
 | **LibreTranslate** | Language translation | `/server/routes.ts` → External API | Configured |
 | **Expo Contacts API** | Native contact access | `/client/screens/ContactsScreen.tsx` | Implemented |
 | **Expo Media Library** | Photo/video access | `/client/screens/PhotosScreen.tsx` | Implemented |
@@ -289,13 +289,14 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 
 #### Pattern 1: Local-First Operations (Current MVP)
 
-```
+```text
 User Action → UI Component → Storage Method → AsyncStorage → UI Update
                                     ↓
                         (Future: Queue for sync)
-```
+```text
 
 **Example:** Creating a note
+
 1. User taps "New Note" in NotebookScreen
 2. NoteEditorScreen renders
 3. User types content, taps Save
@@ -305,13 +306,14 @@ User Action → UI Component → Storage Method → AsyncStorage → UI Update
 
 #### Pattern 2: API-Driven Operations (Authentication)
 
-```
+```text
 User Action → UI Component → API Client → Backend API → Middleware → Storage → Response
                                                               ↓
                                                         JWT Validation
-```
+```text
 
 **Example:** User login
+
 1. User enters credentials
 2. POST /api/auth/login
 3. JWT middleware validates (future: checks password)
@@ -321,11 +323,12 @@ User Action → UI Component → API Client → Backend API → Middleware → S
 
 #### Pattern 3: External Service Integration
 
-```
+```text
 User Action → UI Component → Backend API → External Service → Backend → Response → UI
-```
+```text
 
 **Example:** Translation
+
 1. User types text in TranslatorScreen
 2. POST /api/translate with text and target language
 3. Backend proxies to LibreTranslate API
@@ -335,11 +338,12 @@ User Action → UI Component → Backend API → External Service → Backend �
 
 #### Pattern 4: Device Integration
 
-```
+```text
 User Action → UI Component → Expo API → Native Module → Device → Response → UI
-```
+```text
 
 **Example:** Import contacts
+
 1. User taps "Import Contacts" in ContactsScreen
 2. Request permission via expo-contacts
 3. Native contact picker opens
@@ -349,7 +353,7 @@ User Action → UI Component → Expo API → Native Module → Device → Respo
 
 ### File Organization
 
-```
+```text
 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
 ├── client/                    # Mobile application
 │   ├── components/            # Reusable UI components
@@ -400,7 +404,7 @@ User Action → UI Component → Expo API → Native Module → Device → Respo
 ├── package.json               # Dependencies and scripts
 ├── tsconfig.json              # TypeScript configuration
 └── drizzle.config.ts          # Database configuration
-```
+```text
 
 ---
 
@@ -473,7 +477,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
 
 # Check backend API routes
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/routes.ts | grep "router\."
-```
+```text
 
 ### Verify Technical Context
 
@@ -487,7 +491,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/index.ts | head -50
 # Verify file structure
 tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
 tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
-```
+```text
 
 ### Verify External Integrations
 
@@ -500,7 +504,7 @@ curl -X POST http://localhost:5000/api/translate \
 # Check device API usage
 grep -r "expo-contacts" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
 grep -r "expo-media-library" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
-```
+```text
 
 ### Test Data Flows
 
@@ -513,7 +517,7 @@ npm test client/storage/__tests__/
 
 # Test authentication flow
 npm test server/__tests__/ -- -t "auth"
-```
+```text
 
 ---
 

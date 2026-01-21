@@ -1,6 +1,7 @@
 # Dependency Security Policy
 
 ## Plain English Summary
+
 Third-party npm packages can have security vulnerabilities. We must check dependencies before adding them, keep them updated, and monitor for security advisories.
 
 ## Before Adding Dependencies
@@ -24,17 +25,17 @@ Third-party npm packages can have security vulnerabilities. We must check depend
 npm audit
 
 # Or use GitHub Dependabot / Snyk
-```
+```text
 
 ## Vulnerability Response
 
-**Critical/High:**
+### Critical/High
 1. Update within 48 hours
 2. Test in staging
 3. Deploy to production
 4. Document in changelog
 
-**Medium/Low:**
+### Medium/Low
 1. Update in next sprint
 2. Track in backlog
 
@@ -43,5 +44,6 @@ npm audit
 Maintain list of vetted, approved dependencies. New dependencies require security review.
 
 ## Related
+
 - [Supply Chain Security](./supply_chain.md)
 - [Threat Model](./threat_model.md)

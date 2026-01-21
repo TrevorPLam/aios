@@ -3,16 +3,19 @@
 ## Agent Responsibility Model: Unified AGENT Ownership
 
 ### AGENT
+
 **Role:** Full delivery across platforms
 
-**Responsibilities:**
+### Responsibilities
+
 - Builds all original features, screens, components, and business logic
 - Delivers iOS, Android, and Web compatibility as required
 - Owns architectural decisions
 - Adds platform-specific adaptations when needed
 - Tests on the platforms relevant to the task scope
 
-**Workflow:**
+### Workflow
+
 1. Receives task assignment from TODO.md (Owner: AGENT)
 2. Builds the feature with platform compatibility in mind
 3. Tests on the required platforms
@@ -21,6 +24,7 @@
 ## When to Use AI
 
 ### Good Use Cases
+
 - Writing repetitive boilerplate (models, types, tests)
 - Generating test cases from examples
 - Creating documentation from code
@@ -28,6 +32,7 @@
 - Suggesting implementation approaches
 
 ### Exercise Caution
+
 - Security-sensitive code (auth, crypto, data handling)
 - Complex business logic
 - Performance-critical code
@@ -35,6 +40,7 @@
 - API contracts
 
 ### Seek Human Review
+
 - Architectural decisions
 - Security controls
 - Complex algorithms
@@ -44,6 +50,7 @@
 ## Requirements
 
 All AI-contributed code must:
+
 1. Pass all tests
 2. Meet linting and type-checking standards
 3. Be reviewed by human engineer
@@ -53,11 +60,13 @@ All AI-contributed code must:
 ## AI Declaration
 
 For significant AI contributions, note in PR:
-```
+
+```text
 AI Contribution: Used GitHub Copilot to generate test cases.
 Verified: All tests pass, coverage increased by 15%.
-```
+```text
 
 ## Related
+
 - [Evidence Requirements](./evidence_requirements.md)
 - [Safe Editing Rules](./safe_editing_rules.md)

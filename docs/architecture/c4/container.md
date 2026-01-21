@@ -11,31 +11,31 @@ This diagram zooms into AIOS to show its three main technical pieces: the mobile
 ```mermaid
 graph TB
     User[Mobile User<br/>iOS & Android]
-    
+
     subgraph AIOS[AIOS System]
         MobileApp[Mobile Application<br/>React Native + Expo<br/>TypeScript<br/>----<br/>14 production modules<br/>Offline-first with AsyncStorage<br/>React Query for state<br/>----<br/>client/]
-        
+
         BackendAPI[Backend API<br/>Node.js + Express<br/>TypeScript<br/>----<br/>RESTful JSON API<br/>JWT authentication<br/>----<br/>server/]
-        
+
         Database[(PostgreSQL Database<br/>----<br/>Drizzle ORM<br/>----<br/>Users, Notes, Tasks,<br/>Projects, Events, Messages,<br/>Settings, Recommendations)]
-        
+
         SharedCode[Shared Code<br/>TypeScript<br/>----<br/>Schema definitions<br/>Type definitions<br/>Constants<br/>----<br/>shared/]
-        
+
         LocalStorage[(AsyncStorage<br/>----<br/>Mobile device<br/>local storage<br/>----<br/>Offline cache<br/>JWT tokens)]
     end
-    
+
     ExternalSystems[External Systems<br/>Email, Calendar,<br/>Contacts, Storage]
-    
-    User -->|Uses<br/>Touch UI| MobileApp
-    
-    MobileApp -->|HTTP/HTTPS<br/>JSON<br/>JWT Bearer token| BackendAPI
-    MobileApp -->|Reads/Writes| LocalStorage
-    MobileApp -.->|Uses types & schemas| SharedCode
-    
-    BackendAPI -->|SQL queries<br/>Drizzle ORM| Database
-    BackendAPI -.->|Uses types & schemas| SharedCode
-    BackendAPI -.->|Future: HTTP APIs<br/>SMTP, CalDAV| ExternalSystems
-    
+
+ User --> | Uses<br/>Touch UI | MobileApp
+
+ MobileApp --> | HTTP/HTTPS<br/>JSON<br/>JWT Bearer token | BackendAPI
+ MobileApp --> | Reads/Writes | LocalStorage
+ MobileApp -.-> | Uses types & schemas | SharedCode
+
+ BackendAPI --> | SQL queries<br/>Drizzle ORM | Database
+ BackendAPI -.-> | Uses types & schemas | SharedCode
+ BackendAPI -.-> | Future: HTTP APIs<br/>SMTP, CalDAV | ExternalSystems
+
     style MobileApp fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
     style BackendAPI fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
     style Database fill:#7ED321,stroke:#5FA319,stroke-width:3px,color:#fff
@@ -43,13 +43,13 @@ graph TB
     style LocalStorage fill:#7ED321,stroke:#5FA319,stroke-width:2px,color:#fff
     style User fill:#50E3C2,stroke:#2E8B7A,stroke-width:2px
     style ExternalSystems fill:#E8E8E8,stroke:#999,stroke-width:2px
-```
+```text
 
 ### Container Descriptions
 
 #### Mobile Application (`client/`)
 
-**Technology:**
+### Technology
 - React Native 0.81.5
 - Expo SDK 54
 - TypeScript
@@ -57,7 +57,7 @@ graph TB
 - React Query (TanStack Query)
 - AsyncStorage for offline data
 
-**Responsibilities:**
+### Responsibilities
 - Render UI for 14 production modules
 - Handle user input and gestures
 - Manage local state and navigation
@@ -66,8 +66,8 @@ graph TB
 - Make HTTP requests to Backend API
 - Provide offline-first experience
 
-**Key Files:**
-```
+### Key Files
+```text
 client/
 ├── index.js                 # Entry point (Expo)
 ├── App.tsx                  # Root component
@@ -89,15 +89,15 @@ client/
 ├── hooks/                   # Custom React hooks
 ├── context/                 # React context providers
 └── models/                  # Local data models
-```
+```text
 
-**External Dependencies:**
+### External Dependencies
 - `@react-navigation/*` - Navigation
 - `@tanstack/react-query` - Server state management
 - `@react-native-async-storage/async-storage` - Local storage
 - `expo-*` - Native modules (contacts, camera, file system, etc.)
 
-**Data Flow:**
+### Data Flow
 1. User interacts with UI
 2. Component calls React Query hook
 3. Hook makes HTTP request to Backend API
@@ -106,7 +106,7 @@ client/
 
 #### Backend API (`server/`)
 
-**Technology:**
+### Technology (2)
 - Node.js (runtime)
 - Express 4.21 (web framework)
 - TypeScript
@@ -114,7 +114,7 @@ client/
 - bcryptjs (password hashing)
 - jsonwebtoken (JWT auth)
 
-**Responsibilities:**
+### Responsibilities (2)
 - Expose RESTful JSON API endpoints
 - Authenticate users (JWT generation/validation)
 - Validate incoming requests (Zod schemas)
@@ -123,8 +123,8 @@ client/
 - Return JSON responses
 - Handle errors consistently
 
-**Key Files:**
-```
+### Key Files (2)
+```text
 server/
 ├── index.ts                 # Entry point, Express setup
 ├── routes.ts                # API route definitions
@@ -134,10 +134,10 @@ server/
 │   ├── validation.ts        # Request validation (Zod)
 │   └── errorHandler.ts      # Error handling
 └── __tests__/               # Server unit tests
-```
+```text
 
-**API Endpoints (examples):**
-```
+### API Endpoints (examples)
+```text
 POST   /api/auth/register    # User registration
 POST   /api/auth/login       # User login
 GET    /api/notes            # List user's notes
@@ -147,9 +147,9 @@ PUT    /api/notes/:id        # Update note
 DELETE /api/notes/:id        # Delete note
 GET    /api/tasks            # List user's tasks
 ...                          # Similar patterns for all entities
-```
+```text
 
-**Authentication Flow:**
+### Authentication Flow
 1. POST /api/auth/login with username/password
 2. Server validates credentials
 3. Server generates JWT with userId payload
@@ -158,7 +158,7 @@ GET    /api/tasks            # List user's tasks
 6. Server validates JWT and extracts userId
 7. Server filters data by userId
 
-**Data Access Pattern:**
+### Data Access Pattern
 - Routes call `storage.*` functions
 - Storage layer uses Drizzle ORM to query PostgreSQL
 - All queries filtered by authenticated user's ID
@@ -166,20 +166,20 @@ GET    /api/tasks            # List user's tasks
 
 #### PostgreSQL Database
 
-**Technology:**
+### Technology (3)
 - PostgreSQL 14+ (any compatible version)
 - Drizzle ORM for schema management
 - UUID primary keys
 - JSONB for complex types
 
-**Responsibilities:**
+### Responsibilities (3)
 - Persist all user data
 - Enforce data integrity constraints
 - Support concurrent access
 - Provide transaction support
 - Enable efficient queries
 
-**Schema (major tables):**
+### Schema (major tables)
 ```sql
 -- Core tables (defined in shared/schema.ts)
 users                    # User accounts
@@ -194,15 +194,15 @@ recommendations          # AI suggestions
 contacts                 # (future) Contact data
 budget_entries           # (future) Budget tracking
 integrations             # (future) External service configs
-```
+```text
 
-**Key Schema File:**
-```
+### Key Schema File
+```text
 shared/schema.ts         # Drizzle schema definitions
 drizzle.config.ts        # Drizzle configuration
-```
+```text
 
-**Data Model Highlights:**
+### Data Model Highlights
 - UUIDs for all primary keys
 - `userId` foreign key on all user data tables
 - JSONB columns for arrays (tags, links, taskIds, etc.)
@@ -211,33 +211,33 @@ drizzle.config.ts        # Drizzle configuration
 
 #### Shared Code (`shared/`)
 
-**Technology:**
+### Technology (4)
 - TypeScript
 - Zod (schema validation)
 - Drizzle ORM (schema definitions)
 
-**Responsibilities:**
+### Responsibilities (4)
 - Define database schema (single source of truth)
 - Export TypeScript types derived from schema
 - Provide validation schemas (Zod)
 - Share constants between client and server
 - Ensure type safety across boundaries
 
-**Key Files:**
-```
+### Key Files (3)
+```text
 shared/
 ├── schema.ts            # Database schema + TypeScript types
 └── constants.ts         # Shared constants
-```
+```text
 
-**Type Safety Flow:**
+### Type Safety Flow
 1. Define schema with Drizzle in `shared/schema.ts`
 2. Export inferred TypeScript types (User, Note, Task, etc.)
 3. Generate Zod schemas for validation
 4. Client and server import same types
 5. Compile-time type checking ensures consistency
 
-**Example:**
+### Example
 ```typescript
 // shared/schema.ts
 export const notes = pgTable("notes", {
@@ -251,44 +251,44 @@ export const notes = pgTable("notes", {
 export type Note = typeof notes.$inferSelect;
 export type InsertNote = typeof notes.$inferInsert;
 export const insertNoteSchema = createInsertSchema(notes).omit({...});
-```
+```text
 
 #### AsyncStorage (Local Storage)
 
-**Technology:**
+### Technology (5)
 - `@react-native-async-storage/async-storage`
 - Key-value store
 - Persistent across app restarts
 - Async API
 
-**Responsibilities:**
+### Responsibilities (5)
 - Cache API responses for offline access
 - Store JWT authentication token
 - Persist user preferences
 - Enable offline-first UX
 
-**Storage Keys (examples):**
-```
+### Storage Keys (examples)
+```text
 @aios/auth/token          # JWT token
 @aios/notes/all           # Cached notes list
 @aios/tasks/all           # Cached tasks list
 @aios/user/settings       # User settings
-```
+```text
 
-**Code Location:**
-```
+### Code Location
+```text
 client/lib/storage.ts     # AsyncStorage wrapper functions
-```
+```text
 
 ### Container Interactions
 
 #### Mobile App ↔ Backend API
 
-**Protocol**: HTTP/HTTPS  
-**Format**: JSON  
+**Protocol**: HTTP/HTTPS
+**Format**: JSON
 **Authentication**: JWT Bearer token in `Authorization` header
 
-**Request Flow:**
+### Request Flow
 1. User action in Mobile App
 2. React Query hook triggered
 3. HTTP request sent to Backend API
@@ -300,14 +300,14 @@ client/lib/storage.ts     # AsyncStorage wrapper functions
 9. Mobile App updates UI
 10. Response cached in AsyncStorage
 
-**Example Request:**
+### Example Request
 ```http
 GET /api/notes HTTP/1.1
 Host: api.aios.example.com
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
+```text
 
-**Example Response:**
+### Example Response
 ```json
 [
   {
@@ -320,15 +320,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
     "updatedAt": "2025-01-15T10:30:00Z"
   }
 ]
-```
+```text
 
 #### Backend API ↔ Database
 
-**Protocol**: PostgreSQL wire protocol  
-**Library**: Drizzle ORM  
+**Protocol**: PostgreSQL wire protocol
+**Library**: Drizzle ORM
 **Connection**: Connection pool
 
-**Query Flow:**
+### Query Flow
 1. API route handler receives request
 2. Calls storage layer function
 3. Storage builds Drizzle query
@@ -338,7 +338,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 7. Storage returns to route handler
 8. Handler serializes to JSON
 
-**Example (conceptual):**
+### Example (conceptual)
 ```typescript
 // server/storage.ts
 export async function getUserNotes(userId: string): Promise<Note[]> {
@@ -348,20 +348,20 @@ export async function getUserNotes(userId: string): Promise<Note[]> {
     .where(eq(notes.userId, userId))
     .orderBy(desc(notes.updatedAt));
 }
-```
+```text
 
 #### Mobile App ↔ AsyncStorage
 
-**API**: Async key-value operations  
+**API**: Async key-value operations
 **Usage**: Cache and offline data
 
-**Operations:**
+### Operations
 - `AsyncStorage.getItem(key)` - Read cached data
 - `AsyncStorage.setItem(key, value)` - Write cache
 - `AsyncStorage.removeItem(key)` - Clear cache
 - `AsyncStorage.multiGet([keys])` - Batch read
 
-**Caching Strategy:**
+### Caching Strategy
 - React Query handles cache invalidation
 - Background sync when online
 - Stale-while-revalidate pattern
@@ -382,9 +382,10 @@ import { validate } from './middleware/validation';
 app.post('/api/notes', validate(insertNoteSchema), async (req, res) => {
   // ...
 });
-```
+```text
 
 This ensures:
+
 - No type mismatches between client and server
 - Consistent validation logic
 - Single source of truth for data structures
@@ -406,23 +407,23 @@ This ensures:
 
 **Problem**: React Native app crashes or becomes unresponsive.
 
-**Impact:**
+### Impact
 - User loses current work (unsaved changes)
 - Cached data may be corrupted
 - App requires restart
 
-**Symptoms:**
+### Symptoms
 - White screen of death
 - "App has stopped" dialog
 - Frozen UI
 
-**Mitigation:**
+### Mitigation
 - Autosave drafts to AsyncStorage every N seconds
 - Error boundaries catch React errors gracefully
 - Log errors to help diagnose issues
 - Frequent state persistence
 
-**Recovery:**
+### Recovery
 - User restarts app
 - AsyncStorage data survives restart
 - Unsaved work may be recovered from autosave
@@ -431,23 +432,23 @@ This ensures:
 
 **Problem**: Express server crashes, deploys, or becomes unreachable.
 
-**Impact:**
+### Impact (2)
 - Mobile app cannot sync data
 - Login attempts fail
 - Users restricted to offline mode
 
-**Symptoms:**
+### Symptoms (2)
 - Network errors in app
 - "Cannot connect to server" messages
 - Stale data displayed
 
-**Mitigation:**
+### Mitigation (2)
 - AsyncStorage provides offline read access
 - Queue write operations for later sync
 - Display clear offline indicator
 - Graceful degradation
 
-**Recovery:**
+### Recovery (2)
 - Backend comes back online
 - App automatically retries requests
 - Queued operations sync
@@ -457,23 +458,23 @@ This ensures:
 
 **Problem**: PostgreSQL data corruption, disk failure, or accidental deletion.
 
-**Impact:**
+### Impact (3)
 - Permanent data loss (if no backups)
 - API errors on database queries
 - System unusable until database restored
 
-**Symptoms:**
+### Symptoms (3)
 - 500 errors from API
 - Database connection errors in logs
 - SQL errors
 
-**Mitigation:**
+### Mitigation (3)
 - Regular database backups (daily/hourly)
 - Database replication (production)
 - Transaction logs for point-in-time recovery
 - Validation before writes
 
-**Recovery:**
+### Recovery (3)
 - Restore from latest backup
 - Replay transaction logs if available
 - Users may lose recent changes
@@ -483,23 +484,23 @@ This ensures:
 
 **Problem**: Mobile device runs out of storage space or AsyncStorage hits quota limits.
 
-**Impact:**
+### Impact (4)
 - Cannot cache new data
 - App may fail to save settings
 - Performance degradation
 
-**Symptoms:**
+### Symptoms (4)
 - Write operations fail silently
 - "Storage full" errors
 - App doesn't remember settings
 
-**Mitigation:**
+### Mitigation (4)
 - Monitor cache size
 - Implement LRU cache eviction
 - Compress cached data
 - Prompt user to clear cache
 
-**Recovery:**
+### Recovery (4)
 - User clears app cache
 - User deletes old data
 - Re-sync from server
@@ -508,22 +509,22 @@ This ensures:
 
 **Problem**: User's JWT token expires while using the app.
 
-**Impact:**
+### Impact (5)
 - API requests start returning 401 Unauthorized
 - User kicked out to login screen
 
-**Symptoms:**
+### Symptoms (5)
 - Sudden authentication errors
 - "Session expired" messages
 - Forced logout
 
-**Mitigation:**
+### Mitigation (5)
 - Long token expiration (7-30 days)
 - Token refresh endpoint
 - Refresh token before expiration
 - Detect 401 and prompt re-login
 
-**Recovery:**
+### Recovery (5)
 - User re-enters credentials
 - New JWT issued
 - App resumes normal operation
@@ -532,23 +533,23 @@ This ensures:
 
 **Problem**: Mobile app and backend API versions incompatible (breaking schema changes).
 
-**Impact:**
+### Impact (6)
 - API requests fail validation
 - UI displays incorrect data
 - Corrupted data possible
 
-**Symptoms:**
+### Symptoms (6)
 - Zod validation errors
 - Type mismatches
 - Unexpected null values
 
-**Mitigation:**
+### Mitigation (6)
 - API versioning (/api/v1/, /api/v2/)
 - Backward-compatible schema changes
 - Client checks server version
 - Force update prompt if needed
 
-**Recovery:**
+### Recovery (6)
 - User updates mobile app
 - Server maintains backward compatibility during transition
 - Gradual rollout of breaking changes
@@ -570,7 +571,7 @@ npm run server:dev      # Should start Express on port 5000
 # 3. Verify Database container
 ls drizzle.config.ts
 ls shared/schema.ts
-# Check connection (requires database running):
+# Check connection (requires database running)
 # npm run db:push
 
 # 4. Verify Shared Code
@@ -578,9 +579,9 @@ ls shared/schema.ts shared/constants.ts
 
 # 5. Verify AsyncStorage usage
 grep -r "AsyncStorage" client/lib/storage.ts
-```
+```text
 
-### Container Interactions
+### Container Interactions (2)
 
 ```bash
 # 1. Mobile App → Backend API
@@ -598,13 +599,13 @@ grep "getItem\|setItem" client/lib/storage.ts
 # 4. Shared Code imports
 grep "from '@shared" client/screens/*.tsx | head -5
 grep "from '@shared" server/routes.ts
-```
+```text
 
 ### API Endpoints
 
 ```bash
 # 1. List all defined routes
-grep "app\.\(get\|post\|put\|delete\)" server/routes.ts
+ grep "app\.\(get\ | post\ | put\ | delete\)" server/routes.ts
 
 # 2. Check authentication middleware usage
 grep "authenticate" server/routes.ts | wc -l
@@ -617,7 +618,7 @@ npm run server:dev &
 sleep 5
 curl http://localhost:5000/status
 # Expected: {"status":"ok","timestamp":"..."}
-```
+```text
 
 ### Database Schema
 
@@ -633,7 +634,7 @@ grep "userId.*varchar" shared/schema.ts
 
 # 4. Check for JSONB columns
 grep "jsonb" shared/schema.ts
-```
+```text
 
 ### Type Safety
 
@@ -652,9 +653,9 @@ grep "import.*from '@shared/schema'" client/screens/*.tsx | wc -l
 
 # 5. Check server imports shared types
 grep "import.*from '@shared/schema'" server/routes.ts
-```
+```text
 
-### Authentication Flow
+### Authentication Flow (2)
 
 ```bash
 # 1. Check JWT generation
@@ -669,7 +670,7 @@ grep "AsyncStorage.*token" client/lib/storage.ts
 # 4. Check client sends token in headers
 grep "Authorization.*Bearer" client/lib/query-client.ts
 # (or wherever fetch is configured)
-```
+```text
 
 ### Offline Capabilities
 
@@ -687,7 +688,7 @@ grep -r "offline\|isOnline" client/components/
 # - Start app
 # - Enable airplane mode on device
 # - Verify cached data still accessible
-```
+```text
 
 ### Integration Test
 
@@ -727,7 +728,7 @@ curl -X GET http://localhost:5000/api/notes \
 
 # 6. Cleanup
 kill $SERVER_PID
-```
+```text
 
 ## Related Documentation
 
@@ -742,8 +743,8 @@ kill $SERVER_PID
 
 ## References
 
-- React Native Architecture: https://reactnative.dev/architecture/overview
-- Express.js: https://expressjs.com/
-- Drizzle ORM: https://orm.drizzle.team/
-- React Query: https://tanstack.com/query/
-- AsyncStorage: https://react-native-async-storage.github.io/async-storage/
+- React Native Architecture: <https://reactnative.dev/architecture/overview>
+- Express.js: <https://expressjs.com/>
+- Drizzle ORM: <https://orm.drizzle.team/>
+- React Query: <https://tanstack.com/query/>
+- AsyncStorage: <https://react-native-async-storage.github.io/async-storage/>

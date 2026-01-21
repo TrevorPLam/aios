@@ -1,6 +1,7 @@
 # Contextual Navigation Guide
 
 ## Overview
+
 The app now supports contextual navigation, which allows modules to suggest related modules based on user focus. For example, when viewing an email with a date/time, the Calendar module can be suggested as the next navigation target.
 
 ## How to Use
@@ -14,22 +15,22 @@ import { useNavigationContext } from "@/context/NavigationContext";
 
 function EmailDetailScreen() {
   const { setContextualModule } = useNavigationContext();
-  
+
   useEffect(() => {
     // If email contains a date/event reference
     if (emailHasDateReference) {
       setContextualModule("calendar");
     }
-    
+
     // Clean up when leaving the screen
     return () => {
       setContextualModule(null);
     };
   }, [emailHasDateReference]);
-  
+
   // ... rest of component
 }
-```
+```text
 
 ### How It Works
 

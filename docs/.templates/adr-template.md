@@ -1,6 +1,6 @@
 # ADR-[###]: [title]
 
-**Status:** Proposed | Accepted | Deprecated | Superseded  
+ **Status:** Proposed | Accepted | Deprecated | Superseded
 **Date:** YYYY-MM-DD
 
 ## Context

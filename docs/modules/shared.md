@@ -1,8 +1,8 @@
 # Shared Module
 
-**Location:** `shared/`  
-**Language:** TypeScript  
-**Framework:** None (pure TypeScript/JavaScript)  
+**Location:** `shared/`
+**Language:** TypeScript
+**Framework:** None (pure TypeScript/JavaScript)
 **Status:** Active
 
 ## Plain English Summary
@@ -12,6 +12,7 @@ The shared module contains TypeScript code that is used by both the client (mobi
 ## Purpose
 
 ### What This Module Does
+
 - Defines TypeScript types and interfaces used by both client and server
 - Provides validation schemas (using Zod) for data consistency
 - Implements utility functions needed in both environments
@@ -19,12 +20,14 @@ The shared module contains TypeScript code that is used by both the client (mobi
 - Ensures data contracts are consistent across client and server
 
 ### What This Module Does NOT Do
+
 - Does NOT contain platform-specific code (no React, no Express)
 - Does NOT have side effects or perform I/O operations
 - Does NOT depend on client or server modules (one-way dependency)
 - Does NOT include DOM or Node.js-specific APIs
 
 ### Key Use Cases
+
 1. Defining API request/response types
 2. Validating data on both client and server
 3. Sharing business logic utilities (date formatting, calculations)
@@ -35,7 +38,7 @@ The shared module contains TypeScript code that is used by both the client (mobi
 
 ### Architecture Overview
 
-```
+```text
 shared/
 ├── src/
 │   ├── types/              # TypeScript type definitions
@@ -55,14 +58,15 @@ shared/
 ├── tests/
 ├── package.json
 └── tsconfig.json
-```
+```text
 
 ### Key Components
 
 #### Component 1: Type Definitions
-**Location:** `shared/src/types/`  
-**Purpose:** Central TypeScript types for data structures  
-**Interface:**
+
+**Location:** `shared/src/types/`
+**Purpose:** Central TypeScript types for data structures
+### Interface
 ```typescript
 // API types
 export interface ApiResponse<T> {
@@ -86,12 +90,13 @@ export interface CreateUserDTO {
   password: string;
   name: string;
 }
-```
+```text
 
 #### Component 2: Validation Schemas
-**Location:** `shared/src/validators/`  
-**Purpose:** Zod schemas for runtime validation  
-**Interface:**
+
+**Location:** `shared/src/validators/`
+**Purpose:** Zod schemas for runtime validation
+### Interface (2)
 ```typescript
 import { z } from 'zod';
 
@@ -104,12 +109,13 @@ export const createUserSchema = z.object({
 
 // Infer TypeScript type from schema
 export type CreateUserInput = z.infer<typeof createUserSchema>;
-```
+```text
 
 #### Component 3: Utility Functions
-**Location:** `shared/src/utils/`  
-**Purpose:** Pure functions used in both client and server  
-**Interface:**
+
+**Location:** `shared/src/utils/`
+**Purpose:** Pure functions used in both client and server
+### Interface (3)
 ```typescript
 // Date utilities
 export function formatDate(date: Date, format: string): string;
@@ -122,12 +128,13 @@ export function truncate(text: string, maxLength: number): string;
 // Validation utilities
 export function isValidEmail(email: string): boolean;
 export function isValidUrl(url: string): boolean;
-```
+```text
 
 #### Component 4: Constants
-**Location:** `shared/src/constants/`  
-**Purpose:** Shared constants and enums  
-**Interface:**
+
+**Location:** `shared/src/constants/`
+**Purpose:** Shared constants and enums
+### Interface (4)
 ```typescript
 // API endpoints
 export const API_ENDPOINTS = {
@@ -156,11 +163,11 @@ export const VALIDATION_RULES = {
   USERNAME_MIN_LENGTH: 3,
   USERNAME_MAX_LENGTH: 30,
 } as const;
-```
+```text
 
 ### Data Flow
 
-```
+```text
 Client/Server Module
        ↓
 Imports from shared/
@@ -168,13 +175,14 @@ Imports from shared/
 Uses types, validators, utils
        ↓
 Consistent behavior across platforms
-```
+```text
 
 Shared code has no runtime dependencies on client or server - it's pure TypeScript that compiles to JavaScript and runs anywhere.
 
 ### State Management
 
 Shared module is stateless - it only exports:
+
 - Type definitions (compile-time only)
 - Pure functions (no side effects)
 - Constants (immutable values)
@@ -204,7 +212,7 @@ export function isErrorWithMessage(error: unknown): error is { message: string }
     typeof error.message === 'string'
   );
 }
-```
+```text
 
 ## APIs and Interfaces
 
@@ -213,12 +221,14 @@ export function isErrorWithMessage(error: unknown): error is { message: string }
 Everything exported from `shared/src/index.ts` is the public API:
 
 #### Types
+
 ```typescript
 // Import types in client/server
 import type { User, CreateUserDTO, ApiResponse } from '@aios/shared';
-```
+```text
 
 #### Validators
+
 ```typescript
 // Import validators in client/server
 import { createUserSchema } from '@aios/shared/validators';
@@ -228,25 +238,27 @@ const result = createUserSchema.safeParse(input);
 if (!result.success) {
   // Handle validation errors
 }
-```
+```text
 
 #### Utilities
+
 ```typescript
 // Import utilities in client/server
 import { formatDate, slugify } from '@aios/shared/utils';
 
 const formattedDate = formatDate(new Date(), 'YYYY-MM-DD');
 const slug = slugify('Hello World!'); // 'hello-world'
-```
+```text
 
 #### Constants
+
 ```typescript
 // Import constants in client/server
 import { API_ENDPOINTS, UserStatus } from '@aios/shared/constants';
 
 const loginUrl = API_ENDPOINTS.AUTH.LOGIN;
 const status = UserStatus.ACTIVE;
-```
+```text
 
 ### Internal Organization
 
@@ -258,23 +270,24 @@ export * from './types';
 export * from './validators';
 export * from './utils';
 export * from './constants';
-```
+```text
 
 This allows clean imports:
+
 ```typescript
 // Instead of:
 import { User } from '@aios/shared/src/types/models';
 
 // Users do:
 import { User } from '@aios/shared';
-```
+```text
 
 ## Dependencies
 
 ### External Dependencies
 
 | Package | Version | Purpose |
-|---------|---------|---------|
+| --------- | --------- | --------- |
 | `zod` | `^3.22.0` | Schema validation |
 | `date-fns` | `^3.0.0` | Date manipulation (if needed) |
 
@@ -313,11 +326,11 @@ npm run type-check
 
 # Lint code
 npm run lint
-```
+```text
 
 ### Configuration
 
-**TypeScript Configuration:**
+#### TypeScript Configuration
 ```json
 {
   "compilerOptions": {
@@ -330,9 +343,9 @@ npm run lint
     "skipLibCheck": true
   }
 }
-```
+```text
 
-**Package Configuration:**
+### Package Configuration
 ```json
 {
   "name": "@aios/shared",
@@ -346,7 +359,7 @@ npm run lint
     "./constants": "./dist/constants/index.js"
   }
 }
-```
+```text
 
 ### Deployment
 
@@ -366,7 +379,7 @@ npm install ../shared
 {
   "workspaces": ["client", "server", "shared"]
 }
-```
+```text
 
 ## Common Tasks
 
@@ -374,7 +387,7 @@ npm install ../shared
 
 **Goal:** Define a new type used by both client and server
 
-**Steps:**
+### Steps
 ```typescript
 // 1. Add type definition
 // shared/src/types/models.ts
@@ -403,13 +416,13 @@ npm run build
 // 5. Use in client/server
 // client/src/components/Product.tsx
 import type { Product } from '@aios/shared';
-```
+```text
 
 ### Task 2: Add a Validation Schema
 
 **Goal:** Create a new Zod schema for validation
 
-**Steps:**
+### Steps (2)
 ```typescript
 // 1. Create schema
 // shared/src/validators/product.ts
@@ -440,13 +453,13 @@ import { createProductSchema } from '@aios/shared/validators';
 
 // Validate request body
 const validated = createProductSchema.parse(req.body);
-```
+```text
 
 ### Task 3: Add a Utility Function
 
 **Goal:** Create a utility function used in both environments
 
-**Steps:**
+### Steps (3)
 ```typescript
 // 1. Add function to appropriate file
 // shared/src/utils/price.ts
@@ -473,19 +486,19 @@ export * from './price';
 
 // 4. Use anywhere
 import { formatPrice } from '@aios/shared/utils';
-```
+```text
 
 ## Testing
 
 ### Test Structure
 
-```
+```text
 shared/tests/
 ├── types/              # Type tests (compile-time)
 ├── validators/         # Validator tests
 ├── utils/              # Utility function tests
 └── integration/        # Cross-module tests
-```
+```text
 
 ### Running Tests
 
@@ -501,7 +514,7 @@ npm run test:coverage
 
 # Type-check tests
 npm run type-check
-```
+```text
 
 ### Test Coverage Goals
 
@@ -512,11 +525,13 @@ npm run type-check
 ## Performance Considerations
 
 ### Performance Characteristics
+
 - **Bundle Size:** Keep minimal (< 50KB minified)
 - **Import Cost:** Tree-shakeable exports
 - **Runtime Cost:** Pure functions are fast
 
 ### Optimization Strategies
+
 1. Use tree-shakeable exports (ESM)
 2. Avoid circular dependencies
 3. Keep utilities pure (no side effects)
@@ -524,6 +539,7 @@ npm run type-check
 5. Use type-only imports where possible
 
 ### Known Performance Issues
+
 - **Large Zod Schemas:** Complex nested schemas can be slow
   - Mitigation: Split into smaller schemas, validate only what's needed
 
@@ -539,6 +555,7 @@ npm run type-check
 ## Failure Modes
 
 ### Failure Mode 1: Type Mismatch Between Client and Server
+
 - **Symptom:** Runtime errors, data doesn't match expected structure
 - **Impact:** API calls fail, data corruption
 - **Detection:** TypeScript compiler errors, integration test failures
@@ -550,6 +567,7 @@ npm run type-check
 - **Monitoring:** TypeScript build errors, API validation failures
 
 ### Failure Mode 2: Breaking Changes in Shared Module
+
 - **Symptom:** Client or server build fails after shared update
 - **Impact:** Cannot deploy updates, blocked development
 - **Detection:** Build failures in dependent modules
@@ -561,6 +579,7 @@ npm run type-check
 - **Monitoring:** CI build status for all modules
 
 ### Failure Mode 3: Circular Dependencies
+
 - **Symptom:** Import/require cycles, undefined values at runtime
 - **Impact:** Modules fail to load, undefined behavior
 - **Detection:** Build errors, runtime errors
@@ -571,6 +590,7 @@ npm run type-check
 - **Monitoring:** Lint checks in CI
 
 ### Failure Mode 4: Platform-Specific Code Sneaks In
+
 - **Symptom:** Code works on server but not client (or vice versa)
 - **Impact:** Runtime errors in one environment
 - **Detection:** Tests fail on one platform, runtime errors
@@ -582,6 +602,7 @@ npm run type-check
 - **Monitoring:** Cross-platform test suite
 
 ### Failure Mode 5: Bloated Bundle Size
+
 - **Symptom:** Client bundle grows too large
 - **Impact:** Slow app load times, poor mobile experience
 - **Detection:** Bundle size analysis tools
@@ -595,6 +616,7 @@ npm run type-check
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # 1. Build shared module
 cd shared
@@ -616,9 +638,10 @@ node -e "console.log(require('../shared'))"
 # 6. Verify server can import
 cd ../server
 node -e "console.log(require('../shared'))"
-```
+```text
 
 ### Automated Checks
+
 - [ ] Build succeeds: `npm run build`
 - [ ] All tests pass: `npm test`
 - [ ] Type checking passes: `npm run type-check`
@@ -626,6 +649,7 @@ node -e "console.log(require('../shared'))"
 - [ ] No circular dependencies: `madge --circular src/`
 
 ### Success Criteria
+
 1. Shared module builds without errors
 2. Client can import and use shared code
 3. Server can import and use shared code
@@ -642,14 +666,15 @@ console.log('✓ Types imported');
 console.log('✓ Validators imported:', createUserSchema);
 console.log('✓ Utils imported:', formatDate(new Date()));
 console.log('✓ Constants imported:', API_ENDPOINTS.AUTH.LOGIN);
-```
+```text
 
 ## Troubleshooting
 
 ### Problem 1: "Cannot find module '@aios/shared'"
-**Symptoms:** Import statements fail in client or server  
-**Cause:** Shared module not built or not linked  
-**Solution:**
+
+**Symptoms:** Import statements fail in client or server
+**Cause:** Shared module not built or not linked
+### Solution
 ```bash
 # Build shared module
 cd shared
@@ -665,12 +690,13 @@ npm install ../shared
 
 # Or use npm workspaces
 npm install
-```
+```text
 
 ### Problem 2: Type Errors After Updating Shared
-**Symptoms:** TypeScript errors in client/server after shared module changes  
-**Cause:** Cached types, build artifacts out of sync  
-**Solution:**
+
+**Symptoms:** TypeScript errors in client/server after shared module changes
+**Cause:** Cached types, build artifacts out of sync
+### Solution (2)
 ```bash
 # Rebuild shared
 cd shared
@@ -683,12 +709,13 @@ rm -rf node_modules/.cache
 
 # Reinstall
 npm install
-```
+```text
 
 ### Problem 3: Different Behavior in Client vs Server
-**Symptoms:** Validation passes on server but fails on client  
-**Cause:** Different versions of shared module  
-**Solution:**
+
+**Symptoms:** Validation passes on server but fails on client
+**Cause:** Different versions of shared module
+### Solution (3)
 ```bash
 # Check versions
 grep '@aios/shared' client/package.json
@@ -698,7 +725,7 @@ grep '@aios/shared' server/package.json
 npm run sync-versions  # If you have such script
 
 # Or manually update and reinstall
-```
+```text
 
 ## Migration and Upgrade Guides
 
@@ -717,16 +744,18 @@ When adding new exports to shared:
 Never remove immediately:
 
 1. Mark as deprecated with JSDoc:
+
    ```typescript
    /**
     * @deprecated Use newFunction instead
     */
    export function oldFunction() { }
-   ```
-2. Add deprecation warning in code
-3. Update documentation
-4. Wait at least one major version
-5. Remove in next major version
+   ```text
+
+1. Add deprecation warning in code
+2. Update documentation
+3. Wait at least one major version
+4. Remove in next major version
 
 ## Security Considerations
 
@@ -745,11 +774,13 @@ Never remove immediately:
 ## Maintenance and Support
 
 ### Module Owner
+
 - **Team:** Full Stack Team
 - **Primary Contact:** Tech Lead
 - **Slack Channel:** #engineering
 
 ### SLA Commitments
+
 - **Breaking Changes:** Advance notice, semantic versioning
 - **Bug Fixes:** Within 1 business day
 - **Documentation:** Updated with every change
@@ -757,6 +788,7 @@ Never remove immediately:
 ### Deprecation Policy
 
 Follow semantic versioning:
+
 - **Patch:** Bug fixes only, no breaking changes
 - **Minor:** New features, deprecations (not removals)
 - **Major:** Breaking changes, removal of deprecated features

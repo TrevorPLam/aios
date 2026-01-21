@@ -1,7 +1,7 @@
 # Branch Protection Configuration Guide
 
-**Purpose:** Configure GitHub branch protection rules to enforce documentation standards  
-**Status:** Configuration required by repository administrator  
+**Purpose:** Configure GitHub branch protection rules to enforce documentation standards
+**Status:** Configuration required by repository administrator
 **Date:** 2026-01-18
 
 ## Required Branch Protection Rules
@@ -57,9 +57,9 @@ Recommended settings:
 ### Implementation Steps
 
 1. **Administrator Action Required:**
-   ```
+   ```text
    Repository Settings → Branches → Add rule
-   ```
+   ```text
 
 2. **Configure for `main` branch:**
    - Branch name pattern: `main`
@@ -80,7 +80,7 @@ Recommended settings:
 
 Copy these exact names when configuring required status checks:
 
-```
+```text
 type-check
 lint
 format-check
@@ -89,25 +89,25 @@ test
 audit
 build-client
 build-server
-```
+```text
 
 For documentation-specific workflows, also require:
 
-```
+```text
 Markdown Linting / markdownlint
 Check Documentation Links / link-checker
 Documentation Quality / spell-check
-```
+```text
 
 ### Troubleshooting
 
-**Issue:** Status check not appearing  
+**Issue:** Status check not appearing
 **Solution:** Check that the workflow file exists and has run at least once on the branch
 
-**Issue:** Too many required checks slowing down development  
+**Issue:** Too many required checks slowing down development
 **Solution:** Consider making some checks advisory only (run but don't block) during initial rollout
 
-**Issue:** Vale prose linting too strict  
+**Issue:** Vale prose linting too strict
 **Solution:** Vale is currently set to `suggestion` level and not blocking. Can adjust `.vale.ini` as needed.
 
 ### Verification Checklist
@@ -134,8 +134,8 @@ This configuration enforces the Documentation Review Checklist from GOVERNANCE.m
 - ⚠️ Technical Detail provided (manual review)
 - ⚠️ Examples/commands provided (manual review)
 
-**Automated:** 3/8 checklist items  
-**Advisory:** 1/8 checklist items  
+**Automated:** 3/8 checklist items
+**Advisory:** 1/8 checklist items
 **Manual Review:** 4/8 checklist items
 
 ### Future Enhancements

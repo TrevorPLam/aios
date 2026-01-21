@@ -1,7 +1,7 @@
 # [Component/Module/API] Reference
 
-> **Type:** Reference (Information-Oriented)  
-> **Version:** [Version number]  
+> **Type:** Reference (Information-Oriented)
+> **Version:** [Version number]
 > **Last Updated:** [Date]
 
 ## Plain English Summary
@@ -16,9 +16,9 @@
 
 [Brief 2-3 sentence description of what this component/module/API does]
 
-**Location:** `[file path]`  
-**Type:** `[TypeScript type]`  
-**Module:** `[parent module]`  
+**Location:** `[file path]`
+**Type:** `[TypeScript type]`
+**Module:** `[parent module]`
 **Since:** `[version introduced]`
 
 ---
@@ -34,7 +34,7 @@ import { ComponentName } from '@/path/to/component';
   prop2={value}
   onEvent={handler}
 />
-```
+```text
 
 ---
 
@@ -43,6 +43,7 @@ import { ComponentName } from '@/path/to/component';
 ### Required Props
 
 #### `propName`
+
 - **Type:** `string | number`
 - **Required:** Yes
 - **Description:** [What this prop does]
@@ -50,6 +51,7 @@ import { ComponentName } from '@/path/to/component';
 - **Constraints:** [Any validation rules]
 
 #### `anotherProp`
+
 - **Type:** `boolean`
 - **Required:** Yes
 - **Default:** N/A
@@ -59,6 +61,7 @@ import { ComponentName } from '@/path/to/component';
 ### Optional Props
 
 #### `optionalProp`
+
 - **Type:** `string`
 - **Required:** No
 - **Default:** `"default value"`
@@ -74,26 +77,26 @@ import { ComponentName } from '@/path/to/component';
 
 **Description:** [What this method does]
 
-**Signature:**
+### Signature
 ```typescript
 methodName(param1: string, param2: number): Promise<ReturnType>
-```
+```text
 
-**Parameters:**
+### Parameters
 - `param1` (string): [Description]
 - `param2` (number): [Description]
 
-**Returns:**
+### Returns
 - Type: `Promise<ReturnType>`
 - Description: [What is returned]
 
-**Example:**
+### Example
 ```typescript
 const result = await methodName("value", 42);
 console.log(result); // { ... }
-```
+```text
 
-**Throws:**
+### Throws
 - `ErrorType`: [When this error is thrown]
 
 **See also:** [Related methods]
@@ -106,22 +109,22 @@ console.log(result); // { ... }
 
 **Description:** [When this event fires]
 
-**Signature:**
+### Signature (2)
 ```typescript
 onEvent?: (data: EventData) => void
-```
+```text
 
-**Parameters:**
+### Parameters (2)
 - `data` (EventData): [Description of event data]
 
-**Example:**
+### Example (2)
 ```typescript
 <Component
   onEvent={(data) => {
     console.log('Event fired:', data);
   }}
 />
-```
+```text
 
 **Timing:** [When this fires relative to other events]
 
@@ -140,15 +143,15 @@ interface TypeName {
     subField: string;
   };
 }
-```
+```text
 
-**Fields:**
+### Fields
 - `field1`: [Description]
 - `field2`: [Description]
 - `field3`: [Description] (optional)
 - `nested.subField`: [Description]
 
-**Usage:**
+### Usage
 ```typescript
 const example: TypeName = {
   field1: "value",
@@ -157,7 +160,7 @@ const example: TypeName = {
     subField: "value"
   }
 };
-```
+```text
 
 ---
 
@@ -171,24 +174,23 @@ interface ConfigOptions {
   option2: number;
   option3: boolean;
 }
-```
+```text
 
-**Options:**
-
+### Options
 | Option | Type | Default | Description |
-|--------|------|---------|-------------|
+| -------- | ------ | --------- | ------------- |
 | `option1` | string | `"default"` | [Description] |
 | `option2` | number | `0` | [Description] |
 | `option3` | boolean | `false` | [Description] |
 
-**Example:**
+### Example (3)
 ```typescript
 const config: ConfigOptions = {
   option1: "custom",
   option2: 100,
   option3: true
 };
-```
+```text
 
 ---
 
@@ -202,9 +204,9 @@ enum EnumName {
   VALUE2 = 'value2',
   VALUE3 = 'value3',
 }
-```
+```text
 
-**Values:**
+### Values
 - `VALUE1`: [When to use]
 - `VALUE2`: [When to use]
 - `VALUE3`: [When to use]
@@ -222,7 +224,7 @@ enum EnumName {
     // Structure of successful response
   }
 }
-```
+```text
 
 ### Error Response
 
@@ -234,14 +236,14 @@ enum EnumName {
     message: 'Human readable message'
   }
 }
-```
+```text
 
 ---
 
 ## Error Codes
 
 | Code | Description | Resolution |
-|------|-------------|------------|
+| ------ | ------------- | ------------ |
 | `ERROR_1` | [What it means] | [How to fix] |
 | `ERROR_2` | [What it means] | [How to fix] |
 
@@ -254,27 +256,27 @@ enum EnumName {
 - [Validation rule #1]
 - [Validation rule #2]
 
-**Example validation:**
+### Example validation
 ```typescript
 if (!isValid(input)) {
   throw new Error('Validation failed');
 }
-```
+```text
 
 ---
 
 ## State Management
 
-**Internal State:**
+### Internal State
 - `state1`: [Description]
 - `state2`: [Description]
 
-**State Transitions:**
-```
+### State Transitions
+```text
 INITIAL → LOADING → LOADED
           ↓
         ERROR
-```
+```text
 
 ---
 
@@ -297,11 +299,11 @@ INITIAL → LOADING → LOADED
 
 ## Dependencies
 
-**Required:**
+### Required
 - `dependency1`: [Why needed]
 - `dependency2`: [Why needed]
 
-**Optional:**
+### Optional
 - `optionalDep`: [Enhanced functionality]
 
 ---
@@ -326,7 +328,7 @@ import { Component } from '@/path';
 export default function Example() {
   return <Component prop="value" />;
 }
-```
+```text
 
 ### Advanced Example
 
@@ -348,7 +350,7 @@ export default function AdvancedExample() {
     />
   );
 }
-```
+```text
 
 ---
 
@@ -363,10 +365,12 @@ export default function AdvancedExample() {
 ## Changelog
 
 ### v1.2.0
+
 - Added `newProp` parameter
 - Fixed issue with [specific bug]
 
 ### v1.1.0
+
 - Initial release
 
 **Full changelog:** [Link to CHANGELOG.md]
@@ -383,7 +387,7 @@ export default function AdvancedExample() {
 ## Failure Modes
 
 | Failure | Symptom | Investigation |
-|---------|---------|---------------|
+| --------- | --------- | --------------- |
 | [Failure] | [What happens] | [How to debug] |
 
 ## How to Verify
@@ -397,7 +401,7 @@ npm test [test file]
 
 # Type check
 npx tsc --noEmit
-```
+```text
 
 ---
 
@@ -410,6 +414,6 @@ npx tsc --noEmit
 
 ---
 
-*This reference is auto-generated from source code types where possible.*  
-*File: `[source file path]`*  
+*This reference is auto-generated from source code types where possible.*
+*File: `[source file path]`*
 *Last verified: [Date]*

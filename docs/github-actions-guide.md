@@ -10,20 +10,23 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Automatically reviews documentation prose for style consistency, clarity, and readability.
 
-**Triggers:**
+### Triggers
+
 - Pull requests modifying `docs/**/*.md`
 - Pushes to main branch
 
 **Configuration:** `.vale.ini`
 
-**What it checks:**
+### What it checks
+
 - Writing style consistency
 - Grammar and spelling
 - Passive voice usage
 - Word choice and clarity
 - Technical jargon consistency
 
-**How to fix issues:**
+### How to fix issues
+
 - Review Vale comments in PR
 - Edit documentation to address suggestions
 - Run Vale locally: `vale docs/`
@@ -36,13 +39,15 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Enforces consistent Markdown formatting to ensure clean diffs and maintainable documentation.
 
-**Triggers:**
+### Triggers (2)
+
 - Pull requests modifying markdown files
 - Pushes to main branch
 
 **Configuration:** `.markdownlint.json`
 
-**What it checks:**
+### What it checks (2)
+
 - Heading hierarchy
 - List formatting
 - Code block syntax
@@ -50,7 +55,8 @@ This document provides an overview of all GitHub Actions workflows in this repos
 - Trailing whitespace
 - Consistent indentation
 
-**How to fix issues:**
+### How to fix issues (2)
+
 - Install markdownlint extension in your editor
 - Run locally: `npx markdownlint-cli2 "docs/**/*.md"`
 - Auto-fix: `npx markdownlint-cli2 --fix "docs/**/*.md"`
@@ -63,7 +69,8 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Validates all links in documentation to prevent broken references and 404 errors.
 
-**Triggers:**
+### Triggers (3)
+
 - Pull requests (checks changed files only)
 - Pushes to main (checks all files)
 - Weekly schedule (Mondays at 9 AM UTC)
@@ -71,18 +78,21 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Configuration:** `.lycheeignore`
 
-**What it checks:**
+### What it checks (3)
+
 - External HTTP/HTTPS links
 - Internal repository links
 - Relative documentation links
 - Anchor links within pages
 
-**Special behavior:**
+### Special behavior
+
 - **PRs:** Only checks links in modified files for fast feedback
 - **Main branch:** Checks all links comprehensively
 - **Scheduled runs:** Creates GitHub issue if broken links found
 
-**How to fix issues:**
+### How to fix issues (3)
+
 - Update or remove broken links
 - Check if external sites have moved
 - Verify internal file paths are correct
@@ -96,13 +106,15 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Validates OpenAPI specifications for completeness, consistency, and best practices.
 
-**Triggers:**
+### Triggers (4)
+
 - Pull requests modifying `docs/apis/**/*.{yaml,yml,json}`
 - Pushes to main branch
 
 **Configuration:** `.spectral.yml`
 
-**What it checks:**
+### What it checks (4)
+
 - OpenAPI schema validity
 - Required fields presence
 - Consistent response formats
@@ -110,7 +122,8 @@ This document provides an overview of all GitHub Actions workflows in this repos
 - API documentation completeness
 - Naming conventions
 
-**How to fix issues:**
+### How to fix issues (4)
+
 - Review Spectral error messages
 - Update OpenAPI specs to match standards
 - Run locally: `spectral lint docs/apis/*.yaml`
@@ -125,22 +138,26 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Generates Software Bill of Materials for compliance, security auditing, and supply chain transparency.
 
-**Triggers:**
+### Triggers (5)
+
 - Pushes to main branch
 - Release publications
 - Weekly schedule (Sundays at midnight UTC)
 - Manual dispatch
 
-**Formats generated:**
+### Formats generated
+
 - **SPDX JSON:** Industry-standard SBOM format
 - **CycloneDX JSON:** OWASP SBOM standard
 - **Human-readable table:** Quick reference
 
-**Artifacts:**
+### Artifacts
+
 - Uploaded to workflow artifacts (90-day retention)
 - Attached to GitHub releases automatically
 
-**Use cases:**
+### Use cases
+
 - Compliance audits
 - Security vulnerability tracking
 - License compliance verification
@@ -154,29 +171,34 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Comprehensive security scanning for vulnerabilities in dependencies, configuration files, and infrastructure-as-code.
 
-**Triggers:**
+### Triggers (6)
+
 - Pull requests
 - Pushes to main
 - Daily schedule (2 AM UTC)
 - Manual dispatch
 
-**What it scans:**
+### What it scans
+
 - **Filesystem:** All project files for vulnerabilities
 - **NPM dependencies:** node_modules for known CVEs
 - **Configuration files:** Misconfigurations in YAML, JSON, etc.
 - **IaC files:** Security issues in infrastructure definitions
 
-**Severity levels:**
+### Severity levels
+
 - CRITICAL: Immediate action required
 - HIGH: Should be addressed soon
 - MEDIUM: Plan to address
 
-**Special features:**
+### Special features
+
 - Uploads results to GitHub Security tab
 - Creates issues for critical vulnerabilities (scheduled runs)
 - Comprehensive reports in artifacts
 
-**How to fix issues:**
+### How to fix issues (5)
+
 1. Review Trivy findings in Security > Code scanning
 2. Update vulnerable dependencies
 3. Fix configuration issues
@@ -190,11 +212,13 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **Purpose:** Generates cryptographically signed build provenance for supply chain security and verifiable builds.
 
-**Triggers:**
+### Triggers (7)
+
 - Release publications
 - Manual dispatch with tag input
 
-**What it provides:**
+### What it provides
+
 - Tamper-proof build records
 - Cryptographic signatures
 - Verifiable build process
@@ -202,18 +226,20 @@ This document provides an overview of all GitHub Actions workflows in this repos
 
 **SLSA Level:** Level 3 (highest for GitHub Actions)
 
-**Artifacts generated:**
+### Artifacts generated
+
 - Build artifacts with checksums
 - SLSA provenance attestation
 - Verification instructions
 
-**How to verify:**
+### How to verify
+
 ```bash
 slsa-verifier verify-artifact \
   --provenance-path provenance.intoto.jsonl \
   --source-uri github.com/owner/repo \
   artifact-name.tar.gz
-```
+```text
 
 ---
 
@@ -223,12 +249,12 @@ slsa-verifier verify-artifact \
 
 **Purpose:** Evaluates repository against security best practices defined by the Open Source Security Foundation.
 
-**Triggers:**
+### Triggers (8)
 - Pushes to main
 - Weekly schedule (Wednesdays at 10 AM UTC)
 - Manual dispatch
 
-**Security checks:**
+### Security checks
 - Binary artifacts
 - Branch protection
 - CI tests
@@ -245,12 +271,12 @@ slsa-verifier verify-artifact \
 - Token permissions
 - Known vulnerabilities
 
-**Scoring:**
+### Scoring
 - Each check receives 0-10 score
 - Results uploaded to GitHub Security tab
 - Public repositories can publish to OpenSSF database
 
-**How to improve score:**
+### How to improve score
 1. Review scorecard results in Security tab
 2. Implement recommended security practices
 3. Enable branch protection rules
@@ -268,24 +294,24 @@ slsa-verifier verify-artifact \
 
 **Purpose:** Automatically creates pull requests for dependency updates and security vulnerabilities.
 
-**Configuration:**
+### Configuration
 - **NPM dependencies:** Weekly updates on Mondays
 - **GitHub Actions:** Weekly updates on Tuesdays
 - **Docker:** Weekly updates on Wednesdays (if applicable)
 
-**Features:**
+### Features
 - **Grouped updates:** Minor and patch updates grouped together
 - **Security priority:** Security vulnerabilities always updated
 - **Automatic labeling:** PRs labeled for easy filtering
 - **Semantic commits:** Follows conventional commit format
 
-**Update strategy:**
+### Update strategy
 - Development dependencies grouped
 - Production patches grouped
 - Major version updates require manual review
 - Core dependencies (React, React Native, Expo) opt-in only
 
-**How to manage:**
+### How to manage
 1. Review Dependabot PRs regularly
 2. Test updates before merging
 3. Check for breaking changes
@@ -301,7 +327,7 @@ slsa-verifier verify-artifact \
 
 **Purpose:** Ensures all pull requests include necessary context, documentation, and verification steps.
 
-**Sections:**
+### Sections
 1. **Description:** What changed and why
 2. **Type of change:** Bug fix, feature, docs, etc.
 3. **Related issues:** Links to issues
@@ -315,7 +341,7 @@ slsa-verifier verify-artifact \
 6. **Risks:** Potential issues
 7. **Deployment notes:** Special considerations
 
-**Benefits:**
+### Benefits
 - Prevents incomplete PRs
 - Ensures documentation is updated
 - Encourages thorough testing
@@ -330,12 +356,12 @@ slsa-verifier verify-artifact \
 
 **Purpose:** Automatically requests reviews from appropriate team members based on files changed.
 
-**Setup:**
+### Setup
 1. Rename `CODEOWNERS.example` to `CODEOWNERS`
 2. Replace placeholder usernames with real GitHub usernames/teams
 3. Enable branch protection requiring CODEOWNERS approval
 
-**Protected areas:**
+### Protected areas
 - Documentation (`docs/`)
 - GitHub workflows (`.github/`)
 - Security files (`SECURITY.md`, auth code)
@@ -343,14 +369,14 @@ slsa-verifier verify-artifact \
 - Configuration files
 - Critical application code
 
-**Team examples:**
+### Team examples
 - `@frontend-team`: Client-side code
 - `@backend-team`: Server-side code
 - `@security-team`: Security-sensitive code
 - `@devops-team`: Infrastructure and CI/CD
 - `@tech-writers`: Documentation
 
-**How to customize:**
+### How to customize
 1. Define your teams in GitHub Organization settings
 2. Map file patterns to teams
 3. Use more specific patterns to override defaults
@@ -382,7 +408,7 @@ npm run lint
 
 # Tests
 npm test
-```
+```text
 
 ### Workflow Triggers
 
@@ -401,6 +427,7 @@ npm test
 ### Permissions
 
 All workflows follow principle of least privilege:
+
 - Read-only access by default
 - Write access only when necessary
 - Security-events write for SARIF uploads
@@ -420,22 +447,22 @@ All workflows follow principle of least privilege:
 
 ### Common Issues
 
-**Vale/Markdownlint failures:**
+#### Vale/Markdownlint failures
 - Install editor extensions for real-time feedback
 - Run locally before pushing
 - Review style guide documentation
 
-**Link checker false positives:**
+### Link checker false positives
 - Add to `.lycheeignore` if intentional
 - Check if external site is down temporarily
 - Verify link format is correct
 
-**Trivy vulnerabilities:**
+### Trivy vulnerabilities
 - Update dependencies to patched versions
 - Check for available security advisories
 - Consider alternative packages if no fix available
 
-**SLSA provenance not generated:**
+### SLSA provenance not generated
 - Ensure release is published, not draft
 - Check build artifacts were created
 - Verify workflow has correct permissions
@@ -449,6 +476,7 @@ All workflows follow principle of least privilege:
 View all workflow runs: **Actions tab**
 
 Filter by:
+
 - Workflow name
 - Status (success, failure, cancelled)
 - Branch
@@ -459,16 +487,18 @@ Filter by:
 View security findings: **Security tab > Code scanning**
 
 Includes:
+
 - Trivy vulnerabilities
 - CodeQL alerts
 - OpenSSF Scorecard results
 - Dependabot alerts
 
-### Artifacts
+### Artifacts (2)
 
 Download artifacts: **Actions tab > Workflow run > Artifacts**
 
 Available artifacts:
+
 - Security reports
 - SBOM files
 - Test results
@@ -488,6 +518,7 @@ Available artifacts:
 ### Deprecation Notices
 
 Watch for deprecation warnings in workflow logs:
+
 - Node.js version updates
 - Action version changes
 - API deprecations
@@ -495,6 +526,7 @@ Watch for deprecation warnings in workflow logs:
 ### Scheduled Review
 
 Quarterly review:
+
 - Workflow effectiveness
 - False positive rate
 - Artifact retention needs

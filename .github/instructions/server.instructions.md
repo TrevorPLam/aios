@@ -7,7 +7,7 @@
 
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
-**To make changes:**
+### To make changes
 1. Edit `docs/governance/constitution.md`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -19,30 +19,30 @@
 
 ### Server/Backend Laws
 
-**1. API Contract Discipline**
+#### 1. API Contract Discipline
 - OpenAPI spec (`docs/apis/openapi/openapi.yaml`) is source of truth
 - Define in OpenAPI BEFORE implementing endpoint
 - Validate spec with Spectral before merging
 - Breaking changes require versioning: `/api/v2/` not modifying `/api/v1/`
 
-**2. Input Validation (Zero Exceptions)**
+### 2. Input Validation (Zero Exceptions)
 - ALL inputs validated with Zod schemas
 - Never trust request bodies, params, or query strings
 - Return structured errors with validation details
 
-**3. Database Migrations**
+### 3. Database Migrations
 - NEVER modify existing migrations
 - Create new migration for all schema changes
 - Test migrations before merging
 - Use transactions for multi-step operations
 
-**4. Data Integrity**
+### 4. Data Integrity
 - Use UUIDs, not sequential IDs
 - Enforce authorization on every endpoint
 - Sanitize outputs - don't expose sensitive fields
 - Use database transactions for consistency
 
-**5. Observability**
+### 5. Observability
 - Structured logging (JSON format)
 - Health check endpoint required: `/health`
 - Log errors with context (requestId, userId, timestamp)
@@ -51,6 +51,6 @@
 
 ---
 
-**Source:** `docs/governance/constitution.md`  
-**Compiler:** `scripts/tools/compile-constitution.mjs`  
+**Source:** `docs/governance/constitution.md`
+**Compiler:** `scripts/tools/compile-constitution.mjs`
 **Last Generated:** 2026-01-21T00:44:46.238Z

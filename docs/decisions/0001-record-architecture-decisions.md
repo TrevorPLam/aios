@@ -1,8 +1,8 @@
 # 1. Record Architecture Decisions
 
-**Status:** Accepted  
-**Date:** 2024-01-15  
-**Deciders:** Engineering Team  
+**Status:** Accepted
+**Date:** 2024-01-15
+**Deciders:** Engineering Team
 **Technical Story:** Foundation for transparent decision-making
 
 ## Plain English Summary
@@ -19,6 +19,7 @@ In any software project, we make hundreds of decisions. Most are small and tacti
 - What constraints influenced our choices
 
 ### Forces at Play
+
 - Team members leave, new members join
 - AI tools need context to make appropriate suggestions
 - Decisions made months ago are forgotten
@@ -31,6 +32,7 @@ In any software project, we make hundreds of decisions. Most are small and tacti
 We will use Architecture Decision Records (ADRs) to document significant decisions affecting structure, non-functional characteristics, dependencies, interfaces, or construction techniques.
 
 ADRs will:
+
 - Be stored in `docs/decisions/`
 - Use a numbered sequential format: `NNNN-title-with-dashes.md`
 - Follow the enhanced template in `template.md`
@@ -38,6 +40,7 @@ ADRs will:
 - Include a "Decision-to-Docs Binding" section linking to affected documentation
 
 We will NOT use ADRs for:
+
 - Routine bug fixes
 - Minor implementation details
 - Decisions that don't affect system structure
@@ -46,12 +49,15 @@ We will NOT use ADRs for:
 ### Alternatives Considered
 
 #### Option 1: Wiki Documentation
-**Pros:**
+
+### Pros
+
 - Easy to edit
 - Rich formatting options
 - Search functionality
 
-**Cons:**
+### Cons
+
 - Separate from code
 - Not version controlled
 - Often becomes stale
@@ -59,22 +65,28 @@ We will NOT use ADRs for:
 - Harder for AI tools to access
 
 #### Option 2: Inline Code Comments
-**Pros:**
+
+### Pros (2)
+
 - Right next to the code
 - Developers see it immediately
 
-**Cons:**
+### Cons (2)
+
 - Can't see the big picture
 - Hard to find cross-cutting decisions
 - Comments become stale
 - No structured format
 
 #### Option 3: Confluence/Notion
-**Pros:**
+
+### Pros (3)
+
 - Professional documentation platform
 - Collaboration features
 
-**Cons:**
+### Cons (3)
+
 - Not in version control
 - Requires separate access
 - Can't be reviewed in PRs
@@ -83,6 +95,7 @@ We will NOT use ADRs for:
 ### Chosen Solution
 
 Markdown files in version control because:
+
 - They're reviewed alongside code changes
 - AI tools can easily read them
 - Free and accessible to all team members
@@ -95,20 +108,22 @@ Markdown files in version control because:
 
 ADRs are stored in `docs/decisions/` with this structure:
 
-```
+```text
 docs/decisions/
 ├── template.md                          # The template
 ├── 0001-record-architecture-decisions.md # This ADR
 ├── 0002-use-react-native.md            # Example
 └── README.md                            # Index of all ADRs
-```
+```text
 
 ### Numbering Convention
+
 - Use 4-digit zero-padded numbers: `0001`, `0002`, etc.
 - Numbers are sequential and never reused
 - Even superseded ADRs keep their numbers
 
 ### Components Affected
+
 - `docs/decisions/` - New directory structure
 - All future architectural decisions
 - CI/CD pipeline (optional: can add ADR linting)
@@ -129,9 +144,10 @@ git add docs/decisions/0042-new-decision.md
 git commit -m "feat: implement new caching strategy
 
 See ADR-0042 for decision rationale"
-```
+```text
 
 ### Migration Path
+
 1. Create `docs/decisions/` directory ✅
 2. Add `template.md` ✅
 3. Create this ADR (0001) ✅
@@ -150,6 +166,7 @@ See ADR-0042 for decision rationale"
 ## Consequences
 
 ### Positive
+
 - Future developers understand historical context
 - AI tools can make better suggestions
 - Onboarding is faster
@@ -157,26 +174,30 @@ See ADR-0042 for decision rationale"
 - Architecture knowledge is preserved
 
 ### Negative
+
 - Requires discipline to maintain
 - Adds slight overhead to decision-making process
 - Can accumulate if not actively maintained
 
 ### Neutral
+
 - ADRs are immutable (we don't edit old decisions, we supersede them)
 - Status changes from "Proposed" → "Accepted" → potentially "Deprecated"
 
 ## Failure Modes
 
 ### Failure Mode 1: ADRs Not Created
+
 - **Symptom:** Decisions made without documentation, tribal knowledge accumulates
 - **Impact:** Loss of context, repeated debates, poor AI suggestions
 - **Detection:** PR reviews find architectural changes without ADRs
-- **Mitigation:** 
+- **Mitigation:**
   - Add ADR reminder to PR template
   - Architecture review process checks for ADRs
   - Lead by example
 
 ### Failure Mode 2: ADRs Too Detailed
+
 - **Symptom:** 10-page documents that nobody reads
 - **Impact:** Process becomes burden, developers avoid it
 - **Detection:** ADRs take more than 30 minutes to write
@@ -186,6 +207,7 @@ See ADR-0042 for decision rationale"
   - Code comments for implementation details
 
 ### Failure Mode 3: Stale ADRs
+
 - **Symptom:** ADRs describe a system that no longer exists
 - **Impact:** Confusion, wasted time following old patterns
 - **Detection:** Code reviews find contradictions between code and ADRs
@@ -197,6 +219,7 @@ See ADR-0042 for decision rationale"
 ## How to Verify
 
 ### Manual Verification
+
 ```bash
 # Check that directory exists
 ls -la docs/decisions/
@@ -206,15 +229,17 @@ cat docs/decisions/template.md
 
 # List all ADRs
 ls -1 docs/decisions/*.md
-```
+```text
 
 ### Automated Checks
+
 - [ ] Directory `docs/decisions/` exists
 - [ ] File `template.md` exists
 - [ ] This ADR (0001) exists
 - [ ] All ADR filenames match pattern `\d{4}-.*\.md`
 
 ### Success Criteria
+
 1. At least one ADR created per major architectural decision
 2. New team members reference ADRs during onboarding
 3. AI tools cite ADRs when making suggestions
@@ -225,26 +250,32 @@ ls -1 docs/decisions/*.md
 This is the foundational ADR that establishes the Decision-to-Docs Binding pattern itself.
 
 ### Primary Documentation
+
 - **Architecture:** This decision affects all of `docs/architecture/`
 - **Governance:** [GOVERNANCE.md](../../GOVERNANCE.md) - References ADR process
 - **Contributing:** [CONTRIBUTING.md](../../CONTRIBUTING.md) - Should mention ADRs
 
 ### Related ADRs
+
 - None (this is the first)
 
 ### Tutorial/How-To Updates Required
+
 - [x] Create template.md
 - [ ] Update CONTRIBUTING.md to mention ADR process
 - [ ] Create "How to write an ADR" guide
 
 ### Explanation Updates Required
+
 - [ ] Add ADR section to docs/README.md
 - [ ] Explain ADR process in architecture overview
 
 ### Reference Updates Required
+
 - [ ] Create docs/decisions/README.md with index of all ADRs
 
 ### Documentation Review Checklist
+
 - [x] Template created and comprehensive
 - [x] This ADR follows the template
 - [ ] CONTRIBUTING.md updated
@@ -253,17 +284,21 @@ This is the foundational ADR that establishes the Decision-to-Docs Binding patte
 ## Compliance and Governance
 
 ### Security Impact
+
 None directly. However, security-impacting decisions should always have ADRs.
 
 ### Privacy Impact
+
 None. ADRs are internal documentation and should not contain sensitive user data.
 
 ### Accessibility Impact
+
 None directly. Markdown is accessible and works with screen readers.
 
 ## Notes
 
 This ADR is inspired by:
+
 - Michael Nygard's original ADR proposal
 - The Diataxis documentation framework
 - GitHub's own engineering practices

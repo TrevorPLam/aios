@@ -11,7 +11,7 @@
 
 ## Coverage Status
 
-**Last Updated:** 2026-01-17  
+**Last Updated:** 2026-01-17
 **Overall Coverage:** 43% (6/14 production modules with complete docs)
 
 ### Legend
@@ -26,6 +26,7 @@
 ## Production Modules (14 Total)
 
 ### ✅ Command Center (100% - Exemplar)
+
 - [x] Tutorial - Getting started with recommendations
 - [x] How-To - Customize recommendation weights
 - [x] Reference - API and props documentation
@@ -38,6 +39,7 @@
 ---
 
 ### ⚠️ Notebook (75% - Good)
+
 - [x] Tutorial - Creating your first note
 - [x] How-To - Search and tag notes
 - [x] Reference - Note schema and API
@@ -51,6 +53,7 @@
 ---
 
 ### ⚠️ Planner (75% - Good)
+
 - [x] Tutorial - Task management basics
 - [x] How-To - Project hierarchies
 - [x] Reference - Task model and API
@@ -64,6 +67,7 @@
 ---
 
 ### ⚠️ Calendar (50% - Needs Work)
+
 - [x] Tutorial - Basic event creation
 - [ ] How-To - Conflict resolution
 - [x] Reference - Event schema
@@ -77,6 +81,7 @@
 ---
 
 ### ⚠️ Email (50% - Needs Work)
+
 - [ ] Tutorial - Getting started
 - [x] How-To - Thread management
 - [x] Reference - Email schema
@@ -90,6 +95,7 @@
 ---
 
 ### ❌ Messages (25% - Critical Gap)
+
 - [ ] Tutorial - First conversation
 - [ ] How-To - Group chat setup
 - [x] Reference - Message schema (in code)
@@ -103,6 +109,7 @@
 ---
 
 ### ⚠️ Lists (50% - Needs Work)
+
 - [x] Tutorial - Creating checklists
 - [ ] How-To - List templates
 - [x] Reference - List schema
@@ -116,6 +123,7 @@
 ---
 
 ### ⚠️ Alerts (50% - Needs Work)
+
 - [x] Tutorial - Setting reminders
 - [ ] How-To - Recurrence patterns
 - [x] Reference - Alert schema
@@ -129,6 +137,7 @@
 ---
 
 ### ⚠️ Contacts (50% - Needs Work)
+
 - [ ] Tutorial - Getting started
 - [x] How-To - Native integration
 - [x] Reference - Contact schema
@@ -142,6 +151,7 @@
 ---
 
 ### ⚠️ Translator (75% - Good)
+
 - [x] Tutorial - First translation
 - [x] How-To - TTS and STT features
 - [x] Reference - Translation API
@@ -155,6 +165,7 @@
 ---
 
 ### ⚠️ Photos (50% - Needs Work)
+
 - [x] Tutorial - Gallery basics
 - [ ] How-To - Backup tracking
 - [x] Reference - Photo schema
@@ -168,6 +179,7 @@
 ---
 
 ### ⚠️ History (50% - Needs Work)
+
 - [ ] Tutorial - Getting started
 - [x] How-To - Filter and search
 - [x] Reference - Activity schema
@@ -181,6 +193,7 @@
 ---
 
 ### ⚠️ Budget (50% - Needs Work)
+
 - [x] Tutorial - Financial tracking basics
 - [ ] How-To - Budget templates
 - [x] Reference - Transaction schema
@@ -194,6 +207,7 @@
 ---
 
 ### ⚠️ Integrations (25% - Critical Gap)
+
 - [ ] Tutorial - Adding integrations
 - [ ] How-To - Health monitoring
 - [x] Reference - Integration schema
@@ -211,7 +225,7 @@
 ### Tier 1: Super App Essentials
 
 | Module | Tutorial | How-To | Reference | Architecture | Priority |
-|--------|----------|--------|-----------|--------------|----------|
+| -------- | ---------- | -------- | ----------- | -------------- | ---------- |
 | Wallet | ❌ | ❌ | ❌ | ❌ | HIGH |
 | Marketplace | ❌ | ❌ | ❌ | ❌ | HIGH |
 | Maps | ❌ | ❌ | ❌ | ❌ | HIGH |
@@ -222,7 +236,7 @@
 ### Tier 2: Lifestyle & Utility
 
 | Module | Tutorial | How-To | Reference | Architecture | Priority |
-|--------|----------|--------|-----------|--------------|----------|
+| -------- | ---------- | -------- | ----------- | -------------- | ---------- |
 | Health | ❌ | ❌ | ❌ | ❌ | MEDIUM |
 | Fitness | ❌ | ❌ | ❌ | ❌ | MEDIUM |
 | Weather | ❌ | ❌ | ❌ | ❌ | LOW |
@@ -233,7 +247,7 @@
 ### Tier 3: Future Innovation
 
 | Module | Tutorial | How-To | Reference | Architecture | Priority |
-|--------|----------|--------|-----------|--------------|----------|
+| -------- | ---------- | -------- | ----------- | -------------- | ---------- |
 | Education | ❌ | ❌ | ❌ | ❌ | LOW |
 | Jobs | ❌ | ❌ | ❌ | ❌ | LOW |
 | Dating | ❌ | ❌ | ❌ | ❌ | LOW |
@@ -246,19 +260,23 @@
 ## Coverage by Category
 
 ### Tutorial Coverage: 7/14 (50%)
-**Missing:** Messages, Contacts, History, Integrations  
+
+**Missing:** Messages, Contacts, History, Integrations
 **Action:** Create getting-started tutorials for these 4 modules
 
 ### How-To Coverage: 8/14 (57%)
-**Missing:** Calendar, Messages, Lists, Alerts, Photos, Budget, Integrations  
+
+**Missing:** Calendar, Messages, Lists, Alerts, Photos, Budget, Integrations
 **Action:** Document common tasks for these 7 modules
 
 ### Reference Coverage: 14/14 (100%) ✅
-**Status:** All modules have schema/API reference (many in code comments)  
+
+**Status:** All modules have schema/API reference (many in code comments)
 **Action:** Extract to dedicated docs
 
 ### Architecture Coverage: 0/14 (0%) ❌
-**Critical Gap:** No modules have architecture deep-dives  
+
+**Critical Gap:** No modules have architecture deep-dives
 **Action:** Start with Command Center, Messages, Notebook
 
 ---
@@ -268,6 +286,7 @@
 Every module must have:
 
 ### 1. Tutorial (docs/modules/[module]/tutorial.md)
+
 - [ ] "Getting Started with [Module]"
 - [ ] Step-by-step walkthrough
 - [ ] Beginner-friendly
@@ -275,12 +294,14 @@ Every module must have:
 - [ ] Expected outcomes at each step
 
 ### 2. How-To Guides (docs/modules/[module]/howto/)
+
 - [ ] At least 3 common tasks
 - [ ] Problem-solution format
 - [ ] Assumes module familiarity
 - [ ] Troubleshooting included
 
 ### 3. Reference (docs/modules/[module]/reference.md)
+
 - [ ] API documentation
 - [ ] Props/parameters
 - [ ] Types/interfaces
@@ -288,6 +309,7 @@ Every module must have:
 - [ ] Examples
 
 ### 4. Architecture (docs/modules/[module]/architecture.md)
+
 - [ ] Design decisions
 - [ ] Component structure
 - [ ] Data flow
@@ -299,17 +321,20 @@ Every module must have:
 ## Documentation Debt
 
 ### High Priority (Fix This Quarter)
+
 1. **Messages Architecture** - Real-time sync is complex, needs docs
 2. **Integrations Tutorial** - Third-party setup is confusing
 3. **Command Center Architecture** - AI engine needs explanation
 4. **All Module Architecture** - 0% coverage is critical gap
 
 ### Medium Priority (Fix Next Quarter)
+
 1. Missing How-To guides (7 modules)
 2. Tutorial gaps (4 modules)
 3. Extract reference docs from code to dedicated files
 
 ### Low Priority (Ongoing)
+
 1. Keep docs updated with code changes
 2. Add more advanced How-To guides
 3. Create video tutorials (optional)
@@ -320,18 +345,20 @@ Every module must have:
 
 **Script Location:** `scripts/check-doc-coverage.js` (TODO)
 
-**What it does:**
+### What it does
+
 - Scans `docs/modules/` for required files
 - Checks Diátaxis categories are present
 - Generates this coverage map
 - Fails CI if coverage drops below threshold
 
-**Run locally:**
+### Run locally
+
 ```bash
 npm run check:docs  # TODO: Add to package.json
-```
+```text
 
-**CI Integration:**
+### CI Integration
 ```yaml
 # .github/workflows/docs-coverage.yml (TODO)
 name: Documentation Coverage
@@ -343,16 +370,17 @@ jobs:
       - uses: actions/checkout@v4
       - run: npm run check:docs
       - run: |
-          COVERAGE=$(cat docs/coverage.md | grep "Overall Coverage" | grep -oP '\d+%')
+ COVERAGE=$(cat docs/coverage.md | grep "Overall Coverage" | grep -oP '\d+%')
           echo "Coverage: $COVERAGE"
           # Fail if below 80%
-```
+```text
 
 ---
 
 ## How to Improve Coverage
 
 ### For New Modules
+
 1. Create `docs/modules/[module-name]/` directory
 2. Copy `docs/modules/_template.md` as starting point
 3. Fill in all four Diátaxis categories
@@ -360,6 +388,7 @@ jobs:
 5. Update this coverage map
 
 ### For Existing Modules
+
 1. Identify missing categories (check table above)
 2. Start with highest priority gaps
 3. Use templates from `docs/diataxis/templates/`
@@ -367,6 +396,7 @@ jobs:
 5. Update this coverage map
 
 ### Documentation Definition of Done
+
 - [ ] Tutorial exists and is tested
 - [ ] At least 3 How-To guides
 - [ ] Reference docs extracted from code
@@ -388,7 +418,7 @@ jobs:
 ## Failure Modes
 
 | Failure | Symptom | Solution |
-|---------|---------|----------|
+| --------- | --------- | ---------- |
 | Coverage map out of date | Shows wrong percentages | Run `npm run check:docs` to regenerate |
 | Missing docs not caught | New code without docs merges | Enable CI check, make it required |
 | Docs exist but aren't linked | Can't find documentation | Add cross-links, update module README |
@@ -411,7 +441,7 @@ npm run check:docs  # TODO: Implement
 
 # Manual audit
 # For each module in client/screens/, verify docs/modules/[name]/ exists with 4 files
-```
+```text
 
 ---
 
@@ -421,7 +451,7 @@ npm run check:docs  # TODO: Implement
 
 ---
 
-**Next Actions:**
+### Next Actions
 1. Implement `scripts/check-doc-coverage.js` to automate this map
 2. Add to CI as required check
 3. Create docs for Messages and Integrations (critical gaps)
