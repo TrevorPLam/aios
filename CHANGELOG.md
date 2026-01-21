@@ -149,6 +149,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Notes
 
+## Updating this Changelog
+
+Why: consistent release notes make audits and rollbacks safer and faster.
+
+1. Add entries under **[Unreleased]** grouped by **Added / Changed / Fixed / Removed / Security**.
+2. Reference the related TODO or PR in the bullet when available (e.g., `T-048`).
+3. When releasing, move the **[Unreleased]** items into a new version section with a date.
+4. Keep entries concise, user-facing, and scoped to the change's impact.
+
 ### Semantic Versioning
 
 This project uses [Semantic Versioning](https://semver.org/):
@@ -165,5 +174,5 @@ This project uses [Semantic Versioning](https://semver.org/):
 ---
 
 **Maintained By:** Documentation Team
-**Last Updated:** January 16, 2026
-**Next Review:** February 16, 2026
+**Last Updated:** January 20, 2026
+**Next Review:** February 20, 2026

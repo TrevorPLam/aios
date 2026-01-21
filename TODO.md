@@ -80,7 +80,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Type**: FEATURE
 - **Owner**: AGENT
 - **Platform**: iOS
-- **Status**: READY
+- **Status**: COMPLETE
 - **Context**:
   - Planner AI Assist actions are listed but not implemented
   - Competing planners ship AI-assisted prioritization and task breakdown
@@ -1891,7 +1891,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Type**: DOCS
 - **Owner**: AGENT
 - **Platform**: Platform-Agnostic
-- **Status**: READY
+- **Status**: COMPLETE
 - **Context**:
   - Each lib file needs usage examples
   - Developers don't know how to use lib modules
@@ -1913,7 +1913,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **Type**: DOCS
 - **Owner**: AGENT
 - **Platform**: Platform-Agnostic
-- **Status**: READY
+- **Status**: COMPLETE
 - **Context**:
   - UI components lack documentation
   - Props, usage, and examples not documented
@@ -2656,20 +2656,24 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Type**: DOCS
 - **Owner**: AGENT
 - **Platform**: Platform-Agnostic
-- **Status**: READY
+- **Status**: COMPLETE
 - **Context**:
   - No CHANGELOG.md exists
   - Changes not documented
   - Standard open-source practice missing
 - **Acceptance Criteria**:
-  - [ ] Create CHANGELOG.md following Keep a Changelog format
-  - [ ] Document all major changes by version/date
-  - [ ] Set up process for updating changelog
-  - [ ] Add to root directory
+  - [x] Create CHANGELOG.md following Keep a Changelog format
+  - [x] Document all major changes by version/date
+  - [x] Set up process for updating changelog
+  - [x] Add to root directory
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic changelog. AGENT can verify Android/Web release notes in follow-up.
+- **Completion Date**: 2026-01-20
+- **Completion Notes**:
+  - CHANGELOG.md already followed Keep a Changelog format with versioned entries.
+  - Added documented update process in CHANGELOG.md and CONTRIBUTING.md.
 
 ### T-049
 

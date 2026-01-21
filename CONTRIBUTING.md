@@ -407,6 +407,15 @@ Update relevant documentation:
 - `MISSING_FEATURES.md` - When implementing missing features
 - `IMPLEMENTATION_ROADMAP.md` - When completing roadmap items
 - `design_guidelines.md` - For design system changes
+- `CHANGELOG.md` - For user-facing changes, noteworthy fixes, and release notes
+
+### Changelog updates
+
+Why: consistent release notes keep releases auditable and reversible.
+
+1. Add entries under **[Unreleased]** using the Added/Changed/Fixed/Removed/Security headings.
+2. Include the TODO or PR reference in each bullet when available.
+3. Move **[Unreleased]** entries into a dated version section during release.
 
 ### Documentation standards
 
