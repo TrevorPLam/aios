@@ -677,7 +677,11 @@ export default function AIPreferencesScreen() {
                 accessibilityRole="button"
                 accessibilityLabel="Refresh recommendations"
               >
-                <Feather name="refresh-cw" size={16} color={theme.accent} />
+                <Feather
+                  name="refresh-cw"
+                  size={16}
+                  color={isRefreshing || recommendationsDisabled ? theme.textMuted : theme.accent}
+                />
                 <ThemedText type="small">
                   {isRefreshing ? "Refreshing..." : "Refresh"}
                 </ThemedText>
