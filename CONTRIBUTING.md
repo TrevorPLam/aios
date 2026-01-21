@@ -80,6 +80,7 @@ AIOS uses a **Primary-Secondary Agent Architecture** for development. Understand
 
 **See also:**
 - [Constitution - Agent Responsibility Model](docs/governance/constitution.md)
+- [Best Practices Guide](BESTPR.md) - Token-optimized quick reference for agents
 - [AI Contribution Policy](docs/ai/ai_contribution_policy.md)
 - [Repository State](docs/governance/state.md)
 

@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: docs/governance/constitution.md -->
-<!-- Generated: 2026-01-19 -->
+<!-- Generated: 2026-01-21 -->
 <!-- To update: edit constitution.md and run `npm run compile:constitution` -->
 
 # Global Copilot Instructions
@@ -51,6 +51,7 @@
 - Current state: `docs/governance/state.md`
 - Governance: `GOVERNANCE.md`
 - Contributing: `CONTRIBUTING.md`
+- Best Practices: `BESTPR.md` (token-optimized agent guide)
 - AI policies: `docs/ai/`
 - Security: `docs/security/`, `SECURITY.md`
 - Testing: `docs/testing/`
@@ -89,4 +90,4 @@
 
 **Source:** `docs/governance/constitution.md`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-19T04:22:30.641Z
+**Last Generated:** 2026-01-21T00:44:46.238Z

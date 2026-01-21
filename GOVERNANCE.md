@@ -10,6 +10,7 @@
 - Breaking changes require RFC (Request for Comments) process before implementation
 - Documentation changes follow same rigor as code changes
 - Inactive maintainers can be replaced through transparent succession process
+- **Best Practices Guide:** See `BESTPR.md` for token-optimized agent development guidelines
 
 ## Technical Detail
 
