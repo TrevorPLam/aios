@@ -38,6 +38,12 @@ This guide helps you find the right documentation in our newly organized structu
 - Tech stack
 - API endpoints
 
+### For Repo Best Practices
+→ **[BESTPR.md](./BESTPR.md)**
+- Repo-specific engineering guidance
+- Expected checks before delivery
+- Client/server/documentation conventions
+
 ---
 
 ## 📊 Documentation Consolidation Results
