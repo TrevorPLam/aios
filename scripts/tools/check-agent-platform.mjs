@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * Agent Platform Separation Checker
+ * AGENT Ownership Consistency Checker
  *
- * Validates that GitHub Copilot (Primary) and Codex Agent (Secondary)
- * follow platform separation rules defined in the constitution.
+ * Validates that AGENT ownership is used consistently across documents
+ * and that the unified ownership model is documented in governance files.
  *
  * Rules:
- * - GitHub Copilot (Primary): iOS-only, no Android/Web-specific code
- * - Codex Agent (Secondary): Android/Web adaptation only, must reference Copilot's work
+ * - AGENT is the sole owner in TODO.md assignments
+ * - Constitution and AI policy describe unified AGENT ownership
  *
  * Usage:
  *   node scripts/tools/check-agent-platform.mjs [--mode=warn|fail]
@@ -37,13 +37,13 @@ const ENFORCEMENT_MODE =
   "warn";
 
 function checkAgentPlatform() {
-  console.log("🤖 Agent Platform Separation Checker");
-  console.log("=====================================\n");
+  console.log("🤖 AGENT Ownership Consistency Checker");
+  console.log("=======================================\n");
   console.log(`Enforcement Mode: ${ENFORCEMENT_MODE.toUpperCase()}\n`);
 
   const violations = [];
 
-  // Check 1: TODO.md uses new ownership schema
+  // Check 1: TODO.md uses unified ownership schema
   console.log("📋 Check 1: TODO.md Ownership Schema");
   console.log("-------------------------------------");
 
@@ -54,27 +54,24 @@ function checkAgentPlatform() {
     try {
       const todoContent = readFileSync(TODO_PATH, "utf-8");
 
-      // Check for old AGENT ownership (should not exist)
-      const oldOwnershipPattern = /^-\s+\*\*Owner\*\*:\s+AGENT$/m;
-      if (oldOwnershipPattern.test(todoContent)) {
-        violations.push('TODO.md still uses old "Owner: AGENT" format');
-        console.error('❌ Found old "Owner: AGENT" format in TODO.md');
+      // Check for unified ownership schema presence
+      if (!todoContent.includes("**Owner**: `AGENT`")) {
+        violations.push("TODO.md missing unified AGENT ownership schema");
         console.error(
-          '   Expected: "Owner: GitHub Agent (Primary)" or "Owner: Codex Agent (Secondary)"',
+          "❌ TODO.md does not contain unified AGENT ownership schema",
         );
       } else {
-        console.log("✅ TODO.md uses new ownership schema");
+        console.log("✅ TODO.md contains unified AGENT ownership schema");
       }
 
-      // Check for new ownership schema presence
+      // Check for legacy ownership references
       if (
-        !todoContent.includes("GitHub Agent (Primary)") &&
-        !todoContent.includes("Codex Agent (Secondary)")
+        todoContent.includes("GitHub Agent (Primary)") ||
+        todoContent.includes("Codex Agent (Secondary)") ||
+        todoContent.includes("Owner: Trevor")
       ) {
-        violations.push("TODO.md missing new agent ownership schema");
-        console.error("❌ TODO.md does not contain new agent ownership schema");
-      } else {
-        console.log("✅ TODO.md contains Primary-Secondary agent references");
+        violations.push("TODO.md contains legacy ownership references");
+        console.error("❌ TODO.md still contains legacy ownership references");
       }
 
       // Check for Platform field in schema
@@ -115,18 +112,11 @@ function checkAgentPlatform() {
         console.log("✅ Constitution includes Agent Responsibility Model");
       }
 
-      if (!constitutionContent.includes("GitHub Copilot (Primary Agent)")) {
-        violations.push("Constitution missing Primary Agent definition");
-        console.error("❌ Constitution missing Primary Agent definition");
+      if (!constitutionContent.includes("Unified AGENT Ownership")) {
+        violations.push("Constitution missing Unified AGENT Ownership");
+        console.error("❌ Constitution missing Unified AGENT Ownership");
       } else {
-        console.log("✅ Constitution defines GitHub Copilot (Primary Agent)");
-      }
-
-      if (!constitutionContent.includes("Codex Agent (Secondary Agent)")) {
-        violations.push("Constitution missing Secondary Agent definition");
-        console.error("❌ Constitution missing Secondary Agent definition");
-      } else {
-        console.log("✅ Constitution defines Codex Agent (Secondary Agent)");
+        console.log("✅ Constitution defines Unified AGENT Ownership");
       }
     } catch (error) {
       console.error(`❌ Error reading constitution: ${error.message}`);
@@ -147,18 +137,18 @@ function checkAgentPlatform() {
     try {
       const stateContent = readFileSync(STATE_PATH, "utf-8");
 
-      if (!stateContent.includes("Agent Platform Separation")) {
-        violations.push("State.md missing Agent Platform Separation toggle");
+      if (!stateContent.includes("AGENT Ownership Consistency")) {
+        violations.push("State.md missing AGENT Ownership Consistency toggle");
         console.error(
-          "❌ State.md does not include Agent Platform Separation toggle",
+          "❌ State.md does not include AGENT Ownership Consistency toggle",
         );
       } else {
-        console.log("✅ State.md includes Agent Platform Separation toggle");
+        console.log("✅ State.md includes AGENT Ownership Consistency toggle");
       }
 
       // Check if enforcement mode matches expectation
       if (
-        stateContent.includes("Agent Platform Separation") &&
+        stateContent.includes("AGENT Ownership Consistency") &&
         stateContent.includes("WARN")
       ) {
         console.log(
@@ -185,24 +175,13 @@ function checkAgentPlatform() {
     try {
       const aiPolicyContent = readFileSync(aiPolicyPath, "utf-8");
 
-      if (!aiPolicyContent.includes("Primary-Secondary Architecture")) {
-        violations.push("AI policy missing Primary-Secondary Architecture");
+      if (!aiPolicyContent.includes("Unified AGENT Ownership")) {
+        violations.push("AI policy missing Unified AGENT Ownership");
         console.error(
-          "❌ AI contribution policy missing Primary-Secondary Architecture section",
+          "❌ AI contribution policy missing Unified AGENT Ownership section",
         );
       } else {
-        console.log(
-          "✅ AI contribution policy includes Primary-Secondary Architecture",
-        );
-      }
-
-      if (!aiPolicyContent.includes("Handoff Protocol")) {
-        violations.push("AI policy missing Handoff Protocol");
-        console.warn(
-          "⚠️  AI contribution policy should include Handoff Protocol",
-        );
-      } else {
-        console.log("✅ AI contribution policy includes Handoff Protocol");
+        console.log("✅ AI contribution policy includes Unified AGENT Ownership");
       }
     } catch (error) {
       console.error(
@@ -227,20 +206,16 @@ function checkAgentPlatform() {
     });
 
     if (ENFORCEMENT_MODE === "fail") {
-      console.error(
-        "\n❌ FAILED: Agent platform separation violations detected!",
-      );
+      console.error("\n❌ FAILED: AGENT ownership violations detected!");
       console.error("\n📝 Action required:");
       console.error("   1. Review violations listed above");
-      console.error(
-        "   2. Update TODO.md to use Primary-Secondary agent ownership",
-      );
+      console.error("   2. Update TODO.md to use AGENT-only ownership");
       console.error(
         "   3. Ensure constitution includes Agent Responsibility Model",
       );
       console.error("   4. Ensure state.md has enforcement toggle");
       console.error(
-        "   5. Update AI contribution policy with agent guidelines",
+        "   5. Update AI contribution policy with unified ownership guidelines",
       );
       console.error("   6. Commit and push changes");
       console.error(
@@ -257,7 +232,7 @@ function checkAgentPlatform() {
     }
   }
 
-  console.log("\n✅ All agent platform separation checks passed!");
+  console.log("\n✅ All AGENT ownership checks passed!");
   return 0;
 }
 

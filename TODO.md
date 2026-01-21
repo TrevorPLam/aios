@@ -11,7 +11,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **ID**: `T-###` (unique)
 - **Priority**: `P0 | P1 | P2 | P3`
 - **Type**: `SECURITY | RELEASE | DEPENDENCY | DOCS | QUALITY | BUG | FEATURE | CHORE`
-- **Owner**: `GitHub Agent (Primary) | Codex Agent (Secondary) | Trevor`
+- **Owner**: `AGENT`
 - **Platform**: `iOS | Android | Web | Platform-Agnostic` (when applicable)
 - **Status**: `READY | BLOCKED | IN-PROGRESS | IN-REVIEW`
 - **Context**: why the task exists (1–5 bullets)
@@ -27,14 +27,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **P3**: backlog/tech debt; do when convenient
 
 ### Ownership rule
-- **Owner: GitHub Agent (Primary)** = Builds all original features, screens, components. iOS-only development. Owns architectural decisions.
-- **Owner: Codex Agent (Secondary)** = Adapts Copilot's completed iOS implementations for Android/Web compatibility only. Must reference Copilot's work. Cannot perform original development.
-- **Owner: Trevor** = Requires external actions (provider dashboards, DNS, billing, approvals).
-
-### Task Pattern for Features
-For new features requiring multi-platform support, use sequential tasks:
-- **Part A**: GitHub Agent (Primary) builds iOS implementation
-- **Part B**: Codex Agent (Secondary) adapts for Android/Web (depends on Part A)
+- **Owner: AGENT** = Responsible for all task execution across platforms and for architectural decisions.
 
 ---
 
@@ -46,7 +39,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETED
 - **Context**:
@@ -80,7 +73,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-058**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -102,7 +95,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-059**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -125,7 +118,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-060**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -148,7 +141,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-061**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -173,7 +166,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-082**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -196,7 +189,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-083**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -219,7 +212,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-084**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -245,7 +238,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-062**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -268,7 +261,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-063**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -290,7 +283,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-064**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -312,7 +305,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-065**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -333,7 +326,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-066**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -354,7 +347,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-067**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -376,7 +369,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-068**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -398,7 +391,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-069**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -420,7 +413,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-070**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -441,7 +434,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-088**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -463,7 +456,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-089**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -489,7 +482,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-076**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -513,7 +506,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-077**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -537,7 +530,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-078**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -560,7 +553,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-079**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -582,7 +575,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-080**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -605,7 +598,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-081**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -627,7 +620,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-085**
 - **Priority**: P0
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -655,7 +648,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-086**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -678,7 +671,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-087**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -700,7 +693,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-092**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -726,7 +719,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-071**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -750,7 +743,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-072**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -774,7 +767,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-073**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -796,7 +789,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-074**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -818,7 +811,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-075**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -842,7 +835,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-090**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -864,7 +857,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-091**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -887,7 +880,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: BUG
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 **T-001** ✅ COMPLETED (2026-01-19)
@@ -919,7 +912,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: BUG
-- **Owner**: Codex Agent (Secondary)
+- **Owner**: AGENT
 - **Platform**: Android, Web
 - **Status**: COMPLETE
 - **Context**:
@@ -939,7 +932,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: BUG
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETE
 - **Context**:
@@ -962,7 +955,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: BUG
-- **Owner**: Codex Agent (Secondary)
+- **Owner**: AGENT
 - **Platform**: Android, Web
 - **Status**: COMPLETE
 - **Context**:
@@ -982,7 +975,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P0
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: BUG
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: COMPLETE
 - **Context**:
@@ -999,7 +992,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Route validation system was already fully implemented. Includes isValidRoute() check, user alerts, structured error logging with metadata, and comprehensive error handling throughout navigation flow.
-- **Note**: Platform-agnostic navigation logic. Codex Agent can verify Android/Web compatibility in follow-up if needed.
+- **Note**: Platform-agnostic navigation logic. AGENT can verify Android/Web compatibility in follow-up if needed.
 
 ---
 
@@ -1009,7 +1002,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETE
 - **Context**:
@@ -1035,13 +1028,13 @@ For new features requiring multi-platform support, use sequential tasks:
   - Navigation routing handles all 11 module types with fallback
   - Added web keyboard shortcut (Cmd/Ctrl+K) with input-safe handling
   - Recommended for future iPad-specific enhancement
-- **Note**: Platform-agnostic implementation. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic implementation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-005** ✅ COMPLETED (2026-01-19)
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETE
 - **Context**:
@@ -1065,13 +1058,13 @@ For new features requiring multi-platform support, use sequential tasks:
   - Description: "Notifications & focus mode"
   - Improves discoverability (previously only via CommandCenter badge)
   - Screen already registered in navigation and fully functional
-- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-006** ✅ COMPLETED (2026-01-19)
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETE
 - **Context**:
@@ -1100,13 +1093,13 @@ For new features requiring multi-platform support, use sequential tasks:
   - Integrated with contextEngine.setUserOverride() for manual control
   - Added extensive documentation explaining each zone's behavior
   - Context changes propagate to PersistentSidebar for module visibility
-- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic logic. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-007**
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETED
 - **Context**:
@@ -1127,13 +1120,13 @@ For new features requiring multi-platform support, use sequential tasks:
   - Exposed manual refresh button and disabled state handling in Command Center footer.
   - Added reasoning and evidence preview rows on recommendation cards.
   - Confirmed history navigation stays reachable from Command Center secondary nav.
-- **Note**: Platform-agnostic logic. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic logic. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-008**
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Owner**: AGENT
@@ -1150,7 +1143,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/screens/ModuleGridScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
-- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
   - [x] Add "All Modules" button in BottomNav or Settings (implemented in CommandCenter and PersistentSidebar)
   - [x] Add module grid access from sidebar "More" button (implemented)
   - [x] Consider adding to CommandCenter as a card (grid icon in header)
@@ -1164,7 +1157,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: REVERTED
 - **Context**:
@@ -1189,7 +1182,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1204,13 +1197,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/lazyLoader.ts
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic optimization. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-011**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1225,13 +1218,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/prefetchEngine.ts
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic optimization. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-012**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1246,13 +1239,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/memoryManager.ts
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic memory management. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic memory management. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-013**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1267,13 +1260,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/moduleHandoff.ts
 - **Dependencies**: None
 - **Effort**: S
-- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-057**
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1294,7 +1287,7 @@ For new features requiring multi-platform support, use sequential tasks:
   - Context engine: client/lib/contextEngine.ts
 - **Dependencies**: None
 - **Effort**: L
-- **Note**: This is a complete redesign of onboarding from module selection to AI personality configuration. Platform-agnostic questionnaire. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: This is a complete redesign of onboarding from module selection to AI personality configuration. Platform-agnostic questionnaire. AGENT can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -1304,7 +1297,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: COMPLETE
 - **Context**:
@@ -1334,13 +1327,13 @@ For new features requiring multi-platform support, use sequential tasks:
   - Added accessibility labels to header buttons
   - SettingsMenuScreen already has complete MODULE_SETTINGS section
   - Settings screens have enable/disable toggles and proper state management
-- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-015** ✅ COMPLETED (2026-01-19)
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: COMPLETE
 - **Context**:
@@ -1363,13 +1356,13 @@ For new features requiring multi-platform support, use sequential tasks:
   - Description: "Activity log & timeline"
   - Provides primary navigation path (System screen path remains as secondary)
   - HistoryScreen already registered in navigation and fully functional
-- **Note**: Platform-agnostic navigation. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-016**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1384,13 +1377,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/components/ErrorBoundary.tsx
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic error handling. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic error handling. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-017**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1406,13 +1399,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/screens/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic UI patterns. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic UI patterns. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-018**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1427,13 +1420,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All network-dependent code
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic network handling. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic network handling. AGENT can verify Android/Web compatibility in follow-up.
 
 **T-019**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: iOS
 - **Status**: READY
 - **Context**:
@@ -1449,7 +1442,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/screens/NoteEditor.tsx, client/screens/TaskDetail.tsx, etc.
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic validation logic. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic validation logic. AGENT can verify Android/Web compatibility in follow-up.
 
 ---
 
@@ -1459,7 +1452,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: CHORE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1475,13 +1468,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: QuickCaptureOverlay.tsx, HandoffBreadcrumb.tsx, AIAssistSheet.tsx
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Theme refactoring. Codex Agent can verify Android/Web theme compatibility in follow-up.
+- **Note**: Theme refactoring. AGENT can verify Android/Web theme compatibility in follow-up.
 
 **T-021**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: CHORE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1500,7 +1493,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Owner**: AGENT
@@ -1516,14 +1509,14 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/constants/theme.ts, client/components/ThemedText.tsx, docs/technical/design_guidelines.md
 - **Dependencies**: None
 - **Effort**: S
-- **Note**: Platform-agnostic design system enhancement. Codex Agent can verify Android/Web compatibility in follow-up.
+- **Note**: Platform-agnostic design system enhancement. AGENT can verify Android/Web compatibility in follow-up.
 - **Completion Notes**: Added h4 (16px/600), h5 (14px/600), h6 (12px/600) to Typography. Updated ThemedText component with new types. Documented usage guidelines with examples.
 
 **T-023**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1538,13 +1531,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/constants/theme.ts
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic theme refinement. Codex Agent can verify Android/Web contrast compatibility in follow-up.
+- **Note**: Platform-agnostic theme refinement. AGENT can verify Android/Web contrast compatibility in follow-up.
 
 **T-024**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1561,13 +1554,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All component files
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic accessibility audit. Codex Agent can verify Android/Web accessibility features in follow-up.
+- **Note**: Platform-agnostic accessibility audit. AGENT can verify Android/Web accessibility features in follow-up.
 
 **T-025**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1582,13 +1575,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All interactive components
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic keyboard support. Codex Agent can verify Android/Web keyboard navigation in follow-up.
+- **Note**: Platform-agnostic keyboard support. AGENT can verify Android/Web keyboard navigation in follow-up.
 
 **T-026**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1603,13 +1596,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: MiniModeContainer.tsx, QuickCaptureOverlay.tsx, CommandCenter.tsx
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic animation optimization. Codex Agent can verify Android/Web animation performance in follow-up.
+- **Note**: Platform-agnostic animation optimization. AGENT can verify Android/Web animation performance in follow-up.
 
 **T-027**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1624,7 +1617,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: PhotosScreen.tsx, AlbumsScreen.tsx, PhotoDetailScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic image optimization. Codex Agent can verify Android/Web image caching in follow-up.
+- **Note**: Platform-agnostic image optimization. AGENT can verify Android/Web image caching in follow-up.
 
 ---
 
@@ -1634,7 +1627,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P0
 - **Type**: CHORE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Status**: COMPLETE
 - **Decision**: COMPLETE IMPLEMENTATION (not remove)
 - **Context**:
@@ -1659,7 +1652,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-029** ❌ OBSOLETE (2026-01-20)
 - **Priority**: P1 → OBSOLETE
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: OBSOLETE
 - **Context**:
@@ -1673,7 +1666,7 @@ For new features requiring multi-platform support, use sequential tasks:
 **T-030** ❌ OBSOLETE (2026-01-20)
 - **Priority**: P1 → OBSOLETE
 - **Type**: CHORE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: OBSOLETE
 - **Context**:
@@ -1690,7 +1683,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: COMPLETE
 - **Context**:
@@ -1717,7 +1710,7 @@ For new features requiring multi-platform support, use sequential tasks:
   - Automatic timestamp inclusion and error serialization
   - Used throughout errorHandler middleware
   - Comprehensive JSDoc documentation with usage examples
-- **Note**: Platform-agnostic server logging. Codex Agent can verify Android/Web client logging in follow-up.
+- **Note**: Platform-agnostic server logging. AGENT can verify Android/Web client logging in follow-up.
 
 ---
 
@@ -1727,7 +1720,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1743,13 +1736,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/components/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic testing infrastructure. Codex Agent can verify Android/Web test compatibility in follow-up.
+- **Note**: Platform-agnostic testing infrastructure. AGENT can verify Android/Web test compatibility in follow-up.
 
 **T-033**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1765,13 +1758,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All workflow-related code
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic end-to-end testing. Codex Agent can verify Android/Web workflow testing in follow-up.
+- **Note**: Platform-agnostic end-to-end testing. AGENT can verify Android/Web workflow testing in follow-up.
 
 **T-034**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1786,13 +1779,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All screen components
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic visual regression testing. Codex Agent can verify Android/Web screenshot comparison in follow-up.
+- **Note**: Platform-agnostic visual regression testing. AGENT can verify Android/Web screenshot comparison in follow-up.
 
 **T-035**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1808,7 +1801,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All performance-critical code
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic performance monitoring. Codex Agent can verify Android/Web performance metrics in follow-up.
+- **Note**: Platform-agnostic performance monitoring. AGENT can verify Android/Web performance metrics in follow-up.
 
 ---
 
@@ -1818,7 +1811,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1833,13 +1826,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic library documentation. Codex Agent can verify Android/Web integration examples in follow-up.
+- **Note**: Platform-agnostic library documentation. AGENT can verify Android/Web integration examples in follow-up.
 
 **T-037**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1855,13 +1848,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic component documentation. Codex Agent can verify Android/Web component compatibility in follow-up.
+- **Note**: Platform-agnostic component documentation. AGENT can verify Android/Web component compatibility in follow-up.
 
 **T-038**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1876,7 +1869,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic workflow diagrams. Codex Agent can verify Android/Web workflow coverage in follow-up.
+- **Note**: Platform-agnostic workflow diagrams. AGENT can verify Android/Web workflow coverage in follow-up.
 
 ---
 
@@ -1886,7 +1879,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1901,13 +1894,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic event type system. Codex Agent can verify Android/Web event handling in follow-up.
+- **Note**: Platform-agnostic event type system. AGENT can verify Android/Web event handling in follow-up.
 
 **T-040**
 - **Priority**: P1
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1923,13 +1916,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic theme hook migration. Codex Agent can verify Android/Web theme consistency in follow-up.
+- **Note**: Platform-agnostic theme hook migration. AGENT can verify Android/Web theme consistency in follow-up.
 
 **T-041**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1945,13 +1938,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic model interface audit. Codex Agent can verify Android/Web data model compatibility in follow-up.
+- **Note**: Platform-agnostic model interface audit. AGENT can verify Android/Web data model compatibility in follow-up.
 
 **T-042**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P2
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -1966,13 +1959,13 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: All navigation code, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic navigation patterns. Codex Agent can verify Android/Web navigation type safety in follow-up.
+- **Note**: Platform-agnostic navigation patterns. AGENT can verify Android/Web navigation type safety in follow-up.
 
 **T-043**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Owner**: AGENT
@@ -1989,14 +1982,14 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: client/screens/AlertsScreen.tsx:76, client/screens/BudgetScreen.tsx:1299
 - **Dependencies**: None
 - **Effort**: S
-- **Note**: Platform-agnostic component prop validation. Codex Agent can verify Android/Web component props in follow-up.
+- **Note**: Platform-agnostic component prop validation. AGENT can verify Android/Web component props in follow-up.
 - **Completion Notes**: Fixed ThemedText type="title" to "hero" in AlertsScreen. Changed AIAssistSheet context prop to module in BudgetScreen. Button interface confirmed correct.
 
 **T-044**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2011,7 +2004,7 @@ For new features requiring multi-platform support, use sequential tasks:
 - **References**: tsconfig.json, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: T-039, T-040, T-041, T-042, T-043
 - **Effort**: M
-- **Note**: Platform-agnostic TypeScript strict mode. Codex Agent can verify Android/Web type safety in follow-up.
+- **Note**: Platform-agnostic TypeScript strict mode. AGENT can verify Android/Web type safety in follow-up.
 
 ---
 
@@ -2029,7 +2022,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-081**
 - **Priority**: P0
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic (Server)
 - **Status**: COMPLETE
 - **Context**:
@@ -2054,7 +2047,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-082**
 - **Priority**: P0
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic (Server)
 - **Status**: COMPLETE
 - **Context**:
@@ -2079,7 +2072,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-083**
 - **Priority**: P0
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic (Server)
 - **Status**: COMPLETE
 - **Context**:
@@ -2107,7 +2100,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-084**
 - **Priority**: P0
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic (Shared)
 - **Status**: COMPLETE
 - **Context**:
@@ -2133,7 +2126,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-085**
 - **Priority**: P0
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2165,7 +2158,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-071**
 - **Priority**: P0
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2195,7 +2188,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-072**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2218,7 +2211,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-073**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2242,7 +2235,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-074**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2265,7 +2258,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-075**
 - **Priority**: P1
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2288,7 +2281,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-076**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2311,7 +2304,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-077**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2335,7 +2328,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-078**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2358,7 +2351,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-079**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2381,7 +2374,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-080**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2404,7 +2397,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-093**
 - **Priority**: P2
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2430,7 +2423,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-094**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2457,7 +2450,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **T-095**
 - **Priority**: P3
 - **Type**: FEATURE
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: BLOCKED
 - **Context**:
@@ -2490,7 +2483,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2505,13 +2498,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 1
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic documentation consolidation. Codex Agent can verify Android/Web documentation coverage in follow-up.
+- **Note**: Platform-agnostic documentation consolidation. AGENT can verify Android/Web documentation coverage in follow-up.
 
 **T-046**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2526,13 +2519,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.1
 - **Dependencies**: T-045
 - **Effort**: M
-- **Note**: Platform-agnostic security documentation. Codex Agent can verify Android/Web security practices in follow-up.
+- **Note**: Platform-agnostic security documentation. AGENT can verify Android/Web security practices in follow-up.
 
 **T-047**
 - **Priority**: P2
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2547,13 +2540,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 2.2-2.3
 - **Dependencies**: T-045
 - **Effort**: S
-- **Note**: Platform-agnostic analysis documentation consolidation. Codex Agent can verify Android/Web analysis coverage in follow-up.
+- **Note**: Platform-agnostic analysis documentation consolidation. AGENT can verify Android/Web analysis coverage in follow-up.
 
 **T-048**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2568,13 +2561,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
 - **Dependencies**: None
 - **Effort**: S
-- **Note**: Platform-agnostic changelog. Codex Agent can verify Android/Web release notes in follow-up.
+- **Note**: Platform-agnostic changelog. AGENT can verify Android/Web release notes in follow-up.
 
 **T-049**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2589,13 +2582,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.1
 - **Dependencies**: T-045
 - **Effort**: S
-- **Note**: Platform-agnostic file naming conventions. Codex Agent can verify Android/Web file naming consistency in follow-up.
+- **Note**: Platform-agnostic file naming conventions. AGENT can verify Android/Web file naming consistency in follow-up.
 
 **T-050**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2611,7 +2604,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md Phase 4.4
 - **Dependencies**: T-045
 - **Effort**: S
-- **Note**: Platform-agnostic documentation templates. Codex Agent can verify Android/Web template usage in follow-up.
+- **Note**: Platform-agnostic documentation templates. AGENT can verify Android/Web template usage in follow-up.
 
 ### Documentation Quality & Automation
 
@@ -2619,7 +2612,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2634,13 +2627,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.1
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic getting started guide. Codex Agent can verify Android/Web setup instructions in follow-up.
+- **Note**: Platform-agnostic getting started guide. AGENT can verify Android/Web setup instructions in follow-up.
 
 **T-052**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2656,13 +2649,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 3.2
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
-- **Note**: Platform-agnostic how-to guides. Codex Agent can verify Android/Web task documentation in follow-up.
+- **Note**: Platform-agnostic how-to guides. AGENT can verify Android/Web task documentation in follow-up.
 
 **T-053**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: DOCS
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2677,7 +2670,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: docs/archive/2026-01-pre-consolidation/docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 4.2
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic UI screenshots. Codex Agent can verify Android/Web UI screenshots in follow-up.
+- **Note**: Platform-agnostic UI screenshots. AGENT can verify Android/Web UI screenshots in follow-up.
 
 ### Edge Cases & Testing Scenarios
 
@@ -2685,7 +2678,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2700,13 +2693,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: All screen components
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic empty state design. Codex Agent can verify Android/Web empty states in follow-up.
+- **Note**: Platform-agnostic empty state design. AGENT can verify Android/Web empty states in follow-up.
 
 **T-055**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2721,13 +2714,13 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: List-based screens
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic large dataset testing. Codex Agent can verify Android/Web performance at scale in follow-up.
+- **Note**: Platform-agnostic large dataset testing. AGENT can verify Android/Web performance at scale in follow-up.
 
 **T-056**
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
 - **Type**: QUALITY
-- **Owner**: GitHub Agent (Primary)
+- **Owner**: AGENT
 - **Platform**: Platform-Agnostic
 - **Status**: READY
 - **Context**:
@@ -2742,7 +2735,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**: Permission-requiring features
 - **Dependencies**: None
 - **Effort**: M
-- **Note**: Platform-agnostic permission error handling. Codex Agent can verify Android/Web permission flows in follow-up.
+- **Note**: Platform-agnostic permission error handling. AGENT can verify Android/Web permission flows in follow-up.
 
 ---
 
@@ -2804,9 +2797,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - DEPENDENCY: 1
 
 **By Owner**:
-- GitHub Agent (Primary): 91 tasks (17 complete; all iOS-first development)
-- Codex Agent (Secondary): 2 tasks (T-001B, T-002B - Android/Web adaptation)
-- Trevor: 2 tasks (T-027, T-069 - external actions)
+- AGENT: 95 tasks (17 complete; includes platform work and external actions)
 
 **By Status**:
 - COMPLETE: 17 tasks (T-001, T-002A, T-003, T-004, T-005, T-006, T-008, T-014, T-015, T-022, T-028, T-031, T-043, T-081, T-082, T-083, T-084)

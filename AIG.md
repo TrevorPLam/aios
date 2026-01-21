@@ -5,7 +5,7 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 ## AI Controls & Behavior
 
 - **docs/ai/README.md** — Overview of approved and prohibited AI uses with links to deeper AI policy documents and quick rules for safe AI usage. 
-- **docs/ai/ai_contribution_policy.md** — Primary/Secondary agent responsibility model and AI usage expectations, including when to seek human review. 
+- **docs/ai/ai_contribution_policy.md** — Unified AGENT ownership model and AI usage expectations, including when to seek human review. 
 - **docs/ai/evidence_requirements.md** — Required evidence (tests, lint, manual verification) for AI-generated contributions. 
 - **docs/ai/safe_editing_rules.md** — Guardrails for safe AI-assisted edits, including small-change discipline and test-first workflow. 
 - **docs/ai/prompting_playbook.md** — Guidance on prompting AI effectively with examples for tests, refactors, and documentation. 
@@ -30,7 +30,7 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 
 ## Contribution & Review Controls
 
-- **CONTRIBUTING.md** — Contributor workflows, coding standards, and the Primary/Secondary agent model for AIOS development. 
+- **CONTRIBUTING.md** — Contributor workflows, coding standards, and the unified AGENT ownership model for AIOS development. 
 - **CODE_OF_CONDUCT.md** — Behavioral standards and enforcement expectations for community interactions. 
 - **.github/pull_request_template.md** — PR checklist ensuring documentation, testing, and security considerations are captured. 
 - **.github/ISSUE_TEMPLATE/** — Structured issue templates that standardize change requests and reporting. 
@@ -61,7 +61,7 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 - **.github/workflows/documentation-metrics.yml** — Generates documentation metrics for governance reporting. 
 - **.github/workflows/documentation-stale.yml** — Flags stale docs to prevent governance drift. 
 - **.github/workflows/documentation-issue-automation.yml** — Automates issue creation and tracking for documentation governance. 
-- **.github/workflows/agent-platform-check.yml** — Enforcement workflow for the Primary/Secondary agent platform model. 
+- **.github/workflows/agent-platform-check.yml** — Enforcement workflow for AGENT ownership consistency in TODO assignments. 
 - **docs/github-actions-guide.md** — Detailed documentation for workflow usage and troubleshooting. 
 - **.github/dependabot.yml** — Automated dependency update policy and scheduling. 
 

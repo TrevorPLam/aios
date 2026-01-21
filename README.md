@@ -4,7 +4,7 @@
 
 An iOS-native super app with Android/Web compatibility, built with React Native and Expo, featuring a futuristic "HUD/control panel" aesthetic. AIOS is evolving from an AI-powered productivity hub into a comprehensive life operating system - **the one app to rule them all**.
 
-**Development Model:** Primary-Secondary Agent Architecture - GitHub Copilot builds all original features for iOS, Codex Agent adapts for Android/Web compatibility.
+**Development Model:** Unified AGENT Ownership - a single AGENT delivers features across iOS, Android, and Web compatibility.
 
 ## 🌟 What is AIOS?
 
@@ -152,34 +152,24 @@ AIOS has successfully completed **Phase 3** of the revolutionary UX system with 
    export EXPO_PUBLIC_DOMAIN=your-domain.repl.co:5000
    ```
 
-## 🤖 Development Model: Primary-Secondary Agent Architecture
+## 🤖 Development Model: Unified AGENT Ownership
 
-AIOS uses a **Primary-Secondary Agent Model** for platform development:
+AIOS uses a **Unified AGENT Model** for platform development:
 
-### GitHub Copilot (Primary Agent)
-- **Role:** Builds ALL original features, screens, and components
-- **Platform:** iOS exclusively
+### AGENT
+- **Role:** Builds and adapts all features, screens, and components
+- **Platform:** iOS, Android, and Web
 - **Responsibilities:**
   - Owns all architectural decisions
-  - Develops iOS-native implementations
-  - Creates follow-up tasks for cross-platform adaptation
-  - Tests on iOS simulator/device
-
-### Codex Agent (Secondary Agent)
-- **Role:** Adapts iOS implementations for Android/Web compatibility
-- **Platform:** Android and Web only
-- **Responsibilities:**
-  - Adds platform-specific adaptations (Material Design, web layouts)
-  - Preserves iOS functionality while adding compatibility
-  - References Copilot's completed work (PR/commit)
-  - Tests on Android/Web platforms
+  - Delivers platform-compatible implementations
+  - Adds platform-specific adaptations when needed
+  - Tests on relevant target platforms
 
 ### Workflow
-1. GitHub Copilot builds feature for iOS
-2. Copilot merges PR and marks task complete
-3. Copilot creates follow-up task: "Adapt [feature] for Android/Web"
-4. Codex Agent adapts implementation with platform-specific code
-5. Codex Agent tests on Android/Web platforms
+1. AGENT receives the task from TODO.md
+2. AGENT implements the feature with platform compatibility in mind
+3. AGENT tests on the required platforms
+4. AGENT updates documentation and marks the task complete
 
 **See [docs/governance/constitution.md](docs/governance/constitution.md) and [docs/ai/ai_contribution_policy.md](docs/ai/ai_contribution_policy.md) for complete details.**
 
