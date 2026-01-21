@@ -513,7 +513,7 @@ export default function AppNavigator() {
         name="PhotoEditor"
         // @ts-expect-error - Navigation prop types from React Navigation are complex and props forwarding is safe here
         component={(props) => (
-          <ScreenErrorBoundary screenName="PhotoEditor">
+          <ScreenErrorBoundary screenName="Photo Editor">
             <LazyScreenWrapper screenName="PhotoEditor">
               <LazyPhotoEditorScreen {...props} />
             </LazyScreenWrapper>
