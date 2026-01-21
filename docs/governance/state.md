@@ -63,7 +63,7 @@ Current in-progress migrations and temporary states:
 
 ### Current State
 - 3 example rows populated
-- ~27 features identified (see TODO.md)
+- ~27 features identified (see P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md)
 - Enforcement mode: `WARN`
 
 ### Next Steps
@@ -103,7 +103,7 @@ Current in-progress migrations and temporary states:
 
 ### Current State (3)
 - Constitution updated with unified AGENT responsibilities
-- TODO.md ownership standardized to AGENT-only assignments
+- P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md ownership standardized to AGENT-only assignments
 - Documentation refreshed to remove Primary/Secondary split
 - Enforcement mode: `WARN` (not yet enforced via CI)
 

@@ -7,7 +7,7 @@
 - `client/models/types.ts`
 - `client/storage/database.ts`
 - `client/screens/CommandCenterScreen.tsx`
-- `TODO.md`
+- `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md`
 
 ## Changes Overview
 
@@ -135,7 +135,7 @@ secondaryNavButton: {
 
 ## Future Work
 
-Task **T-003A** created in TODO.md to replicate secondary navigation pattern in:
+Task **T-003A** created in P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md to replicate secondary navigation pattern in:
 
 - Notebook module
 - Lists module

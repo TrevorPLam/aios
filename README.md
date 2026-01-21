@@ -177,7 +177,7 @@ AIOS uses a **Unified AGENT Model** for platform development:
 
 ### Workflow
 
-1. AGENT receives the task from TODO.md
+1. AGENT receives the task from P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md
 2. AGENT implements the feature with platform compatibility in mind
 3. AGENT tests on the required platforms
 4. AGENT updates documentation and marks the task complete

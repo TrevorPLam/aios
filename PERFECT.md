@@ -275,7 +275,7 @@ None currently
 ## Links
 
 - [Project Governance Constitution](docs/governance/constitution.md)
-- [Active Tasks](TODO.md)
+- [Active Tasks](P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md)
 - [Architecture Decisions](docs/decisions/)
 - [Test Coverage Report](docs/coverage.md)
 - [TypeScript Cleanup Phase 1](docs/technical/typescript-cleanup-phase1.md)

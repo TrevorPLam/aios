@@ -16,7 +16,7 @@
 
 ### Workflow
 
-1. Receives task assignment from TODO.md (Owner: AGENT)
+1. Receives task assignment from P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md (Owner: AGENT)
 2. Builds the feature with platform compatibility in mind
 3. Tests on the required platforms
 4. Merges PR with implementation and documentation updates

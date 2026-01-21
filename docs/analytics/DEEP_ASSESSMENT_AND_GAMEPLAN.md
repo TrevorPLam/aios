@@ -2,7 +2,7 @@
 
 **Created:** 2026-01-20
 **Purpose:** Detailed technical assessment and concrete implementation roadmap
-**Related:** ADR-006, IMPLEMENTATION_PLAN.md, TODO.md T-071 through T-080
+**Related:** ADR-006, IMPLEMENTATION_PLAN.md, P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md T-071 through T-080
 
 ---
 
@@ -587,7 +587,7 @@ npm install pako @types/pako  # For compression
 ## 8. Next Steps
 
 1. **Immediate (This Week):**
-   - ✅ Create T-081 through T-085 tasks in TODO.md
+   - ✅ Create T-081 through T-085 tasks in P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md
    - ✅ Get approval on Decision 1-4
    - ⏸️ Begin Phase 0 implementation (server foundation)
 
@@ -612,7 +612,7 @@ npm install pako @types/pako  # For compression
 - [ADR-006: Analytics Implementation Decision](../decisions/006-analytics-implementation-decision.md)
 - [Analytics Implementation Plan](./IMPLEMENTATION_PLAN.md)
 - [World-Class Analytics Roadmap](./WORLD_CLASS_ANALYTICS_ROADMAP.md)
-- [TODO.md](../../TODO.md) - T-071 through T-085
+- [P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md](../../P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md) - T-071 through T-085
 
 ---
 

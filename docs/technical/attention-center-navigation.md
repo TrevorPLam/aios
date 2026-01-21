@@ -121,4 +121,4 @@ badge: {
 
 - Attention Manager API: `client/lib/attentionManager.ts`
 - Command Center UI: `client/screens/CommandCenterScreen.tsx`
-- TODO Task: `TODO.md` lines 154-194
+- TODO Task: `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md` lines 154-194

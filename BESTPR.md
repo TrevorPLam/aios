@@ -24,7 +24,7 @@
 Before making ANY changes:
 
 - [ ] Read constitutional laws in `docs/governance/constitution.md`
-- [ ] Confirm task ownership is AGENT in TODO.md
+- [ ] Confirm task ownership is AGENT in P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md
 - [ ] Review existing patterns in similar files before creating new ones
 - [ ] Run `npm run check:types && npm run lint` to understand current state
 - [ ] Verify tests pass: `npm test`

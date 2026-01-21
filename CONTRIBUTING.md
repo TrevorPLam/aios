@@ -37,7 +37,7 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 
 ### Workflow
 
-1. Receives task from TODO.md (Owner: AGENT)
+1. Receives task from P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md (Owner: AGENT)
 2. Implements the feature with platform compatibility in mind
 3. Tests on required platforms
 4. Merges PR with implementation and documentation updates
@@ -453,7 +453,7 @@ Check out these areas where we especially need help:
 
 - [ ] Additional themes
 - [ ] Animations and transitions
-- [ ] AI personality onboarding (see TODO.md T-057)
+- [ ] AI personality onboarding (see P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md T-057)
 - [ ] Settings enhancements
 
 ## Questions?

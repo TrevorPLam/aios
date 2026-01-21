@@ -3,7 +3,7 @@
 **Status:** Proposed
 **Created:** 2026-01-20
 **Owner:** AGENT
-**Related:** ADR-006, TODO.md T-029
+**Related:** ADR-006, P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md T-029
 
 ## Overview
 
@@ -601,7 +601,7 @@ npm install --save-dev @types/pako
 - [ADR-006: Analytics Implementation Decision](../decisions/006-analytics-implementation-decision.md)
 - [World-Class Analytics Roadmap](./WORLD_CLASS_ANALYTICS_ROADMAP.md)
 - [World-Class Features Summary](./WORLD_CLASS_FEATURES_SUMMARY.md)
-- [TODO.md Task T-029](../../TODO.md)
+- [P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md Task T-029](../../P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md)
 
 ---
 

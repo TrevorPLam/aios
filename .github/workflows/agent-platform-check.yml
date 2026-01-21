@@ -3,7 +3,7 @@ name: Agent Platform Separation Check
 on:
   pull_request:
     paths:
-      - 'TODO.md'
+      - 'P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md'
       - 'docs/governance/constitution.md'
       - 'docs/governance/state.md'
       - 'docs/ai/ai_contribution_policy.md'
@@ -38,7 +38,7 @@ jobs:
           echo ""
           echo "Violations detected in agent platform separation rules."
           echo "Please review and fix:"
-          echo "  - Ensure TODO.md uses 'GitHub Agent (Primary)' or 'Codex Agent (Secondary)'"
+          echo "  - Ensure P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md uses 'GitHub Agent (Primary)' or 'Codex Agent (Secondary)'"
           echo "  - Ensure constitution includes Agent Responsibility Model"
           echo "  - Ensure state.md has Agent Platform Separation toggle"
           echo "  - Ensure AI contribution policy has Primary-Secondary Architecture"

@@ -105,7 +105,7 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 
 ## Action Tracking & Planning Artifacts
 
-- **TODO.md** — Single source of truth for actionable work and ownership assignments.
+- **P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md** — Single source of truth for actionable work and ownership assignments.
 - **CHANGELOG.md** — Record of changes with highlights of major actions and feature updates.
 - **WORK_SESSION_SUMMARY.md** — Session-level actions, workflow outcomes, and follow-ups.
 - **TASK_COMPLETION_REPORT.md** — Summary of completed tasks and verification notes.

@@ -3,7 +3,7 @@
 **Status:** Proposed
 **Date:** 2026-01-20
 **Supersedes:** ADR-005 (Analytics system architecture)
-**Context:** TODO.md Tasks T-028, T-029, T-030
+**Context:** P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md Tasks T-028, T-029, T-030
 
 ## Executive Summary
 
@@ -223,7 +223,7 @@ Analytics is **actively used** in 9 files:
 ### Immediate Next Steps
 
 1. ✅ Accept this ADR
-2. ✅ Update TODO.md: Mark T-028 complete, set T-029 to IN-PROGRESS
+2. ✅ Update P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md: Mark T-028 complete, set T-029 to IN-PROGRESS
 3. ✅ Install missing dependency: `npm install pako @types/pako`
 4. ✅ Begin Phase 1 implementation (Event Inspector, Metrics)
 5. ✅ Create Phase 1 implementation ticket with detailed subtasks
@@ -261,7 +261,7 @@ Analytics is **actively used** in 9 files:
 - Implementation status: [World-Class Features Summary](../analytics/WORLD_CLASS_FEATURES_SUMMARY.md)
 - Source code: `client/analytics/`
 - Tests: `client/analytics/__tests__/`
-- TODO tasks: T-028, T-029, T-030 in `TODO.md`
+- TODO tasks: T-028, T-029, T-030 in `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md`
 
 ---
 
