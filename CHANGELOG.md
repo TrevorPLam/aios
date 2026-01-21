@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Screen-level error recovery actions (try again, go back, go home) for route error boundaries
 - Navigation performance hooks that connect prefetching and memory tracking to module transitions
 - Lazy-loaded Photos and Photo Editor screens with Suspense fallback messaging for faster startup
+- Lazy-loaded mini-mode components with Suspense fallback messaging to reduce initial bundle size
 
 ### Changed
 
