@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
 import { db } from "@/storage/database";
 import { ScreenErrorBoundary } from "@/components/ScreenErrorBoundary";
+import { LazyScreenWrapper } from "@/components/LazyScreenWrapper";
+import { lazyLoader } from "@/lib/lazyLoader";
 import {
   generateSeedRecommendations,
   generateSeedNotes,
@@ -44,10 +46,8 @@ import ListsScreen from "@/screens/ListsScreen";
 import ListEditorScreen from "@/screens/ListEditorScreen";
 import AlertsScreen from "@/screens/AlertsScreen";
 import AlertDetailScreen from "@/screens/AlertDetailScreen";
-import PhotosScreen from "@/screens/PhotosScreen";
 import AlbumsScreen from "@/screens/AlbumsScreen";
 import PhotoDetailScreen from "@/screens/PhotoDetailScreen";
-import PhotoEditorScreen from "@/screens/PhotoEditorScreen";
 import MessagesScreen from "@/screens/MessagesScreen";
 import ConversationDetailScreen from "@/screens/ConversationDetailScreen";
 import ContactsScreen from "@/screens/ContactsScreen";
@@ -61,6 +61,13 @@ import EmailSettingsScreen from "@/screens/EmailSettingsScreen";
 import ContactsSettingsScreen from "@/screens/ContactsSettingsScreen";
 import AttentionCenterScreen from "@/screens/AttentionCenterScreen";
 import OmnisearchModalScreen from "@/screens/OmnisearchModalScreen";
+
+const LazyPhotosScreen = lazyLoader.getLazyComponent("photos");
+// Photo editor isn't a module entry, so we lazy-load it directly to avoid
+// expanding the module registry surface area unnecessarily.
+const LazyPhotoEditorScreen = React.lazy(
+  () => import("@/screens/PhotoEditorScreen"),
+);
 
 export type AppStackParamList = {
   CommandCenter: undefined;
@@ -475,7 +482,9 @@ export default function AppNavigator() {
         // @ts-expect-error - Navigation prop types from React Navigation are complex and props forwarding is safe here
         component={(props) => (
           <ScreenErrorBoundary screenName="Photos">
-            <PhotosScreen {...props} />
+            <LazyScreenWrapper screenName="Photos">
+              <LazyPhotosScreen {...props} />
+            </LazyScreenWrapper>
           </ScreenErrorBoundary>
         )}
         options={{ headerTitle: "Photos" }}
@@ -504,8 +513,10 @@ export default function AppNavigator() {
         name="PhotoEditor"
         // @ts-expect-error - Navigation prop types from React Navigation are complex and props forwarding is safe here
         component={(props) => (
-          <ScreenErrorBoundary screenName="PhotoEditor">
-            <PhotoEditorScreen {...props} />
+          <ScreenErrorBoundary screenName="Photo Editor">
+            <LazyScreenWrapper screenName="PhotoEditor">
+              <LazyPhotoEditorScreen {...props} />
+            </LazyScreenWrapper>
           </ScreenErrorBoundary>
         )}
         options={{ headerTitle: "Edit Photo" }}

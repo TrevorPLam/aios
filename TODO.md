@@ -3045,14 +3045,21 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Add visual indicators for handoff availability
   - **Action**: Test handoff workflows (e.g., Calendar → Maps)
 
-- [ ] **Lazy Loading System Not Utilized**
+- [x] **Lazy Loading System Not Utilized**
   - Location: `client/lib/lazyLoader.ts`
   - Features: Component lazy loading, code splitting
   - Current: Exists but no screens/components use it
   - Impact: Larger bundle size, slower initial load
   - **Action**: Implement lazy loading for heavy screens (Photos, PhotoEditor)
-  - **Action**: Lazy load mini-mode components
   - **Action**: Add loading indicators for lazy-loaded content
+  - **Completed**: Lazy-loaded Photos + Photo Editor screens with Suspense fallback messaging (2026-01-20)
+
+- [ ] **Lazy Load Mini-Mode Components**
+  - Location: `client/components/miniModes/*`
+  - Features: Mini-mode quick actions for Task, Note, Calendar, Contacts, Budget
+  - Impact: Mini-mode components load on app start and increase bundle size
+  - **Action**: Convert mini-mode components to lazy imports
+  - **Action**: Add loading indicators for mini-mode entry points
 
 - [x] **Prefetch Engine Not Active**
   - Location: `client/lib/prefetchEngine.ts`
