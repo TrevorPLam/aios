@@ -912,7 +912,6 @@ top -bn1 | head -20
 - [C4 Overview](./README.md) - How to read C4 diagrams
 - [SECURITY.md](/SECURITY.md) - Security policies and practices
 - [CONTRIBUTING.md](/CONTRIBUTING.md) - Development workflow
-- [../../technical/deployment.md](../../technical/deployment.md) - Detailed deployment guide (if exists)
 
 ## References
 

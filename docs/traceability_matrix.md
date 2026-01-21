@@ -67,7 +67,7 @@ grep "Traceability" docs/governance/state.md
 | **Analytics Tracking** | TODO | [ADR-005](decisions/005-analytics-architecture.md) | `client/analytics/`, `server/routes.ts:analytics` | `POST /api/analytics/events` | `analytics_events` table | TODO: Integration tests | TODO | TODO | Status: Implemented. Missing: comprehensive tests, runbook, dashboard |
 | **Documentation System** | TODO | [ADR-004](decisions/004-docs-structure.md), [ADR-006](decisions/006-docs-automation.md) | `docs/`, `.github/workflows/docs-*.yml` | N/A | N/A | CI workflows | `docs/README.md` | [Documentation Metrics](DOCUMENTATION_METRICS.md) | Status: Active. Well documented. |
 | **API Specification** | TODO | TODO | `docs/apis/openapi/openapi.yaml` | All `/api/*` endpoints | Documented in OpenAPI | `.github/workflows/api-spectral.yml` | TODO | TODO | Status: OpenAPI spec exists. Missing: ADR, tests, runbook |
-| **Security Scanning** | TODO | [ADR-007](decisions/007-governance-ci-enforcement.md) | `.github/workflows/codeql.yml`, `trivy.yml`, `sbom.yml` | N/A | N/A | CI workflows test security | `docs/security/SECURITY.md` | [OSSF Scorecard](https://github.com/TrevorPowellLam/Mobile-Scaffold/security/scorecard) | Status: Active. CodeQL, Trivy, SBOM, OSSF Scorecard |
+| **Security Scanning** | TODO | [ADR-007](decisions/007-governance-ci-enforcement.md) | `.github/workflows/codeql.yml`, `trivy.yml`, `sbom.yml` | N/A | N/A | CI workflows test security | `docs/security/SECURITY.md` | [OSSF Scorecard](https://github.com/TrevorPLam/aios/security/scorecard) | Status: Active. CodeQL, Trivy, SBOM, OSSF Scorecard |
 
 ## Planned Features (Not Yet Implemented)
 
