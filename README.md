@@ -40,6 +40,7 @@ AIOS (AI Operating System) is not just another productivity app. It's a **privac
 - 📱 **Haptic feedback** for enhanced mobile experience
 - 💾 **Local-first storage** using AsyncStorage (privacy-first)
 - 🤖 **AI-powered recommendations** with cross-module intelligence
+- 🧭 **AI Preferences tools** for refreshing recommendations and reviewing history
 - 🎨 **Theme-driven overlays** for consistent light/dark translucency
 - 🔄 **Real-time updates** ready (WebSocket configured)
 - 📊 **100% test coverage** on production modules

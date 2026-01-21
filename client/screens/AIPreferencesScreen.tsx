@@ -47,8 +47,11 @@ import {
   Pressable,
   Switch,
   Platform,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
@@ -59,6 +62,13 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 import { db } from "@/storage/database";
 import { Settings, AIPersonality } from "@/models/types";
 import { contextEngine, ContextZone } from "@/lib/contextEngine";
+import { RecommendationEngine } from "@/lib/recommendationEngine";
+import { AppStackParamList } from "@/navigation/AppNavigator";
+import {
+  refreshRecommendationsWithFeedback,
+} from "@/utils/recommendationActions";
+
+type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
 type RecommendationSettingKey =
   | "recommendationsEnabled"
@@ -147,6 +157,7 @@ const CONTEXT_ZONES: {
 export default function AIPreferencesScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<NavigationProp>();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [aiName, setAiName] = useState("AIOS");
@@ -155,6 +166,7 @@ export default function AIPreferencesScreen() {
   const [currentContextZone, setCurrentContextZone] = useState<ContextZone>(
     ContextZone.AUTO,
   );
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const loadSettings = useCallback(async () => {
     const data = await db.settings.get();
@@ -223,6 +235,32 @@ export default function AIPreferencesScreen() {
       await db.settings.update({ aiCustomPrompt: customPrompt });
     }
   }, [settings, customPrompt]);
+
+  const handleRefreshRecommendations = useCallback(async () => {
+    if (isRefreshing || !settings) {
+      return;
+    }
+
+    setIsRefreshing(true);
+    const result = await refreshRecommendationsWithFeedback({
+      isEnabled: settings.recommendationsEnabled,
+      refresh: RecommendationEngine.refreshRecommendations,
+    });
+    setIsRefreshing(false);
+
+    if (result.status === "error") {
+      Alert.alert("Refresh Failed", result.message);
+      return;
+    }
+
+    const title =
+      result.status === "disabled" ? "Recommendations Paused" : "All Set";
+    Alert.alert(title, result.message);
+  }, [isRefreshing, settings]);
+
+  const handleOpenRecommendationHistory = useCallback(() => {
+    navigation.navigate("RecommendationHistory");
+  }, [navigation]);
 
   /**
    * Toggle a recommendation setting in persistent storage.
@@ -604,6 +642,65 @@ export default function AIPreferencesScreen() {
               }
             />
           </View>
+          <View
+            style={[
+              styles.settingRow,
+              styles.settingDivider,
+              { borderTopColor: theme.border },
+            ]}
+          >
+            <View style={styles.settingInfo}>
+              <Feather
+                name="book-open"
+                size={20}
+                color={recommendationsDisabled ? theme.textMuted : theme.accent}
+              />
+              <View>
+                <ThemedText type="body">Recommendation Tools</ThemedText>
+                <ThemedText type="small" muted>
+                  Refresh suggestions or review past decisions
+                </ThemedText>
+              </View>
+            </View>
+            <View style={styles.recommendationActions}>
+              <Pressable
+                onPress={handleRefreshRecommendations}
+                disabled={isRefreshing || recommendationsDisabled}
+                style={({ pressed }) => [
+                  styles.recommendationAction,
+                  {
+                    backgroundColor: theme.backgroundSecondary,
+                    opacity: recommendationsDisabled ? 0.6 : 1,
+                  },
+                  pressed && styles.pressed,
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel="Refresh recommendations"
+              >
+                <Feather
+                  name="refresh-cw"
+                  size={16}
+                  color={isRefreshing || recommendationsDisabled ? theme.textMuted : theme.accent}
+                />
+                <ThemedText type="small">
+                  {isRefreshing ? "Refreshing..." : "Refresh"}
+                </ThemedText>
+              </Pressable>
+              <Pressable
+                onPress={handleOpenRecommendationHistory}
+                style={({ pressed }) => [
+                  styles.recommendationAction,
+                  { backgroundColor: theme.backgroundSecondary },
+                  pressed && styles.pressed,
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel="View recommendation history"
+              >
+                <Feather name="clock" size={16} color={theme.accent} />
+                <ThemedText type="small">History</ThemedText>
+              </Pressable>
+            </View>
+          </View>
         </View>
 
         <ThemedText type="caption" muted style={styles.note}>
@@ -640,6 +737,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
+  },
+  recommendationActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  recommendationAction: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.sm,
   },
   nameActions: {
     flexDirection: "row",
