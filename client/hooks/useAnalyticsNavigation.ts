@@ -8,23 +8,12 @@ import { useCallback, useEffect, useRef } from "react";
 import { useNavigationContainerRef } from "@react-navigation/native";
 import analytics from "@/analytics";
 import { ModuleType } from "@/models/types";
-import { MODULE_REGISTRY } from "@/analytics/registry";
-
-// Map of route names to module IDs
-const ROUTE_TO_MODULE: Record<string, ModuleType> = {
-  CommandCenter: "command",
-  Notebook: "notebook",
-  Planner: "planner",
-  Calendar: "calendar",
-  Email: "email",
-  Messages: "messages",
-  Lists: "lists",
-  Alerts: "alerts",
-  Photos: "photos",
-  Contacts: "contacts",
-  Translator: "translator",
-  Budget: "budget",
-};
+import { memoryManager } from "@/lib/memoryManager";
+import { prefetchEngine } from "@/lib/prefetchEngine";
+import {
+  resolveModuleFromRoute,
+  runPerformanceHooks,
+} from "@/utils/navigationPerformance";
 
 /**
  * Hook to track navigation events
@@ -40,7 +29,7 @@ export function useAnalyticsNavigation() {
   const trackRouteChange = useCallback((routeName: string | null) => {
     if (!routeName || previousRouteRef.current === routeName) return;
 
-    const moduleId = ROUTE_TO_MODULE[routeName];
+    const moduleId = resolveModuleFromRoute(routeName);
     if (!moduleId) return;
 
     if (currentModuleRef.current && focusStartTimeRef.current) {
@@ -49,7 +38,7 @@ export function useAnalyticsNavigation() {
     }
 
     if (previousRouteRef.current && previousRouteRef.current !== routeName) {
-      const previousModuleId = ROUTE_TO_MODULE[previousRouteRef.current];
+      const previousModuleId = resolveModuleFromRoute(previousRouteRef.current);
       if (previousModuleId) {
         analytics.trackModuleSwitch(previousModuleId, moduleId);
       }
@@ -58,6 +47,14 @@ export function useAnalyticsNavigation() {
     analytics.trackModuleOpened(moduleId, "contextual");
     focusStartTimeRef.current = Date.now();
     analytics.trackModuleFocusStart(moduleId);
+
+    // Prefetch + memory hooks should never block navigation; run and move on.
+    void runPerformanceHooks({
+      moduleId,
+      onModuleEnter: (nextModule) => prefetchEngine.onModuleEnter(nextModule),
+      onModuleAccess: (nextModule) => memoryManager.registerModuleAccess(nextModule),
+      onModuleMount: (nextModule) => memoryManager.registerModuleMount(nextModule),
+    });
 
     previousRouteRef.current = routeName;
     currentModuleRef.current = moduleId;
