@@ -372,6 +372,7 @@ Create a new calendar event.
     "title": "string",
     "description": "string",
     "location": "string",
+    "meetingLink": "string | null (Zoom, Google Meet, or Teams link)",
     "startAt": "ISO 8601 timestamp",
     "endAt": "ISO 8601 timestamp",
     "allDay": boolean,
@@ -403,6 +404,18 @@ Delete an event.
 - **Method:** `DELETE`
 - **Auth Required:** Yes
 - **Success Response (204):** No content
+
+#### Meeting Link Validation
+
+Event payloads support an optional `meetingLink` field for video calls. To keep
+client and server behavior aligned, the API validates links against the same
+provider patterns used in the app UI.
+
+- **Supported Providers:** Zoom, Google Meet, Microsoft Teams
+- **Optional Field:** Empty/omitted values are accepted and normalized to `null`.
+- **Error Responses (400):**
+  - `"Meeting link must be a valid URL."` when the input is not URL-like.
+  - `"Only Zoom, Google Meet, and Teams links are supported."` when a URL is valid but unsupported.
 
 ---
 

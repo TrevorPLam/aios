@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added documentation best practices guide
 - Created implementation plan for world-class documentation standards
 - Documented theme token usage for overlay and semantic colors
+- Documented meeting link validation rules for calendar event API payloads
 
 ## [2.0.0] - 2026-01-16
 
