@@ -32,7 +32,7 @@
 - [x] Reference - API and props documentation
 - [x] Architecture - AI engine explanation
 - **Files:**
-  - `client/screens/CommandCenter.tsx`
+  - `client/screens/CommandCenterScreen.tsx`
   - `docs/modules/command-center/`
 - **Last Updated:** 2026-01-17
 
