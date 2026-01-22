@@ -179,6 +179,7 @@ class ContextEngine {
 
       // Recompute context so persisted focus mode is applied on startup.
       this.detectContext();
+    } catch (error) {
       console.warn("Failed to load focus mode setting:", error);
     }
   }
