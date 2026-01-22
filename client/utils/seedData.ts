@@ -328,6 +328,7 @@ export function generateSeedEvents(): CalendarEvent[] {
       title: "Team Standup",
       description: "Daily sync with the team",
       location: "Meeting Room A",
+      meetingLink: "https://meet.google.com/abc-defg-hij",
       startAt: today.toISOString(),
       endAt: new Date(today.getTime() + 30 * 60000).toISOString(),
       allDay: false,
@@ -344,6 +345,7 @@ export function generateSeedEvents(): CalendarEvent[] {
       title: "Project Review",
       description: "Review Q1 progress with stakeholders",
       location: "Conference Room",
+      meetingLink: "",
       startAt: new Date(today.getTime() + 3 * 60 * 60000).toISOString(),
       endAt: new Date(today.getTime() + 4 * 60 * 60000).toISOString(),
       allDay: false,
@@ -360,6 +362,7 @@ export function generateSeedEvents(): CalendarEvent[] {
       title: "Focus Time",
       description: "Deep work block - no meetings",
       location: "",
+      meetingLink: "",
       startAt: daysFromNow(1),
       endAt: new Date(
         new Date(daysFromNow(1)).getTime() + 2 * 60 * 60000,

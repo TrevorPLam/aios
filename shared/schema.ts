@@ -97,6 +97,7 @@ export const events = pgTable("events", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   location: text("location").notNull(),
+  meetingLink: text("meeting_link"),
   startAt: timestamp("start_at").notNull(),
   endAt: timestamp("end_at").notNull(),
   allDay: boolean("all_day").notNull().default(false),

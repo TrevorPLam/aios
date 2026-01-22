@@ -5,6 +5,7 @@
  * Features:
  * - Create new events or edit existing ones
  * - Set event title, description, and location
+ * - Add optional meeting links for video conferences
  * - Toggle all-day events
  * - Configure recurrence rules (none, daily, weekly, monthly)
  * - Date/time selection (placeholder for full date picker)
@@ -25,6 +26,7 @@ import {
   Platform,
   Alert,
   Switch,
+  Linking,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -40,6 +42,11 @@ import { AppStackParamList } from "@/navigation/AppNavigator";
 import { db } from "@/storage/database";
 import { CalendarEvent, RecurrenceRule } from "@/models/types";
 import { generateId } from "@/utils/helpers";
+import {
+  extractMeetingLinkFromText,
+  meetingLinkLabels,
+  parseMeetingLink,
+} from "@/utils/meetingLinks";
 
 type RouteProps = RouteProp<AppStackParamList, "EventDetail">;
 
@@ -64,6 +71,8 @@ export default function EventDetailScreen() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [meetingLink, setMeetingLink] = useState("");
+  const [meetingLinkError, setMeetingLinkError] = useState("");
   const [allDay, setAllDay] = useState(false);
   const [recurrence, setRecurrence] = useState<RecurrenceRule>("none");
   const [isNew, setIsNew] = useState(true);
@@ -80,6 +89,7 @@ export default function EventDetailScreen() {
           setTitle(event.title);
           setDescription(event.description);
           setLocation(event.location);
+          setMeetingLink(event.meetingLink ?? "");
           setAllDay(event.allDay);
           setRecurrence(event.recurrenceRule);
           setStartDate(new Date(event.startAt));
@@ -108,6 +118,19 @@ export default function EventDetailScreen() {
       return;
     }
 
+    const parsedMeetingLink = parseMeetingLink(meetingLink);
+    if (parsedMeetingLink.error) {
+      Alert.alert("Error", parsedMeetingLink.error);
+      return;
+    }
+
+    // Quick-add: if the user dropped a meeting link in description/location,
+    // we promote it to the dedicated field to keep data structured.
+    const fallbackMeetingLink =
+      parsedMeetingLink.value ??
+      extractMeetingLinkFromText(`${location} ${description}`).value ??
+      undefined;
+
     const endDate = new Date(startDate);
     endDate.setHours(endDate.getHours() + 1);
 
@@ -116,6 +139,7 @@ export default function EventDetailScreen() {
       title: title.trim(),
       description,
       location,
+      meetingLink: fallbackMeetingLink,
       startAt: startDate.toISOString(),
       endAt: endDate.toISOString(),
       allDay,
@@ -140,6 +164,7 @@ export default function EventDetailScreen() {
     title,
     description,
     location,
+    meetingLink,
     startDate,
     allDay,
     recurrence,
@@ -160,6 +185,32 @@ export default function EventDetailScreen() {
       },
     ]);
   }, [eventId, navigation]);
+
+  const handleMeetingLinkChange = useCallback((value: string) => {
+    setMeetingLink(value);
+    // We validate eagerly to give immediate feedback while typing.
+    const parsed = parseMeetingLink(value);
+    setMeetingLinkError(parsed.error ?? "");
+  }, []);
+
+  const handleJoinMeeting = useCallback(async () => {
+    const parsed = parseMeetingLink(meetingLink);
+    if (!parsed.value) {
+      Alert.alert("Error", parsed.error ?? "Meeting link is missing.");
+      return;
+    }
+
+    try {
+      const canOpen = await Linking.canOpenURL(parsed.value);
+      if (!canOpen) {
+        Alert.alert("Error", "Unable to open this meeting link.");
+        return;
+      }
+      await Linking.openURL(parsed.value);
+    } catch (error) {
+      Alert.alert("Error", "Failed to open the meeting link.");
+    }
+  }, [meetingLink]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -214,6 +265,36 @@ export default function EventDetailScreen() {
             style={[styles.fieldInput, { color: theme.text }]}
           />
         </View>
+
+        <View
+          style={[styles.field, { backgroundColor: theme.backgroundDefault }]}
+        >
+          <Feather name="video" size={20} color={theme.textMuted} />
+          <TextInput
+            value={meetingLink}
+            onChangeText={handleMeetingLinkChange}
+            placeholder={`Add meeting link (${meetingLinkLabels.join(", ")})`}
+            placeholderTextColor={theme.textMuted}
+            style={[styles.fieldInput, { color: theme.text }]}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="url"
+          />
+        </View>
+        {meetingLinkError ? (
+          <ThemedText type="small" style={{ color: theme.error }}>
+            {meetingLinkError}
+          </ThemedText>
+        ) : null}
+
+        {parseMeetingLink(meetingLink).value ? (
+          <Button
+            onPress={handleJoinMeeting}
+            style={styles.joinButton}
+          >
+            Join Meeting
+          </Button>
+        ) : null}
 
         <View
           style={[styles.field, { backgroundColor: theme.backgroundDefault }]}
@@ -319,6 +400,10 @@ const styles = StyleSheet.create({
   fieldInput: {
     flex: 1,
     fontSize: 16,
+  },
+  joinButton: {
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.md,
   },
   switchRow: {
     flexDirection: "row",

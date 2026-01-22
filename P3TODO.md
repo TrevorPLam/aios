@@ -67,22 +67,23 @@ Uncertainty:
 - **Type**: FEATURE
 - **Owner**: AGENT
 - **Platform**: iOS
-- **Status**: READY
+- **Status**: COMPLETE
 - **Context**:
   - Video conference links are standard in competitor calendars
   - Meetings often need Zoom/Meet/Teams launch links
   - Integration improves event usefulness
 - **Acceptance Criteria**:
-  - [ ] Add meeting link field to CalendarEvent model
-  - [ ] Support quick-add of video conferencing links
-  - [ ] Render "Join Meeting" action on event details
-  - [ ] Add tests for link validation and rendering
+  - [x] Add meeting link field to CalendarEvent model
+  - [x] Support quick-add of video conferencing links
+  - [x] Render "Join Meeting" action on event details
+  - [x] Add tests for link validation and rendering
 - **References**:
   - client/screens/CalendarScreen.tsx
   - shared/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
+- **Completion Date**: 2026-01-21
 
 ### T-070
 
