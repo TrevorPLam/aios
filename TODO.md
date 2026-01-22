@@ -2,6 +2,7 @@
 
 ## Completed
 - T-069: Added calendar meeting links with validation, quick-add extraction, and join action. (2026-01-21)
+- T-070: Added server-side validation for meeting links when events sync to the API. (2026-01-21)
 
 ## New
-- Follow up: add server-side validation for meeting links when events sync to the API.
+- Follow up: document meeting link validation behavior in API docs.

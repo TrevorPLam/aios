@@ -12,6 +12,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { DEFAULT_AI_CUSTOM_PROMPT } from "./constants";
+import { meetingLinkSchema } from "./meetingLinks";
 
 export const users = pgTable("users", {
   id: varchar("id")
@@ -255,12 +256,17 @@ export const insertProjectSchema = createInsertSchema(projects).omit({
 
 export const updateProjectSchema = insertProjectSchema.partial();
 
-export const insertEventSchema = createInsertSchema(events).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const insertEventSchema = createInsertSchema(events)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    // Centralized meeting link validation keeps API sync aligned with client UI.
+    meetingLink: meetingLinkSchema,
+  });
 
 export const updateEventSchema = insertEventSchema.partial();
 
