@@ -173,6 +173,7 @@ export interface Project {
  * @property {string} title - Event title/name
  * @property {string} description - Optional event description
  * @property {string} location - Optional event location
+ * @property {string} meetingLink - Optional video conference link
  * @property {string} startAt - ISO 8601 timestamp of event start
  * @property {string} endAt - ISO 8601 timestamp of event end
  * @property {boolean} allDay - Whether the event is an all-day event
@@ -191,6 +192,7 @@ export interface CalendarEvent {
   title: string;
   description: string;
   location: string;
+  meetingLink?: string;
   startAt: string;
   endAt: string;
   allDay: boolean;

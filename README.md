@@ -72,7 +72,7 @@ AIOS (AI Operating System) is not another productivity app. It is a **privacy-fi
 1. **Command Center** — AI recommendation engine with swipeable cards and confidence meters
 2. **Notebook** — Markdown editor with tag/link parsing, similarity detection, bulk operations
 3. **Planner** — Task and project management with hierarchies, priorities, filtering
-4. **Calendar** — Event scheduling with 4 view modes, conflict detection, statistics
+4. **Calendar** — Event scheduling with 4 view modes, conflict detection, meeting links, statistics
 5. **Email** — Professional thread management with advanced search, filters, bulk ops
 6. **Messages** — P2P messaging with group chat, media sharing, AI assistance
 7. **Lists** — Checklist management with 7 categories, templates, priorities

@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lazy-loaded Photos and Photo Editor screens with Suspense fallback messaging for faster startup
 - Lazy-loaded mini-mode components with Suspense fallback messaging to reduce initial bundle size
 - Attention Center header button with live badge count for quick access
+- Calendar event meeting links with validation, quick-add extraction, and join action (T-069)
 
 ### Changed
 
