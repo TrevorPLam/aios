@@ -172,7 +172,7 @@ This index provides direct links to all active documentation in the repository.
 ### For Developers
 
 1. Start: [README.md](../README.md)
-2. Setup: [README.md](../README.md#️-installation)
+2. Setup: [README.md](../README.md#installation)
 3. API: [docs/technical/API_DOCUMENTATION.md](technical/API_DOCUMENTATION.md)
 4. Testing: [docs/technical/TESTING_INSTRUCTIONS.md](technical/TESTING_INSTRUCTIONS.md)
 5. Contributing: [CONTRIBUTING.md](../CONTRIBUTING.md)

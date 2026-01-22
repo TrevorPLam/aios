@@ -90,6 +90,12 @@ React Native (Expo SDK 54) mobile app with event-driven architecture, lazy modul
 
 ## Key Components
 
+This section describes the core technical components that make AIOS work.
+
+---
+
+## Event Bus
+
 ### 1. Event Bus (`client/lib/eventBus.ts`)
 
 **Purpose:** Enables modules to communicate without tight coupling.
@@ -141,6 +147,8 @@ const unsubscribe = eventBus.on(
 - Event payload must match expected structure
 
 ---
+
+## Context Engine
 
 ### 2. Context Engine (`client/lib/contextEngine.ts`)
 
@@ -203,6 +211,8 @@ contextEngine.setUserOverride(ContextZone.FOCUS);
 - Machine learning to improve predictions
 
 ---
+
+## Omnisearch
 
 ### 3. Omnisearch (`client/lib/omnisearch.ts`)
 
@@ -305,6 +315,8 @@ const results = await omnisearch.search('doctor', {
 - Add AI-powered semantic search
 
 ---
+
+## Module Registry
 
 ### 4. Module Registry (`client/lib/moduleRegistry.ts`)
 

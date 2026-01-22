@@ -34,6 +34,8 @@ exclude = [
   ".*NNNN-.*\\.md",
   ".*XXXX-.*\\.md",
   ".*\\[.*\\]",
+  ".*#feature-name",
+  ".*#.*-name$",
 ]
 
 # Exclude specific URL patterns
@@ -47,6 +49,8 @@ exclude_path = [
   "coverage",
   "docs/archive",
   "attached_assets",
+  "docs/.templates",
+  "docs/product/prd_template.md",
 ]
 
 # Cache settings

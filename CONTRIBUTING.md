@@ -330,7 +330,7 @@ Closes #123
 - Keep the PR focused and small
 - Be responsive to feedback
 
-## Testing (2)
+## Testing
 
 ### Running Tests
 

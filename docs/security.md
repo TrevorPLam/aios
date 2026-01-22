@@ -15,7 +15,7 @@ This document outlines the security architecture, threat model, and mitigation s
 1. [Security Principles](#security-principles)
 2. [Threat Model](#threat-model)
 3. [Data Security](#data-security)
-4. [Authentication & Authorization](#authentication--authorization)
+4. [Authentication & Authorization](#authentication-authorization)
 5. [Input Validation](#input-validation)
 6. [Output Encoding](#output-encoding)
 7. [Event Bus Security](#event-bus-security)

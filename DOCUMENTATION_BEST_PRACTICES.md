@@ -9,14 +9,14 @@
 ## Table of Contents
 
 1. [Industry Best Practices](#industry-best-practices)
-2. [Documentation Types & Purposes](#documentation-types--purposes)
+2. [Documentation Types & Purposes](#documentation-types-purposes)
 3. [Writing Quality Standards](#writing-quality-standards)
-4. [Structure & Organization](#structure--organization)
+4. [Structure & Organization](#structure-organization)
 5. [Link Management](#link-management)
-6. [Maintenance & Lifecycle](#maintenance--lifecycle)
-7. [Tooling & Automation](#tooling--automation)
-8. [Accessibility & Inclusivity](#accessibility--inclusivity)
-9. [Novel & Innovative Practices](#novel--innovative-practices)
+6. [Maintenance & Lifecycle](#maintenance-lifecycle)
+7. [Tooling & Automation](#tooling-automation)
+8. [Accessibility & Inclusivity](#accessibility-inclusivity)
+9. [Novel & Innovative Practices](#novel-innovative-practices)
 10. [Implementation Checklist](#implementation-checklist)
 
 ---
