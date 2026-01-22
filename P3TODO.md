@@ -255,10 +255,11 @@ Uncertainty:
   - Predictive data loading not active
   - Slower screen transitions
 - **Acceptance Criteria**:
+  - [x] Phase 0: Add battery + memory guardrails in prefetch engine before prefetching
   - [ ] Wire prefetch engine to navigation events
   - [ ] Add prefetch configuration to Settings
   - [ ] Monitor and optimize prefetch patterns
-  - [ ] Address TODOs at prefetchEngine.ts:485, 493
+  - [x] Address TODOs at prefetchEngine.ts:485, 493
 - **References**: client/lib/prefetchEngine.ts
 - **Dependencies**: None
 - **Effort**: M
@@ -1038,4 +1039,3 @@ Uncertainty:
 - **Note**: Platform-agnostic permission error handling. AGENT can verify Android/Web permission flows in follow-up.
 
 ---
-

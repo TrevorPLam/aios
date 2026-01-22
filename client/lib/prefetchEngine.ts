@@ -34,6 +34,8 @@ import { ModuleType } from "@/models/types";
 import { lazyLoader } from "./lazyLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logger } from "@/utils/logger";
+import { Platform } from "react-native";
+import { memoryManager } from "./memoryManager";
 
 /**
  * Module Transition
@@ -90,6 +92,8 @@ const STORAGE_KEYS = {
   MODULE_ENTER_TIME: "@prefetch:enterTime",
 };
 
+const LOW_BATTERY_THRESHOLD = 0.2;
+
 /**
  * Predictive Prefetch Engine
  *
@@ -103,6 +107,7 @@ class PrefetchEngine {
   private strategy: PrefetchStrategy;
   private prefetchTimeout: NodeJS.Timeout | null;
   private initialized: boolean;
+  private batteryLevel: number | null;
 
   constructor() {
     this.transitions = [];
@@ -111,6 +116,7 @@ class PrefetchEngine {
     this.moduleEnterTime = null;
     this.prefetchTimeout = null;
     this.initialized = false;
+    this.batteryLevel = null;
 
     // Default strategy (iOS-optimized)
     this.strategy = {
@@ -203,11 +209,18 @@ class PrefetchEngine {
     this.moduleEnterTime = now;
 
     // Save current module
-    await AsyncStorage.setItem(STORAGE_KEYS.LAST_MODULE, moduleId);
-    await AsyncStorage.setItem(
-      STORAGE_KEYS.MODULE_ENTER_TIME,
-      now.toISOString(),
-    );
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.LAST_MODULE, moduleId);
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.MODULE_ENTER_TIME,
+        now.toISOString(),
+      );
+    } catch (error) {
+      // WHY: Prefetch is best-effort; failing to persist should not crash navigation.
+      logger.error("PrefetchEngine", "Failed to persist module entry", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
 
     // Trigger prefetch predictions (with delay)
     this.schedulePrefetch(moduleId);
@@ -497,23 +510,39 @@ class PrefetchEngine {
    * @returns True if should prefetch
    */
   private shouldPrefetch(): boolean {
-    // TODO: Add battery level check on iOS
-    // if (this.strategy.respectBattery) {
-    //   const batteryLevel = getBatteryLevel();
-    //   if (batteryLevel < 0.2) {
-    //     return false;
-    //   }
-    // }
+    if (this.strategy.respectBattery && Platform.OS === "ios") {
+      // WHY: Avoid background prefetching when battery is low on iOS to protect UX.
+      if (this.batteryLevel !== null && this.batteryLevel <= LOW_BATTERY_THRESHOLD) {
+        return false;
+      }
+    }
 
-    // TODO: Add memory pressure check
-    // if (this.strategy.respectMemory) {
-    //   const memoryUsage = getMemoryUsage();
-    //   if (memoryUsage > 0.8) {
-    //     return false;
-    //   }
-    // }
+    if (this.strategy.respectMemory) {
+      const memoryInfo = memoryManager.getCurrentMemoryUsage();
+      // WHY: Skip prefetch if memory pressure is already high to prevent jank.
+      if (memoryInfo.pressure === "high" || memoryInfo.pressure === "critical") {
+        return false;
+      }
+    }
 
     return true;
+  }
+
+  /**
+   * Update Battery Level
+   *
+   * Plain English: "Let the app report the current battery level."
+   *
+   * @param level - Battery level from 0 to 1, or null when unavailable
+   */
+  updateBatteryLevel(level: number | null): void {
+    if (level === null || Number.isNaN(level)) {
+      // WHY: Treat missing battery data as unknown rather than blocking prefetch.
+      this.batteryLevel = null;
+      return;
+    }
+
+    this.batteryLevel = Math.max(0, Math.min(1, level));
   }
 
   /**
@@ -589,6 +618,15 @@ class PrefetchEngine {
     this.patterns.clear();
     this.currentModule = null;
     this.moduleEnterTime = null;
+    // WHY: Clear pending timers to avoid background work after reset.
+    if (this.prefetchTimeout) {
+      clearTimeout(this.prefetchTimeout);
+      this.prefetchTimeout = null;
+    }
+    if (this.saveTimeout) {
+      clearTimeout(this.saveTimeout);
+      this.saveTimeout = null;
+    }
 
     await AsyncStorage.multiRemove([
       STORAGE_KEYS.TRANSITIONS,
