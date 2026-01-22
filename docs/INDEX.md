@@ -32,6 +32,7 @@ This index provides direct links to all active documentation in the repository.
 - [TESTING_INSTRUCTIONS.md](technical/TESTING_INSTRUCTIONS.md) - Testing guide
 - [IMPLEMENTATION_ROADMAP.md](technical/IMPLEMENTATION_ROADMAP.md) - Development roadmap
 - [MOBILE_CONFIGURATION_EXPLANATION.md](technical/MOBILE_CONFIGURATION_EXPLANATION.md) - Mobile config details
+- [lib-usage.md](technical/lib-usage.md) - Client lib usage examples
 
 ### Design & Architecture
 

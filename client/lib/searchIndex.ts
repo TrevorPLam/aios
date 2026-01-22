@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Initialize once with searchIndex.initialize() and then call searchIndex.search(query).
+ * - Update the index via addItem/updateItem/removeItem when data changes.
+ *
+ * UI integration example:
+ * - OmnisearchScreen can call searchIndex.search before falling back to DB queries.
+ *
+ * Public API:
+ * - searchIndex.
+ *
+ * Expected usage pattern:
+ * - Keep index updates in data layers (event listeners), not directly in UI.
+ *
+ * WHY: Provides fast lookups without forcing every search to hit storage.
+ */
+/**
  * Search Index System
  *
  * Purpose (Plain English):

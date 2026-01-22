@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Use attentionManager.getItems()/getBundles()/getCounts() to drive UI state.
+ * - Subscribe with attentionManager.subscribe(...) and clean up on unmount.
+ *
+ * UI integration example:
+ * - AttentionCenterScreen renders items/bundles and listens for updates via attentionManager.
+ *
+ * Public API:
+ * - AttentionPriority, AttentionStatus, AttentionItem, AttentionBundle, FocusMode, attentionManager.
+ *
+ * Expected usage pattern:
+ * - Treat the singleton as the source of truth and avoid duplicating state elsewhere.
+ *
+ * WHY: One canonical store prevents mismatched counts and keeps notification UX consistent.
+ */
+/**
  * Attention Management System
  *
  * Purpose (Plain English):

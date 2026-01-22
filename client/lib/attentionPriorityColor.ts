@@ -1,3 +1,18 @@
+/**
+ * How to Use:
+ * - Call getAttentionPriorityColor(priority, theme) to style badges and chips.
+ *
+ * UI integration example:
+ * - AttentionCenterScreen uses getAttentionPriorityColor to tint priority pills.
+ *
+ * Public API:
+ * - getAttentionPriorityColor.
+ *
+ * Expected usage pattern:
+ * - Pass theme tokens when available, rely on fallback colors otherwise.
+ *
+ * WHY: Ensures priority colors stay consistent across light/dark themes.
+ */
 import { Colors } from "@/constants/theme";
 import type { AttentionPriority } from "@/lib/attentionManager";
 

@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Call moduleRegistry.getModules() to list modules for grids/sidebars.
+ * - Use moduleRegistry.getModule(moduleId) for metadata lookups.
+ *
+ * UI integration example:
+ * - ModuleGridScreen renders cards from moduleRegistry.getModules().
+ *
+ * Public API:
+ * - ModuleTier, ModuleCategory, ModuleDefinition, ModuleUsage, moduleRegistry.
+ *
+ * Expected usage pattern:
+ * - Treat moduleRegistry as the single source of truth for module metadata.
+ *
+ * WHY: Keeps navigation, search, and UI metadata aligned across the app.
+ */
+/**
  * Module Registry
  *
  * Purpose (Plain English):

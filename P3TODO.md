@@ -596,20 +596,21 @@ Uncertainty:
 - **Type**: DOCS
 - **Owner**: AGENT
 - **Platform**: Platform-Agnostic
-- **Status**: READY
+- **Status**: COMPLETE
 - **Context**:
   - Each lib file needs usage examples
   - Developers don't know how to use lib modules
   - Poor integration documentation
 - **Acceptance Criteria**:
-  - [ ] Add "How to Use" section to each lib file header
-  - [ ] Show integration examples with UI components
-  - [ ] Document public APIs and expected usage patterns
-  - [ ] Add examples to documentation site
+  - [x] Add "How to Use" section to each lib file header
+  - [x] Show integration examples with UI components
+  - [x] Document public APIs and expected usage patterns
+  - [x] Add examples to documentation site
 - **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic library documentation. AGENT can verify Android/Web integration examples in follow-up.
+- **Completion Notes**: Added How to Use headers with UI examples + API summaries across lib modules and published docs/technical/lib-usage.md with copy-ready snippets.
 
 ### T-037
 

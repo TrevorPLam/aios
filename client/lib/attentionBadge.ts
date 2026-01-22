@@ -1,3 +1,19 @@
+/**
+ * How to Use:
+ * - Call getAttentionBadgeCount(attentionManager.getCounts()) to total items.
+ * - Pass the count to formatAttentionBadgeLabel for a badge-ready string.
+ *
+ * UI integration example:
+ * - HeaderNav renders the attention badge using getAttentionBadgeCount + formatAttentionBadgeLabel.
+ *
+ * Public API:
+ * - MAX_ATTENTION_BADGE_COUNT, getAttentionBadgeCount, formatAttentionBadgeLabel.
+ *
+ * Expected usage pattern:
+ * - Compute counts once per render and memoize if needed.
+ *
+ * WHY: Centralizes badge math so every header stays consistent and resilient to bad data.
+ */
 import { logger } from "@/utils/logger";
 import { AttentionPriority } from "./attentionManager";
 

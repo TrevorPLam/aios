@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Call RecommendationEngine.refreshRecommendations() to rebuild suggestions.
+ * - Access RecommendationEngine.generateRecommendations() for custom flows.
+ *
+ * UI integration example:
+ * - CommandCenterScreen refreshes cards via RecommendationEngine.refreshRecommendations().
+ *
+ * Public API:
+ * - RecommendationEngine.
+ *
+ * Expected usage pattern:
+ * - Run refresh sparingly (e.g., user-triggered) to avoid heavy work on launch.
+ *
+ * WHY: Centralizes recommendation generation so results stay consistent across screens.
+ */
+/**
  * Recommendation Engine Module
  *
  * Generates AI-powered recommendations by analyzing user data across modules.

@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Register module mounts/access via memoryManager.registerModuleMount/access.
+ * - Read memoryManager.getStatistics() for diagnostics.
+ *
+ * UI integration example:
+ * - useAnalyticsNavigation (used in App.tsx) registers module access with memoryManager.
+ *
+ * Public API:
+ * - MemoryUsageInfo, memoryManager.
+ *
+ * Expected usage pattern:
+ * - Call register hooks from navigation/analytics layers, not individual screens.
+ *
+ * WHY: Keeps memory pressure handling consistent and avoids per-screen duplication.
+ */
+/**
  * Memory Manager
  *
  * Purpose (Plain English):

@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Call lazyLoader.getLazyComponent(moduleId) to wire screens into navigation.
+ * - Optionally prefetch with lazyLoader.preloadModules(modules, strategy).
+ *
+ * UI integration example:
+ * - AppNavigator lazy-loads Photos via lazyLoader.getLazyComponent("photos").
+ *
+ * Public API:
+ * - LoadingStrategy, lazyLoader.
+ *
+ * Expected usage pattern:
+ * - Use getLazyComponent in navigation setup and prefetch from analytics hooks.
+ *
+ * WHY: Centralizes module code-splitting to keep startup fast and predictable.
+ */
+/**
  * Lazy Loading System
  *
  * Purpose (Plain English):
