@@ -21,13 +21,13 @@ This is the central hub for all documentation in the AIOS (AI Operating System) 
 | Goal | Start Here |
 | ------ | ----------- |
 | Understand what AIOS is | [Project README](../README.md) |
-| Set up the development environment | [Getting Started Tutorial](./diataxis/tutorials/getting-started.md) *(TODO)* |
+| Set up the development environment | [Getting Started Tutorial](./diataxis/tutorials/getting-started.md) |
 | Contribute code or docs | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Understand governance & constitution | [Governance Constitution](./governance/constitution.md) ⭐ **NEW** |
 | Review governance implementation | [Governance Implementation Report](./governance_implementation_report.md) ⭐ **NEW** |
 | Find a specific API | [API Reference](./apis/README.md) |
 | Understand architecture decisions | [ADR Index](./decisions/README.md) |
-| Learn about a module | [Module Documentation](./modules/README.md) *(TODO)* |
+| Learn about a module | [Module Documentation](./modules/README.md) |
 | Fix a production issue | [Operations Runbooks](./operations/runbooks/README.md) |
 | Report a security issue | [SECURITY.md](../SECURITY.md) |
 | See what's coming next | [Roadmap](./roadmaps/roadmap.md) |
@@ -38,7 +38,7 @@ Our documentation is organized following the **Diátaxis framework** for clarity
 
 ### 1. **Learning-Oriented (Tutorials)**
 
-*Location: `docs/diataxis/tutorials/` (TODO)*
+*Location: `docs/diataxis/tutorials/`*
 
 Step-by-step lessons for newcomers. Start here if you're new.
 
@@ -73,7 +73,7 @@ Conceptual clarity on how things work and why.
 Dry, accurate facts. Look things up here.
 
 - [API Documentation](./apis/README.md)
-- [Module Reference](./modules/README.md) *(TODO)*
+- [Module Reference](./modules/README.md)
 - [Glossary](./glossary.md)
 
 ## 🗺️ Complete Navigation Map
