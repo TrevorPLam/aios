@@ -64,7 +64,7 @@ npm run server:dev
   ```bash
   npm run expo:clean
   ```
-- **Error case:** If you see the Worklets version mismatch error, rebuild native iOS:
+- **Error case:** If you see the Worklets version mismatch error, rebuild native dependencies:
   ```bash
   npm run expo:clean:native && npm run expo:rebuild:ios
   ```
