@@ -50,11 +50,15 @@ import { BottomNav } from "@/components/BottomNav";
 import AIAssistSheet from "@/components/AIAssistSheet";
 import { HeaderLeftNav, HeaderRightNav } from "@/components/HeaderNav";
 import { useSecondaryNavScroll } from "@/utils/secondaryNavigation";
-import { logPlaceholderAction } from "@/utils/analyticsLogger";
+import { logButtonPress, logPlaceholderAction } from "@/utils/analyticsLogger";
+import {
+  resolveListsSecondaryNavAction,
+  ListsFilterType,
+} from "@/utils/listSecondaryNav";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 
-type FilterType = "all" | "active" | "archived" | "templates";
+type FilterType = ListsFilterType;
 type SortOption =
   | "recent"
   | "alphabetical"
@@ -772,8 +776,17 @@ export default function ListsScreen() {
                 if (Platform.OS !== "web") {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 }
-                logPlaceholderAction('ListsScreen', 'Templates');
-                // TODO: Implement functionality in follow-up task T-XXX
+                const nextState = resolveListsSecondaryNavAction({
+                  action: "templates",
+                  filter,
+                  showStatsExpanded,
+                });
+                // WHY: Centralize secondary-nav state changes for deterministic behavior and tests.
+                setFilter(nextState.filter);
+                setShowStatsExpanded(nextState.showStatsExpanded);
+                logButtonPress("ListsScreen", "Templates", {
+                  filter: nextState.filter,
+                });
               } catch (error) {
                 if (__DEV__) {
                   console.error('Error in Templates button:', error);
@@ -798,8 +811,17 @@ export default function ListsScreen() {
                 if (Platform.OS !== "web") {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 }
-                logPlaceholderAction('ListsScreen', 'Statistics');
-                // TODO: Implement functionality in follow-up task T-XXX
+                const nextState = resolveListsSecondaryNavAction({
+                  action: "statistics",
+                  filter,
+                  showStatsExpanded,
+                });
+                // WHY: Keep the active filter while toggling statistics visibility.
+                setFilter(nextState.filter);
+                setShowStatsExpanded(nextState.showStatsExpanded);
+                logButtonPress("ListsScreen", "Statistics", {
+                  showStatsExpanded: nextState.showStatsExpanded,
+                });
               } catch (error) {
                 if (__DEV__) {
                   console.error('Error in Statistics button:', error);
