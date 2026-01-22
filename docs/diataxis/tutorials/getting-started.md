@@ -72,7 +72,7 @@ npm run server:dev
 ## Assumptions
 
 - You are running commands from the repository root.
-- You have access to either an iOS Simulator or a physical iOS device.
+- You have access to either an iOS Simulator, Android emulator, or physical device.
 - Network access is available for npm package installation.
 
 ## Failure Modes
