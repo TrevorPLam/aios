@@ -103,7 +103,7 @@ We pull new suggestions to keep the queue fresh.
 
 ### Action
 
-Use the refresh controls (e.g., swipe down or refresh button) to request new cards.
+Tap the Refresh button in Command Center to request new recommendation cards.
 
 ### What you should see
 
