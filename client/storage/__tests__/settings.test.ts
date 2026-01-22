@@ -107,4 +107,17 @@ describe("Settings - New Fields", () => {
       expect(settings.recommendationShowReasoning).toBe(false);
     });
   });
+
+  describe("focusModeEnabled", () => {
+    it("should default to focus mode disabled", async () => {
+      const settings = await db.settings.get();
+      expect(settings.focusModeEnabled).toBe(false);
+    });
+
+    it("should update focus mode setting", async () => {
+      await db.settings.update({ focusModeEnabled: true });
+      const settings = await db.settings.get();
+      expect(settings.focusModeEnabled).toBe(true);
+    });
+  });
 });

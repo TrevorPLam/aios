@@ -49,6 +49,7 @@ import { ModuleType } from "@/models/types";
 import { eventBus, EVENT_TYPES } from "./eventBus";
 import { contextEngine } from "./contextEngine";
 import { saveToStorage, loadFromStorage } from "./storage";
+import { db } from "@/storage/database";
 import { logger } from "@/utils/logger";
 
 /**
@@ -371,6 +372,15 @@ class AttentionManager {
     if (mode.enabled) {
       this.refilterItems();
     }
+
+    // WHY: Keep settings in sync so context rules can restore focus mode on startup.
+    void db.settings
+      .update({ focusModeEnabled: this.focusMode.enabled })
+      .catch((error) => {
+        logger.error("AttentionManager", "Failed to sync focus mode setting", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      });
 
     // Save to storage (async, but don't wait)
     this.savePreferences().catch((error) => {
@@ -743,6 +753,8 @@ class AttentionManager {
       );
       if (focusMode) {
         this.focusMode = focusMode;
+        // WHY: Align stored focus mode with settings so other systems can read it.
+        await db.settings.update({ focusModeEnabled: focusMode.enabled });
       }
 
       // Load items and bundles
