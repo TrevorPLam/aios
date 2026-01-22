@@ -1,7 +1,7 @@
 # AIOS Documentation Navigation Guide
 
-**Last Updated:** January 16, 2026 (Post-Consolidation)
-**Version:** 3.0 - Reorganized Structure
+**Last Updated:** January 21, 2026 (Post-Archival Cleanup)
+**Version:** 3.1 - Archival Cleanup
 
 This guide helps you find the right documentation in our newly organized structure.
 
@@ -56,14 +56,13 @@ This guide helps you find the right documentation in our newly organized structu
 - Root directory: 72 files (chaos!)
 - Organized: 3 files in /docs
 
-### After Consolidation (January 16, 2026)
+### After Archival Cleanup (January 21, 2026)
 
-- Total active files: ~25 files
-- Root directory: 10 files (clean!)
-- Organized: 15+ files properly structured in /docs
-- Archived: 45+ historical files in /docs/archive
-- **Reduction: 68% fewer active docs**
-- **Root cleanup: 86% reduction**
+- Total active files (core index): 51 files
+- Root directory: 20 files (core entry points + governance + planning)
+- Organized: 30+ files properly structured in /docs
+- Archived: 90+ historical files in /docs/archive
+- **Reduction: root clutter preserved in archives**
 
 ---
 
@@ -117,6 +116,9 @@ docs/
 │   ├── TESTING_INSTRUCTIONS.md
 │   ├── MOBILE_CONFIGURATION_EXPLANATION.md
 │   ├── IMPLEMENTATION_ROADMAP.md
+│   ├── URGENT_WORKLETS_FIX.md
+│   ├── WORKLETS_FIX_GUIDE.md
+│   ├── WORKLETS_PREVENTION.md
 │   ├── design_guidelines.md
 │   ├── replit-deployment.md
 │   ├── CONTEXTUAL_NAVIGATION.md
@@ -127,7 +129,8 @@ docs/
 │   ├── COMPETITIVE_ANALYSIS.md
 │   └── CODE_QUALITY_ANALYSIS.md
 ├── planning/               # Roadmaps and planning
-│   └── MISSING_FEATURES.md
+│   ├── MISSING_FEATURES.md
+│   └── PERFECT.md
 ├── analytics/              # Analytics and telemetry
 │   ├── WORLD_CLASS_ANALYTICS_ROADMAP.md
 │   ├── WORLD_CLASS_FEATURES_SUMMARY.md
@@ -136,9 +139,10 @@ docs/
     ├── 2026-01-pre-consolidation/
     ├── completion-summaries/  (10 files)
     ├── enhancements/          (11 files)
-    ├── analysis/              (12 files)
+    ├── analysis/              (37 files)
     ├── security/              (9 files)
-    └── project-management/    (5 files)
+    ├── project-management/    (12 files)
+    └── sessions/              (1 file)
 ```text
 
 ---
@@ -302,11 +306,11 @@ docs/
 
 ---
 
-**Last Updated:** January 16, 2026
-**Consolidation Version:** 3.0
-**Root Files:** 10 (down from 72)
-**Active Docs:** ~25 (down from 79)
-**Archived Docs:** 45+
+**Last Updated:** January 21, 2026
+**Consolidation Version:** 3.1
+**Root Files:** 20
+**Active Docs (core index):** 51
+**Archived Docs:** 90+
 
 ---
 

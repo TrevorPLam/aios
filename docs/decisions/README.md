@@ -4,6 +4,7 @@ This directory captures architectural decisions for AIOS.
 
 ## Index
 
+- [ARCHITECTURE_DECISIONS.md](ARCHITECTURE_DECISIONS.md) - ADR rollup and decision summary
 - [ADR-001: Use AsyncStorage for local persistence](001-use-asyncstorage.md)
 - [ADR-002: Use React Native for mobile client](002-react-native.md)
 - [ADR-003: Use JWT for authentication](003-jwt-auth.md)
