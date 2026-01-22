@@ -176,7 +176,9 @@ class ContextEngine {
     try {
       const settings = await db.settings.get();
       this.focusModeEnabled = settings.focusModeEnabled ?? false;
-    } catch (error) {
+
+      // Recompute context so persisted focus mode is applied on startup.
+      this.detectContext();
       console.warn("Failed to load focus mode setting:", error);
     }
   }
