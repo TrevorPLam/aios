@@ -11,7 +11,11 @@ AIOS is an iOS-first super app with Android/Web compatibility. Built with React 
 - [What is AIOS?](#what-is-aios)
 - [Product Scope](#product-scope)
 - [Current Capabilities (v1.0)](#current-capabilities-v10)
+- [Design Principles](#design-principles)
+- [Module Maturity Matrix](#module-maturity-matrix)
+- [Platform Support](#platform-support)
 - [Deep Analysis (New README Scope)](#deep-analysis-new-readme-scope)
+- [Security & Privacy](#security--privacy)
 - [Quick Start](#quick-start)
 - [Running the Application](#running-the-application)
 - [Troubleshooting](#troubleshooting)
@@ -94,6 +98,43 @@ AIOS (AI Operating System) is not another productivity app. It is a **privacy-fi
 - ⌨️ **Web keyboard shortcut** — Use Cmd/Ctrl+K to open Omnisearch on web
 - ⏱️ **Lazy-loaded heavy screens** (Photos, Photo Editor) for faster startup
 
+## Design Principles
+
+AIOS aligns product and engineering decisions against a small set of non-negotiable principles:
+
+- **Local-first by default** — your data should live with you before it lives elsewhere.
+- **Integrated workflows** — a task, note, or message should be linkable and actionable everywhere.
+- **Signal over noise** — recommendations must be transparent and measurable.
+- **Delightful ergonomics** — haptics, motion, and dark-first visuals keep focus high.
+- **Progressive complexity** — start with core modules, grow into the super app over time.
+
+## Module Maturity Matrix
+
+Snapshot of depth across the 14 production-ready modules (UI, data model, and operations):
+
+| Module | Data Model | CRUD | Search/Filters | Analytics/Stats | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Command Center | ✅ | ✅ | ✅ | ✅ | Confidence meters + evidence |
+| Notebook | ✅ | ✅ | ✅ | ✅ | Similarity detection + tags |
+| Planner | ✅ | ✅ | ✅ | ✅ | Hierarchies + priorities |
+| Calendar | ✅ | ✅ | ✅ | ✅ | 4 views + conflicts |
+| Email | ✅ | ✅ | ✅ | ✅ | Bulk ops + labels |
+| Messages | ✅ | ✅ | ✅ | ✅ | AI assist scaffolds |
+| Lists | ✅ | ✅ | ✅ | ✅ | Templates + priorities |
+| Alerts | ✅ | ✅ | ✅ | ✅ | Recurrence tracking |
+| Contacts | ✅ | ✅ | ✅ | ⚠️ | Native sync dependent |
+| Translator | ✅ | ✅ | ✅ | ⚠️ | External API dependent |
+| Photos | ✅ | ✅ | ✅ | ✅ | Backup tracking |
+| History | ✅ | ✅ | ✅ | ✅ | Export + analytics |
+| Budget | ✅ | ✅ | ✅ | ✅ | Templates + stats |
+| Integrations | ✅ | ✅ | ✅ | ✅ | Health monitoring |
+
+## Platform Support
+
+- **iOS:** Primary target, polished UX and haptics.
+- **Android:** Compatibility via adaptation layer; parity improving.
+- **Web:** Available for key flows, secondary focus with selective UI differences.
+
 ## Deep Analysis (New README Scope)
 
 This section captures the current product + technical reality so teams can reason about capability depth, architectural constraints, and near‑term risks.
@@ -152,6 +193,14 @@ flowchart LR
 - Wire PostgreSQL storage to unlock persistence + sync.
 - Implement AI recommendation generation and assistant actions.
 - Expand WebSocket usage for messaging and live updates.
+
+## Security & Privacy
+
+- **Local-first storage:** AsyncStorage is the default persistence layer.
+- **API security:** JWT authentication with Zod-based request validation.
+- **Data isolation:** User-specific data access enforced server-side.
+- **Privacy posture:** No third-party analytics or ad SDKs embedded by default.
+- **Known gap:** Durable persistence and multi-device sync require PostgreSQL wiring.
 
 ## Quick Start
 
