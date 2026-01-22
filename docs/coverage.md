@@ -6,12 +6,12 @@
 - Every module should have tutorial, how-to guides, reference docs, and architecture explanation
 - Red = missing, yellow = partial, green = complete
 - Use this to identify documentation gaps and prioritize doc work
-- Updated automatically by CI (TODO) or manually each release
+- Updated manually each release; CI automation is planned
 - Documentation is as important as code - this makes it measurable
 
 ## Coverage Status
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-01-21
 **Overall Coverage:** 43% (6/14 production modules with complete docs)
 
 ### Legend
@@ -32,9 +32,9 @@
 - [x] Reference - API and props documentation
 - [x] Architecture - AI engine explanation
 - **Files:**
-  - `client/screens/CommandCenter.tsx`
-  - `docs/modules/command-center/` (TODO: Create)
-- **Last Updated:** 2026-01-17
+  - `client/screens/CommandCenterScreen.tsx`
+  - `docs/modules/command-center/`
+- **Last Updated:** 2026-01-21
 
 ---
 
