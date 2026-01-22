@@ -348,7 +348,7 @@ All documentation changes must pass:
 ### Linking
 
 - Use relative links: `[ADR](./adr/README.md)` not absolute URLs
-- Link to specific sections: `[Setup](#setup)`
+- Link to specific sections (example: link to Setup section)
 - Test all links in CI
 
 ### Code Examples
