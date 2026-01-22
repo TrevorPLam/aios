@@ -1,4 +1,21 @@
 /**
+ * How to Use:
+ * - Call omnisearch.search(query, options) to retrieve grouped results.
+ * - Use omnisearch.saveRecentSearch(...) to persist recent queries.
+ *
+ * UI integration example:
+ * - OmnisearchScreen submits queries and renders results from omnisearch.search.
+ *
+ * Public API:
+ * - SearchResultItem, GroupedSearchResults, SearchResultGroup, SearchOptions,
+ *   RecentSearch, omnisearch.
+ *
+ * Expected usage pattern:
+ * - Debounce user input and guard against empty queries before calling search.
+ *
+ * WHY: Consolidates cross-module search logic so every entry point stays consistent.
+ */
+/**
  * Omnisearch Engine
  *
  * Purpose (Plain English):

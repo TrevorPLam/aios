@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Use useModuleHandoff() to start/return/cancel handoffs from UI.
+ * - Subscribe to moduleHandoffManager when you need lifecycle events.
+ *
+ * UI integration example:
+ * - HandoffBreadcrumb uses useModuleHandoff to render breadcrumbs and return flows.
+ *
+ * Public API:
+ * - HandoffModule, HandoffChain, HandoffReturnData, moduleHandoffManager, useModuleHandoff.
+ *
+ * Expected usage pattern:
+ * - Call startHandoff on user intent and update state with updateCurrentModuleState.
+ *
+ * WHY: Preserves context during module transitions without duplicating breadcrumb logic.
+ */
+/**
  * Module Handoff System
  *
  * Purpose (Plain English):

@@ -1,4 +1,21 @@
 /**
+ * How to Use:
+ * - Register providers with miniModeRegistry.register(provider).
+ * - Open mini-modes via useMiniMode().openMiniMode(config).
+ *
+ * UI integration example:
+ * - QuickCaptureOverlay opens mini-modes with useMiniMode().openMiniMode.
+ *
+ * Public API:
+ * - MiniModeConfig, MiniModeResult, MiniModeProvider, MiniModeComponentProps,
+ *   miniModeRegistry, useMiniMode.
+ *
+ * Expected usage pattern:
+ * - Keep mini-mode data JSON-serializable and always handle onDismiss.
+ *
+ * WHY: Standardizes cross-module quick actions without navigation context.
+ */
+/**
  * Mini-Mode System
  *
  * Purpose (Plain English):

@@ -1,4 +1,21 @@
 /**
+ * How to Use:
+ * - Subscribe with eventBus.on(EVENT_TYPES.X, handler) and unsubscribe on cleanup.
+ * - Emit events with eventBus.emit(EVENT_TYPES.X, payload) after user actions.
+ *
+ * UI integration example:
+ * - OmnisearchScreen emits EVENT_TYPES.SEARCH_PERFORMED on search submission.
+ *
+ * Public API:
+ * - EVENT_TYPES, NoteEventPayload, TaskEventPayload, CalendarEventPayload,
+ *   TypedEventPayload, EventPayload, eventBus.
+ *
+ * Expected usage pattern:
+ * - Keep payloads small and emit from UI actions to keep analytics consistent.
+ *
+ * WHY: Decouples modules while still enabling cross-module reactions.
+ */
+/**
  * Event Bus for Cross-Module Communication
  *
  * Purpose (Plain English):

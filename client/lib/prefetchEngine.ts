@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Call prefetchEngine.onModuleEnter(moduleId) on navigation changes.
+ * - Use prefetchEngine.predictNextModules(moduleId) for insights.
+ *
+ * UI integration example:
+ * - useAnalyticsNavigation (wired in App.tsx) forwards module transitions to prefetchEngine.
+ *
+ * Public API:
+ * - prefetchEngine.
+ *
+ * Expected usage pattern:
+ * - Initialize once and feed it navigation events for accurate predictions.
+ *
+ * WHY: Keeps prefetch decisions centralized so background work stays bounded.
+ */
+/**
  * Predictive Prefetch Engine
  *
  * Purpose (Plain English):

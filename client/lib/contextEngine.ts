@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Read contextEngine.getCurrentZone() and call shouldModuleBeVisible() for filtering.
+ * - Subscribe with contextEngine.onChange(...) to update UI on zone changes.
+ *
+ * UI integration example:
+ * - PersistentSidebar hides/shows modules using contextEngine.shouldModuleBeVisible.
+ *
+ * Public API:
+ * - ContextZone, ContextDetection, contextEngine.
+ *
+ * Expected usage pattern:
+ * - Treat context updates as read-only inputs; keep overrides explicit.
+ *
+ * WHY: Keeps adaptive UI logic centralized so module visibility stays predictable.
+ */
+/**
  * Context Engine for Adaptive Interface
  *
  * Purpose (Plain English):

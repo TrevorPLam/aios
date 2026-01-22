@@ -1,3 +1,19 @@
+/**
+ * How to Use:
+ * - Wrap the app in <QueryClientProvider client={queryClient}>.
+ * - Call apiRequest(...) for manual API calls that need consistent errors.
+ *
+ * UI integration example:
+ * - App.tsx mounts QueryClientProvider using queryClient.
+ *
+ * Public API:
+ * - getApiUrl, apiRequest, getQueryFn, queryClient.
+ *
+ * Expected usage pattern:
+ * - Use queryClient for React Query and apiRequest for imperative calls.
+ *
+ * WHY: Keeps API configuration centralized and avoids per-screen fetch config drift.
+ */
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 /**

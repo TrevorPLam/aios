@@ -1,4 +1,20 @@
 /**
+ * How to Use:
+ * - Use saveToStorage/loadFromStorage for lightweight preferences and caches.
+ * - Call getAsyncStorage() when you need raw storage access in platform code.
+ *
+ * UI integration example:
+ * - Screens like AIPreferencesScreen persist toggles via saveToStorage.
+ *
+ * Public API:
+ * - getAsyncStorage, saveToStorage, loadFromStorage.
+ *
+ * Expected usage pattern:
+ * - Store small JSON-serializable payloads and handle null returns in tests.
+ *
+ * WHY: Standardizes AsyncStorage access so tests and runtime behave consistently.
+ */
+/**
  * Storage Helper
  *
  * Provides a consistent interface to AsyncStorage that works in both
