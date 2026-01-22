@@ -21,7 +21,7 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 - **docs/governance/state.md** — Living document for temporary constraints, enforcement toggles, and active governance migrations.
 - **docs/governance/exceptions.yml** — Structured exception/waiver registry with expiry requirements for policy deviations.
 - **docs/governance_implementation_report.md** — Audit-style report of governance control-plane artifacts implemented, including enforcement mechanisms.
-- **ARCHITECTURE_DECISIONS.md** — Root-level ADRs that document accepted architectural decisions and rationale.
+- **docs/decisions/ARCHITECTURE_DECISIONS.md** — ADR index with accepted architectural decisions and rationale.
 - **docs/decisions/README.md** — Index and guidance for Architecture Decision Records (ADRs) in `docs/decisions/`.
 - **docs/decisions/0001-record-architecture-decisions.md** — ADR establishing ADR usage (meta-governance for decisions).
 - **docs/decisions/004-docs-structure.md** — ADR defining documentation structure (governance for doc organization).
@@ -107,8 +107,8 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 
 - **P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md** — Single source of truth for actionable work and ownership assignments.
 - **CHANGELOG.md** — Record of changes with highlights of major actions and feature updates.
-- **WORK_SESSION_SUMMARY.md** — Session-level actions, workflow outcomes, and follow-ups.
-- **TASK_COMPLETION_REPORT.md** — Summary of completed tasks and verification notes.
-- **TASK_COMPLETION_SESSION_3.md** — Session-specific task completion log and actions taken.
-- **SESSION_3_FINAL_SUMMARY.md** — Finalized actions and outcomes for session 3.
-- **SESSION_COMPLETION_REPORT_2026-01-19.md** — Session completion report with action outcomes.
+- **docs/archive/project-management/WORK_SESSION_SUMMARY.md** — Session-level actions, workflow outcomes, and follow-ups.
+- **docs/archive/project-management/TASK_COMPLETION_REPORT.md** — Summary of completed tasks and verification notes.
+- **docs/archive/project-management/TASK_COMPLETION_SESSION_3.md** — Session-specific task completion log and actions taken.
+- **docs/archive/project-management/SESSION_3_FINAL_SUMMARY.md** — Finalized actions and outcomes for session 3.
+- **docs/archive/project-management/SESSION_COMPLETION_REPORT_2026-01-19.md** — Session completion report with action outcomes.

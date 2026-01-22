@@ -971,9 +971,51 @@ Uncertainty:
 - **Effort**: M
 - **Note**: Platform-agnostic UI screenshots. AGENT can verify Android/Web UI screenshots in follow-up.
 
-### Edge Cases & Testing Scenarios
+### Documentation Governance Follow-ups
 
 #### T-054
+
+- **Priority**: P3
+- **UPDATE: NEW PRIORITY STATUS**: P3
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Documentation best practices call for a dedicated documentation site
+  - No evaluation or rollout plan exists
+- **Acceptance Criteria**:
+  - [ ] Evaluate Docusaurus, MkDocs, and GitBook for AIOS documentation
+  - [ ] Recommend the preferred option with rationale and scope
+  - [ ] Capture rollout plan and milestones in a short proposal
+- **References**: DOCUMENTATION_BEST_PRACTICES.md (Documentation Site recommendation)
+- **Dependencies**: None
+- **Effort**: S
+- **Note**: Platform-agnostic documentation site evaluation. AGENT can validate hosting constraints in follow-up.
+
+#### T-055
+
+- **Priority**: P3
+- **UPDATE: NEW PRIORITY STATUS**: P3
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Documentation quality control highlights missing roadmap coverage
+  - TODO coverage across code comments is incomplete and needs tracking
+- **Acceptance Criteria**:
+  - [ ] Create ROADMAP.md outlining high-level product and documentation milestones
+  - [ ] Audit inline TODOs for missing doc references and log gaps
+  - [ ] Add a recurring reminder to keep TODO references aligned with docs
+- **References**: DOCUMENTATION_QUALITY_CONTROL.md (Missing documentation + TODO coverage)
+- **Dependencies**: None
+- **Effort**: S
+- **Note**: Platform-agnostic documentation governance checklist. AGENT can confirm roadmapping scope with product stakeholders.
+
+### Edge Cases & Testing Scenarios
+
+#### T-056
 
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
@@ -995,7 +1037,7 @@ Uncertainty:
 - **Effort**: M
 - **Note**: Platform-agnostic empty state design. AGENT can verify Android/Web empty states in follow-up.
 
-### T-055
+### T-057
 
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3
@@ -1017,7 +1059,7 @@ Uncertainty:
 - **Effort**: M
 - **Note**: Platform-agnostic large dataset testing. AGENT can verify Android/Web performance at scale in follow-up.
 
-### T-056
+### T-058
 
 - **Priority**: P3
 - **UPDATE: NEW PRIORITY STATUS**: P3

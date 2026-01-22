@@ -214,7 +214,7 @@ npm run server:dev
 npm run expo:clean:native && npm run expo:rebuild:ios
 ```text
 
-**📖 See [URGENT_WORKLETS_FIX.md](./URGENT_WORKLETS_FIX.md) for detailed instructions**
+**📖 See [docs/technical/URGENT_WORKLETS_FIX.md](./docs/technical/URGENT_WORKLETS_FIX.md) for detailed instructions**
 
 This is common after Dependabot updates. The fix takes 5-10 minutes and rebuilds your native iOS app with matching dependency versions.
 
@@ -255,13 +255,13 @@ npm run expo:clean:native && npm run expo:rebuild:ios
 
 This rebuilds your app with the correct configuration. After this one-time rebuild, the issue should NOT reoccur.
 
-**📖 Complete Fix Guide:** See **[URGENT_WORKLETS_FIX.md](URGENT_WORKLETS_FIX.md)** for:
+**📖 Complete Fix Guide:** See **[docs/technical/URGENT_WORKLETS_FIX.md](docs/technical/URGENT_WORKLETS_FIX.md)** for:
 
 - What was fixed and why it was happening
 - One-time rebuild instructions
 - Verification steps
 
-**🛡️ Prevention Guide:** See **[WORKLETS_PREVENTION.md](WORKLETS_PREVENTION.md)** for:
+**🛡️ Prevention Guide:** See **[docs/technical/WORKLETS_PREVENTION.md](docs/technical/WORKLETS_PREVENTION.md)** for:
 
 - Automated prevention measures (post-install hooks, CI checks)
 - Best practices to avoid future issues
@@ -668,7 +668,7 @@ The Calendar module has been transformed into a production-ready calendar manage
 - **Sorting & Organization** - All queries return chronologically sorted results
 - **Edge Case Handling** - Comprehensive error handling and validation
 
-See [CALENDAR_MODULE_COMPLETION_SUMMARY.md](./CALENDAR_MODULE_COMPLETION_SUMMARY.md) and [CALENDAR_HIGH_LEVEL_ANALYSIS.md](./CALENDAR_HIGH_LEVEL_ANALYSIS.md) for complete documentation.
+See [docs/archive/completion-summaries/CALENDAR_MODULE_COMPLETION_SUMMARY.md](./docs/archive/completion-summaries/CALENDAR_MODULE_COMPLETION_SUMMARY.md) and [docs/archive/analysis/CALENDAR_HIGH_LEVEL_ANALYSIS.md](./docs/archive/analysis/CALENDAR_HIGH_LEVEL_ANALYSIS.md) for complete documentation.
 
 ## 📊 History Module (Enhanced)
 
@@ -728,7 +728,7 @@ The Notebook module has been completed with comprehensive database methods and f
 - **Real-time Statistics** - Live calculation of 10 different metrics
 - **Flexible Organization** - Tags, links, pinning, archiving for maximum flexibility
 
-See [NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./NOTEBOOK_MODULE_COMPLETION_SUMMARY.md) and [NOTEBOOK_HIGH_LEVEL_ANALYSIS.md](./NOTEBOOK_HIGH_LEVEL_ANALYSIS.md) for complete documentation.
+See [docs/archive/completion-summaries/NOTEBOOK_MODULE_COMPLETION_SUMMARY.md](./docs/archive/completion-summaries/NOTEBOOK_MODULE_COMPLETION_SUMMARY.md) and [docs/archive/analysis/NOTEBOOK_HIGH_LEVEL_ANALYSIS.md](./docs/archive/analysis/NOTEBOOK_HIGH_LEVEL_ANALYSIS.md) for complete documentation.
 
 ## 📚 Tech Stack
 

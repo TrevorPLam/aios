@@ -1,6 +1,6 @@
 # AIOS Documentation Index
 
-**Last Updated:** January 16, 2026
+**Last Updated:** January 21, 2026
 
 ## Post-Consolidation Structure
 
@@ -15,12 +15,23 @@ This index provides direct links to all active documentation in the repository.
 | [README.md](../README.md) | Project overview, setup, quick start | 560 lines |
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines | - |
 | [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Community standards and enforcement | - |
+| [GOVERNANCE.md](../GOVERNANCE.md) | Governance model, review checklists, release process | - |
 | [SECURITY.md](../SECURITY.md) | Security policy & reporting | 70 lines |
+| [CHANGELOG.md](../CHANGELOG.md) | Release history | - |
+| [BESTPR.md](../BESTPR.md) | Token-optimized best practices for agents | - |
+| [AIG.md](../AIG.md) | Governance & AI documentation index | - |
 | [F&F.md](../F&F.md) | Features & Functionality (main reference) | 669 lines |
 | [MODULE_DETAILS.md](../MODULE_DETAILS.md) | Technical implementation details | 469 lines |
 | [DOCUMENTATION_GUIDE.md](../DOCUMENTATION_GUIDE.md) | Navigation guide (start here!) | 200+ lines |
-| [QUICK_REFERENCE.md](../QUICK_REFERENCE.md) | Mobile configuration reference | 145 lines |
+| [DOCUMENTATION_BEST_PRACTICES.md](../DOCUMENTATION_BEST_PRACTICES.md) | Documentation standards | - |
+| [DOCUMENTATION_QUALITY_CONTROL.md](../DOCUMENTATION_QUALITY_CONTROL.md) | Documentation quality controls | - |
 | [DOCUMENTATION_METRICS.md](../DOCUMENTATION_METRICS.md) | Documentation health dashboard | - |
+| [QUICK_REFERENCE.md](../QUICK_REFERENCE.md) | Mobile configuration reference | 145 lines |
+| [P0TODO.md](../P0TODO.md) | P0 task backlog | - |
+| [P1TODO.md](../P1TODO.md) | P1 task backlog | - |
+| [P2TODO.md](../P2TODO.md) | P2 task backlog | - |
+| [P3TODO.md](../P3TODO.md) | P3 task backlog | - |
+| [TODO_ARCHIVE_2026-01-21.md](../TODO_ARCHIVE_2026-01-21.md) | Archived tasks | - |
 
 ---
 
@@ -33,6 +44,9 @@ This index provides direct links to all active documentation in the repository.
 - [IMPLEMENTATION_ROADMAP.md](technical/IMPLEMENTATION_ROADMAP.md) - Development roadmap
 - [MOBILE_CONFIGURATION_EXPLANATION.md](technical/MOBILE_CONFIGURATION_EXPLANATION.md) - Mobile config details
 - [lib-usage.md](technical/lib-usage.md) - Client lib usage examples
+- [URGENT_WORKLETS_FIX.md](technical/URGENT_WORKLETS_FIX.md) - Worklets mismatch quick fix
+- [WORKLETS_FIX_GUIDE.md](technical/WORKLETS_FIX_GUIDE.md) - Detailed worklets troubleshooting guide
+- [WORKLETS_PREVENTION.md](technical/WORKLETS_PREVENTION.md) - Worklets prevention and automation checklist
 
 ### Design & Architecture
 
@@ -49,6 +63,7 @@ This index provides direct links to all active documentation in the repository.
 ### Decisions & Governance
 
 - [decisions/](decisions/) - Architecture decision records
+- [ARCHITECTURE_DECISIONS.md](decisions/ARCHITECTURE_DECISIONS.md) - ADR rollup summary
 - [.templates/](.templates/) - Documentation templates
 - [processes/](processes/) - Documentation processes and workflows
   - [Feedback Loop](processes/feedback-loop.md) - User feedback collection and review process
@@ -96,6 +111,7 @@ This index provides direct links to all active documentation in the repository.
   - Backend API gaps
   - Module-specific limitations
   - Future enhancements
+- [PERFECT.md](planning/PERFECT.md) - Codebase cleanup and optimization roadmap
 
 ---
 
@@ -210,29 +226,31 @@ This index provides direct links to all active documentation in the repository.
 
 ### Active Documentation
 
-- **Root Files:** 10
-- **Technical Docs:** 8
-- **Security Docs:** 1 (consolidated)
-- **Analysis Docs:** 2
-- **Planning Docs:** 1
-- **Analytics Docs:** 3
-- **Total Active:** ~25 files
+- **Root Files:** 20
+- **Technical Docs:** 14
+- **Security Docs:** 6
+- **Analysis Docs:** 3
+- **Planning Docs:** 2
+- **Analytics Docs:** 6
+- **Total Active (core index):** 51 files
 
 ### Archived Documentation
 
-- **Pre-consolidation:** 2 files
+- **Pre-consolidation:** 10 files
 - **Completion Summaries:** 10 files
 - **Enhancements:** 11 files
-- **Analysis:** 18 files
+- **Analysis:** 37 files
 - **Security:** 9 files
-- **Project Management:** 5 files
-- **Total Archived:** 55 files
+- **Project Management:** 12 files
+- **Sessions:** 1 file
+- **Archive Root Files:** 1 file
+- **Total Archived:** 91 files
 
 ### Reduction Metrics
 
-- **Root Directory:** 72 → 10 files (86% reduction)
-- **Total Docs:** 79 → 25 files (68% reduction)
-- **Duplication:** Eliminated (single source of truth established)
+- **Root Directory:** 72 → 20 files (post-archival cleanup)
+- **Archive Coverage:** 91 historical docs preserved in docs/archive
+- **Duplication:** Eliminated for active references (single source of truth preserved)
 
 ---
 
@@ -257,6 +275,6 @@ This index provides direct links to all active documentation in the repository.
 
 ---
 
-**Consolidation Date:** January 16, 2026
+**Consolidation Date:** January 21, 2026
 **Maintained By:** Documentation Team
-**Version:** 3.0 (Post-Consolidation)
+**Version:** 3.1 (Post-Archival Cleanup)

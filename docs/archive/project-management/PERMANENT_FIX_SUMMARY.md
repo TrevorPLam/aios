@@ -138,7 +138,7 @@ But the configuration issue that was causing persistent errors is now FIXED.
    - This is REQUIRED for Expo to configure worklets in native builds
 
 2. **Documentation Updated**
-   - URGENT_WORKLETS_FIX.md - Reflects permanent fix
+   - docs/technical/URGENT_WORKLETS_FIX.md - Reflects permanent fix
    - README.md - Updated troubleshooting section
    - PERMANENT_FIX_SUMMARY.md - This document
 
@@ -156,9 +156,9 @@ All scripts pass ✅
 
 ## 📖 Additional Resources
 
-- **[URGENT_WORKLETS_FIX.md](URGENT_WORKLETS_FIX.md)** - Explains what was fixed and one-time rebuild
-- **[WORKLETS_FIX_GUIDE.md](WORKLETS_FIX_GUIDE.md)** - Detailed troubleshooting guide
-- **[WORKLETS_PREVENTION.md](WORKLETS_PREVENTION.md)** - Prevention strategies
+- **[docs/technical/URGENT_WORKLETS_FIX.md](../../technical/URGENT_WORKLETS_FIX.md)** - Explains what was fixed and one-time rebuild
+- **[docs/technical/WORKLETS_FIX_GUIDE.md](../../technical/WORKLETS_FIX_GUIDE.md)** - Detailed troubleshooting guide
+- **[docs/technical/WORKLETS_PREVENTION.md](../../technical/WORKLETS_PREVENTION.md)** - Prevention strategies
 - **[README.md](README.md#troubleshooting)** - Quick troubleshooting reference
 
 ---

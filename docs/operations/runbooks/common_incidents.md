@@ -470,7 +470,7 @@ redis-cli LLEN "bull:jobs:waiting"
 npm run expo:clean:native && npm run expo:rebuild:ios
 ```text
 
-**📖 Complete fix guide with 3 options:** See **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)**
+**📖 Complete fix guide with 3 options:** See **[WORKLETS_FIX_GUIDE.md](../../technical/WORKLETS_FIX_GUIDE.md)**
 
 ---
 
@@ -599,8 +599,8 @@ This error occurs when:
 
 ### Related Documentation
 
-- **[WORKLETS_FIX_GUIDE.md](../../../WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
-- **[WORKLETS_PREVENTION.md](../../../WORKLETS_PREVENTION.md)** - Prevention strategies and automation
+- **[WORKLETS_FIX_GUIDE.md](../../technical/WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
+- **[WORKLETS_PREVENTION.md](../../technical/WORKLETS_PREVENTION.md)** - Prevention strategies and automation
 - [react-native-worklets troubleshooting](https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting) - Official docs
 - [Expo prebuild](https://docs.expo.dev/workflow/prebuild/) - Understanding native builds
 - [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/) - Reanimated setup

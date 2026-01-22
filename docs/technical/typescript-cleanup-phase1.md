@@ -205,7 +205,7 @@ Tests: 767 passed, 4 failed (pre-existing), 771 total
 
 ## References
 
-- [PERFECT.md](../../PERFECT.md) - Overall cleanup project tracking
+- [PERFECT.md](../planning/PERFECT.md) - Overall cleanup project tracking
 - [Constitution](../governance/constitution.md) - Coding standards
 - [TypeScript Guidelines](./typescript-guidelines.md) - Type usage patterns
 

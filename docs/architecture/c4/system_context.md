@@ -374,7 +374,7 @@ kill $SERVER_PID
 - [Deployment Diagram](./deployment.md) - How the system is deployed
 - [C4 Overview](./README.md) - Guide to reading C4 diagrams
 - [Module Details](/MODULE_DETAILS.md) - Detailed module specifications
-- [Architecture Decisions](/ARCHITECTURE_DECISIONS.md) - ADRs for key choices
+- [Architecture Decisions](../../decisions/ARCHITECTURE_DECISIONS.md) - ADRs for key choices
 
 ## References
 
