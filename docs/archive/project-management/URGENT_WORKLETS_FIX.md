@@ -91,7 +91,7 @@ For detailed explanation, prevention strategies, and troubleshooting:
 
 - **[WORKLETS_FIX_GUIDE.md](./WORKLETS_FIX_GUIDE.md)** - Complete fix guide with 3 options
 - **[README.md#troubleshooting](../../../README.md#troubleshooting)** - Quick troubleshooting section
-- **[Common Incidents Runbook](./docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)** - Detailed runbook
+- **[Common Incidents Runbook](../../operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)** - Detailed runbook
 
 ## New Tools Added
 
