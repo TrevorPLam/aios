@@ -854,6 +854,7 @@ export interface Settings {
   enabledModules: ModuleType[];
   aiLimitTier: AILimitTier;
   darkMode: boolean;
+  focusModeEnabled: boolean;
   photoGridSize: PhotoGridSize;
   contactSharingPreferences: ContactSharingPreferences;
   colorTheme: ColorTheme;
@@ -997,6 +998,7 @@ export const DEFAULT_SETTINGS: Settings = {
   ] as ModuleType[],
   aiLimitTier: 1,
   darkMode: true,
+  focusModeEnabled: false,
   photoGridSize: 4,
   contactSharingPreferences: {
     shareEmail: true,

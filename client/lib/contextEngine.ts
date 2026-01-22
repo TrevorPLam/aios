@@ -44,7 +44,9 @@
  */
 
 import { ModuleType } from "@/models/types";
+import { db } from "@/storage/database";
 import { eventBus, EVENT_TYPES } from "./eventBus";
+import { moduleRegistry } from "./moduleRegistry";
 
 /**
  * Context Zones
@@ -161,6 +163,41 @@ class ContextEngine {
   private userOverride: ContextZone | null = null;
   private lastDetection: ContextDetection | null = null;
   private listeners: Set<(detection: ContextDetection) => void> = new Set();
+  private focusModeEnabled = false;
+
+  constructor() {
+    // WHY: Initialize focus mode once so adaptive UI reflects saved settings.
+    void this.loadFocusModePreference();
+    // WHY: Keep focus mode synced without a direct dependency on AttentionManager.
+    this.subscribeToFocusModeChanges();
+  }
+
+  private async loadFocusModePreference(): Promise<void> {
+    try {
+      const settings = await db.settings.get();
+      this.focusModeEnabled = settings.focusModeEnabled ?? false;
+    } catch (error) {
+      console.warn("Failed to load focus mode setting:", error);
+    }
+  }
+
+  private subscribeToFocusModeChanges(): void {
+    eventBus.on(EVENT_TYPES.USER_ACTION, (payload) => {
+      if (payload.data.action !== "attention:focus-mode-changed") {
+        return;
+      }
+
+      const mode = payload.data.mode as { enabled?: boolean } | undefined;
+      if (typeof mode?.enabled !== "boolean") {
+        return;
+      }
+
+      this.focusModeEnabled = mode.enabled;
+
+      // Refresh detection so listeners pick up the focus zone immediately.
+      this.detectContext();
+    });
+  }
 
   /**
    * Get Context Rules
@@ -178,15 +215,13 @@ class ContextEngine {
   private getContextRules(): ContextRule[] {
     return [
       // Focus mode overrides everything
-      // TODO: Implement focus mode toggle in settings
       {
         zone: ContextZone.FOCUS,
         priority: 100,
         condition: () => {
           // Check if user has manually enabled focus mode
           // This would be set via a toggle in the UI
-          // TODO: Wire to settings.focusModeEnabled once implemented
-          return false; // Placeholder - focus mode not implemented yet
+          return this.focusModeEnabled;
         },
         reason: "Focus mode enabled",
       },
@@ -346,22 +381,10 @@ class ContextEngine {
    * @returns Modules to hide
    */
   private getHiddenModules(suggestedModules: ModuleType[]): ModuleType[] {
-    // TODO: Get from moduleRegistry.getAllModules() once circular dependency resolved
-    // For now, hardcoded list of core modules
-    const allModules: ModuleType[] = [
-      "command",
-      "notebook",
-      "planner",
-      "calendar",
-      "email",
-      "lists",
-      "alerts",
-      "photos",
-      "messages",
-      "contacts",
-      "translator",
-      "budget",
-    ];
+    // WHY: Use module registry as the source of truth for module lists.
+    const allModules = moduleRegistry
+      .getAllModules()
+      .map((module) => module.id);
 
     return allModules.filter(
       (module) => !suggestedModules.includes(module) && module !== "command",
