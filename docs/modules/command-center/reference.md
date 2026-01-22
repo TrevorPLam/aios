@@ -32,7 +32,7 @@
 ## UI Expectations
 
 - Cards are swipeable and show confidence meters.
-- Confidence colors align with the design system (blue/green/yellow/red scale).
+- Confidence colors align with the design system: purple (low), yellow (medium), green (high).
 - Empty states explain why no recommendations are available.
 
 ## Data Sources
