@@ -32,7 +32,7 @@ function normalizeMeetingLink(candidate: string): ParsedMeetingLink {
     return { value: null };
   }
 
-  const withScheme = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+  const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 
   try {
     const normalized = new URL(withScheme).toString();
