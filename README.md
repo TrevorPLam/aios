@@ -95,6 +95,7 @@ AIOS (AI Operating System) is not another productivity app. It is a **privacy-fi
 - 🔔 **Attention Center badge** in headers for quick access to notifications
 - 🎨 **Theme-driven overlays** for consistent light/dark translucency
 - 🔄 **Real-time updates** ready (WebSocket configured)
+- 🔗 **Meeting link validation** on event sync for supported video providers
 - ⌨️ **Web keyboard shortcut** — Use Cmd/Ctrl+K to open Omnisearch on web
 - ⏱️ **Lazy-loaded heavy screens** (Photos, Photo Editor) for faster startup
 
