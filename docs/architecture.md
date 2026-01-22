@@ -1137,7 +1137,7 @@ it('should enforce max depth limit', () => {
 
 ## References
 
-- [UI/UX Revolutionary Strategy](../vision/UI_UX_REVOLUTIONARY_STRATEGY.md)
-- [Super App Module Expansion](../vision/SUPER_APP_MODULE_EXPANSION.md)
-- [API Documentation](../technical/API_DOCUMENTATION.md)
-- [Testing Instructions](../technical/TESTING_INSTRUCTIONS.md)
+- [UI/UX Revolutionary Strategy](vision/UI_UX_REVOLUTIONARY_STRATEGY.md)
+- [Super App Module Expansion](vision/SUPER_APP_MODULE_EXPANSION.md)
+- [API Documentation](technical/API_DOCUMENTATION.md)
+- [Testing Instructions](technical/TESTING_INSTRUCTIONS.md)
