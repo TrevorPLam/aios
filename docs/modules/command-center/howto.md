@@ -69,7 +69,7 @@ Tap **Accept** for relevant items and **Decline** for irrelevant ones.
 
 ### Step 3: Refresh recommendations
 
-Trigger a refresh (pull to refresh or tap refresh).
+Trigger a refresh by tapping the refresh button in Command Center.
 
 **Key points:**
 - Refreshing without feedback can repeat the same cards.
