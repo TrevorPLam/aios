@@ -10,7 +10,7 @@
 
 1. [General Security Overview](#general-security-overview)
 2. [Module Security Status](#module-security-status)
-3. [Authentication & Authorization](#authentication--authorization)
+3. [Authentication & Authorization](#authentication-authorization)
 4. [Input Validation](#input-validation)
 5. [Data Protection](#data-protection)
 6. [Security Best Practices](#security-best-practices)
