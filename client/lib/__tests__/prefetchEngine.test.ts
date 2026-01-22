@@ -7,12 +7,23 @@
 import { prefetchEngine } from "../prefetchEngine";
 import { ModuleType } from "@/models/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { memoryManager } from "../memoryManager";
+
+jest.mock("react-native", () => ({
+  Platform: { OS: "ios" },
+}));
 
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
   multiRemove: jest.fn(),
+}));
+
+jest.mock("../memoryManager", () => ({
+  memoryManager: {
+    getCurrentMemoryUsage: jest.fn(),
+  },
 }));
 
 // Mock lazyLoader
@@ -26,8 +37,20 @@ describe("PrefetchEngine", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+    (AsyncStorage.setItem as jest.Mock).mockResolvedValue(undefined);
+    (memoryManager.getCurrentMemoryUsage as jest.Mock).mockReturnValue({
+      usedMemoryMB: 50,
+      totalMemoryMB: 2048,
+      percentUsed: 2.4,
+      pressure: "none",
+      timestamp: new Date().toISOString(),
+    });
     await prefetchEngine.clearAllData();
     await prefetchEngine.initialize();
+  });
+
+  afterAll(async () => {
+    await prefetchEngine.clearAllData();
   });
 
   describe("Initialization", () => {
@@ -299,6 +322,29 @@ describe("PrefetchEngine", () => {
 
       // Should have at least some time-based predictions
       expect(timeBasedPrediction).toBeDefined();
+    });
+  });
+
+  describe("Prefetch Constraints", () => {
+    it("should skip prefetching on low battery", async () => {
+      prefetchEngine.updateBatteryLevel(0.1);
+      await prefetchEngine.onModuleEnter("calendar");
+
+      const shouldPrefetch = (prefetchEngine as any).shouldPrefetch();
+      expect(shouldPrefetch).toBe(false);
+    });
+
+    it("should skip prefetching on high memory pressure", () => {
+      (memoryManager.getCurrentMemoryUsage as jest.Mock).mockReturnValue({
+        usedMemoryMB: 190,
+        totalMemoryMB: 2048,
+        percentUsed: 9.2,
+        pressure: "high",
+        timestamp: new Date().toISOString(),
+      });
+
+      const shouldPrefetch = (prefetchEngine as any).shouldPrefetch();
+      expect(shouldPrefetch).toBe(false);
     });
   });
 });
