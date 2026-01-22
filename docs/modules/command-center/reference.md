@@ -38,7 +38,8 @@
 ## Data Sources
 
 - Seed data: `client/utils/seedData.ts`
-- Recommendation logic: `client/screens/CommandCenterScreen.tsx`
+- Recommendation logic engine: `client/lib/recommendationEngine.ts`
+- Command Center UI + wiring: `client/screens/CommandCenterScreen.tsx`
 
 ## Error Handling
 
