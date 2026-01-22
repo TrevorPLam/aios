@@ -15,7 +15,7 @@ const MEETING_LINK_PATTERNS = [
 ];
 
 const URL_LIKE_PATTERN =
-  /\b(https?:\/\/[^\s]+|([\w-]+\.)?zoom\.us\/j\/[\w?=&#%-]+|meet\.google\.com\/[\w-]+|teams\.microsoft\.com\/l\/meetup-join\/[\w?=&#%-]+)\b/gi;
+  /\b(https?:\/\/[^\s]+|([\w-]+\.)?zoom\.us\/j\/[\w?=&#%-]+|meet\.google\.com\/[\w-]+|(teams\.microsoft\.com|teams\.live\.com)\/l\/meetup-join\/[\w?=&#%-]+)\b/gi;
 
 type ParsedMeetingLink = {
   value: string | null;
