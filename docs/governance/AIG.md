@@ -21,7 +21,7 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 - **docs/governance/state.md** — Living document for temporary constraints, enforcement toggles, and active governance migrations.
 - **docs/governance/exceptions.yml** — Structured exception/waiver registry with expiry requirements for policy deviations.
 - **docs/governance_implementation_report.md** — Audit-style report of governance control-plane artifacts implemented, including enforcement mechanisms.
-- **ARCHITECTURE_DECISIONS.md** — Root-level ADRs that document accepted architectural decisions and rationale.
+- **docs/archive/decisions/ARCHITECTURE_DECISIONS.md** — Archived ADR rollup (superseded by individual ADRs in `docs/decisions/`).
 - **docs/decisions/README.md** — Index and guidance for Architecture Decision Records (ADRs) in `docs/decisions/`.
 - **docs/decisions/0001-record-architecture-decisions.md** — ADR establishing ADR usage (meta-governance for decisions).
 - **docs/decisions/004-docs-structure.md** — ADR defining documentation structure (governance for doc organization).
@@ -80,8 +80,8 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 ## Documentation Governance & Quality
 
 - **DOCUMENTATION_GUIDE.md** — Navigation and maintenance guide for the documentation system.
-- **DOCUMENTATION_BEST_PRACTICES.md** — Standards and conventions for writing and maintaining docs.
-- **DOCUMENTATION_QUALITY_CONTROL.md** — Processes and checks for documentation quality assurance, including link validation and checklists.
+- **docs/processes/DOCUMENTATION_BEST_PRACTICES.md** — Standards and conventions for writing and maintaining docs.
+- **docs/processes/DOCUMENTATION_QUALITY_CONTROL.md** — Processes and checks for documentation quality assurance, including link validation and checklists.
 - **DOCUMENTATION_METRICS.md** — Metrics used to track documentation health and coverage.
 - **docs/README.md** — Documentation home and navigation hub, including governance linkouts.
 - **docs/INDEX.md** — Documentation index for structured discovery across doc sets.
@@ -107,8 +107,8 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 
 - **P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md** — Single source of truth for actionable work and ownership assignments.
 - **CHANGELOG.md** — Record of changes with highlights of major actions and feature updates.
-- **WORK_SESSION_SUMMARY.md** — Session-level actions, workflow outcomes, and follow-ups.
-- **TASK_COMPLETION_REPORT.md** — Summary of completed tasks and verification notes.
-- **TASK_COMPLETION_SESSION_3.md** — Session-specific task completion log and actions taken.
-- **SESSION_3_FINAL_SUMMARY.md** — Finalized actions and outcomes for session 3.
-- **SESSION_COMPLETION_REPORT_2026-01-19.md** — Session completion report with action outcomes.
+- **docs/archive/sessions/WORK_SESSION_SUMMARY.md** — Session-level actions, workflow outcomes, and follow-ups.
+- **docs/archive/sessions/TASK_COMPLETION_REPORT.md** — Summary of completed tasks and verification notes.
+- **docs/archive/sessions/TASK_COMPLETION_SESSION_3.md** — Session-specific task completion log and actions taken.
+- **docs/archive/sessions/SESSION_3_FINAL_SUMMARY.md** — Finalized actions and outcomes for session 3.
+- **docs/archive/sessions/SESSION_COMPLETION_REPORT_2026-01-19.md** — Session completion report with action outcomes.

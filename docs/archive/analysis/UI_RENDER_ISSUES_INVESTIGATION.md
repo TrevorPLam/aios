@@ -25,7 +25,7 @@ Investigation of three UI rendering issues in CommandCenterScreen and BottomNav:
 
 - Minimal 2px spacing between recommendation cards
 - Creates "stacked deck" appearance
-- Source: `VISUAL_CHANGES_SUMMARY.md` lines 13-16
+- Source: `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` lines 13-16
 
 ### Code Flow
 
@@ -92,7 +92,7 @@ ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
 
 - Unopened recommendation cards show "white glow" to draw attention
 - Glow implemented via iOS shadow with high opacity and large radius
-- Source: `VISUAL_CHANGES_SUMMARY.md` lines 18-30
+- Source: `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` lines 18-30
 
 ### Code Flow (2)
 
@@ -179,7 +179,7 @@ Animated.View (cardShadowWrapper)
 
 Design specification:
 
-- VISUAL_CHANGES_SUMMARY.md line 18: "White Glow for Unread Recommendations"
+- docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md line 18: "White Glow for Unread Recommendations"
 - Spec uses terminology: "soft white glow", "white halo"
 
 Actual implementation:
@@ -254,7 +254,7 @@ Actual implementation:
 If design wants accent-colored glow instead of white:
 
 - Keep `shadowColor: theme.accent`
-- Update VISUAL_CHANGES_SUMMARY.md to reflect actual design
+- Update docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md to reflect actual design
 - Still need to add backgroundColor to cardShadowWrapper
 
 ---
@@ -265,7 +265,7 @@ If design wants accent-colored glow instead of white:
 
 - Bottom navigation bar should extend to screen edges (no side margins)
 - Modern mobile app pattern (like iOS Music, Messages, etc.)
-- Source: `VISUAL_CHANGES_SUMMARY.md` lines 32-42
+- Source: `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` lines 32-42
 
 ### Code Flow (3)
 
@@ -518,7 +518,7 @@ All three issues share a common pattern:
 
 ### Documentation Updates
 
-- `VISUAL_CHANGES_SUMMARY.md` (if deviating from spec)
+- `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` (if deviating from spec)
 - `docs/technical/design_guidelines.md` (iOS shadow requirements)
 
 ---
@@ -550,7 +550,7 @@ All three issues share a common pattern:
    - Use shallow component inspection when debugging layout
 
 4. **Design specs vs implementation**
-   - VISUAL_CHANGES_SUMMARY.md says "white glow"
+  - docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md says "white glow"
    - Code implements cyan (theme.accent) glow
    - Clarify design intent before implementing
 
@@ -566,7 +566,7 @@ All three issues share a common pattern:
 
 ### Codebase Documentation
 
-- `VISUAL_CHANGES_SUMMARY.md` - Design specifications
+- `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` - Design specifications
 - `client/constants/theme.ts` - Shadow presets and theme colors
 - `docs/technical/design_guidelines.md` - Design patterns (to be updated)
 

@@ -199,7 +199,7 @@ Tracks:
 - Workflows: `.github/workflows/docs-*.yml`
 - Configurations: `.markdownlint.json`, `.cspell.json`, `.vale.ini`, `.lycheeignore`
 - Metrics: `DOCUMENTATION_METRICS.md`
-- Best practices: `DOCUMENTATION_BEST_PRACTICES.md`
+- Best practices: `docs/processes/DOCUMENTATION_BEST_PRACTICES.md`
 
 ---
 

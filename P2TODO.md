@@ -915,3 +915,121 @@ Uncertainty:
 - **Effort**: M (20-30 hours)
 - **Note**: Data quality improvements: 7/10 → 9/10 score
 
+### T-094
+
+- **Priority**: P2
+- **Type**: QUALITY
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Traceability matrix migration is in progress with enforcement set to WARN
+  - Governance requires traceability for API and feature changes
+  - State doc needs a tracking issue and completion target
+- **Acceptance Criteria**:
+  - [ ] Populate docs/traceability_matrix.md to ≥80% coverage across features, code, tests, docs, and runbooks
+  - [ ] Add/update coverage summary with date and percentage
+  - [ ] Create tracking issue and link it in docs/governance/state.md
+  - [ ] Toggle Traceability Matrix enforcement to FAIL in docs/governance/state.md and supporting scripts/workflows
+- **References**:
+  - docs/governance/state.md
+  - docs/traceability_matrix.md
+  - scripts/tools/check-traceability.mjs
+  - .github/workflows/traceability-check.yml
+- **Dependencies**: None
+- **Effort**: L
+
+### T-095
+
+- **Priority**: P2
+- **Type**: CHORE
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - CODEOWNERS activation is ready but still uses placeholders
+  - Branch protection needs alignment with real owners
+  - Governance state requires tracking issue linkage
+- **Acceptance Criteria**:
+  - [ ] Replace placeholder teams in .github/CODEOWNERS with actual GitHub handles/teams
+  - [ ] Update .github/BRANCH_PROTECTION_SETUP.md with CODEOWNERS enforcement steps
+  - [ ] Create tracking issue and link it in docs/governance/state.md
+- **References**:
+  - .github/CODEOWNERS
+  - .github/CODEOWNERS.example
+  - .github/BRANCH_PROTECTION_SETUP.md
+  - docs/governance/state.md
+- **Dependencies**: None
+- **Effort**: M
+
+### T-096
+
+- **Priority**: P2
+- **Type**: QUALITY
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Unified AGENT ownership adoption requires CI enforcement toggle
+  - Constitution compiler must refresh Copilot instructions
+  - State doc requires tracking issue linkage and enforcement update
+- **Acceptance Criteria**:
+  - [ ] Run/implement `npm run compile:constitution` and commit updated .github/copilot-instructions.md output
+  - [ ] Confirm scripts/tools/check-agent-platform.mjs scope matches AGENT-only ownership rules
+  - [ ] Toggle AGENT Ownership Consistency enforcement to FAIL in docs/governance/state.md
+  - [ ] Create tracking issue and link it in docs/governance/state.md
+- **References**:
+  - docs/governance/state.md
+  - scripts/tools/check-agent-platform.mjs
+  - .github/copilot-instructions.md
+- **Dependencies**: None
+- **Effort**: M
+
+### T-097
+
+- **Priority**: P2
+- **Type**: QUALITY
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Analytics modules still use legacy `any` types
+  - Governance requires formal exceptions with expiry
+  - State doc lists an open remediation plan and tracking issue
+- **Acceptance Criteria**:
+  - [ ] Add exception EXC-002 for legacy analytics types to docs/governance/exceptions.yml with expiry date
+  - [ ] Create tracking issue and link it in docs/governance/state.md
+  - [ ] Document remediation plan (2-3 files per sprint) with target dates
+- **References**:
+  - docs/governance/state.md
+  - docs/governance/exceptions.yml
+  - client/analytics/
+- **Dependencies**: None
+- **Effort**: M
+
+### T-098
+
+- **Priority**: P2
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Documentation automation is planned but not implemented
+  - Docs coverage script and CI workflow are still TODO
+  - Verification commands reference missing npm scripts
+- **Acceptance Criteria**:
+  - [ ] Implement scripts/check-doc-coverage.js and wire `npm run check:docs`
+  - [ ] Add `npm run lint:docs` and `npm run verify:all` scripts in package.json
+  - [ ] Add/confirm `npm run db:migrate` (or update docs/verification.md with the correct command)
+  - [ ] Add docs coverage CI workflow and update docs/coverage.md automation section
+  - [ ] Update docs/verification.md and docs/implementation_report.md to remove TODO placeholders
+- **References**:
+  - docs/coverage.md
+  - docs/verification.md
+  - docs/implementation_report.md
+  - package.json
+  - scripts/check-doc-coverage.js
+  - .github/workflows/
+- **Dependencies**: None
+- **Effort**: L

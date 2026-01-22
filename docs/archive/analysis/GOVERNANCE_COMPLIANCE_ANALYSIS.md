@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This analysis reviews the Mobile-Scaffold repository's governance documentation and enforcement mechanisms against the standards defined in GOVERNANCE.md and DOCUMENTATION_BEST_PRACTICES.md.
+This analysis reviews the Mobile-Scaffold repository's governance documentation and enforcement mechanisms against the standards defined in GOVERNANCE.md and docs/processes/DOCUMENTATION_BEST_PRACTICES.md.
 
 **Key Finding:** The repository has a **mature documentation system** (73% compliance) with strong automated enforcement but has specific gaps that need attention.
 
@@ -83,7 +83,7 @@ This analysis reviews the Mobile-Scaffold repository's governance documentation 
 
 ## Document Standards Compliance
 
-### DOCUMENTATION_BEST_PRACTICES.md Implementation Status
+### docs/processes/DOCUMENTATION_BEST_PRACTICES.md Implementation Status
 
 #### ✅ Fully Implemented
 

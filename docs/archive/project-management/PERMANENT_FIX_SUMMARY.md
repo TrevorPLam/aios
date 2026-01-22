@@ -156,10 +156,10 @@ All scripts pass ✅
 
 ## 📖 Additional Resources
 
-- **[URGENT_WORKLETS_FIX.md](URGENT_WORKLETS_FIX.md)** - Explains what was fixed and one-time rebuild
-- **[WORKLETS_FIX_GUIDE.md](WORKLETS_FIX_GUIDE.md)** - Detailed troubleshooting guide
-- **[WORKLETS_PREVENTION.md](WORKLETS_PREVENTION.md)** - Prevention strategies
-- **[README.md](README.md#troubleshooting)** - Quick troubleshooting reference
+- **[URGENT_WORKLETS_FIX.md](./URGENT_WORKLETS_FIX.md)** - Explains what was fixed and one-time rebuild
+- **[WORKLETS_FIX_GUIDE.md](./WORKLETS_FIX_GUIDE.md)** - Detailed troubleshooting guide
+- **[WORKLETS_PREVENTION.md](./WORKLETS_PREVENTION.md)** - Prevention strategies
+- **[README.md](../../../README.md#troubleshooting)** - Quick troubleshooting reference
 
 ---
 
@@ -203,4 +203,4 @@ If after rebuilding you still see the error:
 ### This was the FIFTH time you saw this error. It will NOT be the sixth
 ---
 
-**Questions?** Check the documentation links above or see [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)
+**Questions?** Check the documentation links above or see [Common Incidents Runbook](../../operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)

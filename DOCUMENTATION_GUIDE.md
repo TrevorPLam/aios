@@ -1,6 +1,6 @@
 # AIOS Documentation Navigation Guide
 
-**Last Updated:** January 16, 2026 (Post-Consolidation)
+**Last Updated:** January 21, 2026 (Post-Consolidation)
 **Version:** 3.0 - Reorganized Structure
 
 This guide helps you find the right documentation in our newly organized structure.
@@ -56,14 +56,14 @@ This guide helps you find the right documentation in our newly organized structu
 - Root directory: 72 files (chaos!)
 - Organized: 3 files in /docs
 
-### After Consolidation (January 16, 2026)
+### After Consolidation (January 21, 2026)
 
-- Total active files: ~25 files
-- Root directory: 10 files (clean!)
+- Total active files: ~30 files
+- Root directory: 13 entry-point files (+ task backlogs)
 - Organized: 15+ files properly structured in /docs
 - Archived: 45+ historical files in /docs/archive
 - **Reduction: 68% fewer active docs**
-- **Root cleanup: 86% reduction**
+- **Root cleanup: 80%+ reduction**
 
 ---
 
@@ -112,6 +112,13 @@ This guide helps you find the right documentation in our newly organized structu
 
 ```text
 docs/
+├── governance/             # Governance constitution, state, AI index
+│   ├── constitution.md
+│   ├── state.md
+│   └── AIG.md
+├── processes/              # Documentation standards + QA
+│   ├── DOCUMENTATION_BEST_PRACTICES.md
+│   └── DOCUMENTATION_QUALITY_CONTROL.md
 ├── technical/              # Technical implementation guides
 │   ├── API_DOCUMENTATION.md
 │   ├── TESTING_INSTRUCTIONS.md
@@ -136,9 +143,11 @@ docs/
     ├── 2026-01-pre-consolidation/
     ├── completion-summaries/  (10 files)
     ├── enhancements/          (11 files)
-    ├── analysis/              (12 files)
+    ├── analysis/              (36+ files)
     ├── security/              (9 files)
-    └── project-management/    (5 files)
+    ├── project-management/    (11 files)
+    ├── sessions/              (8 files)
+    └── decisions/             (archived ADR rollups)
 ```text
 
 ---
@@ -292,20 +301,24 @@ docs/
 
 ## 📚 Related Resources
 
+- **Documentation Standards:**
+  - [docs/processes/DOCUMENTATION_BEST_PRACTICES.md](./docs/processes/DOCUMENTATION_BEST_PRACTICES.md) - Writing standards
+  - [docs/processes/DOCUMENTATION_QUALITY_CONTROL.md](./docs/processes/DOCUMENTATION_QUALITY_CONTROL.md) - QA checks and review
+
 - **Analysis Documents:**
-  - [DOCUMENTATION_ANALYSIS.md](./DOCUMENTATION_ANALYSIS.md) - Full analysis that led to reorganization
-  - [DOCUMENTATION_CONSOLIDATION_PLAN.md](./DOCUMENTATION_CONSOLIDATION_PLAN.md) - Implementation plan
-  - [DOCUMENTATION_PART_ONE_SUMMARY.md](./DOCUMENTATION_PART_ONE_SUMMARY.md) - Summary of findings
+  - [DOCUMENTATION_ANALYSIS.md](./docs/archive/2026-01-pre-consolidation/DOCUMENTATION_ANALYSIS.md) - Full analysis that led to reorganization
+  - [DOCUMENTATION_CONSOLIDATION_PLAN.md](./docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md) - Implementation plan
+  - [DOCUMENTATION_PART_ONE_SUMMARY.md](./docs/archive/2026-01-pre-consolidation/DOCUMENTATION_PART_ONE_SUMMARY.md) - Summary of findings
 
 - **Archive:**
   - [docs/archive/](./docs/archive/) - Historical documents organized by category
 
 ---
 
-**Last Updated:** January 16, 2026
+**Last Updated:** January 21, 2026
 **Consolidation Version:** 3.0
-**Root Files:** 10 (down from 72)
-**Active Docs:** ~25 (down from 79)
+**Root Files:** 13 entry-point docs (plus task backlogs)
+**Active Docs:** ~30 (down from 79)
 **Archived Docs:** 45+
 
 ---

@@ -57,7 +57,7 @@ function checkWorklets() {
       console.log('   This may cause runtime errors in your app.\n');
       console.log('   🔧 Quick Fix:');
       console.log('   npm run expo:clean:native && npm run expo:rebuild:ios\n');
-      console.log('   📖 See WORKLETS_FIX_GUIDE.md for details\n');
+      console.log('   📖 See docs/archive/project-management/WORKLETS_FIX_GUIDE.md for details\n');
       return false;
     } else {
       console.log('✅ Worklets version: OK (' + installedVersion + ')');
@@ -91,7 +91,7 @@ function checkExpoConfig() {
       console.log('🚨 IMPORTANT: Missing react-native-reanimated plugin in app.json!\n');
       console.log('   This plugin is required for proper worklets support.\n');
       console.log('   🔧 Add to app.json: "react-native-reanimated" in plugins array');
-      console.log('   📖 See WORKLETS_FIX_GUIDE.md for details\n');
+      console.log('   📖 See docs/archive/project-management/WORKLETS_FIX_GUIDE.md for details\n');
       return false;
     }
 

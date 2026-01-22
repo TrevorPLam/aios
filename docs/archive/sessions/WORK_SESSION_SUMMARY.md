@@ -143,8 +143,8 @@ Time:        5.536s
 4. `client/screens/BudgetScreen.tsx` - Prop mismatch fixed
 5. `docs/technical/design_guidelines.md` - Typography documentation
 6. `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md` - Task tracking updated
-7. `TASK_COMPLETION_REPORT.md` - Created
-8. `HIGH_LEVEL_ANALYSIS.md` - Created
+7. `TASK_COMPLETION_REPORT.md` - Created (see ../sessions/TASK_COMPLETION_REPORT.md)
+8. `HIGH_LEVEL_ANALYSIS.md` - Created (see ../analysis/HIGH_LEVEL_ANALYSIS.md)
 
 ## Commits Made
 

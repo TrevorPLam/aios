@@ -46,7 +46,7 @@ function checkExpoConfig() {
       console.log('      ]');
       console.log('    }');
       console.log('  }\n');
-      console.log('📖 See: WORKLETS_FIX_GUIDE.md for details\n');
+      console.log('📖 See: docs/archive/project-management/WORKLETS_FIX_GUIDE.md for details\n');
       return false;
     }
 
