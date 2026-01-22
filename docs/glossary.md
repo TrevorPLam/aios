@@ -150,6 +150,22 @@ This glossary defines technical terms, acronyms, and project-specific concepts u
 **Technical:** Self-contained feature with screens, logic, storage, and navigation
 **See:** [MODULE_DETAILS.md](../MODULE_DETAILS.md)
 
+### Module Handoff
+
+**Plain English:** Seamlessly switching between modules while preserving what you were doing
+**Technical:** State-preserving navigation system that maintains context and data when transitioning between modules
+**Example:** Switching from Calendar to Messages while composing an event invitation
+**See:** [Architecture](./architecture.md), README.md
+
+## Q
+
+### Quick Capture
+
+**Plain English:** Instantly save an idea, task, note, photo, or reminder from anywhere in the app
+**Technical:** Global overlay system accessible via long-press or quick action that provides 5 mini-modes for fast data capture
+**Features:** Quick Note, Quick Task, Quick Photo, Quick Reminder, Quick Voice Note
+**See:** [Architecture](./architecture.md), README.md
+
 ## O
 
 ### OpenAPI
