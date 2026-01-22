@@ -97,18 +97,19 @@ export const meetingLinkSchema = z
   .optional()
   .nullable()
   .superRefine((value, ctx) => {
-    if (value === undefined || value === null || value.trim() === "") {
-      // Empty/omitted links are allowed so we can keep events link-free.
+    if (value === undefined || value === null || value === "") {
+      // Empty/omitted links are allowed.
       return;
     }
 
     const parsed = parseMeetingLink(value);
-    if (!parsed.value && parsed.error) {
+    if (parsed.error) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: parsed.error,
       });
     }
-  });
+  })
+  .transform((val) => (val ? val : null));
 
 export type { ParsedMeetingLink };
