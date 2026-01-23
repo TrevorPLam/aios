@@ -1,243 +1,219 @@
-# Priority Tasks - Textbook Codebase Standard v2.2 Implementation
+# GitHub Copilot Prompt: Professional Task List Formatting
 
-This document contains the task list for implementing the complete Textbook Codebase Standard v2.2 (Solo Founder) — Agent-Ready Handoff across all 9 phases.
+## Purpose
 
-## PHASE 1: Master Handoff Skeleton + Locked Decisions
+This prompt guides GitHub Copilot to restructure task lists into a professional, diamond-standard format with proper task abbreviations, hierarchical organization, scope definitions, and traceability.
 
-- [ ] Review and confirm locked decisions in phase1.md
-- [ ] Set up execution order for implementing phases 2-9
-- [ ] Establish authority chain: Manifest > Agents > Policy > Standards > Product
-- [ ] Implement selected principles (P3-P25) throughout the codebase
+## Prompt for Copilot
 
-## PHASE 2: Policy Corpus (Authoritative Rules)
+```
+I need you to restructure this task list into a professional, diamond-standard format following these specifications:
 
-### Create `/.repo/policy/` directory and files
+## Required Structure
 
-- [ ] Create `/.repo/policy/CONSTITUTION.md` - Immutable foundational rules
-  - [ ] Article 1: Final Authority (solo founder)
-  - [ ] Article 2: Verifiable over Persuasive
-  - [ ] Article 3: No Guessing (UNKNOWN handling)
-  - [ ] Article 4: Incremental Delivery
-  - [ ] Article 5: Strict Traceability
-  - [ ] Article 6: Safety Before Speed
-  - [ ] Article 7: Per-Repo Variation Allowed
-  - [ ] Article 8: HITL for External Systems
+### 1. Phase Metadata
+Include at the top of each phase document:
+- **Phase**: P[X] (phase number)
+- **Priority**: Critical/High/Medium/Low
+- **Overall Status**: Not Started/In Progress/Blocked/Complete
+- **Owner**: Team/Person responsible
+- **Dependencies**: List prerequisite phases or external dependencies
+- **Target Completion**: Date or Sprint number
 
-- [ ] Create `/.repo/policy/PRINCIPLES.md` - Operating principles
-  - [ ] Document global filepath requirement
-  - [ ] Document P3-P25 principles in plain English
-  - [ ] Include evidence-based workflow requirements
+### 2. Scope Definition
+Clearly separate what is and isn't included:
 
-- [ ] Create `/.repo/policy/QUALITY_GATES.md` - Merge rules
-  - [ ] Define merge policy (soft block with auto-generated waivers)
-  - [ ] Define hard gates (non-waiverable)
-  - [ ] Define waiverable gates (coverage, performance, warnings)
-  - [ ] Document coverage strategy (gradual ratchet)
-  - [ ] Document performance budgets (strict with fallback)
-  - [ ] Document zero warnings policy
+**In Scope:**
+- Specific deliverables and boundaries
+- What IS included in this phase
 
-- [ ] Create `/.repo/policy/SECURITY_BASELINE.md` - Security rules
-  - [ ] Define absolute prohibitions (no secrets in commits/logs)
-  - [ ] Define dependency vulnerability handling (always HITL)
-  - [ ] Define security check frequency (every PR)
-  - [ ] Document security review triggers (IDs: 1,2,4,5,6,8,9,10)
-  - [ ] Document forbidden patterns (A-H placeholders)
-  - [ ] Document mandatory HITL actions (IDs: 1-8)
+**Out of Scope:**
+- What is explicitly NOT included
+- Deferred items or future considerations
 
-- [ ] Create `/.repo/policy/BOUNDARIES.md` - Module boundaries
-  - [ ] Document boundary model (hybrid_domain_feature_layer)
-  - [ ] Document directory pattern: src/<domain>/<feature>/<layer>/
-  - [ ] Document allowed import direction (ui → domain → data → platform)
-  - [ ] Document cross-feature rule (ADR required)
-  - [ ] Document enforcement method (hybrid checker + manifest)
-  - [ ] Document violation severity and handling
+### 3. Success Criteria
+List measurable outcomes as checkboxes:
+- [ ] Specific, testable criterion 1
+- [ ] Specific, testable criterion 2
 
-- [ ] Create `/.repo/policy/HITL.md` - Human-In-The-Loop rules
-  - [ ] Set up HITL storage model (index + items directory)
-  - [ ] Document HITL categories and statuses
-  - [ ] Document merge blocking rules
-  - [ ] Document external systems detection
-  - [ ] Create HITL item file format specification
-  - [ ] Set up Active and Archived index tables
+### 4. Work Packages (WP)
+Organize tasks into logical work packages with this structure:
 
-## PHASE 3: Manifest + Command Resolution Standard
+**WP-P[X].[Y]: [Work Package Name]**
 
-- [ ] Create `/.repo/repo.manifest.yaml` - Source of truth for executable commands
-  - [ ] Define repo metadata (ships, ship_kind, release_protects)
-  - [ ] Define prerequisites (package_manager, runtime, platform tools)
-  - [ ] Fill canonical commands (install, check:quick, check:ci, check:release, check:governance, check:boundaries, check:security)
-  - [ ] Define verify profiles (quick, ci, release, governance)
-  - [ ] Define test requirements (unit+integration)
-  - [ ] Define budget settings (mode, enforcement, fallback)
-  - [ ] Define security settings (every_pr, dependency handling)
-  - [ ] Define boundary enforcement settings and edges
+**Block**: [Infrastructure/Documentation/Automation/Security/Configuration/Architecture]
+**Priority**: P0/P1/P2/P3 (P0 = highest)
+**Status**: Not Started/In Progress/Blocked/Complete
+**Owner**: Name/Team
+**Effort**: XS/S/M/L/XL (or specific hours)
+**Risk**: 🔴 High | 🟡 Medium | 🟢 Low
 
-- [ ] Create `/.repo/docs/standards/manifest.md` - Command resolution guide
-  - [ ] Document what the manifest is (instruction card)
-  - [ ] Document non-negotiable rule (no guessing, use UNKNOWN)
-  - [ ] Document command resolution process (5-step process)
-  - [ ] Document what each command must accomplish
-  - [ ] Document placeholder handling (FILL_FROM_REPO, UNKNOWN)
-  - [ ] Document merge blocking conditions
-  - [ ] Document minimal acceptance checks
+**Dependencies:**
+- Requires: [List of prerequisite WP IDs or tasks]
+- Blocks: [List of WP IDs that depend on this]
 
-## PHASE 4: Agents Framework + Folder-Level Guides
+**Description:**
+[Clear description of what needs to be done]
 
-### Create `/.repo/agents/` directory structure
+**Acceptance Criteria:**
+- [ ] Specific, testable criterion 1
+- [ ] Specific, testable criterion 2
 
-- [ ] Create `/.repo/agents/AGENTS.md` - Core agent rules
-  - [ ] Document no guessing rule
-  - [ ] Document filepath requirement
-  - [ ] Document three-pass code generation (Plan, Change, Verify)
-  - [ ] Document log and trace requirements
-  - [ ] Document boundary enforcement
+**Tasks:**
+- [ ] **T-P[X].[Y].[Z]**: [Specific actionable task]
+  - Files: [List of files to create/modify]
+  - Commands: [Verification commands to run]
+  - Evidence: [What proves this is complete]
 
-- [ ] Create `/.repo/agents/capabilities.md` - Agent capability list
-  - [ ] List all agent capabilities (create_feature, modify_existing, add_dependency, etc.)
+**Out of Scope for This Work Package:**
+- [Things that look related but are NOT part of this work]
 
-- [ ] Create `/.repo/agents/roles/` directory with role definitions
-  - [ ] Create `primary.md` - Full capabilities except waivers and release
-  - [ ] Create `secondary.md` - Modify/refactor within boundaries only
-  - [ ] Create `reviewer.md` - Human controls waivers + enforcement
-  - [ ] Create `release.md` - Human controls release process and deploy
+**Notes:**
+- [Additional context, links to ADRs, known issues]
 
-### Create folder-level AGENT.md guides
+### 5. Task Numbering System
+Use this hierarchical system:
+- **P[X]** = Phase number (0-9)
+- **WP-P[X].[Y]** = Work Package (phase X, package Y)
+- **T-P[X].[Y].[Z]** = Task (phase X, package Y, task Z)
+- **T-P[X].[Y].[Z][a-z]** = Subtask (optional, for complex tasks)
 
-- [ ] Create `/.repo/AGENT.md` - Root folder guide
-- [ ] Create `/src/AGENT.md` - Source folder guide
-- [ ] Create `/src/platform/AGENT.md` - Platform folder guide
-- [ ] Create `/tests/AGENT.md` - Tests folder guide
-- [ ] Create `/docs/AGENT.md` - Docs folder guide
-- [ ] Create `/scripts/AGENT.md` - Scripts folder guide
+Examples:
+- P0 = Phase 0
+- WP-P0.1 = Work Package 1 in Phase 0
+- T-P0.1.1 = Task 1 in Work Package 1 of Phase 0
+- T-P0.1.1a = Subtask 'a' of Task 1
 
-## PHASE 5: PR Operating System
+### 6. Effort Sizing
+- **XS**: 1-2 hours
+- **S**: 2-8 hours (up to 1 day)
+- **M**: 8-16 hours (1-2 days)
+- **L**: 16-40 hours (2-5 days)
+- **XL**: 40+ hours (1+ weeks)
 
-### Create `/.repo/agents/prompts/` directory
+### 7. Priority Levels
+- **P0**: Critical path, blocks everything else
+- **P1**: High priority, needed soon
+- **P2**: Medium priority, important but not urgent
+- **P3**: Low priority, nice to have
 
-- [ ] Create `task_packet.md` - Task packet template
-  - [ ] Include goal, non_goals, acceptance_criteria
-  - [ ] Include approach, files_touched, verification_plan
-  - [ ] Include risks, rollback_plan, hitl_requirements
+### 8. Risk Indicators
+- 🔴 **High**: Complex, security-critical, or has many unknowns
+- 🟡 **Medium**: Some complexity or dependencies
+- 🟢 **Low**: Straightforward, well-understood
 
-- [ ] Create `pr_template.md` - PR template
-  - [ ] Include change_type, summary, task_packet
-  - [ ] Include filepath_changes, verification_commands_run
-  - [ ] Include evidence, risks, rollback, hitl
+### 9. Block Categories
+Categorize work packages by type:
+- **Infrastructure**: Directory structure, tooling setup, configuration
+- **Documentation**: Writing docs, standards, guides
+- **Automation**: Scripts, CI/CD, automated checks
+- **Security**: Security controls, scanning, policies
+- **Configuration**: Config files, settings, environment
+- **Architecture**: Design decisions, boundaries, patterns
 
-### Create `/.repo/agents/checklists/` directory
+### 10. End of Phase Sections
 
-- [ ] Create `change-plan.md` - Change planning checklist
-- [ ] Create `pr-review.md` - PR review checklist
-- [ ] Create `incident.md` - Incident response checklist
+**Risks & Mitigation:**
+List high-risk items with mitigation strategies
 
-### Create `/.repo/templates/` directory
+**Definition of Done:**
+- [ ] All WP-P[X].X work packages marked complete
+- [ ] All files committed and pushed
+- [ ] Peer review completed
+- [ ] No blockers for next phase
 
-- [ ] Create `PR_TEMPLATE.md` - Formal PR template
+**Notes & References:**
+- Related ADRs: [Links]
+- Related PRs: [Links]
+- External Dependencies: [List or "None"]
 
-## PHASE 6: Logging + Trace + Waiver + ADR Templates
+## Task Traceability Requirements
 
-### Create templates in `/.repo/templates/` directory
+Every task MUST include:
+1. **Files**: Specific file paths that will be created or modified
+2. **Commands**: Exact commands to verify the task is complete
+3. **Evidence**: Clear criteria that proves completion
 
-- [ ] Create `AGENT_LOG_TEMPLATE.md` - Agent log structure
-  - [ ] Include intent, plan, actions, evidence
-  - [ ] Include decisions, risks, follow_ups, reasoning_summary
+Example:
+```markdown
+- [ ] **T-P0.1.1**: Create /.repo directory structure
+  - Files: `/.repo/`, `/.repo/policy/`, `/.repo/agents/`
+  - Commands: `tree /.repo -L 2`
+  - Evidence: Directory structure matches specification
+```
 
-- [ ] Create `AGENT_TRACE_SCHEMA.json` - Trace validation schema
-  - [ ] Define required fields (intent, files, commands, evidence, hitl, unknowns)
-  - [ ] Define JSON schema structure for validation
+## Scope Boundaries
 
-- [ ] Create `WAIVER_TEMPLATE.md` - Waiver structure
-  - [ ] Include waives, why, scope, owner
-  - [ ] Include expiration, remediation_plan, link
+Always include explicit scope boundaries:
+- **In Scope**: What IS being done in this phase/work package
+- **Out of Scope**: What is explicitly NOT being done (defer to later or exclude entirely)
 
-- [ ] Create `ADR_TEMPLATE.md` - Architecture Decision Record template
-  - [ ] Include context, decision_drivers, options
-  - [ ] Include decision, consequences, modules, commands
-  - [ ] Include migration, boundary_impact, hitl
+This prevents scope creep and sets clear expectations.
 
-- [ ] Create `RUNBOOK_TEMPLATE.md` - Runbook template
-  - [ ] Include title, summary, steps
-  - [ ] Include rollback, verification
+## Dependencies
 
-- [ ] Create `RFC_TEMPLATE.md` - Request for Comments template
-  - [ ] Include title, problem, proposed_solution
-  - [ ] Include alternatives, impact, risks
+Always document:
+- **Requires**: What must be completed before this can start
+- **Blocks**: What cannot start until this is complete
 
-## PHASE 7: Automation Stubs
+Use work package IDs (WP-P[X].[Y]) or external dependencies.
 
-### Create `/.repo/automation/` directory structure
+## Guidelines for Restructuring
 
-- [ ] Create `/.repo/automation/ci/governance-verify.yml` - CI job template
-  - [ ] Template for calling manifest-defined commands
-  - [ ] Include install and governance verify steps
+1. **Preserve Content**: Don't lose any existing tasks
+2. **Group Logically**: Combine related tasks into work packages
+3. **Add Metadata**: Enhance with effort, risk, owner, dependencies
+4. **Be Specific**: Every task should be actionable with clear success criteria
+5. **No Orphans**: Every task belongs to a work package, every work package belongs to a phase
+6. **Add Context**: Include "why" in descriptions, not just "what"
+7. **Make it Scannable**: Use consistent formatting, clear headers, visual indicators
 
-- [ ] Create `/.repo/automation/scripts/` directory
-  - [ ] Create `governance-verify.js` - Main governance verification script
-  - [ ] Create `validate-agent-trace.js` - Trace log validation script
+## Example Output Format
 
-## PHASE 8: Docs Glue (Indexes + Standards + ADR Scaffold)
+See TODOP0.md and TODOP3.md in this repository for complete examples of the expected format.
 
-### Create `/.repo/docs/` directory structure
+## Apply This Format
 
-- [ ] Create `/.repo/docs/DOCS_INDEX.md` - Central documentation index
-  - [ ] Link to Start Here documents (governance, policy files)
-  - [ ] Link to Standards documents
-  - [ ] Link to ADR History
+Please restructure the provided task list using this format. Ensure:
+- Hierarchical task IDs (P[X], WP-P[X].[Y], T-P[X].[Y].[Z])
+- Clear scope boundaries (in-scope/out-of-scope)
+- Metadata for every work package (block, priority, status, owner, effort, risk)
+- Traceability for every task (files, commands, evidence)
+- Explicit dependencies (requires/blocks)
+- Definition of done for the phase
+- Risk mitigation strategies
+```
 
-### Create `/.repo/docs/standards/` directory
+## Usage Instructions
 
-- [ ] Create `documentation.md` - Documentation standards
-  - [ ] Docs must update when code updates
-  - [ ] Filepath requirements
-  - [ ] Examples are contracts
+1. Copy the prompt above
+2. Provide it to GitHub Copilot along with your task list
+3. Review the output for completeness
+4. Adjust work package groupings if needed
+5. Verify all task IDs follow the numbering system
+6. Ensure dependencies are correctly mapped
 
-- [ ] Create `adr.md` - ADR standards
-  - [ ] Define when ADR is required
-  - [ ] Reference ADR template
+## Benefits of This Format
 
-- [ ] Create `api.md` - API standards
-  - [ ] Document API shape, input, output requirements
-  - [ ] Define api-contract change type
+- **Traceability**: Every task has a unique ID and can be referenced
+- **Clarity**: Clear scope prevents scope creep
+- **Planning**: Dependencies and effort estimates enable better scheduling
+- **Risk Management**: Visual indicators help prioritize attention
+- **Verifiable**: Commands and evidence make completion objective
+- **Professional**: Consistent format improves communication and handoffs
 
-- [ ] Create `style.md` - Code style standards
-  - [ ] Clear naming requirements
-  - [ ] No duplication
-  - [ ] Single responsibility functions
-  - [ ] Comment purpose (WHY not WHAT)
+## Related Documents
 
-### Create `/.repo/docs/adr/` directory
+- `TODOP0.md` - Example: Phase 0 (Core Infrastructure)
+- `TODOP3.md` - Example: Phase 3 (Manifest & Commands)
+- `TODO.md.old` - Original unstructured task list (for reference)
 
-- [ ] Create `README.md` - ADR directory index
-- [ ] Create `0001-example.md` - Example ADR
+## Maintenance
 
-## PHASE 9: Root Scaffolds
-
-### Update/Create root-level files
-
-- [ ] Update `/README.md` - Link to /.repo/DOCS_INDEX.md
-- [ ] Update `/SECURITY.md` - Link to /.repo/policy/SECURITY_BASELINE.md
-- [ ] Update or create `/CODEOWNERS` - Set owner
-- [ ] Verify `/LICENSE` exists
-- [ ] Verify priority TODO files exist (P0TODO.md, P1TODO.md, P2TODO.md)
-- [ ] Verify `/COMPLETEDTODO.md` exists
-- [ ] Create `/.repo/archive/todo/README.md` - Archive directory for TODO snapshots
-
-## Integration and Verification Tasks
-
-- [ ] Verify all `<FILL_FROM_REPO>` placeholders are resolved or documented as UNKNOWN
-- [ ] Run governance-verify to ensure all required artifacts are present
-- [ ] Test command resolution from manifest
-- [ ] Verify boundary enforcement works
-- [ ] Verify HITL workflow is functional
-- [ ] Verify all templates are complete and valid
-- [ ] Create initial waivers for any pre-existing violations
-- [ ] Document any UNKNOWN items that require human input
-- [ ] Archive this TODO list upon completion
-
-## Notes
-
-- **No guessing**: If information cannot be determined from repo contents, mark as UNKNOWN and create HITL item
-- **Filepaths required**: All tasks, PRs, logs, and documentation must include explicit file paths
-- **Evidence over vibes**: All completed tasks must include verification evidence
-- **Incremental delivery**: Break down large tasks into smaller, reviewable increments
-- **Safety first**: For risky changes involving login, money, security, or production: STOP → ASK → VERIFY → PROCEED
+When adding new tasks:
+1. Determine which phase they belong to
+2. Find or create appropriate work package
+3. Assign next sequential task ID
+4. Include files, commands, evidence
+5. Update dependencies if needed
+6. Mark scope explicitly
