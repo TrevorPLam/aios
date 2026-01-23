@@ -54,17 +54,40 @@ This governance system provides:
 │   ├── BOUNDARIES.md       ← Architectural boundaries
 │   ├── HITL.md            ← Human-in-the-loop tracking
 │   └── WAIVERS.md         ← Policy exception tracking
-├── agents/                 ← AI agent framework (Phase 2)
+├── agents/                 ← AI agent framework
 │   ├── roles/             ← Agent role definitions
 │   ├── prompts/           ← Agent prompt templates
-│   └── checklists/        ← Task checklists
-├── templates/             ← Document templates (Phase 2)
+│   ├── checklists/        ← Task checklists
+│   └── QUICK_REFERENCE.md ← One-page cheat sheet
+├── templates/             ← Document templates
+│   ├── AGENT_LOG_TEMPLATE.md
+│   ├── AGENT_TRACE_SCHEMA.json
+│   ├── PR_TEMPLATE.md
+│   ├── ADR_TEMPLATE.md
+│   ├── WAIVER_TEMPLATE.md
+│   └── ...
+├── examples/              ← Example files
+│   ├── example_trace_log.json
+│   ├── example_hitl_item.md
+│   ├── example_waiver.md
+│   ├── example_task_packet.json
+│   └── README.md
 ├── docs/                  ← Documentation standards
 │   ├── standards/         ← Documentation standards
+│   ├── boundary-checker.md ← Boundary checker documentation
+│   ├── ci-integration.md  ← CI integration guide
 │   └── adr/              ← Architecture Decision Records
-└── automation/            ← CI/CD and automation (Phase 3)
-    ├── ci/               ← CI/CD templates
-    └── scripts/          ← Automation scripts
+├── automation/            ← CI/CD and automation
+│   ├── ci/               ← CI/CD templates
+│   │   └── governance-verify.yml
+│   └── scripts/          ← Automation scripts
+│       ├── governance-verify.js
+│       ├── validate-agent-trace.js
+│       ├── sync-hitl-to-pr.py
+│       ├── archive-task.py
+│       └── README.md
+└── hitl/                  ← HITL item files
+    └── HITL-XXXX.md
 ```
 
 ## 🚦 How to Use This Framework

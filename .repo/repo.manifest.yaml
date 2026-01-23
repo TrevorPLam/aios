@@ -24,12 +24,9 @@ commands:
   # Budgets are configured in this manifest but enforcement command is missing.
   check:release: "npm run lint && npm run check:types && npm test && npm audit --audit-level=moderate"
   check:governance: "npm run compile:constitution && npm run check:traceability && npm run check:exceptions && npm run check:agent-platform"
-  check:boundaries: "<UNKNOWN>"
-  # NOTE: check:security currently only runs dependency scan (npm audit).
-  # Secrets scan and forbidden pattern scan are not yet implemented.
-  # These must be added before this command is considered complete.
-  # See SECURITY_BASELINE.md for required patterns.
-  check:security: "npm audit --audit-level=moderate"
+  check:boundaries: "npm run check:boundaries"
+  # NOTE: check:security runs dependency scan (npm audit) and forbidden pattern scan.
+  check:security: "npm audit --audit-level=moderate && npm run check:security:patterns"
 
 verify_profiles:
   quick: [check:quick]

@@ -61,6 +61,14 @@ Filepaths must be included in:
 
 This is required by the global rule in `/.repo/policy/PRINCIPLES.md`.
 
+## Trace Logs
+
+Trace logs should be stored in `.repo/traces/` directory following the naming convention:
+- `trace-{task-id}-{timestamp}.json` - For task-specific traces
+- `trace-{pr-number}-{timestamp}.json` - For PR-specific traces
+
+See `.repo/traces/README.md` for details.
+
 ## Boundary Enforcement
 
 The boundary model is: **ui → domain → data → platform**
@@ -93,6 +101,23 @@ See `/.repo/agents/roles/` for role-specific capabilities:
 ## Capabilities
 
 See `/.repo/agents/capabilities.md` for the complete list of agent capabilities.
+
+## Quick Reference
+
+See `/.repo/agents/QUICK_REFERENCE.md` for a one-page cheat sheet with:
+- Decision tree for HITL requirements
+- Common commands and workflows
+- Artifact requirements table
+- Boundary rules quick reference
+- Exit codes and file locations
+
+## Examples
+
+See `/.repo/examples/` for example files demonstrating correct formats:
+- `example_trace_log.json` - Trace log format
+- `example_hitl_item.md` - HITL item format
+- `example_waiver.md` - Waiver format
+- `example_task_packet.json` - Task packet format
 
 ## Folder-Level Guides
 

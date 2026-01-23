@@ -1,0 +1,14 @@
+# Pre-commit hooks configuration
+# See https://pre-commit.com for more information
+
+repos:
+  - repo: local
+    hooks:
+      - id: governance-verify
+        name: Governance Verification
+        entry: bash -c 'node .repo/automation/scripts/governance-verify.js --hitl-file .repo/policy/HITL.md || true'
+        language: system
+        files: ^\.repo/|^agents/|^scripts/
+        pass_filenames: false
+        verbose: true
+        always_run: false

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Evidence Schema",
+  "description": "Schema for verification evidence in governance framework",
+  "required": ["type", "command", "status"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["build", "test", "lint", "type-check", "security", "boundary", "governance"],
+      "description": "Type of evidence"
+    },
+    "command": {
+      "type": "string",
+      "description": "Command that was executed"
+    },
+    "output": {
+      "type": "string",
+      "description": "Command output or summary"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["passed", "failed", "skipped", "warning"],
+      "description": "Status of the check"
+    },
+    "filepaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "File paths affected or verified"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when evidence was collected"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "properties": {
+        "duration_ms": {
+          "type": "number",
+          "description": "Duration in milliseconds"
+        },
+        "coverage": {
+          "type": "number",
+          "description": "Test coverage percentage (for test evidence)"
+        },
+        "violations": {
+          "type": "number",
+          "description": "Number of violations found (for lint/security evidence)"
+        }
+      }
+    }
+  }
+}

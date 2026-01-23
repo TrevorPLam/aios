@@ -26,9 +26,21 @@ Default meanings (editable only by human in this file if needed):
 10) Dependency / supply-chain risk change
 
 ## Forbidden patterns
-Forbidden patterns list: ["A","B","C","D","E","F","G","H"]
-These are placeholders for repo-specific patterns (strings/regex rules) enforced by check:security.
-If a pattern is unknown, mark UNKNOWN and create HITL.
+Forbidden patterns list: [
+  "password\\s*=\\s*['\"][^'\"]+['\"]",
+  "api[_-]?key\\s*=\\s*['\"][^'\"]+['\"]",
+  "secret\\s*=\\s*['\"][^'\"]+['\"]",
+  "token\\s*=\\s*['\"][^'\"]+['\"]",
+  "private[_-]?key\\s*=\\s*['\"][^'\"]+['\"]",
+  "access[_-]?token\\s*=\\s*['\"][^'\"]+['\"]",
+  "aws[_-]?secret[_-]?access[_-]?key",
+  "bearer\\s+[A-Za-z0-9_-]{20,}"
+]
+These are regex patterns enforced by check:security. Patterns match:
+- Hardcoded passwords, API keys, secrets, tokens
+- AWS secret access keys
+- Bearer tokens in code
+If a pattern needs adjustment, mark UNKNOWN and create HITL.
 
 ## Mandatory HITL actions
 Mandatory HITL action IDs: [1,2,3,4,5,6,7,8]

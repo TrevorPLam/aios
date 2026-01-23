@@ -33,6 +33,9 @@
     "check:postinstall": "node scripts/post-install-check.mjs",
     "check:deps": "node scripts/deep-dependency-check.mjs",
     "check:startup": "node scripts/check-startup-blockers.mjs",
+    "check:security:patterns": "node .repo/automation/scripts/check-security-patterns.js",
+    "check:boundaries": "node .repo/automation/scripts/check-boundaries.js",
+    "check:manifest": "node .repo/automation/scripts/validate-manifest.js",
     "postinstall": "node scripts/post-install-check.mjs"
   },
   "dependencies": {

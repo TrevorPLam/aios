@@ -1,0 +1,21 @@
+{
+  "intent": "Add contact management feature following boundary model",
+  "files": [
+    "packages/features/contacts/domain/contactService.ts",
+    "packages/features/contacts/data/contactRepository.ts",
+    "packages/features/contacts/ui/ContactList.tsx",
+    "packages/features/contacts/domain/__tests__/contactService.test.ts"
+  ],
+  "commands": [
+    "npm run check:types",
+    "npm test",
+    "npm run lint"
+  ],
+  "evidence": [
+    "Type checking complete. No errors.",
+    "All tests passed. 15 tests, 0 failures.",
+    "Linting complete. No issues found."
+  ],
+  "hitl": [],
+  "unknowns": []
+}

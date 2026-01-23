@@ -185,3 +185,103 @@ jobs:
       - name: Build server
         run: npm run server:build
         continue-on-error: false
+
+  governance-verify:
+    name: Governance Verification
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v6
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install Node.js dependencies
+        run: npm ci
+      
+      - name: Install Python dependencies
+        run: |
+          pip install -r .repo/automation/scripts/requirements.txt
+      
+      - name: Find trace log
+        id: trace-log
+        run: |
+          TRACE_LOG=$(find . -name "*trace*.json" -type f | head -1 || echo "")
+          if [ -n "$TRACE_LOG" ]; then
+            echo "path=$TRACE_LOG" >> $GITHUB_OUTPUT
+            echo "Found trace log: $TRACE_LOG"
+          else
+            echo "No trace log found (optional)"
+          fi
+      
+      - name: Run governance verification
+        id: gov-verify
+        run: |
+          TRACE_LOG="${{ steps.trace-log.outputs.path }}"
+          BASE_REF="${{ github.event.pull_request.base.ref || 'main' }}"
+          PR_BODY_PATH="${{ github.event.pull_request.body && format('{0}', github.event.pull_request.body) || '' }}"
+          
+          # Write PR body to temp file if available
+          if [ -n "$PR_BODY_PATH" ]; then
+            echo "$PR_BODY_PATH" > /tmp/pr-body.md
+            PR_BODY_ARG="--pr-body /tmp/pr-body.md"
+          else
+            PR_BODY_ARG=""
+          fi
+          
+          if [ -n "$TRACE_LOG" ]; then
+            node .repo/automation/scripts/governance-verify.js \
+              --trace-log "$TRACE_LOG" \
+              --hitl-file .repo/policy/HITL.md \
+              --base-ref "$BASE_REF" \
+              $PR_BODY_ARG || EXIT_CODE=$?
+          else
+            node .repo/automation/scripts/governance-verify.js \
+              --hitl-file .repo/policy/HITL.md \
+              --base-ref "$BASE_REF" \
+              $PR_BODY_ARG || EXIT_CODE=$?
+          fi
+          echo "exit_code=${EXIT_CODE:-0}" >> $GITHUB_OUTPUT
+          exit ${EXIT_CODE:-0}
+        continue-on-error: true
+      
+      - name: Check for expired waivers
+        run: |
+          python3 .repo/automation/scripts/manage-waivers.py check-expired || EXIT_CODE=$?
+          if [ "${EXIT_CODE:-0}" = "1" ]; then
+            echo "⚠️  Expired waivers found. Review required."
+            # Don't fail the build, but warn
+          fi
+        continue-on-error: true
+      
+      - name: Sync HITL status to PR
+        if: github.event_name == 'pull_request' && steps.gov-verify.outputs.exit_code != '1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          python3 .repo/automation/scripts/sync-hitl-to-pr.py \
+            --pr-number "$PR_NUMBER" \
+            --hitl-file .repo/policy/HITL.md || echo "HITL sync failed (non-blocking)"
+        continue-on-error: true
+      
+      - name: Check governance verification result
+        if: steps.gov-verify.outputs.exit_code == '1'
+        run: |
+          echo "❌ Hard gate failures detected. Merge blocked."
+          exit 1
+      
+      - name: Warn on waiverable failures
+        if: steps.gov-verify.outputs.exit_code == '2'
+        run: |
+          echo "⚠️  Warnings detected. Review recommended."
+          # Don't fail the build, but mark as warning
