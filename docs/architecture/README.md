@@ -4,7 +4,7 @@
 
 **AIOS is undergoing a major architectural transformation** to a Diamond++ AI-native monorepo structure.
 
-👉 **[Start Here: Diamond++ Migration Index](./DIAMOND_MIGRATION_INDEX.md)**
+👉 **[Diamond++ Deep Analysis & Game Plan](./DIAMOND_DEEP_ANALYSIS_AND_GAMEPLAN.md)** — Single comprehensive document with complete analysis, strategy, and execution plan
 
 ---
 
@@ -329,11 +329,9 @@ npm run test:coverage
 
 AIOS is undergoing a major architectural transformation to a Diamond++ AI-native monorepo structure. This migration will happen incrementally over 7 phases.
 
-### Key Migration Documents
+### Key Migration Document
 
-- **[Diamond++ Migration Plan](./DIAMOND_PLUS_PLUS_MIGRATION_PLAN.md)** - Complete 7-phase migration strategy
-- **[Diamond++ Quick Reference](./DIAMOND_QUICK_REFERENCE.md)** - One-page guide for code placement
-- **[ADR-008: Diamond++ Architecture](../decisions/008-diamond-architecture-migration.md)** - Decision rationale
+- **[Diamond++ Deep Analysis & Game Plan](./DIAMOND_DEEP_ANALYSIS_AND_GAMEPLAN.md)** - Single comprehensive document containing complete analysis, 7-phase migration strategy, quality assurance, execution plans, and all details
 
 ### Migration Status
 
@@ -345,13 +343,13 @@ AIOS is undergoing a major architectural transformation to a Diamond++ AI-native
 
 **If you're adding features:**
 - Follow the current structure until Phase 0 is complete
-- Review the migration plan to understand future structure
+- Review the comprehensive game plan to understand future structure
 - Expect code to be moved during the migration
 
 **If you're reviewing code:**
-- Check migration plan for context on structural changes
+- Check the game plan for context on structural changes
 - Validate that changes align with target architecture
-- Use quick reference for guidance on code placement
+- Refer to Part IX (Execution Checklists) for quality gates
 
 ---
 
