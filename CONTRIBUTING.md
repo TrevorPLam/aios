@@ -73,14 +73,14 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 2. Clone your fork:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/Mobile-Scaffold.git
-   cd Mobile-Scaffold
+   git clone https://github.com/YOUR_USERNAME/aios.git
+   cd aios
    ```text
 
 3. Add upstream remote:
 
    ```bash
-   git remote add upstream https://github.com/TrevorPowellLam/Mobile-Scaffold.git
+   git remote add upstream https://github.com/TrevorPowellLam/aios.git
    ```text
 
 4. Install dependencies:

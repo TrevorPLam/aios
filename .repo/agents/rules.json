@@ -150,7 +150,7 @@
       {"rule": "Link changes to task in .repo/tasks/TODO.md", "source": "article_5"},
       {"rule": "Mark UNKNOWN → Create HITL", "source": "article_3"},
       {"rule": "Follow three-pass workflow", "source": "workflow"},
-      {"rule": "Run make lint before PR", "source": "best_practice"},
+      {"rule": "Run npm run lint before PR", "source": "best_practice"},
       {"rule": "Archive completed tasks", "source": "article_5"},
       {"rule": "Show verification evidence", "source": "article_2_p6"},
       {"rule": "Explain what/why/filepaths/verification/risks/rollback in PR", "source": "p17"},
@@ -183,57 +183,76 @@
   "commands": {
     "source": ".repo/repo.manifest.yaml",
     "common": {
-      "setup": "make setup",
-      "lint": "make lint",
-      "test": "make test",
-      "verify": "make verify",
-      "verify_full": "make verify SKIP_HEAVY=0",
-      "ci": "make ci"
+      "setup": "npm install",
+      "lint": "npm run lint",
+      "test": "npm test",
+      "check:types": "npm run check:types",
+      "verify": "npm run check:governance",
+      "ci": "npm run check:governance"
     },
-    "backend": {
-      "migrate": "make -C backend migrate",
-      "openapi": "make -C backend openapi"
+    "mobile": {
+      "start": "npm run expo:dev",
+      "test": "npm test",
+      "build": "npm run expo:static:build"
     },
-    "frontend": {
-      "test": "make -C frontend test",
-      "e2e": "make -C frontend e2e"
+    "api": {
+      "dev": "npm run server:dev",
+      "build": "npm run server:build",
+      "db:push": "npm run db:push"
     }
   },
   "tech_stack": {
-    "backend": {
-      "framework": "Django 4.2",
-      "language": "Python 3.11",
-      "database": "PostgreSQL 15"
+    "mobile": {
+      "framework": "React Native 0.83.1",
+      "platform": "Expo 54",
+      "language": "TypeScript",
+      "state": "TanStack React Query",
+      "navigation": "React Navigation",
+      "animations": "React Native Reanimated"
     },
-    "frontend": {
-      "framework": "React 18.3",
-      "language": "TypeScript 5.9",
-      "build": "Vite 5.4",
-      "data_fetching": "TanStack React Query",
-      "forms": "React Hook Form"
+    "backend": {
+      "framework": "Express",
+      "language": "Node.js + TypeScript",
+      "database": "PostgreSQL with Drizzle ORM",
+      "validation": "Zod"
+    },
+    "testing": {
+      "framework": "Jest",
+      "library": "React Native Testing Library"
+    },
+    "formatting": {
+      "code": "Prettier",
+      "linting": "ESLint (Expo config)"
     }
   },
   "project_structure": {
-    "backend": {
-      "modules": "Domain modules (firm-scoped multi-tenancy)",
-      "api": "API endpoints",
-      "config": "Django settings, middleware"
+    "mobile": {
+      "apps/mobile": "React Native + Expo app (screens, components, hooks, navigation)",
+      "apps/mobile/screens": "Screen components",
+      "apps/mobile/components": "Reusable UI components",
+      "apps/mobile/hooks": "Custom React hooks",
+      "apps/mobile/storage": "AsyncStorage database layer"
     },
-    "frontend": {
-      "src": "React components, pages, hooks"
+    "backend": {
+      "apps/api": "Express API/server entry, middleware, utilities",
+      "apps/api/middleware": "Express middleware",
+      "apps/api/utils": "Shared utilities"
+    },
+    "shared": {
+      "packages/contracts": "Shared types between client and server"
     },
     "tasks": ".repo/tasks/ (TODO/BACKLOG/ARCHIVE)"
   },
   "code_style": {
-    "backend": {
-      "pattern": "Django REST Framework viewsets with FirmScopedMixin",
-      "example": "class ClientViewSet(FirmScopedMixin, viewsets.ModelViewSet):",
-      "requirements": ["firm_scoped_models", "type_hints_preferred"]
+    "mobile": {
+      "pattern": "React Native functional components with TypeScript",
+      "example": "export const Component: React.FC = () => { const { data } = useQuery({ queryKey: ['data'] }); return <View><Text>{data}</Text></View>; };",
+      "requirements": ["functional_components", "react_native_components", "react_query_for_data", "expo_modules"]
     },
-    "frontend": {
-      "pattern": "Functional components with TypeScript",
-      "example": "export const Component: React.FC = () => { const { data } = useQuery(...); }",
-      "requirements": ["functional_components", "react_query_for_data", "react_hook_form_for_forms"]
+    "backend": {
+      "pattern": "Express routes with TypeScript and Zod validation",
+      "example": "router.post('/endpoint', (req, res) => { const validated = schema.parse(req.body); });",
+      "requirements": ["express_routes", "typescript", "zod_validation"]
     }
   }
 }

@@ -8,20 +8,20 @@ repo:
   release_protects: [app_stability, login_security, money_flows]
 
 prerequisites:
-  package_manager: npm+pip
+  package_manager: npm
   runtime_pinned: true
   platform_tools_required_for_release: true
 
 # Canonical commands (names are fixed). Fill values by following docs/development/standards/manifest.md
 # Commands resolved from: Makefile, CI workflow (.github/workflows/ci.yml), package.json scripts
 commands:
-  install: "make setup"
-  check:quick: "make lint && make frontend-build"
-  check:ci: "make verify SKIP_HEAVY=0"
-  check:release: "make verify SKIP_HEAVY=0 && pip-audit -r requirements.txt -r requirements-dev.txt && safety check --file requirements.txt && bandit -r backend/ -ll && cd frontend && npm audit --audit-level=moderate && cd .. && trufflehog filesystem --directory . --json || true"
-  check:governance: "./scripts/governance-verify.sh"
-  check:boundaries: "lint-imports --config .importlinter"
-  check:security: "pip-audit -r requirements.txt -r requirements-dev.txt && safety check --file requirements.txt && bandit -r backend/ -ll && cd frontend && npm audit --audit-level=moderate && cd .. && trufflehog filesystem --directory . --json || true"
+  install: "npm install"
+  check:quick: "npm run lint && npm run check:types"
+  check:ci: "npm test && npm run lint && npm run check:types && npm run check:governance"
+  check:release: "npm test && npm run lint && npm run check:types && npm run check:security && npm run check:governance"
+  check:governance: "node .repo/automation/scripts/governance-verify.js --hitl-file .repo/policy/HITL.md"
+  check:boundaries: "node .repo/automation/scripts/check-boundaries.js"
+  check:security: "npm audit --audit-level=moderate && npm run check:security:patterns"
 
 verify_profiles:
   quick: [check:quick]

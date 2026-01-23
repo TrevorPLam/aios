@@ -214,8 +214,8 @@ flowchart LR
 ### Installation
 
 ```bash
-git clone https://github.com/TrevorPowellLam/Mobile-Scaffold.git
-cd Mobile-Scaffold
+git clone https://github.com/TrevorPowellLam/aios.git
+cd aios
 npm install
 ```
 
@@ -305,7 +305,7 @@ npm run test:coverage
 ## Project Structure
 
 ```text
-Mobile-Scaffold/
+aios/
 ├── apps/mobile/                 # React Native mobile app
 │   ├── components/         # Reusable UI components
 │   ├── constants/          # Theme, colors, spacing

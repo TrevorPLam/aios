@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Agentic System Injection Script
-Injects all files from AGENTIC_SYSTEM_COMPLETE_FILE_MAPPING_WITH_CONTENT.json into target repository
+AIOS Agentic System Injection Script
+Injects all files from AGENTIC_SYSTEM_COMPLETE_FILE_MAPPING_WITH_CONTENT.json into the AIOS repository
 Designed for zero-friction agent execution
 """
 
@@ -13,7 +13,7 @@ from typing import Dict, List, Optional
 import shutil
 
 class AgenticSystemInjector:
-    """Handles injection of agentic system files into a target repository."""
+    """Handles injection of agentic system files into the AIOS repository."""
 
     def __init__(self, mapping_file: str, target_root: str, dry_run: bool = False):
         self.mapping_file = Path(mapping_file)
@@ -202,9 +202,9 @@ class AgenticSystemInjector:
         """Generate injection report."""
         report = []
         report.append("\n" + "="*60)
-        report.append("AGENTIC SYSTEM INJECTION REPORT")
+        report.append("AIOS AGENTIC SYSTEM INJECTION REPORT")
         report.append("="*60)
-        report.append(f"\nTarget Repository: {self.target_root}")
+        report.append(f"\nAIOS Repository: {self.target_root}")
         report.append(f"Mapping File: {self.mapping_file}")
         report.append(f"Dry Run: {self.dry_run}")
         report.append(f"\nFiles Processed: {len(self.injection_order)}")
@@ -246,7 +246,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description='Inject agentic system files into target repository',
+        description='Inject agentic system files into the AIOS repository',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -272,7 +272,7 @@ Examples:
     parser.add_argument(
         '--target',
         default='.',
-        help='Target repository root directory (default: current directory)'
+        help='AIOS repository root directory (default: current directory)'
     )
     parser.add_argument(
         '--dry-run',
