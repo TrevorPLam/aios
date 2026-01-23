@@ -66,20 +66,18 @@
 
 ---
 
-### [TASK-001] Refine AGENTS.md to Be Concise & Effective
+### [TASK-002] Create .env.example File
 - **Priority:** P0
 - **Status:** In Progress
 - **Created:** 2026-01-23
-- **Context:** Current AGENTS.md is 22 lines. Best practice is 50-100 lines that are highly specific and example-driven, NOT verbose documentation.
+- **Context:** Code references `.env.example` but file doesn't exist. Blocks new environment setup.
 
 #### Acceptance Criteria
-- [ ] Include all six core areas: Commands, Testing, Project Structure, Code Style, Git Workflow, Boundaries
-- [ ] Add specific tech stack with versions (Django 4.2 + Python 3.11 + React 18 + TypeScript)
-- [ ] Include 1-2 code examples (showing patterns, not explaining them)
-- [ ] Document clear boundaries (what agents must NEVER do)
-- [ ] Keep total length under 100 lines
+- [ ] Document all required environment variables from `env_validator.py`
+- [ ] Include comments explaining each variable
+- [ ] Add placeholder values (never real secrets)
+- [ ] Reference in README.md and docs/getting-started/onboarding.md
 
 #### Notes
-- "One real code snippet beats three paragraphs" — GitHub research
-- Tools: Cursor, Codex mobile, Claude mobile, GitHub Copilot mobile
-- Reference: https://agents.md (official spec)
+- Required vars: DJANGO_SECRET_KEY, POSTGRES_*, AWS_*, STRIPE_*, etc.
+- Production vars differ from development vars
