@@ -55,13 +55,6 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 - **.github/workflows/docs-links.yml** — Link validation to prevent documentation rot.
 - **.github/workflows/docs-vale.yml** — Prose linting for documentation quality.
 - **.github/workflows/api-spectral.yml** — OpenAPI spec linting to enforce API contract quality.
-- **.github/workflows/constitution-sync.yml** — Ensures Copilot instructions match the constitution (governance enforcement).
-- **.github/workflows/exceptions-expiry.yml** — Enforces expiry of governance exceptions/waivers.
-- **.github/workflows/traceability-check.yml** — Validates traceability matrix completeness (warn/fail based on state).
-- **.github/workflows/documentation-metrics.yml** — Generates documentation metrics for governance reporting.
-- **.github/workflows/documentation-stale.yml** — Flags stale docs to prevent governance drift.
-- **.github/workflows/documentation-issue-automation.yml** — Automates issue creation and tracking for documentation governance.
-- **.github/workflows/agent-platform-check.yml** — Enforcement workflow for AGENT ownership consistency in TODO assignments.
 - **docs/github-actions-guide.md** — Detailed documentation for workflow usage and troubleshooting.
 - **.github/dependabot.yml** — Automated dependency update policy and scheduling.
 

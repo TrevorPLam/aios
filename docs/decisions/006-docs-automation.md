@@ -72,26 +72,6 @@ Features:
 - Terminology consistency
 - Project vocabulary support
 
-### 5. Documentation Metrics
-
-**Script:** `scripts/docs/update-documentation-metrics.mjs`
-**Workflow:** `.github/workflows/documentation-metrics.yml`
-
-Tracks:
-
-- Number of active docs
-- Average doc age
-- TODO count
-- CI pass rate
-- Issue resolution time
-
-### 6. Issue Automation
-
-#### Workflows
-
-- `documentation-issue-automation.yml` - Auto-label and triage
-- `documentation-stale.yml` - Manage stale issues
-
 ## Alternatives Considered
 
 ### 1. Manual Review Only
@@ -172,7 +152,7 @@ Tracks:
 
 - **On PR:** docs-markdownlint, docs-vale, docs-links (changed files only)
 - **On push to main:** All workflows (full validation)
-- **Scheduled:** docs-links (weekly), documentation-metrics (monthly)
+- **Scheduled:** docs-links (weekly)
 - **Manual:** All workflows support workflow_dispatch
 
 ### Performance Optimization

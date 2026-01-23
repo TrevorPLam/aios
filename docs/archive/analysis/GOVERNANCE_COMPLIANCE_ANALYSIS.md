@@ -50,10 +50,6 @@ This analysis reviews the Mobile-Scaffold repository's governance documentation 
    - Configured with `.cspell.json`
    - Runs on all markdown files
 
-5. **Documentation Metrics** - `.github/workflows/documentation-metrics.yml`
-   - Monthly automated metrics updates
-   - Tracks doc count, age, TODOs, CI pass rate
-
 #### ⚠️ Gaps Identified
 
 1. **Vale Configuration Missing**

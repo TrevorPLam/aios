@@ -2,50 +2,64 @@
 
 ## 📊 Overview
 
-This repository includes 14 comprehensive GitHub Actions workflows for documentation quality, security automation, and dependency management.
+This repository includes 11 GitHub Actions workflows for CI, documentation quality, and security automation.
 
-## 🆕 New Workflows (8)
+## ✅ Workflows (11)
 
-### Documentation Quality (4)
+### Core CI (1)
 
-1. **docs-vale.yml** - Vale prose linting
+1. **ci.yml** - Core CI pipeline
+   - Caption: "Core pipeline for type-checking, linting, formatting, docs, and tests."
+   - Triggers: PR, push to main/develop
+
+### Documentation Quality (5)
+
+1. **docs-quality.yml** - Documentation quality gate
+   - Caption: "Combined markdown link checks, linting, and spelling."
+   - Triggers: PR, push to main
+
+2. **docs-vale.yml** - Vale prose linting
    - Caption: "Vale prevents inconsistent tone and unclear writing in PRs."
    - Triggers: PR, push to main
    - Config: `.vale.ini`
 
-2. **docs-markdownlint.yml** - Markdown formatting
+3. **docs-markdownlint.yml** - Markdown formatting
    - Caption: "Markdownlint prevents formatting entropy and unreadable diffs."
    - Triggers: PR, push to main
    - Config: `.markdownlint.json`
 
-3. **docs-links.yml** - Link validation
+4. **docs-links.yml** - Link validation
    - Caption: "Broken links destroy trust; this catches rot early."
    - Triggers: PR (changed files), push (all files), weekly schedule
    - Config: `.lycheeignore`
 
-4. **api-spectral.yml** - OpenAPI spec linting
+5. **api-spectral.yml** - OpenAPI spec linting
    - Caption: "Spectral enforces API consistency and prevents contract drift."
    - Triggers: PR, push to main (when APIs change)
    - Config: `.spectral.yml`
 
-### Security & Compliance (4)
+### Security & Compliance (5)
 
-1. **sbom.yml** - Software Bill of Materials
+1. **codeql.yml** - CodeQL analysis
+   - Caption: "CodeQL scans code for security vulnerabilities."
+   - Triggers: PR, push to main, weekly schedule
+
+2. **sbom.yml** - Software Bill of Materials
    - Caption: "SBOM creates audit-ready inventory of all dependencies."
    - Triggers: push to main, releases, weekly schedule
    - Formats: SPDX, CycloneDX, human-readable
 
-2. **trivy.yml** - Vulnerability scanning
+3. **trivy.yml** - Vulnerability scanning
    - Caption: "Trivy catches security issues in dependencies and configuration."
    - Triggers: PR, push to main, daily schedule
    - Scans: filesystem, npm deps, config files
 
-3. **slsa-provenance.yml** - Build provenance
+4. **slsa-provenance.yml** - Build provenance
    - Caption: "SLSA provenance provides verifiable build integrity."
    - Triggers: releases
    - Level: SLSA Level 3
 
-4. **ossf-scorecard.yml** - Security best practices
+5. **ossf-scorecard.yml** - Security best practices
    - Caption: "OpenSSF Scorecard measures security best practices compliance."
    - Triggers: push to main, weekly schedule
    - Checks: 15+ security practices
