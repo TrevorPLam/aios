@@ -425,10 +425,7 @@ class AttentionManager {
     // Context-aware classification (optional - gracefully degrade if not available)
     let currentContext = null;
     try {
-      if (
-        contextEngine &&
-        typeof contextEngine.getCurrentZone === "function"
-      ) {
+      if (contextEngine && typeof contextEngine.getCurrentZone === "function") {
         currentContext = contextEngine.getCurrentZone();
       }
     } catch (error) {

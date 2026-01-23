@@ -21,7 +21,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../../../..");
-const EVIDENCE_SCHEMA_PATH = join(REPO_ROOT, ".repo/templates/EVIDENCE_SCHEMA.json");
+const EVIDENCE_SCHEMA_PATH = join(
+  REPO_ROOT,
+  ".repo/templates/EVIDENCE_SCHEMA.json",
+);
 
 function main() {
   const evidencePath = process.argv[2];
@@ -57,15 +60,18 @@ function main() {
   for (const [field, spec] of Object.entries(schema.properties || {})) {
     if (field in evidence) {
       const value = evidence[field];
-      
+
       if (spec.type === "string" && typeof value !== "string") {
         errors.push(`Field '${field}' must be a string`);
       } else if (spec.type === "array" && !Array.isArray(value)) {
         errors.push(`Field '${field}' must be an array`);
-      } else if (spec.type === "object" && typeof value !== "object" || Array.isArray(value)) {
+      } else if (
+        (spec.type === "object" && typeof value !== "object") ||
+        Array.isArray(value)
+      ) {
         errors.push(`Field '${field}' must be an object`);
       }
-      
+
       // Check enum values
       if (spec.enum && !spec.enum.includes(value)) {
         errors.push(`Field '${field}' must be one of: ${spec.enum.join(", ")}`);

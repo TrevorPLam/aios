@@ -7,7 +7,15 @@
   "properties": {
     "type": {
       "type": "string",
-      "enum": ["build", "test", "lint", "type-check", "security", "boundary", "governance"],
+      "enum": [
+        "build",
+        "test",
+        "lint",
+        "type-check",
+        "security",
+        "boundary",
+        "governance"
+      ],
       "description": "Type of evidence"
     },
     "command": {

@@ -384,12 +384,18 @@ class OmnisearchEngine {
 
       for (const contact of allContacts) {
         const nameScore = this.calculateRelevance(contact.name, query, "title");
-        const emailScore = contact.emails.length > 0
-          ? this.calculateRelevance(contact.emails[0], query, "metadata")
-          : 0;
-        const phoneScore = contact.phoneNumbers.length > 0
-          ? this.calculateRelevance(contact.phoneNumbers[0], query, "metadata")
-          : 0;
+        const emailScore =
+          contact.emails.length > 0
+            ? this.calculateRelevance(contact.emails[0], query, "metadata")
+            : 0;
+        const phoneScore =
+          contact.phoneNumbers.length > 0
+            ? this.calculateRelevance(
+                contact.phoneNumbers[0],
+                query,
+                "metadata",
+              )
+            : 0;
 
         const maxScore = Math.max(nameScore, emailScore, phoneScore);
         const relevanceScore = maxScore;
@@ -401,7 +407,10 @@ class OmnisearchEngine {
             title: contact.name,
             subtitle: contact.emails[0] || contact.phoneNumbers[0],
             relevanceScore,
-            metadata: { email: contact.emails[0], phone: contact.phoneNumbers[0] },
+            metadata: {
+              email: contact.emails[0],
+              phone: contact.phoneNumbers[0],
+            },
           });
         }
       }

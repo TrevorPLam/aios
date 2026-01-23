@@ -165,14 +165,11 @@ export function ContactsMiniMode({
    */
   const completeSelection = (selectedContacts: Contact[]) => {
     // Emit event to event bus
-    eventBus.emit(
-      EVENT_TYPES.MODULE_OPENED,
-      {
-        contacts: selectedContacts,
-        source,
-        purpose: initialData?.purpose,
-      },
-    );
+    eventBus.emit(EVENT_TYPES.MODULE_OPENED, {
+      contacts: selectedContacts,
+      source,
+      purpose: initialData?.purpose,
+    });
 
     // Success haptic on iOS
     if (Platform.OS === "ios") {
@@ -243,11 +240,7 @@ export function ContactsMiniMode({
 
         {/* Chevron (single select) */}
         {!allowMultiple && (
-          <Feather
-            name="chevron-right"
-            size={20}
-            color={theme.textSecondary}
-          />
+          <Feather name="chevron-right" size={20} color={theme.textSecondary} />
         )}
       </TouchableOpacity>
     );
@@ -341,10 +334,7 @@ export function ContactsMiniMode({
       {/* Done Button (multi-select mode) */}
       {allowMultiple && (
         <View style={styles.actions}>
-          <Button
-            onPress={onDismiss}
-            style={styles.button}
-          >
+          <Button onPress={onDismiss} style={styles.button}>
             <ThemedText>Cancel</ThemedText>
           </Button>
           <Button
@@ -362,155 +352,156 @@ export function ContactsMiniMode({
   );
 }
 
-const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
-  container: {
-    flex: 1,
-    maxHeight: "85%",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    paddingHorizontal: Spacing.md,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.sm,
-  },
-  headerContent: {
-    flex: 1,
-  },
-  title: {
-    fontSize: Typography.sizes.h2,
-    fontWeight: "600",
-    marginBottom: Spacing.xs,
-  },
-  subtitle: {
-    fontSize: Typography.sizes.caption,
-    color: theme.textSecondary,
-  },
-  closeButton: {
-    padding: Spacing.xs,
-    marginLeft: Spacing.sm,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: theme.deepSpace,
-    borderRadius: 12,
-    marginHorizontal: Spacing.md,
-    marginBottom: Spacing.md,
-    paddingHorizontal: Spacing.md,
-    borderWidth: 1,
-    borderColor: theme.border,
-  },
-  searchIcon: {
-    marginRight: Spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: Typography.sizes.body,
-    color: theme.text,
-    paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
-  },
-  clearButton: {
-    padding: Spacing.xs,
-    marginLeft: Spacing.xs,
-  },
-  list: {
-    flex: 1,
-  },
-  contactItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: theme.border,
-  },
-  contactItemSelected: {
-    backgroundColor: "rgba(0, 217, 255, 0.1)", // Electric with opacity
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.electric,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: Spacing.md,
-  },
-  avatarText: {
-    fontSize: Typography.sizes.h3,
-    fontWeight: "600",
-    color: theme.deepSpace,
-  },
-  contactInfo: {
-    flex: 1,
-    marginRight: Spacing.md,
-  },
-  contactName: {
-    fontSize: Typography.sizes.body,
-    fontWeight: "500",
-    marginBottom: 2,
-  },
-  contactDetail: {
-    fontSize: Typography.sizes.small,
-    color: theme.textSecondary,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: theme.border,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: Spacing.sm,
-  },
-  checkboxSelected: {
-    backgroundColor: theme.electric,
-    borderColor: theme.electric,
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing["2xl"],
-  },
-  loadingText: {
-    marginTop: Spacing.md,
-    color: theme.textSecondary,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing["2xl"],
-    paddingHorizontal: Spacing.xl,
-  },
-  emptyText: {
-    fontSize: Typography.sizes.h3,
-    fontWeight: "500",
-    marginTop: Spacing.md,
-    textAlign: "center",
-  },
-  emptyHint: {
-    fontSize: Typography.sizes.small,
-    color: theme.textSecondary,
-    marginTop: Spacing.xs,
-    textAlign: "center",
-  },
-  actions: {
-    flexDirection: "row",
-    gap: Spacing.sm,
-    padding: Spacing.md,
-    paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: theme.border,
-  },
-  button: {
-    flex: 1,
-  },
-  buttonPrimary: {
-    // Primary button styles already defined in Button component
-  },
-});
+const createStyles = (theme: ReturnType<typeof useTheme>["theme"]) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      maxHeight: "85%",
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      paddingHorizontal: Spacing.md,
+      paddingTop: Spacing.md,
+      paddingBottom: Spacing.sm,
+    },
+    headerContent: {
+      flex: 1,
+    },
+    title: {
+      fontSize: Typography.sizes.h2,
+      fontWeight: "600",
+      marginBottom: Spacing.xs,
+    },
+    subtitle: {
+      fontSize: Typography.sizes.caption,
+      color: theme.textSecondary,
+    },
+    closeButton: {
+      padding: Spacing.xs,
+      marginLeft: Spacing.sm,
+    },
+    searchContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.deepSpace,
+      borderRadius: 12,
+      marginHorizontal: Spacing.md,
+      marginBottom: Spacing.md,
+      paddingHorizontal: Spacing.md,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+    searchIcon: {
+      marginRight: Spacing.sm,
+    },
+    searchInput: {
+      flex: 1,
+      fontSize: Typography.sizes.body,
+      color: theme.text,
+      paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
+    },
+    clearButton: {
+      padding: Spacing.xs,
+      marginLeft: Spacing.xs,
+    },
+    list: {
+      flex: 1,
+    },
+    contactItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: Spacing.sm,
+      paddingHorizontal: Spacing.md,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: theme.border,
+    },
+    contactItemSelected: {
+      backgroundColor: "rgba(0, 217, 255, 0.1)", // Electric with opacity
+    },
+    avatar: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.electric,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: Spacing.md,
+    },
+    avatarText: {
+      fontSize: Typography.sizes.h3,
+      fontWeight: "600",
+      color: theme.deepSpace,
+    },
+    contactInfo: {
+      flex: 1,
+      marginRight: Spacing.md,
+    },
+    contactName: {
+      fontSize: Typography.sizes.body,
+      fontWeight: "500",
+      marginBottom: 2,
+    },
+    contactDetail: {
+      fontSize: Typography.sizes.small,
+      color: theme.textSecondary,
+    },
+    checkbox: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: theme.border,
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: Spacing.sm,
+    },
+    checkboxSelected: {
+      backgroundColor: theme.electric,
+      borderColor: theme.electric,
+    },
+    loadingContainer: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: Spacing["2xl"],
+    },
+    loadingText: {
+      marginTop: Spacing.md,
+      color: theme.textSecondary,
+    },
+    emptyContainer: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: Spacing["2xl"],
+      paddingHorizontal: Spacing.xl,
+    },
+    emptyText: {
+      fontSize: Typography.sizes.h3,
+      fontWeight: "500",
+      marginTop: Spacing.md,
+      textAlign: "center",
+    },
+    emptyHint: {
+      fontSize: Typography.sizes.small,
+      color: theme.textSecondary,
+      marginTop: Spacing.xs,
+      textAlign: "center",
+    },
+    actions: {
+      flexDirection: "row",
+      gap: Spacing.sm,
+      padding: Spacing.md,
+      paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: theme.border,
+    },
+    button: {
+      flex: 1,
+    },
+    buttonPrimary: {
+      // Primary button styles already defined in Button component
+    },
+  });

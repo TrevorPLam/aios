@@ -33,10 +33,7 @@ export function ScreenStateMessage({
         <ActivityIndicator size="large" color={theme.accent} />
       ) : icon ? (
         <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: theme.accentDim },
-          ]}
+          style={[styles.iconContainer, { backgroundColor: theme.accentDim }]}
         >
           <Feather name={icon} size={32} color={theme.accent} />
         </View>
@@ -97,4 +94,3 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.full,
   },
 });
-

@@ -35,7 +35,9 @@ function normalizeMeetingLink(candidate: string): ParsedMeetingLink {
     return { value: null };
   }
 
-  const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  const withScheme = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`;
 
   try {
     const normalized = new URL(withScheme).toString();
@@ -72,7 +74,9 @@ export function extractMeetingLinkFromText(text: string): ParsedMeetingLink {
     return { value: null };
   }
 
-  const matches = [...trimmed.matchAll(URL_LIKE_PATTERN)].map((match) => match[0]);
+  const matches = [...trimmed.matchAll(URL_LIKE_PATTERN)].map(
+    (match) => match[0],
+  );
   if (matches.length === 0) {
     return { value: null };
   }

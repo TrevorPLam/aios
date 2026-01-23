@@ -106,7 +106,7 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
   /**
    * Loads and orders modules based on user settings and usage statistics.
    * Memoized to prevent recreation on every render.
-   * 
+   *
    * @returns {Promise<void>}
    */
   const loadModuleOrder = useCallback(async () => {
@@ -172,11 +172,9 @@ export function BottomNav({ onAiPress }: BottomNavProps) {
    * @param moduleName - Optional module name to include in error message
    */
   const showNavigationError = (moduleName?: string) => {
-    Alert.alert(
-      "Navigation Error",
-      getNavigationErrorMessage(moduleName),
-      [{ text: "OK" }],
-    );
+    Alert.alert("Navigation Error", getNavigationErrorMessage(moduleName), [
+      { text: "OK" },
+    ]);
   };
 
   /**

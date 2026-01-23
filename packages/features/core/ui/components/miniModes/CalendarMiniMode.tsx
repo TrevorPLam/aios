@@ -132,13 +132,16 @@ export function CalendarMiniMode({
       await database.events.save(newEvent as any);
 
       // Use our data since save returns void
-      const eventData = { ...newEvent, id: newEvent.id || Date.now().toString() } as CalendarEvent;
+      const eventData = {
+        ...newEvent,
+        id: newEvent.id || Date.now().toString(),
+      } as CalendarEvent;
 
       // Emit event to event bus for cross-module coordination
-      eventBus.emit(
-        EVENT_TYPES.CALENDAR_EVENT_CREATED,
-        { event: eventData, source: source || "mini_mode" },
-      );
+      eventBus.emit(EVENT_TYPES.CALENDAR_EVENT_CREATED, {
+        event: eventData,
+        source: source || "mini_mode",
+      });
 
       // Haptic feedback on success
       if (Platform.OS !== "web") {
@@ -298,86 +301,87 @@ export function CalendarMiniMode({
   );
 }
 
-const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
-  container: {
-    maxHeight: "100%",
-  },
-  header: {
-    alignItems: "center",
-    paddingTop: Spacing.sm,
-    paddingBottom: Spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.border,
-  },
-  handleBar: {
-    width: 40,
-    height: 4,
-    backgroundColor: theme.textTertiary,
-    borderRadius: 2,
-    marginBottom: Spacing.sm,
-  },
-  headerTitle: {
-    fontSize: Typography.sizes.h2,
-    fontWeight: "600",
-    color: theme.electricBlue,
-  },
-  headerSubtitle: {
-    fontSize: Typography.sizes.caption,
-    color: theme.textSecondary,
-    marginTop: 4,
-  },
-  form: {
-    paddingVertical: Spacing.md,
-    maxHeight: 400,
-  },
-  field: {
-    marginBottom: Spacing.md,
-  },
-  label: {
-    fontSize: Typography.sizes.body,
-    fontWeight: "500",
-    color: theme.textPrimary,
-    marginBottom: Spacing.xs,
-  },
-  input: {
-    backgroundColor: theme.deepSpace,
-    borderWidth: 1,
-    borderColor: theme.border,
-    borderRadius: 8,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    fontSize: Typography.sizes.body,
-    color: theme.textPrimary,
-  },
-  textArea: {
-    paddingTop: Spacing.sm,
-    minHeight: 80,
-    textAlignVertical: "top",
-  },
-  dateTimeRow: {
-    backgroundColor: theme.deepSpace,
-    borderWidth: 1,
-    borderColor: theme.border,
-    borderRadius: 8,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-  },
-  dateTimeText: {
-    fontSize: Typography.sizes.body,
-    color: theme.textPrimary,
-  },
-  spacer: {
-    height: Spacing.lg,
-  },
-  actions: {
-    flexDirection: "row",
-    gap: Spacing.sm,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.xs,
-    borderTopWidth: 1,
-    borderTopColor: theme.border,
-  },
-  actionButton: {
-    flex: 1,
-  },
-});
+const createStyles = (theme: ReturnType<typeof useTheme>["theme"]) =>
+  StyleSheet.create({
+    container: {
+      maxHeight: "100%",
+    },
+    header: {
+      alignItems: "center",
+      paddingTop: Spacing.sm,
+      paddingBottom: Spacing.md,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.border,
+    },
+    handleBar: {
+      width: 40,
+      height: 4,
+      backgroundColor: theme.textTertiary,
+      borderRadius: 2,
+      marginBottom: Spacing.sm,
+    },
+    headerTitle: {
+      fontSize: Typography.sizes.h2,
+      fontWeight: "600",
+      color: theme.electricBlue,
+    },
+    headerSubtitle: {
+      fontSize: Typography.sizes.caption,
+      color: theme.textSecondary,
+      marginTop: 4,
+    },
+    form: {
+      paddingVertical: Spacing.md,
+      maxHeight: 400,
+    },
+    field: {
+      marginBottom: Spacing.md,
+    },
+    label: {
+      fontSize: Typography.sizes.body,
+      fontWeight: "500",
+      color: theme.textPrimary,
+      marginBottom: Spacing.xs,
+    },
+    input: {
+      backgroundColor: theme.deepSpace,
+      borderWidth: 1,
+      borderColor: theme.border,
+      borderRadius: 8,
+      paddingHorizontal: Spacing.md,
+      paddingVertical: Spacing.sm,
+      fontSize: Typography.sizes.body,
+      color: theme.textPrimary,
+    },
+    textArea: {
+      paddingTop: Spacing.sm,
+      minHeight: 80,
+      textAlignVertical: "top",
+    },
+    dateTimeRow: {
+      backgroundColor: theme.deepSpace,
+      borderWidth: 1,
+      borderColor: theme.border,
+      borderRadius: 8,
+      paddingHorizontal: Spacing.md,
+      paddingVertical: Spacing.sm,
+    },
+    dateTimeText: {
+      fontSize: Typography.sizes.body,
+      color: theme.textPrimary,
+    },
+    spacer: {
+      height: Spacing.lg,
+    },
+    actions: {
+      flexDirection: "row",
+      gap: Spacing.sm,
+      paddingTop: Spacing.md,
+      paddingBottom: Spacing.xs,
+      borderTopWidth: 1,
+      borderTopColor: theme.border,
+    },
+    actionButton: {
+      flex: 1,
+    },
+  });

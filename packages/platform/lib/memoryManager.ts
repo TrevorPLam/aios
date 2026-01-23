@@ -125,7 +125,9 @@ class MemoryManager {
       cleanupBatchSize: 2, // Unmount 2 modules per cleanup
     };
 
-    logger.info("MemoryManager", "Initialized with strategy", { strategy: this.strategy });
+    logger.info("MemoryManager", "Initialized with strategy", {
+      strategy: this.strategy,
+    });
   }
 
   /**
@@ -520,7 +522,9 @@ class MemoryManager {
       ...this.strategy,
       ...strategy,
     };
-    logger.info("MemoryManager", "Updated strategy", { strategy: this.strategy });
+    logger.info("MemoryManager", "Updated strategy", {
+      strategy: this.strategy,
+    });
   }
 
   /**

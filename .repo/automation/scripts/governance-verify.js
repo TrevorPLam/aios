@@ -32,7 +32,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../../../..");
-const TRACE_SCHEMA_PATH = join(REPO_ROOT, ".repo/templates/AGENT_TRACE_SCHEMA.json");
+const TRACE_SCHEMA_PATH = join(
+  REPO_ROOT,
+  ".repo/templates/AGENT_TRACE_SCHEMA.json",
+);
 const HITL_INDEX_PATH = join(REPO_ROOT, ".repo/policy/HITL.md");
 const HITL_ITEMS_DIR = join(REPO_ROOT, ".repo/hitl");
 const WAIVERS_DIR = join(REPO_ROOT, ".repo/waivers");
@@ -67,7 +70,10 @@ function getChangedFiles(baseRef = "HEAD") {
   try {
     // Try to get changed files from git
     const command = `git diff --name-only ${baseRef} HEAD 2>/dev/null || git diff --name-only origin/${baseRef}...HEAD 2>/dev/null || echo ""`;
-    const output = execSync(command, { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
+    const output = execSync(command, {
+      cwd: REPO_ROOT,
+      encoding: "utf-8",
+    }).trim();
     if (output) {
       return output.split("\n").filter((f) => f.trim());
     }
@@ -132,7 +138,11 @@ function validateTraceLog(traceLogPath) {
 // Parse HITL status from markdown table
 function parseHITLStatus(hitlFilePath) {
   if (!existsSync(hitlFilePath)) {
-    return { valid: false, errors: [`HITL index not found: ${hitlFilePath}`], items: [] };
+    return {
+      valid: false,
+      errors: [`HITL index not found: ${hitlFilePath}`],
+      items: [],
+    };
   }
 
   const content = readFileSync(hitlFilePath, "utf-8");
@@ -140,11 +150,19 @@ function parseHITLStatus(hitlFilePath) {
   const items = [];
 
   // Find Active table
-  const activeTableMatch = content.match(/### Active\s*\n\|[^\n]+\n\|[^\n]+\n((?:\|[^\n]+\n?)+)/);
+  const activeTableMatch = content.match(
+    /### Active\s*\n\|[^\n]+\n\|[^\n]+\n((?:\|[^\n]+\n?)+)/,
+  );
   if (activeTableMatch) {
-    const tableRows = activeTableMatch[1].trim().split("\n").filter((row) => row.trim().startsWith("|"));
+    const tableRows = activeTableMatch[1]
+      .trim()
+      .split("\n")
+      .filter((row) => row.trim().startsWith("|"));
     for (const row of tableRows) {
-      const cells = row.split("|").map((c) => c.trim()).filter((c) => c);
+      const cells = row
+        .split("|")
+        .map((c) => c.trim())
+        .filter((c) => c);
       if (cells.length >= 4) {
         const id = cells[0];
         const category = cells[1];
@@ -157,12 +175,12 @@ function parseHITLStatus(hitlFilePath) {
 
   // Check for required HITL items that are not Completed
   const requiredNotCompleted = items.filter(
-    (item) => item.status && !["Completed", "Superseded"].includes(item.status)
+    (item) => item.status && !["Completed", "Superseded"].includes(item.status),
   );
 
   if (requiredNotCompleted.length > 0) {
     errors.push(
-      `Required HITL items not completed: ${requiredNotCompleted.map((i) => i.id).join(", ")}`
+      `Required HITL items not completed: ${requiredNotCompleted.map((i) => i.id).join(", ")}`,
     );
   }
 
@@ -184,7 +202,7 @@ function checkArtifacts(changedFiles = []) {
       f.includes("/api/") ||
       f.includes("/routes") ||
       f.includes("openapi") ||
-      f.includes("schema")
+      f.includes("schema"),
   );
 
   // Detect module/package boundary changes
@@ -192,7 +210,8 @@ function checkArtifacts(changedFiles = []) {
     (f) =>
       f.includes("packages/") ||
       f.includes("src/") ||
-      (f.includes("index.ts") && (f.includes("features/") || f.includes("platform/")))
+      (f.includes("index.ts") &&
+        (f.includes("features/") || f.includes("platform/"))),
   );
 
   if (apiFiles.length > 0 || moduleFiles.length > 0) {
@@ -201,12 +220,12 @@ function checkArtifacts(changedFiles = []) {
       const adrFiles = readdirSync(ADR_DIR).filter((f) => f.endsWith(".md"));
       if (adrFiles.length === 0) {
         warnings.push(
-          "API/module changes detected but no ADR found. Consider creating an ADR per BOUNDARIES.md"
+          "API/module changes detected but no ADR found. Consider creating an ADR per BOUNDARIES.md",
         );
       }
     } else {
       warnings.push(
-        "API/module changes detected but ADR directory not found. Consider creating an ADR per BOUNDARIES.md"
+        "API/module changes detected but ADR directory not found. Consider creating an ADR per BOUNDARIES.md",
       );
     }
   }
@@ -277,7 +296,10 @@ function validateTaskFormat(todoPath) {
   }
 
   // Check for acceptance criteria
-  if (!/Acceptance Criteria/i.test(content) && !/acceptance criteria/i.test(content)) {
+  if (
+    !/Acceptance Criteria/i.test(content) &&
+    !/acceptance criteria/i.test(content)
+  ) {
     warnings.push("Task missing 'Acceptance Criteria' section");
   }
 
@@ -299,8 +321,10 @@ function verifyBoundaryChecker() {
   const manifestPath = join(REPO_ROOT, ".repo/repo.manifest.yaml");
   if (existsSync(manifestPath)) {
     const manifest = readFileSync(manifestPath, "utf-8");
-    if (manifest.includes("check:boundaries: \"<UNKNOWN>\"")) {
-      warnings.push("Boundary checker command is <UNKNOWN> in manifest. Should be implemented.");
+    if (manifest.includes('check:boundaries: "<UNKNOWN>"')) {
+      warnings.push(
+        "Boundary checker command is <UNKNOWN> in manifest. Should be implemented.",
+      );
     }
   }
 
@@ -319,15 +343,17 @@ function main() {
   // 1. Validate trace log (REQUIRED for non-doc changes per Article 2 & Principle 24)
   console.log("📋 Validating trace log...");
   const changedFiles = getChangedFiles(baseRef);
-  const isDocOnlyChange = changedFiles.length > 0 && 
-    changedFiles.every((f) => 
-      f.endsWith(".md") || 
-      f.endsWith(".txt") || 
-      f.includes("/docs/") || 
-      f.includes("/.repo/docs/") ||
-      f.includes("/examples/")
+  const isDocOnlyChange =
+    changedFiles.length > 0 &&
+    changedFiles.every(
+      (f) =>
+        f.endsWith(".md") ||
+        f.endsWith(".txt") ||
+        f.includes("/docs/") ||
+        f.includes("/.repo/docs/") ||
+        f.includes("/examples/"),
     );
-  
+
   if (traceLogPath) {
     const traceResult = validateTraceLog(traceLogPath);
     if (!traceResult.valid) {
@@ -341,14 +367,22 @@ function main() {
   } else if (!isDocOnlyChange && changedFiles.length > 0) {
     // Trace log is REQUIRED for non-documentation changes
     console.error("❌ Trace log is REQUIRED for non-documentation changes");
-    console.error("   Per Article 2 (Verifiable over Persuasive) and Principle 24 (Logs Required for Non-Docs)");
+    console.error(
+      "   Per Article 2 (Verifiable over Persuasive) and Principle 24 (Logs Required for Non-Docs)",
+    );
     console.error("   Create a trace log using:");
-    console.error("   node .repo/automation/scripts/create-trace-log.js --intent '<intent>' --files '<files>' --commands '<commands>' --evidence '<evidence>'");
-    console.error(`   Changed files: ${changedFiles.slice(0, 5).join(", ")}${changedFiles.length > 5 ? "..." : ""}`);
+    console.error(
+      "   node .repo/automation/scripts/create-trace-log.js --intent '<intent>' --files '<files>' --commands '<commands>' --evidence '<evidence>'",
+    );
+    console.error(
+      `   Changed files: ${changedFiles.slice(0, 5).join(", ")}${changedFiles.length > 5 ? "..." : ""}`,
+    );
     allErrors.push("Trace log required for non-documentation changes");
     hasHardFailures = true;
   } else if (isDocOnlyChange) {
-    console.log("ℹ️  Documentation-only change detected. Trace log not required.\n");
+    console.log(
+      "ℹ️  Documentation-only change detected. Trace log not required.\n",
+    );
   } else {
     console.log("⚠️  No trace log provided and no changed files detected\n");
   }
@@ -362,7 +396,9 @@ function main() {
     allErrors.push(...hitlResult.errors);
     hasHardFailures = true;
   } else {
-    console.log(`✅ HITL items valid (${hitlResult.items.length} items checked)\n`);
+    console.log(
+      `✅ HITL items valid (${hitlResult.items.length} items checked)\n`,
+    );
   }
 
   // 3. Get changed files from git (already done above for trace log check)
@@ -435,13 +471,17 @@ function main() {
 
   // Auto-generate waiver for waiverable failures
   if (allWarnings.length > 0 && !hasHardFailures) {
-    console.log("\n💡 Waiverable failures detected. Consider creating a waiver:");
-    console.log("   python3 .repo/automation/scripts/manage-waivers.py create \\");
-    console.log("     --waives \"<policy>\" \\");
-    console.log("     --why \"<justification>\" \\");
-    console.log("     --scope \"<scope>\" \\");
-    console.log("     --owner \"<owner>\" \\");
-    console.log("     --expiration \"<YYYY-MM-DD>\"");
+    console.log(
+      "\n💡 Waiverable failures detected. Consider creating a waiver:",
+    );
+    console.log(
+      "   python3 .repo/automation/scripts/manage-waivers.py create \\",
+    );
+    console.log('     --waives "<policy>" \\');
+    console.log('     --why "<justification>" \\');
+    console.log('     --scope "<scope>" \\');
+    console.log('     --owner "<owner>" \\');
+    console.log('     --expiration "<YYYY-MM-DD>"');
   }
 
   if (hasHardFailures) {

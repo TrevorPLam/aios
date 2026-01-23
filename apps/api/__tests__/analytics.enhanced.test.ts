@@ -1,6 +1,6 @@
 /**
  * Analytics Storage Trustworthiness Tests
- * 
+ *
  * Enhanced tests that verify actual behavior, not just side effects.
  * Fixes weak idempotency test identified in trust audit.
  */
@@ -126,10 +126,7 @@ describe("Analytics Storage - Enhanced Trustworthiness", () => {
       // Should have 2 total events (not 3)
       const saved = await storage.getAnalyticsEvents(userId);
       expect(saved).toHaveLength(2);
-      expect(saved.map((e) => e.eventName).sort()).toEqual([
-        "existing",
-        "new",
-      ]);
+      expect(saved.map((e) => e.eventName).sort()).toEqual(["existing", "new"]);
 
       consoleSpy.mockRestore();
     });

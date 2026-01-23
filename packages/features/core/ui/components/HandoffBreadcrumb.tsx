@@ -214,71 +214,72 @@ export function CompactBreadcrumb({ style }: { style?: any }) {
  * Using a factory function instead of StyleSheet.create at module level
  * because we need runtime theme colors (light/dark mode)
  */
-const createStyles = (theme: ReturnType<typeof useTheme>["theme"]) => StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    backgroundColor: Platform.OS === "ios" ? "transparent" : theme.deepSpace,
-    overflow: "hidden",
-  },
-  fallbackBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: getOverlayColor(theme, "backdropFallback"),
-  },
-  content: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 44, // iOS standard navigation bar height
-    paddingHorizontal: 8,
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    maxWidth: SCREEN_WIDTH * 0.5, // Max 50% width
-  },
-  backText: {
-    color: theme.electric,
-    fontSize: 17, // iOS standard font size
-    fontWeight: "400",
-    marginLeft: 4,
-  },
-  breadcrumbContainer: {
-    flex: 1,
-    alignItems: "flex-end",
-    paddingHorizontal: 12,
-  },
-  breadcrumbText: {
-    color: theme.textSecondary,
-    fontSize: 13,
-    fontWeight: "500",
-    opacity: 0.7,
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: theme.border,
-    opacity: 0.3,
-  },
-  // Compact style
-  compactContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: getOverlayColor(theme, "breadcrumbCompact"),
-    borderRadius: 12,
-  },
-  compactIcon: {
-    marginRight: 6,
-  },
-  compactText: {
-    color: theme.textSecondary,
-    fontSize: 12,
-    fontWeight: "500",
-    flex: 1,
-  },
-});
+const createStyles = (theme: ReturnType<typeof useTheme>["theme"]) =>
+  StyleSheet.create({
+    container: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1000,
+      backgroundColor: Platform.OS === "ios" ? "transparent" : theme.deepSpace,
+      overflow: "hidden",
+    },
+    fallbackBackdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: getOverlayColor(theme, "backdropFallback"),
+    },
+    content: {
+      flexDirection: "row",
+      alignItems: "center",
+      height: 44, // iOS standard navigation bar height
+      paddingHorizontal: 8,
+    },
+    backButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+      maxWidth: SCREEN_WIDTH * 0.5, // Max 50% width
+    },
+    backText: {
+      color: theme.electric,
+      fontSize: 17, // iOS standard font size
+      fontWeight: "400",
+      marginLeft: 4,
+    },
+    breadcrumbContainer: {
+      flex: 1,
+      alignItems: "flex-end",
+      paddingHorizontal: 12,
+    },
+    breadcrumbText: {
+      color: theme.textSecondary,
+      fontSize: 13,
+      fontWeight: "500",
+      opacity: 0.7,
+    },
+    separator: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: theme.border,
+      opacity: 0.3,
+    },
+    // Compact style
+    compactContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      backgroundColor: getOverlayColor(theme, "breadcrumbCompact"),
+      borderRadius: 12,
+    },
+    compactIcon: {
+      marginRight: 6,
+    },
+    compactText: {
+      color: theme.textSecondary,
+      fontSize: 12,
+      fontWeight: "500",
+      flex: 1,
+    },
+  });

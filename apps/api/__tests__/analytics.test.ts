@@ -1,6 +1,6 @@
 /**
  * Analytics Integration Tests
- * 
+ *
  * Tests for Phase 0 analytics implementation:
  * - Storage methods (saveAnalyticsEvents, getAnalyticsEvents, deleteUserAnalytics)
  * - Event idempotency
@@ -318,7 +318,9 @@ describe("Analytics Storage", () => {
       const userId = randomUUID();
 
       // Should not throw
-      await expect(storage.deleteUserAnalytics(userId)).resolves.toBeUndefined();
+      await expect(
+        storage.deleteUserAnalytics(userId),
+      ).resolves.toBeUndefined();
 
       // Verify still no events
       const events = await storage.getAnalyticsEvents(userId);

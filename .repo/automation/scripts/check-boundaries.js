@@ -61,34 +61,34 @@ function getAllowedExceptions() {
 // Determine layer from file path
 function getLayer(filePath) {
   const relativePath = relative(REPO_ROOT, filePath);
-  
+
   // Check for packages/features structure
   if (relativePath.includes("packages/features/")) {
     if (relativePath.includes("/ui/")) return "ui";
     if (relativePath.includes("/domain/")) return "domain";
     if (relativePath.includes("/data/")) return "data";
   }
-  
+
   // Check for packages/platform
   if (relativePath.includes("packages/platform/")) {
     return "platform";
   }
-  
+
   // Check for packages/design-system
   if (relativePath.includes("packages/design-system/")) {
     return "design-system";
   }
-  
+
   // Check for packages/contracts
   if (relativePath.includes("packages/contracts/")) {
     return "contracts";
   }
-  
+
   // Check for apps (can import from features)
   if (relativePath.includes("apps/")) {
     return "app";
   }
-  
+
   return null;
 }
 
@@ -102,23 +102,27 @@ function getFeature(filePath) {
 function isCrossFeatureImport(fromPath, toPath) {
   const fromFeature = getFeature(fromPath);
   const toFeature = getFeature(toPath);
-  
+
   return fromFeature && toFeature && fromFeature !== toFeature;
 }
 
 // Parse import statements from file
 function parseImports(filePath, content) {
   const imports = [];
-  
+
   // Match import statements
   const importRegex = /import\s+.*?\s+from\s+['"]([^'"]+)['"]/g;
   let match;
-  
+
   while ((match = importRegex.exec(content)) !== null) {
     const importPath = match[1];
-    
+
     // Skip node_modules and external packages
-    if (importPath.startsWith(".") || importPath.startsWith("/") || importPath.startsWith("@")) {
+    if (
+      importPath.startsWith(".") ||
+      importPath.startsWith("/") ||
+      importPath.startsWith("@")
+    ) {
       imports.push({
         from: filePath,
         to: importPath,
@@ -126,28 +130,30 @@ function parseImports(filePath, content) {
       });
     }
   }
-  
+
   return imports;
 }
 
 // Resolve import path to actual file
 function resolveImportPath(fromFile, importPath) {
   const fromDir = dirname(fromFile);
-  
+
   // Handle relative imports
   if (importPath.startsWith(".")) {
     return join(fromDir, importPath);
   }
-  
+
   // Handle package aliases (@features/, @platform/, etc.)
   if (importPath.startsWith("@")) {
-    const aliasMatch = importPath.match(/^@(features|platform|design-system|contracts)\/(.+)$/);
+    const aliasMatch = importPath.match(
+      /^@(features|platform|design-system|contracts)\/(.+)$/,
+    );
     if (aliasMatch) {
       const [, packageType, rest] = aliasMatch;
       return join(REPO_ROOT, "packages", packageType, rest);
     }
   }
-  
+
   return null;
 }
 
@@ -155,16 +161,16 @@ function resolveImportPath(fromFile, importPath) {
 function checkImportViolation(fromFile, toFile, importPath) {
   const fromLayer = getLayer(fromFile);
   const toLayer = getLayer(toFile);
-  
+
   if (!fromLayer || !toLayer) {
     return null; // Can't determine layers, skip
   }
-  
+
   // Apps can import from features (allowed)
   if (fromLayer === "app") {
     return null;
   }
-  
+
   // Check cross-feature imports
   if (isCrossFeatureImport(fromFile, toFile)) {
     return {
@@ -172,7 +178,7 @@ function checkImportViolation(fromFile, toFile, importPath) {
       message: `Cross-feature import requires ADR: ${relative(REPO_ROOT, fromFile)} → ${relative(REPO_ROOT, toFile)}`,
     };
   }
-  
+
   // Check layer boundaries
   const allowed = ALLOWED_IMPORTS[fromLayer] || [];
   if (!allowed.includes(toLayer)) {
@@ -181,25 +187,30 @@ function checkImportViolation(fromFile, toFile, importPath) {
       message: `Layer violation: ${fromLayer} cannot import from ${toLayer}. Allowed: ${allowed.join(", ") || "nothing"}`,
     };
   }
-  
+
   return null;
 }
 
 // Scan a single file
 function scanFile(filePath) {
   const violations = [];
-  
+
   try {
     const content = readFileSync(filePath, "utf-8");
     const imports = parseImports(filePath, content);
-    
+
     for (const imp of imports) {
       const resolvedPath = resolveImportPath(filePath, imp.to);
-      
-      if (resolvedPath && existsSync(resolvedPath + ".ts") || existsSync(resolvedPath + ".tsx")) {
-        const actualPath = existsSync(resolvedPath + ".ts") ? resolvedPath + ".ts" : resolvedPath + ".tsx";
+
+      if (
+        (resolvedPath && existsSync(resolvedPath + ".ts")) ||
+        existsSync(resolvedPath + ".tsx")
+      ) {
+        const actualPath = existsSync(resolvedPath + ".ts")
+          ? resolvedPath + ".ts"
+          : resolvedPath + ".tsx";
         const violation = checkImportViolation(filePath, actualPath, imp.to);
-        
+
         if (violation) {
           violations.push({
             file: relative(REPO_ROOT, filePath),
@@ -212,7 +223,7 @@ function scanFile(filePath) {
   } catch (error) {
     // Skip files that can't be read
   }
-  
+
   return violations;
 }
 
@@ -221,22 +232,30 @@ function scanDirectory(dirPath, allViolations = []) {
   if (!existsSync(dirPath)) {
     return allViolations;
   }
-  
+
   const entries = readdirSync(dirPath);
-  
+
   for (const entry of entries) {
     const fullPath = join(dirPath, entry);
-    
+
     // Skip ignored directories
-    if (entry.startsWith(".") || entry === "node_modules" || entry === "dist" || entry === "build") {
+    if (
+      entry.startsWith(".") ||
+      entry === "node_modules" ||
+      entry === "dist" ||
+      entry === "build"
+    ) {
       continue;
     }
-    
+
     const stat = statSync(fullPath);
-    
+
     if (stat.isDirectory()) {
       scanDirectory(fullPath, allViolations);
-    } else if (stat.isFile() && (fullPath.endsWith(".ts") || fullPath.endsWith(".tsx"))) {
+    } else if (
+      stat.isFile() &&
+      (fullPath.endsWith(".ts") || fullPath.endsWith(".tsx"))
+    ) {
       // Only scan TypeScript files in packages directory
       if (fullPath.includes("packages/") || fullPath.includes("apps/")) {
         const violations = scanFile(fullPath);
@@ -244,7 +263,7 @@ function scanDirectory(dirPath, allViolations = []) {
       }
     }
   }
-  
+
   return allViolations;
 }
 
@@ -252,26 +271,28 @@ function scanDirectory(dirPath, allViolations = []) {
 function main() {
   console.log("🔗 Boundary Checker");
   console.log("==================\n");
-  
+
   const scanPath = process.argv.includes("--path")
     ? process.argv[process.argv.indexOf("--path") + 1]
     : join(REPO_ROOT, "packages");
-  
+
   console.log(`🔍 Scanning: ${scanPath}\n`);
-  
+
   const violations = scanDirectory(scanPath);
-  
+
   if (violations.length > 0) {
     console.error(`❌ Found ${violations.length} boundary violation(s):\n`);
-    
+
     violations.forEach((v) => {
       console.error(`  File: ${v.file}:${v.line}`);
       console.error(`  Type: ${v.type}`);
       console.error(`  Issue: ${v.message}`);
       console.error("");
     });
-    
-    console.error("⚠️  Boundary violations detected. Fix or create ADR/waiver.");
+
+    console.error(
+      "⚠️  Boundary violations detected. Fix or create ADR/waiver.",
+    );
     process.exit(1);
   } else {
     console.log("✅ No boundary violations found");

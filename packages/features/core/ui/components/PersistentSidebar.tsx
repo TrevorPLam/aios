@@ -52,15 +52,21 @@ import * as Haptics from "expo-haptics";
 import { ThemedText } from "./ThemedText";
 import { useTheme } from "@design-system/hooks/useTheme";
 import { Spacing, BorderRadius } from "@design-system/constants/theme";
-import { 
-  Animation, 
-  Opacity, 
-  ComponentSize, 
-  Sidebar, 
-  ZIndex 
+import {
+  Animation,
+  Opacity,
+  ComponentSize,
+  Sidebar,
+  ZIndex,
 } from "@design-system/constants/uiConstants";
-import { moduleRegistry, ModuleDefinition } from "@features/core/domain/moduleRegistry";
-import { contextEngine, ContextZone } from "@features/core/domain/contextEngine";
+import {
+  moduleRegistry,
+  ModuleDefinition,
+} from "@features/core/domain/moduleRegistry";
+import {
+  contextEngine,
+  ContextZone,
+} from "@features/core/domain/contextEngine";
 import { eventBus, EVENT_TYPES } from "@platform/lib/eventBus";
 import { isSidebarSwipeSupported } from "@platform/lib/platformSupport";
 
@@ -182,7 +188,9 @@ export function PersistentSidebar({
 
         // Determine if swipe velocity or distance is sufficient to open
         // Distance: > 30% of sidebar width OR Velocity: > 0.5 units/ms
-        const shouldOpen = dx > SIDEBAR_WIDTH * Sidebar.openThreshold || vx > Sidebar.velocityThreshold;
+        const shouldOpen =
+          dx > SIDEBAR_WIDTH * Sidebar.openThreshold ||
+          vx > Sidebar.velocityThreshold;
 
         if (shouldOpen) {
           runOnJS(openSidebar)();
@@ -304,8 +312,8 @@ export function PersistentSidebar({
   });
 
   const overlayAnimatedStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(isOpen ? Opacity.overlay : 0, { 
-      duration: Animation.overlayDuration 
+    const opacity = withTiming(isOpen ? Opacity.overlay : 0, {
+      duration: Animation.overlayDuration,
     });
     return { opacity };
   });

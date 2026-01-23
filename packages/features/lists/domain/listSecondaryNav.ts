@@ -29,7 +29,9 @@ export function resolveListsSecondaryNavAction({
       // Exhaustiveness check: if a new action is added to ListsSecondaryNavAction,
       // this assignment will cause a compile-time error until handled above.
       const _exhaustiveCheck: never = action;
-      throw new Error(`Unhandled ListsSecondaryNavAction: ${_exhaustiveCheck as string}`);
+      throw new Error(
+        `Unhandled ListsSecondaryNavAction: ${_exhaustiveCheck as string}`,
+      );
     }
   }
 }

@@ -1,24 +1,14 @@
-#!/usr/bin/env sh
+# Run format check (fail if diff exists)
+npm run check:format
 
-# Run type checking
-echo "Running TypeScript type check..."
-npm run check:types || {
-  echo "❌ Type check failed. Please fix TypeScript errors before committing."
-  exit 1
-}
+# Run lint check
+npm run lint
 
-# Run linting  
-echo "Running ESLint..."
-npm run lint || {
-  echo "❌ Lint check failed. Run 'npm run lint:fix' to auto-fix issues."
-  exit 1
-}
+# Run type check
+npm run check:types
 
-# Run format check
-echo "Checking code formatting..."
-npm run check:format || {
-  echo "❌ Format check failed. Run 'npm run format' to auto-format code."
-  exit 1
-}
-
-echo "✅ All pre-commit checks passed!"
+# Run secret scanning (if gitleaks is available)
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "🔍 Running Gitleaks secret scan..."
+  gitleaks detect --source . --no-banner --verbose || exit 1
+fi

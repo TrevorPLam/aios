@@ -108,10 +108,10 @@ describe("RecommendationEngine", () => {
         startAt: yesterday.toISOString(),
         endAt: yesterday.toISOString(),
         allDay: false,
-          timezone: "UTC",
-          exceptions: [],
-          overrides: {},
-          source: "LOCAL",
+        timezone: "UTC",
+        exceptions: [],
+        overrides: {},
+        source: "LOCAL",
         location: "",
         description: "",
         recurrenceRule: "none",
@@ -144,10 +144,10 @@ describe("RecommendationEngine", () => {
         startAt: yesterday.toISOString(),
         endAt: yesterday.toISOString(),
         allDay: false,
-          timezone: "UTC",
-          exceptions: [],
-          overrides: {},
-          source: "LOCAL",
+        timezone: "UTC",
+        exceptions: [],
+        overrides: {},
+        source: "LOCAL",
         location: "",
         description: "",
         recurrenceRule: "none",
@@ -187,15 +187,15 @@ describe("RecommendationEngine", () => {
         status: "pending",
         priority: "high",
         dueDate: null,
-        
+
         userNotes: "",
         aiNotes: [],
         createdAt: fiveDaysAgo.toISOString(),
         updatedAt: fiveDaysAgo.toISOString(),
         parentTaskId: null,
         projectId: null,
-          recurrenceRule: "none",
-          dependencyIds: [],
+        recurrenceRule: "none",
+        dependencyIds: [],
       };
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue([mockTask]);
@@ -220,7 +220,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: null,
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -236,7 +236,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "urgent",
           dueDate: null,
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -272,7 +272,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: null,
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -288,7 +288,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "urgent",
           dueDate: null,
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -306,10 +306,10 @@ describe("RecommendationEngine", () => {
         startAt: tomorrow.toISOString(),
         endAt: tomorrow.toISOString(),
         allDay: false,
-          timezone: "UTC",
-          exceptions: [],
-          overrides: {},
-          source: "LOCAL",
+        timezone: "UTC",
+        exceptions: [],
+        overrides: {},
+        source: "LOCAL",
         location: "",
         description: "",
         recurrenceRule: "none",
@@ -356,7 +356,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "medium",
           dueDate: twoDaysFromNow.toISOString(),
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -372,7 +372,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: twoDaysFromNow.toISOString(),
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -388,7 +388,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "low",
           dueDate: twoDaysFromNow.toISOString(),
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -447,7 +447,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "high",
           dueDate: null,
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: fiveDaysAgo.toISOString(),
@@ -463,7 +463,7 @@ describe("RecommendationEngine", () => {
           status: "pending",
           priority: "urgent",
           dueDate: null,
-          
+
           userNotes: "",
           aiNotes: [],
           createdAt: new Date().toISOString(),
@@ -504,15 +504,15 @@ describe("RecommendationEngine", () => {
         status: "pending",
         priority: "high",
         dueDate: null,
-        
+
         userNotes: "",
         aiNotes: [],
         createdAt: fiveDaysAgo.toISOString(),
         updatedAt: fiveDaysAgo.toISOString(),
         parentTaskId: null,
         projectId: null,
-          recurrenceRule: "none",
-          dependencyIds: [],
+        recurrenceRule: "none",
+        dependencyIds: [],
       };
 
       (db.tasks.getAll as jest.Mock).mockResolvedValue([mockTask]);

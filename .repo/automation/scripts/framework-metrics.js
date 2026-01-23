@@ -14,7 +14,13 @@
  *   1 - Error
  */
 
-import { readFileSync, existsSync, readdirSync, statSync, writeFileSync } from "fs";
+import {
+  readFileSync,
+  existsSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -48,7 +54,7 @@ function countHITLItems() {
     blocked: 0,
     completed: 0,
     superseded: 0,
-    total: 0
+    total: 0,
   };
 
   if (!existsSync(HITL_INDEX_PATH)) {
@@ -56,14 +62,16 @@ function countHITLItems() {
   }
 
   const content = readFileSync(HITL_INDEX_PATH, "utf-8");
-  
+
   // Parse active table
   const activeMatch = content.match(/### Active[\s\S]*?(\n###|$)/);
   if (activeMatch) {
     const activeTable = activeMatch[0];
-    const rows = activeTable.split("\n").filter((line) => line.includes("|") && !line.includes("---"));
+    const rows = activeTable
+      .split("\n")
+      .filter((line) => line.includes("|") && !line.includes("---"));
     stats.active = rows.length - 1; // Subtract header row
-    
+
     // Count by status
     for (const row of rows) {
       if (row.includes("|Pending|")) stats.pending++;
@@ -78,7 +86,9 @@ function countHITLItems() {
   const archivedMatch = content.match(/### Archived[\s\S]*?$/);
   if (archivedMatch) {
     const archivedTable = archivedMatch[0];
-    const rows = archivedTable.split("\n").filter((line) => line.includes("|") && !line.includes("---"));
+    const rows = archivedTable
+      .split("\n")
+      .filter((line) => line.includes("|") && !line.includes("---"));
     stats.total = rows.length - 1; // Subtract header row
   }
 
@@ -97,7 +107,7 @@ function countTraceLogs() {
     total: 0,
     recent: 0, // Last 30 days
     oldest: null,
-    newest: null
+    newest: null,
   };
 
   if (!existsSync(TRACES_DIR)) {
@@ -108,7 +118,7 @@ function countTraceLogs() {
   stats.total = files.length;
 
   const now = Date.now();
-  const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
 
   for (const file of files) {
     const filePath = join(TRACES_DIR, file);
@@ -135,7 +145,7 @@ function countWaivers() {
   const stats = {
     active: 0,
     expired: 0,
-    total: 0
+    total: 0,
   };
 
   if (!existsSync(WAIVERS_DIR)) {
@@ -150,8 +160,10 @@ function countWaivers() {
   for (const file of files) {
     try {
       const content = readFileSync(join(WAIVERS_DIR, file), "utf-8");
-      const expirationMatch = content.match(/Expiration:\s*(\d{4}-\d{2}-\d{2})/);
-      
+      const expirationMatch = content.match(
+        /Expiration:\s*(\d{4}-\d{2}-\d{2})/,
+      );
+
       if (expirationMatch) {
         const expiration = new Date(expirationMatch[1]);
         if (expiration > now) {
@@ -173,7 +185,7 @@ function countWaivers() {
 // Count ADRs
 function countADRs() {
   const stats = {
-    total: 0
+    total: 0,
   };
 
   if (existsSync(ADR_DIR)) {
@@ -198,11 +210,21 @@ function generateReport() {
     waivers: waiverStats,
     adrs: adrStats,
     compliance: {
-      traceLogsPerChange: traceStats.total > 0 ? "✅ Trace logs being created" : "❌ No trace logs found",
-      hitlUsage: hitlStats.active > 0 ? "✅ HITL items being used" : "⚠️  No active HITL items",
-      waiverUsage: waiverStats.active > 0 ? "⚠️  Active waivers exist" : "✅ No active waivers",
-      adrUsage: adrStats.total > 0 ? "✅ ADRs being created" : "ℹ️  No ADRs yet"
-    }
+      traceLogsPerChange:
+        traceStats.total > 0
+          ? "✅ Trace logs being created"
+          : "❌ No trace logs found",
+      hitlUsage:
+        hitlStats.active > 0
+          ? "✅ HITL items being used"
+          : "⚠️  No active HITL items",
+      waiverUsage:
+        waiverStats.active > 0
+          ? "⚠️  Active waivers exist"
+          : "✅ No active waivers",
+      adrUsage:
+        adrStats.total > 0 ? "✅ ADRs being created" : "ℹ️  No ADRs yet",
+    },
   };
 
   return report;
@@ -261,7 +283,7 @@ function main() {
   if (outputPath) {
     writeFileSync(outputPath, markdown, "utf-8");
     console.log(`✅ Report written to: ${outputPath}`);
-    
+
     // Also output JSON for programmatic use
     const jsonPath = outputPath.replace(/\.md$/, ".json");
     writeFileSync(jsonPath, JSON.stringify(report, null, 2), "utf-8");

@@ -97,4 +97,3 @@ describe("ScreenErrorBoundary", () => {
     consoleSpy.mockRestore();
   });
 });
-

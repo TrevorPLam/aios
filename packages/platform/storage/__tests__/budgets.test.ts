@@ -9,7 +9,11 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Budget, BudgetCategory, BudgetLineItem } from "@contracts/models/types";
+import {
+  Budget,
+  BudgetCategory,
+  BudgetLineItem,
+} from "@contracts/models/types";
 
 describe("Database Budget Storage", () => {
   // Clear storage before and after each test to ensure isolation

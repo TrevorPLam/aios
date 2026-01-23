@@ -53,7 +53,10 @@ for (let i = 0; i < args.length; i++) {
 function getChangedFiles(baseRef = "HEAD") {
   try {
     const command = `git diff --name-only ${baseRef} HEAD 2>/dev/null || git diff --name-only origin/${baseRef}...HEAD 2>/dev/null || echo ""`;
-    const output = execSync(command, { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
+    const output = execSync(command, {
+      cwd: REPO_ROOT,
+      encoding: "utf-8",
+    }).trim();
     if (output) {
       return output.split("\n").filter((f) => f.trim());
     }
@@ -66,22 +69,40 @@ function getChangedFiles(baseRef = "HEAD") {
 // Check if change requires HITL
 function requiresHITL(changedFiles) {
   const securityKeywords = [
-    "auth", "login", "password", "credential", "token", "secret", "key",
-    "payment", "billing", "money", "charge", "subscription",
-    "production", "deploy", "release", "schema", "migration",
-    "oauth", "api-key", "bearer"
+    "auth",
+    "login",
+    "password",
+    "credential",
+    "token",
+    "secret",
+    "key",
+    "payment",
+    "billing",
+    "money",
+    "charge",
+    "subscription",
+    "production",
+    "deploy",
+    "release",
+    "schema",
+    "migration",
+    "oauth",
+    "api-key",
+    "bearer",
   ];
 
-  const fileContent = changedFiles.map((f) => {
-    try {
-      if (existsSync(join(REPO_ROOT, f))) {
-        return readFileSync(join(REPO_ROOT, f), "utf-8").toLowerCase();
+  const fileContent = changedFiles
+    .map((f) => {
+      try {
+        if (existsSync(join(REPO_ROOT, f))) {
+          return readFileSync(join(REPO_ROOT, f), "utf-8").toLowerCase();
+        }
+      } catch (e) {
+        // File might not exist or be binary
       }
-    } catch (e) {
-      // File might not exist or be binary
-    }
-    return "";
-  }).join(" ");
+      return "";
+    })
+    .join(" ");
 
   const fileName = changedFiles.join(" ").toLowerCase();
 
@@ -96,7 +117,7 @@ function requiresHITL(changedFiles) {
     /\.env/i,
     /config.*production/i,
     /secrets?/i,
-    /credentials?/i
+    /credentials?/i,
   ];
 
   for (const pattern of securityPatterns) {
@@ -121,23 +142,27 @@ function checkHITLCompliance(changedFiles) {
     }
 
     const hitlContent = readFileSync(HITL_INDEX_PATH, "utf-8");
-    
+
     // Check for active HITL items
     const activeTableMatch = hitlContent.match(/### Active[\s\S]*?(\n###|$)/);
     if (activeTableMatch) {
       const activeTable = activeTableMatch[0];
       const hitlIds = activeTable.match(/HITL-\d+/g) || [];
-      
+
       if (hitlIds.length === 0) {
-        errors.push("HITL required but no active HITL items found. Create HITL item per .repo/policy/HITL.md");
+        errors.push(
+          "HITL required but no active HITL items found. Create HITL item per .repo/policy/HITL.md",
+        );
       } else {
         // Check if PR body references HITL items
         if (prBodyPath && existsSync(prBodyPath)) {
           const prBody = readFileSync(prBodyPath, "utf-8");
           const referencedHITLs = prBody.match(/HITL-\d+/g) || [];
-          
+
           if (referencedHITLs.length === 0) {
-            warnings.push("HITL items exist but PR body doesn't reference them. Add HITL references to PR description.");
+            warnings.push(
+              "HITL items exist but PR body doesn't reference them. Add HITL references to PR description.",
+            );
           }
         }
       }
@@ -154,13 +179,15 @@ function checkTraceLogCompliance(changedFiles) {
   const errors = [];
   const warnings = [];
 
-  const isDocOnlyChange = changedFiles.length > 0 && 
-    changedFiles.every((f) => 
-      f.endsWith(".md") || 
-      f.endsWith(".txt") || 
-      f.includes("/docs/") || 
-      f.includes("/.repo/docs/") ||
-      f.includes("/examples/")
+  const isDocOnlyChange =
+    changedFiles.length > 0 &&
+    changedFiles.every(
+      (f) =>
+        f.endsWith(".md") ||
+        f.endsWith(".txt") ||
+        f.includes("/docs/") ||
+        f.includes("/.repo/docs/") ||
+        f.includes("/examples/"),
     );
 
   if (!isDocOnlyChange && changedFiles.length > 0) {
@@ -168,14 +195,22 @@ function checkTraceLogCompliance(changedFiles) {
     if (!traceLogPath || !existsSync(traceLogPath)) {
       // Try to find trace log in traces directory
       if (existsSync(TRACES_DIR)) {
-        const traceFiles = readdirSync(TRACES_DIR).filter((f) => f.endsWith(".json"));
+        const traceFiles = readdirSync(TRACES_DIR).filter((f) =>
+          f.endsWith(".json"),
+        );
         if (traceFiles.length === 0) {
-          errors.push("Trace log required for non-documentation changes (Article 2, Principle 24). Create using: node .repo/automation/scripts/create-trace-log.js");
+          errors.push(
+            "Trace log required for non-documentation changes (Article 2, Principle 24). Create using: node .repo/automation/scripts/create-trace-log.js",
+          );
         } else {
-          warnings.push("Trace log found in traces directory but not explicitly provided. Consider using --trace-log flag.");
+          warnings.push(
+            "Trace log found in traces directory but not explicitly provided. Consider using --trace-log flag.",
+          );
         }
       } else {
-        errors.push("Trace log required for non-documentation changes (Article 2, Principle 24). Create using: node .repo/automation/scripts/create-trace-log.js");
+        errors.push(
+          "Trace log required for non-documentation changes (Article 2, Principle 24). Create using: node .repo/automation/scripts/create-trace-log.js",
+        );
       }
     }
   }
@@ -190,19 +225,21 @@ function checkTaskCompliance() {
 
   if (prBodyPath && existsSync(prBodyPath)) {
     const prBody = readFileSync(prBodyPath, "utf-8");
-    
+
     // Check for task references (TASK-XXX or links to TODO files)
     const taskPatterns = [
       /TASK-\d+/i,
       /\[TASK-\d+\]/i,
       /P0TODO|P1TODO|P2TODO|P3TODO/i,
-      /TODO\.md/i
+      /TODO\.md/i,
     ];
 
     const hasTaskRef = taskPatterns.some((pattern) => pattern.test(prBody));
 
     if (!hasTaskRef) {
-      warnings.push("PR body doesn't reference a task. Per Article 5 (Strict Traceability), changes should link to tasks.");
+      warnings.push(
+        "PR body doesn't reference a task. Per Article 5 (Strict Traceability), changes should link to tasks.",
+      );
     }
   }
 
@@ -216,13 +253,19 @@ function checkFilepathCompliance() {
 
   if (prBodyPath && existsSync(prBodyPath)) {
     const prBody = readFileSync(prBodyPath, "utf-8");
-    
+
     // Check for filepath section or inline filepaths
-    const hasFilepathSection = /##?\s*(filepaths?|files?|changes?)/i.test(prBody);
-    const hasInlineFilepaths = /`[^`]+\.(ts|tsx|js|jsx|md|json|yaml|yml)`/.test(prBody);
+    const hasFilepathSection = /##?\s*(filepaths?|files?|changes?)/i.test(
+      prBody,
+    );
+    const hasInlineFilepaths = /`[^`]+\.(ts|tsx|js|jsx|md|json|yaml|yml)`/.test(
+      prBody,
+    );
 
     if (!hasFilepathSection && !hasInlineFilepaths) {
-      warnings.push("PR body doesn't include filepaths. Per global rule in PRINCIPLES.md, filepaths are required everywhere.");
+      warnings.push(
+        "PR body doesn't include filepaths. Per global rule in PRINCIPLES.md, filepaths are required everywhere.",
+      );
     }
   }
 

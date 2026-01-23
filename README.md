@@ -426,12 +426,18 @@ Using system fonts with the following scale:
 - **[docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md](./docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md)** — Ten new UX paradigms
 - **[docs/PHASE_3_COMPLETION_SUMMARY.md](./docs/PHASE_3_COMPLETION_SUMMARY.md)** — Phase 3 UX system completion summary
 
+## Maintainers
+
+**Project Owner:** [Your Name/Team]  
+**Contact:** [Email or GitHub Issues]  
+**Support:** Open an issue or see [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## Contributing
 
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`) - **Note:** Commits must follow [Conventional Commits](https://www.conventionalcommits.org/)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 

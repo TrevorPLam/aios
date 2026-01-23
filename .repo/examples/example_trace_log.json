@@ -6,11 +6,7 @@
     "packages/features/contacts/ui/ContactList.tsx",
     "packages/features/contacts/domain/__tests__/contactService.test.ts"
   ],
-  "commands": [
-    "npm run check:types",
-    "npm test",
-    "npm run lint"
-  ],
+  "commands": ["npm run check:types", "npm test", "npm run lint"],
   "evidence": [
     "Type checking complete. No errors.",
     "All tests passed. 15 tests, 0 failures.",

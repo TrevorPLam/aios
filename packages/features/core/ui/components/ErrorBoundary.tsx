@@ -1,5 +1,8 @@
 import React, { Component, ComponentType, PropsWithChildren } from "react";
-import { ErrorFallback, ErrorFallbackProps } from "@features/core/ui/components/ErrorFallback";
+import {
+  ErrorFallback,
+  ErrorFallbackProps,
+} from "@features/core/ui/components/ErrorFallback";
 import analytics from "@platform/analytics";
 import { errorReporting } from "@platform/lib/errorReporting";
 
@@ -75,4 +78,3 @@ export class ErrorBoundary extends Component<
     );
   }
 }
-

@@ -39,10 +39,10 @@
  * Log level enum
  */
 export enum LogLevel {
-  ERROR = 'error',
-  WARN = 'warn',
-  INFO = 'info',
-  DEBUG = 'debug',
+  ERROR = "error",
+  WARN = "warn",
+  INFO = "info",
+  DEBUG = "debug",
 }
 
 /**
@@ -83,7 +83,12 @@ class Logger {
    * Check if a log level should be output
    */
   private shouldLog(level: LogLevel): boolean {
-    const levels = [LogLevel.ERROR, LogLevel.WARN, LogLevel.INFO, LogLevel.DEBUG];
+    const levels = [
+      LogLevel.ERROR,
+      LogLevel.WARN,
+      LogLevel.INFO,
+      LogLevel.DEBUG,
+    ];
     const minIndex = levels.indexOf(this.config.minLevel);
     const levelIndex = levels.indexOf(level);
     return levelIndex <= minIndex;
@@ -94,10 +99,10 @@ class Logger {
    */
   private formatForConsole(entry: LogEntry): string {
     const emoji = {
-      [LogLevel.ERROR]: '❌',
-      [LogLevel.WARN]: '⚠️',
-      [LogLevel.INFO]: 'ℹ️',
-      [LogLevel.DEBUG]: '🔍',
+      [LogLevel.ERROR]: "❌",
+      [LogLevel.WARN]: "⚠️",
+      [LogLevel.INFO]: "ℹ️",
+      [LogLevel.DEBUG]: "🔍",
     }[entry.level];
 
     let output = `${emoji} [${entry.component}] ${entry.message}`;
@@ -116,7 +121,7 @@ class Logger {
     level: LogLevel,
     component: string,
     message: string,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
   ): void {
     if (!this.shouldLog(level)) {
       return;
@@ -159,28 +164,44 @@ class Logger {
   /**
    * Log error message
    */
-  error(component: string, message: string, metadata?: Record<string, unknown>): void {
+  error(
+    component: string,
+    message: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.log(LogLevel.ERROR, component, message, metadata);
   }
 
   /**
    * Log warning message
    */
-  warn(component: string, message: string, metadata?: Record<string, unknown>): void {
+  warn(
+    component: string,
+    message: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.log(LogLevel.WARN, component, message, metadata);
   }
 
   /**
    * Log info message
    */
-  info(component: string, message: string, metadata?: Record<string, unknown>): void {
+  info(
+    component: string,
+    message: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.log(LogLevel.INFO, component, message, metadata);
   }
 
   /**
    * Log debug message
    */
-  debug(component: string, message: string, metadata?: Record<string, unknown>): void {
+  debug(
+    component: string,
+    message: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.log(LogLevel.DEBUG, component, message, metadata);
   }
 

@@ -30,7 +30,10 @@ const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../../../..");
 const TRACES_DIR = join(REPO_ROOT, ".repo/traces");
-const TRACE_SCHEMA_PATH = join(REPO_ROOT, ".repo/templates/AGENT_TRACE_SCHEMA.json");
+const TRACE_SCHEMA_PATH = join(
+  REPO_ROOT,
+  ".repo/templates/AGENT_TRACE_SCHEMA.json",
+);
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -47,19 +50,34 @@ for (let i = 0; i < args.length; i++) {
     intent = args[i + 1];
     i++;
   } else if (args[i] === "--files" && i + 1 < args.length) {
-    files = args[i + 1].split(",").map((f) => f.trim()).filter(Boolean);
+    files = args[i + 1]
+      .split(",")
+      .map((f) => f.trim())
+      .filter(Boolean);
     i++;
   } else if (args[i] === "--commands" && i + 1 < args.length) {
-    commands = args[i + 1].split(",").map((c) => c.trim()).filter(Boolean);
+    commands = args[i + 1]
+      .split(",")
+      .map((c) => c.trim())
+      .filter(Boolean);
     i++;
   } else if (args[i] === "--evidence" && i + 1 < args.length) {
-    evidence = args[i + 1].split(",").map((e) => e.trim()).filter(Boolean);
+    evidence = args[i + 1]
+      .split(",")
+      .map((e) => e.trim())
+      .filter(Boolean);
     i++;
   } else if (args[i] === "--hitl" && i + 1 < args.length) {
-    hitl = args[i + 1].split(",").map((h) => h.trim()).filter(Boolean);
+    hitl = args[i + 1]
+      .split(",")
+      .map((h) => h.trim())
+      .filter(Boolean);
     i++;
   } else if (args[i] === "--unknowns" && i + 1 < args.length) {
-    unknowns = args[i + 1].split(",").map((u) => u.trim()).filter(Boolean);
+    unknowns = args[i + 1]
+      .split(",")
+      .map((u) => u.trim())
+      .filter(Boolean);
     i++;
   } else if (args[i] === "--output" && i + 1 < args.length) {
     outputPath = args[i + 1];

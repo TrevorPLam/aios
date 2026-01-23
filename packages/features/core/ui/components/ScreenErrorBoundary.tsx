@@ -94,7 +94,10 @@ function ScreenErrorActionButton({
     >
       <ThemedText
         type="body"
-        style={[styles.buttonText, { color: isPrimary ? "#FFFFFF" : theme.text }]}
+        style={[
+          styles.buttonText,
+          { color: isPrimary ? "#FFFFFF" : theme.text },
+        ]}
       >
         {label}
       </ThemedText>

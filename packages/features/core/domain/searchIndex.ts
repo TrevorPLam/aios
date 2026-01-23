@@ -216,7 +216,10 @@ class SearchIndex {
         title: payload.task.title,
         searchableText: `${payload.task.title} ${payload.task.userNotes || ""}`,
         timestamp: new Date(payload.task.createdAt).getTime(),
-        metadata: { status: payload.task.status, priority: payload.task.priority },
+        metadata: {
+          status: payload.task.status,
+          priority: payload.task.priority,
+        },
       });
     });
 
@@ -251,7 +254,10 @@ class SearchIndex {
         title: payload.task.title,
         searchableText: `${payload.task.title} ${payload.task.userNotes || ""}`,
         timestamp: new Date(payload.task.updatedAt).getTime(),
-        metadata: { status: payload.task.status, priority: payload.task.priority },
+        metadata: {
+          status: payload.task.status,
+          priority: payload.task.priority,
+        },
       });
     });
 

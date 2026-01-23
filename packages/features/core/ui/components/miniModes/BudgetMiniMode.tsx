@@ -124,20 +124,17 @@ export function BudgetMiniMode({
       // Create budget entry (simplified - just save a note about the transaction)
       // In a real app, this would update the actual budget tracking
       const transactionNote = `${type === "expense" ? "Expense" : "Income"}: ${description.trim()} - $${amountNum} (${category})`;
-      
+
       // Since we don't have a transactions table, we'll just emit the event
       // Real implementation would save to a proper transactions database
-      
-      eventBus.emit(
-        EVENT_TYPES.USER_ACTION,
-        {
-          description: description.trim(),
-          amount: type === "expense" ? -Math.abs(amountNum) : Math.abs(amountNum),
-          category,
-          date: new Date().toISOString(),
-          notes: source ? `Created from ${source}` : undefined,
-        },
-      );
+
+      eventBus.emit(EVENT_TYPES.USER_ACTION, {
+        description: description.trim(),
+        amount: type === "expense" ? -Math.abs(amountNum) : Math.abs(amountNum),
+        category,
+        date: new Date().toISOString(),
+        notes: source ? `Created from ${source}` : undefined,
+      });
 
       // Success haptic on iOS
       if (Platform.OS === "ios") {
@@ -150,7 +147,8 @@ export function BudgetMiniMode({
         module: "budget",
         data: {
           description: description.trim(),
-          amount: type === "expense" ? -Math.abs(amountNum) : Math.abs(amountNum),
+          amount:
+            type === "expense" ? -Math.abs(amountNum) : Math.abs(amountNum),
           category,
           date: new Date().toISOString(),
         },
@@ -232,9 +230,7 @@ export function BudgetMiniMode({
             <Feather
               name="arrow-down-left"
               size={18}
-              color={
-                type === "expense" ? theme.electric : theme.textSecondary
-              }
+              color={type === "expense" ? theme.electric : theme.textSecondary}
             />
             <ThemedText
               style={[
@@ -348,10 +344,7 @@ export function BudgetMiniMode({
 
       {/* Action Buttons (iOS-style) */}
       <View style={styles.actions}>
-        <Button
-          onPress={onDismiss}
-          style={styles.button}
-        >
+        <Button onPress={onDismiss} style={styles.button}>
           <ThemedText>Cancel</ThemedText>
         </Button>
         <Button
@@ -366,153 +359,154 @@ export function BudgetMiniMode({
   );
 }
 
-const createStyles = (theme: ReturnType<typeof useTheme>['theme']) => StyleSheet.create({
-  container: {
-    flex: 1,
-    maxHeight: "85%",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    paddingHorizontal: Spacing.md,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.sm,
-  },
-  headerContent: {
-    flex: 1,
-  },
-  title: {
-    fontSize: Typography.sizes.h2,
-    fontWeight: "600",
-    marginBottom: Spacing.xs,
-  },
-  subtitle: {
-    fontSize: Typography.sizes.caption,
-    color: theme.textSecondary,
-  },
-  closeButton: {
-    padding: Spacing.xs,
-    marginLeft: Spacing.sm,
-  },
-  form: {
-    flex: 1,
-    paddingHorizontal: Spacing.md,
-  },
-  field: {
-    marginBottom: Spacing.lg,
-  },
-  label: {
-    fontSize: Typography.sizes.small,
-    fontWeight: "500",
-    color: theme.textSecondary,
-    marginBottom: Spacing.xs,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-  typeToggleContainer: {
-    flexDirection: "row",
-    backgroundColor: theme.deepSpace,
-    borderRadius: 12,
-    padding: 4,
-    marginBottom: Spacing.lg,
-  },
-  typeToggle: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    borderRadius: 8,
-    gap: Spacing.xs,
-  },
-  typeToggleActive: {
-    backgroundColor: theme.slatePanel,
-  },
-  typeToggleText: {
-    fontSize: Typography.sizes.body,
-    color: theme.textSecondary,
-  },
-  typeToggleTextActive: {
-    color: theme.text,
-    fontWeight: "600",
-  },
-  amountInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: theme.deepSpace,
-    borderRadius: 12,
-    paddingHorizontal: Spacing.md,
-    borderWidth: 1,
-    borderColor: theme.border,
-  },
-  currencySymbol: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: theme.textSecondary,
-    marginRight: Spacing.xs,
-  },
-  amountInput: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: "600",
-    color: theme.text,
-    paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
-  },
-  input: {
-    backgroundColor: theme.deepSpace,
-    borderRadius: 12,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
-    fontSize: Typography.sizes.body,
-    color: theme.text,
-    borderWidth: 1,
-    borderColor: theme.border,
-  },
-  categoryGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: Spacing.sm,
-  },
-  categoryButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    borderRadius: 20, // iOS-style pill shape
-    backgroundColor: theme.deepSpace,
-    borderWidth: 1,
-    borderColor: theme.border,
-    gap: Spacing.xs,
-  },
-  categoryButtonActive: {
-    backgroundColor: theme.slatePanel,
-    borderColor: theme.electric,
-  },
-  categoryButtonText: {
-    fontSize: Typography.sizes.small,
-    color: theme.textSecondary,
-  },
-  categoryButtonTextActive: {
-    color: theme.electric,
-    fontWeight: "600",
-  },
-  spacer: {
-    height: Spacing["2xl"] * 2, // Extra space for keyboard
-  },
-  actions: {
-    flexDirection: "row",
-    gap: Spacing.sm,
-    padding: Spacing.md,
-    paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: theme.border,
-  },
-  button: {
-    flex: 1,
-  },
-  buttonPrimary: {
-    // Primary button styles already defined in Button component
-  },
-});
+const createStyles = (theme: ReturnType<typeof useTheme>["theme"]) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      maxHeight: "85%",
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      paddingHorizontal: Spacing.md,
+      paddingTop: Spacing.md,
+      paddingBottom: Spacing.sm,
+    },
+    headerContent: {
+      flex: 1,
+    },
+    title: {
+      fontSize: Typography.sizes.h2,
+      fontWeight: "600",
+      marginBottom: Spacing.xs,
+    },
+    subtitle: {
+      fontSize: Typography.sizes.caption,
+      color: theme.textSecondary,
+    },
+    closeButton: {
+      padding: Spacing.xs,
+      marginLeft: Spacing.sm,
+    },
+    form: {
+      flex: 1,
+      paddingHorizontal: Spacing.md,
+    },
+    field: {
+      marginBottom: Spacing.lg,
+    },
+    label: {
+      fontSize: Typography.sizes.small,
+      fontWeight: "500",
+      color: theme.textSecondary,
+      marginBottom: Spacing.xs,
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+    },
+    typeToggleContainer: {
+      flexDirection: "row",
+      backgroundColor: theme.deepSpace,
+      borderRadius: 12,
+      padding: 4,
+      marginBottom: Spacing.lg,
+    },
+    typeToggle: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: Spacing.sm,
+      paddingHorizontal: Spacing.md,
+      borderRadius: 8,
+      gap: Spacing.xs,
+    },
+    typeToggleActive: {
+      backgroundColor: theme.slatePanel,
+    },
+    typeToggleText: {
+      fontSize: Typography.sizes.body,
+      color: theme.textSecondary,
+    },
+    typeToggleTextActive: {
+      color: theme.text,
+      fontWeight: "600",
+    },
+    amountInputContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.deepSpace,
+      borderRadius: 12,
+      paddingHorizontal: Spacing.md,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+    currencySymbol: {
+      fontSize: 24,
+      fontWeight: "600",
+      color: theme.textSecondary,
+      marginRight: Spacing.xs,
+    },
+    amountInput: {
+      flex: 1,
+      fontSize: 24,
+      fontWeight: "600",
+      color: theme.text,
+      paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
+    },
+    input: {
+      backgroundColor: theme.deepSpace,
+      borderRadius: 12,
+      paddingHorizontal: Spacing.md,
+      paddingVertical: Platform.OS === "ios" ? Spacing.md : Spacing.sm,
+      fontSize: Typography.sizes.body,
+      color: theme.text,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+    categoryGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: Spacing.sm,
+    },
+    categoryButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: Spacing.sm,
+      paddingHorizontal: Spacing.md,
+      borderRadius: 20, // iOS-style pill shape
+      backgroundColor: theme.deepSpace,
+      borderWidth: 1,
+      borderColor: theme.border,
+      gap: Spacing.xs,
+    },
+    categoryButtonActive: {
+      backgroundColor: theme.slatePanel,
+      borderColor: theme.electric,
+    },
+    categoryButtonText: {
+      fontSize: Typography.sizes.small,
+      color: theme.textSecondary,
+    },
+    categoryButtonTextActive: {
+      color: theme.electric,
+      fontWeight: "600",
+    },
+    spacer: {
+      height: Spacing["2xl"] * 2, // Extra space for keyboard
+    },
+    actions: {
+      flexDirection: "row",
+      gap: Spacing.sm,
+      padding: Spacing.md,
+      paddingBottom: Platform.OS === "ios" ? Spacing.lg : Spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: theme.border,
+    },
+    button: {
+      flex: 1,
+    },
+    buttonPrimary: {
+      // Primary button styles already defined in Button component
+    },
+  });

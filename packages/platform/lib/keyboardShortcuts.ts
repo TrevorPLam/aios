@@ -16,7 +16,9 @@ export function isOmnisearchShortcut(event: KeyboardEvent): boolean {
   return key === "k" && (event.metaKey || event.ctrlKey);
 }
 
-export function shouldIgnoreShortcutTarget(target: EventTarget | null): boolean {
+export function shouldIgnoreShortcutTarget(
+  target: EventTarget | null,
+): boolean {
   const element = target as ShortcutTarget | null;
   if (!element || typeof element.tagName !== "string") {
     return false;

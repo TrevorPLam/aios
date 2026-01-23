@@ -1,6 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Message, Conversation, ConversationParticipant } from "@contracts/models/types";
+import {
+  Message,
+  Conversation,
+  ConversationParticipant,
+} from "@contracts/models/types";
 
 describe("Database Messages Storage", () => {
   beforeEach(async () => {

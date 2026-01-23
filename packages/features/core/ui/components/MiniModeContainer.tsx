@@ -215,51 +215,52 @@ export function MiniModeContainer() {
   );
 }
 
-const createStyles = (theme: ReturnType<typeof useTheme>) => StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
-  },
-  backdropOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-  },
-  keyboardAvoid: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  contentContainer: {
-    justifyContent: "flex-end",
-    maxHeight: SCREEN_HEIGHT * 0.85, // Max 85% of screen height
-  },
-  miniModeCard: {
-    backgroundColor: theme.theme.cardBackground,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingTop: 8,
-    paddingHorizontal: 16,
-    paddingBottom: Platform.OS === "ios" ? 34 : 16, // Account for home indicator
-    minHeight: 200,
-    maxHeight: SCREEN_HEIGHT * 0.85,
-    // Shadow for elevation
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  loadingState: {
-    minHeight: 200,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 24,
-    gap: 8,
-  },
-  loadingTitle: {
-    textAlign: "center",
-  },
-  loadingMessage: {
-    textAlign: "center",
-    opacity: 0.7,
-  },
-});
+const createStyles = (theme: ReturnType<typeof useTheme>) =>
+  StyleSheet.create({
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: "flex-end",
+    },
+    backdropOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+    },
+    keyboardAvoid: {
+      flex: 1,
+      justifyContent: "flex-end",
+    },
+    contentContainer: {
+      justifyContent: "flex-end",
+      maxHeight: SCREEN_HEIGHT * 0.85, // Max 85% of screen height
+    },
+    miniModeCard: {
+      backgroundColor: theme.theme.cardBackground,
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+      paddingTop: 8,
+      paddingHorizontal: 16,
+      paddingBottom: Platform.OS === "ios" ? 34 : 16, // Account for home indicator
+      minHeight: 200,
+      maxHeight: SCREEN_HEIGHT * 0.85,
+      // Shadow for elevation
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: -4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    loadingState: {
+      minHeight: 200,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 24,
+      gap: 8,
+    },
+    loadingTitle: {
+      textAlign: "center",
+    },
+    loadingMessage: {
+      textAlign: "center",
+      opacity: 0.7,
+    },
+  });

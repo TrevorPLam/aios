@@ -82,10 +82,7 @@ export const validateListDraft = (draft: ListDraft): ListValidationResult => {
 
   if (itemWithTooLongText) {
     errors.push(
-      formatLimitError(
-        "List items",
-        LIST_VALIDATION_LIMITS.maxItemTextLength,
-      ),
+      formatLimitError("List items", LIST_VALIDATION_LIMITS.maxItemTextLength),
     );
   }
 

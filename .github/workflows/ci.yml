@@ -114,6 +114,53 @@ jobs:
         with:
           fail_ci_if_error: false
 
+  coverage-ratchet:
+    name: Coverage Ratchet (New Code)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Full history needed for diff
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+        continue-on-error: false
+      
+      - name: Check coverage on new code
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref || 'main' }}
+        run: npm run check:coverage-ratchet
+        continue-on-error: false
+
+  todo-format-check:
+    name: TODO/FIXME Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Check TODO/FIXME format
+        run: npm run check:todo-format
+        continue-on-error: false
+
   audit:
     name: Security Audit
     runs-on: ubuntu-latest
@@ -184,6 +231,35 @@ jobs:
       
       - name: Build server
         run: npm run server:build
+        continue-on-error: false
+
+  bundle-budget:
+    name: Bundle Budget Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [build-client]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Full history needed for comparison
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build client (if not already built)
+        run: npm run expo:static:build || echo "Build may have been done in build-client job"
+        continue-on-error: true
+      
+      - name: Check bundle budget
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref || 'main' }}
+        run: npm run check:bundle-budget
         continue-on-error: false
 
   governance-verify:

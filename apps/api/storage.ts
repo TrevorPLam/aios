@@ -762,7 +762,7 @@ export class MemStorage implements IStorage {
     }>,
   ): Promise<void> {
     const now = new Date();
-    
+
     for (const event of events) {
       // Skip if event ID already exists (idempotency)
       if (this.analyticsEvents.has(event.eventId)) {

@@ -273,7 +273,9 @@ describe("PrefetchEngine", () => {
     it("should limit stored transitions", async () => {
       // Try to create more than max transitions
       for (let i = 0; i < 1100; i++) {
-        await prefetchEngine.onModuleEnter(i % 2 === 0 ? "calendar" : "calendar" as ModuleType);
+        await prefetchEngine.onModuleEnter(
+          i % 2 === 0 ? "calendar" : ("calendar" as ModuleType),
+        );
       }
 
       const stats = prefetchEngine.getStatistics();

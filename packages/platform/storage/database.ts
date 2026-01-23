@@ -386,19 +386,19 @@ export const db = {
      * Mark a recommendation as opened/viewed by the user.
      * Sets the openedAt timestamp to track when recommendation was first viewed.
      * Used to remove the "new" glow indicator from recommendation cards.
-     * 
+     *
      * Behavior:
      * - Only sets openedAt if not already set (idempotent)
      * - Does not update if recommendation already has openedAt value
      * - Returns silently if recommendation ID not found
-     * 
+     *
      * Use Case:
      * Called when user taps a recommendation card to view details.
      * Fire-and-forget pattern used in UI to avoid blocking navigation.
-     * 
+     *
      * @param {string} id - The recommendation ID to mark as opened
      * @returns {Promise<void>}
-     * 
+     *
      * @example
      * // Mark recommendation as opened when user views it
      * await db.recommendations.markAsOpened(recommendationId);
@@ -406,7 +406,7 @@ export const db = {
     async markAsOpened(id: string): Promise<void> {
       const all = await this.getAll();
       const rec = all.find((r) => r.id === id);
-      
+
       // Only update if recommendation exists and hasn't been opened yet
       if (rec && !rec.openedAt) {
         rec.openedAt = new Date().toISOString();

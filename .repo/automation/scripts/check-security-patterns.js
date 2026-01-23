@@ -21,10 +21,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../../../..");
-const SECURITY_BASELINE_PATH = join(REPO_ROOT, ".repo/policy/SECURITY_BASELINE.md");
+const SECURITY_BASELINE_PATH = join(
+  REPO_ROOT,
+  ".repo/policy/SECURITY_BASELINE.md",
+);
 
 // File extensions to scan
-const SCAN_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".json", ".yaml", ".yml", ".env", ".env.example"];
+const SCAN_EXTENSIONS = [
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".json",
+  ".yaml",
+  ".yml",
+  ".env",
+  ".env.example",
+];
 
 // Files/directories to ignore
 const IGNORE_PATTERNS = [
@@ -48,11 +61,13 @@ function getForbiddenPatterns() {
   }
 
   const content = readFileSync(SECURITY_BASELINE_PATH, "utf-8");
-  
+
   // Extract patterns array from markdown
   const patternsMatch = content.match(/Forbidden patterns list:\s*\[(.*?)\]/s);
   if (!patternsMatch) {
-    throw new Error("Could not find forbidden patterns in SECURITY_BASELINE.md");
+    throw new Error(
+      "Could not find forbidden patterns in SECURITY_BASELINE.md",
+    );
   }
 
   // Parse JSON array from the match
@@ -163,7 +178,9 @@ function main() {
         console.error("");
       });
 
-      console.error("⚠️  Security violation detected. Review and remove secrets/tokens.");
+      console.error(
+        "⚠️  Security violation detected. Review and remove secrets/tokens.",
+      );
       process.exit(1);
     } else {
       console.log("✅ No security violations found");

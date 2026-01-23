@@ -23,8 +23,8 @@ describe("attentionPriorityColor helpers", () => {
 
   it("test_error_throws_on_unknown_priority", () => {
     // Error handling: unknown priorities should be rejected to surface bad data.
-    expect(() =>
-      getAttentionPriorityColor("unknown" as "urgent"),
-    ).toThrow("Unknown attention priority: unknown");
+    expect(() => getAttentionPriorityColor("unknown" as "urgent")).toThrow(
+      "Unknown attention priority: unknown",
+    );
   });
 });

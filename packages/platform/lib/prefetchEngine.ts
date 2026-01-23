@@ -528,7 +528,10 @@ class PrefetchEngine {
   private shouldPrefetch(): boolean {
     if (this.strategy.respectBattery && Platform.OS === "ios") {
       // WHY: Avoid background prefetching when battery is low on iOS to protect UX.
-      if (this.batteryLevel !== null && this.batteryLevel <= LOW_BATTERY_THRESHOLD) {
+      if (
+        this.batteryLevel !== null &&
+        this.batteryLevel <= LOW_BATTERY_THRESHOLD
+      ) {
         return false;
       }
     }
@@ -536,7 +539,10 @@ class PrefetchEngine {
     if (this.strategy.respectMemory) {
       const memoryInfo = memoryManager.getCurrentMemoryUsage();
       // WHY: Skip prefetch if memory pressure is already high to prevent jank.
-      if (memoryInfo.pressure === "high" || memoryInfo.pressure === "critical") {
+      if (
+        memoryInfo.pressure === "high" ||
+        memoryInfo.pressure === "critical"
+      ) {
         return false;
       }
     }

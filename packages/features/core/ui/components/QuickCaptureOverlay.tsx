@@ -266,83 +266,84 @@ export function QuickCaptureOverlay({
   );
 }
 
-const createStyles = (theme: ReturnType<typeof useTheme>) => StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  backdropOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: getOverlayColor(theme.theme, "backdropStrong"),
-  },
-  menuContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: Spacing.xl,
-  },
-  menu: {
-    backgroundColor: theme.theme.cardBackground,
-    borderRadius: 24,
-    padding: Spacing.lg,
-    width: "100%",
-    maxWidth: 400,
-    // Shadow for elevation
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 12,
-  },
-  menuHeader: {
-    alignItems: "center",
-    marginBottom: Spacing.lg,
-  },
-  menuTitle: {
-    fontSize: Typography.h1.fontSize,
-    fontWeight: "700",
-    color: theme.theme.accent,
-    marginBottom: 4,
-  },
-  menuSubtitle: {
-    fontSize: Typography.caption.fontSize,
-    color: theme.theme.textSecondary,
-  },
-  actionsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    gap: Spacing.md,
-    marginBottom: Spacing.lg,
-  },
-  actionButton: {
-    alignItems: "center",
-    width: 80,
-    marginBottom: Spacing.sm,
-  },
-  actionIconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: Spacing.xs,
-  },
-  actionLabel: {
-    fontSize: Typography.caption.fontSize,
-    color: theme.theme.text,
-    fontWeight: "500",
-    textAlign: "center",
-  },
-  closeButton: {
-    paddingVertical: Spacing.md,
-    alignItems: "center",
-    borderTopWidth: 1,
-    borderTopColor: theme.theme.border,
-    marginTop: Spacing.sm,
-  },
-  closeButtonText: {
-    fontSize: Typography.body.fontSize,
-    color: theme.theme.textSecondary,
-    fontWeight: "500",
-  },
-});
+const createStyles = (theme: ReturnType<typeof useTheme>) =>
+  StyleSheet.create({
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    backdropOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: getOverlayColor(theme.theme, "backdropStrong"),
+    },
+    menuContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: Spacing.xl,
+    },
+    menu: {
+      backgroundColor: theme.theme.cardBackground,
+      borderRadius: 24,
+      padding: Spacing.lg,
+      width: "100%",
+      maxWidth: 400,
+      // Shadow for elevation
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 12,
+    },
+    menuHeader: {
+      alignItems: "center",
+      marginBottom: Spacing.lg,
+    },
+    menuTitle: {
+      fontSize: Typography.h1.fontSize,
+      fontWeight: "700",
+      color: theme.theme.accent,
+      marginBottom: 4,
+    },
+    menuSubtitle: {
+      fontSize: Typography.caption.fontSize,
+      color: theme.theme.textSecondary,
+    },
+    actionsGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      gap: Spacing.md,
+      marginBottom: Spacing.lg,
+    },
+    actionButton: {
+      alignItems: "center",
+      width: 80,
+      marginBottom: Spacing.sm,
+    },
+    actionIconContainer: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: Spacing.xs,
+    },
+    actionLabel: {
+      fontSize: Typography.caption.fontSize,
+      color: theme.theme.text,
+      fontWeight: "500",
+      textAlign: "center",
+    },
+    closeButton: {
+      paddingVertical: Spacing.md,
+      alignItems: "center",
+      borderTopWidth: 1,
+      borderTopColor: theme.theme.border,
+      marginTop: Spacing.sm,
+    },
+    closeButtonText: {
+      fontSize: Typography.body.fontSize,
+      color: theme.theme.textSecondary,
+      fontWeight: "500",
+    },
+  });

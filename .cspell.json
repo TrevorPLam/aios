@@ -90,9 +90,5 @@
     "Mixpanel",
     "Grafana"
   ],
-  "ignorePaths": [
-    "node_modules/**",
-    "docs/archive/**",
-    "*.lock"
-  ]
+  "ignorePaths": ["node_modules/**", "docs/archive/**", "*.lock"]
 }

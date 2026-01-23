@@ -22,7 +22,10 @@ export function resolveModuleFromRoute(
 ): ModuleType | null {
   if (!routeName) {
     // We log at debug to keep noisy cases (startup, teardown) visible when needed.
-    logger.debug("NavigationPerformance", "Missing route name; skipping module lookup");
+    logger.debug(
+      "NavigationPerformance",
+      "Missing route name; skipping module lookup",
+    );
     return null;
   }
 

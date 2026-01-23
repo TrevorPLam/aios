@@ -21,7 +21,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../../../..");
-const TRACE_SCHEMA_PATH = join(REPO_ROOT, ".repo/templates/AGENT_TRACE_SCHEMA.json");
+const TRACE_SCHEMA_PATH = join(
+  REPO_ROOT,
+  ".repo/templates/AGENT_TRACE_SCHEMA.json",
+);
 
 function main() {
   const traceLogPath = process.argv[2];

@@ -1,6 +1,6 @@
 # Makefile for AIOS project
 
-.PHONY: help install test lint check-governance check-all
+.PHONY: help install setup test lint check-governance check-all
 
 help: ## Show this help message
 	@echo "Available targets:"
@@ -9,6 +9,13 @@ help: ## Show this help message
 install: ## Install all dependencies
 	npm install
 	pip install -r .repo/automation/scripts/requirements.txt
+
+setup: install ## Bootstrap: Install all dependencies and check environment requirements
+	@echo "✅ Checking Node.js version..."
+	@node --version || (echo "❌ Node.js not found. Please install Node.js 18+." && exit 1)
+	@echo "✅ Checking npm version..."
+	@npm --version || (echo "❌ npm not found. Please install npm." && exit 1)
+	@echo "✅ Bootstrap complete!"
 
 test: ## Run tests
 	npm test

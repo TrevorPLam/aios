@@ -8,10 +8,16 @@
 import analytics from "@platform/analytics";
 
 // Type declarations for React Native's ErrorUtils
-declare const ErrorUtils: {
-  setGlobalHandler: (handler: (error: Error, isFatal?: boolean) => void) => void;
-  getGlobalHandler: () => ((error: Error, isFatal?: boolean) => void) | undefined;
-} | undefined;
+declare const ErrorUtils:
+  | {
+      setGlobalHandler: (
+        handler: (error: Error, isFatal?: boolean) => void,
+      ) => void;
+      getGlobalHandler: () =>
+        | ((error: Error, isFatal?: boolean) => void)
+        | undefined;
+    }
+  | undefined;
 
 class ErrorReporting {
   /**

@@ -52,8 +52,10 @@ export function useAnalyticsNavigation() {
     void runPerformanceHooks({
       moduleId,
       onModuleEnter: (nextModule) => prefetchEngine.onModuleEnter(nextModule),
-      onModuleAccess: (nextModule) => memoryManager.registerModuleAccess(nextModule),
-      onModuleMount: (nextModule) => memoryManager.registerModuleMount(nextModule),
+      onModuleAccess: (nextModule) =>
+        memoryManager.registerModuleAccess(nextModule),
+      onModuleMount: (nextModule) =>
+        memoryManager.registerModuleMount(nextModule),
     });
 
     previousRouteRef.current = routeName;
