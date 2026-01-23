@@ -77,15 +77,15 @@ Perform a deep inventory and analysis of all repo documentation. Determine what 
 
 #### Updated 7 files with documentation references
 ### Analytics TODOs (5 files)
-- `client/analytics/schema/versioning.ts` - Schema versioning system
-- `client/analytics/privacy/deletion.ts` - GDPR data deletion
-- `client/analytics/privacy/consent.ts` - Consent management
-- `client/analytics/privacy/retention.ts` - Data retention policies
-- `client/analytics/advanced/screenTracking.ts` - Screen view tracking
+- `apps/mobile/analytics/schema/versioning.ts` - Schema versioning system
+- `apps/mobile/analytics/privacy/deletion.ts` - GDPR data deletion
+- `apps/mobile/analytics/privacy/consent.ts` - Consent management
+- `apps/mobile/analytics/privacy/retention.ts` - Data retention policies
+- `apps/mobile/analytics/advanced/screenTracking.ts` - Screen view tracking
 
 ### Other TODOs (2 files)
-- `client/screens/AlertDetailScreen.tsx` - Time picker implementation
-- `server/middleware/errorHandler.ts` - Logging library
+- `apps/mobile/screens/AlertDetailScreen.tsx` - Time picker implementation
+- `apps/api/middleware/errorHandler.ts` - Logging library
 
 ### Format
 ```typescript
@@ -506,12 +506,13 @@ Part One has successfully delivered:
 3. DOCUMENTATION_PART_ONE_SUMMARY.md (this file)
 
 ### Files Updated
-1. client/analytics/schema/versioning.ts
-2. client/analytics/privacy/deletion.ts
-3. client/analytics/privacy/consent.ts
-4. client/analytics/privacy/retention.ts
-5. client/analytics/advanced/screenTracking.ts
-6. client/screens/AlertDetailScreen.tsx
-7. server/middleware/errorHandler.ts
+1. apps/mobile/analytics/schema/versioning.ts
+2. apps/mobile/analytics/privacy/deletion.ts
+3. apps/mobile/analytics/privacy/consent.ts
+4. apps/mobile/analytics/privacy/retention.ts
+5. apps/mobile/analytics/advanced/screenTracking.ts
+6. apps/mobile/screens/AlertDetailScreen.tsx
+7. apps/api/middleware/errorHandler.ts
 
 **Total Changes:** 3 new docs, 7 updated files, 1,300+ lines of analysis and planning
+

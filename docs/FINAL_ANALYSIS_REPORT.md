@@ -15,28 +15,28 @@
 
 #### Core Infrastructure
 
-- **Event Bus** (`client/lib/eventBus.ts`)
+- **Event Bus** (`apps/mobile/lib/eventBus.ts`)
   - Pub/sub system for cross-module communication
   - 19/19 unit tests passing
   - Error isolation and event history
   - Supports synchronous and async listeners
   - Production-ready, fully documented
 
-- **Context Engine** (`client/lib/contextEngine.ts`)
+- **Context Engine** (`apps/mobile/lib/contextEngine.ts`)
   - 6 context zones (work, personal, focus, social, evening, weekend)
   - Rule-based context detection
   - User override support
   - Module visibility filtering
   - Smooth context transitions with event notifications
 
-- **Omnisearch Engine** (`client/lib/omnisearch.ts`)
+- **Omnisearch Engine** (`apps/mobile/lib/omnisearch.ts`)
   - Unified search across 6 module types (Notes, Tasks, Events, Contacts, Lists, Messages)
   - Relevance scoring algorithm (text matching + recency boost)
   - Parallel module queries (<500ms target)
   - Grouped results by module
   - Recent searches tracking
 
-- **Module Registry** (`client/lib/moduleRegistry.ts`)
+- **Module Registry** (`apps/mobile/lib/moduleRegistry.ts`)
   - Single source of truth for 12 core modules
   - Usage tracking (open count, last opened, favorites)
   - Smart sidebar sorting (command first, favorites, most-used)
@@ -45,7 +45,7 @@
 
 #### UI Components
 
-- **Persistent Sidebar** (`client/components/PersistentSidebar.tsx`)
+- **Persistent Sidebar** (`apps/mobile/components/PersistentSidebar.tsx`)
   - Collapsible navigation drawer
   - Context-aware module filtering
   - Usage-based ordering
@@ -53,7 +53,7 @@
   - Smooth animations with React Native Reanimated
   - "All Modules" button for full catalog
 
-- **Omnisearch Screen** (`client/components/OmnisearchScreen.tsx`)
+- **Omnisearch Screen** (`apps/mobile/components/OmnisearchScreen.tsx`)
   - Debounced search input (300ms)
   - Grouped results display
   - Recent searches UI
@@ -101,7 +101,7 @@
 
 ### ✅ Phase 2: Intelligence Layer (COMPLETE)
 
-- **Onboarding Manager** (`client/lib/onboardingManager.ts`)
+- **Onboarding Manager** (`apps/mobile/lib/onboardingManager.ts`)
   - Progressive 3-module start with auto-unlock
   - Usage-based unlocking (every 3 module uses)
   - Daily unlock limits (max 2/day)
@@ -110,7 +110,7 @@
   - Skip/complete options
   - 29/29 unit tests passing
 
-- **Attention Manager** (`client/lib/attentionManager.ts`)
+- **Attention Manager** (`apps/mobile/lib/attentionManager.ts`)
   - 3-level priority classification (urgent/attention/fyi)
   - Smart bundling (10-minute window, same module)
   - Focus mode with module whitelist
@@ -119,7 +119,7 @@
   - AsyncStorage persistence
   - 25/25 unit tests passing
 
-- **Recommendation Engine** (`client/lib/recommendationEngine.ts`)
+- **Recommendation Engine** (`apps/mobile/lib/recommendationEngine.ts`)
   - 6 rule-based recommendation types:
     1. Meeting notes for recent events
     2. Task breakdown for stale tasks
@@ -133,7 +133,7 @@
   - Automatic expiry and refresh
   - 17/17 unit tests passing
 
-- **Storage Helper** (`client/lib/storage.ts`)
+- **Storage Helper** (`apps/mobile/lib/storage.ts`)
   - AsyncStorage abstraction
   - Test-safe (no-op in test environment)
   - Error handling and graceful degradation
@@ -617,3 +617,4 @@ Built a solid architectural foundation for AIOS Super App:
 **Report Author:** AI Development Team
 **Review Required:** Technical Lead, Product Manager, UX Designer
 **Next Review:** After Phase 2 completion
+

@@ -231,12 +231,12 @@ eas build --platform android --profile production
 ### Start Command
 ```bash
 npm run server:dev
-# Runs: NODE_ENV=development tsx server/index.ts
+# Runs: NODE_ENV=development tsx apps/api/index.ts
 ```text
 
 ## Process
 ```text
-server/index.ts → tsx (TypeScript loader) → Node.js → Express Server
+apps/api/index.ts → tsx (TypeScript loader) → Node.js → Express Server
 ```text
 
 ### Future: Production Server
@@ -315,7 +315,7 @@ heroku container:release web
 
 ### Current: In-Memory Storage
 
-**Location:** `/server/storage.ts`
+**Location:** `/apps/api/storage.ts`
 
 ### Structure (2)
 ```typescript
@@ -350,7 +350,7 @@ const tasks = new Map<string, Task[]>();
 ```typescript
 // /drizzle.config.ts
 export default {
-  schema: './shared/schema.ts',
+  schema: './packages/contracts/schema.ts',
   out: './drizzle',
   driver: 'pg',
   dbCredentials: {
@@ -361,7 +361,7 @@ export default {
 
 ### Connection
 ```typescript
-// /server/db.ts
+// /apps/api/db.ts
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 
@@ -480,7 +480,7 @@ jobs:
 
 ### Implementation
 ```typescript
-// /client/utils/errorReporting.ts
+// /apps/mobile/utils/errorReporting.ts
 import * as Sentry from '@sentry/react-native';
 
 Sentry.init({
@@ -497,7 +497,7 @@ export const logError = (error: Error) => {
 ### Server Logging
 
 ```typescript
-// /server/middleware/logger.ts
+// /apps/api/middleware/logger.ts
 import winston from 'winston';
 
 export const logger = winston.createLogger({
@@ -660,3 +660,4 @@ cat tsconfig.json
 - [System Context](03_context.md) - External dependencies
 - [Constraints](02_constraints.md) - Platform requirements
 - [README.md](../../../README.md) - Installation and running instructions
+

@@ -5,16 +5,22 @@ module.exports = {
     "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@react-native-async-storage)",
   ],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/client/$1",
-    "^@shared/(.*)$": "<rootDir>/shared/$1",
+    "^@/(.*)$": "<rootDir>/apps/mobile/$1",
+    "^@shared/(.*)$": "<rootDir>/packages/contracts/$1",
+    "^@contracts/(.*)$": "<rootDir>/packages/contracts/$1",
+    "^@features/(.*)$": "<rootDir>/packages/features/$1",
+    "^@platform/(.*)$": "<rootDir>/packages/platform/$1",
+    "^@design-system/(.*)$": "<rootDir>/packages/design-system/$1",
+    "^@apps/(.*)$": "<rootDir>/apps/$1",
   },
   collectCoverageFrom: [
-    "client/**/*.{ts,tsx}",
-    "server/**/*.{ts,tsx}",
+    "apps/mobile/**/*.{ts,tsx}",
+    "apps/api/**/*.{ts,tsx}",
+    "packages/**/*.{ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
     "!**/vendor/**",
-    "!client/index.js",
+    "!apps/mobile/index.js",
   ],
   coverageThreshold: {
     global: {

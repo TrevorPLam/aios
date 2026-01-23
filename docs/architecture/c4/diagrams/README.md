@@ -564,8 +564,8 @@ grep "fill:#E8E8E8" docs/architecture/c4/*.md  # Gray - External systems
 # 3. Confirm they match
 
 # Check for file paths in documentation
-grep "client/" docs/architecture/c4/*.md | wc -l
-grep "server/" docs/architecture/c4/*.md | wc -l
+grep "apps/mobile/" docs/architecture/c4/*.md | wc -l
+grep "apps/api/" docs/architecture/c4/*.md | wc -l
 # Should reference actual code files
 ```text
 
@@ -585,3 +585,4 @@ grep "server/" docs/architecture/c4/*.md | wc -l
 - GitHub Mermaid Support: <https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/>
 - VS Code Mermaid Extension: <https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid>
 - Mermaid CLI: <https://github.com/mermaid-js/mermaid-cli>
+

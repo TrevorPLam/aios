@@ -25,7 +25,7 @@
 
 ### T-081: Database Schema ✅ COMPLETE
 
-**File:** `shared/schema.ts` (+57 lines)
+**File:** `packages/contracts/schema.ts` (+57 lines)
 
 ### Added
 
@@ -70,7 +70,7 @@ export const analyticsEvents = pgTable(
 
 ### T-082: Storage Methods ✅ COMPLETE
 
-**File:** `server/storage.ts` (+109 lines)
+**File:** `apps/api/storage.ts` (+109 lines)
 
 ### Added to IStorage interface
 ```typescript
@@ -131,7 +131,7 @@ await storage.deleteUserAnalytics("user-123");
 
 ### T-083: Server Endpoint ✅ COMPLETE
 
-**File:** `server/routes.ts` (+31 lines)
+**File:** `apps/api/routes.ts` (+31 lines)
 
 ### Added endpoint
 ```typescript
@@ -188,7 +188,7 @@ Content-Type: application/json
 
 ### T-084: Validation Schemas ✅ COMPLETE
 
-**File:** `shared/schema.ts` (+38 lines within T-081 changes)
+**File:** `packages/contracts/schema.ts` (+38 lines within T-081 changes)
 
 ### Added schemas
 #### 1. `analyticsEventSchema`
@@ -291,7 +291,7 @@ await storage.deleteUserAnalytics("user-id");
 ```text
 
 ### Automated Testing
-Create file: `server/__tests__/analytics.test.ts`
+Create file: `apps/api/__tests__/analytics.test.ts`
 
 ```typescript
 import { MemStorage } from "../storage";
@@ -396,7 +396,7 @@ describe("Analytics Storage", () => {
 
 ### Run tests
 ```bash
-npm test server/__tests__/analytics.test.ts
+npm test apps/api/__tests__/analytics.test.ts
 ```text
 
 ---
@@ -531,7 +531,7 @@ setInterval(() => {
 1. Check client transport configuration:
 
    ```typescript
-   // In client/analytics/client.ts
+   // In apps/mobile/analytics/client.ts
    endpoint: "/api/telemetry/events", // Should match server
    ```text
 
@@ -554,7 +554,7 @@ setInterval(() => {
 1. Check network errors in client:
 
    ```typescript
-   // In client/analytics/transport.ts
+   // In apps/mobile/analytics/transport.ts
    // Add console.log to see actual error
    ```text
 
@@ -576,7 +576,7 @@ setInterval(() => {
 1. Check if idempotency is working:
 
    ```typescript
-   // In server/storage.ts, line ~765
+   // In apps/api/storage.ts, line ~765
    if (this.analyticsEvents.has(event.eventId)) {
      console.log(`[Analytics] Skipping duplicate event: ${event.eventId}`);
      continue;
@@ -586,7 +586,7 @@ setInterval(() => {
 1. Check if client is generating unique IDs:
 
    ```typescript
-   // In client/analytics/client.ts
+   // In apps/mobile/analytics/client.ts
    event_id: randomUUID(), // Should be unique per event
    ```text
 
@@ -615,7 +615,7 @@ setInterval(() => {
 1. Check deletion logic:
 
    ```typescript
-   // In server/storage.ts, line ~831
+   // In apps/api/storage.ts, line ~831
    const eventsToDelete = Array.from(this.analyticsEvents.values()).filter(
      (event) => event.userId === userId,
    );
@@ -661,7 +661,7 @@ setInterval(() => {
    ```text
 
 ### Solution (4)
-- Use exact schema from `shared/schema.ts`
+- Use exact schema from `packages/contracts/schema.ts`
 - Validate locally before sending
 - Check Zod error messages for specific field issues
 
@@ -671,14 +671,14 @@ setInterval(() => {
 
 ```text
 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
-├── shared/
+├── packages/contracts/
 │   └── schema.ts                          # Database schema + validation ✅ MODIFIED
-├── server/
+├── apps/api/
 │   ├── storage.ts                         # Storage layer ✅ MODIFIED
 │   ├── routes.ts                          # API endpoints ✅ MODIFIED
 │   └── __tests__/
 │       └── analytics.test.ts              # ⏸️ NEEDS CREATION (T-085)
-├── client/
+├── apps/mobile/
 │   └── analytics/
 │       ├── client.ts                      # Already configured to POST
 │       ├── transport.ts                   # HTTP transport with retry
@@ -700,14 +700,14 @@ setInterval(() => {
 #### 1. Server Endpoint
 
 ```typescript
-// File: server/routes.ts, line ~687
+// File: apps/api/routes.ts, line ~687
 app.post("/api/telemetry/events", authenticate, validate(analyticsBatchSchema), ...)
 ```text
 
 ### 2. Storage Methods
 
 ```typescript
-// File: server/storage.ts
+// File: apps/api/storage.ts
 saveAnalyticsEvents(events)      // Line ~751
 getAnalyticsEvents(userId, filters)  // Line ~790
 deleteUserAnalytics(userId)      // Line ~831
@@ -716,14 +716,14 @@ deleteUserAnalytics(userId)      // Line ~831
 ### 3. Database Schema
 
 ```typescript
-// File: shared/schema.ts, line ~303
+// File: packages/contracts/schema.ts, line ~303
 export const analyticsEvents = pgTable("analytics_events", {...})
 ```text
 
 ### 4. Validation Schemas
 
 ```typescript
-// File: shared/schema.ts, line ~328
+// File: packages/contracts/schema.ts, line ~328
 export const analyticsEventSchema = z.object({...})
 export const analyticsBatchSchema = z.object({...})
 ```text
@@ -732,13 +732,13 @@ export const analyticsBatchSchema = z.object({...})
 
 #### Endpoint Configuration
 ```typescript
-// File: client/analytics/client.ts, line ~32
+// File: apps/mobile/analytics/client.ts, line ~32
 endpoint: "/api/telemetry/events",  // Matches server
 ```text
 
 ### Transport Layer
 ```typescript
-// File: client/analytics/transport.ts, line ~145
+// File: apps/mobile/analytics/transport.ts, line ~145
 method: "POST",
 body: JSON.stringify(payload),
 ```text
@@ -772,9 +772,9 @@ If you have questions about this handoff:
    - IMPLEMENTATION_PLAN.md
 
 2. **Check code:**
-   - `shared/schema.ts` - Schema definitions
-   - `server/storage.ts` - Storage implementation
-   - `server/routes.ts` - API endpoint
+   - `packages/contracts/schema.ts` - Schema definitions
+   - `apps/api/storage.ts` - Storage implementation
+   - `apps/api/routes.ts` - API endpoint
 
 3. **Test manually:**
    - Start server: `npm run dev`
@@ -814,3 +814,4 @@ If you have questions about this handoff:
 **Last Updated:** 2026-01-20
 **Version:** 1.0
 **Status:** Ready for handoff
+

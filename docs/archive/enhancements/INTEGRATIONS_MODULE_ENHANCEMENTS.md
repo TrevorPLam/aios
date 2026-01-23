@@ -278,7 +278,7 @@ Successfully enhanced the Integrations module from a **basic 610-line integratio
 - **New Tests**: 28
 - **Test Pass Rate**: 100%
 - **Coverage**: All database methods
-- **Test File**: `client/storage/__tests__/integrations.test.ts`
+- **Test File**: `apps/mobile/storage/__tests__/integrations.test.ts`
 
 ### Test Categories
 
@@ -818,3 +818,4 @@ The Integrations module has been successfully enhanced from a basic integration 
 **Enhancement Date:** 2026-01-16
 **Module Version:** 2.0 (Enhanced)
 **Status:** Production Ready ✅
+

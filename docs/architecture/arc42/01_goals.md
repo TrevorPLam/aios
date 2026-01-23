@@ -22,8 +22,8 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files
 
-- `/client/screens/CommandCenterScreen.tsx`
-- `/client/storage/database.ts` (recommendations methods)
+- `/apps/mobile/screens/CommandCenterScreen.tsx`
+- `/apps/mobile/storage/database.ts` (recommendations methods)
 
 #### 2. Notebook
 
@@ -37,10 +37,10 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (2)
 
-- `/client/screens/NoteEditorScreen.tsx`
-- `/client/screens/NotebookScreen.tsx`
-- `/client/storage/database.ts` (notes methods)
-- `/client/storage/__tests__/notebook.test.ts`
+- `/apps/mobile/screens/NoteEditorScreen.tsx`
+- `/apps/mobile/screens/NotebookScreen.tsx`
+- `/apps/mobile/storage/database.ts` (notes methods)
+- `/apps/mobile/storage/__tests__/notebook.test.ts`
 
 #### 3. Planner
 
@@ -53,10 +53,10 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (3)
 
-- `/client/screens/PlannerScreen.tsx`
-- `/client/screens/TaskDetailScreen.tsx`
-- `/client/screens/ProjectDetailScreen.tsx`
-- `/client/storage/database.ts` (tasks, projects methods)
+- `/apps/mobile/screens/PlannerScreen.tsx`
+- `/apps/mobile/screens/TaskDetailScreen.tsx`
+- `/apps/mobile/screens/ProjectDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (tasks, projects methods)
 
 #### 4. Calendar
 
@@ -70,10 +70,10 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (4)
 
-- `/client/screens/CalendarScreen.tsx`
-- `/client/screens/EventDetailScreen.tsx`
-- `/client/storage/database.ts` (events methods)
-- `/client/storage/__tests__/calendar.test.ts`
+- `/apps/mobile/screens/CalendarScreen.tsx`
+- `/apps/mobile/screens/EventDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (events methods)
+- `/apps/mobile/storage/__tests__/calendar.test.ts`
 
 #### 5. Email
 
@@ -87,9 +87,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (5)
 
-- `/client/screens/EmailScreen.tsx`
-- `/client/screens/ThreadDetailScreen.tsx`
-- `/client/storage/database.ts` (email methods)
+- `/apps/mobile/screens/EmailScreen.tsx`
+- `/apps/mobile/screens/ThreadDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (email methods)
 
 #### 6. Messages
 
@@ -103,9 +103,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (6)
 
-- `/client/screens/MessagesScreen.tsx`
-- `/client/screens/ConversationDetailScreen.tsx`
-- `/client/storage/database.ts` (conversations, messages methods)
+- `/apps/mobile/screens/MessagesScreen.tsx`
+- `/apps/mobile/screens/ConversationDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (conversations, messages methods)
 
 #### 7. Lists
 
@@ -117,9 +117,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (7)
 
-- `/client/screens/ListsScreen.tsx`
-- `/client/screens/ListEditorScreen.tsx`
-- `/client/storage/database.ts` (lists methods)
+- `/apps/mobile/screens/ListsScreen.tsx`
+- `/apps/mobile/screens/ListEditorScreen.tsx`
+- `/apps/mobile/storage/database.ts` (lists methods)
 
 #### 8. Alerts
 
@@ -130,9 +130,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (8)
 
-- `/client/screens/AlertsScreen.tsx`
-- `/client/screens/AlertDetailScreen.tsx`
-- `/client/storage/database.ts` (alerts methods)
+- `/apps/mobile/screens/AlertsScreen.tsx`
+- `/apps/mobile/screens/AlertDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (alerts methods)
 
 #### 9. Contacts
 
@@ -144,9 +144,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (9)
 
-- `/client/screens/ContactsScreen.tsx`
-- `/client/screens/ContactDetailScreen.tsx`
-- `/client/storage/database.ts` (contacts methods)
+- `/apps/mobile/screens/ContactsScreen.tsx`
+- `/apps/mobile/screens/ContactDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (contacts methods)
 
 #### 10. Translator
 
@@ -159,8 +159,8 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (10)
 
-- `/client/screens/TranslatorScreen.tsx`
-- `/server/routes.ts` (translation API endpoint)
+- `/apps/mobile/screens/TranslatorScreen.tsx`
+- `/apps/api/routes.ts` (translation API endpoint)
 
 #### 11. Photos
 
@@ -172,10 +172,10 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (11)
 
-- `/client/screens/PhotosScreen.tsx`
-- `/client/screens/AlbumsScreen.tsx`
-- `/client/screens/PhotoDetailScreen.tsx`
-- `/client/storage/database.ts` (photos methods)
+- `/apps/mobile/screens/PhotosScreen.tsx`
+- `/apps/mobile/screens/AlbumsScreen.tsx`
+- `/apps/mobile/screens/PhotoDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (photos methods)
 
 #### 12. History
 
@@ -188,8 +188,8 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (12)
 
-- `/client/screens/HistoryScreen.tsx`
-- `/client/storage/database.ts` (history methods)
+- `/apps/mobile/screens/HistoryScreen.tsx`
+- `/apps/mobile/storage/database.ts` (history methods)
 
 #### 13. Budget
 
@@ -201,8 +201,8 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (13)
 
-- `/client/screens/BudgetScreen.tsx`
-- `/client/storage/database.ts` (budget methods)
+- `/apps/mobile/screens/BudgetScreen.tsx`
+- `/apps/mobile/storage/database.ts` (budget methods)
 
 #### 14. Integrations
 
@@ -213,9 +213,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (14)
 
-- `/client/screens/IntegrationsScreen.tsx`
-- `/client/screens/IntegrationDetailScreen.tsx`
-- `/client/storage/database.ts` (integrations methods)
+- `/apps/mobile/screens/IntegrationsScreen.tsx`
+- `/apps/mobile/screens/IntegrationDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (integrations methods)
 
 ### Cross-Cutting Requirements
 
@@ -228,8 +228,8 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (15)
 
-- `/client/navigation/AppNavigator.tsx`
-- `/client/context/HandoffContext.tsx`
+- `/apps/mobile/navigation/AppNavigator.tsx`
+- `/apps/mobile/context/HandoffContext.tsx`
 
 #### Quick Capture
 
@@ -240,12 +240,12 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (16)
 
-- `/client/components/QuickCaptureOverlay.tsx`
-- `/client/components/MiniCalendar.tsx`
-- `/client/components/MiniTask.tsx`
-- `/client/components/MiniNote.tsx`
-- `/client/components/MiniBudget.tsx`
-- `/client/components/MiniContacts.tsx`
+- `/apps/mobile/components/QuickCaptureOverlay.tsx`
+- `/apps/mobile/components/MiniCalendar.tsx`
+- `/apps/mobile/components/MiniTask.tsx`
+- `/apps/mobile/components/MiniNote.tsx`
+- `/apps/mobile/components/MiniBudget.tsx`
+- `/apps/mobile/components/MiniContacts.tsx`
 
 #### Settings
 
@@ -256,9 +256,9 @@ AIOS must provide the following integrated modules with seamless data sharing:
 
 ### Files (17)
 
-- `/client/screens/SettingsMenuScreen.tsx`
-- `/client/screens/GeneralSettingsScreen.tsx`
-- `/client/screens/AIPreferencesScreen.tsx`
+- `/apps/mobile/screens/SettingsMenuScreen.tsx`
+- `/apps/mobile/screens/GeneralSettingsScreen.tsx`
+- `/apps/mobile/screens/AIPreferencesScreen.tsx`
 
 ---
 
@@ -300,8 +300,8 @@ npm run start
 ```text
 
 ### Files Implementing Performance
-- `/client/screens/*Screen.tsx` (useMemo, useCallback)
-- `/client/components/` (optimized components)
+- `/apps/mobile/screens/*Screen.tsx` (useMemo, useCallback)
+- `/apps/mobile/components/` (optimized components)
 - `/metro.config.js` (bundling optimization)
 
 ### 2. Security
@@ -336,10 +336,10 @@ npm run check:types
 ```text
 
 ## Files Implementing Security
-- `/server/middleware/auth.ts` (JWT validation)
-- `/server/middleware/validation.ts` (input validation)
-- `/server/routes.ts` (protected endpoints)
-- `/shared/schema.ts` (Zod validation schemas)
+- `/apps/api/middleware/auth.ts` (JWT validation)
+- `/apps/api/middleware/validation.ts` (input validation)
+- `/apps/api/routes.ts` (protected endpoints)
+- `/packages/contracts/schema.ts` (Zod validation schemas)
 
 ### 3. Maintainability
 
@@ -354,7 +354,7 @@ npm run check:types
 
 ### Architecture Decisions (3)
 - Modular architecture with clear boundaries
-- Shared component library in `/client/components`
+- Shared component library in `/apps/mobile/components`
 - Consistent patterns across all modules
 - TypeScript strict mode enabled
 - Comprehensive inline documentation
@@ -368,17 +368,17 @@ npm run check:types
 npm run lint
 
 # Check for duplicates
-npx jscpd client/ server/
+npx jscpd apps/mobile/ apps/api/
 
 # Documentation
 npm run docs (if configured)
 ```text
 
 ### Files Implementing Maintainability
-- `/client/components/` (reusable components)
-- `/client/hooks/` (custom hooks)
-- `/client/constants/` (centralized configuration)
-- `/shared/` (shared types between client/server)
+- `/apps/mobile/components/` (reusable components)
+- `/apps/mobile/hooks/` (custom hooks)
+- `/apps/mobile/constants/` (centralized configuration)
+- `/packages/contracts/` (shared types between apps/mobile/server)
 - `/tsconfig.json` (strict TypeScript config)
 
 ### 4. Testability
@@ -415,8 +415,8 @@ npm run test:watch
 ```text
 
 ## Files Implementing Testability
-- `/client/storage/__tests__/*.test.ts` (storage tests)
-- `/server/__tests__/*.test.ts` (API tests)
+- `/apps/mobile/storage/__tests__/*.test.ts` (storage tests)
+- `/apps/api/__tests__/*.test.ts` (API tests)
 - `/jest.config.js` (Jest configuration)
 - `/jest.setup.js` (Test setup)
 
@@ -450,10 +450,10 @@ npm run test:a11y
 ```text
 
 ## Files Implementing Usability
-- `/client/constants/theme.ts` (design system)
-- `/client/components/` (consistent UI components)
-- `/client/screens/OnboardingWelcomeScreen.tsx`
-- `/client/screens/OnboardingModuleSelectionScreen.tsx`
+- `/apps/mobile/constants/theme.ts` (design system)
+- `/apps/mobile/components/` (consistent UI components)
+- `/apps/mobile/screens/OnboardingWelcomeScreen.tsx`
+- `/apps/mobile/screens/OnboardingModuleSelectionScreen.tsx`
 - `/docs/technical/design_guidelines.md` (UX specification)
 
 ### 6. Reliability
@@ -489,10 +489,10 @@ npm run monitor:errors
 ```text
 
 ## Files Implementing Reliability
-- `/client/storage/database.ts` (offline storage)
-- `/client/utils/errorReporting.ts` (error handling)
-- `/client/App.tsx` (error boundaries)
-- `/server/middleware/errorHandler.ts` (API error handling)
+- `/apps/mobile/storage/database.ts` (offline storage)
+- `/apps/mobile/utils/errorReporting.ts` (error handling)
+- `/apps/mobile/App.tsx` (error boundaries)
+- `/apps/api/middleware/errorHandler.ts` (API error handling)
 
 ---
 
@@ -601,10 +601,10 @@ npm run monitor:errors
 
 ```bash
 # Check all modules exist
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/
 
 # Verify storage methods
-grep -r "export const" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
+grep -r "export const" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts
 
 # Check test coverage
 npm run test:coverage
@@ -637,8 +637,8 @@ npm run test:coverage
 
 ```bash
 # Check files mentioned in this document
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/CommandCenterScreen.tsx | head -20
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/CommandCenterScreen.tsx | head -20
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts | head -50
 ```text
 
 ---
@@ -650,3 +650,4 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
 - [Solution Strategy](04_solution_strategy.md) - How quality goals are achieved
 - [Quality Requirements](10_quality.md) - Detailed quality scenarios and metrics
 - [F&F.md](../../../F&F.md) - Complete features and functionality reference
+

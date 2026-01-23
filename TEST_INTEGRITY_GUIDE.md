@@ -11,10 +11,10 @@ This guide documents how to validate test suite trustworthiness using manual mut
 npm test
 
 # Run only security tests
-npm test -- server/__tests__/auth.security.test.ts
+npm test -- apps/api/__tests__/auth.security.test.ts
 
 # Run enhanced analytics tests
-npm test -- server/__tests__/analytics.enhanced.test.ts
+npm test -- apps/api/__tests__/analytics.enhanced.test.ts
 
 # Run with coverage to identify gaps
 npm test -- --coverage
@@ -23,7 +23,7 @@ npm test -- --coverage
 ## New Integrity Tests
 
 ### 1. Authentication Security Tests
-**Location:** `server/__tests__/auth.security.test.ts`
+**Location:** `apps/api/__tests__/auth.security.test.ts`
 
 **Purpose:** Verifies that critical security measures cannot be accidentally removed.
 
@@ -35,7 +35,7 @@ npm test -- --coverage
 **How to validate:**
 ```bash
 # Run security tests
-npm test -- server/__tests__/auth.security.test.ts
+npm test -- apps/api/__tests__/auth.security.test.ts
 
 # If these tests pass, you're protected against:
 # - Accidentally removing bcrypt.hash() calls
@@ -44,7 +44,7 @@ npm test -- server/__tests__/auth.security.test.ts
 ```
 
 ### 2. Enhanced Analytics Tests
-**Location:** `server/__tests__/analytics.enhanced.test.ts`
+**Location:** `apps/api/__tests__/analytics.enhanced.test.ts`
 
 **Purpose:** Verifies idempotency and duplicate prevention actually work.
 
@@ -58,7 +58,7 @@ npm test -- server/__tests__/auth.security.test.ts
 **How to validate:**
 ```bash
 # Run enhanced tests
-npm test -- server/__tests__/analytics.enhanced.test.ts
+npm test -- apps/api/__tests__/analytics.enhanced.test.ts
 
 # These tests verify actual behavior, not just side effects
 ```
@@ -95,7 +95,7 @@ git checkout -- path/to/production-file.ts
 
 #### Test 1: Password Hashing
 ```typescript
-// In server/routes.ts
+// In apps/api/routes.ts
 // BEFORE (correct):
 const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -103,7 +103,7 @@ const hashedPassword = await bcrypt.hash(password, 10);
 const hashedPassword = password; // ← Stores plaintext!
 
 // Run test:
-npm test -- server/__tests__/auth.security.test.ts
+npm test -- apps/api/__tests__/auth.security.test.ts
 
 // Expected: FAIL ✅
 // If PASS: Test doesn't verify hashing ❌
@@ -111,7 +111,7 @@ npm test -- server/__tests__/auth.security.test.ts
 
 #### Test 2: Idempotency
 ```typescript
-// In server/storage.ts
+// In apps/api/storage.ts
 // BEFORE (correct):
 if (this.analyticsEvents.has(event.eventId)) {
   console.log('Skipping duplicate event');
@@ -122,7 +122,7 @@ if (this.analyticsEvents.has(event.eventId)) {
 // [commented out the check]
 
 // Run test:
-npm test -- server/__tests__/analytics.enhanced.test.ts
+npm test -- apps/api/__tests__/analytics.enhanced.test.ts
 
 // Expected: FAIL ✅
 // If PASS: Test uses weak assertion ❌
@@ -225,8 +225,8 @@ cat > stryker.conf.json << EOF
   "testRunner": "jest",
   "coverageAnalysis": "perTest",
   "mutate": [
-    "server/**/*.ts",
-    "client/**/*.ts",
+    "apps/api/**/*.ts",
+    "apps/mobile/**/*.ts",
     "!**/*.test.ts"
   ],
   "thresholds": { "high": 80, "low": 60, "break": 50 }
@@ -234,7 +234,7 @@ cat > stryker.conf.json << EOF
 EOF
 
 # Run mutation testing on critical modules
-npx stryker run --mutate "server/middleware/auth.ts"
+npx stryker run --mutate "apps/api/middleware/auth.ts"
 ```
 
 ### Test Smell Detection
@@ -279,8 +279,8 @@ grep -r "async.*=>" --include="*.test.*" | grep -v "await" | head -10
 ## Resources
 
 - **Test Trustworthiness Report:** `TEST_TRUST_REPORT.md`
-- **Security Tests:** `server/__tests__/auth.security.test.ts`
-- **Enhanced Analytics Tests:** `server/__tests__/analytics.enhanced.test.ts`
+- **Security Tests:** `apps/api/__tests__/auth.security.test.ts`
+- **Enhanced Analytics Tests:** `apps/api/__tests__/analytics.enhanced.test.ts`
 - **Jest Documentation:** https://jestjs.io/docs/getting-started
 - **Testing Library Best Practices:** https://testing-library.com/docs/queries/about
 
@@ -293,3 +293,4 @@ For urgent security concerns, prioritize:
 2. Token validation
 3. Input sanitization
 4. Authorization checks
+

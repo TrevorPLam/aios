@@ -38,7 +38,7 @@
 
 **Theme Token Usage**:
 
-- Always use color tokens from `client/constants/theme.ts` instead of hardcoded hex/rgba values.
+- Always use color tokens from `apps/mobile/constants/theme.ts` instead of hardcoded hex/rgba values.
 - Overlay/backdrop treatments should use `overlayStrong`, `overlayMedium`, `overlaySubtle`, `overlayCompact`, or `overlayHandle` tokens for consistent translucency across light/dark modes.
 - Semantic accents (success/warning/error) should rely on theme tokens to keep module actions consistent.
 
@@ -238,3 +238,4 @@ The heading variants h4-h6 intentionally share sizes with body text (h4=body=16p
 7. **empty-email.png** - Envelope icon - USED: Email empty state
 
 **Style**: All illustrations use electric blue on dark background with clean geometric shapes and subtle HUD elements. Avoid complexity—keep them supporting, not distracting.
+

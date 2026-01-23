@@ -79,12 +79,13 @@ This stub establishes the Learning & Education module’s structure and integrat
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/learning/` — learning domain types
-- `server/services/learning/` — ingestion/credential stubs
-- `client/modules/learning/` — module entry points (no UI implementation)
+- `packages/contracts/models/learning/` — learning domain types
+- `apps/api/services/learning/` — ingestion/credential stubs
+- `apps/mobile/modules/learning/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/LEARNING_AND_EDUCATION.md` — this plan
 
 ## Open Questions to Resolve
 
 - Standard for credential storage and verification.
 - Content provider partnerships and export formats.
+

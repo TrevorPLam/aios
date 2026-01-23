@@ -592,10 +592,10 @@ Analysis Result for 'javascript'. Found 0 alerts:
 
 | File | Type | Changes | Lines |
 | ------ | ------ | --------- | ------- |
-| `client/models/types.ts` | Modified | Added Translation/SavedPhrase/Stats types | +78 |
-| `client/storage/database.ts` | Modified | Added translations & savedPhrases collections | +430 |
-| `client/storage/__tests__/translations.test.ts` | Created | Comprehensive test suite | +627 |
-| `client/screens/TranslatorScreen.tsx` | Modified | Complete enhancement | +1,097 |
+| `apps/mobile/models/types.ts` | Modified | Added Translation/SavedPhrase/Stats types | +78 |
+| `apps/mobile/storage/database.ts` | Modified | Added translations & savedPhrases collections | +430 |
+| `apps/mobile/storage/__tests__/translations.test.ts` | Created | Comprehensive test suite | +627 |
+| `apps/mobile/screens/TranslatorScreen.tsx` | Modified | Complete enhancement | +1,097 |
 | `TRANSLATOR_ENHANCEMENT_SUMMARY.md` | Created | Feature documentation | +278 |
 | `TRANSLATOR_MODULE_COMPLETION_SUMMARY.md` | Created | This completion summary | +750 |
 
@@ -836,3 +836,4 @@ The Translator module has been successfully transformed from a basic translation
 ---
 
 *This document serves as the official completion summary for the Translator module enhancement task.*
+

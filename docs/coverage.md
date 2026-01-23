@@ -32,7 +32,7 @@
 - [x] Reference - API and props documentation
 - [x] Architecture - AI engine explanation
 - **Files:**
-  - `client/screens/CommandCenterScreen.tsx`
+  - `apps/mobile/screens/CommandCenterScreen.tsx`
   - `docs/modules/command-center/`
 - **Last Updated:** 2026-01-21
 
@@ -45,7 +45,7 @@
 - [x] Reference - Note schema and API
 - [ ] Architecture - Similarity detection algorithm
 - **Files:**
-  - `client/screens/Notebook/`
+  - `apps/mobile/screens/Notebook/`
   - `docs/archive/enhancements/NOTEBOOK_ENHANCEMENTS.md` (exists)
 - **Gaps:** Missing deep-dive on similarity detection
 - **Last Updated:** 2026-01-10
@@ -59,7 +59,7 @@
 - [x] Reference - Task model and API
 - [ ] Architecture - Priority algorithm
 - **Files:**
-  - `client/screens/Planner/`
+  - `apps/mobile/screens/Planner/`
   - `docs/archive/enhancements/PLANNER_MODULE_ENHANCEMENTS.md` (exists)
 - **Gaps:** Priority calculation not documented
 - **Last Updated:** 2026-01-10
@@ -73,7 +73,7 @@
 - [x] Reference - Event schema
 - [ ] Architecture - View mode switching
 - **Files:**
-  - `client/screens/Calendar/`
+  - `apps/mobile/screens/Calendar/`
   - `docs/archive/completion-summaries/CALENDAR_MODULE_COMPLETION_SUMMARY.md` (exists)
 - **Gaps:** Advanced features undocumented
 - **Last Updated:** 2026-01-08
@@ -87,7 +87,7 @@
 - [x] Reference - Email schema
 - [ ] Architecture - Search algorithm
 - **Files:**
-  - `client/screens/Email/`
+  - `apps/mobile/screens/Email/`
   - `docs/archive/enhancements/EMAIL_MODULE_ENHANCEMENTS.md` (exists)
 - **Gaps:** Missing tutorial and architecture
 - **Last Updated:** 2026-01-10
@@ -101,7 +101,7 @@
 - [x] Reference - Message schema (in code)
 - [ ] Architecture - Real-time sync
 - **Files:**
-  - `client/screens/Messages/`
+  - `apps/mobile/screens/Messages/`
   - No dedicated docs
 - **Priority:** HIGH - Core communication feature
 - **Last Updated:** Never
@@ -115,7 +115,7 @@
 - [x] Reference - List schema
 - [ ] Architecture - Category system
 - **Files:**
-  - `client/screens/Lists/`
+  - `apps/mobile/screens/Lists/`
   - `docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md` (exists)
 - **Gaps:** Templates and categories
 - **Last Updated:** 2026-01-10
@@ -129,7 +129,7 @@
 - [x] Reference - Alert schema
 - [ ] Architecture - Effectiveness tracking
 - **Files:**
-  - `client/screens/Alerts/`
+  - `apps/mobile/screens/Alerts/`
   - `docs/archive/enhancements/ALERTS_ENHANCEMENT_SUMMARY.md` (exists)
 - **Gaps:** Advanced recurrence not documented
 - **Last Updated:** 2026-01-10
@@ -143,7 +143,7 @@
 - [x] Reference - Contact schema
 - [ ] Architecture - Sharing preferences
 - **Files:**
-  - `client/screens/Contacts/`
+  - `apps/mobile/screens/Contacts/`
   - `docs/archive/enhancements/CONTACTS_MODULE_ENHANCEMENTS.md` (exists)
 - **Gaps:** Missing tutorial
 - **Last Updated:** 2026-01-10
@@ -157,7 +157,7 @@
 - [x] Reference - Translation API
 - [ ] Architecture - Language detection
 - **Files:**
-  - `client/screens/Translator.tsx`
+  - `apps/mobile/screens/Translator.tsx`
   - `docs/archive/enhancements/TRANSLATOR_ENHANCEMENT_SUMMARY.md` (exists)
 - **Gaps:** Language detection algorithm
 - **Last Updated:** 2026-01-10
@@ -171,7 +171,7 @@
 - [x] Reference - Photo schema
 - [ ] Architecture - Organization system
 - **Files:**
-  - `client/screens/Photos/`
+  - `apps/mobile/screens/Photos/`
   - `docs/archive/enhancements/PHOTOS_MODULE_ENHANCEMENTS.md` (exists)
 - **Gaps:** Advanced features
 - **Last Updated:** 2026-01-10
@@ -185,7 +185,7 @@
 - [x] Reference - Activity schema
 - [ ] Architecture - Analytics engine
 - **Files:**
-  - `client/screens/History/`
+  - `apps/mobile/screens/History/`
   - `docs/archive/enhancements/HISTORY_MODULE_ENHANCEMENTS.md` (exists)
 - **Gaps:** Missing tutorial and analytics docs
 - **Last Updated:** 2026-01-10
@@ -199,7 +199,7 @@
 - [x] Reference - Transaction schema
 - [ ] Architecture - Statistics calculation
 - **Files:**
-  - `client/screens/Budget/`
+  - `apps/mobile/screens/Budget/`
   - `docs/archive/enhancements/BUDGET_MODULE_ENHANCEMENTS.md` (exists)
 - **Gaps:** Templates and statistics
 - **Last Updated:** 2026-01-10
@@ -213,7 +213,7 @@
 - [x] Reference - Integration schema
 - [ ] Architecture - Third-party connections
 - **Files:**
-  - `client/screens/Integrations/`
+  - `apps/mobile/screens/Integrations/`
   - `docs/archive/enhancements/INTEGRATIONS_MODULE_ENHANCEMENTS.md` (exists)
 - **Priority:** HIGH - Complex feature
 - **Last Updated:** 2026-01-10
@@ -440,7 +440,7 @@ find docs/modules/ -name "tutorial.md" | wc -l
 npm run check:docs  # TODO: Implement
 
 # Manual audit
-# For each module in client/screens/, verify docs/modules/[name]/ exists with 4 files
+# For each module in apps/mobile/screens/, verify docs/modules/[name]/ exists with 4 files
 ```text
 
 ---
@@ -457,3 +457,4 @@ npm run check:docs  # TODO: Implement
 3. Create docs for Messages and Integrations (critical gaps)
 4. Fill in architecture docs for all 14 modules
 5. Set team goal: 80% coverage by end of Q1 2026
+

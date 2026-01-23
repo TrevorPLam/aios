@@ -56,9 +56,9 @@ What is the change that we're proposing and/or doing?
 
 ### Components Affected
 
-- `client/` - [How client is affected]
-- `server/` - [How server is affected]
-- `shared/` - [How shared code is affected]
+- `apps/mobile/` - [How client is affected]
+- `apps/api/` - [How server is affected]
+- `packages/contracts/` - [How shared code is affected]
 
 ### Code Examples
 
@@ -188,3 +188,4 @@ This section explicitly links this architectural decision to its supporting docu
 
 - [Link to relevant resources]
 - [Research papers, blog posts, etc.]
+

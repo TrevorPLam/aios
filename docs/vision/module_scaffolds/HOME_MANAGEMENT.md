@@ -78,12 +78,13 @@ This stub defines the Home Management module’s foundations and integration poi
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/home/` — home domain types
-- `server/services/home/` — provider/import adapters
-- `client/modules/home/` — module entry points (no UI implementation)
+- `packages/contracts/models/home/` — home domain types
+- `apps/api/services/home/` — provider/import adapters
+- `apps/mobile/modules/home/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/HOME_MANAGEMENT.md` — this plan
 
 ## Open Questions to Resolve
 
 - Smart home device scope and providers.
 - Receipt ingestion sources and OCR needs.
+

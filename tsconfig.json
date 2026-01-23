@@ -4,8 +4,13 @@
     "strict": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["./client/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["./apps/mobile/*"],
+      "@shared/*": ["./packages/contracts/*"],
+      "@contracts/*": ["./packages/contracts/*"],
+      "@features/*": ["./packages/features/*"],
+      "@platform/*": ["./packages/platform/*"],
+      "@design-system/*": ["./packages/design-system/*"],
+      "@apps/*": ["./apps/*"]
     },
     "types": ["node", "jest"]
   },

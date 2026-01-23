@@ -78,12 +78,13 @@ This stub defines the Memory Bank module as a cross-module aggregation layer. It
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/memory/` — memory domain types
-- `server/services/memory/` — indexing/search stubs
-- `client/modules/memory/` — module entry points (no UI implementation)
+- `packages/contracts/models/memory/` — memory domain types
+- `apps/api/services/memory/` — indexing/search stubs
+- `apps/mobile/modules/memory/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/MEMORY_BANK.md` — this plan
 
 ## Open Questions to Resolve
 
 - Default capture sources and user consent UX.
 - Indexing technology and storage footprint.
+

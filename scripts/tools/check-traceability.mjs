@@ -27,7 +27,9 @@ const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../..");
 const TRACEABILITY_PATH = join(REPO_ROOT, "docs/traceability_matrix.md");
-const STATE_PATH = join(REPO_ROOT, "docs/governance/state.md");
+// Note: State management is now handled via .repo/policy/QUALITY_GATES.md
+// This script may need updates to work with new governance structure
+const STATE_PATH = join(REPO_ROOT, "docs/archive/governance/state.md");
 const OPENAPI_PATH = join(REPO_ROOT, "docs/apis/openapi/openapi.yaml");
 
 // Determine enforcement mode

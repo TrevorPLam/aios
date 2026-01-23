@@ -53,9 +53,9 @@ Each issue follows the mandatory format:
 
 ### Location
 
-- `client/hooks/useQuickCapture.ts:101` (4 errors)
-- `client/storage/__tests__/quickWins.e2e.test.ts:130` (1 error)
-- `server/routes.ts:569` (1 error)
+- `apps/mobile/hooks/useQuickCapture.ts:101` (4 errors)
+- `apps/mobile/storage/__tests__/quickWins.e2e.test.ts:130` (1 error)
+- `apps/api/routes.ts:569` (1 error)
 
 ### Failure Mode
 
@@ -83,11 +83,11 @@ error TS1128: Declaration or statement expected.
 **Confidence:** Certain
 
 ### Locations (Critical)
-- `server/middleware/errorHandler.ts:2` - `Promise<any>` return type
-- `client/lib/miniMode.ts:33,39,50,65` - `MiniModeConfig<T = any>`
-- `client/lib/storage.ts:10,12` - `let AsyncStorage: any = null`
-- `server/middleware/validation.ts:8,16,22` - `catch (error: any)`
-- `client/analytics/client.ts:11,27` - Analytics queue as `any`
+- `apps/api/middleware/errorHandler.ts:2` - `Promise<any>` return type
+- `apps/mobile/lib/miniMode.ts:33,39,50,65` - `MiniModeConfig<T = any>`
+- `apps/mobile/lib/storage.ts:10,12` - `let AsyncStorage: any = null`
+- `apps/api/middleware/validation.ts:8,16,22` - `catch (error: any)`
+- `apps/mobile/analytics/client.ts:11,27` - Analytics queue as `any`
 
 **Failure Mode:** Type system cannot catch:
 
@@ -118,12 +118,12 @@ error TS1128: Declaration or statement expected.
 **Confidence:** Highly Likely
 
 ### Locations (High Risk)
-- `client/components/BudgetMiniMode.tsx:61` - `name={module.icon as any}`
-- `client/screens/IntegrationsScreen.tsx:153` - `name={integration.iconName as any}`
-- `client/screens/AttentionCenterScreen.tsx:85` - `name={getPriorityIcon(priority) as any}`
-- `client/components/BottomNav.tsx:39` - `navigation.navigate(module.route as any)`
-- `client/screens/ModuleGridScreen.tsx:67` - `navigation.navigate(module.route as any)`
-- `client/storage/database.ts:490,508` - `status: status as any`
+- `apps/mobile/components/BudgetMiniMode.tsx:61` - `name={module.icon as any}`
+- `apps/mobile/screens/IntegrationsScreen.tsx:153` - `name={integration.iconName as any}`
+- `apps/mobile/screens/AttentionCenterScreen.tsx:85` - `name={getPriorityIcon(priority) as any}`
+- `apps/mobile/components/BottomNav.tsx:39` - `navigation.navigate(module.route as any)`
+- `apps/mobile/screens/ModuleGridScreen.tsx:67` - `navigation.navigate(module.route as any)`
+- `apps/mobile/storage/database.ts:490,508` - `status: status as any`
 
 **Failure Mode:** Runtime type mismatch. Example:
 
@@ -222,10 +222,10 @@ const data = transformData();  // Shadows outer 'data', breaks logic
 **Confidence:** Highly Likely
 
 ### Locations (2)
-- `client/analytics/reliability/circuitBreaker.ts` - `CircuitState` enum
-- `client/analytics/privacy/consent.ts` - `ConsentCategory` enum
-- `client/lib/contextEngine.ts` - `ContextZone` enum
-- `client/lib/eventBus.ts` - `EVENT_TYPES` enum
+- `apps/mobile/analytics/reliability/circuitBreaker.ts` - `CircuitState` enum
+- `apps/mobile/analytics/privacy/consent.ts` - `ConsentCategory` enum
+- `apps/mobile/lib/contextEngine.ts` - `ContextZone` enum
+- `apps/mobile/lib/eventBus.ts` - `EVENT_TYPES` enum
 
 ### Example
 ```typescript
@@ -260,7 +260,7 @@ function handleState(state: CircuitState) {
 **Severity:** Crash
 **Confidence:** Certain
 
-**Location:** `client/screens/PlannerScreen.tsx:197-200` (approximate)
+**Location:** `apps/mobile/screens/PlannerScreen.tsx:197-200` (approximate)
 
 ### Code
 ```typescript
@@ -301,7 +301,7 @@ global.onunhandledrejection = (event) => {
 **Severity:** Crash
 **Confidence:** Certain
 
-**Location:** `client/screens/NoteEditorScreen.tsx:52-72` and ~15 similar screens
+**Location:** `apps/mobile/screens/NoteEditorScreen.tsx:52-72` and ~15 similar screens
 
 ### Code (2)
 ```typescript
@@ -362,10 +362,10 @@ useEffect(() => {
 **Confidence:** Highly Likely
 
 ### Locations (3)
-- `client/lib/memoryManager.ts:127-129` - `setInterval` for memory checks
-- `client/analytics/client.ts:99` - `startFlushTimer()` creates interval
-- `client/screens/AlertsScreen.tsx:61-67` - Clock updates every second
-- `client/lib/attentionManager.ts:150-170` - Expiry check interval
+- `apps/mobile/lib/memoryManager.ts:127-129` - `setInterval` for memory checks
+- `apps/mobile/analytics/client.ts:99` - `startFlushTimer()` creates interval
+- `apps/mobile/screens/AlertsScreen.tsx:61-67` - Clock updates every second
+- `apps/mobile/lib/attentionManager.ts:150-170` - Expiry check interval
 
 ### Code (AlertsScreen example)
 ```typescript
@@ -411,7 +411,7 @@ useEffect(() => {
 **Severity:** Data Loss
 **Confidence:** Highly Likely
 
-**Location:** `client/storage/database.ts` - All methods using AsyncStorage
+**Location:** `apps/mobile/storage/database.ts` - All methods using AsyncStorage
 
 ### Scenario
 ```typescript
@@ -460,7 +460,7 @@ class Database {
 **Severity:** Degradation
 **Confidence:** Plausible
 
-**Location:** `server/routes.ts` - All POST/PUT/DELETE endpoints
+**Location:** `apps/api/routes.ts` - All POST/PUT/DELETE endpoints
 
 ### Scenario (2)
 ```typescript
@@ -495,9 +495,9 @@ DELETE /api/tasks/123  // Second call fails with 404
 **Confidence:** Highly Likely
 
 ### Location (2)
-- `client/lib/searchIndex.ts` - Synchronous string operations on large datasets
-- `client/screens/NotebookScreen.tsx` - Filtering/sorting notes without memoization
-- `client/lib/recommendationEngine.ts` - Synchronous recommendation calculations
+- `apps/mobile/lib/searchIndex.ts` - Synchronous string operations on large datasets
+- `apps/mobile/screens/NotebookScreen.tsx` - Filtering/sorting notes without memoization
+- `apps/mobile/lib/recommendationEngine.ts` - Synchronous recommendation calculations
 
 ### Example (searchIndex)
 ```typescript
@@ -535,7 +535,7 @@ export function buildSearchIndex(items: any[]): SearchIndex {
 **Severity:** Crash
 **Confidence:** Plausible
 
-**Location:** `client/lib/eventBus.ts` - Event emission within event handlers
+**Location:** `apps/mobile/lib/eventBus.ts` - Event emission within event handlers
 
 ### Scenario (3)
 ```typescript
@@ -589,7 +589,7 @@ class EventBus {
 **Severity:** Degradation
 **Confidence:** Certain
 
-**Location:** `client/screens/ContactsScreen.tsx:23+` and 15+ other screens
+**Location:** `apps/mobile/screens/ContactsScreen.tsx:23+` and 15+ other screens
 
 ### Code (3)
 ```typescript
@@ -638,7 +638,7 @@ const [state, dispatch] = useReducer(contactsReducer, initialState);
 **Severity:** Future Risk
 **Confidence:** Certain
 
-**Location:** `client/components/PersistentSidebar.tsx:67-71`
+**Location:** `apps/mobile/components/PersistentSidebar.tsx:67-71`
 
 ### Code (4)
 ```typescript
@@ -686,10 +686,10 @@ export interface PersistentSidebarProps {
 **Confidence:** Highly Likely
 
 ### Locations (4)
-- `client/lib/moduleRegistry.ts` - `export const moduleRegistry = new ModuleRegistry()`
-- `client/lib/contextEngine.ts` - `export const contextEngine = new ContextEngine()`
-- `client/lib/eventBus.ts` - `export const eventBus = new EventBus()`
-- `client/lib/attentionManager.ts` - `export const attentionManager = new AttentionManager()`
+- `apps/mobile/lib/moduleRegistry.ts` - `export const moduleRegistry = new ModuleRegistry()`
+- `apps/mobile/lib/contextEngine.ts` - `export const contextEngine = new ContextEngine()`
+- `apps/mobile/lib/eventBus.ts` - `export const eventBus = new EventBus()`
+- `apps/mobile/lib/attentionManager.ts` - `export const attentionManager = new AttentionManager()`
 
 ### Code (5)
 ```typescript
@@ -742,7 +742,7 @@ export const moduleRegistry = new ModuleRegistry();  // Global singleton
 **Severity:** Crash
 **Confidence:** Certain
 
-**Location:** `client/context/ThemeContext.tsx:31-41`
+**Location:** `apps/mobile/context/ThemeContext.tsx:31-41`
 
 ### Code (6)
 ```typescript
@@ -852,7 +852,7 @@ const { data: tasks } = useQuery(['tasks'], () => db.tasks.getAll());
 **Severity:** Data Loss
 **Confidence:** Highly Likely
 
-**Location:** `client/context/ThemeContext.tsx:31`
+**Location:** `apps/mobile/context/ThemeContext.tsx:31`
 
 ### Code (8)
 ```typescript
@@ -910,7 +910,7 @@ try {
 
 **Location:** Throughout all screens
 
-**Example:** `client/screens/PlannerScreen.tsx` contains:
+**Example:** `apps/mobile/screens/PlannerScreen.tsx` contains:
 
 - UI rendering (200+ lines of JSX)
 - Business logic (task filtering, sorting, grouping)
@@ -993,7 +993,7 @@ npx expo export --platform android --analyzer
 **Severity:** Degradation
 **Confidence:** Certain
 
-**Location:** `client/navigation/AppNavigator.tsx` - All screens imported at startup
+**Location:** `apps/mobile/navigation/AppNavigator.tsx` - All screens imported at startup
 
 ### Code (9)
 ```typescript
@@ -1020,7 +1020,7 @@ import NotebookScreen from '@/screens/NotebookScreen';
 const PlannerScreen = React.lazy(() => import('@/screens/PlannerScreen'));
 const NotebookScreen = React.lazy(() => import('@/screens/NotebookScreen'));
 ```text
-1. Note: LazyLoader exists in `client/lib/lazyLoader.ts` but not used for screens!
+1. Note: LazyLoader exists in `apps/mobile/lib/lazyLoader.ts` but not used for screens!
 2. Add loading fallback UI for lazy screens
 3. Measure startup time in CI, fail if >2 seconds (on emulator)
 
@@ -1079,7 +1079,7 @@ const NotebookScreen = React.lazy(() => import('@/screens/NotebookScreen'));
 **Severity:** Degradation
 **Confidence:** Highly Likely
 
-**Location:** `client/context/ThemeContext.tsx`, `client/context/NavigationContext.tsx`
+**Location:** `apps/mobile/context/ThemeContext.tsx`, `apps/mobile/context/NavigationContext.tsx`
 
 ### Code (10)
 ```typescript
@@ -1218,7 +1218,7 @@ npm run performance:startup -- --threshold 2000ms
 **Severity:** Exploit
 **Confidence:** Certain
 
-**Location:** `server/middleware/auth.ts:5-6`
+**Location:** `apps/api/middleware/auth.ts:5-6`
 
 ### Code (11)
 ```typescript
@@ -1257,7 +1257,7 @@ if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
 **Severity:** Exploit
 **Confidence:** Certain
 
-**Location:** `shared/schema.ts` - User registration schema
+**Location:** `packages/contracts/schema.ts` - User registration schema
 
 ### Code (12)
 ```typescript
@@ -1297,9 +1297,9 @@ password: z.string()
 **Confidence:** Highly Likely
 
 ### Locations (5)
-- `client/analytics/identity.ts` - User IDs, session IDs
-- `client/storage/database.ts` - All user data (notes, tasks, contacts)
-- `client/lib/storage.ts` - General key-value storage
+- `apps/mobile/analytics/identity.ts` - User IDs, session IDs
+- `apps/mobile/storage/database.ts` - All user data (notes, tasks, contacts)
+- `apps/mobile/lib/storage.ts` - General key-value storage
 
 **Failure Mode:** AsyncStorage on Android is plain text in SharedPreferences. Root access or ADB backup exposes all data.
 
@@ -1337,7 +1337,7 @@ await AsyncStorage.setItem(key, encrypted.toString());
 **Severity:** Exploit
 **Confidence:** Certain
 
-**Location:** `client/screens/TranslatorScreen.tsx`
+**Location:** `apps/mobile/screens/TranslatorScreen.tsx`
 
 ### Code (13)
 ```typescript
@@ -1381,8 +1381,8 @@ if (!__DEV__ && !apiUrl.startsWith('https://')) {
 **Locations:** Throughout codebase (90+ console.log calls)
 
 ### Examples
-- `client/analytics/advanced/userProperties.ts:14` - Logs user IDs
-- `client/analytics/client.ts:40` - Logs analytics events (could contain PII)
+- `apps/mobile/analytics/advanced/userProperties.ts:14` - Logs user IDs
+- `apps/mobile/analytics/client.ts:40` - Logs analytics events (could contain PII)
 - Error handlers - Log error objects (could contain tokens, passwords)
 
 **Failure Mode:** Console logs shipped to production expose sensitive data in:
@@ -1435,7 +1435,7 @@ class Logger {
 **Severity:** Exploit
 **Confidence:** Certain
 
-**Location:** `server/routes.ts` - `/api/auth/login` endpoint
+**Location:** `apps/api/routes.ts` - `/api/auth/login` endpoint
 
 **Failure Mode:** No rate limiting implemented. Attackers can attempt unlimited login attempts.
 
@@ -1503,7 +1503,7 @@ app.use(csrf({ cookie: true }));
 **Severity:** Degradation
 **Confidence:** Certain
 
-**Location:** `server/routes.ts` - `/api/auth/logout` endpoint
+**Location:** `apps/api/routes.ts` - `/api/auth/logout` endpoint
 
 ### Code (14)
 ```typescript
@@ -1553,7 +1553,7 @@ if (blacklist.has(token)) {
 **Severity:** Degradation
 **Confidence:** Highly Likely
 
-**Location:** `client/screens/NoteEditorScreen.tsx` and similar screens
+**Location:** `apps/mobile/screens/NoteEditorScreen.tsx` and similar screens
 
 **Failure Mode:** User input not sanitized before storage/display. Potential for:
 
@@ -1846,7 +1846,7 @@ git diff package.json | grep -q "version" &&
 **Severity:** Crash
 **Confidence:** Certain
 
-**Location:** ErrorBoundary exists (`client/components/ErrorBoundary.tsx`) but coverage unknown
+**Location:** ErrorBoundary exists (`apps/mobile/components/ErrorBoundary.tsx`) but coverage unknown
 
 ### Verification needed
 ```typescript
@@ -1991,7 +1991,7 @@ describe('Login Flow', () => {
 **Severity:** Future Risk
 **Confidence:** Certain
 
-**Location:** Analytics exists (`client/analytics/`) but no performance tracking
+**Location:** Analytics exists (`apps/mobile/analytics/`) but no performance tracking
 
 ### Missing Metrics
 - Screen load time (TTI - Time to Interactive)
@@ -2015,7 +2015,7 @@ describe('Login Flow', () => {
 1. Add performance tracking to existing analytics:
 
 ```typescript
-// client/analytics/performance.ts
+// apps/mobile/analytics/performance.ts
 export function trackScreenLoad(screenName: string, startTime: number) {
   const duration = Date.now() - startTime;
   analytics.trackTiming('screen_load', screenName, duration);
@@ -2068,7 +2068,7 @@ useEffect(() => {
 1. Implement structured logger:
 
 ```typescript
-// client/lib/logger.ts
+// apps/mobile/lib/logger.ts
 import { NativeModules } from 'react-native';
 
 class Logger {
@@ -2135,7 +2135,7 @@ export const logger = new Logger();
 1. Set up health check endpoint:
 
 ```typescript
-// server/routes.ts
+// apps/api/routes.ts
 app.get('/health', async (req, res) => {
   const checks = {
     database: await checkDatabase(),
@@ -2281,7 +2281,7 @@ jobs:
 1. Add environment validation:
 
 ```typescript
-// server/index.ts (at top)
+// apps/api/index.ts (at top)
 function validateEnvironment() {
   const required = ['JWT_SECRET', 'DATABASE_URL'];
   const missing = required.filter(key => !process.env[key]);
@@ -2400,7 +2400,7 @@ if (__DEV__) {
 1. Add feature flag library (LaunchDarkly, Flagsmith, or custom):
 
 ```typescript
-// client/lib/featureFlags.ts
+// apps/mobile/lib/featureFlags.ts
 export async function isFeatureEnabled(feature: string): Promise<boolean> {
   try {
     const config = await fetch('https://api.yourapp.com/feature-flags').then(r => r.json());
@@ -3028,3 +3028,4 @@ This codebase demonstrates **solid engineering fundamentals** but has **critical
 **Automation Opportunities:** 58 (97%)
 
 *This analysis assumes absence of evidence as evidence of risk. Many "plausible" issues may not exist but require verification. All "certain" and "highly likely" issues have been validated by code inspection.*
+

@@ -10,7 +10,7 @@ This diagram shows the internal structure of the mobile app and backend API—th
 
 ```mermaid
 graph TB
-    subgraph "Mobile Application (client/)"
+    subgraph "Mobile Application (apps/mobile/)"
         AppEntry[App Entry Point<br/>App.tsx, index.js<br/>----<br/>Initialize app<br/>Setup providers]
 
         Navigation[Navigation System<br/>navigation/<br/>----<br/>React Navigation<br/>Bottom tabs, Stack, Drawer]
@@ -52,7 +52,7 @@ graph TB
 
 ```mermaid
 graph TB
-    subgraph "Backend API (server/)"
+    subgraph "Backend API (apps/api/)"
         ServerEntry[Server Entry Point<br/>index.ts<br/>----<br/>Initialize Express<br/>Setup middleware<br/>Start HTTP server]
 
         Routes[API Routes<br/>routes.ts<br/>----<br/>Endpoint definitions<br/>Request handlers<br/>Response formatting]
@@ -68,7 +68,7 @@ graph TB
     end
 
     Database[(PostgreSQL<br/>Database)]
-    SharedSchema[Shared Schema<br/>shared/schema.ts<br/>----<br/>Drizzle definitions<br/>TypeScript types<br/>Zod validators]
+    SharedSchema[Shared Schema<br/>packages/contracts/schema.ts<br/>----<br/>Drizzle definitions<br/>TypeScript types<br/>Zod validators]
 
     Storage --> Database
  Routes -.-> | Imports types | SharedSchema
@@ -91,8 +91,8 @@ graph TB
 ### 1. App Entry Point
 
 #### Files
-- `client/App.tsx` - Root React component
-- `client/index.js` - Expo entry point
+- `apps/mobile/App.tsx` - Root React component
+- `apps/mobile/index.js` - Expo entry point
 
 ### Responsibilities
 - Initialize Expo app
@@ -111,7 +111,7 @@ graph TB
 
 ### Code Example
 ```typescript
-// client/App.tsx (conceptual)
+// apps/mobile/App.tsx (conceptual)
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -132,8 +132,8 @@ export default function App() {
 ### 2. Navigation System
 
 #### Files (2)
-- `client/navigation/AppNavigator.tsx` - Main app navigation (bottom tabs, drawer)
-- `client/navigation/RootStackNavigator.tsx` - Root stack (auth, onboarding)
+- `apps/mobile/navigation/AppNavigator.tsx` - Main app navigation (bottom tabs, drawer)
+- `apps/mobile/navigation/RootStackNavigator.tsx` - Root stack (auth, onboarding)
 
 ### Responsibilities (2)
 - Define navigation structure (tabs, stacks, drawer)
@@ -170,7 +170,7 @@ RootStack
 
 ### 3. Screen Components
 
-**Directory:** `client/screens/`
+**Directory:** `apps/mobile/screens/`
 
 **Count:** 40+ screen components
 
@@ -192,7 +192,7 @@ RootStack
 
 ### Key Screens
 ```text
-client/screens/
+apps/mobile/screens/
 ├── CommandCenterScreen.tsx       # Dashboard
 ├── NotebookScreen.tsx            # Note list
 ├── NoteEditorScreen.tsx          # Note create/edit
@@ -262,7 +262,7 @@ export default function NotebookScreen({ navigation }) {
 
 ### 4. Core Libraries
 
-**Directory:** `client/lib/`
+**Directory:** `apps/mobile/lib/`
 
 ### Key Files
 #### `storage.ts` - AsyncStorage Wrapper
@@ -274,7 +274,7 @@ export default function NotebookScreen({ navigation }) {
 - JWT token storage
 
 ```typescript
-// client/lib/storage.ts
+// apps/mobile/lib/storage.ts
 export async function getAuthToken(): Promise<string | null> {
   return await AsyncStorage.getItem('@aios/auth/token');
 }
@@ -337,7 +337,7 @@ export async function setAuthToken(token: string): Promise<void> {
 
 ### 5. UI Components
 
-**Directory:** `client/components/`
+**Directory:** `apps/mobile/components/`
 
 ### Responsibilities (4)
 - Reusable UI elements
@@ -359,7 +359,7 @@ export async function setAuthToken(token: string): Promise<void> {
 
 ### 6. Custom Hooks
 
-**Directory:** `client/hooks/`
+**Directory:** `apps/mobile/hooks/`
 
 **Purpose:** Encapsulate reusable logic
 
@@ -374,7 +374,7 @@ export async function setAuthToken(token: string): Promise<void> {
 
 ### 7. Context Providers
 
-**Directory:** `client/context/`
+**Directory:** `apps/mobile/context/`
 
 **Purpose:** Global state management
 
@@ -386,7 +386,7 @@ export async function setAuthToken(token: string): Promise<void> {
 
 ### Pattern
 ```typescript
-// client/context/AuthContext.tsx
+// apps/mobile/context/AuthContext.tsx
 export const AuthContext = createContext<AuthContextType>(null);
 
 export function AuthProvider({ children }) {
@@ -406,7 +406,7 @@ export function AuthProvider({ children }) {
 
 ### 8. Data Models
 
-**Directory:** `client/models/`
+**Directory:** `apps/mobile/models/`
 
 ### Purpose
 - Local data structures
@@ -420,7 +420,7 @@ export function AuthProvider({ children }) {
 
 ### 1. Server Entry Point
 
-**File:** `server/index.ts`
+**File:** `apps/api/index.ts`
 
 ### Responsibilities (5)
 - Create Express app instance
@@ -433,7 +433,7 @@ export function AuthProvider({ children }) {
 
 ### Code Structure
 ```typescript
-// server/index.ts (simplified)
+// apps/api/index.ts (simplified)
 import express from 'express';
 import { registerRoutes } from './routes';
 
@@ -450,7 +450,7 @@ server.listen(PORT, () => {
 
 ### 2. API Routes
 
-**File:** `server/routes.ts`
+**File:** `apps/api/routes.ts`
 
 ### Responsibilities (6)
 - Define all HTTP endpoints
@@ -539,7 +539,7 @@ app.post('/api/notes',
 
 ### 3. Middleware
 
-**Directory:** `server/middleware/`
+**Directory:** `apps/api/middleware/`
 
 #### `auth.ts` - Authentication Middleware
 
@@ -630,7 +630,7 @@ export function errorHandler(err, req, res, next) {
 
 ### 4. Storage Layer
 
-**File:** `server/storage.ts`
+**File:** `apps/api/storage.ts`
 
 ### Responsibilities (10)
 - Abstract database operations
@@ -661,7 +661,7 @@ export async function searchMessages(userId: string, query: string, limit?: numb
 ### Database Interaction
 ```typescript
 import { db } from './db';
-import { notes } from '@shared/schema';
+import { notes } from '@packages/contracts/schema';
 import { eq, and, desc } from 'drizzle-orm';
 
 export async function getUserNotes(userId: string): Promise<Note[]> {
@@ -675,7 +675,7 @@ export async function getUserNotes(userId: string): Promise<Note[]> {
 
 ### 5. Shared Schema
 
-**File:** `shared/schema.ts`
+**File:** `packages/contracts/schema.ts`
 
 ### Used By
 - Backend storage layer (imports table definitions)
@@ -772,7 +772,7 @@ export const updateNoteSchema = insertNoteSchema.partial();
 5. **Middleware composition**: Express middleware compose cleanly without side effects
 6. **Storage layer abstraction**: Routes never directly query database, always use storage layer
 7. **User isolation in storage**: Every storage function filters by userId
-8. **Shared schema as contract**: Client and server agree on data structure via shared/schema.ts
+8. **Shared schema as contract**: Client and server agree on data structure via packages/contracts/schema.ts
 
 ## Failure Modes
 
@@ -842,7 +842,7 @@ export const updateNoteSchema = insertNoteSchema.partial();
 - Validation failures
 
 ### Mitigation (5)
-- Single source of truth in shared/schema.ts
+- Single source of truth in packages/contracts/schema.ts
 - TypeScript compilation catches mismatches
 - Integration tests verify contract
 
@@ -852,22 +852,22 @@ export const updateNoteSchema = insertNoteSchema.partial();
 
 ```bash
 # 1. Verify all component directories exist
-ls -d client/{screens,components,lib,hooks,context,navigation,models}
+ls -d apps/mobile/{screens,components,lib,hooks,context,navigation,models}
 
 # 2. Count screens (should be 40+)
-ls client/screens/*.tsx | wc -l
+ls apps/mobile/screens/*.tsx | wc -l
 
 # 3. Check core libraries exist
-ls client/lib/*.ts
+ls apps/mobile/lib/*.ts
 
 # 4. Verify navigation files
-ls client/navigation/*.tsx
+ls apps/mobile/navigation/*.tsx
 
 # 5. Check for context providers
-grep -r "createContext" client/context/
+grep -r "createContext" apps/mobile/context/
 
 # 6. Verify hooks directory
-ls client/hooks/
+ls apps/mobile/hooks/
 
 # 7. Test import paths work
 npm run check:types
@@ -877,40 +877,40 @@ npm run check:types
 
 ```bash
 # 1. Verify server structure
-ls server/{index.ts,routes.ts,storage.ts}
+ls apps/api/{index.ts,routes.ts,storage.ts}
 
 # 2. Check middleware exists
-ls server/middleware/{auth.ts,validation.ts,errorHandler.ts}
+ls apps/api/middleware/{auth.ts,validation.ts,errorHandler.ts}
 
 # 3. Count API routes
- grep -E "app\.(get | post | put | delete)" server/routes.ts | wc -l
+ grep -E "app\.(get | post | put | delete)" apps/api/routes.ts | wc -l
 
 # 4. Verify storage functions
-grep "export async function" server/storage.ts | wc -l
+grep "export async function" apps/api/storage.ts | wc -l
 
 # 5. Check shared schema imports
-grep "from '@shared/schema'" server/routes.ts
-grep "from '@shared/schema'" server/storage.ts
+grep "from '@packages/contracts/schema'" apps/api/routes.ts
+grep "from '@packages/contracts/schema'" apps/api/storage.ts
 ```text
 
 ### Component Interactions
 
 ```bash
 # 1. Screen → Library calls
-grep -r "import.*from.*lib" client/screens/ | head -10
+grep -r "import.*from.*lib" apps/mobile/screens/ | head -10
 
 # 2. Screen → Hook calls
- grep -r "use[A-Z]" client/screens/*.tsx | grep "=" | head -10
+ grep -r "use[A-Z]" apps/mobile/screens/*.tsx | grep "=" | head -10
 
 # 3. Route → Middleware usage
-grep "authenticate" server/routes.ts | wc -l
-grep "validate" server/routes.ts | wc -l
+grep "authenticate" apps/api/routes.ts | wc -l
+grep "validate" apps/api/routes.ts | wc -l
 
 # 4. Route → Storage calls
-grep "storage\." server/routes.ts | head -10
+grep "storage\." apps/api/routes.ts | head -10
 
 # 5. Storage → Database queries
-grep "db\." server/storage.ts | head -10
+grep "db\." apps/api/storage.ts | head -10
 ```text
 
 ### Type Safety Across Components
@@ -920,13 +920,13 @@ grep "db\." server/storage.ts | head -10
 npm run check:types
 
 # 2. Check client imports shared types
-grep "import.*from '@shared/schema'" client/screens/*.tsx | wc -l
+grep "import.*from '@packages/contracts/schema'" apps/mobile/screens/*.tsx | wc -l
 
 # 3. Check server imports shared types
-grep "import.*from '@shared/schema'" server/*.ts | wc -l
+grep "import.*from '@packages/contracts/schema'" apps/api/*.ts | wc -l
 
 # 4. Verify Zod schema usage
-grep "Schema" server/routes.ts | head -10
+grep "Schema" apps/api/routes.ts | head -10
 ```text
 
 ### Component Tests
@@ -936,10 +936,10 @@ grep "Schema" server/routes.ts | head -10
 npm test
 
 # 2. Run client tests (if separated)
-npm test -- client/
+npm test -- apps/mobile/
 
 # 3. Run server tests
-npm test -- server/
+npm test -- apps/api/
 
 # 4. Check test coverage
 npm run test:coverage
@@ -952,8 +952,8 @@ npm run test:coverage
 - [Deployment Diagram](./deployment.md) - Runtime deployment
 - [C4 Overview](./README.md) - How to read C4 diagrams
 - [Module Details](/MODULE_DETAILS.md) - Detailed module specifications
-- [client/lib/README.md](/client/lib/README.md) - Core library documentation (if exists)
-- [server/README.md](/server/README.md) - Server documentation (if exists)
+- [apps/mobile/lib/README.md](/apps/mobile/lib/README.md) - Core library documentation (if exists)
+- [apps/api/README.md](/apps/api/README.md) - Server documentation (if exists)
 
 ## References
 
@@ -961,3 +961,4 @@ npm run test:coverage
 - Express Middleware: <https://expressjs.com/en/guide/using-middleware.html>
 - React Query Architecture: <https://tanstack.com/query/latest/docs/react/overview>
 - Drizzle ORM: <https://orm.drizzle.team/docs/overview>
+

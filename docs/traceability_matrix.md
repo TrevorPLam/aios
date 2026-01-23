@@ -28,10 +28,10 @@ The traceability matrix ensures:
 | **Feature/Capability** | Name of the feature | "User Authentication" |
 | **PRD Link** | Product requirements doc | `docs/product/auth-requirements.md` |
 | **ADR Link** | Architecture decision record | `docs/decisions/003-jwt-auth.md` |
-| **Modules** | Implementation file paths | `server/middleware/auth.ts` |
+| **Modules** | Implementation file paths | `apps/api/middleware/auth.ts` |
 | **APIs** | API endpoints | `POST /api/login, GET /api/me` |
 | **Data Schemas** | Database tables/schemas | `users table, sessions table` |
-| **Tests** | Test file paths | `server/__tests__/auth.test.ts` |
+| **Tests** | Test file paths | `apps/api/__tests__/auth.test.ts` |
 | **Runbooks** | Operations documentation | `docs/operations/runbooks/auth-issues.md` |
 | **Dashboards** | Monitoring dashboards | `Grafana: User Auth Dashboard` |
 | **Notes** | Additional context | Status, blockers, TODOs |
@@ -59,16 +59,16 @@ The traceability matrix ensures:
 grep -o "TODO" docs/traceability_matrix.md | wc -l
 
 # Check enforcement mode
-grep "Traceability" docs/governance/state.md
+grep "Traceability" .repo/policy/QUALITY_GATES.md
 ```text
 
 ## Traceability Matrix
 
 | Feature/Capability | PRD Link | ADR Link | Modules | APIs | Data Schemas | Tests | Runbooks | Dashboards | Notes |
 | ------------------- | ---------- | ---------- | --------- | ------ | -------------- | ------- | ---------- | ------------ | ------- |
-| **User Authentication** | TODO: `docs/product/` | [ADR-003](decisions/003-jwt-auth.md) | `server/middleware/auth.ts`, `server/routes.ts:45-89` | `POST /api/login`, `POST /api/register`, `GET /api/me` | `users` table (see `server/storage.ts:20`) | `server/__tests__/auth.test.ts` | TODO: `docs/operations/runbooks/` | TODO: Auth metrics | Status: Implemented. Missing: PRD, runbook, metrics |
-| **Data Persistence** | TODO | [ADR-001](decisions/001-use-asyncstorage.md) | `client/storage/`, `server/storage.ts` | N/A (local) | `users`, `settings`, `analytics_events` tables | `server/__tests__/storage.test.ts`, TODO: client tests | TODO | TODO | Status: Implemented. AsyncStorage for client, PostgreSQL for server |
-| **Analytics Tracking** | TODO | [ADR-005](decisions/005-analytics-architecture.md) | `client/analytics/`, `server/routes.ts:analytics` | `POST /api/analytics/events` | `analytics_events` table | TODO: Integration tests | TODO | TODO | Status: Implemented. Missing: comprehensive tests, runbook, dashboard |
+| **User Authentication** | TODO: `docs/product/` | [ADR-003](decisions/003-jwt-auth.md) | `apps/api/middleware/auth.ts`, `apps/api/routes.ts:45-89` | `POST /api/login`, `POST /api/register`, `GET /api/me` | `users` table (see `apps/api/storage.ts:20`) | `apps/api/__tests__/auth.test.ts` | TODO: `docs/operations/runbooks/` | TODO: Auth metrics | Status: Implemented. Missing: PRD, runbook, metrics |
+| **Data Persistence** | TODO | [ADR-001](decisions/001-use-asyncstorage.md) | `apps/mobile/storage/`, `apps/api/storage.ts` | N/A (local) | `users`, `settings`, `analytics_events` tables | `apps/api/__tests__/storage.test.ts`, TODO: client tests | TODO | TODO | Status: Implemented. AsyncStorage for client, PostgreSQL for server |
+| **Analytics Tracking** | TODO | [ADR-005](decisions/005-analytics-architecture.md) | `apps/mobile/analytics/`, `apps/api/routes.ts:analytics` | `POST /api/analytics/events` | `analytics_events` table | TODO: Integration tests | TODO | TODO | Status: Implemented. Missing: comprehensive tests, runbook, dashboard |
 | **Documentation System** | TODO | [ADR-004](decisions/004-docs-structure.md), [ADR-006](decisions/006-docs-automation.md) | `docs/`, `.github/workflows/docs-*.yml` | N/A | N/A | CI workflows | `docs/README.md` | [Documentation Metrics](DOCUMENTATION_METRICS.md) | Status: Active. Well documented. |
 | **API Specification** | TODO | TODO | `docs/apis/openapi/openapi.yaml` | All `/api/*` endpoints | Documented in OpenAPI | `.github/workflows/api-spectral.yml` | TODO | TODO | Status: OpenAPI spec exists. Missing: ADR, tests, runbook |
 | **Security Scanning** | TODO | [ADR-007](decisions/007-governance-ci-enforcement.md) | `.github/workflows/codeql.yml`, `trivy.yml`, `sbom.yml` | N/A | N/A | CI workflows test security | `docs/security/SECURITY.md` | [OSSF Scorecard](https://github.com/TrevorPLam/aios/security/scorecard) | Status: Active. CodeQL, Trivy, SBOM, OSSF Scorecard |
@@ -135,7 +135,7 @@ grep "TODO" docs/traceability_matrix.md | grep "Tests"
 ### Current Status
 - Total features: 6 implemented, 2 planned
 - Completion: ~30% (many TODOs remain)
-- Enforcement mode: WARN (see `docs/governance/state.md`)
+- Enforcement mode: See `/.repo/policy/QUALITY_GATES.md`
 - Target: 80% completion by 2026-03-01
 
 ### Next Actions
@@ -150,3 +150,4 @@ grep "TODO" docs/traceability_matrix.md | grep "Tests"
 *Last Updated: 2026-01-18*
 *Maintained by: Repository maintainers*
 *Enforcement: Warn-only (toggle to fail when >80% complete)*
+

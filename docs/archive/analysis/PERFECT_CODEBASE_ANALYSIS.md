@@ -260,7 +260,7 @@ While h4-h6 are properly implemented, they're not being used anywhere yet:
 
 ```bash
 # Search results show only definitions, no usage
-grep -r "type=\"h[456]\"" client/screens client/components
+grep -r "type=\"h[456]\"" apps/mobile/screens apps/mobile/components
 # No results
 
 grep -r "Typography\.h[456]" client
@@ -711,3 +711,4 @@ The codebase meets "Perfect Codebase Standards" with only minor documentation en
 **Analysis Completed**: 2026-01-19
 **Reviewed By**: GitHub Copilot
 **Status**: ✅ Approved with Minor Enhancements
+

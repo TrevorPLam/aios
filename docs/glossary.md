@@ -64,13 +64,13 @@ This glossary defines technical terms, acronyms, and project-specific concepts u
 
 **Plain English:** The main dashboard screen with AI-powered recommendations
 **Technical:** Primary module displaying swipeable recommendation cards with confidence metrics
-**Location:** `client/screens/CommandCenter.tsx`
+**Location:** `apps/mobile/screens/CommandCenter.tsx`
 
 ### Component
 
 **Plain English:** A reusable piece of UI, like a button or form
 **Technical:** React/React Native functional or class-based UI element
-**Location:** `client/components/`
+**Location:** `apps/mobile/components/`
 
 ## D
 
@@ -200,7 +200,7 @@ This glossary defines technical terms, acronyms, and project-specific concepts u
 
 **Plain English:** A proposal for major changes that the community discusses before we implement
 **Technical:** Formal process for gathering feedback on significant architectural changes
-**See:** [GOVERNANCE.md](../GOVERNANCE.md)
+**See:** [/.repo/policy/CONSTITUTION.md](/.repo/policy/CONSTITUTION.md)
 
 ## S
 
@@ -324,3 +324,4 @@ When adding a term:
 **Last Updated:** January 2026
 **Maintainer:** Documentation team
 **Found a missing term?** [Open an issue](https://github.com/TrevorPLam/aios/issues/new?title=Glossary:%20Add%20term)
+

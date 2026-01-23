@@ -30,7 +30,7 @@ docs/data/
 - **ORM:** Drizzle ORM
 - **Migration Tool:** Drizzle Kit
 - **Type Safety:** TypeScript types generated from schema
-- **Location:** `server/src/models/` (schema definitions)
+- **Location:** `apps/api/models/` (schema definitions)
 - **Migrations:** `drizzle/migrations/` (SQL migration files)
 
 ## Data Architecture
@@ -68,9 +68,9 @@ docs/data/
 
 | Entity | Description | Schema File |
 | -------- | ------------- | ------------- |
-| **Users** | User accounts and authentication | `server/src/models/users.ts` |
-| **Sessions** | User session management | `server/src/models/sessions.ts` |
-| **Data** | Application-specific data | `server/src/models/data.ts` |
+| **Users** | User accounts and authentication | `apps/api/models/users.ts` |
+| **Sessions** | User session management | `apps/api/models/sessions.ts` |
+| **Data** | Application-specific data | `apps/api/models/data.ts` |
 
 ### (Expand this table as your data model grows)
 
@@ -165,7 +165,7 @@ Validation happens at multiple levels:
 └──────┬───────┘
        ↓
 ┌──────────────┐
-│ 2. API       │ - Zod schemas (shared/validators)
+│ 2. API       │ - Zod schemas (packages/contracts/validators)
 └──────┬───────┘
        ↓
 ┌──────────────┐
@@ -183,7 +183,7 @@ Validation happens at multiple levels:
 
 ```bash
 # 1. Update schema definition
-# Edit server/src/models/*.ts
+# Edit apps/api/models/*.ts
 
 # 2. Generate migration
 npm run db:generate
@@ -197,7 +197,7 @@ npm run db:migrate
 # 5. Test changes
 
 # 6. Commit migration with code
-git add server/src/models/ drizzle/migrations/
+git add apps/api/models/ drizzle/migrations/
 git commit -m "feat: add new data model"
 
 # 7. Deploy to production
@@ -493,3 +493,5 @@ psql recovery_db -c "SELECT COUNT(*) FROM users;"
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [Database Design Best Practices](https://www.postgresql.org/docs/current/ddl.html)
 - [Normalization](https://en.wikipedia.org/wiki/Database_normalization)
+
+

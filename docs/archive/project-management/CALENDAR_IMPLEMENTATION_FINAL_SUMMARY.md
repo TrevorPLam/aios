@@ -328,14 +328,14 @@ The Calendar module has been successfully enhanced from a basic event display sy
 
 ### Created Files (3)
 
-1. `client/storage/__tests__/calendar.test.ts` - 33 comprehensive tests
+1. `apps/mobile/storage/__tests__/calendar.test.ts` - 33 comprehensive tests
 2. `CALENDAR_MODULE_COMPLETION_SUMMARY.md` - Feature documentation
 3. `CALENDAR_HIGH_LEVEL_ANALYSIS.md` - Architectural analysis
 
 ### Modified Files (2)
 
-1. `client/storage/database.ts` - Enhanced events module (18 methods)
-2. `client/screens/CalendarScreen.tsx` - Added statistics dashboard
+1. `apps/mobile/storage/database.ts` - Enhanced events module (18 methods)
+2. `apps/mobile/screens/CalendarScreen.tsx` - Added statistics dashboard
 3. `README.md` - Added Calendar module section
 
 ---
@@ -412,3 +412,4 @@ The implementation serves as a **template for future module enhancements** and d
 
 **Total Commits**: 7 focused, incremental commits
 **PR Status**: Ready for review and merge
+

@@ -212,24 +212,24 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
 ### New Files
 
 #### Core Analytics
-- `client/analytics/types.ts` - Type definitions (400+ lines)
-- `client/analytics/taxonomy.ts` - Event definitions (350+ lines)
-- `client/analytics/registry.ts` - Module registry (100+ lines)
-- `client/analytics/identity.ts` - Identity providers (250+ lines)
-- `client/analytics/sanitizer.ts` - Privacy transforms (300+ lines)
-- `client/analytics/queue.ts` - Event queue (250+ lines)
-- `client/analytics/transport.ts` - HTTP transport (200+ lines)
-- `client/analytics/client.ts` - Main orchestrator (400+ lines)
-- `client/analytics/index.ts` - Public API (450+ lines)
+- `apps/mobile/analytics/types.ts` - Type definitions (400+ lines)
+- `apps/mobile/analytics/taxonomy.ts` - Event definitions (350+ lines)
+- `apps/mobile/analytics/registry.ts` - Module registry (100+ lines)
+- `apps/mobile/analytics/identity.ts` - Identity providers (250+ lines)
+- `apps/mobile/analytics/sanitizer.ts` - Privacy transforms (300+ lines)
+- `apps/mobile/analytics/queue.ts` - Event queue (250+ lines)
+- `apps/mobile/analytics/transport.ts` - HTTP transport (200+ lines)
+- `apps/mobile/analytics/client.ts` - Main orchestrator (400+ lines)
+- `apps/mobile/analytics/index.ts` - Public API (450+ lines)
 
 ### Tests
-- `client/analytics/__tests__/buckets.test.ts` (230+ lines)
-- `client/analytics/__tests__/sanitizer.test.ts` (200+ lines)
-- `client/analytics/__tests__/queue.test.ts` (180+ lines)
-- `client/analytics/__tests__/taxonomy.test.ts` (160+ lines)
+- `apps/mobile/analytics/__tests__/buckets.test.ts` (230+ lines)
+- `apps/mobile/analytics/__tests__/sanitizer.test.ts` (200+ lines)
+- `apps/mobile/analytics/__tests__/queue.test.ts` (180+ lines)
+- `apps/mobile/analytics/__tests__/taxonomy.test.ts` (160+ lines)
 
 ### Hooks
-- `client/hooks/useAnalyticsNavigation.ts` - Navigation tracking (90+ lines)
+- `apps/mobile/hooks/useAnalyticsNavigation.ts` - Navigation tracking (90+ lines)
 
 ### Documentation
 - `docs/telemetry.md` - Comprehensive guide (500+ lines)
@@ -237,13 +237,13 @@ export const MODULE_REGISTRY: Record<ModuleType, ModuleMetadata> = {
 ### Modified Files
 
 #### Instrumentation
-- `client/App.tsx` - Lifecycle tracking
-- `client/components/AIAssistSheet.tsx` - AI events
-- `client/components/ErrorBoundary.tsx` - Error tracking
-- `client/navigation/RootStackNavigator.tsx` - Navigation integration
-- `client/screens/NotebookScreen.tsx` - CRUD events
-- `client/screens/NoteEditorScreen.tsx` - Create/update events
-- `client/screens/PersonalizationScreen.tsx` - Privacy toggle
+- `apps/mobile/App.tsx` - Lifecycle tracking
+- `apps/mobile/components/AIAssistSheet.tsx` - AI events
+- `apps/mobile/components/ErrorBoundary.tsx` - Error tracking
+- `apps/mobile/navigation/RootStackNavigator.tsx` - Navigation integration
+- `apps/mobile/screens/NotebookScreen.tsx` - CRUD events
+- `apps/mobile/screens/NoteEditorScreen.tsx` - Create/update events
+- `apps/mobile/screens/PersonalizationScreen.tsx` - Privacy toggle
 
 ## Key Features
 
@@ -420,7 +420,7 @@ analytics.trackAISuggestionRejected("clarity");
 ### Running Tests
 
 ```bash
-npm test client/analytics
+npm test apps/mobile/analytics
 ```text
 
 ### Test Results
@@ -491,3 +491,4 @@ Successfully delivered a production-ready, privacy-conscious analytics system th
 The implementation is conservative, boring (in a good way), and bulletproof against accidental logging of forbidden data.
 
 Ready for production! 🚀
+

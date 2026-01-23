@@ -6,7 +6,7 @@
 
 ## Context
 
-GOVERNANCE.md defines standards for code and documentation quality, but without automated enforcement, these standards rely on manual review. As the project scales:
+The governance policies in `/.repo/policy/` define standards for code and documentation quality, but without automated enforcement, these standards rely on manual review. As the project scales:
 
 - Manual enforcement is inconsistent
 - Governance violations slip through review
@@ -208,7 +208,7 @@ After branch protection configuration:
 
 - Main CI workflow: `.github/workflows/ci.yml`
 - Branch protection guide: `.github/BRANCH_PROTECTION_SETUP.md`
-- Governance: `GOVERNANCE.md` (lines 71-79)
+- Governance: `/.repo/policy/QUALITY_GATES.md`
 - Analysis: `GOVERNANCE_COMPLIANCE_ANALYSIS.md`
 
 ---

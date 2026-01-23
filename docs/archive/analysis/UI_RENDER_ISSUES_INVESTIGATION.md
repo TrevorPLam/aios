@@ -358,7 +358,7 @@ container: {
 **Remove internal padding from BottomNav.container** ✅ IMPLEMENTED (commit 3c42beb):
 
 ```typescript
-// In client/components/BottomNav.tsx, line 328
+// In apps/mobile/components/BottomNav.tsx, line 328
 container: {
   flexDirection: "row",
   alignItems: "center",
@@ -501,19 +501,19 @@ All three issues share a common pattern:
 
 ### Card Glow Fix
 
-- `client/screens/CommandCenterScreen.tsx`
+- `apps/mobile/screens/CommandCenterScreen.tsx`
   - Line 271: Change shadowColor to "#FFFFFF" (or keep theme.accent if design changes)
   - Line 842-847: Add backgroundColor to cardShadowWrapper style
 
 ### Bottom Nav Fix
 
-- `client/components/BottomNav.tsx`
+- `apps/mobile/components/BottomNav.tsx`
   - Line 328: Remove paddingHorizontal or set to 0
   - Line 332: Update comment to match new behavior
 
 ### Optional Card Spacing Fix
 
-- `client/screens/CommandCenterScreen.tsx`
+- `apps/mobile/screens/CommandCenterScreen.tsx`
   - Line 834-836: Add backgroundColor to cardSeparator (if visible separator desired)
 
 ### Documentation Updates
@@ -567,17 +567,18 @@ All three issues share a common pattern:
 ### Codebase Documentation
 
 - `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` - Design specifications
-- `client/constants/theme.ts` - Shadow presets and theme colors
+- `apps/mobile/constants/theme.ts` - Shadow presets and theme colors
 - `docs/technical/design_guidelines.md` - Design patterns (to be updated)
 
 ### Related Code
 
-- `client/screens/CommandCenterScreen.tsx` - Recommendation cards
-- `client/components/BottomNav.tsx` - Bottom navigation
-- `client/constants/theme.ts` - Theme system
+- `apps/mobile/screens/CommandCenterScreen.tsx` - Recommendation cards
+- `apps/mobile/components/BottomNav.tsx` - Bottom navigation
+- `apps/mobile/constants/theme.ts` - Theme system
 
 ---
 
 **Report prepared by**: GitHub Copilot Agent
 **Investigation complete**: 2026-01-19
 **Status**: Ready for implementation
+

@@ -303,13 +303,13 @@ Verified all directories exist and are properly organized:
 ### TODO/FIXME References
 
 #### Updated Files (7)
-- ✅ `client/analytics/schema/versioning.ts`
-- ✅ `client/analytics/privacy/deletion.ts`
-- ✅ `client/analytics/privacy/consent.ts`
-- ✅ `client/analytics/privacy/retention.ts`
-- ✅ `client/analytics/advanced/screenTracking.ts`
-- ✅ `client/screens/AlertDetailScreen.tsx`
-- ✅ `server/middleware/errorHandler.ts`
+- ✅ `apps/mobile/analytics/schema/versioning.ts`
+- ✅ `apps/mobile/analytics/privacy/deletion.ts`
+- ✅ `apps/mobile/analytics/privacy/consent.ts`
+- ✅ `apps/mobile/analytics/privacy/retention.ts`
+- ✅ `apps/mobile/analytics/advanced/screenTracking.ts`
+- ✅ `apps/mobile/screens/AlertDetailScreen.tsx`
+- ✅ `apps/api/middleware/errorHandler.ts`
 
 ### Format Quality
 ```typescript
@@ -511,3 +511,4 @@ Verified all directories exist and are properly organized:
 **Analyst:** GitHub Copilot Agent
 **Date:** January 16, 2026
 **Document Version:** 1.0
+

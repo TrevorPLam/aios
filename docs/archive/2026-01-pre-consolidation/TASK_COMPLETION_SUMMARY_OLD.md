@@ -17,7 +17,7 @@
 
 ### 1. Enhanced Database Layer
 
-**File**: `client/storage/database.ts`
+**File**: `apps/mobile/storage/database.ts`
 
 **New Methods Added** (8 total):
 
@@ -36,7 +36,7 @@
 
 ### 2. Redesigned User Interface
 
-**File**: `client/screens/HistoryScreen.tsx`
+**File**: `apps/mobile/screens/HistoryScreen.tsx`
 
 **Major Features Implemented**:
 
@@ -78,7 +78,7 @@
 
 ### 3. Comprehensive Test Suite
 
-**File**: `client/storage/__tests__/history.test.ts`
+**File**: `apps/mobile/storage/__tests__/history.test.ts`
 
 **Test Coverage**: 40+ test cases across 7 test suites
 
@@ -258,3 +258,4 @@ The History module now serves as a reference implementation for how other simple
 **Code Review Rounds**: 2 (all issues resolved)
 
 **Status**: ✅ **COMPLETE AND READY FOR MERGE**
+

@@ -171,11 +171,11 @@ interface AlertStatistics {
 ### Code Metrics
 
 - **Files Modified**: 5
-  - `client/models/types.ts` (Extended Alert interface)
-  - `client/storage/database.ts` (7 new database methods)
-  - `client/screens/AlertDetailScreen.tsx` (Enhanced editor)
-  - `client/screens/AlertsScreen.tsx` (Filtering & bulk ops)
-  - `client/utils/seedData.ts` (Updated seed data)
+  - `apps/mobile/models/types.ts` (Extended Alert interface)
+  - `apps/mobile/storage/database.ts` (7 new database methods)
+  - `apps/mobile/screens/AlertDetailScreen.tsx` (Enhanced editor)
+  - `apps/mobile/screens/AlertsScreen.tsx` (Filtering & bulk ops)
+  - `apps/mobile/utils/seedData.ts` (Updated seed data)
 
 - **Lines Added**: ~1,050 total
   - Production code: ~850 lines
@@ -319,3 +319,4 @@ The Alerts module enhancement successfully transforms a basic alarm system into 
 ✅ **Future Ready**: Foundation for analytics and advanced features
 
 This enhancement demonstrates how a "relatively simple" module can be enriched with thoughtful, logical features that significantly improve user experience while maintaining code quality and technical excellence.
+

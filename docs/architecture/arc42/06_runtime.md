@@ -81,9 +81,9 @@ This document shows how AIOS works in action through key user scenarios. It trac
 - Optimistic UI update
 
 ### Files Involved
-- `/client/screens/NotebookScreen.tsx`
-- `/client/screens/NoteEditorScreen.tsx`
-- `/client/storage/database.ts` (saveNote, getNotes)
+- `/apps/mobile/screens/NotebookScreen.tsx`
+- `/apps/mobile/screens/NoteEditorScreen.tsx`
+- `/apps/mobile/storage/database.ts` (saveNote, getNotes)
 - `@react-native-async-storage/async-storage`
 
 ### Performance
@@ -136,7 +136,7 @@ User → CalendarScreen → database → AsyncStorage
 
 ### Conflict Detection Logic
 ```typescript
-// Simplified from /client/storage/database.ts
+// Simplified from /apps/mobile/storage/database.ts
 const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
   return existingEvents.filter(event => {
     const newStart = newEvent.startTime;
@@ -151,9 +151,9 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
 ```text
 
 ### Files Involved (2)
-- `/client/screens/CalendarScreen.tsx`
-- `/client/screens/EventDetailScreen.tsx`
-- `/client/storage/database.ts` (saveEvent, detectConflicts, getEventsForDate)
+- `/apps/mobile/screens/CalendarScreen.tsx`
+- `/apps/mobile/screens/EventDetailScreen.tsx`
+- `/apps/mobile/storage/database.ts` (saveEvent, detectConflicts, getEventsForDate)
 
 ### Performance (2)
 - Conflict detection: < 10ms (even with 1000+ events)
@@ -246,10 +246,10 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
 ```text
 
 ### Files Involved (3)
-- `/client/screens/LoginScreen.tsx` (future)
-- `/server/routes.ts` (POST /api/auth/login)
-- `/server/middleware/auth.ts` (JWT validation)
-- `/server/storage.ts` (user queries)
+- `/apps/mobile/screens/LoginScreen.tsx` (future)
+- `/apps/api/routes.ts` (POST /api/auth/login)
+- `/apps/api/middleware/auth.ts` (JWT validation)
+- `/apps/api/storage.ts` (user queries)
 
 **Status:** Backend implemented, client integration pending
 
@@ -333,8 +333,8 @@ const detectConflicts = (newEvent: Event, existingEvents: Event[]) => {
 ```text
 
 ### Files Involved (4)
-- `/client/screens/TranslatorScreen.tsx`
-- `/server/routes.ts` (POST /api/translate)
+- `/apps/mobile/screens/TranslatorScreen.tsx`
+- `/apps/api/routes.ts` (POST /api/translate)
 - `expo-av` (audio recording)
 - `expo-speech` (text-to-speech)
 
@@ -402,7 +402,7 @@ User → EmailScreen → QuickCaptureOverlay → MiniNote → NotebookScreen
 
 ### Handoff Context
 ```typescript
-// /client/context/HandoffContext.tsx
+// /apps/mobile/context/HandoffContext.tsx
 interface HandoffState {
   breadcrumbs: Breadcrumb[];
   push: (screen: string, data: any) => void;
@@ -420,10 +420,10 @@ interface HandoffState {
 ```text
 
 ### Files Involved (5)
-- `/client/components/QuickCaptureOverlay.tsx`
-- `/client/components/MiniNote.tsx`
-- `/client/context/HandoffContext.tsx`
-- `/client/storage/database.ts` (saveNote, saveHandoffBreadcrumb)
+- `/apps/mobile/components/QuickCaptureOverlay.tsx`
+- `/apps/mobile/components/MiniNote.tsx`
+- `/apps/mobile/context/HandoffContext.tsx`
+- `/apps/mobile/storage/database.ts` (saveNote, saveHandoffBreadcrumb)
 
 ### Performance (3)
 - Overlay animation: 300ms
@@ -500,9 +500,9 @@ interface Action {
 ```text
 
 ### Files Involved (6)
-- `/client/screens/CommandCenterScreen.tsx`
-- `/client/storage/database.ts` (recommendations methods)
-- `/server/routes.ts` (POST /api/recommendations)
+- `/apps/mobile/screens/CommandCenterScreen.tsx`
+- `/apps/mobile/storage/database.ts` (recommendations methods)
+- `/apps/api/routes.ts` (POST /api/recommendations)
 - Future: AI service integration
 
 **Status:** Data model complete, AI service integration pending
@@ -620,3 +620,4 @@ npm test -- database.test.ts
 - [Deployment View](07_deployment.md) - Where scenarios run
 - [Quality Requirements](10_quality.md) - Performance targets
 - [F&F.md](../../../F&F.md) - Complete feature documentation
+

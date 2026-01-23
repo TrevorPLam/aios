@@ -37,8 +37,8 @@ interface Module {
 
 ### Files
 - 14 modules × 2-3 screens = 43 screens
-- `/client/storage/database.ts` - All storage methods (200+)
-- `/client/storage/__tests__/` - One test file per module
+- `/apps/mobile/storage/database.ts` - All storage methods (200+)
+- `/apps/mobile/storage/__tests__/` - One test file per module
 
 ### Data Model Patterns
 
@@ -71,7 +71,7 @@ interface Task extends BaseEntity {
 }
 ```text
 
-**Location:** `/client/models/types.ts`
+**Location:** `/apps/mobile/models/types.ts`
 
 ---
 
@@ -81,7 +81,7 @@ interface Task extends BaseEntity {
 
 #### Palette
 ```typescript
-// /client/constants/theme.ts
+// /apps/mobile/constants/theme.ts
 export const Colors = {
   // Primary
   primary: '#00D9FF',        // Electric blue (brand color)
@@ -192,7 +192,7 @@ export const Spacing = {
 
 #### Shared Components
 ```text
-/client/components/
+/apps/mobile/components/
 ├── Button.tsx           # Primary, secondary, text variants
 ├── Card.tsx             # Container with shadow
 ├── Input.tsx            # Text input with validation
@@ -246,7 +246,7 @@ try {
 
 ### Error Utility
 ```typescript
-// /client/utils/errorReporting.ts
+// /apps/mobile/utils/errorReporting.ts
 export const logError = (error: Error, context?: any) => {
   console.error('Error:', error, context);
 
@@ -263,7 +263,7 @@ export const showError = (message: string) => {
 
 #### Middleware
 ```typescript
-// /server/middleware/errorHandler.ts
+// /apps/api/middleware/errorHandler.ts
 export const errorHandler = (err, req, res, next) => {
   console.error('Server error:', err);
 
@@ -279,7 +279,7 @@ export const errorHandler = (err, req, res, next) => {
 
 ### Usage (3)
 ```typescript
-// /server/routes.ts
+// /apps/api/routes.ts
 app.get('/api/notes', async (req, res, next) => {
   try {
     const notes = await getNotes(req.userId);
@@ -370,7 +370,7 @@ const validateNote = (note: Partial<Note>): string[] => {
 
 ### Server-Side
 ```typescript
-// /server/middleware/validation.ts
+// /apps/api/middleware/validation.ts
 import { z } from 'zod';
 
 const NoteSchema = z.object({
@@ -459,7 +459,7 @@ const TranslatorScreen = React.lazy(() => import('./TranslatorScreen'));
 
 #### Debouncing
 ```typescript
-// /client/hooks/useDebounce.ts
+// /apps/mobile/hooks/useDebounce.ts
 export const useDebounce = <T>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -609,7 +609,7 @@ if (loading) {
 
 #### Pattern (7)
 ```typescript
-// /client/storage/__tests__/module.test.ts
+// /apps/mobile/storage/__tests__/module.test.ts
 describe('Module Storage', () => {
   // Setup
   beforeEach(async () => {
@@ -723,20 +723,20 @@ describe('Button', () => {
 
 ```bash
 # Check theme constants
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/constants/theme.ts
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/constants/theme.ts
 
 # Ensure no hardcoded colors (should return nothing)
-grep -r "color.*#" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/ | grep -v "Colors\."
+grep -r "color.*#" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/ | grep -v "Colors\."
 ```text
 
 ### Verify Error Handling
 
 ```bash
 # Check error utilities
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/utils/errorReporting.ts
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/utils/errorReporting.ts
 
 # Find try-catch blocks
-grep -r "try {" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+grep -r "try {" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
 ```text
 
 ### Verify Testing Patterns
@@ -749,7 +749,7 @@ npm test
 npm run test:coverage
 
 # Verify all modules tested
-ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/__tests__/
+ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/__tests__/
 ```text
 
 ---
@@ -760,3 +760,4 @@ ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/__tests__/
 - [Building Blocks](05_building_blocks.md) - Where concepts are implemented
 - [Quality Requirements](10_quality.md) - Quality metrics
 - [Design Guidelines](../../technical/design_guidelines.md) - Full design spec
+

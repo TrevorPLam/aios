@@ -13,13 +13,13 @@ graph TB
     User[Mobile User<br/>iOS & Android]
 
     subgraph AIOS[AIOS System]
-        MobileApp[Mobile Application<br/>React Native + Expo<br/>TypeScript<br/>----<br/>14 production modules<br/>Offline-first with AsyncStorage<br/>React Query for state<br/>----<br/>client/]
+        MobileApp[Mobile Application<br/>React Native + Expo<br/>TypeScript<br/>----<br/>14 production modules<br/>Offline-first with AsyncStorage<br/>React Query for state<br/>----<br/>apps/mobile/]
 
-        BackendAPI[Backend API<br/>Node.js + Express<br/>TypeScript<br/>----<br/>RESTful JSON API<br/>JWT authentication<br/>----<br/>server/]
+        BackendAPI[Backend API<br/>Node.js + Express<br/>TypeScript<br/>----<br/>RESTful JSON API<br/>JWT authentication<br/>----<br/>apps/api/]
 
         Database[(PostgreSQL Database<br/>----<br/>Drizzle ORM<br/>----<br/>Users, Notes, Tasks,<br/>Projects, Events, Messages,<br/>Settings, Recommendations)]
 
-        SharedCode[Shared Code<br/>TypeScript<br/>----<br/>Schema definitions<br/>Type definitions<br/>Constants<br/>----<br/>shared/]
+        SharedCode[Shared Code<br/>TypeScript<br/>----<br/>Schema definitions<br/>Type definitions<br/>Constants<br/>----<br/>packages/contracts/]
 
         LocalStorage[(AsyncStorage<br/>----<br/>Mobile device<br/>local storage<br/>----<br/>Offline cache<br/>JWT tokens)]
     end
@@ -47,7 +47,7 @@ graph TB
 
 ### Container Descriptions
 
-#### Mobile Application (`client/`)
+#### Mobile Application (`apps/mobile/`)
 
 ### Technology
 - React Native 0.81.5
@@ -68,7 +68,7 @@ graph TB
 
 ### Key Files
 ```text
-client/
+apps/mobile/
 ├── index.js                 # Entry point (Expo)
 ├── App.tsx                  # Root component
 ├── navigation/              # Navigation configuration
@@ -104,7 +104,7 @@ client/
 4. Response cached locally via React Query + AsyncStorage
 5. UI updates with new data
 
-#### Backend API (`server/`)
+#### Backend API (`apps/api/`)
 
 ### Technology (2)
 - Node.js (runtime)
@@ -125,7 +125,7 @@ client/
 
 ### Key Files (2)
 ```text
-server/
+apps/api/
 ├── index.ts                 # Entry point, Express setup
 ├── routes.ts                # API route definitions
 ├── storage.ts               # Data access layer (in-memory + DB)
@@ -181,7 +181,7 @@ GET    /api/tasks            # List user's tasks
 
 ### Schema (major tables)
 ```sql
--- Core tables (defined in shared/schema.ts)
+-- Core tables (defined in packages/contracts/schema.ts)
 users                    # User accounts
 notes                    # Notebook entries
 tasks                    # Planner tasks
@@ -198,7 +198,7 @@ integrations             # (future) External service configs
 
 ### Key Schema File
 ```text
-shared/schema.ts         # Drizzle schema definitions
+packages/contracts/schema.ts         # Drizzle schema definitions
 drizzle.config.ts        # Drizzle configuration
 ```text
 
@@ -209,7 +209,7 @@ drizzle.config.ts        # Drizzle configuration
 - Timestamps: `createdAt`, `updatedAt`
 - Soft deletes not implemented (hard deletes)
 
-#### Shared Code (`shared/`)
+#### Shared Code (`packages/contracts/`)
 
 ### Technology (4)
 - TypeScript
@@ -225,13 +225,13 @@ drizzle.config.ts        # Drizzle configuration
 
 ### Key Files (3)
 ```text
-shared/
+packages/contracts/
 ├── schema.ts            # Database schema + TypeScript types
 └── constants.ts         # Shared constants
 ```text
 
 ### Type Safety Flow
-1. Define schema with Drizzle in `shared/schema.ts`
+1. Define schema with Drizzle in `packages/contracts/schema.ts`
 2. Export inferred TypeScript types (User, Note, Task, etc.)
 3. Generate Zod schemas for validation
 4. Client and server import same types
@@ -239,7 +239,7 @@ shared/
 
 ### Example
 ```typescript
-// shared/schema.ts
+// packages/contracts/schema.ts
 export const notes = pgTable("notes", {
   id: varchar("id").primaryKey(),
   userId: varchar("user_id").notNull(),
@@ -277,7 +277,7 @@ export const insertNoteSchema = createInsertSchema(notes).omit({...});
 
 ### Code Location
 ```text
-client/lib/storage.ts     # AsyncStorage wrapper functions
+apps/mobile/lib/storage.ts     # AsyncStorage wrapper functions
 ```text
 
 ### Container Interactions
@@ -340,7 +340,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ### Example (conceptual)
 ```typescript
-// server/storage.ts
+// apps/api/storage.ts
 export async function getUserNotes(userId: string): Promise<Note[]> {
   return await db
     .select()
@@ -369,14 +369,14 @@ export async function getUserNotes(userId: string): Promise<Note[]> {
 
 #### Shared Code Usage
 
-Both Mobile App and Backend API import from `shared/`:
+Both Mobile App and Backend API import from `packages/contracts/`:
 
 ```typescript
-// client/screens/NoteEditorScreen.tsx
-import type { Note, InsertNote } from '@shared/schema';
+// apps/mobile/screens/NoteEditorScreen.tsx
+import type { Note, InsertNote } from '@packages/contracts/schema';
 
-// server/routes.ts
-import { insertNoteSchema } from '@shared/schema';
+// apps/api/routes.ts
+import { insertNoteSchema } from '@packages/contracts/schema';
 import { validate } from './middleware/validation';
 
 app.post('/api/notes', validate(insertNoteSchema), async (req, res) => {
@@ -560,58 +560,58 @@ This ensures:
 
 ```bash
 # 1. Verify Mobile App container
-ls client/index.js client/App.tsx
-ls client/package.json  # (uses root package.json)
+ls apps/mobile/index.js apps/mobile/App.tsx
+ls apps/mobile/package.json  # (uses root package.json)
 npm run start           # Should start Expo
 
 # 2. Verify Backend API container
-ls server/index.ts server/routes.ts
+ls apps/api/index.ts apps/api/routes.ts
 npm run server:dev      # Should start Express on port 5000
 
 # 3. Verify Database container
 ls drizzle.config.ts
-ls shared/schema.ts
+ls packages/contracts/schema.ts
 # Check connection (requires database running)
 # npm run db:push
 
 # 4. Verify Shared Code
-ls shared/schema.ts shared/constants.ts
+ls packages/contracts/schema.ts packages/contracts/constants.ts
 
 # 5. Verify AsyncStorage usage
-grep -r "AsyncStorage" client/lib/storage.ts
+grep -r "AsyncStorage" apps/mobile/lib/storage.ts
 ```text
 
 ### Container Interactions (2)
 
 ```bash
 # 1. Mobile App → Backend API
-grep -r "fetch.*api" client/
-grep -r "useQuery\|useMutation" client/screens/
+grep -r "fetch.*api" apps/mobile/
+grep -r "useQuery\|useMutation" apps/mobile/screens/
 
 # 2. Backend API → Database
-grep "db\." server/storage.ts | head -10
-grep "import.*drizzle" server/storage.ts
+grep "db\." apps/api/storage.ts | head -10
+grep "import.*drizzle" apps/api/storage.ts
 
 # 3. Mobile App ↔ AsyncStorage
-grep "AsyncStorage" client/lib/storage.ts
-grep "getItem\|setItem" client/lib/storage.ts
+grep "AsyncStorage" apps/mobile/lib/storage.ts
+grep "getItem\|setItem" apps/mobile/lib/storage.ts
 
 # 4. Shared Code imports
-grep "from '@shared" client/screens/*.tsx | head -5
-grep "from '@shared" server/routes.ts
+grep "from '@shared" apps/mobile/screens/*.tsx | head -5
+grep "from '@shared" apps/api/routes.ts
 ```text
 
 ### API Endpoints
 
 ```bash
 # 1. List all defined routes
- grep "app\.\(get\ | post\ | put\ | delete\)" server/routes.ts
+ grep "app\.\(get\ | post\ | put\ | delete\)" apps/api/routes.ts
 
 # 2. Check authentication middleware usage
-grep "authenticate" server/routes.ts | wc -l
+grep "authenticate" apps/api/routes.ts | wc -l
 
 # 3. Verify validation middleware
-grep "validate" server/routes.ts | head -10
+grep "validate" apps/api/routes.ts | head -10
 
 # 4. Test API health check
 npm run server:dev &
@@ -624,16 +624,16 @@ curl http://localhost:5000/status
 
 ```bash
 # 1. List all tables
-grep "export const.*= pgTable" shared/schema.ts
+grep "export const.*= pgTable" packages/contracts/schema.ts
 
 # 2. Count tables
-grep "pgTable" shared/schema.ts | wc -l
+grep "pgTable" packages/contracts/schema.ts | wc -l
 
 # 3. Verify user_id foreign keys (ensures isolation)
-grep "userId.*varchar" shared/schema.ts
+grep "userId.*varchar" packages/contracts/schema.ts
 
 # 4. Check for JSONB columns
-grep "jsonb" shared/schema.ts
+grep "jsonb" packages/contracts/schema.ts
 ```text
 
 ### Type Safety
@@ -643,32 +643,32 @@ grep "jsonb" shared/schema.ts
 npm run check:types
 
 # 2. Check shared types are exported
-grep "export type" shared/schema.ts | head -10
+grep "export type" packages/contracts/schema.ts | head -10
 
 # 3. Verify Zod schemas exist
-grep "export const.*Schema.*=" shared/schema.ts | head -10
+grep "export const.*Schema.*=" packages/contracts/schema.ts | head -10
 
 # 4. Check client imports shared types
-grep "import.*from '@shared/schema'" client/screens/*.tsx | wc -l
+grep "import.*from '@packages/contracts/schema'" apps/mobile/screens/*.tsx | wc -l
 
 # 5. Check server imports shared types
-grep "import.*from '@shared/schema'" server/routes.ts
+grep "import.*from '@packages/contracts/schema'" apps/api/routes.ts
 ```text
 
 ### Authentication Flow (2)
 
 ```bash
 # 1. Check JWT generation
-cat server/middleware/auth.ts | grep -A5 "generateToken"
+cat apps/api/middleware/auth.ts | grep -A5 "generateToken"
 
 # 2. Check JWT validation
-cat server/middleware/auth.ts | grep -A10 "authenticate"
+cat apps/api/middleware/auth.ts | grep -A10 "authenticate"
 
 # 3. Verify client stores token
-grep "AsyncStorage.*token" client/lib/storage.ts
+grep "AsyncStorage.*token" apps/mobile/lib/storage.ts
 
 # 4. Check client sends token in headers
-grep "Authorization.*Bearer" client/lib/query-client.ts
+grep "Authorization.*Bearer" apps/mobile/lib/query-client.ts
 # (or wherever fetch is configured)
 ```text
 
@@ -676,13 +676,13 @@ grep "Authorization.*Bearer" client/lib/query-client.ts
 
 ```bash
 # 1. Check AsyncStorage wrapper exists
-cat client/lib/storage.ts | head -20
+cat apps/mobile/lib/storage.ts | head -20
 
 # 2. Verify React Query cache configuration
-cat client/lib/query-client.ts
+cat apps/mobile/lib/query-client.ts
 
 # 3. Check offline indicators in UI
-grep -r "offline\|isOnline" client/components/
+grep -r "offline\|isOnline" apps/mobile/components/
 
 # 4. Test offline mode (manual)
 # - Start app
@@ -737,9 +737,9 @@ kill $SERVER_PID
 - [Deployment Diagram](./deployment.md) - Runtime infrastructure
 - [C4 Overview](./README.md) - How to read these diagrams
 - [../README.md](../README.md) - Architecture documentation hub
-- [shared/schema.ts](/shared/schema.ts) - Database schema source code
-- [server/routes.ts](/server/routes.ts) - API routes source code
-- [client/lib/query-client.ts](/client/lib/query-client.ts) - React Query configuration
+- [packages/contracts/schema.ts](/packages/contracts/schema.ts) - Database schema source code
+- [apps/api/routes.ts](/apps/api/routes.ts) - API routes source code
+- [apps/mobile/lib/query-client.ts](/apps/mobile/lib/query-client.ts) - React Query configuration
 
 ## References
 
@@ -748,3 +748,4 @@ kill $SERVER_PID
 - Drizzle ORM: <https://orm.drizzle.team/>
 - React Query: <https://tanstack.com/query/>
 - AsyncStorage: <https://react-native-async-storage.github.io/async-storage/>
+

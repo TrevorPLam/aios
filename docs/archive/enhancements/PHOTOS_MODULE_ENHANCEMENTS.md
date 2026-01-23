@@ -385,37 +385,37 @@ Photos Screen
 
 ### 9.1 Modified Files
 
-1. **client/models/types.ts**
+1. **apps/mobile/models/types.ts**
    - Updated `Photo` interface with 4 new fields
    - Added `PhotoAlbum` interface
    - Added `PhotoSortBy` and `PhotoSortOrder` types
 
-2. **client/storage/database.ts**
+2. **apps/mobile/storage/database.ts**
    - Added 13 new methods to `photos` namespace
    - Added complete `photoAlbums` namespace with 5 methods
    - Added `PHOTO_ALBUMS` storage key
 
-3. **client/utils/helpers.ts**
+3. **apps/mobile/utils/helpers.ts**
    - Added `formatFileSize()` function
 
-4. **client/screens/PhotosScreen.tsx**
+4. **apps/mobile/screens/PhotosScreen.tsx**
    - Complete rewrite with 400+ lines added
    - Added search, filter, sort, selection features
    - Added statistics modal component
    - Enhanced UI with multiple new components
 
-5. **client/screens/PhotoDetailScreen.tsx**
+5. **apps/mobile/screens/PhotoDetailScreen.tsx**
    - Added favorites toggle in header
    - Added favorite status in metadata section
 
-6. **client/navigation/AppNavigator.tsx**
+6. **apps/mobile/navigation/AppNavigator.tsx**
    - Added `Albums` route
    - Imported `AlbumsScreen` component
    - Added screen to navigation stack
 
 ### 9.2 New Files Created
 
-1. **client/screens/AlbumsScreen.tsx** (580+ lines)
+1. **apps/mobile/screens/AlbumsScreen.tsx** (580+ lines)
    - Complete album management interface
    - Album list with search
    - Create/edit modal
@@ -756,3 +756,4 @@ None - all changes are backward compatible
 **Last Updated:** 2026-01-15
 **Author:** GitHub Copilot Agent
 **Review Status:** Ready for Review
+

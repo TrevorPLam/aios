@@ -70,34 +70,34 @@ Transform the AIOS codebase into a world-class, production-ready system through 
 ### Wave 2: Code Quality - Core Libraries (P1 - High Impact) ✅ COMPLETE
 
 - [x] 2.1 Eliminate `any` types in core libraries
-  - [x] client/lib/miniMode.ts - Generic type parameters (acceptable use)
-  - [x] client/lib/prefetchEngine.ts - No problematic `any` types found
-  - [x] client/lib/searchIndex.ts - Type assertions documented (data as any for event handlers)
-  - [x] client/lib/contextEngine.ts - No problematic `any` types found
+  - [x] apps/mobile/lib/miniMode.ts - Generic type parameters (acceptable use)
+  - [x] apps/mobile/lib/prefetchEngine.ts - No problematic `any` types found
+  - [x] apps/mobile/lib/searchIndex.ts - Type assertions documented (data as any for event handlers)
+  - [x] apps/mobile/lib/contextEngine.ts - No problematic `any` types found
 - [x] 2.2 Fix circular dependency
   - [x] Verified: No circular dependency exists between moduleRegistry ↔ contextEngine
   - [x] Module list already in shared constants
 - [x] 2.3 Standardize logging in core libraries ✅
-  - [x] Created client/utils/logger.ts with structured logging
-  - [x] Replaced 18 console.log in client/lib/memoryManager.ts
-  - [x] Replaced 4 console.log in client/lib/lazyLoader.ts
-  - [x] Replaced 5 console.log in client/lib/prefetchEngine.ts
-  - [x] Replaced 5 console.error in client/lib/attentionManager.ts
+  - [x] Created apps/mobile/utils/logger.ts with structured logging
+  - [x] Replaced 18 console.log in apps/mobile/lib/memoryManager.ts
+  - [x] Replaced 4 console.log in apps/mobile/lib/lazyLoader.ts
+  - [x] Replaced 5 console.log in apps/mobile/lib/prefetchEngine.ts
+  - [x] Replaced 5 console.error in apps/mobile/lib/attentionManager.ts
   - [x] Total: 32 console statements replaced in core libraries
   - [ ] Note: Remaining console statements are in less critical files (screens, other libs)
 
 ### Wave 3: Code Quality - Components & Screens (P1) ✅ COMPLETE
 
 - [x] 3.1 Remove commented-out code ✅
-  - [x] client/screens/PhotosScreen.tsx - No commented-out code found
-  - [x] client/screens/ContactsScreen.tsx - No commented-out code found
-  - [x] client/components/PersistentSidebar.tsx - No commented-out code found
+  - [x] apps/mobile/screens/PhotosScreen.tsx - No commented-out code found
+  - [x] apps/mobile/screens/ContactsScreen.tsx - No commented-out code found
+  - [x] apps/mobile/components/PersistentSidebar.tsx - No commented-out code found
 - [x] 3.2 Resolve eslint-disable comments ✅
-  - [x] client/screens/PhotoEditorScreen.tsx - Added comprehensive justification comments
-  - [x] client/lib/searchIndex.ts - No eslint-disable comments found
+  - [x] apps/mobile/screens/PhotoEditorScreen.tsx - Added comprehensive justification comments
+  - [x] apps/mobile/lib/searchIndex.ts - No eslint-disable comments found
   - [x] Test files - No eslint-disable comments found
 - [x] 3.3 Extract magic numbers to constants ✅
-  - [x] Created client/constants/uiConstants.ts with comprehensive constant definitions
+  - [x] Created apps/mobile/constants/uiConstants.ts with comprehensive constant definitions
   - [x] Updated PhotosScreen.tsx to use new constants
   - [x] Updated ContactsScreen.tsx to use new constants
   - [x] Updated PersistentSidebar.tsx to use new constants
@@ -182,7 +182,7 @@ Transform the AIOS codebase into a world-class, production-ready system through 
     - Added react-native-reanimated plugin to app.json
 
 - ✅ **Wave 2: Code Quality - Core Libraries (COMPLETE)** (2026-01-20)
-  - Created client/utils/logger.ts with structured logging system
+  - Created apps/mobile/utils/logger.ts with structured logging system
   - Replaced 32 console statements in 4 core libraries
   - Verified no circular dependencies exist
   - Documented acceptable use of `any` types (generics only)
@@ -202,7 +202,7 @@ Wave 4: Deduplication & DRY (Next)
 
 **Wave 2 Complete! ✅** (2026-01-20)
 
-- Created structured logger (client/utils/logger.ts) with log levels and context metadata
+- Created structured logger (apps/mobile/utils/logger.ts) with log levels and context metadata
 - Replaced 32 console statements in core libraries:
   - memoryManager.ts: 18 statements
   - lazyLoader.ts: 4 statements
@@ -214,7 +214,7 @@ Wave 4: Deduplication & DRY (Next)
 
 **Wave 3 Complete! ✅** (2026-01-20)
 
-- Created client/constants/uiConstants.ts with comprehensive UI constant definitions
+- Created apps/mobile/constants/uiConstants.ts with comprehensive UI constant definitions
 - Extracted all magic numbers to semantic constants:
   - Animation timings (stagger delays: 30ms, 50ms, 100ms; overlay duration: 200ms)
   - Spring animation config (damping: 20, stiffness: 90)
@@ -279,3 +279,4 @@ None currently
 - [Architecture Decisions](docs/decisions/)
 - [Test Coverage Report](docs/coverage.md)
 - [TypeScript Cleanup Phase 1](docs/technical/typescript-cleanup-phase1.md)
+

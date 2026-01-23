@@ -19,7 +19,7 @@ Preferred communication style: Simple, everyday language.
 - **State Management**: TanStack React Query for server state, local React state for UI
 - **Animations**: React Native Reanimated for smooth, performant animations with gesture support via React Native Gesture Handler
 - **Styling**: Dark-first theme with electric blue (#00D9FF) accent color, following HUD/control panel aesthetic
-- **Path Aliases**: `@/` maps to `./client/`, `@shared/` maps to `./shared/`
+- **Path Aliases**: `@/` maps to `./apps/mobile/`, `@packages/contracts/` maps to `./packages/contracts/`
 
 ### Module Structure
 
@@ -35,7 +35,7 @@ The app has five main modules, all accessible via a grid screen:
 
 - **Server**: Express.js with TypeScript, running on port 5000
 - **API Pattern**: RESTful endpoints prefixed with `/api`
-- **Database**: Drizzle ORM configured for PostgreSQL, schema in `shared/schema.ts`
+- **Database**: Drizzle ORM configured for PostgreSQL, schema in `packages/contracts/schema.ts`
 - **Build**: esbuild for server bundling, outputs to `server_dist/`
 
 ### Local Data Storage
@@ -84,3 +84,4 @@ The mobile app uses AsyncStorage for persistence with these data models:
 - Expo handles mobile builds (iOS/Android/Web)
 - Custom build script (`scripts/build.js`) for Replit deployment
 - Server builds via esbuild for production
+

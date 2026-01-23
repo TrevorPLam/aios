@@ -153,7 +153,7 @@ January 2025
 
 ### Primary Changes
 
-1. **client/screens/ListsScreen.tsx** - Enhanced with all new features
+1. **apps/mobile/screens/ListsScreen.tsx** - Enhanced with all new features
    - 1059 lines added
    - 73 lines removed
    - Net addition: 986 lines
@@ -180,3 +180,4 @@ The ListsScreen has been successfully enhanced with advanced features that match
 ### No Breaking Changes
 
 All enhancements are additive and maintain backward compatibility with existing functionality.
+

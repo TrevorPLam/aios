@@ -70,10 +70,10 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 5 "
 ### Verification (2)
 ```bash
 # Check AsyncStorage usage
-grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
 
 # Check storage configuration
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts | head -50
 ```text
 
 ### Development Environment Constraints
@@ -146,14 +146,14 @@ npm audit
 ### Verification (4)
 ```bash
 # Check authentication implementation
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/middleware/auth.ts
 
 # Run security scans
 npm audit
 npm audit fix
 
 # Check for secrets in code (should return nothing)
-grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/ | grep -v test
+grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/ | grep -v test
 ```text
 
 ---
@@ -166,7 +166,7 @@ grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/ 
 | ------------ | -------------- | ----------- | -------- |
 | **Strict Mode** | `"strict": true` | Maximum type safety | No implicit `any`, null checks required |
 | **ES Module Interop** | `"esModuleInterop": true` | Import compatibility | Can import CommonJS modules |
-| **Path Aliases** | `@/*` for client, `@shared/*` for shared | Clean imports | Shorter import paths |
+| **Path Aliases** | `@/*` for client, `@packages/contracts/*` for shared | Clean imports | Shorter import paths |
 | **No `any` Types** | Lint rule | Type safety | All types must be explicit |
 
 ### Configuration
@@ -177,8 +177,8 @@ grep -r "password.*=" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/ 
     "strict": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["./client/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["./apps/mobile/*"],
+      "@packages/contracts/*": ["./packages/contracts/*"]
     }
   }
 }
@@ -242,8 +242,8 @@ npm run format
 
 ### Files (4)
 - `/metro.config.js` - Bundling optimization
-- `/client/components/` - Optimized components
-- `/client/screens/` - Performance best practices
+- `/apps/mobile/components/` - Optimized components
+- `/apps/mobile/screens/` - Performance best practices
 
 ### Verification (7)
 ```bash
@@ -271,8 +271,8 @@ npm run expo:dev
 - Network state monitoring
 
 ### Files (5)
-- `/client/storage/database.ts` - Offline storage
-- `/client/hooks/` - Network-aware hooks
+- `/apps/mobile/storage/database.ts` - Offline storage
+- `/apps/mobile/hooks/` - Network-aware hooks
 
 ---
 
@@ -347,7 +347,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 50 
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/tsconfig.json
 
 # Check storage implementation
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
 
 # Verify build configuration
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/metro.config.js
@@ -366,7 +366,7 @@ ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/decisions/
 ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
 
 # Verify security implementation
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/middleware/auth.ts
 ```text
 
 ### Verify Code Quality Constraints
@@ -413,3 +413,4 @@ npx expo export --dev
 - [ADR-002: React Native](../../decisions/002-react-native.md) - Platform decision
 - [ADR-003: JWT Authentication](../../decisions/003-jwt-auth.md) - Auth decision
 - [Architecture Decisions](../../decisions/README.md) - All ADRs
+

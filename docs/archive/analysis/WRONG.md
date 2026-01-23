@@ -42,7 +42,7 @@
 ## 🚨 CRITICAL ISSUES (Immediate Action Required)
 
 ### #001 - [Severity: CRITICAL] Default JWT Secret in Production
-**Location:** `server/middleware/auth.ts:5-6`
+**Location:** `apps/api/middleware/auth.ts:5-6`
 **Type:** Security Vulnerability  
 **Description:** JWT secret defaults to hardcoded value if not set in environment  
 **Impact:** Authentication bypass possible in production if JWT_SECRET not configured. Attackers can forge valid JWTs.  
@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === "production" && !JWT_SECRET) {
 ---
 
 ### #002 - [Severity: CRITICAL] Missing Authentication on Translation Endpoint
-**Location:** `server/routes.ts:644-685`
+**Location:** `apps/api/routes.ts:644-685`
 **Type:** Security Vulnerability / Missing Auth  
 **Description:** `/api/translate` endpoint lacks authentication middleware  
 **Impact:** Unauthenticated users can consume translation API quota, potential DoS or quota exhaustion  
@@ -90,7 +90,7 @@ app.post(
 ---
 
 ### #003 - [Severity: CRITICAL] Weak Authorization Checks
-**Location:** `server/storage.ts:599-605`
+**Location:** `apps/api/storage.ts:599-605`
 **Type:** Security Vulnerability / Authorization Bypass  
 **Description:** Messages authorization check only verifies userId on conversation, doesn't prevent cross-user access  
 **Impact:** User A could potentially access User B's messages if conversation IDs are guessable  
@@ -111,7 +111,7 @@ async getMessages(
 ---
 
 ### #004 - [Severity: CRITICAL] SQL Injection Risk via Raw Query
-**Location:** `server/routes.ts:646-654`
+**Location:** `apps/api/routes.ts:646-654`
 **Type:** Security Vulnerability / Input Validation  
 **Description:** Manual input validation instead of using Zod schema validation on translation endpoint  
 **Impact:** Potential injection if validation bypassed; inconsistent with rest of API  
@@ -139,7 +139,7 @@ app.post("/api/translate", authenticate, validate(translateSchema), asyncHandler
 ---
 
 ### #005 - [Severity: CRITICAL] Missing Rate Limiting
-**Location:** `server/index.ts` (entire file)
+**Location:** `apps/api/index.ts` (entire file)
 **Type:** Security Vulnerability / DoS Protection  
 **Description:** No rate limiting middleware configured  
 **Impact:** API endpoints vulnerable to brute force, DoS attacks, credential stuffing  
@@ -166,7 +166,7 @@ app.use('/api/', limiter);
 ---
 
 ### #006 - [Severity: CRITICAL] Credentials Included in CORS Without Origin Restrictions
-**Location:** `server/index.ts:44-45`
+**Location:** `apps/api/index.ts:44-45`
 **Type:** Security Vulnerability / CORS Misconfiguration  
 **Description:** Credentials allowed but origin validation allows any localhost  
 **Impact:** CSRF attacks possible from any localhost port  
@@ -185,7 +185,7 @@ const isLocalhost =
 ---
 
 ### #007 - [Severity: CRITICAL] No Input Size Limits
-**Location:** `server/index.ts:56-66`
+**Location:** `apps/api/index.ts:56-66`
 **Type:** Security Vulnerability / DoS  
 **Description:** JSON body parser has no size limit configured  
 **Impact:** Large payload attacks can exhaust server memory  
@@ -243,7 +243,7 @@ app.use(
 **New Issues Added:** +14 issues from comprehensive deep dive
 
 ### #009 - [Severity: HIGH] Uncaught Promise Rejection in Error Handling
-**Location:** `server/middleware/auth.ts:38`
+**Location:** `apps/api/middleware/auth.ts:38`
 **Type:** Logic Error  
 **Description:** Catch block swallows error type information  
 **Impact:** JWT errors thrown in verifyToken get caught but error details lost  
@@ -269,27 +269,27 @@ try {
 ---
 
 ### #010-#023 - [Severity: HIGH to LOW] Additional Phase 1 Issues
-- **#010 [HIGH]:** Potential Null Pointer in Message Update `server/storage.ts:652-684` - Race condition if simultaneous deletions
-- **#011 [HIGH]:** Missing Authorization Header Logging - JWT tokens logged in plain text `server/index.ts:88-100`
-- **#012 [HIGH]:** Type Coercion Bug in Query Validation - z.coerce.number could silently fail `server/routes.ts:36-40`
-- **#013 [HIGH]:** Memory Leak in Event Listeners `client/lib/eventBus.ts:226-238` - Listeners not cleaned up on error
-- **#014 [HIGH]:** Async Race Condition in Storage - Parallel reads return stale data `client/storage/database.ts:81-88`
-- **#015 [MEDIUM]:** Incomplete Error Context - console.error without structured logging `client/utils/errorReporting.ts`
-- **#016 [MEDIUM]:** Potential Integer Overflow in backoff calculation `client/analytics/transport.ts:34-42`
-- **#017 [MEDIUM]:** Unsafe Type Assertions (`as any`) bypass validation `server/routes.ts:51, 201, 268`
+- **#010 [HIGH]:** Potential Null Pointer in Message Update `apps/api/storage.ts:652-684` - Race condition if simultaneous deletions
+- **#011 [HIGH]:** Missing Authorization Header Logging - JWT tokens logged in plain text `apps/api/index.ts:88-100`
+- **#012 [HIGH]:** Type Coercion Bug in Query Validation - z.coerce.number could silently fail `apps/api/routes.ts:36-40`
+- **#013 [HIGH]:** Memory Leak in Event Listeners `apps/mobile/lib/eventBus.ts:226-238` - Listeners not cleaned up on error
+- **#014 [HIGH]:** Async Race Condition in Storage - Parallel reads return stale data `apps/mobile/storage/database.ts:81-88`
+- **#015 [MEDIUM]:** Incomplete Error Context - console.error without structured logging `apps/mobile/utils/errorReporting.ts`
+- **#016 [MEDIUM]:** Potential Integer Overflow in backoff calculation `apps/mobile/analytics/transport.ts:34-42`
+- **#017 [MEDIUM]:** Unsafe Type Assertions (`as any`) bypass validation `apps/api/routes.ts:51, 201, 268`
 - **#018 [MEDIUM]:** Missing Error Boundaries on all screens
 - **#019 [MEDIUM]:** Timezone Handling Issues throughout date handling
-- **#020 [MEDIUM]:** Incomplete Analytics Sanitization - PII might leak `client/analytics/sanitizer.ts:56-68`
+- **#020 [MEDIUM]:** Incomplete Analytics Sanitization - PII might leak `apps/mobile/analytics/sanitizer.ts:56-68`
 - **#021 [LOW]:** Magic Numbers Throughout - hardcoded values without named constants
 - **#022 [LOW]:** Inconsistent Date Formatting - mix of Date(), Date.now(), toISOString()
-- **#023 [LOW]:** Missing Request Timeouts in API client `client/lib/query-client.ts`
+- **#023 [LOW]:** Missing Request Timeouts in API client `apps/mobile/lib/query-client.ts`
 
 ---
 
 ### 🆕 NEW DEEP DIVE FINDINGS (14 Additional Issues)
 
 ### #024 - [Severity: CRITICAL] Non-Null Assertions on Authentication Context
-**Location:** `server/routes.ts:130-634` (36+ instances)  
+**Location:** `apps/api/routes.ts:130-634` (36+ instances)  
 **Type:** Null Pointer Dereference  
 **Description:** Systematic use of `req.user!` non-null assertion operator throughout routes without proper null checks  
 **Impact:** Production crashes if authentication middleware fails or is misconfigured  
@@ -316,7 +316,7 @@ const user = await storage.getUser(userId);
 ---
 
 ### #025 - [Severity: CRITICAL] Uncaught Promise Rejections
-**Location:** `client/lib/recommendationEngine.ts:560-572`  
+**Location:** `apps/mobile/lib/recommendationEngine.ts:560-572`  
 **Type:** Unhandled Promise Rejection  
 **Description:** Fire-and-forget async operations without error handling  
 **Impact:** Silent data loss; users unaware of recommendation failures  
@@ -342,7 +342,7 @@ try {
 ---
 
 ### #026 - [Severity: HIGH] Race Conditions in Concurrent Writes
-**Location:** `client/storage/database.ts:238-270` (12 instances)  
+**Location:** `apps/mobile/storage/database.ts:238-270` (12 instances)  
 **Type:** Race Condition  
 **Description:** Timestamp generated before async operations complete, causing incorrect ordering  
 **Impact:** Data corruption; last-write-wins with wrong timestamps  
@@ -366,7 +366,7 @@ await setData(KEYS.NOTES, all);
 ---
 
 ### #027 - [Severity: HIGH] Type Assertions Bypass Validation
-**Location:** `server/routes.ts:51, 201, 215, 268, 282, 335, 349, 405, 419, 465, 504, 518, 599, 613`  
+**Location:** `apps/api/routes.ts:51, 201, 215, 268, 282, 335, 349, 405, 419, 465, 504, 518, 599, 613`  
 **Type:** Type Safety Violation  
 **Description:** 14 instances of `validate(schema as any)` bypassing type checking  
 **Impact:** No compile-time type safety; invalid data could be accepted  
@@ -379,7 +379,7 @@ validate(updateNoteSchema as any),    // Line 215
 ```
 **Recommended Fix:**
 ```typescript
-// Fix schema type definitions in @shared/schema
+// Fix schema type definitions in @packages/contracts/schema
 export const insertUserSchema: z.ZodType<InsertUser> = z.object({ ... });
 
 // Use without type assertion
@@ -391,7 +391,7 @@ validate(insertUserSchema),
 ---
 
 ### #028 - [Severity: HIGH] Memory Leaks in Event Listeners
-**Location:** `client/lib/eventBus.ts:226-238`, `client/lib/attentionManager.ts:589`, `client/analytics/client.ts:315`  
+**Location:** `apps/mobile/lib/eventBus.ts:226-238`, `apps/mobile/lib/attentionManager.ts:589`, `apps/mobile/analytics/client.ts:315`  
 **Type:** Resource Leak  
 **Description:** 24+ setInterval/setTimeout calls without cleanup  
 **Impact:** Memory grows unbounded; app slows down over long sessions  
@@ -421,7 +421,7 @@ useEffect(() => {
 ---
 
 ### #029 - [Severity: HIGH] Array Mutations Break React State
-**Location:** `client/storage/database.ts:238, 350, 548, 812, 850, 951, 970` (170+ instances)  
+**Location:** `apps/mobile/storage/database.ts:238, 350, 548, 812, 850, 951, 970` (170+ instances)  
 **Type:** Immutability Violation  
 **Description:** Direct array mutations via .push() instead of creating new arrays  
 **Impact:** React doesn't detect changes; UI shows stale data  
@@ -447,7 +447,7 @@ await setData(KEYS.NOTES, updated);
 ---
 
 ### #030 - [Severity: HIGH] Race Conditions in Server Storage
-**Location:** `server/storage.ts:231, 534, 617, 658, 688`  
+**Location:** `apps/api/storage.ts:231, 534, 617, 658, 688`  
 **Type:** Concurrency Bug  
 **Description:** Read-modify-write operations without locks  
 **Impact:** Concurrent updates cause data loss (last-write-wins)  
@@ -475,7 +475,7 @@ this.notes.set(id, note);
 ---
 
 ### #031 - [Severity: HIGH] Timezone Bugs in Date Handling
-**Location:** `client/storage/database.ts:1345, 1347, 1364, 1369` (50+ instances)  
+**Location:** `apps/mobile/storage/database.ts:1345, 1347, 1364, 1369` (50+ instances)  
 **Type:** Timezone Bug  
 **Description:** String date splitting loses timezone information  
 **Impact:** Events scheduled at wrong times across timezones  
@@ -526,7 +526,7 @@ const day = eventDate.getDate();
 ---
 
 ### #033 - [Severity: MEDIUM] Off-by-One Errors in Array Access
-**Location:** `client/storage/database.ts:2568, 2806, 3215-3221, 3448, 3996, 5158`  
+**Location:** `apps/mobile/storage/database.ts:2568, 2806, 3215-3221, 3448, 3996, 5158`  
 **Type:** Off-by-One Error  
 **Description:** Array access without length validation  
 **Impact:** Runtime crashes with "Cannot read property of undefined"  
@@ -548,7 +548,7 @@ const lastMessage = conversation.messageIds.length > 0
 ---
 
 ### #034 - [Severity: MEDIUM] Integer Overflow in Backoff Calculation
-**Location:** `client/analytics/transport.ts:34-42`  
+**Location:** `apps/mobile/analytics/transport.ts:34-42`  
 **Type:** Arithmetic Overflow  
 **Description:** Exponential backoff can overflow JavaScript's Number.MAX_SAFE_INTEGER  
 **Impact:** NaN delays cause infinite retry loops  
@@ -573,7 +573,7 @@ if (!Number.isFinite(delay)) {
 ---
 
 ### #035 - [Severity: MEDIUM] Missing Input Validation
-**Location:** `client/utils/timeInput.ts:33-34`  
+**Location:** `apps/mobile/utils/timeInput.ts:33-34`  
 **Type:** Input Validation Gap  
 **Description:** No bounds checking on time input; accepts invalid times like 99:99  
 **Impact:** Invalid times stored in database; calendar events broken  
@@ -597,7 +597,7 @@ if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
 ---
 
 ### #036 - [Severity: MEDIUM] Unhandled Promise Rejections in Email Screen
-**Location:** `client/screens/EmailScreen.tsx:413, 442`  
+**Location:** `apps/mobile/screens/EmailScreen.tsx:413, 442`  
 **Type:** Unhandled Promise  
 **Description:** .then() calls without .catch() handlers  
 **Impact:** Silent failures confuse users  
@@ -623,7 +623,7 @@ database.emailThreads.save(updatedThread)
 ---
 
 ### #037 - [Severity: MEDIUM] Uncleaned Timers in Components
-**Location:** `client/screens/AlertsScreen.tsx:61`, `client/screens/NoteEditorScreen.tsx:108` (10+ instances)  
+**Location:** `apps/mobile/screens/AlertsScreen.tsx:61`, `apps/mobile/screens/NoteEditorScreen.tsx:108` (10+ instances)  
 **Type:** Resource Leak  
 **Description:** Timers without cleanup in useEffect  
 **Impact:** Memory leak; timers continue after unmount  
@@ -656,7 +656,7 @@ useEffect(() => {
 **New Issues Added:** +14 issues from comprehensive deep dive
 
 ### #024 - [Severity: HIGH] God Object - Storage Class
-**Location:** `server/storage.ts` (854 lines)
+**Location:** `apps/api/storage.ts` (854 lines)
 **Type:** Code Smell / Single Responsibility Violation  
 **Description:** Monolithic class handles all data storage with 30+ methods  
 **Impact:** Difficult to test, modify, or extend; violates SRP  
@@ -667,7 +667,7 @@ useEffect(() => {
 ---
 
 ### #025 - [Severity: HIGH] Monolithic Routes File
-**Location:** `server/routes.ts` (722 lines)
+**Location:** `apps/api/routes.ts` (722 lines)
 **Type:** Code Smell / File Size  
 **Description:** All API routes in one file; violates separation of concerns  
 **Impact:** Merge conflicts, difficult navigation, testing complexity  
@@ -683,9 +683,9 @@ useEffect(() => {
 **Description:** Direct console.log/error/warn instead of structured logging  
 **Impact:** Log pollution in production, no log levels, difficult debugging  
 **Examples:**
-- `console.log("[DLQ] Retrying events")` - client/analytics/reliability/deadLetterQueue.ts:137
-- `console.error("[Analytics] Failed")` - client/analytics/client.ts:162
-- `console.warn("[DLQ] Queue trimmed")` - client/analytics/reliability/deadLetterQueue.ts:71  
+- `console.log("[DLQ] Retrying events")` - apps/mobile/analytics/reliability/deadLetterQueue.ts:137
+- `console.error("[Analytics] Failed")` - apps/mobile/analytics/client.ts:162
+- `console.warn("[DLQ] Queue trimmed")` - apps/mobile/analytics/reliability/deadLetterQueue.ts:71  
 **Recommended Fix:** Replace with structured logger utility  
 **Effort:** 1 day  
 **Priority Justification:** Production logging must be structured
@@ -693,9 +693,9 @@ useEffect(() => {
 ---
 
 ### #027-#049 - [Severity: HIGH to LOW] Additional Code Quality Issues
-- **#027 [HIGH]:** Deep Nesting in SearchIndex - cyclomatic complexity > 15 `client/lib/searchIndex.ts`
+- **#027 [HIGH]:** Deep Nesting in SearchIndex - cyclomatic complexity > 15 `apps/mobile/lib/searchIndex.ts`
 - **#028 [HIGH]:** Duplicated Validation Logic between routes and schemas
-- **#029 [HIGH]:** Mixed Concerns in Database Module - storage + business logic + UI helpers `client/storage/database.ts`
+- **#029 [HIGH]:** Mixed Concerns in Database Module - storage + business logic + UI helpers `apps/mobile/storage/database.ts`
 - **#030 [HIGH]:** Inconsistent Error Handling - mix of try-catch, promises, asyncHandler
 - **#031 [MEDIUM]:** Long Parameter Lists - functions with 5+ parameters
 - **#032 [MEDIUM]:** Primitive Obsession - strings instead of enums/constants
@@ -712,7 +712,7 @@ useEffect(() => {
 ### 🆕 NEW DEEP DIVE FINDINGS (14 Additional Code Quality Issues)
 
 ### #050 - [Severity: CRITICAL] Monolithic database.ts - God Object
-**Location:** `client/storage/database.ts:1-5747`  
+**Location:** `apps/mobile/storage/database.ts:1-5747`  
 **Metrics:** 5,747 lines | 319 methods | 12+ domains mixed  
 **Type:** God Object Anti-Pattern  
 **Description:** Single file handles all data persistence for entire application  
@@ -724,9 +724,9 @@ useEffect(() => {
 - Performance issues loading entire module
 **Recommended Fix:** Split into domain-specific storage modules:
 ```typescript
-// client/storage/notes/NotesStorage.ts
-// client/storage/tasks/TasksStorage.ts
-// client/storage/contacts/ContactsStorage.ts
+// apps/mobile/storage/notes/NotesStorage.ts
+// apps/mobile/storage/tasks/TasksStorage.ts
+// apps/mobile/storage/contacts/ContactsStorage.ts
 // etc.
 ```
 **Effort:** 3-4 weeks  
@@ -735,7 +735,7 @@ useEffect(() => {
 ---
 
 ### #051 - [Severity: HIGH] Monolithic routes.ts
-**Location:** `server/routes.ts:1-722`  
+**Location:** `apps/api/routes.ts:1-722`  
 **Metrics:** 722 lines | 50+ endpoints | 5+ domains  
 **Impact:** Poor organization; merge conflicts  
 **Effort:** 2-3 days
@@ -767,7 +767,7 @@ useEffect(() => {
 ---
 
 ### #055 - [Severity: MEDIUM] Duplicate CRUD - 50+ Methods
-**Location:** `client/storage/database.ts`  
+**Location:** `apps/mobile/storage/database.ts`  
 **Issue:** Same save/update/delete pattern repeated 50+ times  
 **Impact:** Maintenance nightmare  
 **Effort:** 2-3 days
@@ -849,7 +849,7 @@ useEffect(() => {
 **New Issues Added:** +13 issues from comprehensive deep dive
 
 ### #050 - [Severity: MEDIUM] Stub Analytics Features
-**Location:** `client/analytics/` directory (~2,000 LOC)
+**Location:** `apps/mobile/analytics/` directory (~2,000 LOC)
 **Type:** Dead Code / Stubs  
 **Description:** Entire analytics infrastructure is stubbed with TODO comments  
 **Impact:** Misleading to developers, bloats codebase  
@@ -871,10 +871,10 @@ useEffect(() => {
 **Type:** Dead Code / Non-functional Buttons  
 **Description:** Buttons with TODO comments that don't work  
 **Examples:**
-- `client/screens/NotebookScreen.tsx:510` - "TODO: Implement backup functionality"
-- `client/screens/PlannerScreen.tsx:692` - "TODO: Implement AI Assist"
-- `client/screens/ListsScreen.tsx:750` - "TODO: Implement Share List"
-- `client/screens/CalendarScreen.tsx:551` - "TODO: Implement Sync"
+- `apps/mobile/screens/NotebookScreen.tsx:510` - "TODO: Implement backup functionality"
+- `apps/mobile/screens/PlannerScreen.tsx:692` - "TODO: Implement AI Assist"
+- `apps/mobile/screens/ListsScreen.tsx:750` - "TODO: Implement Share List"
+- `apps/mobile/screens/CalendarScreen.tsx:551` - "TODO: Implement Sync"
 **Impact:** Confusing UX, broken user promises  
 **Recommended Fix:** Implement or hide buttons until ready  
 **Effort:** 1 day per feature or 4 hours to hide all  
@@ -894,7 +894,7 @@ useEffect(() => {
 ### 🆕 NEW DEEP DIVE FINDINGS (13 Additional Dead Code Issues)
 
 ### #065 - [Severity: CRITICAL] Unused Analytics Module - 5,632 LOC Dead Code
-**Location:** `client/analytics/` (9 subdirectories)  
+**Location:** `apps/mobile/analytics/` (9 subdirectories)  
 **Metrics:** 5,632 LOC | 202 exports | 13 actual imports | 94% UNUSED  
 **Type:** Massive Dead Code / Stub System  
 **Description:** Entire analytics infrastructure is stubbed with TODO everywhere  
@@ -938,7 +938,7 @@ useEffect(() => {
 ---
 
 ### #068 - [Severity: MEDIUM] Unused Library - worldclass.ts (100+ LOC)
-**Location:** `client/lib/worldclass.ts`  
+**Location:** `apps/mobile/lib/worldclass.ts`  
 **Issue:** Helper utilities not imported anywhere  
 **Impact:** Bundle bloat  
 **Effort:** 1 hour to remove
@@ -962,7 +962,7 @@ useEffect(() => {
 ---
 
 ### #071 - [Severity: MEDIUM] Dead Analytics Tracking
-**Location:** `client/analytics/` stubs  
+**Location:** `apps/mobile/analytics/` stubs  
 **Issue:** Events "tracked" locally but never sent anywhere  
 **Impact:** False sense of analytics  
 **Effort:** 1 hour to remove | 1-2 weeks to implement properly
@@ -978,7 +978,7 @@ useEffect(() => {
 ---
 
 ### #073 - [Severity: LOW] Orphaned Type Definitions
-**Location:** `shared/types/` and various files  
+**Location:** `packages/contracts/types/` and various files  
 **Issue:** Types not imported/used anywhere  
 **Impact:** Code confusion  
 **Effort:** 1-2 hours
@@ -1010,7 +1010,7 @@ useEffect(() => {
 ---
 
 ### #077 - [Severity: LOW] Stub Feature Flags
-**Location:** `shared/features.ts` and config files  
+**Location:** `packages/contracts/features.ts` and config files  
 **Issue:** Feature flags hardcoded to false with no mechanism to enable  
 **Impact:** Dead code; misleading infrastructure  
 **Effort:** 1-2 hours
@@ -1027,7 +1027,7 @@ useEffect(() => {
 **Issues Found:** 21 (Critical: 0 | High: 4 | Medium: 14 | Low: 3)
 
 ### #065 - [Severity: HIGH] Incomplete Analytics Integration
-**Location:** `client/utils/logger.ts:78`  
+**Location:** `apps/mobile/utils/logger.ts:78`  
 **Description:** Remote logging marked TODO, no production error tracking  
 **Code:** `enableRemoteLogging: false, // TODO: Enable when analytics backend is ready`  
 **Impact:** No production observability  
@@ -1037,7 +1037,7 @@ useEffect(() => {
 ---
 
 ### #066 - [Severity: HIGH] Incomplete Context Engine
-**Location:** `client/lib/contextEngine.ts:165, 172`  
+**Location:** `apps/mobile/lib/contextEngine.ts:165, 172`  
 **Description:** Focus mode and settings integration not implemented  
 **Impact:** Advertised feature doesn't work  
 **Effort:** 3-4 days  
@@ -1046,7 +1046,7 @@ useEffect(() => {
 ---
 
 ### #067 - [Severity: HIGH] Incomplete Prefetch Engine
-**Location:** `client/lib/prefetchEngine.ts:500, 508`  
+**Location:** `apps/mobile/lib/prefetchEngine.ts:500, 508`  
 **Description:** Battery and memory checks not implemented  
 **Code:** `// TODO: Add battery level check on iOS`, `// TODO: Add memory pressure check`  
 **Impact:** Prefetch runs without resource awareness, drains battery  
@@ -1071,7 +1071,7 @@ useEffect(() => {
 **Issues Found:** 19 (Critical: 0 | High: 5 | Medium: 11 | Low: 3)
 
 ### #086 - [Severity: HIGH] In-Memory Storage in Production
-**Location:** `server/storage.ts:200`  
+**Location:** `apps/api/storage.ts:200`  
 **Description:** Production uses in-memory Map storage  
 **Impact:** All data lost on restart, no horizontal scaling  
 **Recommended Fix:** Implement PostgreSQL storage layer (Drizzle ORM already configured)  
@@ -1118,7 +1118,7 @@ useEffect(() => {
 ---
 
 ### #107 - [Severity: HIGH] Missing Security Headers
-**Location:** `server/index.ts`  
+**Location:** `apps/api/index.ts`  
 **Description:** No Helmet.js or security headers  
 **Impact:** XSS, clickjacking, MIME-sniffing attacks  
 **Fix:** Add Helmet middleware  
@@ -1150,10 +1150,10 @@ useEffect(() => {
 **Issues Found:** 12 (Critical: 0 | High: 4 | Medium: 7 | Low: 1)
 
 ### #119-#130 - Concurrency Issues
-- **#119 [HIGH]:** Race Condition in Queue Flush `client/analytics/queue.ts` - Events sent twice or lost
-- **#120 [HIGH]:** Concurrent Storage Writes `client/storage/database.ts` - Last-write-wins data loss
+- **#119 [HIGH]:** Race Condition in Queue Flush `apps/mobile/analytics/queue.ts` - Events sent twice or lost
+- **#120 [HIGH]:** Concurrent Storage Writes `apps/mobile/storage/database.ts` - Last-write-wins data loss
 - **#121 [HIGH]:** Unhandled Promise Rejections - Silent failures
-- **#122 [HIGH]:** Event Listener Memory Leaks `client/lib/eventBus.ts`
+- **#122 [HIGH]:** Event Listener Memory Leaks `apps/mobile/lib/eventBus.ts`
 - **#123-130 [MEDIUM]:** No mutex/lock, callback hell, missing Promise.all, unawaited async, missing abort controllers, no debouncing, deadlock potential, missing timeouts
 
 **Effort:** 2-3 weeks  
@@ -1277,12 +1277,12 @@ useEffect(() => {
 
 ### Hotspots (Files with Most Issues)
 
-1. **`server/storage.ts`** - 18 issues (3 critical, 8 high)
-2. **`server/routes.ts`** - 15 issues (2 critical, 7 high)
-3. **`server/middleware/auth.ts`** - 8 issues (2 critical, 3 high)
-4. **`client/analytics/`** - 45 issues (0 critical, 12 high) - All stub code
-5. **`client/storage/database.ts`** - 12 issues (1 critical, 5 high)
-6. **`server/index.ts`** - 10 issues (2 critical, 4 high)
+1. **`apps/api/storage.ts`** - 18 issues (3 critical, 8 high)
+2. **`apps/api/routes.ts`** - 15 issues (2 critical, 7 high)
+3. **`apps/api/middleware/auth.ts`** - 8 issues (2 critical, 3 high)
+4. **`apps/mobile/analytics/`** - 45 issues (0 critical, 12 high) - All stub code
+5. **`apps/mobile/storage/database.ts`** - 12 issues (1 critical, 5 high)
+6. **`apps/api/index.ts`** - 10 issues (2 critical, 4 high)
 
 ---
 
@@ -1417,3 +1417,4 @@ useEffect(() => {
 **Audit Completed:** 2026-01-21 04:53  
 **Auditor:** Comprehensive Codebase Analysis  
 **Next Audit:** After completing immediate fixes (1 week)
+

@@ -4,9 +4,9 @@
 **PR Branch**: copilot/update-recommendation-cards-ui
 **Files Changed**:
 
-- `client/models/types.ts`
-- `client/storage/database.ts`
-- `client/screens/CommandCenterScreen.tsx`
+- `apps/mobile/models/types.ts`
+- `apps/mobile/storage/database.ts`
+- `apps/mobile/screens/CommandCenterScreen.tsx`
 - `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md`
 
 ## Changes Overview
@@ -179,3 +179,4 @@ This will provide consistent UX and reduce navigation clutter across the entire 
 - [ ] Unread cards with white glow
 - [ ] Edge-to-edge bottom navigation bar
 - [ ] Secondary navigation bar with key actions
+

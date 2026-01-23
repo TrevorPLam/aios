@@ -24,7 +24,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../..");
-const EXCEPTIONS_PATH = join(REPO_ROOT, "docs/governance/exceptions.yml");
+// Note: Exceptions are now handled via HITL system (/.repo/hitl/HITL-XXXX.md)
+// This script checks the archived exceptions.yml for historical reference
+const EXCEPTIONS_PATH = join(REPO_ROOT, "docs/archive/governance/exceptions.yml");
 
 function checkExceptions() {
   console.log("🔍 Exception Expiry Checker");

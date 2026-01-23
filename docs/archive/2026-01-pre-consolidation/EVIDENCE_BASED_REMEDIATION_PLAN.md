@@ -9,7 +9,7 @@
 
 ### CRITICAL-01: Timer Cleanup Race Conditions → Potential Data Loss
 
-**FILE PATH:** `client/screens/NoteEditorScreen.tsx:104-117`
+**FILE PATH:** `apps/mobile/screens/NoteEditorScreen.tsx:104-117`
 
 ### CODE PATTERN
 
@@ -60,7 +60,7 @@ useEffect(() => {
 
 ### CRITICAL-02: Unhandled Promise Rejections in EventBus → Silent System Failures
 
-**FILE PATH:** `client/lib/eventBus.ts:199-211`
+**FILE PATH:** `apps/mobile/lib/eventBus.ts:199-211`
 
 ### CODE PATTERN (2)
 ```typescript
@@ -130,7 +130,7 @@ listenersForType.forEach((listener) => {
 ```text
 
 ## MINIMAL REPRODUCTION
-1. Commit change in `client/screens/`
+1. Commit change in `apps/mobile/screens/`
 2. CI runs: `npx eslint .`
 3. ESLint attempts to lint ALL directories including `node_modules/`, `.expo/`, `dist/`
 4. CI job takes 5-10x longer than necessary
@@ -164,7 +164,7 @@ cat: .prettierignore: No such file or directory
 
 #### QUANTIFICATION
 ```bash
-$ grep -r "from.*storage/database" client/screens --include="*.tsx" | wc -l
+$ grep -r "from.*storage/database" apps/mobile/screens --include="*.tsx" | wc -l
 38
 ```text
 
@@ -221,7 +221,7 @@ await db.notes.save(note);
 
 ### CRITICAL-05: No Database Migration System → Data Loss on Model Changes
 
-**FILE PATH:** `client/storage/database.ts` (entire file)
+**FILE PATH:** `apps/mobile/storage/database.ts` (entire file)
 
 ### EVIDENCE (4)
 - AsyncStorage keys are namespaced (`@aios/notes`, `@aios/tasks`, etc.) at lines 52-79
@@ -266,7 +266,7 @@ async function getData<T>(key: string, defaultValue: T): Promise<T> {
 
 ### CRITICAL-06: No Per-Screen Error Boundaries → One Crash Kills Entire App
 
-**FILE PATH:** `client/App.tsx:66` (single app-level boundary)
+**FILE PATH:** `apps/mobile/App.tsx:66` (single app-level boundary)
 
 ### EVIDENCE (5)
 ```typescript
@@ -287,7 +287,7 @@ return (
 
 ### VALIDATION (2)
 ```bash
-$ find client/screens -name "*.tsx" -exec grep -l "ErrorBoundary" {} \;
+$ find apps/mobile/screens -name "*.tsx" -exec grep -l "ErrorBoundary" {} \;
 # Returns nothing - NO screen has its own boundary
 ```text
 
@@ -315,7 +315,7 @@ $ find client/screens -name "*.tsx" -exec grep -l "ErrorBoundary" {} \;
 
 ### CRITICAL-07: No Environment Variable Validation → Runtime Crashes on Misconfiguration
 
-**FILE PATH:** `client/lib/query-client.ts:8-12`
+**FILE PATH:** `apps/mobile/lib/query-client.ts:8-12`
 
 ### CODE PATTERN (5)
 ```typescript
@@ -369,12 +369,12 @@ grep -r "process\.env\." server client --include="*.ts" --include="*.tsx" | grep
 
 ### CRITICAL-08: database.ts is 5,700 Lines → God Module Maintenance Nightmare
 
-**FILE PATH:** `client/storage/database.ts`
+**FILE PATH:** `apps/mobile/storage/database.ts`
 
 ### QUANTIFICATION
 ```bash
-$ wc -l client/storage/database.ts
-5701 client/storage/database.ts
+$ wc -l apps/mobile/storage/database.ts
+5701 apps/mobile/storage/database.ts
 ```text
 
 ### RESPONSIBILITIES (counted)
@@ -447,10 +447,10 @@ export const db = {
 #### Must ship first - enables monitoring of other fixes
 
 ### Files Touched
-- `client/App.tsx` (add global handlers)
-- `client/components/ErrorBoundary.tsx` (enhance with logging)
-- `client/utils/errorReporting.ts` (new file, ~50 lines)
-- `client/navigation/RootStackNavigator.tsx` (add per-screen boundaries)
+- `apps/mobile/App.tsx` (add global handlers)
+- `apps/mobile/components/ErrorBoundary.tsx` (enhance with logging)
+- `apps/mobile/utils/errorReporting.ts` (new file, ~50 lines)
+- `apps/mobile/navigation/RootStackNavigator.tsx` (add per-screen boundaries)
 
 ### Changes
 - Add unhandled promise rejection handler to App.tsx
@@ -495,7 +495,7 @@ static-build/
 
 ## Acceptance Criteria
 - [ ] CI lint job completes in <30 seconds (was 3+ minutes)
-- [ ] ESLint only checks client/, server/, shared/
+- [ ] ESLint only checks apps/mobile/, apps/api/, packages/contracts/
 - [ ] No linting errors from generated files
 
 **Rollback Plan:** Delete files (CI returns to slow state)
@@ -509,7 +509,7 @@ static-build/
 #### Blocks: Data loss in note editor
 
 ### Files Touched (3)
-- `client/screens/NoteEditorScreen.tsx`
+- `apps/mobile/screens/NoteEditorScreen.tsx`
 
 ### Changes (3)
 ```typescript
@@ -574,8 +574,8 @@ useEffect(() => {
 #### Blocks: Silent failures in search/recommendations
 
 ### Files Touched (4)
-- `client/lib/eventBus.ts`
-- `client/utils/errorReporting.ts` (from PR-0)
+- `apps/mobile/lib/eventBus.ts`
+- `apps/mobile/utils/errorReporting.ts` (from PR-0)
 
 ### Changes (4)
 ```typescript
@@ -627,14 +627,14 @@ listenersForType.forEach((listener) => {
 #### Blocks: Runtime crashes on misconfiguration
 
 ### Files Touched (5)
-- `client/config/env.ts` (new)
-- `client/App.tsx` (validate on startup)
-- `server/config/env.ts` (new)
-- `server/index.ts` (validate on startup)
+- `apps/mobile/config/env.ts` (new)
+- `apps/mobile/App.tsx` (validate on startup)
+- `apps/api/config/env.ts` (new)
+- `apps/api/index.ts` (validate on startup)
 
 ### Changes (5)
 ```typescript
-// client/config/env.ts
+// apps/mobile/config/env.ts
 import { z } from 'zod';
 
 const envSchema = z.object({
@@ -672,14 +672,14 @@ export const env = envSchema.parse({
 #### Blocks: Data loss on schema changes
 
 ### Files Touched (6)
-- `client/storage/migrations/index.ts` (new)
-- `client/storage/migrations/001_initial.ts` (new)
-- `client/storage/database.ts` (add migration runner)
-- `client/App.tsx` (run migrations on startup)
+- `apps/mobile/storage/migrations/index.ts` (new)
+- `apps/mobile/storage/migrations/001_initial.ts` (new)
+- `apps/mobile/storage/database.ts` (add migration runner)
+- `apps/mobile/App.tsx` (run migrations on startup)
 
 ### Changes (6)
 ```typescript
-// client/storage/migrations/index.ts
+// apps/mobile/storage/migrations/index.ts
 export interface Migration {
   version: number;
   name: string;
@@ -730,8 +730,8 @@ export async function migrate001() {
 #### Blocks: App-wide crashes from single screen bugs
 
 ### Files Touched (7)
-- `client/navigation/RootStackNavigator.tsx`
-- `client/components/ScreenErrorBoundary.tsx` (new)
+- `apps/mobile/navigation/RootStackNavigator.tsx`
+- `apps/mobile/components/ScreenErrorBoundary.tsx` (new)
 
 ### Changes (7)
 ```typescript
@@ -785,10 +785,10 @@ export function ScreenErrorBoundary({
 #### Blocks: Architectural refactoring
 
 ### Files Touched (8)
-- `client/hooks/data/useNotes.ts` (new)
-- `client/hooks/data/useTasks.ts` (new)
-- `client/screens/NoteEditorScreen.tsx` (migrate 1 screen as example)
-- `client/screens/CommandCenterScreen.tsx` (migrate 1 screen as example)
+- `apps/mobile/hooks/data/useNotes.ts` (new)
+- `apps/mobile/hooks/data/useTasks.ts` (new)
+- `apps/mobile/screens/NoteEditorScreen.tsx` (migrate 1 screen as example)
+- `apps/mobile/screens/CommandCenterScreen.tsx` (migrate 1 screen as example)
 
 ### Changes (8)
 ```typescript
@@ -877,11 +877,11 @@ updateNote.mutate(note);
 #### Blocks: Development velocity
 
 ### Files Touched (9)
-- `client/storage/database.ts` (remove 3 domains)
-- `client/storage/repositories/notes.repository.ts` (new)
-- `client/storage/repositories/tasks.repository.ts` (new)
-- `client/storage/repositories/events.repository.ts` (new)
-- `client/storage/repositories/index.ts` (new, re-exports)
+- `apps/mobile/storage/database.ts` (remove 3 domains)
+- `apps/mobile/storage/repositories/notes.repository.ts` (new)
+- `apps/mobile/storage/repositories/tasks.repository.ts` (new)
+- `apps/mobile/storage/repositories/events.repository.ts` (new)
+- `apps/mobile/storage/repositories/index.ts` (new, re-exports)
 
 ### Changes (9)
 ```typescript
@@ -1077,7 +1077,7 @@ export function useTimeout(callback: () => void, delay: number | null) {
 ### PR-0-A: Global Error Handlers
 
 ```typescript
-// client/utils/errorReporting.ts (new file)
+// apps/mobile/utils/errorReporting.ts (new file)
 import analytics from '@/analytics';
 
 class ErrorReporting {
@@ -1133,7 +1133,7 @@ if (typeof window !== 'undefined') {
 ### PR-0-B: Enhanced ErrorBoundary
 
 ```typescript
-// client/components/ErrorBoundary.tsx (modify)
+// apps/mobile/components/ErrorBoundary.tsx (modify)
 import { errorReporting } from '@/utils/errorReporting';
 
 componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -1153,7 +1153,7 @@ componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
 ### PR-0-C: Per-Screen Boundaries
 
 ```typescript
-// client/components/ScreenErrorBoundary.tsx (new file)
+// apps/mobile/components/ScreenErrorBoundary.tsx (new file)
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -1230,7 +1230,7 @@ function ScreenErrorFallback({ screenName, error, onReset }: {
 ### PR-0-D: Navigator Integration
 
 ```typescript
-// client/navigation/RootStackNavigator.tsx
+// apps/mobile/navigation/RootStackNavigator.tsx
 import { ScreenErrorBoundary } from '@/components/ScreenErrorBoundary';
 
 // Wrap EVERY screen
@@ -1461,3 +1461,4 @@ describe('Migration Safety', () => {
 **PROOF PLAN:** 5 smoke flows + 2 contract tests + metrics to justify "Risk: Low" claim.
 
 **TOTAL EFFORT:** Week 1 (~40 hours), assumes 1 engineer full-time.
+

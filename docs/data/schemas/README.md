@@ -6,7 +6,7 @@ This directory contains detailed documentation for each database table (schema) 
 
 ## Technical Detail
 
-Database schemas are defined using Drizzle ORM in `server/src/models/`. This directory documents those schemas in human-readable format, explaining design decisions, constraints, and usage patterns.
+Database schemas are defined using Drizzle ORM in `apps/api/models/`. This directory documents those schemas in human-readable format, explaining design decisions, constraints, and usage patterns.
 
 ### Documentation Structure
 
@@ -26,7 +26,7 @@ Each schema should be documented with:
 ```markdown
 # [Table Name]
 
-**Location:** `server/src/models/[filename].ts`
+**Location:** `apps/api/models/[filename].ts`
 **Migration:** `drizzle/migrations/NNNN_*.sql`
 
 ## Purpose
@@ -100,7 +100,7 @@ Document user sessions including:
 
 ### 3. Application Data Schemas
 
-Document your application-specific tables based on your actual `server/src/models/` directory.
+Document your application-specific tables based on your actual `apps/api/models/` directory.
 
 ## Creating New Schema Documentation
 
@@ -109,7 +109,7 @@ When adding a new table:
 1. **Create migration:**
 
    ```bash
-   # Update server/src/models/new_table.ts
+   # Update apps/api/models/new_table.ts
    npm run db:generate
    ```text
 
@@ -185,7 +185,7 @@ When adding a new table:
 npm run db:studio  # Visual comparison
 
 # 2. Verify all tables are documented
-ls server/src/models/*.ts
+ls apps/api/models/*.ts
 ls docs/data/schemas/*.md
 
 # 3. Check relationship accuracy
@@ -288,3 +288,5 @@ Think of schema docs as the instruction manual for your database.
 - [Drizzle Schema Documentation](https://orm.drizzle.team/docs/sql-schema-declaration)
 - [PostgreSQL Data Types](https://www.postgresql.org/docs/current/datatype.html)
 - [Database Design Best Practices](https://www.postgresql.org/docs/current/ddl.html)
+
+

@@ -227,7 +227,7 @@ LOW RISK (12 instances): Test mocks, intentional type escape hatches
 #### ⚠️ ISSUE #22: No Code Splitting
 
 **Assessment:** PARTIALLY INCORRECT
-**Evidence:** LazyLoader EXISTS in codebase (client/lib/lazyLoader.ts)
+**Evidence:** LazyLoader EXISTS in codebase (apps/mobile/lib/lazyLoader.ts)
 **Problem:** Analysis claims no lazy loading but it exists
 **Reality:** May not be USED for screens, but infrastructure present
 **Recommendation:** REVISE - Check if LazyLoader is actually used
@@ -270,7 +270,7 @@ LOW RISK (12 instances): Test mocks, intentional type escape hatches
 #### ✅ ISSUE #27: Hardcoded JWT Secret
 
 **Assessment:** EXCELLENT - Critical security issue
-**Evidence:** server/middleware/auth.ts:5-6 verified
+**Evidence:** apps/api/middleware/auth.ts:5-6 verified
 **Severity Justified:** YES - Authentication bypass
 **Actionability:** EXCELLENT - Production check provided
 **ROI:** CRITICAL - Must fix
@@ -279,7 +279,7 @@ LOW RISK (12 instances): Test mocks, intentional type escape hatches
 #### ✅ ISSUE #28: Weak Password Validation
 
 **Assessment:** EXCELLENT - Valid security concern
-**Evidence:** shared/schema.ts verified
+**Evidence:** packages/contracts/schema.ts verified
 **Severity Justified:** YES - Brute force risk
 **Actionability:** EXCELLENT - Zod validation shown
 **ROI:** HIGH - Easy fix, big impact
@@ -805,3 +805,4 @@ Add to each critical issue:
 
 **RECOMMENDATION:** Proceed with Quick Wins + Medium Effort for A- grade (92/100)
 This brings analysis to world-class standard while respecting time constraints.
+

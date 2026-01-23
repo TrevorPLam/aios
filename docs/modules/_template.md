@@ -122,8 +122,8 @@ export interface ImportantType {
 
 ### Internal Dependencies
 
-- `../shared/utils` - [What we use from it]
-- `../shared/types` - [What types we import]
+- `../packages/contracts/utils` - [What we use from it]
+- `../packages/contracts/types` - [What types we import]
 
 ### Dependency Rationale
 
@@ -367,3 +367,4 @@ npm run health-check
 - [Link to external documentation]
 - [Link to related projects]
 - [Link to research or RFCs]
+

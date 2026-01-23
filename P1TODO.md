@@ -83,7 +83,7 @@ Uncertainty:
   - [x] Add secondary navigation to Planner module
   - [x] Add secondary navigation to Calendar module
   - [x] Test navigation consistency across modules
-- **References**: client/screens/CommandCenterScreen.tsx:494-559
+- **References**: apps/mobile/screens/CommandCenterScreen.tsx:494-559
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Date**: 2026-01-20
@@ -117,7 +117,7 @@ Uncertainty:
   - [ ] Add empty/error states for AI Assist actions
   - [ ] Test AI Assist actions on iOS with sample tasks
 - **References**:
-  - client/components/AIAssistSheet.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
   - docs/planning/MISSING_FEATURES.md
 - **Dependencies**: None
 - **Effort**: M
@@ -140,8 +140,8 @@ Uncertainty:
   - [ ] Add dependency graph summary in task details
   - [ ] Add tests for dependency validation logic
 - **References**:
-  - client/screens/TaskDetailScreen.tsx
-  - client/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
   - docs/planning/MISSING_FEATURES.md
 - **Dependencies**: None
 - **Effort**: M
@@ -165,8 +165,8 @@ Uncertainty:
   - [ ] Render recurring instances in day/week/month/agenda views
   - [ ] Add tests for recurrence expansion and exception handling
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/planning/MISSING_FEATURES.md
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
@@ -189,8 +189,8 @@ Uncertainty:
   - [ ] Update/cancel notifications on event edits/deletes
   - [ ] Add tests for reminder scheduling and notification lifecycle
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -214,9 +214,9 @@ Uncertainty:
   - [ ] Sync shared list changes and show collaborator indicators
   - [ ] Add tests for permission enforcement and merge behavior
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/screens/ListEditorScreen.tsx
-  - client/models/types.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/screens/ListEditorScreen.tsx
+  - apps/mobile/models/types.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -239,9 +239,9 @@ Uncertainty:
   - [ ] Show recurrence indicators and filters in Lists UI
   - [ ] Add tests for recurrence scheduling logic
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -264,8 +264,8 @@ Uncertainty:
   - [ ] Add location-based reminder support for list items
   - [ ] Add tests for reminder scheduling and notification lifecycle
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -288,8 +288,8 @@ Uncertainty:
   - [ ] Roll up completion state based on child items
   - [ ] Add tests for nested item rendering and completion logic
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
 - **Effort**: M
@@ -316,8 +316,8 @@ Uncertainty:
 - **References**:
   - MODULE_DETAILS.md
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
 - **Dependencies**: None
 - **Effort**: L
 
@@ -341,8 +341,8 @@ Uncertainty:
 - **References**:
   - MODULE_DETAILS.md
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
-  - client/components/AIAssistSheet.tsx
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
 - **Dependencies**: T-071
 - **Effort**: L
 
@@ -363,7 +363,7 @@ Uncertainty:
   - [x] Add recommendation settings in AIPreferences screen
   - [x] Show evidence/reasoning in recommendation cards
   - [x] Wire up RecommendationHistoryScreen to navigation on iOS
-- **References**: client/lib/recommendationEngine.ts, client/screens/RecommendationHistoryScreen.tsx
+- **References**: apps/mobile/lib/recommendationEngine.ts, apps/mobile/screens/RecommendationHistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Date**: 2026-01-20
@@ -395,9 +395,9 @@ Uncertainty:
   - [ ] Use preferences to configure AI behavior across all modules
   - [ ] Skip option that uses sensible defaults
 - **References**:
-  - Previous onboarding: client/screens/OnboardingWelcomeScreen.tsx (removed)
-  - AI preferences: client/screens/AIPreferencesScreen.tsx
-  - Context engine: client/lib/contextEngine.ts
+  - Previous onboarding: apps/mobile/screens/OnboardingWelcomeScreen.tsx (removed)
+  - AI preferences: apps/mobile/screens/AIPreferencesScreen.tsx
+  - Context engine: apps/mobile/lib/contextEngine.ts
 - **Dependencies**: None
 - **Effort**: L
 - **Note**: This is a complete redesign of onboarding from module selection to AI personality configuration. Platform-agnostic questionnaire. AGENT can verify Android/Web compatibility in follow-up.
@@ -421,7 +421,7 @@ Uncertainty:
   - [ ] Add recovery options (reload screen, go back, go home)
   - [ ] Test error boundary behavior with intentional errors on iOS
   - [ ] Add error logging for debugging
-- **References**: client/components/ErrorBoundary.tsx
+- **References**: apps/mobile/components/ErrorBoundary.tsx
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic error handling. AGENT can verify Android/Web compatibility in follow-up.
@@ -444,7 +444,7 @@ Uncertainty:
   - [ ] Phase 3: Add loading states to remaining module screens
   - [ ] Phase 4: Implement pull-to-refresh on list-based screens
   - [ ] Phase 5: Test loading states and measure performance improvement on iOS
-- **References**: client/screens/*.tsx
+- **References**: apps/mobile/screens/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic UI patterns. AGENT can verify Android/Web compatibility in follow-up.
@@ -490,7 +490,7 @@ Uncertainty:
   - [ ] Backend integration for group data
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.1)
-  - client/analytics/advanced/groups.ts
+  - apps/mobile/analytics/advanced/groups.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables B2B analytics use cases.
@@ -515,7 +515,7 @@ Uncertainty:
   - [ ] Funnel comparison (A/B cohorts)
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.2)
-  - client/analytics/advanced/funnels.ts
+  - apps/mobile/analytics/advanced/funnels.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: High value for product optimization.
@@ -539,7 +539,7 @@ Uncertainty:
   - [ ] Experiment state management
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.3)
-  - client/analytics/advanced/abTests.ts
+  - apps/mobile/analytics/advanced/abTests.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables data-driven experimentation.
@@ -563,8 +563,9 @@ Uncertainty:
   - [ ] Deep link tracking
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.4)
-  - client/analytics/advanced/screenTracking.ts
+  - apps/mobile/analytics/advanced/screenTracking.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (15-25 hours)
 - **Note**: Enhances useAnalyticsNavigation hook.
+
 

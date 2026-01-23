@@ -50,7 +50,7 @@ This guide helps you find the right documentation in our newly organized structu
 → **[BESTPR.md](./BESTPR.md)**
 - Repo-specific engineering guidance
 - Expected checks before delivery
-- Client/server/documentation conventions
+- Client/apps/api/documentation conventions
 
 ---
 
@@ -117,8 +117,8 @@ This guide helps you find the right documentation in our newly organized structu
 
 ```text
 docs/
-├── governance/             # Governance constitution, state, AI index
-│   ├── constitution.md
+├── .repo/policy/          # Governance policies (CONSTITUTION.md, PRINCIPLES.md, etc.)
+│   ├── CONSTITUTION.md
 │   ├── state.md
 │   └── AIG.md
 ├── processes/              # Documentation standards + QA
@@ -332,3 +332,4 @@ docs/
 ---
 
 *Need help? Open an issue on GitHub with the "documentation" label.*
+

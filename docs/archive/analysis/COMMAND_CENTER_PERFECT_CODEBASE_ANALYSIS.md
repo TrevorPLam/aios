@@ -69,7 +69,7 @@ The Command Center module demonstrates exceptional code quality across all evalu
 
 **1. Magic Numbers in UI** (Priority: Low)
 
-**Location:** `client/screens/RecommendationHistoryScreen.tsx:178`
+**Location:** `apps/mobile/screens/RecommendationHistoryScreen.tsx:178`
 
 ```typescript
 // Current
@@ -84,7 +84,7 @@ const history = await db.recommendations.getHistory(MAX_HISTORY_ITEMS);
 
 **2. Hardcoded Refresh Threshold** (Priority: Low)
 
-**Location:** `client/screens/CommandCenterScreen.tsx:274`
+**Location:** `apps/mobile/screens/CommandCenterScreen.tsx:274`
 
 ```typescript
 // Current
@@ -129,7 +129,7 @@ if (recs.length < MIN_RECOMMENDATIONS_THRESHOLD) {
 
 **1. Complex Conditional in Rule** (Priority: Medium)
 
-**Location:** `client/lib/recommendationEngine.ts:105`
+**Location:** `apps/mobile/lib/recommendationEngine.ts:105`
 
 ```typescript
 // Current
@@ -158,7 +158,7 @@ const hasRecentReflection = data.notes.some((note) => {
 
 **2. Inline Type Definition** (Priority: Low)
 
-**Location:** `client/screens/RecommendationHistoryScreen.tsx:86`
+**Location:** `apps/mobile/screens/RecommendationHistoryScreen.tsx:86`
 
 ```typescript
 // Current
@@ -183,7 +183,7 @@ function StatisticsCard({ stats }: { stats: StatisticsData }) {
 
 **3. Duplicate Status Mapping** (Priority: Low)
 
-**Location:** `client/screens/RecommendationHistoryScreen.tsx:51-79`
+**Location:** `apps/mobile/screens/RecommendationHistoryScreen.tsx:51-79`
 
 The status icon and color mapping could be combined into a single configuration object:
 
@@ -226,7 +226,7 @@ function getStatusColor(status: RecommendationStatus, theme: any): string {
 
 **1. Date Comparison Edge Case** (Priority: Low)
 
-**Location:** `client/lib/recommendationEngine.ts:112`
+**Location:** `apps/mobile/lib/recommendationEngine.ts:112`
 
 ```typescript
 // Current
@@ -251,7 +251,7 @@ return all.filter((r) => {
 
 **2. Race Condition in Auto-Refresh** (Priority: Low)
 
-**Location:** `client/screens/CommandCenterScreen.tsx:274`
+**Location:** `apps/mobile/screens/CommandCenterScreen.tsx:274`
 
 ```typescript
 // Current
@@ -345,13 +345,13 @@ useEffect(() => {
 **1. Status Mapping Duplication** (Priority: Low)
 
 ### Locations
-- `client/screens/RecommendationHistoryScreen.tsx:51-79`
-- Similar pattern in `client/screens/RecommendationDetailScreen.tsx` (if exists)
+- `apps/mobile/screens/RecommendationHistoryScreen.tsx:51-79`
+- Similar pattern in `apps/mobile/screens/RecommendationDetailScreen.tsx` (if exists)
 
 **Opportunity:** Create shared utility:
 
 ```typescript
-// client/utils/recommendationHelpers.ts
+// apps/mobile/utils/recommendationHelpers.ts
 export const RECOMMENDATION_STATUS_CONFIG = {
   accepted: { icon: "check-circle", colorKey: "success" },
   declined: { icon: "x-circle", colorKey: "error" },
@@ -388,7 +388,7 @@ export function getRecommendationColor(status: RecommendationStatus, theme: any)
 
 **1. Rule Priority Constants** (Priority: Medium)
 
-**Location:** `client/lib/recommendationEngine.ts`
+**Location:** `apps/mobile/lib/recommendationEngine.ts`
 
 ```typescript
 // Current - Magic numbers scattered
@@ -422,7 +422,7 @@ const suggestDueDateReview: RecommendationRule = {
 
 **2. Recommendation Filter Helper** (Priority: Low)
 
-**Location:** `client/storage/database.ts`
+**Location:** `apps/mobile/storage/database.ts`
 
 ```typescript
 // Current - Filter logic duplicated
@@ -459,12 +459,12 @@ async getByModule(module: ModuleType) {
 
 **3. React Component Extraction** (Priority: Low)
 
-**Location:** `client/screens/RecommendationHistoryScreen.tsx:178-230`
+**Location:** `apps/mobile/screens/RecommendationHistoryScreen.tsx:178-230`
 
 The filter chips could be extracted to reusable component:
 
 ```typescript
-// client/components/FilterChipList.tsx
+// apps/mobile/components/FilterChipList.tsx
 interface FilterChipListProps<T> {
   options: T[];
   selected: T;
@@ -917,3 +917,4 @@ This module sets a **gold standard** for AIOS development and should serve as a 
 **Date:** January 16, 2026
 **Version:** 1.0
 **Classification:** Internal - Quality Assurance
+

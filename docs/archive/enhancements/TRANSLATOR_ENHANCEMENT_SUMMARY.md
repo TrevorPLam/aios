@@ -266,8 +266,8 @@ Added 30+ new style definitions:
 
 ```text
 Modified:
-- client/screens/TranslatorScreen.tsx (+1,097 lines)
-- client/storage/database.ts (+9 lines for exportToJSON)
+- apps/mobile/screens/TranslatorScreen.tsx (+1,097 lines)
+- apps/mobile/storage/database.ts (+9 lines for exportToJSON)
 
 No other files modified.
 ```text
@@ -307,3 +307,4 @@ Successfully delivered a production-ready, comprehensively enhanced TranslatorSc
 - Excellent user experience
 
 **Total Enhancement**: ~1,100 lines of well-documented, type-safe, performant code.
+

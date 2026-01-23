@@ -32,7 +32,7 @@ Mark categories complete as you finish them.
 
 ### Day 1-2: Define Event Payload Types
 
-**Files:** `client/lib/eventBus.ts`
+**Files:** `apps/mobile/lib/eventBus.ts`
 
 ### Tasks
 
@@ -113,7 +113,7 @@ eventBus.on(EVENT_TYPES.NOTE_CREATED, (payload) => {
 **Files:** All files using eventBus.emit()
 
 ### Tasks (3)
-1. Find all `eventBus.emit()` calls: `grep -r "eventBus.emit" client/`
+1. Find all `eventBus.emit()` calls: `grep -r "eventBus.emit" apps/mobile/`
 2. Update to use EVENT_TYPES enum and correct payload shape
 3. Ensure all emit calls match discriminated union
 
@@ -139,7 +139,7 @@ eventBus.emit(EVENT_TYPES.NOTE_CREATED, { note: newNote });
 
 ### Day 1: Create useTheme Migration Utility
 
-**Files:** `client/hooks/useTheme.ts`
+**Files:** `apps/mobile/hooks/useTheme.ts`
 
 ### Tasks (4)
 1. Extend useTheme hook to return all required properties
@@ -154,7 +154,7 @@ eventBus.emit(EVENT_TYPES.NOTE_CREATED, { note: newNote });
 
 ### Day 2-3: Migrate Components (Batch 1)
 
-**Files:** `client/components/miniModes/*`
+**Files:** `apps/mobile/components/miniModes/*`
 
 ### Tasks (5)
 1. Replace `import { Colors } from '@/constants/theme'`
@@ -182,7 +182,7 @@ const { theme } = useTheme();
 
 ### Day 4-5: Migrate Screens (Batch 2)
 
-**Files:** `client/screens/*` (Priority screens first)
+**Files:** `apps/mobile/screens/*` (Priority screens first)
 
 ### Tasks (6)
 1. Migrate high-traffic screens first:
@@ -205,7 +205,7 @@ const { theme } = useTheme();
 
 ### Day 1-2: Fix Model Interfaces
 
-**Files:** `client/models/types.ts`, affected files
+**Files:** `apps/mobile/models/types.ts`, affected files
 
 ### Tasks (7)
 1. Audit each interface against actual usage
@@ -278,7 +278,7 @@ If property used in >20 places: Rename database field
 
 ### Day 1: Fix Server Types
 
-**Files:** `server/*`
+**Files:** `apps/api/*`
 
 ### Tasks (10)
 1. Verify all Settings creation includes required fields
@@ -413,3 +413,4 @@ If any category causes major issues:
 - Each commit should be under 500 lines for reviewability
 - Take breaks - type refactoring is mentally taxing
 - Ask for help if stuck on any category
+

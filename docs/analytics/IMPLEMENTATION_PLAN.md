@@ -24,7 +24,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 1.1: Event Inspector UI (CRITICAL)
 
-**File:** `client/analytics/observability/inspector.ts`
+**File:** `apps/mobile/analytics/observability/inspector.ts`
 **Effort:** 20-30 hours
 **TODOs:** 6
 **Priority:** P0
@@ -54,7 +54,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 1.2: Metrics Collection (CRITICAL)
 
-**File:** `client/analytics/observability/metrics.ts`
+**File:** `apps/mobile/analytics/observability/metrics.ts`
 **Effort:** 20-30 hours
 **TODOs:** 5
 **Priority:** P0
@@ -83,7 +83,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 1.3: Consent Management (REQUIRED for GDPR)
 
-**File:** `client/analytics/privacy/consent.ts`
+**File:** `apps/mobile/analytics/privacy/consent.ts`
 **Effort:** 15-20 hours
 **TODOs:** 5
 **Priority:** P0
@@ -112,7 +112,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 1.4: Data Retention Policies
 
-**File:** `client/analytics/privacy/retention.ts`
+**File:** `apps/mobile/analytics/privacy/retention.ts`
 **Effort:** 15-20 hours
 **TODOs:** 3
 **Priority:** P1
@@ -138,7 +138,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 1.5: Data Deletion API
 
-**File:** `client/analytics/privacy/deletion.ts`
+**File:** `apps/mobile/analytics/privacy/deletion.ts`
 **Effort:** 10-15 hours
 **TODOs:** 4
 **Priority:** P1
@@ -194,7 +194,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 2.1: Group Analytics
 
-**File:** `client/analytics/advanced/groups.ts`
+**File:** `apps/mobile/analytics/advanced/groups.ts`
 **Effort:** 25-35 hours
 **TODOs:** 5
 **Priority:** P1
@@ -221,7 +221,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 2.2: Funnel Tracking
 
-**File:** `client/analytics/advanced/funnels.ts`
+**File:** `apps/mobile/analytics/advanced/funnels.ts`
 **Effort:** 25-35 hours
 **TODOs:** 5
 **Priority:** P1
@@ -249,7 +249,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 2.3: A/B Test Integration
 
-**File:** `client/analytics/advanced/abTests.ts`
+**File:** `apps/mobile/analytics/advanced/abTests.ts`
 **Effort:** 25-35 hours
 **TODOs:** 5
 **Priority:** P1
@@ -276,7 +276,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 2.4: Screen Tracking
 
-**File:** `client/analytics/advanced/screenTracking.ts`
+**File:** `apps/mobile/analytics/advanced/screenTracking.ts`
 **Effort:** 15-25 hours
 **TODOs:** 5
 **Priority:** P1
@@ -303,7 +303,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 2.5: Schema Versioning
 
-**File:** `client/analytics/schema/versioning.ts`
+**File:** `apps/mobile/analytics/schema/versioning.ts`
 **Effort:** 10-20 hours
 **TODOs:** 5
 **Priority:** P2
@@ -339,7 +339,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 3.1: Feature Flags
 
-**File:** `client/analytics/production/featureFlags.ts`
+**File:** `apps/mobile/analytics/production/featureFlags.ts`
 **Effort:** 30-40 hours
 **TODOs:** 3
 **Priority:** P2
@@ -368,7 +368,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 3.2: Plugin System
 
-**File:** `client/analytics/plugins/manager.ts`
+**File:** `apps/mobile/analytics/plugins/manager.ts`
 **Effort:** 25-35 hours
 **TODOs:** 5
 **Priority:** P2
@@ -395,7 +395,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 3.3: Multi-Destination Routing
 
-**File:** `client/analytics/plugins/destinations.ts`
+**File:** `apps/mobile/analytics/plugins/destinations.ts`
 **Effort:** 20-30 hours
 **TODOs:** 5
 **Priority:** P2
@@ -422,7 +422,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 3.4: Production Monitoring
 
-**File:** `client/analytics/production/monitoring.ts`
+**File:** `apps/mobile/analytics/production/monitoring.ts`
 **Effort:** 30-40 hours
 **TODOs:** 4
 **Priority:** P2
@@ -449,7 +449,7 @@ This document provides a detailed implementation plan for completing the analyti
 
 ### Task 3.5: CLI Tools
 
-**File:** `client/analytics/devtools/cli.ts`
+**File:** `apps/mobile/analytics/devtools/cli.ts`
 **Effort:** 15-25 hours
 **TODOs:** 1
 **Priority:** P3
@@ -609,3 +609,4 @@ npm install --save-dev @types/pako
 **Last Updated:** 2026-01-20
 **Status:** Proposed
 **Owner:** AGENT
+

@@ -29,9 +29,9 @@ This document provides a comprehensive "Perfect Codebase Standards" analysis of 
 ### Evidence
 
 ```text
-client/screens/NotebookScreen.tsx    - UI Layer (1,041 lines)
-client/storage/database.ts           - Data Layer (notes: 175-592)
-client/storage/__tests__/notes.test.ts - Test Suite (800 lines)
+apps/mobile/screens/NotebookScreen.tsx    - UI Layer (1,041 lines)
+apps/mobile/storage/database.ts           - Data Layer (notes: 175-592)
+apps/mobile/storage/__tests__/notes.test.ts - Test Suite (800 lines)
 ```text
 
 **Recommendation:** ✅ No changes needed
@@ -1162,7 +1162,7 @@ The module now rivals Notion, Obsidian, and Bear for core functionality, with un
 ### A. Recommended getSorted Fix
 
 ```typescript
-// client/storage/database.ts (line 313)
+// apps/mobile/storage/database.ts (line 313)
 async getSorted(
  sortBy: "recent" | "alphabetical" | "tags" | "wordCount" = "recent",
   order: "asc" | "desc" = "desc",
@@ -1183,7 +1183,7 @@ async getSorted(
 ### B. Recommended addTag Validation
 
 ```typescript
-// client/storage/database.ts (line 429)
+// apps/mobile/storage/database.ts (line 429)
 async addTag(noteId: string, tag: string): Promise<void> {
   const note = await this.get(noteId);
   if (!note) {
@@ -1209,7 +1209,7 @@ async addTag(noteId: string, tag: string): Promise<void> {
 ### C. Recommended Word Count Helper
 
 ```typescript
-// client/storage/database.ts (after line 182, in notes object)
+// apps/mobile/storage/database.ts (after line 182, in notes object)
 notes: {
   /**
    * Calculate word count from markdown text
@@ -1226,3 +1226,4 @@ notes: {
 ---
 
 ### End of Analysis
+

@@ -51,7 +51,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 - Provide haptic feedback
 - Integrate with native device APIs (contacts, gallery, audio)
 
-**Location:** `/client/`
+**Location:** `/apps/mobile/`
 
 ### Key Components
 - Screens (UI)
@@ -72,7 +72,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 - Future: Database operations with Drizzle ORM
 - Future: WebSocket for real-time messaging
 
-**Location:** `/server/`
+**Location:** `/apps/api/`
 
 ### Key Components (2)
 - Routes (API endpoints)
@@ -88,7 +88,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 - Zod validation schemas
 - Shared constants
 
-**Location:** `/shared/`
+**Location:** `/packages/contracts/`
 
 ### Key Components (3)
 - `schema.ts` - Drizzle ORM schema (future)
@@ -107,21 +107,21 @@ This document shows the internal structure of AIOS - how it's organized into com
 │                                                               │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │                    UI Layer                           │  │
-│  │  /client/screens/ (43 screens)                       │  │
-│  │  /client/components/ (25 reusable components)        │  │
-│  │  /client/navigation/ (React Navigation config)       │  │
+│  │  /apps/mobile/screens/ (43 screens)                       │  │
+│  │  /apps/mobile/components/ (25 reusable components)        │  │
+│  │  /apps/mobile/navigation/ (React Navigation config)       │  │
 │  └────────────────────┬─────────────────────────────────┘  │
 │                       │ Calls                               │
 │  ┌────────────────────▼─────────────────────────────────┐  │
 │  │              Business Logic Layer                     │  │
-│  │  /client/hooks/ (Custom hooks)                       │  │
-│  │  /client/context/ (React Context providers)          │  │
-│  │  /client/utils/ (Helper functions, seed data)        │  │
+│  │  /apps/mobile/hooks/ (Custom hooks)                       │  │
+│  │  /apps/mobile/context/ (React Context providers)          │  │
+│  │  /apps/mobile/utils/ (Helper functions, seed data)        │  │
 │  └────────────────────┬─────────────────────────────────┘  │
 │                       │ Calls                               │
 │  ┌────────────────────▼─────────────────────────────────┐  │
 │  │                Storage Layer                          │  │
-│  │  /client/storage/database.ts                         │  │
+│  │  /apps/mobile/storage/database.ts                         │  │
 │  │  - 200+ methods for CRUD operations                  │  │
 │  │  - Organized by module (notes, tasks, events, etc.)  │  │
 │  └────────────────────┬─────────────────────────────────┘  │
@@ -143,7 +143,7 @@ This document shows the internal structure of AIOS - how it's organized into com
 
 ### Structure
 ```text
-/client/screens/
+/apps/mobile/screens/
 ├── CommandCenterScreen.tsx        # AI recommendations
 ├── NotebookScreen.tsx              # Notes list
 ├── NoteEditorScreen.tsx            # Note detail
@@ -234,7 +234,7 @@ export const NotebookScreen = ({ navigation }: Props) => {
 
 ### Structure (2)
 ```text
-/client/components/
+/apps/mobile/components/
 ├── Button.tsx                  # Primary button
 ├── Card.tsx                    # Container card
 ├── QuickCaptureOverlay.tsx     # Global capture menu
@@ -254,7 +254,7 @@ export const NotebookScreen = ({ navigation }: Props) => {
 
 ### Example
 ```typescript
-// /client/components/Button.tsx
+// /apps/mobile/components/Button.tsx
 export const Button = ({ title, onPress, variant = 'primary' }: ButtonProps) => {
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -279,7 +279,7 @@ export const Button = ({ title, onPress, variant = 'primary' }: ButtonProps) => 
 
 ### Structure (3)
 ```text
-/client/navigation/
+/apps/mobile/navigation/
 └── AppNavigator.tsx       # React Navigation setup
 ```text
 
@@ -316,7 +316,7 @@ const Stack = createNativeStackNavigator();
 
 ### Structure (4)
 ```text
-/client/hooks/
+/apps/mobile/hooks/
 ├── useDebounce.ts         # Debounce inputs
 ├── useSearch.ts           # Search logic
 ├── useFilter.ts           # Filtering logic
@@ -325,7 +325,7 @@ const Stack = createNativeStackNavigator();
 
 ### Example (2)
 ```typescript
-// /client/hooks/useDebounce.ts
+// /apps/mobile/hooks/useDebounce.ts
 export const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -347,7 +347,7 @@ export const useDebounce = <T,>(value: T, delay: number): T => {
 
 ### Structure (5)
 ```text
-/client/context/
+/apps/mobile/context/
 └── HandoffContext.tsx     # Module handoff state
 ```text
 
@@ -362,7 +362,7 @@ export const useDebounce = <T,>(value: T, delay: number): T => {
 
 ### Structure (6)
 ```text
-/client/utils/
+/apps/mobile/utils/
 ├── helpers.ts             # General utilities
 ├── seedData.ts            # Demo data for development
 ├── contactHelpers.ts      # Contact operations
@@ -375,7 +375,7 @@ export const useDebounce = <T,>(value: T, delay: number): T => {
 
 **Purpose:** Provide CRUD operations for all modules, abstracting AsyncStorage
 
-**File:** `/client/storage/database.ts` (5,000+ lines, 200+ methods)
+**File:** `/apps/mobile/storage/database.ts` (5,000+ lines, 200+ methods)
 
 ### Structure (7)
 ```typescript
@@ -470,7 +470,7 @@ export const saveNote = async (note: Note): Promise<void> => {
 ### Test Coverage
 - 659 unit tests total
 - 100% coverage on 14 production modules
-- Tests in `/client/storage/__tests__/`
+- Tests in `/apps/mobile/storage/__tests__/`
 
 ---
 
@@ -498,11 +498,11 @@ Module Name (e.g., Notebook)
 ### Example: Notebook Module
 
 #### Files
-- `/client/screens/NotebookScreen.tsx` - List all notes
-- `/client/screens/NoteEditorScreen.tsx` - Create/edit note
-- `/client/screens/NotebookSettingsScreen.tsx` - Notebook preferences
-- `/client/storage/database.ts` - 29 note-related methods
-- `/client/storage/__tests__/notebook.test.ts` - 49 unit tests
+- `/apps/mobile/screens/NotebookScreen.tsx` - List all notes
+- `/apps/mobile/screens/NoteEditorScreen.tsx` - Create/edit note
+- `/apps/mobile/screens/NotebookSettingsScreen.tsx` - Notebook preferences
+- `/apps/mobile/storage/database.ts` - 29 note-related methods
+- `/apps/mobile/storage/__tests__/notebook.test.ts` - 49 unit tests
 
 ### Data Flow
 1. User opens NotebookScreen
@@ -530,7 +530,7 @@ Module Name (e.g., Notebook)
 │                                                               │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │                   API Layer                           │  │
-│  │  /server/routes.ts                                    │  │
+│  │  /apps/api/routes.ts                                    │  │
 │  │  - REST endpoints for all modules                    │  │
 │  │  - Authentication endpoints                           │  │
 │  │  - Translation proxy                                  │  │
@@ -538,7 +538,7 @@ Module Name (e.g., Notebook)
 │                       │ Passes through                      │
 │  ┌────────────────────▼─────────────────────────────────┐  │
 │  │              Middleware Layer                         │  │
-│  │  /server/middleware/                                  │  │
+│  │  /apps/api/middleware/                                  │  │
 │  │  - auth.ts (JWT validation)                          │  │
 │  │  - validation.ts (Zod schemas)                       │  │
 │  │  - errorHandler.ts (Error responses)                 │  │
@@ -546,7 +546,7 @@ Module Name (e.g., Notebook)
 │                       │ Calls                               │
 │  ┌────────────────────▼─────────────────────────────────┐  │
 │  │               Storage Layer                           │  │
-│  │  /server/storage.ts                                   │  │
+│  │  /apps/api/storage.ts                                   │  │
 │  │  - In-memory storage (MVP)                           │  │
 │  │  - Future: Drizzle ORM + PostgreSQL                  │  │
 │  └───────────────────────────────────────────────────────┘  │
@@ -556,7 +556,7 @@ Module Name (e.g., Notebook)
 
 ### API Layer
 
-**File:** `/server/routes.ts`
+**File:** `/apps/api/routes.ts`
 
 ### Structure (8)
 ```typescript
@@ -582,9 +582,9 @@ router.post('/api/recommendations', authMiddleware, validateRecommendation, crea
 ### Middleware Layer
 
 #### Files (2)
-- `/server/middleware/auth.ts` - JWT validation
-- `/server/middleware/validation.ts` - Zod validation
-- `/server/middleware/errorHandler.ts` - Error responses
+- `/apps/api/middleware/auth.ts` - JWT validation
+- `/apps/api/middleware/validation.ts` - Zod validation
+- `/apps/api/middleware/errorHandler.ts` - Error responses
 
 ### Responsibilities (10)
 - Authenticate requests
@@ -594,7 +594,7 @@ router.post('/api/recommendations', authMiddleware, validateRecommendation, crea
 
 ### Example (3)
 ```typescript
-// /server/middleware/auth.ts
+// /apps/api/middleware/auth.ts
 export const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
 
@@ -614,7 +614,7 @@ export const authMiddleware = (req, res, next) => {
 
 ### Storage Layer (2)
 
-**File:** `/server/storage.ts`
+**File:** `/apps/api/storage.ts`
 
 **Current:** In-memory storage (Maps/Arrays)
 **Future:** Drizzle ORM + PostgreSQL
@@ -628,7 +628,7 @@ const tasks = new Map<string, Task[]>();
 
 // Future: Database operations
 import { db } from './db';
-import { notes, tasks } from '@shared/schema';
+import { notes, tasks } from '@packages/contracts/schema';
 
 export const getUserNotes = async (userId: string) => {
   return await db.select().from(notes).where(eq(notes.userId, userId));
@@ -728,30 +728,30 @@ const notes = await db
 
 ```bash
 # Check screens
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/
 
 # Check components
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/components/
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/components/
 
 # Check storage layer
-wc -l /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
+wc -l /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts
 
 # Check tests
-find /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/__tests__ -name "*.test.ts"
+find /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/__tests__ -name "*.test.ts"
 
 # Check backend
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/
 ```text
 
 ### Verify Module Pattern
 
 ```bash
 # Example: Notebook module
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/Notebook*
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/NoteEditor*
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/Notebook*
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/NoteEditor*
 
 # Check storage methods
-grep -A 5 "export const saveNote" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
+grep -A 5 "export const saveNote" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts
 
 # Check tests (2)
 npm test -- notebook
@@ -779,3 +779,4 @@ npm test -- calendar
 - [Deployment View](07_deployment.md) - How building blocks are deployed
 - [Solution Strategy](04_solution_strategy.md) - Why this structure
 - [Code Repository](../../../) - Browse actual code
+

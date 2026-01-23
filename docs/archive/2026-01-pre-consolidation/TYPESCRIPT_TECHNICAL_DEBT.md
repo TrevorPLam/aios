@@ -18,8 +18,8 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 
 ### Files Affected
 
-- client/lib/searchIndex.ts (43 errors)
-- client/lib/memoryManager.ts (2 errors)
+- apps/mobile/lib/searchIndex.ts (43 errors)
+- apps/mobile/lib/memoryManager.ts (2 errors)
 - Other event listeners across codebase
 
 ### Solution
@@ -43,8 +43,8 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 
 ### Files Affected (2)
 
-- client/components/miniModes/* (all files)
-- client/screens/* (multiple screens)
+- apps/mobile/components/miniModes/* (all files)
+- apps/mobile/screens/* (multiple screens)
 - Any component using Colors/Typography/Shadows directly
 
 ### Solution (2)
@@ -68,8 +68,8 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 
 ### Files Affected (3)
 
-- client/screens/AttentionCenterScreen.tsx
-- client/screens/SettingsMenuScreen.tsx
+- apps/mobile/screens/AttentionCenterScreen.tsx
+- apps/mobile/screens/SettingsMenuScreen.tsx
 - Other screens with navigation.navigate()
 
 ### Solution (3)
@@ -139,10 +139,10 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 
 ### Examples (3)
 
-- server/routes.ts: Settings object missing required fields ✅ FIXED
-- server/routes.ts: Query parameter type assertions instead of proper validation
-- server/storage.ts: Duplicate/malformed code ✅ FIXED
-- server/index.ts: Implicit any types ✅ FIXED
+- apps/api/routes.ts: Settings object missing required fields ✅ FIXED
+- apps/api/routes.ts: Query parameter type assertions instead of proper validation
+- apps/api/storage.ts: Duplicate/malformed code ✅ FIXED
+- apps/api/index.ts: Implicit any types ✅ FIXED
 
 ### Impact (6)
 
@@ -167,7 +167,7 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 - Use `// @ts-expect-error` with explanatory comments for known issues
 - Use type assertions (`as`) only when type is correct but TS can't infer it
 - Document all suppressions in this file
-- **Note:** Code review flagged type assertions in server/routes.ts - plan to replace with Zod validation
+- **Note:** Code review flagged type assertions in apps/api/routes.ts - plan to replace with Zod validation
 
 ### Long Term (Next Quarter)
 
@@ -202,6 +202,7 @@ that should be addressed in a planned refactor to ensure long-term maintainabili
 ## Code Review Feedback (Nitpicks for Future)
 
 1. **database export alias** - Document migration path in code comments
-2. **server/routes.ts type assertions** - Replace with Zod validators
+2. **apps/api/routes.ts type assertions** - Replace with Zod validators
 3. **textTertiary naming** - Consider renaming to textPlaceholder
 4. **ESLint scope** - Verify .eslintignore covers build artifacts
+

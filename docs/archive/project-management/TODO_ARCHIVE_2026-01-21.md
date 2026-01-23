@@ -58,7 +58,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add secondary navigation to Planner module
   - [x] Add secondary navigation to Calendar module
   - [x] Test navigation consistency across modules
-- **References**: client/screens/CommandCenterScreen.tsx:494-559
+- **References**: apps/mobile/screens/CommandCenterScreen.tsx:494-559
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Date**: 2026-01-20
@@ -92,7 +92,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add empty/error states for AI Assist actions
   - [ ] Test AI Assist actions on iOS with sample tasks
 - **References**:
-  - client/components/AIAssistSheet.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
   - docs/planning/MISSING_FEATURES.md
 - **Dependencies**: None
 - **Effort**: M
@@ -115,8 +115,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add dependency graph summary in task details
   - [ ] Add tests for dependency validation logic
 - **References**:
-  - client/screens/TaskDetailScreen.tsx
-  - client/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
   - docs/planning/MISSING_FEATURES.md
 - **Dependencies**: None
 - **Effort**: M
@@ -139,9 +139,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add recurrence-aware filters (overdue vs recurring)
   - [ ] Add tests for recurrence scheduling logic
 - **References**:
-  - client/screens/TaskDetailScreen.tsx
-  - client/screens/PlannerScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
+  - packages/contracts/schema.ts
 - **Dependencies**: None
 - **Effort**: L
 
@@ -163,10 +163,10 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add cross-module tests for task creation flows
   - [ ] Document new integration hooks in module guides
 - **References**:
-  - client/screens/NotebookScreen.tsx
-  - client/screens/ListsScreen.tsx
-  - client/screens/EmailScreen.tsx
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/NotebookScreen.tsx
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/archive/2026-01-pre-consolidation/F&F-BACKUP.md
 - **Dependencies**: None
 - **Effort**: L
@@ -188,9 +188,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Sync scheduled tasks to Calendar with bi-directional updates
   - [ ] Add tests for scheduling conflicts and reschedule logic
 - **References**:
-  - client/screens/PlannerScreen.tsx
-  - client/screens/TaskDetailScreen.tsx
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -212,9 +212,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add activity feed for assignment and status changes
   - [ ] Add tests for permission enforcement and assignment rendering
 - **References**:
-  - client/screens/PlannerScreen.tsx
-  - client/screens/TaskDetailScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -236,8 +236,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Provide bulk triage actions (schedule, prioritize, assign)
   - [ ] Add tests for parsing and triage flows
 - **References**:
-  - client/screens/PlannerScreen.tsx
-  - client/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -263,8 +263,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Render recurring instances in day/week/month/agenda views
   - [ ] Add tests for recurrence expansion and exception handling
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/planning/MISSING_FEATURES.md
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
@@ -287,8 +287,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Update/cancel notifications on event edits/deletes
   - [ ] Add tests for reminder scheduling and notification lifecycle
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -310,8 +310,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Implement calendar sharing flow (share link or invite)
   - [ ] Surface RSVP status in event details and list cards
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -333,7 +333,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Handle permissions and sync failure states
   - [ ] Add tests for sync mapping and conflict resolution
 - **References**:
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -355,7 +355,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Provide preview + user confirmation before save
   - [ ] Add tests for common natural language patterns
 - **References**:
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -377,7 +377,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Surface calendar insights (meeting load, focus hours, trends)
   - [ ] Log AI actions to History for auditability
 - **References**:
-  - client/components/AIAssistSheet.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
   - docs/planning/MISSING_FEATURES.md
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
@@ -400,8 +400,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add optional weather context for outdoor events
   - [ ] Add tests for time zone conversion edge cases
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -423,8 +423,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Render "Join Meeting" action on event details
   - [ ] Add tests for link validation and rendering
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -446,7 +446,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add bulk confirmation and undo safety prompts
   - [ ] Add tests for bulk edit operations
 - **References**:
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -468,8 +468,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Allow booking requests to create tentative events with confirmation
   - [ ] Add tests for availability calculations and link booking flow
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -491,8 +491,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Filter views by calendar and show combined agenda
   - [ ] Add tests for calendar visibility and subscription updates
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -518,9 +518,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Sync shared list changes and show collaborator indicators
   - [ ] Add tests for permission enforcement and merge behavior
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/screens/ListEditorScreen.tsx
-  - client/models/types.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/screens/ListEditorScreen.tsx
+  - apps/mobile/models/types.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -543,9 +543,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Show recurrence indicators and filters in Lists UI
   - [ ] Add tests for recurrence scheduling logic
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -568,8 +568,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add location-based reminder support for list items
   - [ ] Add tests for reminder scheduling and notification lifecycle
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -592,8 +592,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Roll up completion state based on child items
   - [ ] Add tests for nested item rendering and completion logic
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
 - **Effort**: M
@@ -615,8 +615,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Handle permission denial and error states
   - [ ] Add tests for voice input flow
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/screens/ListEditorScreen.tsx
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/screens/ListEditorScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -639,8 +639,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Log insights/suggestions to History for auditability
   - [ ] Add tests for insights calculations
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
 - **Effort**: M
@@ -669,7 +669,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**:
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5)
-  - server/**tests**/analytics.test.ts (NEW FILE)
+  - apps/api/**tests**/analytics.test.ts (NEW FILE)
 - **Dependencies**: None (T-081-T-084 already complete)
 - **Effort**: M (4-6 hours)
 - **Note**: Last step for Phase 0. Once complete, unblocks Phase 1 (T-071).
@@ -691,9 +691,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Render attachments in list detail view with download/share actions
   - [ ] Add tests for attachment persistence and rendering
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -715,8 +715,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Provide audit log of rule executions
   - [ ] Add tests for rule evaluation and side effects
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -738,8 +738,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Support dynamic counts and empty state messaging per view
   - [ ] Add tests for filter persistence and query accuracy
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -768,8 +768,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**:
   - MODULE_DETAILS.md
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
 - **Dependencies**: None
 - **Effort**: L
 
@@ -793,8 +793,8 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**:
   - MODULE_DETAILS.md
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
-  - client/components/AIAssistSheet.tsx
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
 - **Dependencies**: T-071
 - **Effort**: L
 
@@ -817,7 +817,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**:
   - MODULE_DETAILS.md
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
+  - apps/mobile/screens/EmailScreen.tsx
 - **Dependencies**: T-071
 - **Effort**: M
 
@@ -839,8 +839,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add tests for mailbox transitions and rule application
 - **References**:
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
 - **Dependencies**: T-071
 - **Effort**: M
 
@@ -863,9 +863,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add tests for AI action routing and metadata creation
 - **References**:
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/components/AIAssistSheet.tsx
-  - client/lib/contextEngine.ts
-  - client/screens/EmailScreen.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
+  - apps/mobile/lib/contextEngine.ts
+  - apps/mobile/screens/EmailScreen.tsx
 - **Dependencies**: T-072
 - **Effort**: M
 
@@ -886,8 +886,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Provide filter UI for unread, starred, priority, and attachments
   - [ ] Add tests for search parsing and query execution
 - **References**:
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: T-071
 - **Effort**: M
@@ -909,8 +909,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Surface snoozed/follow-up queues with counts
   - [ ] Add tests for reminder scheduling and queue transitions
 - **References**:
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: T-071
 - **Effort**: M
@@ -938,12 +938,12 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Implement proper time picker in AlertDetailScreen.tsx for iOS
   - [ ] Test time selection on iOS
   - [ ] Remove TODO comment at line 277
-- **References**: client/screens/AlertDetailScreen.tsx:277
+- **References**: apps/mobile/screens/AlertDetailScreen.tsx:277
   - [x] Install @react-native-community/datetimepicker (already installed)
   - [x] Implement proper time picker in AlertDetailScreen.tsx (already implemented)
   - [x] Test time selection on both iOS and Android (implemented with platform logic)
   - [x] Remove TODO comment at line 277 (no TODO found)
-- **References**: client/screens/AlertDetailScreen.tsx:32-34, 291-318, 451-459
+- **References**: apps/mobile/screens/AlertDetailScreen.tsx:32-34, 291-318, 451-459
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Time picker was already fully implemented in previous work. Verified functionality includes handleTimeChange, openTimePicker, and DateTimePicker component integration with haptic feedback.
@@ -964,7 +964,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add web-compatible time picker if needed
   - [x] Preserve iOS functionality
   - [x] Test on Android and Web platforms
-- **References**: client/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
+- **References**: apps/mobile/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
 - **Dependencies**: T-001A
 - **Effort**: S
 - **Completion Notes**: Added web-specific time input with validation and ensured swipe/selection logic remains intact for native platforms.
@@ -988,7 +988,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Test gesture on iOS (manual verification recommended)
   - [x] Maintain button alternative for accessibility (button always available)
   - [x] Remove TODO comment at line 63 (no TODO found in file)
-- **References**: client/components/PersistentSidebar.tsx:111-196
+- **References**: apps/mobile/components/PersistentSidebar.tsx:111-196
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Notes**: Edge swipe gesture was already fully implemented in previous work. PanResponder handles gesture recognition, animation, haptic feedback, and edge cases. Comprehensive JSDoc documentation included.
@@ -1009,7 +1009,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add web-compatible swipe gesture if needed
   - [x] Preserve iOS functionality
   - [x] Verify button alternative works on all platforms
-- **References**: client/components/PersistentSidebar.tsx:111-196, T-002A (2026-01-19)
+- **References**: apps/mobile/components/PersistentSidebar.tsx:111-196, T-002A (2026-01-19)
 - **Dependencies**: T-002A
 - **Effort**: S
 - **Completion Notes**: Disabled swipe gesture on web while keeping the button entry point and native swipe behavior unchanged.
@@ -1032,7 +1032,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Show error message if route doesn't exist (showNavigationError at lines 163-171)
   - [x] Log navigation errors for debugging (logNavigationError at lines 180-189)
   - [x] Test with disabled modules on iOS (handleNavigation validates at lines 226-250)
-- **References**: client/components/BottomNav.tsx:163-250
+- **References**: apps/mobile/components/BottomNav.tsx:163-250
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Route validation system was already fully implemented. Includes isValidRoute() check, user alerts, structured error logging with metadata, and comprehensive error handling throughout navigation flow.
@@ -1061,9 +1061,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Implement keyboard shortcut (Cmd+K / Ctrl+K) for web/desktop access
   - [x] Test search across all modules on iOS (navigation routing covers all 11 module types)
 - **References**:
-  - client/screens/OmnisearchModalScreen.tsx (NEW)
-  - client/navigation/AppNavigator.tsx:69, 234-243
-  - client/screens/CommandCenterScreen.tsx:417-427
+  - apps/mobile/screens/OmnisearchModalScreen.tsx (NEW)
+  - apps/mobile/navigation/AppNavigator.tsx:69, 234-243
+  - apps/mobile/screens/CommandCenterScreen.tsx:417-427
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Notes**:
@@ -1094,9 +1094,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Show attention indicators on BottomNav module buttons (deferred - future enhancement)
   - [ ] Test attention item display and dismissal on iOS (manual verification recommended)
 - **References**:
-  - client/lib/attentionManager.ts
-  - client/screens/AttentionCenterScreen.tsx
-  - client/screens/SettingsMenuScreen.tsx:79-84 (NEW menu entry)
+  - apps/mobile/lib/attentionManager.ts
+  - apps/mobile/screens/AttentionCenterScreen.tsx
+  - apps/mobile/screens/SettingsMenuScreen.tsx:79-84 (NEW menu entry)
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Notes**:
@@ -1126,10 +1126,10 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Test automatic context switching based on time/location on iOS (manual verification recommended)
   - [ ] Address TODOs at contextEngine.ts:165, 172, 331 (partially addressed - focus mode TODO remains)
 - **References**:
-  - client/lib/contextEngine.ts
-  - client/screens/AIPreferencesScreen.tsx:79-134 (CONTEXT_ZONES array)
-  - client/screens/AIPreferencesScreen.tsx:214-227 (selectContextZone handler)
-  - client/screens/AIPreferencesScreen.tsx:274-337 (Context Mode UI section)
+  - apps/mobile/lib/contextEngine.ts
+  - apps/mobile/screens/AIPreferencesScreen.tsx:79-134 (CONTEXT_ZONES array)
+  - apps/mobile/screens/AIPreferencesScreen.tsx:214-227 (selectContextZone handler)
+  - apps/mobile/screens/AIPreferencesScreen.tsx:274-337 (Context Mode UI section)
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Notes**:
@@ -1159,7 +1159,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add recommendation settings in AIPreferences screen
   - [x] Show evidence/reasoning in recommendation cards
   - [x] Wire up RecommendationHistoryScreen to navigation on iOS
-- **References**: client/lib/recommendationEngine.ts, client/screens/RecommendationHistoryScreen.tsx
+- **References**: apps/mobile/lib/recommendationEngine.ts, apps/mobile/screens/RecommendationHistoryScreen.tsx
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Date**: 2026-01-20
@@ -1189,7 +1189,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add module grid access from sidebar "More" button
   - [ ] Consider adding to CommandCenter as a card
   - [ ] Test module grid display and navigation on iOS
-- **References**: client/screens/ModuleGridScreen.tsx
+- **References**: apps/mobile/screens/ModuleGridScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
@@ -1197,7 +1197,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add module grid access from sidebar "More" button (implemented)
   - [x] Consider adding to CommandCenter as a card (grid icon in header)
   - [x] Test module grid display and navigation (verified working)
-- **References**: client/screens/CommandCenterScreen.tsx:384-392, client/components/PersistentSidebar.tsx:420-444
+- **References**: apps/mobile/screens/CommandCenterScreen.tsx:384-392, apps/mobile/components/PersistentSidebar.tsx:420-444
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: ModuleGrid accessible via grid icon in CommandCenter header and "All Modules" button in PersistentSidebar. Modal presentation configured.
@@ -1221,9 +1221,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add "skip onboarding" option with explanation (implemented in OnboardingWelcomeScreen.tsx:203-207)
   - [x] Test complete onboarding flow (verified working)
 - **References**:
-  - REMOVED: client/screens/OnboardingWelcomeScreen.tsx
-  - REMOVED: client/screens/OnboardingModuleSelectionScreen.tsx
-  - REMOVED: client/lib/onboardingManager.ts
+  - REMOVED: apps/mobile/screens/OnboardingWelcomeScreen.tsx
+  - REMOVED: apps/mobile/screens/OnboardingModuleSelectionScreen.tsx
+  - REMOVED: apps/mobile/lib/onboardingManager.ts
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Onboarding system removed per user request. Future onboarding will focus on AI personality/behavior configuration (T-057), not module selection.
@@ -1245,7 +1245,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Lazy load mini-mode components
   - [ ] Add loading indicators for lazy-loaded content
   - [ ] Measure bundle size improvement on iOS
-- **References**: client/lib/lazyLoader.ts
+- **References**: apps/mobile/lib/lazyLoader.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
@@ -1267,7 +1267,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add prefetch configuration to Settings
   - [ ] Monitor and optimize prefetch patterns
   - [ ] Address TODOs at prefetchEngine.ts:485, 493
-- **References**: client/lib/prefetchEngine.ts
+- **References**: apps/mobile/lib/prefetchEngine.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
@@ -1289,7 +1289,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add memory usage monitoring
   - [ ] Implement automatic cleanup on low memory warnings
   - [ ] Test memory cleanup behavior on iOS
-- **References**: client/lib/memoryManager.ts
+- **References**: apps/mobile/lib/memoryManager.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic memory management. AGENT can verify Android/Web compatibility in follow-up.
@@ -1311,7 +1311,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add visual indicators for handoff-enabled modules
   - [ ] Test handoff workflows (e.g., Calendar → Maps) on iOS
   - [ ] Add handoff history or back navigation
-- **References**: client/lib/moduleHandoff.ts
+- **References**: apps/mobile/lib/moduleHandoff.ts
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
@@ -1337,9 +1337,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Use preferences to configure AI behavior across all modules
   - [ ] Skip option that uses sensible defaults
 - **References**:
-  - Previous onboarding: client/screens/OnboardingWelcomeScreen.tsx (removed)
-  - AI preferences: client/screens/AIPreferencesScreen.tsx
-  - Context engine: client/lib/contextEngine.ts
+  - Previous onboarding: apps/mobile/screens/OnboardingWelcomeScreen.tsx (removed)
+  - AI preferences: apps/mobile/screens/AIPreferencesScreen.tsx
+  - Context engine: apps/mobile/lib/contextEngine.ts
 - **Dependencies**: None
 - **Effort**: L
 - **Note**: This is a complete redesign of onboarding from module selection to AI personality configuration. Platform-agnostic questionnaire. AGENT can verify Android/Web compatibility in follow-up.
@@ -1367,13 +1367,13 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add "Module Settings" section in main Settings (already implemented in SettingsMenuScreen)
   - [x] Test settings navigation flow on iOS (manual verification recommended)
 - **References**:
-  - client/components/HeaderNav.tsx:40-71 (HeaderRightNav enhanced)
-  - client/screens/NotebookScreen.tsx:209
-  - client/screens/PlannerScreen.tsx:342
-  - client/screens/CalendarScreen.tsx:215
-  - client/screens/EmailScreen.tsx:388
-  - client/screens/ContactsScreen.tsx:429
-  - client/screens/SettingsMenuScreen.tsx:95-167 (MODULE_SETTINGS)
+  - apps/mobile/components/HeaderNav.tsx:40-71 (HeaderRightNav enhanced)
+  - apps/mobile/screens/NotebookScreen.tsx:209
+  - apps/mobile/screens/PlannerScreen.tsx:342
+  - apps/mobile/screens/CalendarScreen.tsx:215
+  - apps/mobile/screens/EmailScreen.tsx:388
+  - apps/mobile/screens/ContactsScreen.tsx:429
+  - apps/mobile/screens/SettingsMenuScreen.tsx:95-167 (MODULE_SETTINGS)
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Notes**:
@@ -1403,9 +1403,9 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Consider adding history access from CommandCenter (deferred - Settings access sufficient)
   - [ ] Test history display and filtering on iOS (manual verification recommended)
 - **References**:
-  - client/screens/HistoryScreen.tsx
-  - client/screens/SettingsMenuScreen.tsx:86-92 (NEW menu entry)
-  - client/screens/SystemScreen.tsx:79-88 (existing System → History path)
+  - apps/mobile/screens/HistoryScreen.tsx
+  - apps/mobile/screens/SettingsMenuScreen.tsx:86-92 (NEW menu entry)
+  - apps/mobile/screens/SystemScreen.tsx:79-88 (existing System → History path)
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**:
@@ -1432,7 +1432,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add recovery options (reload screen, go back, go home)
   - [ ] Test error boundary behavior with intentional errors on iOS
   - [ ] Add error logging for debugging
-- **References**: client/components/ErrorBoundary.tsx
+- **References**: apps/mobile/components/ErrorBoundary.tsx
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic error handling. AGENT can verify Android/Web compatibility in follow-up.
@@ -1455,7 +1455,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Phase 3: Add loading states to remaining module screens
   - [ ] Phase 4: Implement pull-to-refresh on list-based screens
   - [ ] Phase 5: Test loading states and measure performance improvement on iOS
-- **References**: client/screens/*.tsx
+- **References**: apps/mobile/screens/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic UI patterns. AGENT can verify Android/Web compatibility in follow-up.
@@ -1500,7 +1500,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add validation to form screens: ContactDetail, ListEditor, other editors
   - [ ] Implement error message display and inline validation feedback
   - [ ] Test validation with edge cases (empty, invalid, boundary values) on iOS
-- **References**: client/screens/NoteEditor.tsx, client/screens/TaskDetail.tsx, etc.
+- **References**: apps/mobile/screens/NoteEditor.tsx, apps/mobile/screens/TaskDetail.tsx, etc.
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic validation logic. AGENT can verify Android/Web compatibility in follow-up.
@@ -1570,7 +1570,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Add h4, h5, h6 to Typography constants (implemented in theme.ts)
   - [x] Document typography scale usage (added to design_guidelines.md)
   - [x] Update components using hardcoded heading sizes (ThemedText.tsx updated)
-- **References**: client/constants/theme.ts, client/components/ThemedText.tsx, docs/technical/design_guidelines.md
+- **References**: apps/mobile/constants/theme.ts, apps/mobile/components/ThemedText.tsx, docs/technical/design_guidelines.md
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic design system enhancement. AGENT can verify Android/Web compatibility in follow-up.
@@ -1593,7 +1593,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Adjust colors for better contrast/readability
   - [ ] Run WCAG contrast checker
   - [ ] Add light mode screenshots to documentation
-- **References**: client/constants/theme.ts
+- **References**: apps/mobile/constants/theme.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic theme refinement. AGENT can verify Android/Web contrast compatibility in follow-up.
@@ -1714,7 +1714,7 @@ If another document disagrees, the task record in this file wins (unless the Con
 - **References**:
   - docs/decisions/006-analytics-implementation-decision.md
   - docs/analytics/IMPLEMENTATION_PLAN.md
-  - client/analytics/**/*, docs/analytics/*
+  - apps/mobile/analytics/**/*, docs/analytics/*
 - **Dependencies**: Unblocks T-071-T-080 (new phased tasks)
 - **Effort**: S (decision only)
 - **Completion Notes**: Decision made to complete implementation based on 70% completion status, high-quality foundation, clear TODOs, business value, and active usage in app. Created comprehensive ADR-006 and implementation plan.
@@ -1771,8 +1771,8 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Configure log levels for environments (LOG_LEVEL env var, NODE_ENV detection)
   - [x] Remove TODO at errorHandler.ts:28-30 (no TODO found, logger fully implemented)
 - **References**:
-  - server/utils/logger.ts:1-115 (Winston logger implementation)
-  - server/middleware/errorHandler.ts:30, 76, 90 (logger usage)
+  - apps/api/utils/logger.ts:1-115 (Winston logger implementation)
+  - apps/api/middleware/errorHandler.ts:30, 76, 90 (logger usage)
   - package.json:87 (Winston dependency)
 - **Dependencies**: None
 - **Effort**: S
@@ -1807,7 +1807,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Phase 3: Add tests for form components (Input, Select, Checkbox, etc.)
   - [ ] Phase 4: Add tests for complex components (MiniModeContainer, QuickCapture, AIAssist)
   - [ ] Phase 5: Measure coverage, document testing patterns, aim for 80%+ coverage
-- **References**: client/components/*.tsx
+- **References**: apps/mobile/components/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic testing infrastructure. AGENT can verify Android/Web test compatibility in follow-up.
@@ -1901,7 +1901,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Show integration examples with UI components
   - [ ] Document public APIs and expected usage patterns
   - [ ] Add examples to documentation site
-- **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: apps/mobile/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic library documentation. AGENT can verify Android/Web integration examples in follow-up.
@@ -1924,7 +1924,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Document complex components: MiniMode, QuickCapture, AIAssist
   - [ ] Add Storybook or create component showcase page
   - [ ] Include accessibility guidelines for each component
-- **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: apps/mobile/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic component documentation. AGENT can verify Android/Web component compatibility in follow-up.
@@ -1972,7 +1972,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Make EventBus.on() type-safe
   - [ ] Update emit() to enforce payload types
   - [ ] Fix all event-related TypeScript errors
-- **References**: client/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: apps/mobile/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic event type system. AGENT can verify Android/Web event handling in follow-up.
@@ -1995,7 +1995,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Phase 3: Migrate miniMode components (5-8 components)
   - [ ] Phase 4: Migrate screen components (high-priority screens first)
   - [ ] Phase 5: Remove static imports, verify no TypeScript errors remain
-- **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: apps/mobile/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic theme hook migration. AGENT can verify Android/Web theme consistency in follow-up.
@@ -2018,7 +2018,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [ ] Add missing properties or rename incorrect ones
   - [ ] Fix all callers with incorrect property access
   - [ ] Test all data operations
-- **References**: client/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: apps/mobile/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic model interface audit. AGENT can verify Android/Web data model compatibility in follow-up.
@@ -2064,7 +2064,7 @@ If another document disagrees, the task record in this file wins (unless the Con
   - [x] Fix ThemedText type union (removed "title" usage in AlertsScreen.tsx)
   - [x] Fix AIAssistSheet props (fixed context→module in BudgetScreen.tsx)
   - [x] Test all component prop usage (verified via grep searches)
-- **References**: client/screens/AlertsScreen.tsx:76, client/screens/BudgetScreen.tsx:1299
+- **References**: apps/mobile/screens/AlertsScreen.tsx:76, apps/mobile/screens/BudgetScreen.tsx:1299
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic component prop validation. AGENT can verify Android/Web component props in follow-up.
@@ -2116,7 +2116,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - Phase 0: Server Foundation - Database Schema
   - Analytics client sends events to `/api/telemetry/events`
   - Database schema created with indexes for performance
-  - COMPLETED: shared/schema.ts lines 304-327
+  - COMPLETED: packages/contracts/schema.ts lines 304-327
 - **Acceptance Criteria**:
   - [x] Create analytics_events table schema
   - [x] Table includes: id, user_id, event_name, event_properties (JSONB), timestamp, session_id, device_id, platform
@@ -2124,7 +2124,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [x] Timestamp with timezone for correct time handling
   - [x] Validation schemas (analyticsEventSchema, analyticsBatchSchema)
 - **References**:
-  - shared/schema.ts:304-354
+  - packages/contracts/schema.ts:304-354
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.1)
 - **Dependencies**: None
@@ -2142,7 +2142,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - Phase 0: Server Foundation - Storage Methods
   - Storage methods for analytics event persistence implemented
   - Supports batch inserts, querying, and GDPR deletion
-  - COMPLETED: server/storage.ts lines 748-850
+  - COMPLETED: apps/api/storage.ts lines 748-850
 - **Acceptance Criteria**:
   - [x] Add saveAnalyticsEvents(events: AnalyticsEvent[]): Promise<void>
   - [x] Batch insert with idempotency (skip duplicate event IDs)
@@ -2150,7 +2150,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [x] Add deleteUserAnalytics(userId) for GDPR deletion
   - [x] Error logging for monitoring
 - **References**:
-  - server/storage.ts:748-850
+  - apps/api/storage.ts:748-850
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.2)
 - **Dependencies**: T-081 (COMPLETE)
@@ -2168,19 +2168,19 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - Phase 0: Server Foundation - API Endpoint
   - POST /api/telemetry/events endpoint created
   - Client successfully configured to send to this endpoint
-  - COMPLETED: server/routes.ts lines 687-719
+  - COMPLETED: apps/api/routes.ts lines 687-719
 - **Acceptance Criteria**:
-  - [x] POST /api/telemetry/events endpoint in server/routes.ts
+  - [x] POST /api/telemetry/events endpoint in apps/api/routes.ts
   - [x] Require authentication (JWT token)
   - [x] Validate payload with Zod schema (analyticsBatchSchema)
   - [x] Call storage.saveAnalyticsEvents(events)
   - [x] Return 202 Accepted with confirmation
   - [x] Error handling for storage failures
 - **References**:
-  - server/routes.ts:687-719
+  - apps/api/routes.ts:687-719
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.3)
-  - client/analytics/transport.ts (client-side POST)
+  - apps/mobile/analytics/transport.ts (client-side POST)
 - **Dependencies**: T-082 (COMPLETE)
 - **Effort**: M (COMPLETE)
 - **Completion Date**: 2026-01-20
@@ -2197,16 +2197,16 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - Phase 0: Server Foundation - Validation Schemas
   - Zod validation schemas for analytics payloads created
   - Ensures data quality and security on server
-  - COMPLETED: shared/schema.ts lines 329-354
+  - COMPLETED: packages/contracts/schema.ts lines 329-354
 - **Acceptance Criteria**:
-  - [x] Add analyticsEventSchema to shared/schema.ts
+  - [x] Add analyticsEventSchema to packages/contracts/schema.ts
   - [x] Validate: eventId (UUID), eventName (string), timestamp (datetime), properties (object)
   - [x] Validate identity: userId, deviceId, sessionId
   - [x] Add analyticsBatchSchema (array of events, 1-100 limit)
   - [x] Schema compatible with client types
   - [x] Export for use in server validation
 - **References**:
-  - shared/schema.ts:329-354
+  - packages/contracts/schema.ts:329-354
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.4)
 - **Dependencies**: None
@@ -2268,11 +2268,11 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Phase 1)
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Phase 1 details)
-  - client/analytics/observability/inspector.ts
-  - client/analytics/observability/metrics.ts
-  - client/analytics/privacy/consent.ts
-  - client/analytics/privacy/retention.ts
-  - client/analytics/privacy/deletion.ts
+  - apps/mobile/analytics/observability/inspector.ts
+  - apps/mobile/analytics/observability/metrics.ts
+  - apps/mobile/analytics/privacy/consent.ts
+  - apps/mobile/analytics/privacy/retention.ts
+  - apps/mobile/analytics/privacy/deletion.ts
 - **Dependencies**: T-085 (Phase 0 complete and tested)
 - **Effort**: L (80-120 hours total for Phase 1)
 - **Note**: Phase 1 is production-critical. Target: 53/100 → 70/100 score.
@@ -2296,7 +2296,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Backend integration for group data
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.1)
-  - client/analytics/advanced/groups.ts
+  - apps/mobile/analytics/advanced/groups.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables B2B analytics use cases.
@@ -2321,7 +2321,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Funnel comparison (A/B cohorts)
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.2)
-  - client/analytics/advanced/funnels.ts
+  - apps/mobile/analytics/advanced/funnels.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: High value for product optimization.
@@ -2345,7 +2345,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Experiment state management
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.3)
-  - client/analytics/advanced/abTests.ts
+  - apps/mobile/analytics/advanced/abTests.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables data-driven experimentation.
@@ -2369,7 +2369,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Deep link tracking
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.4)
-  - client/analytics/advanced/screenTracking.ts
+  - apps/mobile/analytics/advanced/screenTracking.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (15-25 hours)
 - **Note**: Enhances useAnalyticsNavigation hook.
@@ -2393,7 +2393,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Schema evolution tracking
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.5)
-  - client/analytics/schema/versioning.ts
+  - apps/mobile/analytics/schema/versioning.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (10-20 hours)
 - **Note**: Phase 2 target: 70/100 → 80/100 score.
@@ -2418,7 +2418,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Flag exposure tracking
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.1)
-  - client/analytics/production/featureFlags.ts
+  - apps/mobile/analytics/production/featureFlags.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: L (30-40 hours)
 - **Note**: Enables safe feature rollouts.
@@ -2442,7 +2442,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Plugin error handling
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.2)
-  - client/analytics/plugins/manager.ts
+  - apps/mobile/analytics/plugins/manager.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables custom analytics extensions.
@@ -2466,7 +2466,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Destination error handling
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.3)
-  - client/analytics/plugins/destinations.ts
+  - apps/mobile/analytics/plugins/destinations.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (20-30 hours)
 - **Note**: Enables sending to multiple backends.
@@ -2490,7 +2490,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Performance degradation alerts
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.4)
-  - client/analytics/production/monitoring.ts
+  - apps/mobile/analytics/production/monitoring.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: L (30-40 hours)
 - **Note**: Phase 3 target: 80/100 → 90/100 score. World-class infrastructure.
@@ -2515,8 +2515,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Schema-based validation at runtime
   - [ ] Add tests for sampling algorithms and validation rules
 - **References**:
-  - client/analytics/quality/sampling.ts
-  - client/analytics/quality/validation.ts
+  - apps/mobile/analytics/quality/sampling.ts
+  - apps/mobile/analytics/quality/validation.ts
   - docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md (Data Quality section)
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (20-30 hours)
@@ -2542,9 +2542,9 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Nearest endpoint selection based on user location
   - [ ] Add tests for CLI commands and geo-routing logic
 - **References**:
-  - client/analytics/devtools/cli.ts
-  - client/analytics/devtools/ci.ts
-  - client/analytics/performance/geoRouting.ts
+  - apps/mobile/analytics/devtools/cli.ts
+  - apps/mobile/analytics/devtools/ci.ts
+  - apps/mobile/analytics/performance/geoRouting.ts
   - docs/analytics/IMPLEMENTATION_PLAN.md (Phase 3.5, Phase 4)
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (25-35 hours)
@@ -2570,8 +2570,8 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - [ ] Feature flag support (enable/disable analytics features)
   - [ ] Add tests for SLI calculations and mock client
 - **References**:
-  - client/analytics/production/slo.ts
-  - client/analytics/devtools/testing.ts
+  - apps/mobile/analytics/production/slo.ts
+  - apps/mobile/analytics/devtools/testing.ts
   - docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (20-30 hours)
@@ -2996,7 +2996,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ### Core Engine Features Not Surfaced
 
 - [ ] **Context Engine Not Accessible to Users**
-  - Location: `client/lib/contextEngine.ts`
+  - Location: `apps/mobile/lib/contextEngine.ts`
   - Features: Work/Personal/Focus/Social/Wellness/Evening/Weekend modes
   - Current: Only used internally by PersistentSidebar
   - Missing UI: No user control over context switching
@@ -3005,7 +3005,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Show current context indicator in UI
 
 - [ ] **Recommendation Engine Not Fully Exposed**
-  - Location: `client/lib/recommendationEngine.ts`
+  - Location: `apps/mobile/lib/recommendationEngine.ts`
   - Features: Cross-module analysis, evidence-based reasoning
   - Current: Only CommandCenter shows recommendations
   - Missing UI: No way to manually trigger recommendation refresh
@@ -3016,7 +3016,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Show evidence/reasoning in recommendation cards
 
 - [ ] **Omnisearch Not Accessible**
-  - Location: `client/components/OmnisearchScreen.tsx`
+  - Location: `apps/mobile/components/OmnisearchScreen.tsx`
   - Feature: Universal search across all modules
   - Current: Component exists but NOT added to navigation stack
   - Impact: Major feature completely hidden from users
@@ -3025,7 +3025,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Add keyboard shortcut (Cmd+K / Ctrl+K)
 
 - [ ] **Attention Manager Not Fully Integrated**
-  - Location: `client/lib/attentionManager.ts`
+  - Location: `apps/mobile/lib/attentionManager.ts`
   - Features: Smart notification bundling, focus mode, priority classification
   - Current: AttentionCenter screen exists but not in navigation
   - Missing UI: No notification badges on modules
@@ -3037,7 +3037,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Show attention indicators on BottomNav module buttons
 
 - [ ] **Module Handoff System Not Visible**
-  - Location: `client/lib/moduleHandoff.ts`
+  - Location: `apps/mobile/lib/moduleHandoff.ts`
   - Features: Contextual module transitions with breadcrumbs
   - Current: HandoffBreadcrumb component exists but connection unclear
   - Missing UI: No visual indicators for handoff-enabled modules
@@ -3047,7 +3047,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Action**: Test handoff workflows (e.g., Calendar → Maps)
 
 - [x] **Lazy Loading System Not Utilized**
-  - Location: `client/lib/lazyLoader.ts`
+  - Location: `apps/mobile/lib/lazyLoader.ts`
   - Features: Component lazy loading, code splitting
   - Current: Exists but no screens/components use it
   - Impact: Larger bundle size, slower initial load
@@ -3056,7 +3056,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Completed**: Lazy-loaded Photos + Photo Editor screens with Suspense fallback messaging (2026-01-20)
 
 - [x] **Lazy Load Mini-Mode Components**
-  - Location: `client/components/miniModes/*`
+  - Location: `apps/mobile/components/miniModes/*`
   - Features: Mini-mode quick actions for Task, Note, Calendar, Contacts, Budget
   - Impact: Mini-mode components load on app start and increase bundle size
   - **Action**: Convert mini-mode components to lazy imports
@@ -3064,7 +3064,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Completed**: Lazy-loaded mini-mode components with Suspense fallback UI (2026-01-20)
 
 - [x] **Prefetch Engine Not Active**
-  - Location: `client/lib/prefetchEngine.ts`
+  - Location: `apps/mobile/lib/prefetchEngine.ts`
   - Features: Predictive data loading, memory management
   - Current: Engine exists but no integration with navigation
   - Impact: Slower screen transitions, wasted opportunity
@@ -3074,7 +3074,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
   - **Completed**: Wired prefetch engine to navigation module changes via shared performance hooks (2026-01-20)
 
 - [x] **Memory Manager Not Connected**
-  - Location: `client/lib/memoryManager.ts`
+  - Location: `apps/mobile/lib/memoryManager.ts`
   - Features: Smart memory cleanup, cache management
   - Current: Manager exists but no cleanup triggers
   - Impact: Potential memory leaks, degraded performance
@@ -3088,7 +3088,7 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 ### Analytics & Monitoring (80+ TODOs)
 
 - [ ] **Complete Stub Analytics Implementation**
-  - Files: `client/analytics/**/*` (35 files, 80+ TODO comments)
+  - Files: `apps/mobile/analytics/**/*` (35 files, 80+ TODO comments)
   - Missing: Group analytics, A/B testing, screen tracking, feature flags, funnels
   - Missing: Metrics, monitoring, validation, sampling, destinations
   - Missing: Consent management, data deletion, retention policies
@@ -3506,3 +3506,4 @@ Following T-028 decision to COMPLETE analytics implementation, tasks broken down
 **Last Updated**: 2026-01-17
 **Total Items**: 78
 **Priority Breakdown**: 2 Critical, 22 High, 32 Medium, 22 Low
+

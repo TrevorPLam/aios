@@ -83,12 +83,13 @@ This file defines the Wallets & Payments module scaffolding without implementing
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/wallet/` — domain models and type definitions
-- `server/services/wallet/` — processor adapters + orchestration stubs
-- `client/modules/wallet/` — feature entry points (no UI implementation)
+- `packages/contracts/models/wallet/` — domain models and type definitions
+- `apps/api/services/wallet/` — processor adapters + orchestration stubs
+- `apps/mobile/modules/wallet/` — feature entry points (no UI implementation)
 - `docs/vision/module_scaffolds/WALLET_AND_PAYMENTS.md` — this plan
 
 ## Open Questions to Resolve
 
 - Payment processor selection and availability per region.
 - Offline mode behavior for balances and transaction drafts.
+

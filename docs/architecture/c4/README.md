@@ -148,21 +148,21 @@ Verify that the C4 documentation matches the actual codebase:
 
 ```bash
 # 1. Check that all referenced files exist
-grep -r "client/" docs/architecture/c4/*.md
-grep -r "server/" docs/architecture/c4/*.md
-grep -r "shared/" docs/architecture/c4/*.md
+grep -r "apps/mobile/" docs/architecture/c4/*.md
+grep -r "apps/api/" docs/architecture/c4/*.md
+grep -r "packages/contracts/" docs/architecture/c4/*.md
 
 # 2. Verify module screens exist
-ls client/screens/*Screen.tsx | wc -l  # Should match module count
+ls apps/mobile/screens/*Screen.tsx | wc -l  # Should match module count
 
 # 3. Check API routes in server
- grep "app\.(get | post | put | delete)" server/routes.ts | wc -l
+ grep "app\.(get | post | put | delete)" apps/api/routes.ts | wc -l
 
 # 4. Verify database tables
-grep "pgTable" shared/schema.ts
+grep "pgTable" packages/contracts/schema.ts
 
 # 5. Confirm authentication middleware exists
-ls server/middleware/auth.ts
+ls apps/api/middleware/auth.ts
 ```text
 
 ### Diagram Rendering
@@ -186,17 +186,17 @@ Each diagram document includes a "How to Verify" section with specific file path
 ```bash
 # Example: Verify container diagram references
 # Check mobile app entry point
-cat client/index.js
+cat apps/mobile/index.js
 
 # Check server entry point
-cat server/index.ts
+cat apps/api/index.ts
 
 # Check database schema
-cat shared/schema.ts | head -50
+cat packages/contracts/schema.ts | head -50
 
 # Check authentication flow
-cat server/middleware/auth.ts
-cat client/lib/storage.ts  # JWT token storage
+cat apps/api/middleware/auth.ts
+cat apps/mobile/lib/storage.ts  # JWT token storage
 ```text
 
 ### Completeness Check
@@ -240,3 +240,4 @@ done
 | Date | Author | Changes |
 | ------ | -------- | --------- |
 | 2025-01-17 | AI Assistant | Initial creation of comprehensive C4 model documentation |
+

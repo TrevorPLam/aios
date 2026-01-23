@@ -139,7 +139,7 @@ npx @redocly/cli lint docs/apis/openapi/openapi.yaml
 npx @openapitools/openapi-generator-cli generate \
   -i docs/apis/openapi/openapi.yaml \
   -g typescript-axios \
-  -o client/src/generated/api
+  -o apps/mobile/generated/api
 ```text
 
 #### Generate Node.js Server Stubs
@@ -148,7 +148,7 @@ npx @openapitools/openapi-generator-cli generate \
 npx @openapitools/openapi-generator-cli generate \
   -i docs/apis/openapi/openapi.yaml \
   -g nodejs-express-server \
-  -o server/src/generated
+  -o apps/api/generated
 ```text
 
 ### Creating a Mock Server
@@ -545,3 +545,5 @@ Think of the OpenAPI spec as the blueprint for your API.
 - [OpenAPI Best Practices](https://swagger.io/resources/articles/best-practices-in-api-design/)
 - [AsyncAPI Style Guide](https://www.asyncapi.com/docs/community/011-styleguide)
 - [API Design Patterns](https://cloud.google.com/apis/design)
+
+

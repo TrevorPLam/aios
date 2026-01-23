@@ -35,19 +35,19 @@ Successfully completed **4 open tasks** from P0TODO.md, P1TODO.md, P2TODO.md, P3
 
 **Solution Implemented**:
 
-1. **Created OmnisearchModalScreen** (`client/screens/OmnisearchModalScreen.tsx`)
+1. **Created OmnisearchModalScreen** (`apps/mobile/screens/OmnisearchModalScreen.tsx`)
    - 155 lines, comprehensive JSDoc documentation
    - Navigation wrapper for OmnisearchScreen component
    - Handles routing to all 11 module types (notebook, planner, calendar, email, messages, lists, alerts, photos, contacts, budget, translator)
    - Graceful fallback for unknown module types
    - Type-safe navigation with AppStackParamList
 
-2. **Added to Navigation Stack** (`client/navigation/AppNavigator.tsx`)
+2. **Added to Navigation Stack** (`apps/mobile/navigation/AppNavigator.tsx`)
    - Registered Omnisearch screen with modal presentation
    - Added to type definitions
    - Wrapped with ErrorBoundary for safety
 
-3. **Added Search Button** (`client/screens/CommandCenterScreen.tsx`)
+3. **Added Search Button** (`apps/mobile/screens/CommandCenterScreen.tsx`)
    - Search icon in CommandCenter header
    - Positioned between grid and bell icons
    - Accessibility labels added
@@ -67,9 +67,9 @@ Successfully completed **4 open tasks** from P0TODO.md, P1TODO.md, P2TODO.md, P3
 
 **Files Changed**:
 
-- `client/screens/OmnisearchModalScreen.tsx` (NEW - 155 lines)
-- `client/navigation/AppNavigator.tsx` (2 insertions)
-- `client/screens/CommandCenterScreen.tsx` (11 insertions, 3 deletions)
+- `apps/mobile/screens/OmnisearchModalScreen.tsx` (NEW - 155 lines)
+- `apps/mobile/navigation/AppNavigator.tsx` (2 insertions)
+- `apps/mobile/screens/CommandCenterScreen.tsx` (11 insertions, 3 deletions)
 
 **Commit**: b5c6359 - "feat: Add Omnisearch universal search to navigation (T-004)"
 
@@ -87,7 +87,7 @@ Successfully completed **4 open tasks** from P0TODO.md, P1TODO.md, P2TODO.md, P3
 
 **Solution Implemented**:
 
-1. **Enhanced HeaderRightNav Component** (`client/components/HeaderNav.tsx`)
+1. **Enhanced HeaderRightNav Component** (`apps/mobile/components/HeaderNav.tsx`)
    - Added optional `settingsRoute` prop
    - Maintains backward compatibility (defaults to main Settings)
    - Added accessibility labels
@@ -116,12 +116,12 @@ Successfully completed **4 open tasks** from P0TODO.md, P1TODO.md, P2TODO.md, P3
 
 **Files Changed**:
 
-- `client/components/HeaderNav.tsx` (27 insertions, 7 deletions)
-- `client/screens/NotebookScreen.tsx` (1 insertion, 1 deletion)
-- `client/screens/PlannerScreen.tsx` (1 insertion, 1 deletion)
-- `client/screens/CalendarScreen.tsx` (1 insertion, 1 deletion)
-- `client/screens/EmailScreen.tsx` (1 insertion, 1 deletion)
-- `client/screens/ContactsScreen.tsx` (1 insertion, 1 deletion)
+- `apps/mobile/components/HeaderNav.tsx` (27 insertions, 7 deletions)
+- `apps/mobile/screens/NotebookScreen.tsx` (1 insertion, 1 deletion)
+- `apps/mobile/screens/PlannerScreen.tsx` (1 insertion, 1 deletion)
+- `apps/mobile/screens/CalendarScreen.tsx` (1 insertion, 1 deletion)
+- `apps/mobile/screens/EmailScreen.tsx` (1 insertion, 1 deletion)
+- `apps/mobile/screens/ContactsScreen.tsx` (1 insertion, 1 deletion)
 
 **Commit**: f3f9214 - "feat: Wire up module settings navigation in headers (T-014)"
 
@@ -148,7 +148,7 @@ Edge swipe gesture was **already fully implemented** in PersistentSidebar.tsx (l
 **Evidence**:
 
 ```typescript
-// Lines 111-196 in client/components/PersistentSidebar.tsx
+// Lines 111-196 in apps/mobile/components/PersistentSidebar.tsx
 const panResponder = useRef(
   PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => { ... },
@@ -214,7 +214,7 @@ const handleNavigation = async (module: ModuleItem) => {
 **Status**: ✅ Already Complete (Previous Work)
 
 **Finding**:
-Winston structured logging was **already fully implemented** in server/utils/logger.ts (115 lines).
+Winston structured logging was **already fully implemented** in apps/api/utils/logger.ts (115 lines).
 
 **Implementation Details**:
 
@@ -230,7 +230,7 @@ Winston structured logging was **already fully implemented** in server/utils/log
 **Evidence**:
 
 ```typescript
-// server/utils/logger.ts:107-114
+// apps/api/utils/logger.ts:107-114
 export const logger = winston.createLogger({
   level: logLevel,
   format: isProduction ? jsonFormat : consoleFormat,
@@ -238,7 +238,7 @@ export const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
 });
 
-// server/middleware/errorHandler.ts:76, 90
+// apps/api/middleware/errorHandler.ts:76, 90
 logger.warn("Operational error", { ... });
 logger.error("Unexpected error", { ... });
 ```text
@@ -483,3 +483,4 @@ The codebase continues to be in excellent condition with:
 
 **Session End**: 2026-01-19
 **Next Session**: Continue with P1 Hidden Features (T-005, T-006, T-007)
+

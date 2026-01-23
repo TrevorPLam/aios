@@ -28,7 +28,7 @@ This repository contains a **React Native mobile application scaffold** named AI
 
 - Clean separation of concerns
 - TypeScript throughout
-- Path aliases configured (@/ for client, @shared/ for shared)
+- Path aliases configured (@/ for client, @packages/contracts/ for shared)
 - React Navigation properly set up
 - AsyncStorage database layer well-implemented
 - Good data model design
@@ -272,3 +272,4 @@ However, it is currently a **visual prototype** rather than a functional applica
 **Files created:** 5 documentation files
 **Total documentation added:** ~42KB
 **Repository readiness:** 🟡 Development-ready, 🔴 Not production-ready
+

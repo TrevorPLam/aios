@@ -17,9 +17,9 @@ The Budget module enhancement has been analyzed for security vulnerabilities usi
 
 ### Files Analyzed
 
-1. **client/storage/database.ts** (Budget database operations)
-2. **client/storage/**tests**/budgets.test.ts** (Test suite)
-3. **client/screens/BudgetScreen.tsx** (UI implementation)
+1. **apps/mobile/storage/database.ts** (Budget database operations)
+2. **apps/mobile/storage/**tests**/budgets.test.ts** (Test suite)
+3. **apps/mobile/screens/BudgetScreen.tsx** (UI implementation)
 
 ### Security Categories Checked
 
@@ -374,3 +374,4 @@ The Budget module enhancement has been thoroughly analyzed and found to be secur
 **Security Scan Completed:** January 16, 2026
 **Vulnerabilities Found:** 0
 **Status:** ✅ **Production Ready - Secure**
+

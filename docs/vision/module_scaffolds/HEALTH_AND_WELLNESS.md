@@ -81,12 +81,13 @@ This stub outlines health tracking, reminders, and records management with priva
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/health/` — health domain types
-- `server/services/health/` — device sync and vault stubs
-- `client/modules/health/` — module entry points (no UI implementation)
+- `packages/contracts/models/health/` — health domain types
+- `apps/api/services/health/` — device sync and vault stubs
+- `apps/mobile/modules/health/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/HEALTH_AND_WELLNESS.md` — this plan
 
 ## Open Questions to Resolve
 
 - Device integration scope and permissions.
 - Medical record storage provider and retention policy.
+

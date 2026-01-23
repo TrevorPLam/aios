@@ -75,12 +75,13 @@ This stub defines Context Zones as a cross-module filter layer, with rules and t
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/context/` — context domain types
-- `server/services/context/` — trigger evaluation stubs
-- `client/modules/context/` — module entry points (no UI implementation)
+- `packages/contracts/models/context/` — context domain types
+- `apps/api/services/context/` — trigger evaluation stubs
+- `apps/mobile/modules/context/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/CONTEXT_ZONES.md` — this plan
 
 ## Open Questions to Resolve
 
 - Rule precedence and multi-context blending.
 - Safe defaults for automated switching.
+

@@ -1,6 +1,6 @@
 # Lib Usage Guide
 
-**Purpose:** Quick, copy-ready usage examples for the shared `client/lib` utilities.
+**Purpose:** Quick, copy-ready usage examples for the shared `apps/mobile/lib` utilities.
 
 > WHY: The lib layer powers the "one app to rule them all" architecture in README.md by
 > providing reusable, cross-module behaviors (navigation, attention, search) that keep
@@ -255,3 +255,4 @@ const preferences = await loadFromStorage("@preferences:commandCenter");
 ```
 
 **UI integration example:** `AIPreferencesScreen` persists user toggles with these helpers.
+

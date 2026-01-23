@@ -462,7 +462,7 @@ const handleToggleComplete = async (task: Task) => {
 
 ### Comprehensive Test Suite
 
-**Test File:** `client/storage/__tests__/tasks.test.ts`
+**Test File:** `apps/mobile/storage/__tests__/tasks.test.ts`
 **Total Tests:** 31 comprehensive tests
 **Coverage:** All database methods and edge cases
 
@@ -986,10 +986,10 @@ The module is now ready for production use and serves as a strong foundation for
 
 | File | Type | Lines Added | Purpose |
 | ------ | ------ | ------------- | --------- |
-| `client/storage/database.ts` | Modified | +250 | Enhanced task database methods |
-| `client/storage/__tests__/tasks.test.ts` | Created | +450 | Comprehensive test suite |
-| `client/screens/TaskDetailScreen.tsx` | Modified | +275 | Due date picker and fixes |
-| `client/screens/PlannerScreen.tsx` | Modified | +400 | Search, filters, statistics, UI |
+| `apps/mobile/storage/database.ts` | Modified | +250 | Enhanced task database methods |
+| `apps/mobile/storage/__tests__/tasks.test.ts` | Created | +450 | Comprehensive test suite |
+| `apps/mobile/screens/TaskDetailScreen.tsx` | Modified | +275 | Due date picker and fixes |
+| `apps/mobile/screens/PlannerScreen.tsx` | Modified | +400 | Search, filters, statistics, UI |
 | `PLANNER_MODULE_ENHANCEMENTS.md` | Created | +600 | This documentation file |
 
 **Total Impact:** 5 files, ~1,975 lines added/modified
@@ -998,3 +998,4 @@ The module is now ready for production use and serves as a strong foundation for
 
 **Task Status:** ✅ **COMPLETE** - All objectives exceeded
 **Next Steps:** Code review, security scan, final testing
+

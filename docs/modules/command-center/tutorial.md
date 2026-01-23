@@ -138,7 +138,7 @@ New recommendations load, with updated timestamps or content.
 
 #### Solution
 
-- Confirm seed data exists in `client/utils/seedData.ts`.
+- Confirm seed data exists in `apps/mobile/utils/seedData.ts`.
 - Restart Expo and reopen Command Center.
 
 ---
@@ -160,3 +160,4 @@ New recommendations load, with updated timestamps or content.
 ---
 
 *Last Updated: 2026-01-21*
+

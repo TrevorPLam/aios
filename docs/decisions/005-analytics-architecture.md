@@ -16,7 +16,7 @@ AIOS requires comprehensive analytics to track user behavior, feature usage, and
 
 ## Decision
 
-Implement a custom analytics system (`client/analytics/`) with the following architecture:
+Implement a custom analytics system (`apps/mobile/analytics/`) with the following architecture:
 
 1. **Client-side SDK** (`client.ts`)
    - Event capture and validation
@@ -126,10 +126,10 @@ Implement a custom analytics system (`client/analytics/`) with the following arc
 
 Key files:
 
-- `client/analytics/client.ts` - Main analytics client
-- `client/analytics/advanced/` - Advanced analytics features
-- `client/analytics/devtools/` - Developer tooling
-- `client/analytics/__tests__/` - Test suite
+- `apps/mobile/analytics/client.ts` - Main analytics client
+- `apps/mobile/analytics/advanced/` - Advanced analytics features
+- `apps/mobile/analytics/devtools/` - Developer tooling
+- `apps/mobile/analytics/__tests__/` - Test suite
 
 Dependencies:
 
@@ -144,11 +144,12 @@ Dependencies:
 
 ## References
 
-- Analytics implementation: `client/analytics/`
+- Analytics implementation: `apps/mobile/analytics/`
 - Documentation: `docs/analytics/`
-- Tests: `client/analytics/__tests__/`
+- Tests: `apps/mobile/analytics/__tests__/`
 
 ---
 
 **Accepted by:** Development team
-**Implementation:** Complete in client/analytics/
+**Implementation:** Complete in apps/mobile/analytics/
+

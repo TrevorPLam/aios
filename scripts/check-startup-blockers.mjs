@@ -38,7 +38,7 @@ function checkCriticalFiles() {
     'babel.config.js': 'Babel configuration',
     'metro.config.js': 'Metro bundler configuration',
     'app.json': 'Expo app configuration',
-    'client/index.js': 'App entry point',
+    'apps/mobile/index.js': 'App entry point',
   };
 
   let missing = [];

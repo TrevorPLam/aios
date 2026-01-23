@@ -66,10 +66,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Deliverables
 
-- `client/lib/lazyLoader.ts` - Module lazy loading system
-- `client/lib/prefetchEngine.ts` - Predictive prefetch logic
-- `client/lib/memoryManager.ts` - Memory optimization utilities
-- `client/lib/searchIndex.ts` - Optimized search indexing
+- `apps/mobile/lib/lazyLoader.ts` - Module lazy loading system
+- `apps/mobile/lib/prefetchEngine.ts` - Predictive prefetch logic
+- `apps/mobile/lib/memoryManager.ts` - Memory optimization utilities
+- `apps/mobile/lib/searchIndex.ts` - Optimized search indexing
 - Performance test suite (E2E)
 - Documentation updates in `docs/architecture.md`
 
@@ -94,10 +94,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Implementation Files
 
-- `client/screens/WalletScreen.tsx`
-- `client/storage/wallet.ts` (database methods)
-- `client/models/types.ts` (Wallet, Transaction types)
-- `client/components/miniModes/WalletMiniMode.tsx`
+- `apps/mobile/screens/WalletScreen.tsx`
+- `apps/mobile/storage/wallet.ts` (database methods)
+- `apps/mobile/models/types.ts` (Wallet, Transaction types)
+- `apps/mobile/components/miniModes/WalletMiniMode.tsx`
 
 #### Security Requirements
 
@@ -136,10 +136,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Implementation Files (2)
 
-- `client/screens/MarketplaceScreen.tsx`
-- `client/storage/marketplace.ts`
-- `client/models/types.ts` (Product, Listing types)
-- `client/components/miniModes/MarketplaceMiniMode.tsx`
+- `apps/mobile/screens/MarketplaceScreen.tsx`
+- `apps/mobile/storage/marketplace.ts`
+- `apps/mobile/models/types.ts` (Product, Listing types)
+- `apps/mobile/components/miniModes/MarketplaceMiniMode.tsx`
 
 #### Integration Points
 
@@ -169,10 +169,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Implementation Files (3)
 
-- `client/screens/MapsScreen.tsx`
-- `client/storage/maps.ts`
-- `client/models/types.ts` (Location, Route types)
-- `client/components/miniModes/MapsMiniMode.tsx`
+- `apps/mobile/screens/MapsScreen.tsx`
+- `apps/mobile/storage/maps.ts`
+- `apps/mobile/models/types.ts` (Location, Route types)
+- `apps/mobile/components/miniModes/MapsMiniMode.tsx`
 
 #### External Dependencies
 
@@ -208,10 +208,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Implementation Files (4)
 
-- `client/screens/EventsScreen.tsx`
-- `client/storage/events.ts` (expand existing)
-- `client/models/types.ts` (Ticket, RSVP types)
-- `client/components/miniModes/EventsMiniMode.tsx`
+- `apps/mobile/screens/EventsScreen.tsx`
+- `apps/mobile/storage/events.ts` (expand existing)
+- `apps/mobile/models/types.ts` (Ticket, RSVP types)
+- `apps/mobile/components/miniModes/EventsMiniMode.tsx`
 
 #### Integration Points (3)
 
@@ -242,10 +242,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Implementation Files (5)
 
-- `client/screens/FoodScreen.tsx`
-- `client/storage/food.ts`
-- `client/models/types.ts` (Restaurant, Order types)
-- `client/components/miniModes/FoodMiniMode.tsx`
+- `apps/mobile/screens/FoodScreen.tsx`
+- `apps/mobile/storage/food.ts`
+- `apps/mobile/models/types.ts` (Restaurant, Order types)
+- `apps/mobile/components/miniModes/FoodMiniMode.tsx`
 
 #### External Dependencies (2)
 
@@ -280,10 +280,10 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 #### Implementation Files (6)
 
-- `client/screens/RideScreen.tsx`
-- `client/storage/rides.ts`
-- `client/models/types.ts` (Ride, Transit types)
-- `client/components/miniModes/RideMiniMode.tsx`
+- `apps/mobile/screens/RideScreen.tsx`
+- `apps/mobile/storage/rides.ts`
+- `apps/mobile/models/types.ts` (Ride, Transit types)
+- `apps/mobile/components/miniModes/RideMiniMode.tsx`
 
 #### External Dependencies (3)
 
@@ -365,7 +365,7 @@ Phase 4 focuses on **scaling AIOS to 20+ modules** while maintaining the intelli
 
 ### Deliverables
 
-- `client/analytics/telemetry.ts` - Telemetry hooks
+- `apps/mobile/analytics/telemetry.ts` - Telemetry hooks
 - `docs/telemetry.md` - What we measure and why
 - Privacy-compliant data collection
 - Analytics dashboard (optional)
@@ -528,3 +528,4 @@ Phase 4 is considered complete when:
 **Prepared by:** AIOS Development Team
 **Date:** January 16, 2026
 **Version:** 1.0 (Draft)
+

@@ -78,12 +78,13 @@ This stub defines long-term planning and habit tracking without UI/UX implementa
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/goals/` — goals domain types
-- `server/services/goals/` — progress computation stubs
-- `client/modules/goals/` — module entry points (no UI implementation)
+- `packages/contracts/models/goals/` — goals domain types
+- `apps/api/services/goals/` — progress computation stubs
+- `apps/mobile/modules/goals/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/LIFE_GOALS_AND_VISION.md` — this plan
 
 ## Open Questions to Resolve
 
 - Goal model: OKR vs personal milestones.
 - Alignment engine depth and explainability.
+

@@ -77,12 +77,13 @@ This stub defines the Global ID module as a privacy-preserving identity and veri
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/identity/` — identity domain types
-- `server/services/identity/` — verification/consent stubs
-- `client/modules/identity/` — module entry points (no UI implementation)
+- `packages/contracts/models/identity/` — identity domain types
+- `apps/api/services/identity/` — verification/consent stubs
+- `apps/mobile/modules/identity/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/GLOBAL_ID_AND_VERIFICATION.md` — this plan
 
 ## Open Questions to Resolve
 
 - Verification provider selection and compliance scope.
 - Data residency constraints by region.
+

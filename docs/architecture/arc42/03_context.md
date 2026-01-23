@@ -155,23 +155,23 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 │  │  │                                             │   │   │
 │  │  │  ┌────────────────────────────────────┐   │   │   │
 │  │  │  │     UI Layer (Screens)             │   │   │   │
-│  │  │  │  /client/screens/*.tsx             │   │   │   │
+│  │  │  │  /apps/mobile/screens/*.tsx             │   │   │   │
 │  │  │  └────────────┬───────────────────────┘   │   │   │
 │  │  │               │                            │   │   │
 │  │  │  ┌────────────▼───────────────────────┐   │   │   │
 │  │  │  │  Components & Navigation           │   │   │   │
-│  │  │  │  /client/components/               │   │   │   │
-│  │  │  │  /client/navigation/               │   │   │   │
+│  │  │  │  /apps/mobile/components/               │   │   │   │
+│  │  │  │  /apps/mobile/navigation/               │   │   │   │
 │  │  │  └────────────┬───────────────────────┘   │   │   │
 │  │  │               │                            │   │   │
 │  │  │  ┌────────────▼───────────────────────┐   │   │   │
 │  │  │  │    Business Logic (Hooks)          │   │   │   │
-│  │  │  │  /client/hooks/                    │   │   │   │
+│  │  │  │  /apps/mobile/hooks/                    │   │   │   │
 │  │  │  └────────────┬───────────────────────┘   │   │   │
 │  │  │               │                            │   │   │
 │  │  │  ┌────────────▼───────────────────────┐   │   │   │
 │  │  │  │    Storage Layer                   │   │   │   │
-│  │  │  │  /client/storage/database.ts       │   │   │   │
+│  │  │  │  /apps/mobile/storage/database.ts       │   │   │   │
 │  │  │  └────────────┬───────────────────────┘   │   │   │
 │  │  │               │                            │   │   │
 │  │  │  ┌────────────▼───────────────────────┐   │   │   │
@@ -206,7 +206,7 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 │  │              (TypeScript)                           │   │
 │  │                                                       │   │
 │  │  ┌────────────────────────────────────────────┐    │   │
-│  │  │        API Routes (/server/routes.ts)      │    │   │
+│  │  │        API Routes (/apps/api/routes.ts)      │    │   │
 │  │  │  • /api/auth/*                             │    │   │
 │  │  │  • /api/recommendations/*                  │    │   │
 │  │  │  • /api/notes/*                            │    │   │
@@ -218,13 +218,13 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 │  │               │                                     │   │
 │  │  ┌────────────▼───────────────────────────────┐   │   │
 │  │  │        Middleware                           │   │   │
-│  │  │  • /server/middleware/auth.ts (JWT)        │   │   │
-│  │  │  • /server/middleware/validation.ts (Zod)  │   │   │
-│  │  │  • /server/middleware/errorHandler.ts      │   │   │
+│  │  │  • /apps/api/middleware/auth.ts (JWT)        │   │   │
+│  │  │  • /apps/api/middleware/validation.ts (Zod)  │   │   │
+│  │  │  • /apps/api/middleware/errorHandler.ts      │   │   │
 │  │  └────────────┬───────────────────────────────┘   │   │
 │  │               │                                     │   │
 │  │  ┌────────────▼───────────────────────────────┐   │   │
-│  │  │    Storage Layer (/server/storage.ts)      │   │   │
+│  │  │    Storage Layer (/apps/api/storage.ts)      │   │   │
 │  │  │  • In-memory storage (MVP)                 │   │   │
 │  │  │  • Future: Drizzle ORM → PostgreSQL        │   │   │
 │  │  └────────────────────────────────────────────┘   │   │
@@ -249,40 +249,40 @@ AIOS (AI Operating System) is a mobile super app that consolidates 14+ productiv
 
 | Layer | Technology | Purpose | Location |
 | ------- | ------------ | --------- | ---------- |
-| **UI Framework** | React Native 0.81.5 | Mobile rendering | `/client/screens/`, `/client/components/` |
+| **UI Framework** | React Native 0.81.5 | Mobile rendering | `/apps/mobile/screens/`, `/apps/mobile/components/` |
 | **Development Platform** | Expo 54.0.23 | Build tools, managed services | Root, `app.json` |
-| **Navigation** | React Navigation 7.x | Screen routing | `/client/navigation/AppNavigator.tsx` |
-| **State Management** | React Context + Hooks | Local state | `/client/context/` |
-| **Server State** | TanStack React Query 5.90.7 | API caching, retries | `/client/hooks/` (future) |
-| **Local Storage** | AsyncStorage 2.2.0 | Key-value persistence | `/client/storage/database.ts` |
+| **Navigation** | React Navigation 7.x | Screen routing | `/apps/mobile/navigation/AppNavigator.tsx` |
+| **State Management** | React Context + Hooks | Local state | `/apps/mobile/context/` |
+| **Server State** | TanStack React Query 5.90.7 | API caching, retries | `/apps/mobile/hooks/` (future) |
+| **Local Storage** | AsyncStorage 2.2.0 | Key-value persistence | `/apps/mobile/storage/database.ts` |
 | **Animations** | React Native Reanimated 4.1.1 | 60fps animations | Throughout components |
 | **Type System** | TypeScript 5.9.2 | Static typing | All `.ts/.tsx` files |
-| **Validation** | Zod 3.24.2 | Runtime validation | `/shared/schema.ts` |
+| **Validation** | Zod 3.24.2 | Runtime validation | `/packages/contracts/schema.ts` |
 
 #### Server-Side Technologies
 
 | Layer | Technology | Purpose | Location |
 | ------- | ------------ | --------- | ---------- |
 | **Runtime** | Node.js 18+ | JavaScript runtime | Server process |
-| **Web Framework** | Express 4.21.2 | HTTP server | `/server/index.ts` |
-| **Authentication** | JWT (jsonwebtoken 9.0.3) | Token-based auth | `/server/middleware/auth.ts` |
-| **Password Hashing** | bcryptjs 3.0.3 | Secure passwords | `/server/middleware/auth.ts` |
-| **ORM** | Drizzle ORM 0.39.3 | Type-safe SQL | `/shared/schema.ts` (future) |
-| **Database Driver** | pg 8.16.3 | PostgreSQL client | `/server/storage.ts` (future) |
-| **Validation** | Zod 3.24.2 | Request validation | `/server/middleware/validation.ts` |
+| **Web Framework** | Express 4.21.2 | HTTP server | `/apps/api/index.ts` |
+| **Authentication** | JWT (jsonwebtoken 9.0.3) | Token-based auth | `/apps/api/middleware/auth.ts` |
+| **Password Hashing** | bcryptjs 3.0.3 | Secure passwords | `/apps/api/middleware/auth.ts` |
+| **ORM** | Drizzle ORM 0.39.3 | Type-safe SQL | `/packages/contracts/schema.ts` (future) |
+| **Database Driver** | pg 8.16.3 | PostgreSQL client | `/apps/api/storage.ts` (future) |
+| **Validation** | Zod 3.24.2 | Request validation | `/apps/api/middleware/validation.ts` |
 | **Type System** | TypeScript 5.9.2 | Static typing | All `.ts` files |
 
 #### External Integrations
 
 | Service | Purpose | Integration Point | Status |
 | --------- | --------- | ------------------ | -------- |
-| **LibreTranslate** | Language translation | `/server/routes.ts` → External API | Configured |
-| **Expo Contacts API** | Native contact access | `/client/screens/ContactsScreen.tsx` | Implemented |
-| **Expo Media Library** | Photo/video access | `/client/screens/PhotosScreen.tsx` | Implemented |
-| **Expo Speech** | Text-to-speech | `/client/screens/TranslatorScreen.tsx` | Implemented |
-| **Expo AV** | Audio recording | `/client/screens/TranslatorScreen.tsx` | Placeholder |
-| **PostgreSQL** | Cloud database | `/server/storage.ts` | Configured, not connected |
-| **WebSocket** | Real-time messaging | `/server/index.ts` | Scaffold ready |
+| **LibreTranslate** | Language translation | `/apps/api/routes.ts` → External API | Configured |
+| **Expo Contacts API** | Native contact access | `/apps/mobile/screens/ContactsScreen.tsx` | Implemented |
+| **Expo Media Library** | Photo/video access | `/apps/mobile/screens/PhotosScreen.tsx` | Implemented |
+| **Expo Speech** | Text-to-speech | `/apps/mobile/screens/TranslatorScreen.tsx` | Implemented |
+| **Expo AV** | Audio recording | `/apps/mobile/screens/TranslatorScreen.tsx` | Placeholder |
+| **PostgreSQL** | Cloud database | `/apps/api/storage.ts` | Configured, not connected |
+| **WebSocket** | Real-time messaging | `/apps/api/index.ts` | Scaffold ready |
 | **AI Service (Future)** | Recommendations | Backend API | Planned |
 
 ### Data Flow Patterns
@@ -300,7 +300,7 @@ User Action → UI Component → Storage Method → AsyncStorage → UI Update
 1. User taps "New Note" in NotebookScreen
 2. NoteEditorScreen renders
 3. User types content, taps Save
-4. `saveNote()` called in `/client/storage/database.ts`
+4. `saveNote()` called in `/apps/mobile/storage/database.ts`
 5. Data written to AsyncStorage
 6. NotebookScreen updates with new note
 
@@ -355,7 +355,7 @@ User Action → UI Component → Expo API → Native Module → Device → Respo
 
 ```text
 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
-├── client/                    # Mobile application
+├── apps/mobile/                    # Mobile application
 │   ├── components/            # Reusable UI components
 │   │   ├── Button.tsx
 │   │   ├── Card.tsx
@@ -381,7 +381,7 @@ User Action → UI Component → Expo API → Native Module → Device → Respo
 │   ├── utils/                 # Helper functions
 │   │   └── seedData.ts
 │   └── App.tsx                # Root component
-├── server/                    # Backend API
+├── apps/api/                    # Backend API
 │   ├── middleware/            # Express middleware
 │   │   ├── auth.ts            # JWT authentication
 │   │   ├── validation.ts      # Zod validation
@@ -390,7 +390,7 @@ User Action → UI Component → Expo API → Native Module → Device → Respo
 │   ├── index.ts               # Express app setup
 │   ├── routes.ts              # API endpoints
 │   └── storage.ts             # In-memory storage (future: DB)
-├── shared/                    # Code shared by client/server
+├── packages/contracts/                    # Code shared by apps/mobile/server
 │   ├── constants.ts           # Shared constants
 │   └── schema.ts              # Drizzle schema (future)
 ├── docs/                      # Documentation
@@ -470,13 +470,13 @@ User Action → UI Component → Expo API → Native Module → Device → Respo
 
 ```bash
 # Check all modules are implemented
-ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
+ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/
 
 # Verify storage layer exists
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts | head -50
 
 # Check backend API routes
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/routes.ts | grep "router\."
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/routes.ts | grep "router\."
 ```text
 
 ### Verify Technical Context
@@ -486,11 +486,11 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/routes.ts | grep "r
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep -A 30 "dependencies"
 
 # Check server setup
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/index.ts | head -50
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/index.ts | head -50
 
 # Verify file structure
-tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
-tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
+tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/
+tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/
 ```text
 
 ### Verify External Integrations
@@ -502,21 +502,21 @@ curl -X POST http://localhost:5000/api/translate \
   -d '{"text": "Hello", "target": "es"}'
 
 # Check device API usage
-grep -r "expo-contacts" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
-grep -r "expo-media-library" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
+grep -r "expo-contacts" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/
+grep -r "expo-media-library" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/
 ```text
 
 ### Test Data Flows
 
 ```bash
 # Run end-to-end tests
-npm test server/__tests__/api.e2e.test.ts
+npm test apps/api/__tests__/api.e2e.test.ts
 
 # Test local storage
-npm test client/storage/__tests__/
+npm test apps/mobile/storage/__tests__/
 
 # Test authentication flow
-npm test server/__tests__/ -- -t "auth"
+npm test apps/api/__tests__/ -- -t "auth"
 ```text
 
 ---
@@ -530,3 +530,4 @@ npm test server/__tests__/ -- -t "auth"
 - [Deployment View](07_deployment.md) - Infrastructure and deployment
 - [ADR-001: AsyncStorage](../../decisions/001-use-asyncstorage.md) - Storage decision
 - [ADR-002: React Native](../../decisions/002-react-native.md) - Platform decision
+

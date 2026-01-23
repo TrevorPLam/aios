@@ -21,8 +21,8 @@ The Notebook module has undergone comprehensive security analysis using GitHub's
 
 #### Files Scanned
 
-- `client/storage/database.ts` (Notes module methods)
-- `client/storage/__tests__/notes.test.ts` (Test suite)
+- `apps/mobile/storage/database.ts` (Notes module methods)
+- `apps/mobile/storage/__tests__/notes.test.ts` (Test suite)
 
 ### Results
 
@@ -427,3 +427,4 @@ Code Quality Issues: 0
 ```text
 
 **Conclusion:** Clean bill of health from security perspective.
+

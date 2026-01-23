@@ -135,7 +135,7 @@ Successfully enhanced the Alerts module from **52% to 61% completion** by implem
 ### Code Structure
 
 ```text
-client/
+apps/mobile/
 ├── components/
 │   └── AlertStatisticsSheet.tsx      (New - 565 lines)
 ├── screens/
@@ -393,3 +393,4 @@ The module is now **production-ready** with a solid foundation for future AI enh
 
 *Generated on January 16, 2026*
 *AIOS Development Team*
+

@@ -305,7 +305,7 @@ Each document includes "How to Verify" section with commands to check:
 ### Example
 ```bash
 # Verify AsyncStorage usage
-grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
 
 # Verify test coverage
 npm run test:coverage
@@ -394,3 +394,4 @@ npm run test:coverage
 2. Browse sections based on your needs (see Quick Start guide above)
 3. Use verification commands to explore the actual codebase
 4. Refer back to this README when navigating the documentation
+

@@ -234,7 +234,7 @@ it('should hash passwords with bcrypt', async () => {
 });
 ```text
 
-**Current Status:** ✅ Implemented in `/server/middleware/auth.ts`
+**Current Status:** ✅ Implemented in `/apps/api/middleware/auth.ts`
 
 ---
 
@@ -290,7 +290,7 @@ it('should hash passwords with bcrypt', async () => {
 
 ### Test (8)
 ```bash
-# 1. Modify /client/components/Button.tsx
+# 1. Modify /apps/mobile/components/Button.tsx
 # 2. Run tests: npm test
 # 3. Verify zero test failures
 # 4. Manually check 2-3 screens to verify visual change
@@ -557,7 +557,7 @@ npm run check:types
 
 # Maintainability
 npm run lint
-npx jscpd client/ server/
+npx jscpd apps/mobile/ apps/api/
 
 # Testability
 npm run test:coverage
@@ -589,3 +589,4 @@ npm run test:coverage
 - [Requirements and Goals](01_goals.md) - Quality goals definition
 - [Runtime View](06_runtime.md) - Quality in action
 - [Risks and Technical Debt](11_risks.md) - Quality risks
+

@@ -79,12 +79,13 @@ This stub defines the Maps & Navigation module structure and cross-module contra
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/maps/` — location domain types
-- `server/services/maps/` — provider adapters, routing stubs
-- `client/modules/maps/` — module entry points (no UI implementation)
+- `packages/contracts/models/maps/` — location domain types
+- `apps/api/services/maps/` — provider adapters, routing stubs
+- `apps/mobile/modules/maps/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/MAPS_AND_NAVIGATION.md` — this plan
 
 ## Open Questions to Resolve
 
 - Provider selection and cost constraints.
 - Offline map availability and storage limits.
+

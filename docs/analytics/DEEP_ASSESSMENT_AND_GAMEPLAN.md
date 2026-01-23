@@ -67,7 +67,7 @@
 
 1. **Telemetry API Endpoint** - CRITICAL
    - **Current:** Client POSTs to `/api/telemetry/events`
-   - **Actual:** Endpoint doesn't exist in `server/routes.ts`
+   - **Actual:** Endpoint doesn't exist in `apps/api/routes.ts`
    - **Impact:** All analytics events fail to send
    - **Priority:** P0 - Blocks all analytics
 
@@ -82,7 +82,7 @@
    - **Priority:** P0 - Required for endpoint
 
 3. **Storage Layer** - CRITICAL
-   - **Current:** No analytics methods in `server/storage.ts`
+   - **Current:** No analytics methods in `apps/api/storage.ts`
    - **Needed:**
      - `saveAnalyticsEvents(events: AnalyticsEvent[]): Promise<void>`
      - `getAnalyticsEvents(userId: string, filters): Promise<AnalyticsEvent[]>`
@@ -90,7 +90,7 @@
    - **Priority:** P0 - Required for endpoint
 
 4. **Validation** - HIGH
-   - **Current:** No analytics event schema in `shared/schema.ts`
+   - **Current:** No analytics event schema in `packages/contracts/schema.ts`
    - **Needed:** Zod schema for batch payload validation
    - **Priority:** P1 - Security/data quality
 
@@ -129,7 +129,7 @@
 
 ### 2.1 Where Code Should Live
 
-#### Client-Side (`client/analytics/`)
+#### Client-Side (`apps/mobile/analytics/`)
 
 ✅ **Keep Here:**
 
@@ -142,7 +142,7 @@
 - Privacy mode switching
 - Client-side aggregations (time on screen, etc.)
 
-### Server-Side (`server/`)
+### Server-Side (`apps/api/`)
 
 ✅ **Add Here:**
 
@@ -155,7 +155,7 @@
 - Event querying API (NEW)
 - Aggregation/reporting (FUTURE)
 
-### Database (`shared/schema.ts` + migrations)
+### Database (`packages/contracts/schema.ts` + migrations)
 
 ✅ **Add Here:**
 
@@ -164,11 +164,11 @@
 - User ID foreign key (NEW)
 - Retention policy support (NEW)
 
-### Shared (`shared/`)
+### Shared (`packages/contracts/`)
 
 ✅ **Add Here:**
 
-- Analytics event types (shared between client/server)
+- Analytics event types (shared between apps/mobile/server)
 - Validation schemas (Zod)
 - Common utilities
 
@@ -177,16 +177,16 @@
 ```text
 [Client App]
     ↓
-[Analytics Client] (client/analytics/client.ts)
+[Analytics Client] (apps/mobile/analytics/client.ts)
     ↓ (sanitize, bucket, deduplicate)
-[Event Queue] (client/analytics/queue.ts)
+[Event Queue] (apps/mobile/analytics/queue.ts)
     ↓ (batch events)
-[Transport] (client/analytics/transport.ts)
+[Transport] (apps/mobile/analytics/transport.ts)
     ↓ (compress, retry)
     ↓ POST /api/telemetry/events
-[Server Endpoint] (server/routes.ts) ❌ MISSING
+[Server Endpoint] (apps/api/routes.ts) ❌ MISSING
     ↓ (validate, authenticate)
-[Storage Layer] (server/storage.ts) ❌ MISSING
+[Storage Layer] (apps/api/storage.ts) ❌ MISSING
     ↓ (batch insert)
 [Database] (analytics_events table) ❌ MISSING
     ↓ (persist, index)
@@ -207,7 +207,7 @@
 
 #### Task 0.1: Create Database Schema (T-081) ⭐ NEW
 
-**File:** `server/migrations/XXXX_create_analytics_events.sql`
+**File:** `apps/api/migrations/XXXX_create_analytics_events.sql`
 **Priority:** P0
 **Effort:** 4-6 hours
 **Dependencies:** None
@@ -243,7 +243,7 @@ CREATE INDEX idx_analytics_session ON analytics_events(session_id);
 
 #### Task 0.2: Add Storage Methods (T-082) ⭐ NEW
 
-**File:** `server/storage.ts`
+**File:** `apps/api/storage.ts`
 **Priority:** P0
 **Effort:** 6-8 hours
 **Dependencies:** T-081 (database schema)
@@ -279,7 +279,7 @@ deleteUserAnalytics(userId: string): Promise<void>
 
 #### Task 0.3: Create Telemetry Endpoint (T-083) ⭐ NEW
 
-**File:** `server/routes.ts`
+**File:** `apps/api/routes.ts`
 **Priority:** P0
 **Effort:** 4-6 hours
 **Dependencies:** T-082 (storage methods)
@@ -320,7 +320,7 @@ app.post(
 
 #### Task 0.4: Add Validation Schema (T-084) ⭐ NEW
 
-**File:** `shared/schema.ts`
+**File:** `packages/contracts/schema.ts`
 **Priority:** P0
 **Effort:** 3-4 hours
 **Dependencies:** None (can parallelize)
@@ -620,3 +620,4 @@ npm install pako @types/pako  # For compression
 **Status:** Proposed
 **Owner:** AGENT
 **Approval Needed:** Decisions 1-4, Phase 0 prioritization
+

@@ -79,7 +79,7 @@ The following quality attributes drive architectural decisions, ranked by priori
 ### Maintainability
 
 - Modular architecture with clear boundaries
-- Shared component library in `/client/components`
+- Shared component library in `/apps/mobile/components`
 - Consistent patterns across all modules
 - Comprehensive TypeScript typing
 
@@ -174,10 +174,10 @@ The following quality attributes drive architectural decisions, ranked by priori
    ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
 
    # Verify module screens exist
-   ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
+   ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/
 
    # Check storage layer
-   ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+   ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
    ```text
 
 1. **Verify Quality Metrics:**
@@ -211,7 +211,7 @@ The following quality attributes drive architectural decisions, ranked by priori
 
 ### Business Goals Verification
 
-- **Module Count:** Check `/client/screens/` for 14 production modules
+- **Module Count:** Check `/apps/mobile/screens/` for 14 production modules
 - **Test Coverage:** Run `npm run test:coverage` to verify 100% coverage on production modules
 - **Security:** Check `npm audit` and CodeQL results for zero critical vulnerabilities
 - **Performance:** Use React DevTools Profiler to measure render times
@@ -226,3 +226,4 @@ The following quality attributes drive architectural decisions, ranked by priori
 - [Architecture Decisions](../../decisions/README.md) - ADRs for key technical choices
 - [README.md](../../../README.md) - Project overview and getting started
 - [F&F.md](../../../F&F.md) - Complete features and functionality reference
+

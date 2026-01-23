@@ -96,7 +96,7 @@ This section describes the core technical components that make AIOS work.
 
 ## Event Bus
 
-### 1. Event Bus (`client/lib/eventBus.ts`)
+### 1. Event Bus (`apps/mobile/lib/eventBus.ts`)
 
 **Purpose:** Enables modules to communicate without tight coupling.
 
@@ -150,7 +150,7 @@ const unsubscribe = eventBus.on(
 
 ## Context Engine
 
-### 2. Context Engine (`client/lib/contextEngine.ts`)
+### 2. Context Engine (`apps/mobile/lib/contextEngine.ts`)
 
 **Purpose:** Automatically adapts UI based on user's current life context.
 
@@ -214,7 +214,7 @@ contextEngine.setUserOverride(ContextZone.FOCUS);
 
 ## Omnisearch
 
-### 3. Omnisearch (`client/lib/omnisearch.ts`)
+### 3. Omnisearch (`apps/mobile/lib/omnisearch.ts`)
 
 **Purpose:** Search everything in the app from one place.
 
@@ -318,7 +318,7 @@ const results = await omnisearch.search('doctor', {
 
 ## Module Registry
 
-### 4. Module Registry (`client/lib/moduleRegistry.ts`)
+### 4. Module Registry (`apps/mobile/lib/moduleRegistry.ts`)
 
 **Purpose:** Single source of truth for all modules in the app.
 
@@ -608,7 +608,7 @@ interface PerformanceMetrics {
 
 ### Adding a New Module
 
-1. **Add to Module Registry** (`client/lib/moduleRegistry.ts`):
+1. **Add to Module Registry** (`apps/mobile/lib/moduleRegistry.ts`):
 
 ```typescript
 {
@@ -626,9 +626,9 @@ interface PerformanceMetrics {
 }
 ```text
 
-1. **Create Module Screen** (`client/screens/WalletScreen.tsx`)
+1. **Create Module Screen** (`apps/mobile/screens/WalletScreen.tsx`)
 
-2. **Add Route to Navigator** (`client/navigation/AppNavigator.tsx`)
+2. **Add Route to Navigator** (`apps/mobile/navigation/AppNavigator.tsx`)
 
 3. **Implement Search** (add to omnisearch):
 
@@ -655,7 +655,7 @@ eventBus.emit(EVENT_TYPES.PAYMENT_COMPLETED, {
 
 ### Adding a New Context Zone
 
-1. **Add to ContextEngine** (`client/lib/contextEngine.ts`):
+1. **Add to ContextEngine** (`apps/mobile/lib/contextEngine.ts`):
 
 ```typescript
 enum ContextZone {
@@ -771,7 +771,7 @@ State-preserving navigation manager with breadcrumb UI, iOS-specific storage via
 
 ### Components
 
-#### 1. Module Handoff Manager (`client/lib/moduleHandoff.ts`)
+#### 1. Module Handoff Manager (`apps/mobile/lib/moduleHandoff.ts`)
 
 ### Responsibilities
 - Track handoff chain (module → module → module)
@@ -842,7 +842,7 @@ handoffManager.cancelHandoff();
 }
 ```text
 
-#### 2. Handoff Breadcrumb UI (`client/components/HandoffBreadcrumb.tsx`)
+#### 2. Handoff Breadcrumb UI (`apps/mobile/components/HandoffBreadcrumb.tsx`)
 
 **Purpose:** Visual breadcrumb bar showing navigation path with back button.
 
@@ -1141,3 +1141,4 @@ it('should enforce max depth limit', () => {
 - [Super App Module Expansion](vision/SUPER_APP_MODULE_EXPANSION.md)
 - [API Documentation](technical/API_DOCUMENTATION.md)
 - [Testing Instructions](technical/TESTING_INSTRUCTIONS.md)
+

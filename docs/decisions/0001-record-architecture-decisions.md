@@ -252,7 +252,7 @@ This is the foundational ADR that establishes the Decision-to-Docs Binding patte
 ### Primary Documentation
 
 - **Architecture:** This decision affects all of `docs/architecture/`
-- **Governance:** [GOVERNANCE.md](../../GOVERNANCE.md) - References ADR process
+- **Governance:** [/.repo/policy/CONSTITUTION.md](/.repo/policy/CONSTITUTION.md) - References ADR process
 - **Contributing:** [CONTRIBUTING.md](../../CONTRIBUTING.md) - Should mention ADRs
 
 ### Related ADRs

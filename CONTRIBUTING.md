@@ -52,10 +52,10 @@ AIOS uses a **Unified AGENT Ownership** model for development. Understanding thi
 
 ### See also
 
-- [Constitution - Agent Responsibility Model](docs/governance/constitution.md)
+- [Constitution - Agent Responsibility Model](/.repo/policy/CONSTITUTION.md)
 - [Best Practices Guide](BESTPR.md) - Token-optimized quick reference for agents
 - [AI Contribution Policy](docs/ai/ai_contribution_policy.md)
-- [Repository State](docs/governance/state.md)
+- [Repository Policies](/.repo/policy/)
 
 ## Getting Started
 

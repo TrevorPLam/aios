@@ -78,8 +78,8 @@ Uncertainty:
   - [x] Render "Join Meeting" action on event details
   - [x] Add tests for link validation and rendering
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -102,7 +102,7 @@ Uncertainty:
   - [ ] Add bulk confirmation and undo safety prompts
   - [ ] Add tests for bulk edit operations
 - **References**:
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -124,8 +124,8 @@ Uncertainty:
   - [ ] Provide audit log of rule executions
   - [ ] Add tests for rule evaluation and side effects
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -153,12 +153,12 @@ Uncertainty:
   - [ ] Implement proper time picker in AlertDetailScreen.tsx for iOS
   - [ ] Test time selection on iOS
   - [ ] Remove TODO comment at line 277
-- **References**: client/screens/AlertDetailScreen.tsx:277
+- **References**: apps/mobile/screens/AlertDetailScreen.tsx:277
   - [x] Install @react-native-community/datetimepicker (already installed)
   - [x] Implement proper time picker in AlertDetailScreen.tsx (already implemented)
   - [x] Test time selection on both iOS and Android (implemented with platform logic)
   - [x] Remove TODO comment at line 277 (no TODO found)
-- **References**: client/screens/AlertDetailScreen.tsx:32-34, 291-318, 451-459
+- **References**: apps/mobile/screens/AlertDetailScreen.tsx:32-34, 291-318, 451-459
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Time picker was already fully implemented in previous work. Verified functionality includes handleTimeChange, openTimePicker, and DateTimePicker component integration with haptic feedback.
@@ -182,7 +182,7 @@ Uncertainty:
   - [ ] Add module grid access from sidebar "More" button
   - [ ] Consider adding to CommandCenter as a card
   - [ ] Test module grid display and navigation on iOS
-- **References**: client/screens/ModuleGridScreen.tsx
+- **References**: apps/mobile/screens/ModuleGridScreen.tsx
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
@@ -190,7 +190,7 @@ Uncertainty:
   - [x] Add module grid access from sidebar "More" button (implemented)
   - [x] Consider adding to CommandCenter as a card (grid icon in header)
   - [x] Test module grid display and navigation (verified working)
-- **References**: client/screens/CommandCenterScreen.tsx:384-392, client/components/PersistentSidebar.tsx:420-444
+- **References**: apps/mobile/screens/CommandCenterScreen.tsx:384-392, apps/mobile/components/PersistentSidebar.tsx:420-444
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: ModuleGrid accessible via grid icon in CommandCenter header and "All Modules" button in PersistentSidebar. Modal presentation configured.
@@ -214,9 +214,9 @@ Uncertainty:
   - [x] Add "skip onboarding" option with explanation (implemented in OnboardingWelcomeScreen.tsx:203-207)
   - [x] Test complete onboarding flow (verified working)
 - **References**:
-  - REMOVED: client/screens/OnboardingWelcomeScreen.tsx
-  - REMOVED: client/screens/OnboardingModuleSelectionScreen.tsx
-  - REMOVED: client/lib/onboardingManager.ts
+  - REMOVED: apps/mobile/screens/OnboardingWelcomeScreen.tsx
+  - REMOVED: apps/mobile/screens/OnboardingModuleSelectionScreen.tsx
+  - REMOVED: apps/mobile/lib/onboardingManager.ts
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Onboarding system removed per user request. Future onboarding will focus on AI personality/behavior configuration (T-057), not module selection.
@@ -238,7 +238,7 @@ Uncertainty:
   - [ ] Lazy load mini-mode components
   - [ ] Add loading indicators for lazy-loaded content
   - [ ] Measure bundle size improvement on iOS
-- **References**: client/lib/lazyLoader.ts
+- **References**: apps/mobile/lib/lazyLoader.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
@@ -261,7 +261,7 @@ Uncertainty:
   - [ ] Add prefetch configuration to Settings
   - [ ] Monitor and optimize prefetch patterns
   - [x] Address TODOs at prefetchEngine.ts:485, 493
-- **References**: client/lib/prefetchEngine.ts
+- **References**: apps/mobile/lib/prefetchEngine.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic optimization. AGENT can verify Android/Web compatibility in follow-up.
@@ -283,7 +283,7 @@ Uncertainty:
   - [ ] Add memory usage monitoring
   - [ ] Implement automatic cleanup on low memory warnings
   - [ ] Test memory cleanup behavior on iOS
-- **References**: client/lib/memoryManager.ts
+- **References**: apps/mobile/lib/memoryManager.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic memory management. AGENT can verify Android/Web compatibility in follow-up.
@@ -305,7 +305,7 @@ Uncertainty:
   - [ ] Add visual indicators for handoff-enabled modules
   - [ ] Test handoff workflows (e.g., Calendar → Maps) on iOS
   - [ ] Add handoff history or back navigation
-- **References**: client/lib/moduleHandoff.ts
+- **References**: apps/mobile/lib/moduleHandoff.ts
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic navigation. AGENT can verify Android/Web compatibility in follow-up.
@@ -373,7 +373,7 @@ Uncertainty:
   - [x] Add h4, h5, h6 to Typography constants (implemented in theme.ts)
   - [x] Document typography scale usage (added to design_guidelines.md)
   - [x] Update components using hardcoded heading sizes (ThemedText.tsx updated)
-- **References**: client/constants/theme.ts, client/components/ThemedText.tsx, docs/technical/design_guidelines.md
+- **References**: apps/mobile/constants/theme.ts, apps/mobile/components/ThemedText.tsx, docs/technical/design_guidelines.md
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic design system enhancement. AGENT can verify Android/Web compatibility in follow-up.
@@ -396,7 +396,7 @@ Uncertainty:
   - [ ] Adjust colors for better contrast/readability
   - [ ] Run WCAG contrast checker
   - [ ] Add light mode screenshots to documentation
-- **References**: client/constants/theme.ts
+- **References**: apps/mobile/constants/theme.ts
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic theme refinement. AGENT can verify Android/Web contrast compatibility in follow-up.
@@ -513,7 +513,7 @@ Uncertainty:
   - [ ] Phase 3: Add tests for form components (Input, Select, Checkbox, etc.)
   - [ ] Phase 4: Add tests for complex components (MiniModeContainer, QuickCapture, AIAssist)
   - [ ] Phase 5: Measure coverage, document testing patterns, aim for 80%+ coverage
-- **References**: client/components/*.tsx
+- **References**: apps/mobile/components/*.tsx
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic testing infrastructure. AGENT can verify Android/Web test compatibility in follow-up.
@@ -607,7 +607,7 @@ Uncertainty:
   - [x] Show integration examples with UI components
   - [x] Document public APIs and expected usage patterns
   - [x] Add examples to documentation site
-- **References**: client/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: apps/mobile/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic library documentation. AGENT can verify Android/Web integration examples in follow-up.
@@ -631,7 +631,7 @@ Uncertainty:
   - [ ] Document complex components: MiniMode, QuickCapture, AIAssist
   - [ ] Add Storybook or create component showcase page
   - [ ] Include accessibility guidelines for each component
-- **References**: client/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
+- **References**: apps/mobile/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic component documentation. AGENT can verify Android/Web component compatibility in follow-up.
@@ -679,7 +679,7 @@ Uncertainty:
   - [x] Fix ThemedText type union (removed "title" usage in AlertsScreen.tsx)
   - [x] Fix AIAssistSheet props (fixed context→module in BudgetScreen.tsx)
   - [x] Test all component prop usage (verified via grep searches)
-- **References**: client/screens/AlertsScreen.tsx:76, client/screens/BudgetScreen.tsx:1299
+- **References**: apps/mobile/screens/AlertsScreen.tsx:76, apps/mobile/screens/BudgetScreen.tsx:1299
 - **Dependencies**: None
 - **Effort**: S
 - **Note**: Platform-agnostic component prop validation. AGENT can verify Android/Web component props in follow-up.
@@ -729,9 +729,9 @@ Uncertainty:
   - [ ] Nearest endpoint selection based on user location
   - [ ] Add tests for CLI commands and geo-routing logic
 - **References**:
-  - client/analytics/devtools/cli.ts
-  - client/analytics/devtools/ci.ts
-  - client/analytics/performance/geoRouting.ts
+  - apps/mobile/analytics/devtools/cli.ts
+  - apps/mobile/analytics/devtools/ci.ts
+  - apps/mobile/analytics/performance/geoRouting.ts
   - docs/analytics/IMPLEMENTATION_PLAN.md (Phase 3.5, Phase 4)
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (25-35 hours)
@@ -757,8 +757,8 @@ Uncertainty:
   - [ ] Feature flag support (enable/disable analytics features)
   - [ ] Add tests for SLI calculations and mock client
 - **References**:
-  - client/analytics/production/slo.ts
-  - client/analytics/devtools/testing.ts
+  - apps/mobile/analytics/production/slo.ts
+  - apps/mobile/analytics/devtools/testing.ts
   - docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (20-30 hours)
@@ -1198,3 +1198,4 @@ Uncertainty:
   - P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md
 - **Dependencies**: None
 - **Effort**: S
+

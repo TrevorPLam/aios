@@ -92,9 +92,9 @@ The error handler automatically logs errors with request context:
 
 ## Files Changed
 
-- `server/utils/logger.ts`: Winston logger configuration
-- `server/middleware/errorHandler.ts`: Error logging integration
-- `server/index.ts`: Replaced console.log with structured logger
+- `apps/api/utils/logger.ts`: Winston logger configuration
+- `apps/api/middleware/errorHandler.ts`: Error logging integration
+- `apps/api/index.ts`: Replaced console.log with structured logger
 
 ## Migration from console.log
 
@@ -123,3 +123,4 @@ logger.error('Unexpected error', { error: err, path: req.path });
   - [x] Add structured logging with context
   - [x] Configure log levels for environments
   - [x] Remove TODO at errorHandler.ts:28-30
+

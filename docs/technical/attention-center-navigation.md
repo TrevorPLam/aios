@@ -24,7 +24,7 @@ The Attention Center is now accessible from the Command Center header, displayin
 
 ### Files Changed
 
-- `client/screens/CommandCenterScreen.tsx`:
+- `apps/mobile/screens/CommandCenterScreen.tsx`:
   - Added attention icon button (line 407)
   - Added badge component with count display
   - Added `attentionCount` state management
@@ -87,13 +87,13 @@ badge: {
 
 ### Automated Testing
 
-- Attention manager tests: `client/lib/__tests__/attentionManager.test.ts`
+- Attention manager tests: `apps/mobile/lib/__tests__/attentionManager.test.ts`
 - All 25 tests passing, including `getCounts()` tests
 
 ## Related Features
 
-- **Attention Manager**: `client/lib/attentionManager.ts`
-- **Attention Center Screen**: `client/screens/AttentionCenterScreen.tsx`
+- **Attention Manager**: `apps/mobile/lib/attentionManager.ts`
+- **Attention Center Screen**: `apps/mobile/screens/AttentionCenterScreen.tsx`
 - **Focus Mode**: Available in AttentionCenter for filtering notifications
 
 ## Task Completion
@@ -119,6 +119,7 @@ badge: {
 
 ## References
 
-- Attention Manager API: `client/lib/attentionManager.ts`
-- Command Center UI: `client/screens/CommandCenterScreen.tsx`
+- Attention Manager API: `apps/mobile/lib/attentionManager.ts`
+- Command Center UI: `apps/mobile/screens/CommandCenterScreen.tsx`
 - TODO Task: `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md` lines 154-194
+

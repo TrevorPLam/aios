@@ -1,6 +1,6 @@
 # Client Module (Mobile App)
 
-**Location:** `client/`
+**Location:** `apps/mobile/`
 **Language:** TypeScript, JavaScript
 **Framework:** React Native (Expo)
 **Status:** Active
@@ -16,7 +16,7 @@ The client module is the mobile application that users interact with on their iO
 - Renders the mobile UI for iOS and Android platforms
 - Manages user interactions and navigation
 - Handles authentication and user sessions
-- Communicates with the backend API (`server/`)
+- Communicates with the backend API (`apps/api/`)
 - Manages local state and offline data
 - Provides push notifications and background tasks
 - Integrates device features (camera, location, etc.)
@@ -24,7 +24,7 @@ The client module is the mobile application that users interact with on their iO
 ### What This Module Does NOT Do
 
 - Does NOT store sensitive data persistently without encryption
-- Does NOT perform complex business logic (that belongs in `server/`)
+- Does NOT perform complex business logic (that belongs in `apps/api/`)
 - Does NOT directly access databases (all data comes through API)
 - Does NOT trust user input (validation happens on both sides)
 
@@ -41,7 +41,7 @@ The client module is the mobile application that users interact with on their iO
 ### Architecture Overview
 
 ```text
-client/
+apps/mobile/
 ├── src/
 │   ├── components/         # Reusable UI components
 │   ├── screens/           # Full-screen views/pages
@@ -63,7 +63,7 @@ client/
 
 #### Component 1: API Service
 
-**Location:** `client/src/services/api.ts`
+**Location:** `apps/mobile/services/api.ts`
 **Purpose:** Centralized HTTP client for backend communication
 ### Interface
 ```typescript
@@ -77,7 +77,7 @@ export class ApiService {
 
 #### Component 2: Authentication Context
 
-**Location:** `client/src/store/AuthContext.tsx`
+**Location:** `apps/mobile/store/AuthContext.tsx`
 **Purpose:** Manages user authentication state across the app
 ### Interface (2)
 ```typescript
@@ -92,7 +92,7 @@ export interface AuthContextType {
 
 #### Component 3: Navigation
 
-**Location:** `client/src/navigation/RootNavigator.tsx`
+**Location:** `apps/mobile/navigation/RootNavigator.tsx`
 **Purpose:** Defines app navigation structure and routing
 ### Interface (3)
 ```typescript
@@ -216,13 +216,13 @@ The app responds to system and custom events:
 | `@react-native-async-storage/async-storage` | `^1.21.0` | Local storage |
 | `expo-secure-store` | `~12.8.0` | Secure credential storage |
 
-See `client/package.json` for complete dependency list.
+See `apps/mobile/package.json` for complete dependency list.
 
 ### Internal Dependencies
 
-- `../shared/types` - Shared TypeScript types and interfaces
-- `../shared/validators` - Shared validation logic
-- `../shared/utils` - Shared utility functions
+- `../packages/contracts/types` - Shared TypeScript types and interfaces
+- `../packages/contracts/validators` - Shared validation logic
+- `../packages/contracts/utils` - Shared utility functions
 
 ### Dependency Rationale
 
@@ -263,7 +263,7 @@ npm run lint
 
 #### Environment Variables
 ```bash
-# Create .env file in client/ directory
+# Create .env file in apps/mobile/ directory
 API_URL=https://api.example.com      # Backend API URL
 API_TIMEOUT=30000                     # Request timeout (ms)
 ENABLE_ANALYTICS=true                 # Analytics flag
@@ -300,13 +300,13 @@ eas submit --platform android
 ### Steps
 ```bash
 # 1. Create screen component
-touch client/src/screens/NewScreen.tsx
+touch apps/mobile/screens/NewScreen.tsx
 
 # 2. Add to navigation types
-# Edit client/src/navigation/types.ts
+# Edit apps/mobile/navigation/types.ts
 
 # 3. Add route to navigator
-# Edit client/src/navigation/RootNavigator.tsx
+# Edit apps/mobile/navigation/RootNavigator.tsx
 
 # 4. Test navigation
 npm run ios  # or npm run android
@@ -318,28 +318,28 @@ npm run ios  # or npm run android
 
 ### Steps (2)
 ```typescript
-// 1. Define types in shared/types (if new types needed)
-// shared/types/api.ts
+// 1. Define types in packages/contracts/types (if new types needed)
+// packages/contracts/types/api.ts
 export interface NewDataType {
   id: string;
   // ... fields
 }
 
 // 2. Add method to API service
-// client/src/services/api.ts
+// apps/mobile/services/api.ts
 export const fetchNewData = async (): Promise<NewDataType> => {
   const response = await apiService.get('/api/new-data');
   return response;
 };
 
 // 3. Create hook for the endpoint
-// client/src/hooks/useNewData.ts
+// apps/mobile/hooks/useNewData.ts
 export const useNewData = () => {
   return useQuery('newData', fetchNewData);
 };
 
 // 4. Use in component
-// client/src/screens/SomeScreen.tsx
+// apps/mobile/screens/SomeScreen.tsx
 const { data, isLoading, error } = useNewData();
 ```text
 
@@ -350,10 +350,10 @@ const { data, isLoading, error } = useNewData();
 ### Steps (3)
 ```bash
 # 1. Check API URL configuration
-cat client/.env
+cat apps/mobile/.env
 
 # 2. Enable network logging
-# Edit client/src/services/api.ts and add console logs
+# Edit apps/mobile/services/api.ts and add console logs
 
 # 3. Use React Native Debugger or Flipper
 npm install -g react-native-debugger
@@ -367,7 +367,7 @@ curl http://localhost:3000/health
 ### Test Structure
 
 ```text
-client/tests/
+apps/mobile/tests/
 ├── unit/                    # Component and utility tests
 │   ├── components/
 │   ├── hooks/
@@ -568,7 +568,7 @@ npm install
 ### Solution (2)
 ```bash
 # Clean iOS build
-cd client/ios
+cd apps/mobile/ios
 rm -rf Pods Podfile.lock
 pod install
 cd ../..
@@ -654,3 +654,5 @@ No current plans for deprecation. React Native and Expo are core to the architec
 - [Expo Documentation](https://docs.expo.dev/)
 - [React Navigation](https://reactnavigation.org/docs/getting-started)
 - [React Query](https://tanstack.com/query/latest/docs/react/overview)
+
+

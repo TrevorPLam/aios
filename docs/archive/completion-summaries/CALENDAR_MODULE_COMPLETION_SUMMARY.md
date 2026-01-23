@@ -261,7 +261,7 @@ describe("Method Name", () => {
 The Calendar module is ready for backend integration:
 
 ```typescript
-// Existing endpoints in server/routes.ts:
+// Existing endpoints in apps/api/routes.ts:
 GET    /api/events          // List all events
 POST   /api/events          // Create event
 GET    /api/events/:id      // Get single event
@@ -468,3 +468,4 @@ The Calendar module is now **feature-complete, well-tested, and production-ready
 **Date**: 2026-01-16
 **Status**: ✅ Complete
 **Next Module**: Consider applying similar enhancements to Translator or Messages modules
+

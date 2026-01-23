@@ -85,7 +85,7 @@ Uncertainty:
 - **References**:
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5)
-  - server/**tests**/analytics.test.ts (NEW FILE)
+  - apps/api/**tests**/analytics.test.ts (NEW FILE)
 - **Dependencies**: None (T-081-T-084 already complete)
 - **Effort**: M (4-6 hours)
 - **Note**: Last step for Phase 0. Once complete, unblocks Phase 1 (T-071).
@@ -103,7 +103,7 @@ Uncertainty:
   - Phase 0: Server Foundation - Database Schema
   - Analytics client sends events to `/api/telemetry/events`
   - Database schema created with indexes for performance
-  - COMPLETED: shared/schema.ts lines 304-327
+  - COMPLETED: packages/contracts/schema.ts lines 304-327
 - **Acceptance Criteria**:
   - [x] Create analytics_events table schema
   - [x] Table includes: id, user_id, event_name, event_properties (JSONB), timestamp, session_id, device_id, platform
@@ -111,7 +111,7 @@ Uncertainty:
   - [x] Timestamp with timezone for correct time handling
   - [x] Validation schemas (analyticsEventSchema, analyticsBatchSchema)
 - **References**:
-  - shared/schema.ts:304-354
+  - packages/contracts/schema.ts:304-354
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.1)
 - **Dependencies**: None
@@ -129,7 +129,7 @@ Uncertainty:
   - Phase 0: Server Foundation - Storage Methods
   - Storage methods for analytics event persistence implemented
   - Supports batch inserts, querying, and GDPR deletion
-  - COMPLETED: server/storage.ts lines 748-850
+  - COMPLETED: apps/api/storage.ts lines 748-850
 - **Acceptance Criteria**:
   - [x] Add saveAnalyticsEvents(events: AnalyticsEvent[]): Promise<void>
   - [x] Batch insert with idempotency (skip duplicate event IDs)
@@ -137,7 +137,7 @@ Uncertainty:
   - [x] Add deleteUserAnalytics(userId) for GDPR deletion
   - [x] Error logging for monitoring
 - **References**:
-  - server/storage.ts:748-850
+  - apps/api/storage.ts:748-850
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.2)
 - **Dependencies**: T-081 (COMPLETE)
@@ -155,19 +155,19 @@ Uncertainty:
   - Phase 0: Server Foundation - API Endpoint
   - POST /api/telemetry/events endpoint created
   - Client successfully configured to send to this endpoint
-  - COMPLETED: server/routes.ts lines 687-719
+  - COMPLETED: apps/api/routes.ts lines 687-719
 - **Acceptance Criteria**:
-  - [x] POST /api/telemetry/events endpoint in server/routes.ts
+  - [x] POST /api/telemetry/events endpoint in apps/api/routes.ts
   - [x] Require authentication (JWT token)
   - [x] Validate payload with Zod schema (analyticsBatchSchema)
   - [x] Call storage.saveAnalyticsEvents(events)
   - [x] Return 202 Accepted with confirmation
   - [x] Error handling for storage failures
 - **References**:
-  - server/routes.ts:687-719
+  - apps/api/routes.ts:687-719
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.3)
-  - client/analytics/transport.ts (client-side POST)
+  - apps/mobile/analytics/transport.ts (client-side POST)
 - **Dependencies**: T-082 (COMPLETE)
 - **Effort**: M (COMPLETE)
 - **Completion Date**: 2026-01-20
@@ -184,16 +184,16 @@ Uncertainty:
   - Phase 0: Server Foundation - Validation Schemas
   - Zod validation schemas for analytics payloads created
   - Ensures data quality and security on server
-  - COMPLETED: shared/schema.ts lines 329-354
+  - COMPLETED: packages/contracts/schema.ts lines 329-354
 - **Acceptance Criteria**:
-  - [x] Add analyticsEventSchema to shared/schema.ts
+  - [x] Add analyticsEventSchema to packages/contracts/schema.ts
   - [x] Validate: eventId (UUID), eventName (string), timestamp (datetime), properties (object)
   - [x] Validate identity: userId, deviceId, sessionId
   - [x] Add analyticsBatchSchema (array of events, 1-100 limit)
   - [x] Schema compatible with client types
   - [x] Export for use in server validation
 - **References**:
-  - shared/schema.ts:329-354
+  - packages/contracts/schema.ts:329-354
   - docs/analytics/PHASE_0_HANDOFF.md
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.4)
 - **Dependencies**: None
@@ -255,12 +255,13 @@ Uncertainty:
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Phase 1)
   - docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Phase 1 details)
-  - client/analytics/observability/inspector.ts
-  - client/analytics/observability/metrics.ts
-  - client/analytics/privacy/consent.ts
-  - client/analytics/privacy/retention.ts
-  - client/analytics/privacy/deletion.ts
+  - apps/mobile/analytics/observability/inspector.ts
+  - apps/mobile/analytics/observability/metrics.ts
+  - apps/mobile/analytics/privacy/consent.ts
+  - apps/mobile/analytics/privacy/retention.ts
+  - apps/mobile/analytics/privacy/deletion.ts
 - **Dependencies**: T-085 (Phase 0 complete and tested)
 - **Effort**: L (80-120 hours total for Phase 1)
 - **Note**: Phase 1 is production-critical. Target: 53/100 → 70/100 score.
+
 

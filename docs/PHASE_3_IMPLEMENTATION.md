@@ -20,9 +20,9 @@ Mini-modes allow users to perform quick actions from one module without leaving 
 
 ### Technical Implementation
 
-- **Registry System** (`client/lib/miniMode.ts`): Central registration and lifecycle management
-- **Container Component** (`client/components/MiniModeContainer.tsx`): Modal rendering with animations
-- **Provider Components** (`client/components/miniModes/`):
+- **Registry System** (`apps/mobile/lib/miniMode.ts`): Central registration and lifecycle management
+- **Container Component** (`apps/mobile/components/MiniModeContainer.tsx`): Modal rendering with animations
+- **Provider Components** (`apps/mobile/components/miniModes/`):
   - `CalendarMiniMode.tsx` - Quick event creation
   - `TaskMiniMode.tsx` - Quick task creation
   - `NoteMiniMode.tsx` - Quick note capture
@@ -69,8 +69,8 @@ function MessagesScreen() {
 A global menu accessible from anywhere that lets users quickly capture notes, tasks, events, expenses, or photos without losing their place in the app.
 
 ### Technical Implementation (2)
-- **Overlay Component** (`client/components/QuickCaptureOverlay.tsx`): Modal menu with action grid
-- **Context Hook** (`client/hooks/useQuickCapture.ts`): Global state management
+- **Overlay Component** (`apps/mobile/components/QuickCaptureOverlay.tsx`): Modal menu with action grid
+- **Context Hook** (`apps/mobile/hooks/useQuickCapture.ts`): Global state management
 - **Integration** with mini-mode system for seamless capture flows
 
 ### Key Features (2)
@@ -254,7 +254,7 @@ function AppWithGestures() {
 Run mini-mode tests:
 
 ```bash
-npm test -- client/lib/__tests__/miniMode.test.ts
+npm test -- apps/mobile/lib/__tests__/miniMode.test.ts
 ```text
 
 ### Coverage
@@ -415,3 +415,4 @@ For questions or issues with Phase 3 implementation:
 - Check existing tests for usage examples
 - Consult architecture.md for system design
 - Open an issue if you find a bug
+

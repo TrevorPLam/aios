@@ -103,7 +103,7 @@ graph TB
 - **Protocol**: Device contacts API, vCard format
 - **Examples**: iOS Contacts, Android Contacts, CardDAV servers
 - **Integration**: Via `expo-contacts` package
-- **Code**: `client/screens/ContactsScreen.tsx`
+- **Code**: `apps/mobile/screens/ContactsScreen.tsx`
 
 #### Cloud Storage (Future Integration)
 
@@ -251,38 +251,38 @@ graph TB
 
 ```bash
 # 1. Verify mobile app exists and can be started
-ls client/index.js                    # Entry point
-ls client/App.tsx                     # Main app component
+ls apps/mobile/index.js                    # Entry point
+ls apps/mobile/App.tsx                     # Main app component
 npm run start                         # Should start Expo dev server
 
 # 2. Verify backend API exists and can be started
-ls server/index.ts                    # Entry point
-ls server/routes.ts                   # API routes
+ls apps/api/index.ts                    # Entry point
+ls apps/api/routes.ts                   # API routes
 npm run server:dev                    # Should start Express server
 
 # 3. Check database schema is defined
-ls shared/schema.ts                   # Schema definitions
-grep "pgTable" shared/schema.ts       # Should list all tables
+ls packages/contracts/schema.ts                   # Schema definitions
+grep "pgTable" packages/contracts/schema.ts       # Should list all tables
 
 # 4. Verify authentication system
-ls server/middleware/auth.ts          # JWT auth middleware
-grep "generateToken" server/middleware/auth.ts
-grep "authenticate" server/middleware/auth.ts
+ls apps/api/middleware/auth.ts          # JWT auth middleware
+grep "generateToken" apps/api/middleware/auth.ts
+grep "authenticate" apps/api/middleware/auth.ts
 ```text
 
 ### User Interactions
 
 ```bash
 # 1. Check all module screens exist (14 production modules)
- ls client/screens/ | grep -E "(CommandCenter | Notebook | Planner | Calendar | Email | Messages | Lists | Alerts | Contacts | Translator | Photos | History | Budget | Integrations)Screen.tsx"
+ ls apps/mobile/screens/ | grep -E "(CommandCenter | Notebook | Planner | Calendar | Email | Messages | Lists | Alerts | Contacts | Translator | Photos | History | Budget | Integrations)Screen.tsx"
 
 # 2. Verify navigation structure
-cat client/navigation/AppNavigator.tsx    # Bottom tabs, drawer
-cat client/navigation/RootStackNavigator.tsx  # Stack navigation
+cat apps/mobile/navigation/AppNavigator.tsx    # Bottom tabs, drawer
+cat apps/mobile/navigation/RootStackNavigator.tsx  # Stack navigation
 
 # 3. Check authentication flow
-grep -r "login" client/screens/            # Login UI
-grep -r "/api/auth" client/                # Auth API calls
+grep -r "login" apps/mobile/screens/            # Login UI
+grep -r "/api/auth" apps/mobile/                # Auth API calls
 ```text
 
 ### External System Integrations
@@ -290,47 +290,47 @@ grep -r "/api/auth" client/                # Auth API calls
 ```bash
 # 1. Check contacts integration (active)
 grep "expo-contacts" package.json
-grep "Contacts\." client/screens/ContactsScreen.tsx
+grep "Contacts\." apps/mobile/screens/ContactsScreen.tsx
 
 # 2. Check file system usage (photos)
 grep "expo-file-system" package.json
-grep "FileSystem\." client/screens/PhotosScreen.tsx
+grep "FileSystem\." apps/mobile/screens/PhotosScreen.tsx
 
 # 3. Verify email/calendar screens exist (placeholder)
-ls client/screens/EmailScreen.tsx
-ls client/screens/CalendarScreen.tsx
+ls apps/mobile/screens/EmailScreen.tsx
+ls apps/mobile/screens/CalendarScreen.tsx
 
 # 4. Check for external API integrations in code
-grep -r "fetch.*http" server/              # Outbound HTTP calls
-grep -r "axios" server/                     # HTTP client library (if used)
+grep -r "fetch.*http" apps/api/              # Outbound HTTP calls
+grep -r "axios" apps/api/                     # HTTP client library (if used)
 ```text
 
 ### Trust Boundaries (2)
 
 ```bash
 # 1. Verify JWT authentication middleware
-cat server/middleware/auth.ts | grep -A5 "export.*authenticate"
+cat apps/api/middleware/auth.ts | grep -A5 "export.*authenticate"
 
 # 2. Check routes use authentication
-grep "authenticate" server/routes.ts | wc -l  # Should be many routes
+grep "authenticate" apps/api/routes.ts | wc -l  # Should be many routes
 
 # 3. Verify HTTPS configuration (production)
-grep -r "https" server/                   # HTTPS setup
-grep "ssl" server/                        # SSL certificate handling
+grep -r "https" apps/api/                   # HTTPS setup
+grep "ssl" apps/api/                        # SSL certificate handling
 
 # 4. Check user data isolation
-grep "userId" server/routes.ts | head -10  # Should filter by user
-grep "req.user" server/routes.ts | head -10  # Should use authenticated user
+grep "userId" apps/api/routes.ts | head -10  # Should filter by user
+grep "req.user" apps/api/routes.ts | head -10  # Should use authenticated user
 ```text
 
 ### System Boundary Validation
 
 ```bash
 # 1. Verify no cross-user data access
-grep -A10 "WHERE.*userId" server/storage.ts  # Should filter by user
+grep -A10 "WHERE.*userId" apps/api/storage.ts  # Should filter by user
 
 # 2. Check offline capabilities
-grep "AsyncStorage" client/lib/storage.ts
+grep "AsyncStorage" apps/mobile/lib/storage.ts
 grep "@react-native-async-storage/async-storage" package.json
 
 # 3. Verify React Native/Expo setup
@@ -338,8 +338,8 @@ cat app.json                              # Expo configuration
 grep "react-native" package.json          # RN version
 
 # 4. Check for external service configurations
- grep -i "smtp\ | imap\ | caldav" server/      # Email/calendar config
-grep "integration" shared/schema.ts       # Integration data model
+ grep -i "smtp\ | imap\ | caldav" apps/api/      # Email/calendar config
+grep "integration" packages/contracts/schema.ts       # Integration data model
 ```text
 
 ### Smoke Test
@@ -384,3 +384,4 @@ kill $SERVER_PID
 - Expo: <https://expo.dev/>
 - Express: <https://expressjs.com/>
 - PostgreSQL: <https://www.postgresql.org/>
+

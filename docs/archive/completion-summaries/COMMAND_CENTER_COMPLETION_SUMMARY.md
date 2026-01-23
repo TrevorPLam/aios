@@ -27,7 +27,7 @@ The Command Center module has been significantly enhanced from a basic UI mockup
 
 ### 1. Recommendation Generation Engine (New - 600+ lines)
 
-**Location:** `client/lib/recommendationEngine.ts`
+**Location:** `apps/mobile/lib/recommendationEngine.ts`
 
 ### Core Capabilities
 
@@ -85,7 +85,7 @@ The Command Center module has been significantly enhanced from a basic UI mockup
 
 ### 2. Database Enhancements (150+ lines)
 
-**Location:** `client/storage/database.ts`
+**Location:** `apps/mobile/storage/database.ts`
 
 ### 5 New Methods
 
@@ -144,7 +144,7 @@ async deleteOld(days: number = 30): Promise<number>
 
 #### B. RecommendationHistoryScreen (New - 400+ lines)
 
-**Location:** `client/screens/RecommendationHistoryScreen.tsx`
+**Location:** `apps/mobile/screens/RecommendationHistoryScreen.tsx`
 
 ### Features
 - **Statistics Dashboard:**
@@ -172,7 +172,7 @@ async deleteOld(days: number = 30): Promise<number>
 
 ### 4. Navigation Integration
 
-#### Updates to `client/navigation/AppNavigator.tsx`
+#### Updates to `apps/mobile/navigation/AppNavigator.tsx`
 - Added `RecommendationHistory` route type
 - Imported `RecommendationHistoryScreen` component
 - Registered screen with proper header configuration
@@ -184,7 +184,7 @@ async deleteOld(days: number = 30): Promise<number>
 
 ### Recommendation Engine Tests (15 tests)
 
-**Location:** `client/lib/__tests__/recommendationEngine.test.ts`
+**Location:** `apps/mobile/lib/__tests__/recommendationEngine.test.ts`
 
 ### Test Categories
 1. **Rule Evaluation (6 tests)**
@@ -217,7 +217,7 @@ async deleteOld(days: number = 30): Promise<number>
 
 ### Database Method Tests (11 tests)
 
-**Location:** `client/storage/__tests__/database.test.ts`
+**Location:** `apps/mobile/storage/__tests__/database.test.ts`
 
 ### Test Categories (2)
 1. **History Retrieval (2 tests)**
@@ -481,3 +481,4 @@ The module is now production-ready and sets a high standard for other modules in
 **Review Status:** Code Review Complete - All Issues Addressed
 **Security Status:** CodeQL Verified - 0 Vulnerabilities
 **Test Status:** 26/26 Tests Passing (Pending CI Run)
+

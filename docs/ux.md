@@ -584,7 +584,7 @@ No Context Loss
 
 ### ✅ Implemented (Phase 3)
 
-- **Module Handoff System** (`client/lib/moduleHandoff.ts`)
+- **Module Handoff System** (`apps/mobile/lib/moduleHandoff.ts`)
   - State-preserving navigation between modules
   - iOS-specific AsyncStorage persistence
   - Breadcrumb navigation UI with blur backdrop
@@ -592,14 +592,14 @@ No Context Loss
   - Circular handoff prevention
   - 22/22 tests passing
 
-- **Mini-Mode Extensions** (`client/components/miniModes/`)
+- **Mini-Mode Extensions** (`apps/mobile/components/miniModes/`)
   - Budget Mini-Mode for quick expense tracking
   - Contacts Mini-Mode for contact selection
   - iOS-native keyboards and haptics
   - Quick Capture integration
   - Total: 5 mini-modes available
 
-- **Handoff Breadcrumb UI** (`client/components/HandoffBreadcrumb.tsx`)
+- **Handoff Breadcrumb UI** (`apps/mobile/components/HandoffBreadcrumb.tsx`)
   - Full breadcrumb with back button
   - Compact breadcrumb for headers
   - iOS BlurView backdrop
@@ -608,21 +608,21 @@ No Context Loss
 
 ### ✅ Implemented (Phase 2)
 
-- **Progressive Onboarding System** (`client/lib/onboardingManager.ts`)
+- **Progressive Onboarding System** (`apps/mobile/lib/onboardingManager.ts`)
   - 3-module initial selection with auto-unlock
   - Usage-based module unlocking (every 3 uses)
   - Contextual welcome tips
   - AsyncStorage persistence
   - 29/29 tests passing
 
-- **Attention Management System** (`client/lib/attentionManager.ts`)
+- **Attention Management System** (`apps/mobile/lib/attentionManager.ts`)
   - Priority classification (urgent/attention/fyi)
   - Smart bundling of related notifications
   - Focus mode with whitelist
   - AsyncStorage persistence
   - 25/25 tests passing
 
-- **Recommendation Engine** (`client/lib/recommendationEngine.ts`)
+- **Recommendation Engine** (`apps/mobile/lib/recommendationEngine.ts`)
   - 6 rule-based recommendation types
   - Cross-module data analysis
   - Deduplication mechanism
@@ -823,10 +823,11 @@ CalendarScreen restores:
 
 All Phase 2 & 3 components have comprehensive unit tests:
 
-- `client/lib/__tests__/moduleHandoff.test.ts` - 22 tests ✅
-- `client/lib/__tests__/onboardingManager.test.ts` - 29 tests ✅
-- `client/lib/__tests__/attentionManager.test.ts` - 25 tests ✅
-- `client/lib/__tests__/recommendationEngine.test.ts` - 17 tests ✅
-- `client/lib/__tests__/eventBus.test.ts` - 19 tests ✅
+- `apps/mobile/lib/__tests__/moduleHandoff.test.ts` - 22 tests ✅
+- `apps/mobile/lib/__tests__/onboardingManager.test.ts` - 29 tests ✅
+- `apps/mobile/lib/__tests__/attentionManager.test.ts` - 25 tests ✅
+- `apps/mobile/lib/__tests__/recommendationEngine.test.ts` - 17 tests ✅
+- `apps/mobile/lib/__tests__/eventBus.test.ts` - 19 tests ✅
 
 **Total Phase 1, 2 & 3:** 112/112 tests passing (100% pass rate)
+

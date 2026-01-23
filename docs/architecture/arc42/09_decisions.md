@@ -47,7 +47,7 @@ Architecture Decision Records (ADRs) document significant architectural decision
 ### Impact
 
 - All 14 modules use AsyncStorage
-- Storage layer in `/client/storage/database.ts`
+- Storage layer in `/apps/mobile/storage/database.ts`
 - 659 unit tests for storage operations
 - Future migration path to SQLite/PostgreSQL if limits exceeded
 
@@ -55,7 +55,7 @@ Architecture Decision Records (ADRs) document significant architectural decision
 
 ```bash
 # Check AsyncStorage usage
-grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
 
 # Verify in package.json
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep async-storage
@@ -99,7 +99,7 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep react-
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep "\"expo\""
 
 # List screens
-ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
+ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/
 ```text
 
 ---
@@ -125,7 +125,7 @@ ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
   - ❌ Token in localStorage vulnerable to XSS (mitigated by AsyncStorage on mobile)
 
 ### Impact (3)
-- JWT middleware in `/server/middleware/auth.ts`
+- JWT middleware in `/apps/api/middleware/auth.ts`
 - bcrypt hashing (10 rounds) in auth routes
 - Token stored in AsyncStorage on client
 - 7-day token expiry (configurable)
@@ -133,10 +133,10 @@ ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
 ### Verification (3)
 ```bash
 # Check JWT implementation
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/middleware/auth.ts
 
 # Check bcrypt usage
-grep -r "bcrypt" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/
+grep -r "bcrypt" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/
 ```text
 
 ---
@@ -405,13 +405,13 @@ ls -la /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/decisions/
 
 ```bash
 # ADR-001: Check AsyncStorage usage
-grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/
+grep -r "AsyncStorage" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/
 
 # ADR-002: Check React Native version
 cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/package.json | grep react-native
 
 # ADR-003: Check JWT implementation
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts | head -30
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/middleware/auth.ts | head -30
 
 # ADR-004: Check docs structure
 tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/docs/
@@ -442,3 +442,4 @@ done
 - [Solution Strategy](04_solution_strategy.md) - How decisions support quality goals
 - [Constraints](02_constraints.md) - Constraints that influenced decisions
 - [Cross-Cutting Concepts](08_crosscutting.md) - Patterns resulting from decisions
+

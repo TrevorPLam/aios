@@ -79,9 +79,9 @@ Uncertainty:
   - [ ] Add recurrence-aware filters (overdue vs recurring)
   - [ ] Add tests for recurrence scheduling logic
 - **References**:
-  - client/screens/TaskDetailScreen.tsx
-  - client/screens/PlannerScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
+  - packages/contracts/schema.ts
 - **Dependencies**: None
 - **Effort**: L
 
@@ -103,10 +103,10 @@ Uncertainty:
   - [ ] Add cross-module tests for task creation flows
   - [ ] Document new integration hooks in module guides
 - **References**:
-  - client/screens/NotebookScreen.tsx
-  - client/screens/ListsScreen.tsx
-  - client/screens/EmailScreen.tsx
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/NotebookScreen.tsx
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/archive/2026-01-pre-consolidation/F&F-BACKUP.md
 - **Dependencies**: None
 - **Effort**: L
@@ -128,9 +128,9 @@ Uncertainty:
   - [ ] Sync scheduled tasks to Calendar with bi-directional updates
   - [ ] Add tests for scheduling conflicts and reschedule logic
 - **References**:
-  - client/screens/PlannerScreen.tsx
-  - client/screens/TaskDetailScreen.tsx
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -152,9 +152,9 @@ Uncertainty:
   - [ ] Add activity feed for assignment and status changes
   - [ ] Add tests for permission enforcement and assignment rendering
 - **References**:
-  - client/screens/PlannerScreen.tsx
-  - client/screens/TaskDetailScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -176,8 +176,8 @@ Uncertainty:
   - [ ] Provide bulk triage actions (schedule, prioritize, assign)
   - [ ] Add tests for parsing and triage flows
 - **References**:
-  - client/screens/PlannerScreen.tsx
-  - client/screens/TaskDetailScreen.tsx
+  - apps/mobile/screens/PlannerScreen.tsx
+  - apps/mobile/screens/TaskDetailScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -201,8 +201,8 @@ Uncertainty:
   - [ ] Implement calendar sharing flow (share link or invite)
   - [ ] Surface RSVP status in event details and list cards
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -224,7 +224,7 @@ Uncertainty:
   - [ ] Handle permissions and sync failure states
   - [ ] Add tests for sync mapping and conflict resolution
 - **References**:
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -246,7 +246,7 @@ Uncertainty:
   - [ ] Provide preview + user confirmation before save
   - [ ] Add tests for common natural language patterns
 - **References**:
-  - client/screens/CalendarScreen.tsx
+  - apps/mobile/screens/CalendarScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -268,7 +268,7 @@ Uncertainty:
   - [ ] Surface calendar insights (meeting load, focus hours, trends)
   - [ ] Log AI actions to History for auditability
 - **References**:
-  - client/components/AIAssistSheet.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
   - docs/planning/MISSING_FEATURES.md
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
@@ -291,8 +291,8 @@ Uncertainty:
   - [ ] Add optional weather context for outdoor events
   - [ ] Add tests for time zone conversion edge cases
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -314,8 +314,8 @@ Uncertainty:
   - [ ] Allow booking requests to create tentative events with confirmation
   - [ ] Add tests for availability calculations and link booking flow
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -337,8 +337,8 @@ Uncertainty:
   - [ ] Filter views by calendar and show combined agenda
   - [ ] Add tests for calendar visibility and subscription updates
 - **References**:
-  - client/screens/CalendarScreen.tsx
-  - shared/schema.ts
+  - apps/mobile/screens/CalendarScreen.tsx
+  - packages/contracts/schema.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -362,8 +362,8 @@ Uncertainty:
   - [ ] Handle permission denial and error states
   - [ ] Add tests for voice input flow
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/screens/ListEditorScreen.tsx
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/screens/ListEditorScreen.tsx
   - docs/analysis/COMPETITIVE_ANALYSIS.md
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
@@ -386,8 +386,8 @@ Uncertainty:
   - [ ] Log insights/suggestions to History for auditability
   - [ ] Add tests for insights calculations
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/archive/enhancements/LISTS_ENHANCEMENT_SUMMARY.md
 - **Dependencies**: None
 - **Effort**: M
@@ -409,9 +409,9 @@ Uncertainty:
   - [ ] Render attachments in list detail view with download/share actions
   - [ ] Add tests for attachment persistence and rendering
 - **References**:
-  - client/models/types.ts
-  - client/screens/ListEditorScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/models/types.ts
+  - apps/mobile/screens/ListEditorScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: L
@@ -433,8 +433,8 @@ Uncertainty:
   - [ ] Support dynamic counts and empty state messaging per view
   - [ ] Add tests for filter persistence and query accuracy
 - **References**:
-  - client/screens/ListsScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/ListsScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: None
 - **Effort**: M
@@ -460,7 +460,7 @@ Uncertainty:
 - **References**:
   - MODULE_DETAILS.md
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
+  - apps/mobile/screens/EmailScreen.tsx
 - **Dependencies**: T-071
 - **Effort**: M
 
@@ -482,8 +482,8 @@ Uncertainty:
   - [ ] Add tests for mailbox transitions and rule application
 - **References**:
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
 - **Dependencies**: T-071
 - **Effort**: M
 
@@ -506,9 +506,9 @@ Uncertainty:
   - [ ] Add tests for AI action routing and metadata creation
 - **References**:
   - docs/analysis/CODE_QUALITY_ANALYSIS.md
-  - client/components/AIAssistSheet.tsx
-  - client/lib/contextEngine.ts
-  - client/screens/EmailScreen.tsx
+  - apps/mobile/components/AIAssistSheet.tsx
+  - apps/mobile/lib/contextEngine.ts
+  - apps/mobile/screens/EmailScreen.tsx
 - **Dependencies**: T-072
 - **Effort**: M
 
@@ -529,8 +529,8 @@ Uncertainty:
   - [ ] Provide filter UI for unread, starred, priority, and attachments
   - [ ] Add tests for search parsing and query execution
 - **References**:
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: T-071
 - **Effort**: M
@@ -552,8 +552,8 @@ Uncertainty:
   - [ ] Surface snoozed/follow-up queues with counts
   - [ ] Add tests for reminder scheduling and queue transitions
 - **References**:
-  - client/screens/EmailScreen.tsx
-  - client/storage/database.ts
+  - apps/mobile/screens/EmailScreen.tsx
+  - apps/mobile/storage/database.ts
   - docs/analysis/COMPETITIVE_ANALYSIS.md
 - **Dependencies**: T-071
 - **Effort**: M
@@ -574,7 +574,7 @@ Uncertainty:
   - [x] Add web-compatible time picker if needed
   - [x] Preserve iOS functionality
   - [x] Test on Android and Web platforms
-- **References**: client/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
+- **References**: apps/mobile/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
 - **Dependencies**: T-001A
 - **Effort**: S
 - **Completion Notes**: Added web-specific time input with validation and ensured swipe/selection logic remains intact for native platforms.
@@ -598,7 +598,7 @@ Uncertainty:
   - [x] Test gesture on iOS (manual verification recommended)
   - [x] Maintain button alternative for accessibility (button always available)
   - [x] Remove TODO comment at line 63 (no TODO found in file)
-- **References**: client/components/PersistentSidebar.tsx:111-196
+- **References**: apps/mobile/components/PersistentSidebar.tsx:111-196
 - **Dependencies**: None
 - **Effort**: M
 - **Completion Notes**: Edge swipe gesture was already fully implemented in previous work. PanResponder handles gesture recognition, animation, haptic feedback, and edge cases. Comprehensive JSDoc documentation included.
@@ -619,7 +619,7 @@ Uncertainty:
   - [x] Add web-compatible swipe gesture if needed
   - [x] Preserve iOS functionality
   - [x] Verify button alternative works on all platforms
-- **References**: client/components/PersistentSidebar.tsx:111-196, T-002A (2026-01-19)
+- **References**: apps/mobile/components/PersistentSidebar.tsx:111-196, T-002A (2026-01-19)
 - **Dependencies**: T-002A
 - **Effort**: S
 - **Completion Notes**: Disabled swipe gesture on web while keeping the button entry point and native swipe behavior unchanged.
@@ -642,7 +642,7 @@ Uncertainty:
   - [x] Show error message if route doesn't exist (showNavigationError at lines 163-171)
   - [x] Log navigation errors for debugging (logNavigationError at lines 180-189)
   - [x] Test with disabled modules on iOS (handleNavigation validates at lines 226-250)
-- **References**: client/components/BottomNav.tsx:163-250
+- **References**: apps/mobile/components/BottomNav.tsx:163-250
 - **Dependencies**: None
 - **Effort**: S
 - **Completion Notes**: Route validation system was already fully implemented. Includes isValidRoute() check, user alerts, structured error logging with metadata, and comprehensive error handling throughout navigation flow.
@@ -668,7 +668,7 @@ Uncertainty:
   - [ ] Add validation to form screens: ContactDetail, ListEditor, other editors
   - [ ] Implement error message display and inline validation feedback
   - [ ] Test validation with edge cases (empty, invalid, boundary values) on iOS
-- **References**: client/screens/NoteEditor.tsx, client/screens/TaskDetail.tsx, etc.
+- **References**: apps/mobile/screens/NoteEditor.tsx, apps/mobile/screens/TaskDetail.tsx, etc.
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic validation logic. AGENT can verify Android/Web compatibility in follow-up.
@@ -694,7 +694,7 @@ Uncertainty:
   - [ ] Make EventBus.on() type-safe
   - [ ] Update emit() to enforce payload types
   - [ ] Fix all event-related TypeScript errors
-- **References**: client/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: apps/mobile/lib/eventBus.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic event type system. AGENT can verify Android/Web event handling in follow-up.
@@ -717,7 +717,7 @@ Uncertainty:
   - [ ] Phase 3: Migrate miniMode components (5-8 components)
   - [ ] Phase 4: Migrate screen components (high-priority screens first)
   - [ ] Phase 5: Remove static imports, verify no TypeScript errors remain
-- **References**: client/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: apps/mobile/hooks/useTheme.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M (broken down from L)
 - **Note**: Platform-agnostic theme hook migration. AGENT can verify Android/Web theme consistency in follow-up.
@@ -740,7 +740,7 @@ Uncertainty:
   - [ ] Add missing properties or rename incorrect ones
   - [ ] Fix all callers with incorrect property access
   - [ ] Test all data operations
-- **References**: client/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
+- **References**: apps/mobile/models/types.ts, docs/archive/2026-01-pre-consolidation/TYPESCRIPT_REMEDIATION_PLAN.md
 - **Dependencies**: None
 - **Effort**: M
 - **Note**: Platform-agnostic model interface audit. AGENT can verify Android/Web data model compatibility in follow-up.
@@ -786,7 +786,7 @@ Uncertainty:
   - [ ] Schema evolution tracking
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 2.5)
-  - client/analytics/schema/versioning.ts
+  - apps/mobile/analytics/schema/versioning.ts
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (10-20 hours)
 - **Note**: Phase 2 target: 70/100 → 80/100 score.
@@ -811,7 +811,7 @@ Uncertainty:
   - [ ] Flag exposure tracking
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.1)
-  - client/analytics/production/featureFlags.ts
+  - apps/mobile/analytics/production/featureFlags.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: L (30-40 hours)
 - **Note**: Enables safe feature rollouts.
@@ -835,7 +835,7 @@ Uncertainty:
   - [ ] Plugin error handling
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.2)
-  - client/analytics/plugins/manager.ts
+  - apps/mobile/analytics/plugins/manager.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (25-35 hours)
 - **Note**: Enables custom analytics extensions.
@@ -859,7 +859,7 @@ Uncertainty:
   - [ ] Destination error handling
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.3)
-  - client/analytics/plugins/destinations.ts
+  - apps/mobile/analytics/plugins/destinations.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: M (20-30 hours)
 - **Note**: Enables sending to multiple backends.
@@ -883,7 +883,7 @@ Uncertainty:
   - [ ] Performance degradation alerts
 - **References**:
   - docs/analytics/IMPLEMENTATION_PLAN.md (Task 3.4)
-  - client/analytics/production/monitoring.ts
+  - apps/mobile/analytics/production/monitoring.ts
 - **Dependencies**: T-071, T-072-T-076 (Phases 1-2 complete)
 - **Effort**: L (30-40 hours)
 - **Note**: Phase 3 target: 80/100 → 90/100 score. World-class infrastructure.
@@ -908,8 +908,8 @@ Uncertainty:
   - [ ] Schema-based validation at runtime
   - [ ] Add tests for sampling algorithms and validation rules
 - **References**:
-  - client/analytics/quality/sampling.ts
-  - client/analytics/quality/validation.ts
+  - apps/mobile/analytics/quality/sampling.ts
+  - apps/mobile/analytics/quality/validation.ts
   - docs/analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md (Data Quality section)
 - **Dependencies**: T-071 (Phase 1 complete)
 - **Effort**: M (20-30 hours)
@@ -1003,7 +1003,7 @@ Uncertainty:
 - **References**:
   - docs/governance/state.md
   - docs/governance/exceptions.yml
-  - client/analytics/
+  - apps/mobile/analytics/
 - **Dependencies**: None
 - **Effort**: M
 
@@ -1033,3 +1033,4 @@ Uncertainty:
   - .github/workflows/
 - **Dependencies**: None
 - **Effort**: L
+

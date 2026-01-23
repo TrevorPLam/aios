@@ -286,12 +286,12 @@ The Photos module has been brought to production-ready status through comprehens
 
 ### Core Implementation
 
-- `client/screens/PhotosScreen.tsx` - Main screen (enhanced documentation)
-- `client/storage/database.ts` - Database methods (already implemented)
+- `apps/mobile/screens/PhotosScreen.tsx` - Main screen (enhanced documentation)
+- `apps/mobile/storage/database.ts` - Database methods (already implemented)
 
 ### Testing
 
-- `client/storage/__tests__/photos.test.ts` - Comprehensive test suite (49 tests)
+- `apps/mobile/storage/__tests__/photos.test.ts` - Comprehensive test suite (49 tests)
 
 ### Documentation
 
@@ -360,3 +360,4 @@ The module demonstrates best practices in React Native development including:
 **Completed By:** GitHub Copilot
 **Review Status:** Ready for production deployment
 **Maintenance:** Standard maintenance only - no blockers
+

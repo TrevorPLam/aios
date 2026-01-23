@@ -21,7 +21,7 @@ This document describes the recent improvements to the mobile app's navigation s
 **Code Constraints**:
 
 ```typescript
-// client/components/BottomNav.tsx
+// apps/mobile/components/BottomNav.tsx
 const styles = StyleSheet.create({
   container: {
     // IMPORTANT: These constraints ensure the bar fills to screen edges
@@ -195,15 +195,16 @@ To test the changes:
 
 ## Files Modified
 
-- `client/components/BottomNav.tsx` - Navigation bar with arrows and constraints
-- `client/components/HeaderNav.tsx` - Grid, home, and settings buttons
-- `client/screens/ModuleGridScreen.tsx` - Grid/list view and arrangement settings
-- `client/models/types.ts` - New types for view mode and arrangement
-- `client/storage/database.ts` - Usage tracking method
-- `client/App.tsx` - Navigation context provider
-- `client/context/NavigationContext.tsx` - New contextual navigation system
+- `apps/mobile/components/BottomNav.tsx` - Navigation bar with arrows and constraints
+- `apps/mobile/components/HeaderNav.tsx` - Grid, home, and settings buttons
+- `apps/mobile/screens/ModuleGridScreen.tsx` - Grid/list view and arrangement settings
+- `apps/mobile/models/types.ts` - New types for view mode and arrangement
+- `apps/mobile/storage/database.ts` - Usage tracking method
+- `apps/mobile/App.tsx` - Navigation context provider
+- `apps/mobile/context/NavigationContext.tsx` - New contextual navigation system
 
 ## Files Created
 
 - `CONTEXTUAL_NAVIGATION.md` - Guide for contextual navigation
 - `NAVIGATION_IMPROVEMENTS.md` - This file
+

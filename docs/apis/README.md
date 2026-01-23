@@ -318,7 +318,7 @@ open docs/apis/openapi/docs.html
 
 When adding a new API endpoint:
 
-1. **Implement the endpoint** in `server/src/routes/`
+1. **Implement the endpoint** in `apps/api/routes/`
 2. **Update OpenAPI spec** with:
    - Path and operation
    - Parameters (path, query, body)
@@ -420,3 +420,5 @@ See [OpenAPI Guide](./openapi/README.md) for detailed instructions.
 - [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 - [API Design Patterns](https://www.apiguide.com/)
 - [OAuth 2.0](https://oauth.net/2/) (if implementing)
+
+

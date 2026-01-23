@@ -80,7 +80,7 @@
 ### Example (2)
 ```text
 In deployment v1.2.3, we introduced a change to the database connection
-handling in `server/src/services/database.ts`. The new code acquired
+handling in `apps/api/services/database.ts`. The new code acquired
 connections from the pool but failed to release them in error scenarios
 due to missing `finally` blocks. Over 30 minutes, all 100 connections
 in the pool were exhausted, causing all new requests to fail with
@@ -371,3 +371,5 @@ This postmortem is **blameless**. We're analyzing the system and process failure
 
 **Template Version:** 1.0
 **Last Updated:** 2024-01-15
+
+

@@ -353,7 +353,7 @@ Before adding a new event, verify:
 ### Running Tests
 
 ```bash
-npm test client/analytics
+npm test apps/mobile/analytics
 ```text
 
 ### Test Coverage
@@ -572,3 +572,4 @@ For issues or questions about the analytics system:
 3. Check debug logs in development mode
 4. Review event taxonomy for available events
 5. Consult the team if sensitive data handling is unclear
+

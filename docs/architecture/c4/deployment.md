@@ -370,7 +370,7 @@ find $BACKUP_DIR -name "aios_*.sql.gz" -mtime +7 -delete
 
 ### Logging
 ```javascript
-// server/index.ts
+// apps/api/index.ts
 import winston from 'winston';
 
 const logger = winston.createLogger({
@@ -576,7 +576,7 @@ npm run start
 
 ```text
 1. Create feature branch: git checkout -b feature/new-feature
-2. Make changes to client/ or server/
+2. Make changes to apps/mobile/ or apps/api/
 3. Changes hot-reload in Expo (client) or auto-restart (server via tsx)
 4. Test on simulator/emulator
 5. Run tests: npm test
@@ -932,3 +932,4 @@ top -bn1 | head -20
 - AWS RDS Best Practices: <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html>
 - Docker Multi-stage Builds: <https://docs.docker.com/build/building/multi-stage/>
 - Kubernetes Deployments: <https://kubernetes.io/docs/concepts/workloads/controllers/deployment/>
+

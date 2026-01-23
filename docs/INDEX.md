@@ -1,10 +1,14 @@
-# AIOS Documentation Index
+# Documentation Index
+
+**File**: `docs/INDEX.md`
 
 **Last Updated:** January 21, 2026
 
-## Post-Consolidation Structure
-
 This index provides direct links to all active documentation in the repository.
+
+## See Also
+
+- [Repository Root Index](../INDEX.md) - Master repository index
 
 ---
 
@@ -13,7 +17,7 @@ This index provides direct links to all active documentation in the repository.
 | Document | Purpose | Size |
 | ---------- | --------- | ------ |
 | [README.md](../README.md) | Project overview, setup, quick start | 560 lines |
-| [GOVERNANCE.md](../GOVERNANCE.md) | Governance model, review checklists, release process | - |
+| [/.repo/policy/CONSTITUTION.md](/.repo/policy/CONSTITUTION.md) | Repository constitution and governance | - |
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines | - |
 | [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Community standards and enforcement | - |
 | [SECURITY.md](../SECURITY.md) | Security policy & reporting | 70 lines |
@@ -73,9 +77,9 @@ This index provides direct links to all active documentation in the repository.
 
 - [decisions/](decisions/) - Architecture decision records
 - [ARCHITECTURE_DECISIONS.md](decisions/ARCHITECTURE_DECISIONS.md) - ADR rollup summary
-- [governance/constitution.md](governance/constitution.md) - Constitution (highest authority)
-- [governance/state.md](governance/state.md) - Living state & enforcement toggles
-- [governance/AIG.md](governance/AIG.md) - Governance & AI index
+- [/.repo/policy/CONSTITUTION.md](/.repo/policy/CONSTITUTION.md) - Constitution (highest authority)
+- [/.repo/policy/PRINCIPLES.md](/.repo/policy/PRINCIPLES.md) - Operating principles
+- [/.repo/policy/QUALITY_GATES.md](/.repo/policy/QUALITY_GATES.md) - Merge rules and quality gates
 - [.templates/](.templates/) - Documentation templates
 - [processes/](processes/) - Documentation processes and workflows
   - [Feedback Loop](processes/feedback-loop.md) - User feedback collection and review process

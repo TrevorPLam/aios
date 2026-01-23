@@ -39,12 +39,12 @@ This document outlines a suggested implementation plan for the missing features 
 
 ### Files modified
 
-- `server/routes.ts` - Added all route handlers
-- `server/storage.ts` - Implemented all CRUD operations
-- `server/middleware/auth.ts` - JWT authentication middleware
-- `server/middleware/validation.ts` - Zod validation middleware
-- `server/middleware/errorHandler.ts` - Error handling middleware
-- `shared/schema.ts` - Extended schema for all models
+- `apps/api/routes.ts` - Added all route handlers
+- `apps/api/storage.ts` - Implemented all CRUD operations
+- `apps/api/middleware/auth.ts` - JWT authentication middleware
+- `apps/api/middleware/validation.ts` - Zod validation middleware
+- `apps/api/middleware/errorHandler.ts` - Error handling middleware
+- `packages/contracts/schema.ts` - Extended schema for all models
 - `API_DOCUMENTATION.md` - Complete API documentation
 
 ### 1.3 Database Integration (Priority: Critical)
@@ -60,8 +60,8 @@ This document outlines a suggested implementation plan for the missing features 
 
 ### Files to modify
 
-- `shared/schema.ts` - Add tables for all models
-- Create `server/db/` folder for migrations
+- `packages/contracts/schema.ts` - Add tables for all models
+- Create `apps/api/db/` folder for migrations
 - Update `drizzle.config.ts` if needed
 
 ### 1.4 Environment Configuration (Priority: High)
@@ -94,8 +94,8 @@ This document outlines a suggested implementation plan for the missing features 
 
 ### Files to create (2)
 
-- `server/services/ai.ts`
-- `server/services/recommendations.ts`
+- `apps/api/services/ai.ts`
+- `apps/api/services/recommendations.ts`
 
 ### 2.2 Recommendation Generation (Priority: Critical)
 
@@ -111,7 +111,7 @@ This document outlines a suggested implementation plan for the missing features 
 
 ### Files to modify (2)
 
-- `server/services/recommendations.ts`
+- `apps/api/services/recommendations.ts`
 - Create background job system for auto-refresh
 
 ### 2.3 AI Assist Actions (Priority: High)
@@ -150,8 +150,8 @@ Implement each AI assist action:
 
 ### Files to modify (3)
 
-- `client/components/AIAssistSheet.tsx` - Wire up actions
-- Create `server/services/ai-actions/` folder for each action
+- `apps/mobile/components/AIAssistSheet.tsx` - Wire up actions
+- Create `apps/api/services/ai-actions/` folder for each action
 
 ## Phase 3: Data Synchronization - ~1 week
 
@@ -168,7 +168,7 @@ Implement each AI assist action:
 
 ### Files to modify (4)
 
-- Create `client/services/sync.ts`
+- Create `apps/mobile/services/sync.ts`
 - Update storage layer to use API
 - Add React Query mutations and queries
 
@@ -184,8 +184,8 @@ Implement each AI assist action:
 
 ### Files to modify (5)
 
-- `server/index.ts` - Add WebSocket server
-- Create `client/services/websocket.ts`
+- `apps/api/index.ts` - Add WebSocket server
+- Create `apps/mobile/services/websocket.ts`
 
 ## Phase 4: Security & Authentication - ~1 week
 
@@ -203,10 +203,10 @@ Implement each AI assist action:
 
 ### Files to create (3)
 
-- `client/screens/LoginScreen.tsx`
-- `client/screens/SignupScreen.tsx`
-- `server/middleware/auth.ts`
-- `client/services/auth.ts`
+- `apps/mobile/screens/LoginScreen.tsx`
+- `apps/mobile/screens/SignupScreen.tsx`
+- `apps/api/middleware/auth.ts`
+- `apps/mobile/services/auth.ts`
 
 ### 4.2 Data Security (Priority: High)
 
@@ -420,3 +420,4 @@ Track these metrics to measure implementation progress:
 
 - ✅ **1.1 Testing Infrastructure** - Jest and React Native Testing Library configured with test coverage reporting
 - ✅ **1.2 Backend API Implementation** - Complete REST API with authentication, CRUD endpoints, validation, and error handling
+

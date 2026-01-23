@@ -1156,7 +1156,7 @@ const handleToggleComplete = async (task: Task) => {
 
 #### 1. Extract FilterBar Component (2 hours)
 
-Create `client/components/FilterBar.tsx`:
+Create `apps/mobile/components/FilterBar.tsx`:
 
 ```typescript
 import React from "react";
@@ -1295,7 +1295,7 @@ import { FilterBar } from "@/components/FilterBar";
 
 ### 2. Extract Sorting Utility (1 hour)
 
-Create `client/utils/taskSort.ts`:
+Create `apps/mobile/utils/taskSort.ts`:
 
 ```typescript
 import { Task, TaskWithSubtasks, TaskPriority, SortOption } from "@/models/types";
@@ -1393,7 +1393,7 @@ This refactoring would make the code more maintainable and testable.
 Add integration tests:
 
 ```typescript
-// client/screens/__tests__/PlannerScreen.test.tsx
+// apps/mobile/screens/__tests__/PlannerScreen.test.tsx
 describe("PlannerScreen Integration", () => {
   it("should filter tasks by search query", async () => {
     // Test search functionality
@@ -1522,3 +1522,4 @@ The Planner module represents **solid engineering work** with a comprehensive fe
 **Analysis Completed:** 2026-01-16
 **Next Review:** After P0 fixes applied
 **Overall Assessment:** Good - Production-ready with bug fixes
+

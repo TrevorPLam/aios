@@ -290,13 +290,13 @@ As more modules are added, they may become tightly coupled, making changes diffi
 
 2. **Modular Storage:**
    - Split `database.ts` into module-specific files
-   - `/client/storage/notes.ts`, `/client/storage/tasks.ts`, etc.
-   - Shared utilities in `/client/storage/utils.ts`
+   - `/apps/mobile/storage/notes.ts`, `/apps/mobile/storage/tasks.ts`, etc.
+   - Shared utilities in `/apps/mobile/storage/utils.ts`
 
 ### Detection (4)
 ```bash
 # Check dependencies between modules
-npx madge --circular --extensions ts,tsx ./client/
+npx madge --circular --extensions ts,tsx ./apps/mobile/
 
 # Expected: No circular dependencies
 ```text
@@ -511,7 +511,7 @@ iOS and Android release major updates annually. Breaking changes could affect AI
 ### Description (8)
 Backend uses in-memory storage (`Map`, `Array`) instead of PostgreSQL. Data lost on server restart, no persistence, no multi-instance support.
 
-**Location:** `/server/storage.ts`
+**Location:** `/apps/api/storage.ts`
 
 ### Remediation
 1. Implement PostgreSQL connection
@@ -534,7 +534,7 @@ Backend uses in-memory storage (`Map`, `Array`) instead of PostgreSQL. Data lost
 ### Description (9)
 All data stored locally (AsyncStorage). Users cannot sync across devices, no backup, data lost if device lost.
 
-**Location:** All storage operations in `/client/storage/database.ts`
+**Location:** All storage operations in `/apps/mobile/storage/database.ts`
 
 ### Remediation (2)
 1. Implement sync engine
@@ -684,20 +684,20 @@ du -h dist/
 npm run test:coverage
 
 # Check for circular dependencies
-npx madge --circular --extensions ts,tsx ./client/
+npx madge --circular --extensions ts,tsx ./apps/mobile/
 ```text
 
 ### Verify Debt Status
 
 ```bash
 # Check for any types
-grep -r ": any" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/
+grep -r ": any" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/
 
 # Check for TODO comments (debt markers)
 grep -r "TODO\|FIXME" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
 
 # Check PostgreSQL implementation
- cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/storage.ts | grep -i "postgres\ | drizzle"
+ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/storage.ts | grep -i "postgres\ | drizzle"
 ```text
 
 ---
@@ -708,3 +708,4 @@ grep -r "TODO\|FIXME" /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
 - [Architecture Decisions](09_decisions.md) - Decisions that created or mitigated risks
 - [Solution Strategy](04_solution_strategy.md) - Risk mitigation strategies
 - [Constraints](02_constraints.md) - Constraints that introduce risks
+

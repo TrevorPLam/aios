@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-The analytics system in `client/analytics/` is **70% complete** with a solid foundation. **Recommendation: COMPLETE the implementation** rather than remove it. The remaining 30% consists of well-defined stub features with clear TODOs that can be implemented incrementally.
+The analytics system in `apps/mobile/analytics/` is **70% complete** with a solid foundation. **Recommendation: COMPLETE the implementation** rather than remove it. The remaining 30% consists of well-defined stub features with clear TODOs that can be implemented incrementally.
 
 ## Analysis
 
@@ -259,8 +259,8 @@ Analytics is **actively used** in 9 files:
 - Original architecture: [ADR-005: Analytics system architecture](./005-analytics-architecture.md)
 - Roadmap: [World-Class Analytics Roadmap](../analytics/WORLD_CLASS_ANALYTICS_ROADMAP.md)
 - Implementation status: [World-Class Features Summary](../analytics/WORLD_CLASS_FEATURES_SUMMARY.md)
-- Source code: `client/analytics/`
-- Tests: `client/analytics/__tests__/`
+- Source code: `apps/mobile/analytics/`
+- Tests: `apps/mobile/analytics/__tests__/`
 - TODO tasks: T-028, T-029, T-030 in `P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md`
 
 ---
@@ -269,3 +269,4 @@ Analytics is **actively used** in 9 files:
 **Decision Date:** 2026-01-20
 **Approved by:** Pending
 **Implementation Owner:** AGENT
+

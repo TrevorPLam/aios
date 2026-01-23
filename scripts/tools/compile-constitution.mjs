@@ -23,7 +23,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../..");
-const CONSTITUTION_PATH = join(REPO_ROOT, "docs/governance/constitution.md");
+const CONSTITUTION_PATH = join(REPO_ROOT, ".repo/policy/CONSTITUTION.md");
 const OUTPUT_DIR = join(REPO_ROOT, ".github");
 
 const TARGETS = {
@@ -48,7 +48,7 @@ const TARGETS = {
 function generateHeader(targetName) {
   const timestamp = new Date().toISOString().split("T")[0];
   return `<!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
-<!-- Source: docs/governance/constitution.md -->
+<!-- Source: .repo/policy/CONSTITUTION.md -->
 <!-- Generated: ${timestamp} -->
 <!-- To update: edit constitution.md and run \`npm run compile:constitution\` -->
 
@@ -57,7 +57,7 @@ function generateHeader(targetName) {
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
-1. Edit \`docs/governance/constitution.md\`
+1. Edit \`.repo/policy/CONSTITUTION.md\`
 2. Run \`npm run compile:constitution\`
 3. Commit both files together
 
@@ -122,7 +122,7 @@ function generateFooter() {
 
 ---
 
-**Source:** \`docs/governance/constitution.md\`  
+**Source:** \`.repo/policy/CONSTITUTION.md\`  
 **Compiler:** \`scripts/tools/compile-constitution.mjs\`  
 **Last Generated:** ${new Date().toISOString()}
 `;
@@ -183,7 +183,7 @@ function compileConstitution() {
   console.log("\n✨ Constitution compiled successfully!");
   console.log("\n📝 Next steps:");
   console.log("   1. Review generated files");
-  console.log("   2. Commit changes: git add .github/ docs/governance/");
+    console.log("   2. Commit changes: git add .github/ .repo/policy/");
   console.log("   3. Push to repository");
 }
 

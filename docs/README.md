@@ -23,7 +23,7 @@ This is the central hub for all documentation in the AIOS (AI Operating System) 
 | Understand what AIOS is | [Project README](../README.md) |
 | Set up the development environment | [Getting Started Tutorial](./diataxis/tutorials/getting-started.md) |
 | Contribute code or docs | [CONTRIBUTING.md](../CONTRIBUTING.md) |
-| Understand governance & constitution | [Governance Constitution](./governance/constitution.md) ⭐ **NEW** |
+| Understand governance & constitution | [Governance Constitution](/.repo/policy/CONSTITUTION.md) ⭐ **NEW** |
 | Find a specific API | [API Reference](./apis/README.md) |
 | Understand architecture decisions | [ADR Index](./decisions/README.md) |
 | Learn about a module | [Module Documentation](./modules/README.md) |
@@ -101,9 +101,9 @@ docs/
 │
 ├── modules/                    # Module-specific documentation
 │   ├── README.md
-│   ├── client/
-│   ├── server/
-│   └── shared/
+│   ├── apps/mobile/
+│   ├── apps/api/
+│   └── packages/contracts/
 │
 ├── apis/                       # API contracts & specs
 │   ├── README.md
@@ -165,7 +165,7 @@ docs/
    - Code review includes doc review
 
 4. **Evidence-Based**
-   - Reference concrete file paths: `client/screens/CommandCenter.tsx`
+   - Reference concrete file paths: `apps/mobile/screens/CommandCenter.tsx`
    - Include runnable commands: `npm run test`
    - Link to actual code, not just descriptions
    - Show example output
@@ -270,7 +270,7 @@ A: Start with [MODULE_DETAILS.md](../MODULE_DETAILS.md), then check `docs/module
 A: See [docs/testing/strategy.md](./testing/strategy.md)
 
 ### Q: Who decides on changes?
-A: See [GOVERNANCE.md](../GOVERNANCE.md) and [ADR process](./adr/README.md)
+A: See [/.repo/policy/CONSTITUTION.md](/.repo/policy/CONSTITUTION.md) and [ADR process](./decisions/README.md)
 
 #### Q: How do I report security issues?
 A: See [SECURITY.md](../SECURITY.md) - use private disclosure
@@ -355,7 +355,7 @@ All documentation changes must pass:
 - Include language hints: ` ```typescript `
 - Show complete, runnable examples
 - Include expected output
-- Reference actual files: `// See: client/App.tsx`
+- Reference actual files: `// See: apps/mobile/App.tsx`
 
 ### Diagrams
 
@@ -498,3 +498,4 @@ mkdocs serve
 
 *Last Updated: {{ git_revision_date }}*
 *Found an issue? [Open an issue](https://github.com/TrevorPLam/aios/issues/new) or submit a PR.*
+

@@ -46,7 +46,7 @@ Achieve 60fps animations, < 100ms screen transitions, instant UI responsiveness.
 ### Implementation
 
 ```typescript
-// /client/App.tsx - Native component tree
+// /apps/mobile/App.tsx - Native component tree
 import { View, Text, FlatList } from 'react-native';
 
 // Native rendering, not DOM/WebView
@@ -66,7 +66,7 @@ import { View, Text, FlatList } from 'react-native';
 
 ### Implementation (2)
 ```typescript
-// /client/components/Card.tsx (example pattern)
+// /apps/mobile/components/Card.tsx (example pattern)
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 <Animated.View entering={FadeIn} exiting={FadeOut}>
@@ -76,7 +76,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 ### Files
 - All screen components use Animated.View
-- `/client/components/` - Animated components
+- `/apps/mobile/components/` - Animated components
 - `/package.json` - "react-native-reanimated": "~4.1.1"
 
 #### 1.3 Lazy Loading and Code Splitting
@@ -90,7 +90,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 ### Implementation (3)
 ```typescript
-// /client/navigation/AppNavigator.tsx (pattern)
+// /apps/mobile/navigation/AppNavigator.tsx (pattern)
 const NotebookScreen = React.lazy(() => import('../screens/NotebookScreen'));
 
 // Screens loaded when navigated to, not upfront
@@ -117,9 +117,9 @@ const NotebookScreen = React.lazy(() => import('../screens/NotebookScreen'));
 ```text
 
 ### Files (2)
-- `/client/screens/NotebookScreen.tsx`
-- `/client/screens/PlannerScreen.tsx`
-- `/client/screens/EmailScreen.tsx`
+- `/apps/mobile/screens/NotebookScreen.tsx`
+- `/apps/mobile/screens/PlannerScreen.tsx`
+- `/apps/mobile/screens/EmailScreen.tsx`
 - All list-based screens
 
 #### 1.5 React Optimization Hooks
@@ -146,7 +146,7 @@ const handlePress = useCallback((id: string) => {
 
 ### Files (3)
 - All screen components use these patterns
-- `/client/screens/*Screen.tsx`
+- `/apps/mobile/screens/*Screen.tsx`
 
 ### Verification
 
@@ -193,7 +193,7 @@ Zero critical vulnerabilities, protect user privacy, secure authentication.
 
 ### Implementation (6)
 ```typescript
-// /client/storage/database.ts
+// /apps/mobile/storage/database.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const saveNote = async (note: Note): Promise<void> => {
@@ -203,7 +203,7 @@ export const saveNote = async (note: Note): Promise<void> => {
 ```text
 
 ### Files (4)
-- `/client/storage/database.ts` - All storage operations
+- `/apps/mobile/storage/database.ts` - All storage operations
 - 100% local until future sync enabled
 
 #### 2.2 JWT Authentication with bcrypt
@@ -218,7 +218,7 @@ export const saveNote = async (note: Note): Promise<void> => {
 
 ### Implementation (7)
 ```typescript
-// /server/middleware/auth.ts
+// /apps/api/middleware/auth.ts
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -233,8 +233,8 @@ const decoded = jwt.verify(token, SECRET_KEY);
 ```text
 
 ### Files (5)
-- `/server/middleware/auth.ts` - JWT middleware
-- `/server/routes.ts` - Protected endpoints
+- `/apps/api/middleware/auth.ts` - JWT middleware
+- `/apps/api/routes.ts` - Protected endpoints
 
 #### 2.3 Input Validation with Zod
 
@@ -243,11 +243,11 @@ const decoded = jwt.verify(token, SECRET_KEY);
 ### Rationale (8)
 - Runtime type checking prevents injection attacks
 - Schema validation catches malformed data
-- Type-safe validation shared between client/server
+- Type-safe validation shared between apps/mobile/server
 
 ### Implementation (8)
 ```typescript
-// /shared/schema.ts (pattern)
+// /packages/contracts/schema.ts (pattern)
 import { z } from 'zod';
 
 export const NoteSchema = z.object({
@@ -257,13 +257,13 @@ export const NoteSchema = z.object({
   tags: z.array(z.string()),
 });
 
-// /server/middleware/validation.ts
+// /apps/api/middleware/validation.ts
 const validated = NoteSchema.parse(req.body);
 ```text
 
 ### Files (6)
-- `/shared/schema.ts` - Zod schemas
-- `/server/middleware/validation.ts` - Validation middleware
+- `/packages/contracts/schema.ts` - Zod schemas
+- `/apps/api/middleware/validation.ts` - Validation middleware
 
 #### 2.4 Security Scanning with CodeQL
 
@@ -331,26 +331,26 @@ Add new modules in < 3 days, minimize code duplication, enable parallel developm
 ### Structure
 ```text
 Module: Notebook
-├── /client/screens/NotebookScreen.tsx        (UI)
-├── /client/screens/NoteEditorScreen.tsx      (Detail)
-├── /client/storage/database.ts               (Storage methods)
-└── /client/storage/__tests__/notebook.test.ts (Tests)
+├── /apps/mobile/screens/NotebookScreen.tsx        (UI)
+├── /apps/mobile/screens/NoteEditorScreen.tsx      (Detail)
+├── /apps/mobile/storage/database.ts               (Storage methods)
+└── /apps/mobile/storage/__tests__/notebook.test.ts (Tests)
 
 Module: Planner
-├── /client/screens/PlannerScreen.tsx
-├── /client/screens/TaskDetailScreen.tsx
-├── /client/storage/database.ts               (Tasks methods)
-└── /client/storage/__tests__/tasks.test.ts
+├── /apps/mobile/screens/PlannerScreen.tsx
+├── /apps/mobile/screens/TaskDetailScreen.tsx
+├── /apps/mobile/storage/database.ts               (Tasks methods)
+└── /apps/mobile/storage/__tests__/tasks.test.ts
 ```text
 
 ### Files (8)
-- `/client/screens/` - 44 screen files (14 modules)
-- `/client/storage/database.ts` - Methods grouped by module
-- `/client/storage/__tests__/` - Tests per module
+- `/apps/mobile/screens/` - 44 screen files (14 modules)
+- `/apps/mobile/storage/database.ts` - Methods grouped by module
+- `/apps/mobile/storage/__tests__/` - Tests per module
 
 #### 3.2 Shared Component Library
 
-**Decision:** Reusable components in `/client/components/`
+**Decision:** Reusable components in `/apps/mobile/components/`
 
 ### Rationale (11)
 - UI consistency across modules
@@ -359,7 +359,7 @@ Module: Planner
 
 ### Implementation (10)
 ```typescript
-// /client/components/Button.tsx
+// /apps/mobile/components/Button.tsx
 export const Button = ({ title, onPress }: ButtonProps) => {
   // Consistent styling, haptics, accessibility
 };
@@ -369,9 +369,9 @@ import { Button } from '@/components/Button';
 ```text
 
 ### Files (9)
-- `/client/components/Button.tsx`
-- `/client/components/Card.tsx`
-- `/client/components/QuickCaptureOverlay.tsx`
+- `/apps/mobile/components/Button.tsx`
+- `/apps/mobile/components/Card.tsx`
+- `/apps/mobile/components/QuickCaptureOverlay.tsx`
 - 20+ shared components
 
 #### 3.3 TypeScript Strict Mode
@@ -409,7 +409,7 @@ npm run check:types
 - **Storage:** `save*`, `get*`, `update*`, `delete*` methods
 - **Screens:** `*Screen.tsx` naming
 - **Components:** Functional components with TypeScript
-- **Hooks:** Custom hooks in `/client/hooks/`
+- **Hooks:** Custom hooks in `/apps/mobile/hooks/`
 - **Tests:** `*.test.ts` with 100% coverage
 
 ### Example
@@ -425,7 +425,7 @@ export const deleteNote = async (id: string): Promise<void> => { /* ... */ };
 
 ```bash
 # Check code duplication
-npx jscpd client/ server/
+npx jscpd apps/mobile/ apps/api/
 
 # Lint for consistency
 npm run lint
@@ -462,7 +462,7 @@ npm run check:types
 
 ### Implementation (11)
 ```typescript
-// /client/storage/__tests__/notebook.test.ts
+// /apps/mobile/storage/__tests__/notebook.test.ts
 describe('Notebook Storage', () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
@@ -480,10 +480,10 @@ describe('Notebook Storage', () => {
 ```text
 
 ### Files (10)
-- `/client/storage/__tests__/notebook.test.ts` (49 tests)
-- `/client/storage/__tests__/calendar.test.ts` (33 tests)
-- `/client/storage/__tests__/tasks.test.ts`
-- `/client/storage/__tests__/alerts.test.ts`
+- `/apps/mobile/storage/__tests__/notebook.test.ts` (49 tests)
+- `/apps/mobile/storage/__tests__/calendar.test.ts` (33 tests)
+- `/apps/mobile/storage/__tests__/tasks.test.ts`
+- `/apps/mobile/storage/__tests__/alerts.test.ts`
 - 659 total tests passing (100% pass rate)
 
 #### 4.2 Component Tests with React Native Testing Library
@@ -497,7 +497,7 @@ describe('Notebook Storage', () => {
 
 ### Implementation (12)
 ```typescript
-// /client/components/__tests__/Button.test.tsx
+// /apps/mobile/components/__tests__/Button.test.tsx
 import { render, fireEvent } from '@testing-library/react-native';
 
 it('calls onPress when tapped', () => {
@@ -515,7 +515,7 @@ it('calls onPress when tapped', () => {
 
 ### Implementation (13)
 ```typescript
-// /server/__tests__/api.e2e.test.ts
+// /apps/api/__tests__/api.e2e.test.ts
 describe('Authentication Flow', () => {
   it('should register, login, and access protected resource', async () => {
     // Register
@@ -543,8 +543,8 @@ describe('Authentication Flow', () => {
 ```text
 
 ### Files (11)
-- `/server/__tests__/api.e2e.test.ts`
-- `/server/__tests__/messages.quickwins.e2e.test.ts`
+- `/apps/api/__tests__/api.e2e.test.ts`
+- `/apps/api/__tests__/messages.quickwins.e2e.test.ts`
 
 #### 4.4 Automated CI/CD with GitHub Actions
 
@@ -619,7 +619,7 @@ npm test -- notebook
 
 ### Implementation (15)
 ```typescript
-// /client/screens/OnboardingModuleSelectionScreen.tsx
+// /apps/mobile/screens/OnboardingModuleSelectionScreen.tsx
 const suggestedModules = ['Command Center', 'Notebook', 'Planner'];
 
 // User selects 3 modules to start
@@ -627,8 +627,8 @@ const suggestedModules = ['Command Center', 'Notebook', 'Planner'];
 ```text
 
 ### Files (13)
-- `/client/screens/OnboardingWelcomeScreen.tsx`
-- `/client/screens/OnboardingModuleSelectionScreen.tsx`
+- `/apps/mobile/screens/OnboardingWelcomeScreen.tsx`
+- `/apps/mobile/screens/OnboardingModuleSelectionScreen.tsx`
 
 #### 5.2 Consistent Design System
 
@@ -641,7 +641,7 @@ const suggestedModules = ['Command Center', 'Notebook', 'Planner'];
 
 ### Implementation (16)
 ```typescript
-// /client/constants/theme.ts
+// /apps/mobile/constants/theme.ts
 export const Colors = {
   primary: '#00D9FF',      // Electric blue
   background: '#0A0E1A',   // Deep space
@@ -659,7 +659,7 @@ export const Typography = {
 ```text
 
 ### Files (14)
-- `/client/constants/theme.ts` - Design tokens
+- `/apps/mobile/constants/theme.ts` - Design tokens
 - `/docs/technical/design_guidelines.md` - Full spec
 - All components use theme constants
 
@@ -697,9 +697,9 @@ const handlePress = () => {
 - Mini-mode components for common tasks
 
 ### Files (16)
-- `/client/components/QuickCaptureOverlay.tsx`
-- `/client/context/HandoffContext.tsx`
-- `/client/components/Mini*.tsx` - 5 mini-mode components
+- `/apps/mobile/components/QuickCaptureOverlay.tsx`
+- `/apps/mobile/context/HandoffContext.tsx`
+- `/apps/mobile/components/Mini*.tsx` - 5 mini-mode components
 
 ### Verification (6)
 
@@ -716,7 +716,7 @@ npm run test:a11y
 ### Metrics (5)
 
 - Onboarding screens: 2 (welcome + module selection)
-- Design system: Fully implemented in `/client/constants/theme.ts`
+- Design system: Fully implemented in `/apps/mobile/constants/theme.ts`
 - Haptic feedback: 100% of interactive elements
 - Quick Capture: 5 mini-mode components
 
@@ -742,7 +742,7 @@ npm run test:a11y
 
 ### Implementation (18)
 ```typescript
-// /client/storage/database.ts
+// /apps/mobile/storage/database.ts
 // All operations local-first
 export const saveNote = async (note: Note): Promise<void> => {
   await AsyncStorage.setItem(`note_${note.id}`, JSON.stringify(note));
@@ -756,7 +756,7 @@ export const saveNote = async (note: Note): Promise<void> => {
 
 ### Implementation (19)
 ```typescript
-// /client/App.tsx (pattern)
+// /apps/mobile/App.tsx (pattern)
 <ErrorBoundary
   fallback={<ErrorScreen />}
   onError={logError}
@@ -776,7 +776,7 @@ export const saveNote = async (note: Note): Promise<void> => {
 
 ### Future Implementation
 ```typescript
-// /client/hooks/useQuery.ts (future)
+// /apps/mobile/hooks/useQuery.ts (future)
 const { data } = useQuery({
   queryKey: ['notes'],
   queryFn: fetchNotes,
@@ -889,22 +889,22 @@ npm run expo:dev
 # Strategy 2: Security
 npm audit
 npm run check:types
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/server/middleware/auth.ts
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/api/middleware/auth.ts
 
 # Strategy 3: Maintainability
 npm run lint
-tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/
+tree -L 2 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/
 
 # Strategy 4: Testability
 npm run test:coverage
 
 # Strategy 5: Usability
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/constants/theme.ts
-ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/screens/Onboarding*
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/constants/theme.ts
+ls /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/screens/Onboarding*
 
 # Strategy 6: Reliability
 # Test offline mode manually
-cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts | head -50
+cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/apps/mobile/storage/database.ts | head -50
 ```text
 
 ---
@@ -920,3 +920,4 @@ cat /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/client/storage/database.ts
 - [ADR-001: AsyncStorage](../../decisions/001-use-asyncstorage.md)
 - [ADR-002: React Native](../../decisions/002-react-native.md)
 - [ADR-003: JWT Auth](../../decisions/003-jwt-auth.md)
+

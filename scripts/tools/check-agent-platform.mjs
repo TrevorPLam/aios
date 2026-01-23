@@ -28,7 +28,8 @@ const __dirname = dirname(__filename);
 
 const REPO_ROOT = join(__dirname, "../..");
 const TODO_PATH = join(REPO_ROOT, "P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md");
-const STATE_PATH = join(REPO_ROOT, "docs/governance/state.md");
+// Note: State management is now handled via .repo/policy/QUALITY_GATES.md
+const STATE_PATH = join(REPO_ROOT, "docs/archive/governance/state.md");
 
 // Read enforcement mode from environment or default to WARN
 const ENFORCEMENT_MODE =
@@ -93,7 +94,7 @@ function checkAgentPlatform() {
   console.log("📜 Check 2: Constitution Has Agent Model");
   console.log("------------------------------------------");
 
-  const constitutionPath = join(REPO_ROOT, "docs/governance/constitution.md");
+  const constitutionPath = join(REPO_ROOT, ".repo/policy/CONSTITUTION.md");
   if (!existsSync(constitutionPath)) {
     console.error(`❌ Constitution not found at: ${constitutionPath}`);
     violations.push("Constitution file not found");

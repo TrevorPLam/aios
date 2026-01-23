@@ -23,7 +23,7 @@ This second-pass analysis identified **47 distinct issues** across 10 categories
 
 ### 🔴 CRITICAL-01: Missing Timer Cleanup in NoteEditorScreen
 
-**File:** `client/screens/NoteEditorScreen.tsx:104-117`
+**File:** `apps/mobile/screens/NoteEditorScreen.tsx:104-117`
 **Issue:** Autosave timer cleanup depends on `saveNote` in dependency array, which changes on every render due to inline dependencies (`isPinned`, `isArchived`). This causes:
 
 - Timer cleared and recreated on every state change
@@ -51,7 +51,7 @@ useEffect(() => { isArchivedRef.current = isArchived; }, [isArchived]);
 
 ### 🔴 CRITICAL-02: Unhandled Promise Rejections in Event Listeners
 
-**File:** `client/lib/eventBus.ts:169-177`
+**File:** `apps/mobile/lib/eventBus.ts:169-177`
 **Issue:** Async event listeners catch errors but don't propagate them. Silent failures can occur:
 
 ```typescript
@@ -88,7 +88,7 @@ private failedListeners: Map<EVENT_TYPES, number> = new Map();
 
 ### 🟠 HIGH-01: Stale Closure in App.tsx Analytics
 
-**File:** `client/App.tsx:40-62`
+**File:** `apps/mobile/App.tsx:40-62`
 **Issue:** `initAnalytics` is an async function called immediately but not awaited in useEffect. AppState listener is registered before analytics initializes.
 
 ### How It Breaks (2)
@@ -131,7 +131,7 @@ useEffect(() => {
 
 ### 🟠 HIGH-02: Race Condition in CommandCenterScreen Data Loading
 
-**File:** `client/screens/CommandCenterScreen.tsx`
+**File:** `apps/mobile/screens/CommandCenterScreen.tsx`
 **Issue:** `loadData` called in two places:
 
 1. `useEffect(() => { loadData(); }, [loadData]);`
@@ -170,7 +170,7 @@ useEffect(() => {
 
 ### 🟠 HIGH-03: Async Side Effects in PlannerScreen
 
-**File:** `client/screens/PlannerScreen.tsx`
+**File:** `apps/mobile/screens/PlannerScreen.tsx`
 **Issue:** `.map(async (task) => {...})` returns array of Promises, not awaited
 
 ```typescript
@@ -193,7 +193,7 @@ await Promise.all(topLevel.map(async (task) => {
 
 ### 🟡 MEDIUM-01: Missing Abort Controller for Fetch Calls
 
-**File:** `client/screens/TranslatorScreen.tsx`, `client/analytics/transport.ts`
+**File:** `apps/mobile/screens/TranslatorScreen.tsx`, `apps/mobile/analytics/transport.ts`
 **Issue:** Fetch requests not cancellable - if component unmounts mid-request, setState called on unmounted component
 
 ### Fix (5)
@@ -220,9 +220,9 @@ const handleTranslate = async () => {
 ### 🟡 MEDIUM-02: SetTimeout Without Cleanup in Multiple Screens
 
 #### Files
-- `client/screens/ModuleGridScreen.tsx:104, 110` - Two setTimeout calls, neither cleaned up
-- `client/screens/IntegrationDetailScreen.tsx:203`
-- `client/screens/PhotoEditorScreen.tsx:262`
+- `apps/mobile/screens/ModuleGridScreen.tsx:104, 110` - Two setTimeout calls, neither cleaned up
+- `apps/mobile/screens/IntegrationDetailScreen.tsx:203`
+- `apps/mobile/screens/PhotoEditorScreen.tsx:262`
 
 **How It Breaks:** User navigates away before timeout → setState on unmounted component → React warning, memory leak
 
@@ -273,7 +273,7 @@ coverage/
 ### Fix (6)
 ```json
 {
-  "include": ["client/**/*.ts", "client/**/*.tsx", "shared/**/*.ts"],
+  "include": ["apps/mobile/**/*.ts", "apps/mobile/**/*.tsx", "packages/contracts/**/*.ts"],
   "exclude": ["node_modules", "build", "dist", "server"]
 }
 ```text
@@ -375,7 +375,7 @@ updates:
 **Fix:** Create data hooks layer:
 
 ```typescript
-// client/hooks/useNotes.ts
+// apps/mobile/hooks/useNotes.ts
 export function useNotes() {
   return useQuery(['notes'], () => db.notes.getAll());
 }
@@ -399,7 +399,7 @@ Then screens use hooks, not db directly.
 
 ### 🟠 HIGH-07: God Module - database.ts (5,700 Lines)
 
-**File:** `client/storage/database.ts`
+**File:** `apps/mobile/storage/database.ts`
 **Issue:** Single file handles 13 different data types (Notes, Tasks, Events, Messages, Contacts, etc.) → impossible to maintain
 
 ### How It Breaks (6)
@@ -411,7 +411,7 @@ Then screens use hooks, not db directly.
 **Fix:** Split into domain modules:
 
 ```text
-client/storage/
+apps/mobile/storage/
   ├── database.ts (orchestrator)
   ├── notes/
   │   ├── notes.repository.ts
@@ -426,7 +426,7 @@ client/storage/
 
 ### 🟠 HIGH-08: Business Logic in UI Components
 
-**File:** `client/screens/CommandCenterScreen.tsx:294-350`
+**File:** `apps/mobile/screens/CommandCenterScreen.tsx:294-350`
 **Issue:** 50+ lines of swipe gesture logic mixed with rendering code
 
 ### How It Breaks (7)
@@ -457,7 +457,7 @@ const { gesture, animatedStyle } = useSwipeableCards(
 
 ### 🟡 MEDIUM-05: Circular Logic Risk in recommendationEngine.ts
 
-**File:** `client/lib/recommendationEngine.ts`
+**File:** `apps/mobile/lib/recommendationEngine.ts`
 **Issue:** Engine calls `db.notes.getAll()`, `db.tasks.getAll()`, etc. in catch blocks with only console.error
 
 ```typescript
@@ -514,7 +514,7 @@ export function validateNote(note: Partial<Note>): Result<Note, ValidationError>
 
 ### 🟠 HIGH-09: Hardcoded Colors in ListEditorScreen
 
-**File:** `client/screens/ListEditorScreen.tsx:38-42`
+**File:** `apps/mobile/screens/ListEditorScreen.tsx:38-42`
 **Issue:** Priority colors hardcoded, not using theme system:
 
 ```typescript
@@ -540,7 +540,7 @@ export const PriorityColors = {
 
 ### 🟡 MEDIUM-07: Inconsistent Spacing - Mix of Numbers and Tokens
 
-**Example:** `client/screens/ProjectDetailScreen.tsx:fontSize: 16`
+**Example:** `apps/mobile/screens/ProjectDetailScreen.tsx:fontSize: 16`
 **Issue:** Some components use `Spacing.md`, others use raw numbers
 
 **Fix:** Create Typography tokens for all font sizes, enforce via ESLint rule
@@ -591,7 +591,7 @@ export const Opacity = {
 
 ### 🟠 HIGH-10: Missing Fallback UI in ErrorBoundary
 
-**File:** `client/components/ErrorBoundary.tsx`
+**File:** `apps/mobile/components/ErrorBoundary.tsx`
 **Issue:** Shows error details to user - security risk, bad UX
 
 **Fix:** Add user-friendly fallback:
@@ -616,7 +616,7 @@ if (this.state.error) {
 
 ### 🟠 HIGH-11: No Retry Logic in query-client.ts
 
-**File:** `client/lib/query-client.ts:77`
+**File:** `apps/mobile/lib/query-client.ts:77`
 **Issue:** `retry: false` - network hiccup = permanent failure
 
 ### Fix (9)
@@ -710,7 +710,7 @@ const mutation = useMutation(acceptRecommendation, {
 
 ### 🟡 MEDIUM-10: AsyncStorage Keys Not Namespaced
 
-**File:** `client/storage/database.ts:KEYS`
+**File:** `apps/mobile/storage/database.ts:KEYS`
 **Issue:** Keys like `"notes"`, `"tasks"` - conflicts with other libraries or apps
 
 ### Fix (11)
@@ -728,7 +728,7 @@ const KEYS = {
 
 ### 🟠 HIGH-13: Derived State Stored Instead of Computed
 
-**File:** `client/screens/HistoryScreen.tsx:26-27`
+**File:** `apps/mobile/screens/HistoryScreen.tsx:26-27`
 #### Issue
 ```typescript
 const [allEntries, setAllEntries] = useState<HistoryLogEntry[]>([]);
@@ -751,7 +751,7 @@ const filteredEntries = useMemo(() =>
 
 ### 🟡 MEDIUM-11: Missing useMemo for Expensive Computations
 
-**Example:** `client/screens/CalendarScreen.tsx` filters events on every render
+**Example:** `apps/mobile/screens/CalendarScreen.tsx` filters events on every render
 
 **Fix:** Wrap in useMemo:
 
@@ -781,7 +781,7 @@ const AlertCard = React.memo(({ alert, onPress }) => {
 
 ### 🔴 CRITICAL-08: No Environment Variable Validation
 
-**File:** `client/lib/query-client.ts:8-12`
+**File:** `apps/mobile/lib/query-client.ts:8-12`
 #### Issue (2)
 ```typescript
 let host = process.env.EXPO_PUBLIC_DOMAIN;
@@ -923,8 +923,8 @@ export const features = {
 
 ```javascript
 moduleNameMapper: {
-  "^@/(.*)$": "<rootDir>/client/$1",
-  "^@shared/(.*)$": "<rootDir>/shared/$1",
+  "^@/(.*)$": "<rootDir>/apps/mobile/$1",
+  "^@packages/contracts/(.*)$": "<rootDir>/packages/contracts/$1",
 },
 ```text
 
@@ -1024,3 +1024,4 @@ Fix MEDIUM issues:
 - Cleanup function coverage: 100%
 - Data hooks usage: 100% (no direct db in screens)
 - Console statements: 0 (replaced with logger)
+

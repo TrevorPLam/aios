@@ -118,7 +118,7 @@ This refactoring transforms Mobile-Scaffold from a feature-rich prototype into a
 
 ### 6. Delete Code Aggressively
 
-- Removed duplicate code in server/storage.ts
+- Removed duplicate code in apps/api/storage.ts
 - Cleaned up malformed function blocks
 - Identified dead code (documented for removal)
 
@@ -264,7 +264,7 @@ eventBus.emit(EVENT_TYPES.NOTE_CREATED, { note }); // ✅ Typed
 
 ### Deleted (So Far)
 
-1. **server/storage.ts lines 620-625** - Duplicate code block
+1. **apps/api/storage.ts lines 620-625** - Duplicate code block
    - **Why:** Copy-paste error, would cause bugs
    - **Class of Bug:** Logic errors, undefined behavior
    - **How It Fails:** TypeScript compilation error now
@@ -392,3 +392,4 @@ This refactoring establishes a **production-grade foundation** for Mobile-Scaffo
 - ⏳ Production-ready (after completing remaining phases)
 
 **Estimated time to production-ready:** 3-6 weeks (following TYPESCRIPT_TECHNICAL_DEBT.md plan)
+

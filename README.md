@@ -151,7 +151,7 @@ This section captures the current product + technical reality so teams can reaso
 
 - **Client (React Native + Expo):** iOS-first UI, shared components, theme system, haptics, and Reanimated for smooth motion.
 - **Server (Express):** REST API with JWT auth, Zod validation, and in-memory storage ready for PostgreSQL migration.
-- **Shared (TypeScript):** Shared schema for client/server alignment.
+- **Shared (TypeScript):** Shared schema for apps/mobile/server alignment.
 
 Mermaid overview:
 
@@ -306,7 +306,7 @@ npm run test:coverage
 
 ```text
 Mobile-Scaffold/
-├── client/                 # React Native mobile app
+├── apps/mobile/                 # React Native mobile app
 │   ├── components/         # Reusable UI components
 │   ├── constants/          # Theme, colors, spacing
 │   ├── hooks/              # Custom React hooks
@@ -316,11 +316,11 @@ Mobile-Scaffold/
 │   ├── storage/            # AsyncStorage database layer
 │   ├── utils/              # Helper functions and seed data
 │   └── App.tsx             # App entry point
-├── server/                 # Express backend
+├── apps/api/                 # Express backend
 │   ├── index.ts            # Server setup and middleware
 │   ├── routes.ts           # API routes (scaffold)
 │   └── storage.ts          # Database utilities
-├── shared/                 # Shared types between client/server
+├── packages/contracts/                 # Shared types between apps/mobile/server
 │   └── schema.ts           # Database schema (Drizzle ORM)
 ├── assets/                 # Images and static files
 ├── scripts/                # Build and deployment scripts
@@ -440,4 +440,5 @@ Using system fonts with the following scale:
 - [BESTPR.md](BESTPR.md) — Token-optimized best practices guide for AI agents
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Full contribution guidelines
 - [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Constitution](docs/governance/constitution.md) — Repository governance
+- [Constitution](/.repo/policy/CONSTITUTION.md) — Repository governance
+

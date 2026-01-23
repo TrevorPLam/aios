@@ -23,7 +23,7 @@ Successfully completed **5 high-priority tasks** from P0TODO.md, P1TODO.md, P2TO
 - Structured error logging with metadata (BottomNav.tsx:180-189)
 - Comprehensive `handleNavigation()` with validation (BottomNav.tsx:226-261)
 
-**Evidence**: `client/components/BottomNav.tsx`
+**Evidence**: `apps/mobile/components/BottomNav.tsx`
 
 ---
 
@@ -43,7 +43,7 @@ Successfully completed **5 high-priority tasks** from P0TODO.md, P1TODO.md, P2TO
 
 **Files Changed**:
 
-- `client/screens/CommandCenterScreen.tsx`: Added attention icon, badge, state management
+- `apps/mobile/screens/CommandCenterScreen.tsx`: Added attention icon, badge, state management
 - `docs/technical/attention-center-navigation.md`: Complete documentation
 
 **Testing**: ✅ All 25 attention manager tests passing
@@ -69,7 +69,7 @@ Successfully completed **5 high-priority tasks** from P0TODO.md, P1TODO.md, P2TO
 - Clock icon with chevron indicator
 - Proper routing configured
 
-**Evidence**: `client/screens/SystemScreen.tsx`
+**Evidence**: `apps/mobile/screens/SystemScreen.tsx`
 
 ---
 
@@ -84,7 +84,7 @@ Successfully completed **5 high-priority tasks** from P0TODO.md, P1TODO.md, P2TO
 - 6 modules with "Settings coming soon" placeholders
 - Clear navigation hierarchy
 
-**Evidence**: `client/screens/SettingsMenuScreen.tsx` (lines 95-167)
+**Evidence**: `apps/mobile/screens/SettingsMenuScreen.tsx` (lines 95-167)
 
 **Note**: Framework is complete. Individual module settings screens are tracked separately in P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md.
 
@@ -97,7 +97,7 @@ Successfully completed **5 high-priority tasks** from P0TODO.md, P1TODO.md, P2TO
 **Implementation**:
 
 - Installed Winston logging library
-- Created `server/utils/logger.ts` (93 lines, comprehensive docs)
+- Created `apps/api/utils/logger.ts` (93 lines, comprehensive docs)
 - JSON logs in production, colored console in development
 - Multiple log levels: error, warn, info, debug
 - Configurable via `LOG_LEVEL` environment variable
@@ -108,9 +108,9 @@ Successfully completed **5 high-priority tasks** from P0TODO.md, P1TODO.md, P2TO
 
 **Files Changed**:
 
-- `server/utils/logger.ts`: New Winston logger with docs
-- `server/middleware/errorHandler.ts`: Structured error logging
-- `server/index.ts`: All console logs replaced with logger
+- `apps/api/utils/logger.ts`: New Winston logger with docs
+- `apps/api/middleware/errorHandler.ts`: Structured error logging
+- `apps/api/index.ts`: All console logs replaced with logger
 - `package.json`: Added winston dependency
 - `docs/operations/server-logging.md`: Complete usage guide
 
@@ -185,14 +185,14 @@ NODE_ENV=production LOG_LEVEL=warn npm run server:prod
 
 ### Modified Files (4)
 
-1. `client/screens/CommandCenterScreen.tsx` - AttentionCenter navigation (52 lines changed)
-2. `server/index.ts` - Structured logging (25 lines changed)
-3. `server/middleware/errorHandler.ts` - Error logging (20 lines changed)
+1. `apps/mobile/screens/CommandCenterScreen.tsx` - AttentionCenter navigation (52 lines changed)
+2. `apps/api/index.ts` - Structured logging (25 lines changed)
+3. `apps/api/middleware/errorHandler.ts` - Error logging (20 lines changed)
 4. `package.json` - Winston dependency (1 line)
 
 ### New Files (3)
 
-1. `server/utils/logger.ts` - Winston logger utility (93 lines)
+1. `apps/api/utils/logger.ts` - Winston logger utility (93 lines)
 2. `docs/technical/attention-center-navigation.md` - Feature docs (140 lines)
 3. `docs/operations/server-logging.md` - Configuration guide (130 lines)
 
@@ -207,7 +207,7 @@ NODE_ENV=production LOG_LEVEL=warn npm run server:prod
 ### Unit Tests
 
 ```text
-PASS client/lib/__tests__/attentionManager.test.ts
+PASS apps/mobile/lib/__tests__/attentionManager.test.ts
   AttentionManager
     initialization
       ✓ should initialize successfully
@@ -372,3 +372,4 @@ Successfully completed 5 high-priority tasks with production-ready implementatio
 **Session Duration**: ~2 hours
 **Engineer**: AGENT
 **Platform**: iOS
+

@@ -144,7 +144,7 @@ For comprehensive domain terms (AI, modules, features), see the main glossary: [
 **Technical:** TypeScript-first schema validation with static type inference
 **Version:** 3.24.2
 **Usage:** API request validation, data model validation
-**File:** `/shared/schema.ts`
+**File:** `/packages/contracts/schema.ts`
 
 ---
 
@@ -260,3 +260,4 @@ See "Code Coverage"
 - [Introduction and Goals](00_intro.md) - Overview of AIOS
 - [Architecture Decisions](../../decisions/README.md) - ADR index
 - All arc42 sections use terms defined here
+

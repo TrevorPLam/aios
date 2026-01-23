@@ -1,6 +1,6 @@
 # Server Module (Backend API)
 
-**Location:** `server/`
+**Location:** `apps/api/`
 **Language:** TypeScript, JavaScript
 **Framework:** Node.js, Express
 **Status:** Active
@@ -42,7 +42,7 @@ The server module is the backend REST API that powers the mobile application. Bu
 ### Architecture Overview
 
 ```text
-server/
+apps/api/
 ├── src/
 │   ├── routes/            # Express route definitions
 │   ├── controllers/       # Request handlers
@@ -65,7 +65,7 @@ server/
 
 #### Component 1: Express Application
 
-**Location:** `server/src/server.ts`
+**Location:** `apps/api/server.ts`
 **Purpose:** Main Express app configuration and startup
 ### Interface
 ```typescript
@@ -79,7 +79,7 @@ app.use('/api', routes);
 
 #### Component 2: Authentication Middleware
 
-**Location:** `server/src/middleware/auth.ts`
+**Location:** `apps/api/middleware/auth.ts`
 **Purpose:** Validates JWT tokens and protects routes
 ### Interface (2)
 ```typescript
@@ -95,7 +95,7 @@ export const authenticateUser = async (
 
 #### Component 3: Database Service
 
-**Location:** `server/src/services/database.ts`
+**Location:** `apps/api/services/database.ts`
 **Purpose:** Database connection and query execution
 ### Interface (3)
 ```typescript
@@ -107,7 +107,7 @@ export class DatabaseService {
 
 #### Component 4: API Controllers
 
-**Location:** `server/src/controllers/`
+**Location:** `apps/api/controllers/`
 **Purpose:** Handle HTTP requests, call services, return responses
 ### Interface (4)
 ```typescript
@@ -241,13 +241,13 @@ The server emits events for background processing:
 | `bull` | `^4.12.0` | Job queue |
 | `redis` | `^4.6.0` | Caching |
 
-See `server/package.json` for complete dependency list.
+See `apps/api/package.json` for complete dependency list.
 
 ### Internal Dependencies
 
-- `../shared/types` - Shared TypeScript types
-- `../shared/validators` - Shared validation schemas
-- `../shared/utils` - Shared utility functions
+- `../packages/contracts/types` - Shared TypeScript types
+- `../packages/contracts/validators` - Shared validation schemas
+- `../packages/contracts/utils` - Shared utility functions
 
 ### Dependency Rationale
 
@@ -317,8 +317,8 @@ LOG_LEVEL=info                  # Logging level
 ```text
 
 ### Configuration Files
-- `server/src/config/database.ts` - Database configuration
-- `server/src/config/auth.ts` - Auth configuration
+- `apps/api/config/database.ts` - Database configuration
+- `apps/api/config/auth.ts` - Auth configuration
 - `.env.example` - Example environment variables
 
 ### Deployment
@@ -344,11 +344,11 @@ git push heroku main
 ### Steps
 ```bash
 # 1. Define route
-# server/src/routes/data.routes.ts
+# apps/api/routes/data.routes.ts
 router.post('/items', authenticateUser, itemController.createItem);
 
 # 2. Create controller
-# server/src/controllers/item.controller.ts
+# apps/api/controllers/item.controller.ts
 export class ItemController {
   async createItem(req: Request, res: Response): Promise<Response> {
     const data = await itemService.createItem(req.body);
@@ -357,7 +357,7 @@ export class ItemController {
 }
 
 # 3. Create service with business logic
-# server/src/services/item.service.ts
+# apps/api/services/item.service.ts
 export class ItemService {
   async createItem(data: CreateItemDTO): Promise<Item> {
     // Validate, save to DB, return
@@ -365,7 +365,7 @@ export class ItemService {
 }
 
 # 4. Add validation schema
-# server/src/validators/item.validator.ts
+# apps/api/validators/item.validator.ts
 export const createItemSchema = z.object({
   name: z.string().min(1).max(100),
   description: z.string().optional(),
@@ -422,7 +422,7 @@ npm run logs:tail
 ### Test Structure
 
 ```text
-server/tests/
+apps/api/tests/
 ├── unit/                   # Unit tests for services, utils
 │   ├── services/
 │   ├── utils/
@@ -748,3 +748,5 @@ APIs follow semantic versioning:
 - [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
 - [OpenAPI Specification](https://swagger.io/specification/)
 - [Twelve-Factor App](https://12factor.net/)
+
+

@@ -168,7 +168,7 @@ These instructions help verify that the mobile-first configuration changes are w
 
 1. Open the app in iOS simulator
 
-1. Make a visible change in any screen file (e.g., change text in `client/screens/ModuleGridScreen.tsx`)
+1. Make a visible change in any screen file (e.g., change text in `apps/mobile/screens/ModuleGridScreen.tsx`)
 
 1. Save the file
 
@@ -188,7 +188,7 @@ These instructions help verify that the mobile-first configuration changes are w
 
 ### Steps (7)
 
-1. Add a temporary Platform check in `client/App.tsx`:
+1. Add a temporary Platform check in `apps/mobile/App.tsx`:
 
    ```typescript
    import { Platform } from 'react-native';
@@ -340,3 +340,4 @@ After completing all tests:
 ## Questions?
 
 See `MOBILE_CONFIGURATION_EXPLANATION.md` for detailed explanations of each fix.
+

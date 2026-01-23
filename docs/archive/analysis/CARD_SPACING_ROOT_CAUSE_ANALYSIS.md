@@ -16,16 +16,16 @@ User reports that after numerous attempts (seventh time requesting), the recomme
 
 ### What Was Checked
 
-1. ✅ Reviewed `client/screens/CommandCenterScreen.tsx` (lines 1-1050)
+1. ✅ Reviewed `apps/mobile/screens/CommandCenterScreen.tsx` (lines 1-1050)
 2. ✅ Examined `UI_RENDER_ISSUES_INVESTIGATION.md`
 3. ✅ Analyzed `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md`
-4. ✅ Reviewed spacing constants in `client/constants/theme.ts`
+4. ✅ Reviewed spacing constants in `apps/mobile/constants/theme.ts`
 5. ✅ Traced FlatList rendering structure
 6. ✅ Analyzed git history for past fix attempts
 
 ### Current Implementation State
 
-**File**: `client/screens/CommandCenterScreen.tsx`
+**File**: `apps/mobile/screens/CommandCenterScreen.tsx`
 
 ```typescript
 // Line 106: Separator spacing constant
@@ -56,7 +56,7 @@ cardContainer: {
 
 ### The Problem
 
-**Location**: `client/screens/CommandCenterScreen.tsx`, line 938
+**Location**: `apps/mobile/screens/CommandCenterScreen.tsx`, line 938
 
 The `minHeight: 300` style on the `cardContainer` wrapper forces each recommendation card to occupy at least 300 pixels of vertical space, regardless of the actual content height.
 
@@ -185,7 +185,7 @@ None checked for height constraints on the container wrapper.
 
 ### Code Evidence
 
-**File**: `client/screens/CommandCenterScreen.tsx`
+**File**: `apps/mobile/screens/CommandCenterScreen.tsx`
 
 ```typescript
 // Lines 789-797: FlatList renderItem structure
@@ -251,7 +251,7 @@ However, current code shows `CARD_SPACING = 0`, not 2px. This indicates:
 
 ### Primary Fix: Remove minHeight Constraint
 
-**File**: `client/screens/CommandCenterScreen.tsx`, line 938
+**File**: `apps/mobile/screens/CommandCenterScreen.tsx`, line 938
 
 ```diff
 cardContainer: {
@@ -326,7 +326,7 @@ This allows tighter spacing while preventing overly compact cards.
 
 After thorough investigation, the root cause of the "almost a full inch of spacing" is definitively identified:
 
-**`minHeight: 300` on line 938 of `client/screens/CommandCenterScreen.tsx`**
+**`minHeight: 300` on line 938 of `apps/mobile/screens/CommandCenterScreen.tsx`**
 
 This property forces each card container to be at least 300 pixels tall, creating large empty spaces when card content is naturally shorter (typically 180-250px). Since the card separator (`CARD_SPACING`) is already set to 0px, the only source of spacing is this minimum height constraint.
 
@@ -351,8 +351,8 @@ This is a one-line change that will resolve the issue immediately.
 
 ## Files Referenced
 
-- `client/screens/CommandCenterScreen.tsx` (main issue location)
-- `client/constants/theme.ts` (Spacing constants)
+- `apps/mobile/screens/CommandCenterScreen.tsx` (main issue location)
+- `apps/mobile/constants/theme.ts` (Spacing constants)
 - `UI_RENDER_ISSUES_INVESTIGATION.md` (past investigation)
 - `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` (design specifications)
 
@@ -361,3 +361,4 @@ This is a one-line change that will resolve the issue immediately.
 **Investigation completed by**: GitHub Copilot
 **Status**: Ready for implementation (pending user approval)
 **Next Steps**: Present findings to user, await decision on code changes
+

@@ -23,7 +23,7 @@ npm run lint
 npm run lint:fix
 
 # Check specific files
-npx expo lint client/screens/CommandCenter.tsx
+npx expo lint apps/mobile/screens/CommandCenter.tsx
 ```text
 
 ### Expected Output (Success)
@@ -34,7 +34,7 @@ npx expo lint client/screens/CommandCenter.tsx
 ### Expected Output (Failure)
 ```text
 ✖ 3 problems (2 errors, 1 warning)
-  client/screens/Notebook.tsx:42:3  error  'useState' is not defined
+  apps/mobile/screens/Notebook.tsx:42:3  error  'useState' is not defined
 ```text
 
 ---
@@ -49,7 +49,7 @@ npm run check:types
 npx tsc --noEmit --pretty
 
 # Check specific file
-npx tsc --noEmit client/screens/Calendar.tsx
+npx tsc --noEmit apps/mobile/screens/Calendar.tsx
 ```text
 
 ### Expected Output (Success) (2)
@@ -59,7 +59,7 @@ npx tsc --noEmit client/screens/Calendar.tsx
 
 ### Expected Output (Failure) (2)
 ```text
-client/screens/Planner.tsx(42,3): error TS2322: Type 'string' is not assignable to type 'number'.
+apps/mobile/screens/Planner.tsx(42,3): error TS2322: Type 'string' is not assignable to type 'number'.
 ```text
 
 ---
@@ -74,7 +74,7 @@ npm run check:format
 npm run format
 
 # Format specific files
-npx prettier --write "client/screens/*.tsx"
+npx prettier --write "apps/mobile/screens/*.tsx"
 ```text
 
 ### Expected Output (Success) (3)
@@ -85,9 +85,9 @@ All matched files use Prettier code style!
 ### Expected Output (Failure) (3)
 ```text
 Code style issues found in 3 files:
-  client/screens/Email.tsx
-  client/screens/Lists.tsx
-  server/routes.ts
+  apps/mobile/screens/Email.tsx
+  apps/mobile/screens/Lists.tsx
+  apps/api/routes.ts
 ```text
 
 ---
@@ -123,7 +123,7 @@ Time:        12.456 s
 
 ### Expected Output (Failure) (4)
 ```text
-FAIL client/screens/__tests__/Planner.test.tsx
+FAIL apps/mobile/screens/__tests__/Planner.test.tsx
   ● Planner › should handle task creation
     expect(received).toBe(expected)
     Expected: "Buy milk"
@@ -681,3 +681,4 @@ npm run lint && echo "✓ Lint command works"
 **Used By:** All documentation "How to Verify" sections
 **CI Integration:** .github/workflows/ci.yml, .github/workflows/docs-quality.yml
 **Maintenance:** Update when adding/changing npm scripts or verification tools
+

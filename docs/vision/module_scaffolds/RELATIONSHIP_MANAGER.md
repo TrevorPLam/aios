@@ -78,12 +78,13 @@ This stub defines the Relationship Manager module structure and its cross-module
 
 ## Proposed File Scaffolding (No Code Yet)
 
-- `shared/models/relationships/` — relationship domain types
-- `server/services/relationships/` — scoring/connector stubs
-- `client/modules/relationships/` — module entry points (no UI implementation)
+- `packages/contracts/models/relationships/` — relationship domain types
+- `apps/api/services/relationships/` — scoring/connector stubs
+- `apps/mobile/modules/relationships/` — module entry points (no UI implementation)
 - `docs/vision/module_scaffolds/RELATIONSHIP_MANAGER.md` — this plan
 
 ## Open Questions to Resolve
 
 - Health score calculation and weighting.
 - Automated vs manual interaction logging defaults.
+

@@ -49,7 +49,7 @@ Added History as a top-level menu item in SettingsMenuScreen:
 
 **Files Changed**:
 
-- `client/screens/SettingsMenuScreen.tsx` (7 insertions)
+- `apps/mobile/screens/SettingsMenuScreen.tsx` (7 insertions)
 
 ---
 
@@ -80,7 +80,7 @@ Added AttentionCenter as a top-level menu item in SettingsMenuScreen:
 
 **Files Changed**:
 
-- `client/screens/SettingsMenuScreen.tsx` (7 insertions)
+- `apps/mobile/screens/SettingsMenuScreen.tsx` (7 insertions)
 
 **Deferred Items**:
 
@@ -140,12 +140,12 @@ Added AttentionCenter as a top-level menu item in SettingsMenuScreen:
 
 **Files Changed**:
 
-- `client/screens/AIPreferencesScreen.tsx` (223 insertions)
+- `apps/mobile/screens/AIPreferencesScreen.tsx` (223 insertions)
 
 **Integration Points**:
 
-- `client/lib/contextEngine.ts` - Core context detection and management
-- `client/components/PersistentSidebar.tsx` - Module visibility control
+- `apps/mobile/lib/contextEngine.ts` - Core context detection and management
+- `apps/mobile/components/PersistentSidebar.tsx` - Module visibility control
 - Context changes propagate to entire app via event bus
 
 ---
@@ -156,8 +156,8 @@ Added AttentionCenter as a top-level menu item in SettingsMenuScreen:
 **Total Lines Changed**: 247 additions, 1 deletion
 
 ```text
-client/screens/AIPreferencesScreen.tsx | 223 +++++++++++++++++++++++
-client/screens/SettingsMenuScreen.tsx  |  24 +++++-
+apps/mobile/screens/AIPreferencesScreen.tsx | 223 +++++++++++++++++++++++
+apps/mobile/screens/SettingsMenuScreen.tsx  |  24 +++++-
 ```text
 
 ---
@@ -306,8 +306,8 @@ client/screens/SettingsMenuScreen.tsx  |  24 +++++-
 
 **Changes**:
 
-- client/screens/AIPreferencesScreen.tsx (223 additions)
-- client/screens/SettingsMenuScreen.tsx (24 additions, 1 deletion)
+- apps/mobile/screens/AIPreferencesScreen.tsx (223 additions)
+- apps/mobile/screens/SettingsMenuScreen.tsx (24 additions, 1 deletion)
 - package-lock.json (1 addition)
 
 ---
@@ -427,3 +427,4 @@ Completed 3 high-value tasks that significantly improve user access to existing 
 **Ready for Review**: ✅ YES
 **Breaking Changes**: ❌ NO
 **Requires Migration**: ❌ NO
+

@@ -10,9 +10,9 @@ The AIOS system is organized into three main modules:
 
 ```text
 /home/runner/work/Mobile-Scaffold/Mobile-Scaffold/
-├── client/          # React Native mobile application
-├── server/          # Node.js/Express backend API
-└── shared/          # TypeScript code shared between client and server
+├── apps/mobile/          # React Native mobile application
+├── apps/api/          # Node.js/Express backend API
+└── packages/contracts/          # TypeScript code shared between client and server
 ```text
 
 Each module has its own:
@@ -49,7 +49,7 @@ Each module document follows this structure:
 - **Assumption 1:** Each module maintains clear boundaries with documented interfaces
   - *If false:* Refactor to clarify module boundaries and update documentation
 - **Assumption 2:** Shared code is truly reusable between client and server
-  - *If false:* Move module-specific code out of `shared/` into respective modules
+  - *If false:* Move module-specific code out of `packages/contracts/` into respective modules
 - **Assumption 3:** Modules can be built and tested independently
   - *If false:* Document dependencies and required build order
 
@@ -71,7 +71,7 @@ Each module document follows this structure:
 - **Impact:** Subtle bugs, inconsistent validation, data corruption
 - **Detection:** Integration tests fail, production errors
 - **Mitigation:**
-  - Keep `shared/` version synchronized across modules
+  - Keep `packages/contracts/` version synchronized across modules
   - Use workspace features to manage shared dependencies
   - Test shared code in both contexts
 
@@ -96,9 +96,9 @@ cd ../server && npm run build
 cd ../shared && npm run build
 
 # Check for circular dependencies
-npx madge --circular --extensions ts,tsx ./client/
-npx madge --circular --extensions ts,tsx ./server/
-npx madge --circular --extensions ts,tsx ./shared/
+npx madge --circular --extensions ts,tsx ./apps/mobile/
+npx madge --circular --extensions ts,tsx ./apps/api/
+npx madge --circular --extensions ts,tsx ./packages/contracts/
 
 # Verify documentation exists
 ls -la docs/modules/*.md
@@ -160,3 +160,4 @@ Module documentation should be:
 - **Honest** - Document limitations and known issues
 
 Think of module docs as the "tour guide" for a specific part of the codebase.
+

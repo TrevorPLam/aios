@@ -48,14 +48,14 @@ const createStyles = (theme: ReturnType<typeof useTheme>['theme']) =>
 ```text
 
 ### Files Updated
-- `client/components/HandoffBreadcrumb.tsx`
-- `client/components/MiniModeContainer.tsx`
-- `client/components/QuickCaptureOverlay.tsx`
-- `client/components/miniModes/BudgetMiniMode.tsx`
-- `client/components/miniModes/CalendarMiniMode.tsx`
-- `client/components/miniModes/ContactsMiniMode.tsx`
-- `client/components/miniModes/NoteMiniMode.tsx`
-- `client/components/miniModes/TaskMiniMode.tsx`
+- `apps/mobile/components/HandoffBreadcrumb.tsx`
+- `apps/mobile/components/MiniModeContainer.tsx`
+- `apps/mobile/components/QuickCaptureOverlay.tsx`
+- `apps/mobile/components/miniModes/BudgetMiniMode.tsx`
+- `apps/mobile/components/miniModes/CalendarMiniMode.tsx`
+- `apps/mobile/components/miniModes/ContactsMiniMode.tsx`
+- `apps/mobile/components/miniModes/NoteMiniMode.tsx`
+- `apps/mobile/components/miniModes/TaskMiniMode.tsx`
 
 ### 2. Model Property Corrections (16+ fixes)
 
@@ -70,17 +70,17 @@ const createStyles = (theme: ReturnType<typeof useTheme>['theme']) =>
 - `CalendarEvent.startDate` → `CalendarEvent.startAt`
 
 ### Files Updated (2)
-- `client/lib/omnisearch.ts` (16 property references)
-- `client/components/miniModes/ContactsMiniMode.tsx`
-- `client/components/miniModes/NoteMiniMode.tsx`
-- `client/components/miniModes/TaskMiniMode.tsx`
-- `client/lib/__tests__/recommendationEngine.test.ts` (28 test mocks)
+- `apps/mobile/lib/omnisearch.ts` (16 property references)
+- `apps/mobile/components/miniModes/ContactsMiniMode.tsx`
+- `apps/mobile/components/miniModes/NoteMiniMode.tsx`
+- `apps/mobile/components/miniModes/TaskMiniMode.tsx`
+- `apps/mobile/lib/__tests__/recommendationEngine.test.ts` (28 test mocks)
 
 ### 3. EventBus Type Definitions (48 fixes)
 
 #### Added Missing EVENT_TYPES
 ```typescript
-// client/lib/eventBus.ts
+// apps/mobile/lib/eventBus.ts
 export const EVENT_TYPES = {
   // ... existing types
   NOTE_CREATED: 'NOTE_CREATED',
@@ -98,10 +98,10 @@ export const EVENT_TYPES = {
 ```text
 
 ### Files Updated (3)
-- `client/lib/eventBus.ts` - Added missing event types
-- `client/lib/searchIndex.ts` - Updated event handlers to use EVENT_TYPES
-- `client/lib/memoryManager.ts` - Converted string events to EVENT_TYPES
-- `client/components/miniModes/*` - Fixed emit() signatures
+- `apps/mobile/lib/eventBus.ts` - Added missing event types
+- `apps/mobile/lib/searchIndex.ts` - Updated event handlers to use EVENT_TYPES
+- `apps/mobile/lib/memoryManager.ts` - Converted string events to EVENT_TYPES
+- `apps/mobile/components/miniModes/*` - Fixed emit() signatures
 
 ### 4. Navigation Type Safety (48 fixes)
 
@@ -113,10 +113,10 @@ navigation.navigate(screenName, undefined);
 ```text
 
 ### Files Updated (4)
-- `client/navigation/AppNavigator.tsx` - 42 component prop annotations
-- `client/screens/AttentionCenterScreen.tsx`
-- `client/screens/OmnisearchModalScreen.tsx`
-- `client/screens/SettingsMenuScreen.tsx`
+- `apps/mobile/navigation/AppNavigator.tsx` - 42 component prop annotations
+- `apps/mobile/screens/AttentionCenterScreen.tsx`
+- `apps/mobile/screens/OmnisearchModalScreen.tsx`
+- `apps/mobile/screens/SettingsMenuScreen.tsx`
 
 ### 5. Library Issues & Workarounds (12 fixes)
 
@@ -143,8 +143,8 @@ validate(insertUserSchema as any)
 ```text
 
 ### Files Updated (5)
-- `server/routes.ts` - 14 validation middleware calls
-- `shared/schema.ts` - 1 type constraint issue
+- `apps/api/routes.ts` - 14 validation middleware calls
+- `packages/contracts/schema.ts` - 1 type constraint issue
 
 ## Verification
 
@@ -216,3 +216,4 @@ Tests: 767 passed, 4 failed (pre-existing), 771 total
 3. **Type Assertions**: Document justification for all `@ts-expect-error` and `as any`
 4. **EventBus**: Define all event types in EVENT_TYPES constant
 5. **Test Mocks**: Keep mock data in sync with actual types
+

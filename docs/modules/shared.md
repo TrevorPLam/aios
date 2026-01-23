@@ -1,6 +1,6 @@
 # Shared Module
 
-**Location:** `shared/`
+**Location:** `packages/contracts/`
 **Language:** TypeScript
 **Framework:** None (pure TypeScript/JavaScript)
 **Status:** Active
@@ -39,7 +39,7 @@ The shared module contains TypeScript code that is used by both the client (mobi
 ### Architecture Overview
 
 ```text
-shared/
+packages/contracts/
 ├── src/
 │   ├── types/              # TypeScript type definitions
 │   │   ├── api.ts         # API request/response types
@@ -64,7 +64,7 @@ shared/
 
 #### Component 1: Type Definitions
 
-**Location:** `shared/src/types/`
+**Location:** `packages/contracts/types/`
 **Purpose:** Central TypeScript types for data structures
 ### Interface
 ```typescript
@@ -94,7 +94,7 @@ export interface CreateUserDTO {
 
 #### Component 2: Validation Schemas
 
-**Location:** `shared/src/validators/`
+**Location:** `packages/contracts/validators/`
 **Purpose:** Zod schemas for runtime validation
 ### Interface (2)
 ```typescript
@@ -113,7 +113,7 @@ export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 #### Component 3: Utility Functions
 
-**Location:** `shared/src/utils/`
+**Location:** `packages/contracts/utils/`
 **Purpose:** Pure functions used in both client and server
 ### Interface (3)
 ```typescript
@@ -132,7 +132,7 @@ export function isValidUrl(url: string): boolean;
 
 #### Component 4: Constants
 
-**Location:** `shared/src/constants/`
+**Location:** `packages/contracts/constants/`
 **Purpose:** Shared constants and enums
 ### Interface (4)
 ```typescript
@@ -170,7 +170,7 @@ export const VALIDATION_RULES = {
 ```text
 Client/Server Module
        ↓
-Imports from shared/
+Imports from packages/contracts/
        ↓
 Uses types, validators, utils
        ↓
@@ -218,20 +218,20 @@ export function isErrorWithMessage(error: unknown): error is { message: string }
 
 ### Public API
 
-Everything exported from `shared/src/index.ts` is the public API:
+Everything exported from `packages/contracts/index.ts` is the public API:
 
 #### Types
 
 ```typescript
-// Import types in client/server
+// Import types in apps/mobile/server
 import type { User, CreateUserDTO, ApiResponse } from '@aios/shared';
 ```text
 
 #### Validators
 
 ```typescript
-// Import validators in client/server
-import { createUserSchema } from '@aios/shared/validators';
+// Import validators in apps/mobile/server
+import { createUserSchema } from '@aios/packages/contracts/validators';
 
 // Use for validation
 const result = createUserSchema.safeParse(input);
@@ -243,8 +243,8 @@ if (!result.success) {
 #### Utilities
 
 ```typescript
-// Import utilities in client/server
-import { formatDate, slugify } from '@aios/shared/utils';
+// Import utilities in apps/mobile/server
+import { formatDate, slugify } from '@aios/packages/contracts/utils';
 
 const formattedDate = formatDate(new Date(), 'YYYY-MM-DD');
 const slug = slugify('Hello World!'); // 'hello-world'
@@ -253,8 +253,8 @@ const slug = slugify('Hello World!'); // 'hello-world'
 #### Constants
 
 ```typescript
-// Import constants in client/server
-import { API_ENDPOINTS, UserStatus } from '@aios/shared/constants';
+// Import constants in apps/mobile/server
+import { API_ENDPOINTS, UserStatus } from '@aios/packages/contracts/constants';
 
 const loginUrl = API_ENDPOINTS.AUTH.LOGIN;
 const status = UserStatus.ACTIVE;
@@ -265,7 +265,7 @@ const status = UserStatus.ACTIVE;
 Shared module uses barrel exports:
 
 ```typescript
-// shared/src/index.ts
+// packages/contracts/index.ts
 export * from './types';
 export * from './validators';
 export * from './utils';
@@ -276,7 +276,7 @@ This allows clean imports:
 
 ```typescript
 // Instead of:
-import { User } from '@aios/shared/src/types/models';
+import { User } from '@aios/packages/contracts/types/models';
 
 // Users do:
 import { User } from '@aios/shared';
@@ -390,7 +390,7 @@ npm install ../shared
 ### Steps
 ```typescript
 // 1. Add type definition
-// shared/src/types/models.ts
+// packages/contracts/types/models.ts
 export interface Product {
   id: string;
   name: string;
@@ -407,14 +407,14 @@ export interface CreateProductDTO {
 }
 
 // 3. Export from index
-// shared/src/types/index.ts
+// packages/contracts/types/index.ts
 export * from './models';
 
 // 4. Build shared module
 npm run build
 
-// 5. Use in client/server
-// client/src/components/Product.tsx
+// 5. Use in apps/mobile/server
+// apps/mobile/components/Product.tsx
 import type { Product } from '@aios/shared';
 ```text
 
@@ -425,7 +425,7 @@ import type { Product } from '@aios/shared';
 ### Steps (2)
 ```typescript
 // 1. Create schema
-// shared/src/validators/product.ts
+// packages/contracts/validators/product.ts
 import { z } from 'zod';
 
 export const createProductSchema = z.object({
@@ -437,19 +437,19 @@ export const createProductSchema = z.object({
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 
 // 2. Export from validators index
-// shared/src/validators/index.ts
+// packages/contracts/validators/index.ts
 export * from './product';
 
 // 3. Use in client
-// client/src/forms/ProductForm.tsx
-import { createProductSchema } from '@aios/shared/validators';
+// apps/mobile/forms/ProductForm.tsx
+import { createProductSchema } from '@aios/packages/contracts/validators';
 
 // Validate form input
 const result = createProductSchema.safeParse(formData);
 
 // 4. Use in server
-// server/src/controllers/product.controller.ts
-import { createProductSchema } from '@aios/shared/validators';
+// apps/api/controllers/product.controller.ts
+import { createProductSchema } from '@aios/packages/contracts/validators';
 
 // Validate request body
 const validated = createProductSchema.parse(req.body);
@@ -462,7 +462,7 @@ const validated = createProductSchema.parse(req.body);
 ### Steps (3)
 ```typescript
 // 1. Add function to appropriate file
-// shared/src/utils/price.ts
+// packages/contracts/utils/price.ts
 export function formatPrice(cents: number, currency: string = 'USD'): string {
   const dollars = cents / 100;
   return new Intl.NumberFormat('en-US', {
@@ -472,7 +472,7 @@ export function formatPrice(cents: number, currency: string = 'USD'): string {
 }
 
 // 2. Write tests
-// shared/tests/utils/price.test.ts
+// packages/contracts/tests/utils/price.test.ts
 import { formatPrice } from '../../src/utils/price';
 
 test('formatPrice formats cents to currency', () => {
@@ -481,11 +481,11 @@ test('formatPrice formats cents to currency', () => {
 });
 
 // 3. Export from utils index
-// shared/src/utils/index.ts
+// packages/contracts/utils/index.ts
 export * from './price';
 
 // 4. Use anywhere
-import { formatPrice } from '@aios/shared/utils';
+import { formatPrice } from '@aios/packages/contracts/utils';
 ```text
 
 ## Testing
@@ -493,7 +493,7 @@ import { formatPrice } from '@aios/shared/utils';
 ### Test Structure
 
 ```text
-shared/tests/
+packages/contracts/tests/
 ├── types/              # Type tests (compile-time)
 ├── validators/         # Validator tests
 ├── utils/              # Utility function tests
@@ -694,7 +694,7 @@ npm install
 
 ### Problem 2: Type Errors After Updating Shared
 
-**Symptoms:** TypeScript errors in client/server after shared module changes
+**Symptoms:** TypeScript errors in apps/mobile/server after shared module changes
 **Cause:** Cached types, build artifacts out of sync
 ### Solution (2)
 ```bash
@@ -718,8 +718,8 @@ npm install
 ### Solution (3)
 ```bash
 # Check versions
-grep '@aios/shared' client/package.json
-grep '@aios/shared' server/package.json
+grep '@aios/shared' apps/mobile/package.json
+grep '@aios/shared' apps/api/package.json
 
 # Sync versions
 npm run sync-versions  # If you have such script
@@ -811,3 +811,5 @@ Think of shared as the "common language" between client and server.
 - [Zod Documentation](https://zod.dev/)
 - [npm Workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces)
 - [Tree Shaking](https://webpack.js.org/guides/tree-shaking/)
+
+
