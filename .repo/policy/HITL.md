@@ -60,6 +60,7 @@ Required fields:
 ### Active
 |ID|Category|Status|Summary|Filepath|
 |---|---|---|---|---|
+|HITL-0001|Clarification|Pending|Locate env_validator.py or source of required environment variables for .env.example|.repo/hitl/HITL-0001.md|
 
 ### Archived
 |ID|Category|Status|Summary|Filepath|
