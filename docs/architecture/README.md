@@ -313,6 +313,38 @@ npm run test:coverage
 
 ---
 
+## Migration to Diamond++ Architecture
+
+🚨 **ACTIVE MIGRATION IN PROGRESS** 🚨
+
+AIOS is undergoing a major architectural transformation to a Diamond++ AI-native monorepo structure. This migration will happen incrementally over 7 phases.
+
+### Key Migration Documents
+
+- **[Diamond++ Migration Plan](./DIAMOND_PLUS_PLUS_MIGRATION_PLAN.md)** - Complete 7-phase migration strategy
+- **[Diamond++ Quick Reference](./DIAMOND_QUICK_REFERENCE.md)** - One-page guide for code placement
+- **[ADR-008: Diamond++ Architecture](../decisions/008-diamond-architecture-migration.md)** - Decision rationale
+
+### Migration Status
+
+- **Current Phase:** Phase 0 - Planning & Documentation
+- **Next Phase:** Phase 0 - Repository Normalization
+- **Completion Target:** 12-15 weeks from start
+
+### What This Means for You
+
+**If you're adding features:**
+- Follow the current structure until Phase 0 is complete
+- Review the migration plan to understand future structure
+- Expect code to be moved during the migration
+
+**If you're reviewing code:**
+- Check migration plan for context on structural changes
+- Validate that changes align with target architecture
+- Use quick reference for guidance on code placement
+
+---
+
 ## Related Documentation
 
 ### Within This Repository

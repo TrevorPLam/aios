@@ -396,6 +396,15 @@ Using system fonts with the following scale:
 
 ## Documentation
 
+### 🚨 Architecture Migration Notice
+
+**AIOS is undergoing a major architectural transformation** to a Diamond++ AI-native monorepo structure. This will happen incrementally over 7 phases:
+
+- **[Diamond++ Migration Plan](./docs/architecture/DIAMOND_PLUS_PLUS_MIGRATION_PLAN.md)** — Complete strategy (all 7 phases)
+- **[Diamond++ Quick Reference](./docs/architecture/DIAMOND_QUICK_REFERENCE.md)** — One-page guide for code placement
+- **[ADR-008: Diamond++ Architecture](./docs/decisions/008-diamond-architecture-migration.md)** — Decision rationale
+- **Current Status:** Phase 0 - Planning & Documentation
+
 ### Quick Start
 
 - **[README.md](./README.md)** — This file
