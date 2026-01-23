@@ -44,3 +44,4 @@ This directory contains guidelines for using AI tools (like GitHub Copilot) in t
 - [Contributing Guidelines](../../CONTRIBUTING.md)
 - [Testing Strategy](../testing/strategy.md)
 - [Code Review Process](../../GOVERNANCE.md)
+- [Repo Best Practices](../../BESTPR.md)

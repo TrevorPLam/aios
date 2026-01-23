@@ -68,6 +68,7 @@
 
 - [ ] CI passes (tests, lint, type-check, security)
 - [ ] Code follows existing patterns and style guide
+- [ ] Changes adhere to repo best practices in BESTPR.md
 - [ ] Tests cover new/changed behavior
 - [ ] Documentation updated (code + user docs)
 - [ ] No security vulnerabilities introduced
