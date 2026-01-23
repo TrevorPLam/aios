@@ -1,0 +1,13 @@
+# /.repo/agents/capabilities.md
+
+create_feature
+modify_existing
+add_dependency
+change_api_contract
+change_schema
+update_security
+update_release_process
+apply_waiver
+create_adr
+create_task_packet
+run_verification_profiles

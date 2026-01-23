@@ -11,6 +11,19 @@
 - Documentation changes follow same rigor as code changes
 - Inactive maintainers can be replaced through transparent succession process
 - **Best Practices Guide:** See `BESTPR.md` for token-optimized agent development guidelines
+- **Governance Framework:** See `.repo/policy/` for detailed governance policies and standards
+
+## Governance Framework Links
+
+For detailed governance policies, see:
+
+- **[Constitution](.repo/policy/CONSTITUTION.md)** — Immutable foundational rules
+- **[Principles](.repo/policy/PRINCIPLES.md)** — Operating principles (P3-P25)
+- **[Quality Gates](.repo/policy/QUALITY_GATES.md)** — Merge rules and requirements
+- **[Security Baseline](.repo/policy/SECURITY_BASELINE.md)** — Security standards
+- **[Boundaries](.repo/policy/BOUNDARIES.md)** — Module boundaries and architecture rules
+- **[HITL (Human-In-The-Loop)](.repo/policy/HITL.md)** — Human approval requirements
+- **[Documentation Index](.repo/docs/DOCS_INDEX.md)** — Central documentation hub
 
 ## Technical Detail
 

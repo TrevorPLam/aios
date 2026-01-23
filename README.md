@@ -426,6 +426,13 @@ Using system fonts with the following scale:
 - **[docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md](./docs/vision/UI_UX_REVOLUTIONARY_STRATEGY.md)** — Ten new UX paradigms
 - **[docs/PHASE_3_COMPLETION_SUMMARY.md](./docs/PHASE_3_COMPLETION_SUMMARY.md)** — Phase 3 UX system completion summary
 
+### Governance Framework
+
+- **[.repo/docs/DOCS_INDEX.md](./.repo/docs/DOCS_INDEX.md)** — Central documentation index for governance framework
+- **[.repo/policy/CONSTITUTION.md](./.repo/policy/CONSTITUTION.md)** — Immutable foundational rules
+- **[.repo/policy/PRINCIPLES.md](./.repo/policy/PRINCIPLES.md)** — Operating principles (P3-P25)
+- **[.repo/repo.manifest.yaml](./.repo/repo.manifest.yaml)** — Source of truth for executable commands
+
 ## Contributing
 
 

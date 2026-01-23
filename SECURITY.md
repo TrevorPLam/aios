@@ -55,6 +55,7 @@ For comprehensive security documentation, see:
 - [Complete Security Documentation](docs/security/SECURITY.md)
 - [API Security](docs/technical/API_DOCUMENTATION.md)
 - [Testing Security](docs/technical/TESTING_INSTRUCTIONS.md)
+- [Security Baseline Policy](.repo/policy/SECURITY_BASELINE.md) — Security rules and requirements
 
 ## Agentic Development Security
 
