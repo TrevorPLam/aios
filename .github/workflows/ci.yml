@@ -254,6 +254,35 @@ jobs:
           exit ${EXIT_CODE:-0}
         continue-on-error: true
       
+      - name: Check framework compliance
+        id: compliance
+        run: |
+          BASE_REF="${{ github.event.pull_request.base.ref || 'main' }}"
+          TRACE_LOG="${{ steps.trace-log.outputs.path }}"
+          PR_BODY_PATH="${{ github.event.pull_request.body && format('{0}', github.event.pull_request.body) || '' }}"
+          
+          # Write PR body to temp file if available
+          if [ -n "$PR_BODY_PATH" ]; then
+            echo "$PR_BODY_PATH" > /tmp/pr-body.md
+            PR_BODY_ARG="--pr-body /tmp/pr-body.md"
+          else
+            PR_BODY_ARG=""
+          fi
+          
+          if [ -n "$TRACE_LOG" ]; then
+            node .repo/automation/scripts/check-framework-compliance.js \
+              --base-ref "$BASE_REF" \
+              --trace-log "$TRACE_LOG" \
+              $PR_BODY_ARG || EXIT_CODE=$?
+          else
+            node .repo/automation/scripts/check-framework-compliance.js \
+              --base-ref "$BASE_REF" \
+              $PR_BODY_ARG || EXIT_CODE=$?
+          fi
+          echo "exit_code=${EXIT_CODE:-0}" >> $GITHUB_OUTPUT
+          exit ${EXIT_CODE:-0}
+        continue-on-error: true
+      
       - name: Check for expired waivers
         run: |
           python3 .repo/automation/scripts/manage-waivers.py check-expired || EXIT_CODE=$?
@@ -262,6 +291,12 @@ jobs:
             # Don't fail the build, but warn
           fi
         continue-on-error: true
+      
+      - name: Check compliance result
+        if: steps.compliance.outputs.exit_code == '1'
+        run: |
+          echo "❌ Framework compliance failed. Merge blocked."
+          exit 1
       
       - name: Sync HITL status to PR
         if: github.event_name == 'pull_request' && steps.gov-verify.outputs.exit_code != '1'

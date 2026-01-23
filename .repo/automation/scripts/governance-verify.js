@@ -316,8 +316,18 @@ function main() {
   const allWarnings = [];
   let hasHardFailures = false;
 
-  // 1. Validate trace log
+  // 1. Validate trace log (REQUIRED for non-doc changes per Article 2 & Principle 24)
   console.log("📋 Validating trace log...");
+  const changedFiles = getChangedFiles(baseRef);
+  const isDocOnlyChange = changedFiles.length > 0 && 
+    changedFiles.every((f) => 
+      f.endsWith(".md") || 
+      f.endsWith(".txt") || 
+      f.includes("/docs/") || 
+      f.includes("/.repo/docs/") ||
+      f.includes("/examples/")
+    );
+  
   if (traceLogPath) {
     const traceResult = validateTraceLog(traceLogPath);
     if (!traceResult.valid) {
@@ -328,8 +338,19 @@ function main() {
     } else {
       console.log("✅ Trace log valid\n");
     }
+  } else if (!isDocOnlyChange && changedFiles.length > 0) {
+    // Trace log is REQUIRED for non-documentation changes
+    console.error("❌ Trace log is REQUIRED for non-documentation changes");
+    console.error("   Per Article 2 (Verifiable over Persuasive) and Principle 24 (Logs Required for Non-Docs)");
+    console.error("   Create a trace log using:");
+    console.error("   node .repo/automation/scripts/create-trace-log.js --intent '<intent>' --files '<files>' --commands '<commands>' --evidence '<evidence>'");
+    console.error(`   Changed files: ${changedFiles.slice(0, 5).join(", ")}${changedFiles.length > 5 ? "..." : ""}`);
+    allErrors.push("Trace log required for non-documentation changes");
+    hasHardFailures = true;
+  } else if (isDocOnlyChange) {
+    console.log("ℹ️  Documentation-only change detected. Trace log not required.\n");
   } else {
-    console.log("⚠️  No trace log provided (use --trace-log <path>)\n");
+    console.log("⚠️  No trace log provided and no changed files detected\n");
   }
 
   // 2. Parse HITL status
@@ -344,9 +365,8 @@ function main() {
     console.log(`✅ HITL items valid (${hitlResult.items.length} items checked)\n`);
   }
 
-  // 3. Get changed files from git
-  console.log("📝 Detecting changed files...");
-  const changedFiles = getChangedFiles(baseRef);
+  // 3. Get changed files from git (already done above for trace log check)
+  console.log("📝 Changed files detected:");
   if (changedFiles.length > 0) {
     console.log(`   Found ${changedFiles.length} changed file(s)\n`);
   } else {

@@ -63,9 +63,22 @@ This is required by the global rule in `/.repo/policy/PRINCIPLES.md`.
 
 ## Trace Logs
 
+**REQUIRED for all non-documentation changes** per Article 2 (Verifiable over Persuasive) and Principle 24 (Logs Required for Non-Docs).
+
 Trace logs should be stored in `.repo/traces/` directory following the naming convention:
 - `trace-{task-id}-{timestamp}.json` - For task-specific traces
 - `trace-{pr-number}-{timestamp}.json` - For PR-specific traces
+
+**Create trace logs using:**
+```bash
+node .repo/automation/scripts/create-trace-log.js \
+  --intent "<what you're doing>" \
+  --files "<file1,file2>" \
+  --commands "<cmd1,cmd2>" \
+  --evidence "<evidence1,evidence2>"
+```
+
+**Enforcement:** Trace logs are automatically checked in CI. PRs without trace logs for non-doc changes will be blocked.
 
 See `.repo/traces/README.md` for details.
 
@@ -128,3 +141,27 @@ Each major directory may have an `AGENT.md` file with folder-specific rules:
 - `/scripts/AGENT.md` - Scripts folder rules
 
 These supplement but do not override the core rules in this file.
+
+## Enforcement
+
+**The framework is mandatory, not optional.** Compliance is automatically checked:
+
+1. **Trace logs are required** for non-documentation changes (enforced in CI)
+2. **HITL items are required** for security/risky changes (enforced in CI)
+3. **Filepaths are required** in PRs (checked by compliance checker)
+4. **Task references are required** for traceability (checked by compliance checker)
+
+**Before creating a PR, run:**
+```bash
+# Check framework compliance
+node .repo/automation/scripts/check-framework-compliance.js \
+  --base-ref main \
+  --trace-log .repo/traces/trace-*.json
+
+# Run governance verification
+node .repo/automation/scripts/governance-verify.js \
+  --trace-log .repo/traces/trace-*.json \
+  --hitl-file .repo/policy/HITL.md
+```
+
+**Non-compliance will block PR merges.** See `.repo/docs/AGENT_GETTING_STARTED.md` for a complete guide.

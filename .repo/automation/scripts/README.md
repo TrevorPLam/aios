@@ -270,6 +270,75 @@ node .repo/automation/scripts/validate-evidence.js <evidence-file>
 - `0` - Valid
 - `1` - Invalid
 
+### `create-trace-log.js`
+
+Creates a trace log following AGENT_TRACE_SCHEMA.json format. Automates trace log creation for agents.
+
+**Usage:**
+```bash
+node .repo/automation/scripts/create-trace-log.js \
+  --intent "Add feature X" \
+  --files "file1.ts,file2.ts" \
+  --commands "npm test,npm run lint" \
+  --evidence "Tests passed,Lint clean" \
+  [--hitl "HITL-0001"] \
+  [--unknowns "API endpoint unclear"] \
+  [--output .repo/traces/trace-{timestamp}.json]
+```
+
+**Features:**
+- Validates against schema
+- Auto-generates output path
+- Creates traces directory if needed
+- Provides helpful error messages
+
+**Exit Codes:**
+- `0` - Success
+- `1` - Error
+
+### `check-framework-compliance.js`
+
+Checks if PRs and changes comply with the governance framework requirements. Enforces framework usage.
+
+**Usage:**
+```bash
+node .repo/automation/scripts/check-framework-compliance.js \
+  [--base-ref <ref>] \
+  [--pr-body <path>] \
+  [--trace-log <path>]
+```
+
+**Features:**
+- Checks trace log compliance (required for non-doc changes)
+- Checks HITL compliance (required for security/risky changes)
+- Checks task compliance (PRs should reference tasks)
+- Checks filepath compliance (filepaths required in PRs)
+
+**Exit Codes:**
+- `0` - Compliant
+- `1` - Non-compliant (hard failure)
+- `2` - Warnings (waiverable)
+
+### `framework-metrics.js`
+
+Generates metrics and reports on framework compliance and usage. Helps track adoption and identify areas for improvement.
+
+**Usage:**
+```bash
+node .repo/automation/scripts/framework-metrics.js [--output <path>]
+```
+
+**Features:**
+- HITL item statistics (active, pending, completed, etc.)
+- Trace log statistics (total, recent, oldest, newest)
+- Waiver statistics (active, expired, total)
+- ADR statistics
+- Compliance status
+
+**Exit Codes:**
+- `0` - Success
+- `1` - Error
+
 ### `archive-task.py`
 
 Archives completed tasks from priority TODO files and promotes tasks from backlog.
@@ -305,10 +374,13 @@ These scripts are integrated into the CI/CD pipeline. See `.repo/docs/ci-integra
 
 **Current Integration:**
 - ✅ GitHub Actions workflow (`.github/workflows/ci.yml`) - Job 7: Governance Verification
+- ✅ Framework compliance check integrated into CI
 - ✅ Automatic HITL sync on every PR
 - ✅ Governance verification blocks merge on hard gate failures
+- ✅ Compliance check blocks merge on non-compliance
 - ✅ Makefile target: `make check-governance` for local verification
 - ✅ Pre-commit hook: Non-blocking governance checks on `.repo/`, `agents/`, `scripts/` changes
+- ✅ npm scripts: `check:governance`, `check:compliance`, `framework:metrics`
 
 ## Error Handling
 

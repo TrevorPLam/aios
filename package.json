@@ -36,6 +36,9 @@
     "check:security:patterns": "node .repo/automation/scripts/check-security-patterns.js",
     "check:boundaries": "node .repo/automation/scripts/check-boundaries.js",
     "check:manifest": "node .repo/automation/scripts/validate-manifest.js",
+    "check:governance": "node .repo/automation/scripts/governance-verify.js --hitl-file .repo/policy/HITL.md",
+    "check:compliance": "node .repo/automation/scripts/check-framework-compliance.js --base-ref main",
+    "framework:metrics": "node .repo/automation/scripts/framework-metrics.js",
     "postinstall": "node scripts/post-install-check.mjs"
   },
   "dependencies": {

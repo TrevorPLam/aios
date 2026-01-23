@@ -62,6 +62,9 @@ This index provides navigation to all governance framework components.
 | Document | Purpose |
 |----------|---------|
 | [`docs/standards/manifest.md`](docs/standards/manifest.md) | How to fill repo.manifest.yaml |
+| [`docs/AGENT_GETTING_STARTED.md`](docs/AGENT_GETTING_STARTED.md) | Agent onboarding guide (start here!) |
+| [`docs/AGENTIC_SYSTEM_ASSESSMENT.md`](docs/AGENTIC_SYSTEM_ASSESSMENT.md) | Complete framework assessment |
+| [`docs/IMPLEMENTATION_COMPLETE.md`](docs/IMPLEMENTATION_COMPLETE.md) | Implementation summary |
 
 ## Quick Navigation
 
