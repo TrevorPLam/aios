@@ -1,5 +1,4 @@
-# Change Plan Checklist
-
+# /.repo/agents/checklists/change-plan.md
 - Identify change type.
 - Read relevant policy files.
 - Declare UNKNOWNs.

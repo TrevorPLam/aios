@@ -1,167 +1,107 @@
-# /.repo/agents/AGENTS.md
-Agents operate ONLY within the rules defined in /.repo/policy/*.md and /.repo/GOVERNANCE.md.
+# Agents Framework
+
+**File**: `.repo/agents/AGENTS.md`
+
+Agents operate ONLY within the rules defined in `.repo/policy/*.md` and `.repo/GOVERNANCE.md`.
 
 ## Core Rules (Plain English)
-- No guessing. If something is not explicitly known, declare UNKNOWN and create a HITL item.
-- Filepaths required everywhere.
-- Three-pass code generation required:
+
+- **No guessing.** If something is not explicitly known, declare UNKNOWN and create a HITL item.
+- **Filepaths required everywhere.** All changes, PRs, logs, and documentation must include filepaths.
+- **Three-pass code generation required:**
   1) Plan (list actions, risks, files, UNKNOWNs)
   2) Change (apply edits)
   3) Verify (tests, evidence, logs, trace)
-- All logs must follow /.repo/templates/AGENT_LOG_TEMPLATE.md.
-- All trace logs must follow /.repo/templates/AGENT_TRACE_SCHEMA.json.
-- Cross-feature imports require ADR.
-- Boundary model enforced: ui → domain → data → platform.
+- **All logs must follow** `.repo/templates/AGENT_LOG_TEMPLATE.md`.
+- **All trace logs must follow** `.repo/templates/AGENT_TRACE_SCHEMA.json`.
+- **Cross-feature imports require ADR.** See `.repo/policy/BOUNDARIES.md` and Principle 23.
+- **Boundary model enforced:** For Django modules, see `.repo/policy/BOUNDARIES.md` for UBOS-specific rules (api → modules → config/core with firm-scoping).
 
 ## UNKNOWN Workflow
 
-When you encounter something that is not explicitly known from repo docs, manifest, or code:
-
-1. **Mark it as UNKNOWN** - Use the `<UNKNOWN>` placeholder or explicit declaration
-2. **Stop on that portion** - Do not proceed with uncertain work
-3. **Create HITL item** - Follow the process in `/.repo/policy/HITL.md`
-4. **Document what you know** - Include filepaths, context, and what you tried
-5. **Wait for human resolution** - Do not guess or make assumptions
-
-This is required by Article 3 (No Guessing) in `/.repo/policy/CONSTITUTION.md`.
+When encountering uncertainty:
+1. Mark the item as `<UNKNOWN>` in any relevant file (manifest, plan, etc.)
+2. Create a HITL item in `.repo/policy/HITL.md`
+3. Stop work on that uncertain portion
+4. Do not proceed until HITL item is resolved
 
 ## Three-Pass Code Generation
 
-All code changes must follow this process:
-
 ### Pass 1: Plan
-- List all actions you will take
-- Identify risks and filepaths affected
-- Mark any UNKNOWNs
-- Reference relevant policies (BOUNDARIES.md, SECURITY_BASELINE.md, etc.)
-- Get approval if HITL is required
+- List all actions to be taken
+- Identify risks and required HITL items
+- List all files that will be modified
+- Mark any UNKNOWN items
+- Get approval if required (HITL, ADR, etc.)
 
 ### Pass 2: Change
 - Apply edits to files
-- Follow boundary rules (ui → domain → data → platform)
-- Maintain existing patterns
+- Follow existing patterns and boundaries
 - Include filepaths in all changes
+- Do not proceed if Pass 1 identified blockers
 
 ### Pass 3: Verify
-- Run tests (use commands from `/.repo/repo.manifest.yaml`)
+- Run tests (unit, integration, e2e as appropriate)
 - Provide evidence (command outputs, test results)
-- Create trace log following `/.repo/templates/AGENT_TRACE_SCHEMA.json`
-- Document verification in PR or task
-
-## Filepaths Required
-
-Filepaths must be included in:
-- PR descriptions
-- Task Packets
-- Logs and trace files
-- ADRs (Architecture Decision Records)
-- Waivers
-- Inline code comments when relevant
-- HITL items
-
-This is required by the global rule in `/.repo/policy/PRINCIPLES.md`.
-
-## Trace Logs
-
-**REQUIRED for all non-documentation changes** per Article 2 (Verifiable over Persuasive) and Principle 24 (Logs Required for Non-Docs).
-
-Trace logs should be stored in `.repo/traces/` directory following the naming convention:
-- `trace-{task-id}-{timestamp}.json` - For task-specific traces
-- `trace-{pr-number}-{timestamp}.json` - For PR-specific traces
-
-**Create trace logs using:**
-```bash
-node .repo/automation/scripts/create-trace-log.js \
-  --intent "<what you're doing>" \
-  --files "<file1,file2>" \
-  --commands "<cmd1,cmd2>" \
-  --evidence "<evidence1,evidence2>"
-```
-
-**Enforcement:** Trace logs are automatically checked in CI. PRs without trace logs for non-doc changes will be blocked.
-
-See `.repo/traces/README.md` for details.
-
-## Boundary Enforcement
-
-The boundary model is: **ui → domain → data → platform**
-
-- **UI layer** may import from Domain layer
-- **Domain layer** may import from Data layer
-- **Data layer** may import from Platform layer
-- **Platform layer** depends on nothing
-
-Cross-feature imports require an ADR. See `/.repo/policy/BOUNDARIES.md` for details.
+- Update logs and trace files
+- Ensure all quality gates pass
+- Document verification in PR
 
 ## Required References
 
-Before making changes, agents must:
-1. Read `/.repo/repo.manifest.yaml` for command definitions
-2. Check `/.repo/policy/CONSTITUTION.md` for fundamental rules
-3. Review `/.repo/policy/PRINCIPLES.md` for operating principles
-4. Understand `/.repo/policy/BOUNDARIES.md` for architectural rules
-5. Check `/.repo/policy/SECURITY_BASELINE.md` for security triggers
-6. Review `/.repo/policy/HITL.md` for escalation process
+All agents must reference:
+- `.repo/policy/CONSTITUTION.md` - Fundamental articles
+- `.repo/policy/PRINCIPLES.md` - Operating principles
+- `.repo/policy/BOUNDARIES.md` - Architectural boundaries
+- `.repo/policy/QUALITY_GATES.md` - Merge requirements
+- `.repo/policy/SECURITY_BASELINE.md` - Security rules
+- `.repo/policy/HITL.md` - Human-in-the-loop process
+- `.repo/repo.manifest.yaml` - Command definitions
+- `.repo/GOVERNANCE.md` - Framework entry point
 
-## Agent Roles
+## Capabilities and Roles
 
-See `/.repo/agents/roles/` for role-specific capabilities:
-- `primary.md` - Full capabilities agent
-- `secondary.md` - Limited capabilities agent
-- `reviewer.md` - Human reviewer
-- `release.md` - Human release manager
+**Note:** This is a **single-agent system**. You are the only agent working on tasks. The role definitions in `.repo/agents/roles/` exist for potential future multi-agent scenarios but are not currently used.
 
-## Capabilities
-
-See `/.repo/agents/capabilities.md` for the complete list of agent capabilities.
+See:
+- `.repo/agents/capabilities.md` - List of all capabilities
+- `.repo/agents/roles/` - Role definitions (for reference only, not currently used)
 
 ## Quick Reference
 
-See `/.repo/agents/QUICK_REFERENCE.md` for a one-page cheat sheet with:
-- Decision tree for HITL requirements
-- Common commands and workflows
-- Artifact requirements table
-- Boundary rules quick reference
-- Exit codes and file locations
+For a one-page cheat sheet, see `.repo/agents/QUICK_REFERENCE.md`.
+
+## Trace Logs
+
+**When to create:** In Pass 3 (Verify) after tests pass, for **non-doc changes only**.
+
+**What it tracks:** What changed (files, commands, evidence, HITL items, unknowns).
+
+**How:**
+1. Create: `scripts/generate-trace-log.sh [task-id] [intent]`
+2. Fill in required fields per `.repo/templates/AGENT_TRACE_SCHEMA.json`
+3. Validate: `scripts/validate-trace-log.sh [trace-log-file]` or `node .repo/automation/scripts/validate-agent-trace.js [trace-log-file]`
+4. Store in `.repo/traces/` (directory auto-created by script)
+
+## Agent Logs
+
+**When to create:** In Pass 3 (Verify) for **non-doc changes** (P24 requirement: Logs Required for Non-Docs).
+
+**What it tracks:** Why/how (reasoning, decisions, assumptions, plan, risks).
+
+**How:**
+1. Create: `scripts/generate-agent-log.sh [task-id] [action]`
+2. Fill in: `intent`, `plan`, `actions`, `evidence`, `decisions`, `risks`, `reasoning_summary`
+3. Store in `.repo/logs/` (directory auto-created by script)
+
+**Difference from trace log:**
+- **Trace log** = What changed (files, commands, evidence)
+- **Agent log** = Why/how (reasoning, decisions, assumptions)
 
 ## Examples
 
-See `/.repo/examples/` for example files demonstrating correct formats:
+See `.repo/templates/examples/` for example files:
 - `example_trace_log.json` - Trace log format
 - `example_hitl_item.md` - HITL item format
 - `example_waiver.md` - Waiver format
 - `example_task_packet.json` - Task packet format
-
-## Folder-Level Guides
-
-Each major directory may have an `AGENT.md` file with folder-specific rules:
-- `/.repo/AGENT.md` - Governance folder rules
-- `/packages/platform/AGENT.md` - Platform layer rules
-- `/docs/AGENT.md` - Documentation rules
-- `/scripts/AGENT.md` - Scripts folder rules
-
-These supplement but do not override the core rules in this file.
-
-## Enforcement
-
-**The framework is mandatory, not optional.** Compliance is automatically checked:
-
-1. **Trace logs are required** for non-documentation changes (enforced in CI)
-2. **HITL items are required** for security/risky changes (enforced in CI)
-3. **Filepaths are required** in PRs (checked by compliance checker)
-4. **Task references are required** for traceability (checked by compliance checker)
-
-**Before creating a PR, run:**
-```bash
-# Check framework compliance
-node .repo/automation/scripts/check-framework-compliance.js \
-  --base-ref main \
-  --trace-log .repo/traces/trace-*.json
-
-# Run governance verification
-node .repo/automation/scripts/governance-verify.js \
-  --trace-log .repo/traces/trace-*.json \
-  --hitl-file .repo/policy/HITL.md
-```
-
-**Non-compliance will block PR merges.** See `.repo/docs/AGENT_GETTING_STARTED.md` for a complete guide.

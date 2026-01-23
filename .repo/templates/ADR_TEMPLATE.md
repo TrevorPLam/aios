@@ -1,6 +1,4 @@
-# ADR Template
-
-```json
+# /.repo/templates/ADR_TEMPLATE.md
 {
   "context": "",
   "decision_drivers": [],
@@ -13,4 +11,3 @@
   "boundary_impact": "",
   "hitl": []
 }
-```

@@ -1,6 +1,4 @@
-# Waiver Template
-
-```json
+# /.repo/templates/WAIVER_TEMPLATE.md
 {
   "waives": "",
   "why": "",
@@ -11,4 +9,3 @@
   "link": "",
   "notes": "Auto-generated waivers allowed for gate failures only."
 }
-```

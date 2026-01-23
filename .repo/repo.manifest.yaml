@@ -8,25 +8,20 @@ repo:
   release_protects: [app_stability, login_security, money_flows]
 
 prerequisites:
-  package_manager: npm
+  package_manager: npm+pip
   runtime_pinned: true
   platform_tools_required_for_release: true
 
-# Canonical commands (names are fixed). Fill values by following /.repo/docs/standards/manifest.md
-# Placeholders:
-# - <UNKNOWN> = cannot determine from repo contents. Must create HITL item and stop on that portion.
-# - <FILL_FROM_REPO> = deterministically discoverable from repo; fill before merge (or waiver if allowed).
+# Canonical commands (names are fixed). Fill values by following docs/development/standards/manifest.md
+# Commands resolved from: Makefile, CI workflow (.github/workflows/ci.yml), package.json scripts
 commands:
-  install: "npm install"
-  check:quick: "npm run lint && npm run check:types && npm run server:build"
-  check:ci: "npm run lint && npm run check:types && npm test"
-  # NOTE: check:release should include budgets (bundle/perf) but budget checking is not yet implemented.
-  # Budgets are configured in this manifest but enforcement command is missing.
-  check:release: "npm run lint && npm run check:types && npm test && npm audit --audit-level=moderate"
-  check:governance: "npm run compile:constitution && npm run check:traceability && npm run check:exceptions && npm run check:agent-platform"
-  check:boundaries: "npm run check:boundaries"
-  # NOTE: check:security runs dependency scan (npm audit) and forbidden pattern scan.
-  check:security: "npm audit --audit-level=moderate && npm run check:security:patterns"
+  install: "make setup"
+  check:quick: "make lint && make frontend-build"
+  check:ci: "make verify SKIP_HEAVY=0"
+  check:release: "make verify SKIP_HEAVY=0 && pip-audit -r requirements.txt -r requirements-dev.txt && safety check --file requirements.txt && bandit -r backend/ -ll && cd frontend && npm audit --audit-level=moderate && cd .. && trufflehog filesystem --directory . --json || true"
+  check:governance: "./scripts/governance-verify.sh"
+  check:boundaries: "lint-imports --config .importlinter"
+  check:security: "pip-audit -r requirements.txt -r requirements-dev.txt && safety check --file requirements.txt && bandit -r backend/ -ll && cd frontend && npm audit --audit-level=moderate && cd .. && trufflehog filesystem --directory . --json || true"
 
 verify_profiles:
   quick: [check:quick]

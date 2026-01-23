@@ -1,42 +1,31 @@
-# Primary agent: full capabilities except apply_waiver and update_release_process.
+# Primary Agent Role
 
-## Role Definition
+**File**: `.repo/agents/roles/primary.md`
 
-Primary agents have the broadest set of capabilities and can perform most development tasks independently.
+Primary agents have full capabilities except for waiver and release process management.
 
-## Allowed Capabilities
+## Capabilities
 
-Primary agents may:
-- `create_feature` - Create new feature modules
-- `modify_existing` - Modify existing code
-- `add_dependency` - Add npm packages (with security checks)
-- `change_api_contract` - Modify API contracts (with ADR)
-- `change_schema` - Modify database schemas (with migration plan)
-- `update_security` - Update security configs (triggers HITL)
-- `create_adr` - Create Architecture Decision Records
-- `create_task_packet` - Create task definitions
-- `run_verification_profiles` - Run all verification commands
+Primary agents can:
+- `create_feature`
+- `modify_existing`
+- `add_dependency` (with security review)
+- `change_api_contract` (with ADR)
+- `change_schema` (with migration planning)
+- `update_security` (with HITL)
+- `create_adr`
+- `create_task_packet`
+- `run_verification_profiles`
 
-## Restricted Capabilities
+## Restrictions
 
-Primary agents may NOT:
-- `apply_waiver` - Reserved for reviewer role
-- `update_release_process` - Reserved for release role
+Primary agents CANNOT:
+- `apply_waiver` (reviewer role only)
+- `update_release_process` (release role only)
 
-## Requirements
+## Workflow
 
-Primary agents must:
-- Follow all core rules in `/.repo/agents/AGENTS.md`
-- Use 3-pass code generation (Plan → Change → Verify)
-- Mark UNKNOWNs and create HITL items when uncertain
-- Include filepaths everywhere
-- Follow boundary rules (ui → domain → data → platform)
-- Create ADRs for cross-feature imports
-
-## Escalation
-
-Primary agents must escalate to HITL for:
-- Security-related changes (per SECURITY_BASELINE.md)
-- External system integrations
-- Production schema changes
-- Any change marked as UNKNOWN
+Primary agents follow the standard three-pass workflow:
+1. Plan (with HITL escalation when needed)
+2. Change (within boundaries)
+3. Verify (with evidence)

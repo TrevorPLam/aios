@@ -1,6 +1,4 @@
-# PR Template
-
-```json
+# /.repo/agents/prompts/pr_template.md
 {
   "change_type": "",
   "summary": "",
@@ -13,4 +11,3 @@
   "hitl": [],
   "notes": "One change type per PR. Evidence over vibes."
 }
-```

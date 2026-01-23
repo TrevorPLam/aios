@@ -1,5 +1,14 @@
-# /.repo/policy/CONSTITUTION.md
-This file is immutable unless the solo founder explicitly approves changes.
+# Repository Constitution
+
+**File**: `.repo/policy/CONSTITUTION.md`
+
+> **IMMUTABLE**: This file is immutable unless the solo founder explicitly approves changes.
+
+> **Operating Principles**: See `.repo/policy/PRINCIPLES.md` for detailed operating principles that implement these constitutional articles.
+> **Quality Gates**: See `.repo/policy/QUALITY_GATES.md` for merge rules and verification requirements.
+> **Security**: See `.repo/policy/SECURITY_BASELINE.md` for security rules and HITL triggers.
+> **HITL**: See `.repo/policy/HITL.md` for Human-In-The-Loop process and item management.
+> **Boundaries**: See `.repo/policy/BOUNDARIES.md` for module boundary enforcement.
 
 ## Article 1: Final Authority
 The solo founder is the final authority for any ambiguity, conflict, or decision.
@@ -9,9 +18,9 @@ Work is not "done" without verification evidence. Proof beats persuasion.
 
 ## Article 3: No Guessing
 If something is not explicitly known from repo docs, manifest, or code:
-- mark it as UNKNOWN
-- route to HITL (or explicit questions)
-- do not proceed on that uncertain portion
+- Mark it as **UNKNOWN**
+- Route to HITL (Human-In-The-Loop) or explicit questions
+- Do not proceed on that uncertain portion
 
 ## Article 4: Incremental Delivery
 Ship small, reviewable, testable increments.
@@ -21,10 +30,10 @@ Large tasks must be decomposed into smaller tasks. No mega-PRs without explicit 
 Every meaningful change must be traceable to an explicit task definition and include verification proof.
 Completed tasks must be archived to preserve a compact history of what changed, why, and how it was verified.
 
-## Article 6: Safety Before Speed (Non-Coder Plain English)
+## Article 6: Safety Before Speed
 If a change could break logins, money flows, user data, privacy, security, external services, or production behavior:
-SAFETY WINS.
-For risky/uncertain changes: STOP → ASK (HITL) → VERIFY → THEN PROCEED.
+**SAFETY WINS.**
+For risky/uncertain changes: **STOP → ASK (HITL) → VERIFY → THEN PROCEED.**
 
 ## Article 7: Per-Repo Variation Allowed
 Governance structure is consistent, but per-repo workflow/execution may vary via manifest, packs, and repo checks.

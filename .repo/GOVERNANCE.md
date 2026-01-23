@@ -1,7 +1,7 @@
 # Governance Framework
 
-**Version:** 1.0.0  
-**Status:** Injectable Template  
+**Version:** 1.0.0
+**Status:** Injectable Template
 **Layer:** Entry Point
 
 ---
@@ -36,7 +36,7 @@ This governance system provides:
 
 ### For Approvers/Reviewers
 1. **Check**: [`policy/HITL.md`](policy/HITL.md) - Active human-in-the-loop items
-2. **Review**: [`policy/WAIVERS.md`](policy/WAIVERS.md) - Active policy exceptions
+2. **Review**: [`policy/WAIVERS.md`](policy/WAIVERS.md) - Active policy exceptions (if exists)
 3. **Verify**: All changes have proper traceability
 
 ## 📂 Directory Structure
@@ -44,7 +44,6 @@ This governance system provides:
 ```
 .repo/
 ├── GOVERNANCE.md           ← You are here (start here)
-├── VERSION                 ← Framework version tracking
 ├── repo.manifest.yaml      ← Command definitions (critical!)
 ├── policy/                 ← Authoritative governance rules
 │   ├── CONSTITUTION.md     ← 8 fundamental articles (immutable)
@@ -52,42 +51,23 @@ This governance system provides:
 │   ├── QUALITY_GATES.md    ← Quality standards and gates
 │   ├── SECURITY_BASELINE.md← Security requirements
 │   ├── BOUNDARIES.md       ← Architectural boundaries
-│   ├── HITL.md            ← Human-in-the-loop tracking
-│   └── WAIVERS.md         ← Policy exception tracking
+│   └── HITL.md            ← Human-in-the-loop tracking
 ├── agents/                 ← AI agent framework
-│   ├── roles/             ← Agent role definitions
-│   ├── prompts/           ← Agent prompt templates
-│   ├── checklists/        ← Task checklists
-│   └── QUICK_REFERENCE.md ← One-page cheat sheet
+│   ├── rules.json         ← Core agent rules (machine-readable)
+│   ├── QUICK_REFERENCE.md  ← Human-readable rules
+│   ├── QUICK_REFERENCE.md ← One-page cheat sheet
+│   ├── capabilities.md    ← Agent capabilities list
+│   └── roles/             ← Agent role definitions
 ├── templates/             ← Document templates
 │   ├── AGENT_LOG_TEMPLATE.md
 │   ├── AGENT_TRACE_SCHEMA.json
-│   ├── PR_TEMPLATE.md
-│   ├── ADR_TEMPLATE.md
-│   ├── WAIVER_TEMPLATE.md
-│   └── ...
-├── examples/              ← Example files
-│   ├── example_trace_log.json
-│   ├── example_hitl_item.md
-│   ├── example_waiver.md
-│   ├── example_task_packet.json
-│   └── README.md
+│   └── examples/         ← Example files (trace logs, HITL items, etc.)
 ├── docs/                  ← Documentation standards
 │   ├── standards/         ← Documentation standards
-│   ├── boundary-checker.md ← Boundary checker documentation
-│   ├── ci-integration.md  ← CI integration guide
-│   └── adr/              ← Architecture Decision Records
-├── automation/            ← CI/CD and automation
-│   ├── ci/               ← CI/CD templates
-│   │   └── governance-verify.yml
-│   └── scripts/          ← Automation scripts
-│       ├── governance-verify.js
-│       ├── validate-agent-trace.js
-│       ├── sync-hitl-to-pr.py
-│       ├── archive-task.py
-│       └── README.md
+│   ├── boundary_checker.md ← Boundary checker docs
+│   ├── ci_integration.md  ← CI integration guide
+│   └── automation_scripts.md ← Automation scripts docs
 └── hitl/                  ← HITL item files
-    └── HITL-XXXX.md
 ```
 
 ## 🚦 How to Use This Framework
@@ -107,10 +87,10 @@ This governance system provides:
 
 ### When You Need to Deviate
 1. Check if your situation requires a waiver
-2. Follow the waiver process in [`policy/WAIVERS.md`](policy/WAIVERS.md)
+2. Follow the waiver process (document in HITL if needed)
 3. Document your justification
 4. Get required approvals
-5. Set expiration date
+5. Set expiration date if applicable
 
 ## 🔴 Critical Rules (Never Skip These)
 
@@ -124,7 +104,7 @@ This governance system provides:
 
 The framework uses a 3-layer update model:
 
-- **Layer 1 (CUSTOM)**: Repository-specific content (HITL, WAIVERS, manifest)
+- **Layer 1 (CUSTOM)**: Repository-specific content (HITL, manifest)
 - **Layer 2 (UPDATEABLE)**: Framework-provided but customizable (policies)
 - **Layer 3 (IMMUTABLE)**: Core framework structure
 
@@ -136,7 +116,7 @@ Each file has a marker indicating its layer.
 - **"Can I change the CONSTITUTION?"** → Only with explicit founder approval (Article 1)
 - **"What if I'm not sure about a command?"** → Set `<UNKNOWN>` in manifest, create HITL
 - **"Do I need HITL for this?"** → Check triggers in [`policy/SECURITY_BASELINE.md`](policy/SECURITY_BASELINE.md)
-- **"How do I request a waiver?"** → Follow process in [`policy/WAIVERS.md`](policy/WAIVERS.md)
+- **"How do I request a waiver?"** → Follow process in HITL or create HITL item
 
 ### Support
 - Review policy documents in `policy/` directory
@@ -153,11 +133,10 @@ For new repositories adopting this framework:
 3. [ ] Fill in commands using `docs/standards/manifest.md` guide
 4. [ ] Replace all `<FILL_FROM_REPO>` placeholders
 5. [ ] Set `<UNKNOWN>` for unclear items (with HITL)
-6. [ ] Review and customize `policy/WAIVERS.md` structure
-7. [ ] Review and customize `policy/HITL.md` structure
-8. [ ] Test commands locally to verify they work
-9. [ ] Commit the governance framework
-10. [ ] Start using it for all changes
+6. [ ] Review and customize `policy/HITL.md` structure
+7. [ ] Test commands locally to verify they work
+8. [ ] Commit the governance framework
+9. [ ] Start using it for all changes
 
 ## 📋 Maintenance
 

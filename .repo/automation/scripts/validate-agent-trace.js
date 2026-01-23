@@ -1,92 +1,111 @@
 #!/usr/bin/env node
+// /.repo/automation/scripts/validate-agent-trace.js
+// Validate trace logs against AGENT_TRACE_SCHEMA.json using JSON schema validation
 
-/**
- * Agent Trace Validation Script
- *
- * Validates trace logs against AGENT_TRACE_SCHEMA.json
- *
- * Usage:
- *   node .repo/automation/scripts/validate-agent-trace.js <trace-log-path>
- *
- * Exit codes:
- *   0 - Valid
- *   1 - Invalid
- */
+const fs = require('fs');
+const path = require('path');
 
-import { readFileSync, existsSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+// Colors for output
+const RED = '\x1b[31m';
+const GREEN = '\x1b[32m';
+const YELLOW = '\x1b[33m';
+const RESET = '\x1b[0m';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const REPO_ROOT = join(__dirname, "../../../..");
-const TRACE_SCHEMA_PATH = join(
-  REPO_ROOT,
-  ".repo/templates/AGENT_TRACE_SCHEMA.json",
-);
-
-function main() {
-  const traceLogPath = process.argv[2];
-
-  if (!traceLogPath) {
-    console.error("Usage: node validate-agent-trace.js <trace-log-path>");
-    process.exit(1);
-  }
-
-  if (!existsSync(traceLogPath)) {
-    console.error(`Trace log not found: ${traceLogPath}`);
-    process.exit(1);
-  }
-
-  if (!existsSync(TRACE_SCHEMA_PATH)) {
-    console.error(`Schema not found: ${TRACE_SCHEMA_PATH}`);
-    process.exit(1);
-  }
-
-  const schema = JSON.parse(readFileSync(TRACE_SCHEMA_PATH, "utf-8"));
-  const traceLog = JSON.parse(readFileSync(traceLogPath, "utf-8"));
-
-  const errors = [];
-
-  // Check required fields
-  for (const field of schema.required || []) {
-    if (!(field in traceLog)) {
-      errors.push(`Missing required field: ${field}`);
-    }
-  }
-
-  // Check field types
-  for (const [field, spec] of Object.entries(schema.properties || {})) {
-    if (field in traceLog) {
-      const value = traceLog[field];
-      if (spec.type === "array" && !Array.isArray(value)) {
-        errors.push(`Field '${field}' must be an array`);
-      } else if (spec.type === "string" && typeof value !== "string") {
-        errors.push(`Field '${field}' must be a string`);
-      }
-
-      // Check array item types
-      if (spec.type === "array" && spec.items) {
-        if (Array.isArray(value)) {
-          value.forEach((item, index) => {
-            if (spec.items.type === "string" && typeof item !== "string") {
-              errors.push(`Field '${field}[${index}]' must be a string`);
-            }
-          });
-        }
-      }
-    }
-  }
-
-  if (errors.length > 0) {
-    console.error("❌ Trace log validation failed:");
-    errors.forEach((e) => console.error(`   - ${e}`));
-    process.exit(1);
-  }
-
-  console.log("✅ Trace log is valid");
-  process.exit(0);
+function logError(msg) {
+  console.error(`${RED}✗ ${msg}${RESET}`);
 }
 
-main();
+function logSuccess(msg) {
+  console.log(`${GREEN}✓ ${msg}${RESET}`);
+}
+
+function logWarning(msg) {
+  console.warn(`${YELLOW}⚠ ${msg}${RESET}`);
+}
+
+function validateTraceLog(traceFile, schemaFile) {
+  // Read files
+  let traceData, schemaData;
+
+  try {
+    traceData = JSON.parse(fs.readFileSync(traceFile, 'utf8'));
+  } catch (e) {
+    logError(`Invalid JSON in trace log: ${traceFile}`);
+    console.error(e.message);
+    return false;
+  }
+
+  try {
+    schemaData = JSON.parse(fs.readFileSync(schemaFile, 'utf8'));
+  } catch (e) {
+    logError(`Invalid JSON in schema: ${schemaFile}`);
+    console.error(e.message);
+    return false;
+  }
+
+  // Check required fields from schema
+  const required = schemaData.required || [];
+  const missing = required.filter(field => !(field in traceData));
+
+  if (missing.length > 0) {
+    logError(`Missing required fields: ${missing.join(', ')}`);
+    return false;
+  }
+
+  // Validate field types
+  const properties = schemaData.properties || {};
+  let valid = true;
+
+  for (const [field, spec] of Object.entries(properties)) {
+    if (!(field in traceData)) continue; // Optional fields
+
+    const value = traceData[field];
+    const expectedType = spec.type;
+
+    if (expectedType === 'array' && !Array.isArray(value)) {
+      logError(`Field '${field}' must be an array`);
+      valid = false;
+    } else if (expectedType === 'string' && typeof value !== 'string') {
+      logError(`Field '${field}' must be a string`);
+      valid = false;
+    } else if (expectedType === 'object' && (typeof value !== 'object' || Array.isArray(value))) {
+      logError(`Field '${field}' must be an object`);
+      valid = false;
+    }
+  }
+
+  if (valid) {
+    logSuccess(`Trace log validation passed: ${traceFile}`);
+    return true;
+  }
+
+  return false;
+}
+
+// Main
+if (require.main === module) {
+  const args = process.argv.slice(2);
+
+  if (args.length < 1) {
+    console.error('Usage: validate-agent-trace.js <trace-log-file> [schema-file]');
+    process.exit(1);
+  }
+
+  const traceFile = path.resolve(args[0]);
+  const schemaFile = args[1] || path.resolve(__dirname, '../../templates/AGENT_TRACE_SCHEMA.json');
+
+  if (!fs.existsSync(traceFile)) {
+    logError(`Trace log file not found: ${traceFile}`);
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(schemaFile)) {
+    logError(`Schema file not found: ${schemaFile}`);
+    process.exit(1);
+  }
+
+  const valid = validateTraceLog(traceFile, schemaFile);
+  process.exit(valid ? 0 : 1);
+}
+
+module.exports = { validateTraceLog };

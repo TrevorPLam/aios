@@ -1,58 +1,24 @@
-# AGENT.md (Folder-Level Guide)
+# .repo/AGENT.md
 
-## Purpose of this folder
+**All agent rules are in:** `.repo/agents/rules.json`
 
-This `.repo/` folder contains the governance framework for the repository. It includes:
-- Policy files (CONSTITUTION.md, PRINCIPLES.md, QUALITY_GATES.md, etc.)
-- Agent framework definitions (agents/ directory)
-- Command manifest (repo.manifest.yaml)
-- Templates for logs and traces
-- Documentation standards
+**Read that file for complete rules, workflows, and policies.**
 
-This is the authoritative source for all governance rules and agent operating procedures.
+---
 
-## What agents may do here
+## Quick Start (Reading Order)
 
-- **Read** all policy files and documentation
-- **Reference** policy files in PRs, ADRs, and documentation
-- **Create HITL items** when policy questions arise
-- **Update** repository-specific content (HITL items, waivers, manifest commands)
-- **Follow** the policies defined here in all work
+**Canonical reading order (per AGENTS.json):**
 
-## What agents may NOT do
+1. Read `.repo/tasks/TODO.md` - Current task (MUST READ FIRST)
+2. Read `.repo/repo.manifest.yaml` - Commands (BEFORE ANY COMMAND)
+3. Read `.repo/agents/QUICK_REFERENCE.md` - Rules (START HERE for human-readable)
+4. Follow three-pass workflow from `AGENTS.json`
 
-- **Modify policy files** without proper process:
-  - CONSTITUTION.md requires explicit founder approval (Article 1)
-  - Other policy files may be updated but must follow Layer rules
-- **Guess** at policy interpretation - use UNKNOWN + HITL
-- **Bypass** HITL requirements for risky changes
-- **Ignore** boundary rules or security baselines
+**Alternative:** If you prefer machine-readable format, use `.repo/agents/rules.json` instead of step 3.
 
-## Required links
+---
 
-- Refer to higher-level policy: 
-  - `/.repo/policy/CONSTITUTION.md` - Fundamental articles
-  - `/.repo/policy/PRINCIPLES.md` - Operating principles
-  - `/.repo/policy/BOUNDARIES.md` - Architectural boundaries
-  - `/.repo/policy/SECURITY_BASELINE.md` - Security requirements
-  - `/.repo/policy/HITL.md` - Human-in-the-loop process
-  - `/.repo/policy/QUALITY_GATES.md` - Quality standards
+**For full policy context:** See `.repo/policy/CONSTITUTION.md` and `.repo/policy/PRINCIPLES.md`
 
-## Agent Framework
-
-For agent-specific rules, see:
-- `/.repo/agents/AGENTS.md` - Core agent rules
-- `/.repo/agents/capabilities.md` - Available capabilities
-- `/.repo/agents/roles/` - Role definitions
-
-## Manifest
-
-Always check `/.repo/repo.manifest.yaml` for command definitions before running any checks or builds.
-
-## When in Doubt
-
-If you're uncertain about:
-- Policy interpretation → Create HITL item
-- Command to run → Check repo.manifest.yaml
-- Whether change is allowed → Check relevant policy file
-- Security implications → Check SECURITY_BASELINE.md and create HITL if triggered
+**Note:** This is a single-agent system. You are the only agent working on tasks.

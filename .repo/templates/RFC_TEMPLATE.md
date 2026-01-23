@@ -1,6 +1,4 @@
-# RFC Template
-
-```json
+# /.repo/templates/RFC_TEMPLATE.md
 {
   "title": "",
   "problem": "",
@@ -10,4 +8,3 @@
   "risks": [],
   "notes": ""
 }
-```

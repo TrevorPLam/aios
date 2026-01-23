@@ -1,6 +1,4 @@
-# Agent Log Template
-
-```json
+# /.repo/templates/AGENT_LOG_TEMPLATE.md
 {
   "intent": "",
   "plan": [],
@@ -12,4 +10,3 @@
   "reasoning_summary": "",
   "notes": "No secrets. No private data. No raw chain-of-thought."
 }
-```

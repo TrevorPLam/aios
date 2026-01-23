@@ -1,10 +1,15 @@
-# /.repo/policy/HITL.md
+# Human-In-The-Loop (HITL)
+
+**File**: `.repo/policy/HITL.md`
+
 HITL = Human-In-The-Loop. This is the single binding place for human-required actions.
+
+> **Related**: See `.repo/policy/CONSTITUTION.md` Article 3 (No Guessing), Article 6 (Safety Before Speed), Article 8 (HITL for External Systems), `.repo/policy/SECURITY_BASELINE.md` for security triggers, and `.repo/policy/QUALITY_GATES.md` for merge blocking rules.
 
 ## Storage model
 Split, same folder:
-- Index (this file): /.repo/policy/HITL.md
-- Items: /.repo/hitl/HITL-XXXX.md
+- Index (this file): `.repo/policy/HITL.md`
+- Items: `.repo/hitl/HITL-XXXX.md`
 
 ## Rule: minimal human effort
 The human does the smallest action possible (usually: set Status + add Evidence line).
@@ -21,7 +26,7 @@ Agents do all mechanical work: syncing PR body, archiving, and governance-verify
 Pending | In Progress | Blocked | Completed | Superseded
 
 ## Merge blocking rule
-If a PR has any required HITL item not in Completed status (or not validly waived), merge is blocked.
+If a PR has any required HITL item not in Completed status (or not validly waived), merge is blocked (see `.repo/policy/QUALITY_GATES.md` hard gates).
 
 ## Who can do what
 - Agents may create HITL items and propose wording.
@@ -33,6 +38,8 @@ Detection is keywords + manifest + change type:
 - If the change type implies external systems (security, release, schema), HITL is required.
 - If the manifest command involves external credentials/dashboards, HITL is required.
 - If keywords appear (credentials, token, billing, app store, vendor dashboard, prod deploy, payment, oauth), HITL is required.
+
+See `.repo/policy/SECURITY_BASELINE.md` for security review triggers that require HITL.
 
 ## HITL item file format (HITL-XXXX.md)
 Required fields:

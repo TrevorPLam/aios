@@ -70,13 +70,17 @@ function getForbiddenPatterns() {
     );
   }
 
-  // Parse JSON array from the match
+  // Parse JSON array from the match (handles both comma-separated and newline-separated)
   const patternsStr = patternsMatch[1];
-  // Clean up and parse
+  // Split by comma or newline, then clean up
   const patterns = patternsStr
-    .split(",")
+    .split(/[,\n]/)
     .map((p) => p.trim().replace(/^"|"$/g, ""))
-    .filter((p) => p);
+    .filter((p) => p && !p.match(/^\s*$/)); // Filter out empty strings
+
+  if (patterns.length === 0) {
+    throw new Error("No patterns found in SECURITY_BASELINE.md");
+  }
 
   return patterns.map((pattern) => new RegExp(pattern, "i"));
 }

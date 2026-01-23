@@ -1,6 +1,4 @@
-# Task Packet Template
-
-```json
+# /.repo/agents/prompts/task_packet.md
 {
   "goal": "",
   "non_goals": [],
@@ -13,4 +11,3 @@
   "hitl_requirements": [],
   "notes": "Filepaths required. No guessing. UNKNOWN → HITL."
 }
-```

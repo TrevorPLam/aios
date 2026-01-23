@@ -1,6 +1,4 @@
-# Runbook Template
-
-```json
+# /.repo/templates/RUNBOOK_TEMPLATE.md
 {
   "title": "",
   "summary": "",
@@ -9,4 +7,3 @@
   "verification": [],
   "notes": ""
 }
-```

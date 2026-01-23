@@ -1,5 +1,4 @@
-# Incident Checklist
-
+# /.repo/agents/checklists/incident.md
 - Describe issue.
 - Identify impacted files.
 - Assess risk.

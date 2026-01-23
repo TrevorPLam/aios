@@ -19,7 +19,45 @@ This will install:
 
 ---
 
-## Step 2: Initialize Husky
+## Step 2: Install Python Dependencies
+
+Install Python dependencies for automation scripts:
+
+```bash
+pip install -r .repo/automation/scripts/requirements.txt
+```
+
+Or use the Makefile:
+```bash
+make install
+```
+
+**Expected time:** < 30 seconds
+
+---
+
+## Step 3: Install Pre-commit Hooks
+
+Install the pre-commit framework and hooks:
+
+```bash
+# Install pre-commit framework (if not already installed)
+pip install pre-commit
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+Or use the Makefile (which includes this):
+```bash
+make install
+```
+
+**Expected time:** < 10 seconds
+
+---
+
+## Step 4: Initialize Husky
 
 After `npm install` completes, run:
 
@@ -38,7 +76,7 @@ This sets up Git hooks in `.husky/` directory.
 
 ---
 
-## Step 3: Verify Husky is Working
+## Step 5: Verify Hooks are Working
 
 Test the commit message hook:
 

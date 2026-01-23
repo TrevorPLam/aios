@@ -1,5 +1,10 @@
-# /.repo/policy/SECURITY_BASELINE.md
+# Security Baseline
+
+**File**: `.repo/policy/SECURITY_BASELINE.md`
+
 This file defines the minimum security rules.
+
+> **Related**: See `.repo/policy/CONSTITUTION.md` Article 6 & 8 for safety-first governance, `.repo/policy/QUALITY_GATES.md` for merge requirements, and `.repo/policy/HITL.md` for HITL item management process.
 
 ## Absolute prohibitions
 - Secrets/tokens/keys must never be committed or logged (absolute prohibition).
@@ -26,21 +31,18 @@ Default meanings (editable only by human in this file if needed):
 10) Dependency / supply-chain risk change
 
 ## Forbidden patterns
-Forbidden patterns list: [
-  "password\\s*=\\s*['\"][^'\"]+['\"]",
-  "api[_-]?key\\s*=\\s*['\"][^'\"]+['\"]",
-  "secret\\s*=\\s*['\"][^'\"]+['\"]",
-  "token\\s*=\\s*['\"][^'\"]+['\"]",
-  "private[_-]?key\\s*=\\s*['\"][^'\"]+['\"]",
-  "access[_-]?token\\s*=\\s*['\"][^'\"]+['\"]",
-  "aws[_-]?secret[_-]?access[_-]?key",
-  "bearer\\s+[A-Za-z0-9_-]{20,}"
-]
-These are regex patterns enforced by check:security. Patterns match:
-- Hardcoded passwords, API keys, secrets, tokens
-- AWS secret access keys
-- Bearer tokens in code
-If a pattern needs adjustment, mark UNKNOWN and create HITL.
+Forbidden patterns list (regex patterns enforced by `check:security`):
+- **A**: Hardcoded API keys: `(api[_-]?key|apikey)\s*[=:]\s*['"][a-zA-Z0-9]{20,}['"]`
+- **B**: Hardcoded secrets: `(secret|password|pwd|passwd)\s*[=:]\s*['"][^'"]{8,}['"]`
+- **C**: AWS credentials: `(aws[_-]?access[_-]?key[_-]?id|aws[_-]?secret[_-]?access[_-]?key)\s*[=:]\s*['"][^'"]+['"]`
+- **D**: Private keys: `-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----`
+- **E**: OAuth tokens: `(oauth[_-]?token|access[_-]?token)\s*[=:]\s*['"][a-zA-Z0-9_-]{20,}['"]`
+- **F**: Database connection strings with passwords: `(postgres|mysql|mongodb)://[^:]+:[^@]+@`
+- **G**: JWT secrets: `(jwt[_-]?secret|jwt[_-]?key)\s*[=:]\s*['"][^'"]{16,}['"]`
+- **H**: Stripe keys: `(sk_live|pk_live|sk_test|pk_test)[a-zA-Z0-9]{24,}`
+
+These patterns are enforced by `check:security` command. Patterns may be refined based on false positives.
+If a pattern is unknown or needs adjustment, mark UNKNOWN and create HITL (see Article 3: No Guessing, Principle 7: UNKNOWN Is a First-Class State).
 
 ## Mandatory HITL actions
 Mandatory HITL action IDs: [1,2,3,4,5,6,7,8]

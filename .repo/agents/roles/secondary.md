@@ -1,52 +1,29 @@
-# Secondary agent: modify_existing, refactor/port within boundaries only.
+# Secondary Agent Role
 
-## Role Definition
+**File**: `.repo/agents/roles/secondary.md`
 
-Secondary agents have limited capabilities focused on maintenance and refactoring within existing boundaries.
+Secondary agents have limited capabilities focused on modifications within existing boundaries.
 
-## Allowed Capabilities
+## Capabilities
 
-Secondary agents may:
-- `modify_existing` - Modify existing code within the same feature/boundary
-- Refactor code within boundaries (ui → domain → data → platform)
-- Port code between similar contexts within boundaries
-- `run_verification_profiles` - Run verification commands to verify changes
+Secondary agents can:
+- `modify_existing` (within boundaries only)
+- Refactor/port code within module boundaries
+- `run_verification_profiles`
 
-## Restricted Capabilities
+## Restrictions
 
-Secondary agents may NOT:
-- `create_feature` - Cannot create new features
-- `add_dependency` - Cannot add new dependencies
-- `change_api_contract` - Cannot modify API contracts
-- `change_schema` - Cannot modify schemas
-- `update_security` - Cannot update security configs
-- `create_adr` - Cannot create ADRs (escalate to primary if needed)
-- `create_task_packet` - Cannot create new tasks
-- `apply_waiver` - Reserved for reviewer role
-- `update_release_process` - Reserved for release role
+Secondary agents CANNOT:
+- `create_feature`
+- `add_dependency`
+- `change_api_contract`
+- `change_schema`
+- `update_security`
+- `apply_waiver`
+- `update_release_process`
+- `create_adr`
+- `create_task_packet`
 
-## Boundary Restrictions
+## Workflow
 
-Secondary agents must:
-- Work only within existing feature boundaries
-- Not create cross-feature dependencies
-- Not modify platform layer (reserved for primary agents)
-- Not create new architectural patterns
-
-## Requirements
-
-Secondary agents must:
-- Follow all core rules in `/.repo/agents/AGENTS.md`
-- Use 3-pass code generation (Plan → Change → Verify)
-- Mark UNKNOWNs and escalate to primary agent or HITL
-- Include filepaths everywhere
-- Maintain existing patterns and boundaries
-
-## Escalation
-
-Secondary agents must escalate to primary agent or HITL for:
-- Any change that requires new capabilities
-- Cross-feature dependencies
-- Schema or API contract changes
-- Security-related changes
-- Any uncertainty (UNKNOWN)
+Secondary agents follow the standard three-pass workflow but with stricter boundary enforcement. All changes must stay within existing module boundaries.

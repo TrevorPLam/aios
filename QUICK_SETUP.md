@@ -30,10 +30,19 @@ If the script doesn't work, run these commands manually:
 # 1. Install dependencies
 npm install
 
-# 2. Initialize Husky
+# 2. Install Python dependencies (for automation scripts)
+pip install -r .repo/automation/scripts/requirements.txt
+
+# 3. Install pre-commit framework (if not already installed)
+pip install pre-commit
+
+# 4. Install pre-commit hooks
+pre-commit install
+
+# 5. Initialize Husky
 npm run prepare
 
-# 3. Test hooks
+# 6. Test hooks
 git commit -m "test: verify hooks work"
 ```
 

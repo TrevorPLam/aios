@@ -1,145 +1,56 @@
-# CODEOWNERS ensures qualified reviewers see critical changes.
-#
-# This file defines individuals or teams responsible for code in this repository.
-# When a PR modifies files matching these patterns, the specified owners are
-# automatically requested for review.
-#
-# Format: <file-pattern> @username-or-team
-# More specific patterns override less specific ones
+# CODEOWNERS
+# This file defines code ownership for automatic PR review assignment.
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# ============================================================================
-# DEFAULT OWNERS
-# ============================================================================
-# These owners will be requested for review on all PRs unless overridden below
-
+# Repository owner/maintainer (update with actual username)
 * @TrevorPowellLam
 
-# ============================================================================
-# GOVERNANCE & CONSTITUTION
-# ============================================================================
-# Critical governance files require explicit approval from repository owner
-
-/.github/copilot-instructions.md @TrevorPowellLam
-/.github/instructions/ @TrevorPowellLam
-/docs/governance/ @TrevorPowellLam
-/docs/security/ @TrevorPowellLam
-
-# ============================================================================
-# DOCUMENTATION
-# ============================================================================
-# Documentation changes require review from maintainers
-
+# Documentation
 /docs/ @TrevorPowellLam
-/docs/ai/ @TrevorPowellLam
-/docs/apis/ @TrevorPowellLam
 *.md @TrevorPowellLam
+DOCUMENTATION_GUIDE.md @TrevorPowellLam
+README.md @TrevorPowellLam
+CONTRIBUTING.md @TrevorPowellLam
 
-# Root-level documentation requires special attention
-/README.md @TrevorPowellLam
-/CONTRIBUTING.md @TrevorPowellLam
-/SECURITY.md @TrevorPowellLam
-/GOVERNANCE.md @TrevorPowellLam
-/LICENSE @TrevorPowellLam
+# Repository governance and policy
+/.repo/ @TrevorPowellLam
+.repo/policy/ @TrevorPowellLam
+.repo/automation/ @TrevorPowellLam
 
-# ============================================================================
-# GITHUB CONFIGURATION
-# ============================================================================
-# Changes to CI/CD, workflows, and GitHub settings require owner approval
-
+# GitHub workflows and configuration
 /.github/ @TrevorPowellLam
-/.github/workflows/ @TrevorPowellLam
-/.github/CODEOWNERS @TrevorPowellLam
-/.github/dependabot.yml @TrevorPowellLam
+.github/workflows/ @TrevorPowellLam
+.github/dependabot.yml @TrevorPowellLam
 
-# ============================================================================
-# INFRASTRUCTURE & CONFIGURATION
-# ============================================================================
-# Infrastructure and configuration files require owner review
+# Security-related files
+SECURITY.md @TrevorPowellLam
+.repo/policy/SECURITY_BASELINE.md @TrevorPowellLam
+.gitleaks.toml @TrevorPowellLam
 
-/scripts/ @TrevorPowellLam
-/scripts/tools/ @TrevorPowellLam
-*.config.js @TrevorPowellLam
-*.config.ts @TrevorPowellLam
-/drizzle.config.ts @TrevorPowellLam
-/.eslintrc* @TrevorPowellLam
-/tsconfig.json @TrevorPowellLam
-/babel.config.js @TrevorPowellLam
-/metro.config.js @TrevorPowellLam
+# Database and schema
+packages/contracts/ @TrevorPowellLam
+drizzle.config.ts @TrevorPowellLam
 
-# ============================================================================
-# APPLICATION CODE
-# ============================================================================
-# Code ownership by functional area
+# Platform and infrastructure
+packages/platform/ @TrevorPowellLam
+apps/api/ @TrevorPowellLam
 
-# Client/Frontend
-/client/ @TrevorPowellLam
-/client/components/ @TrevorPowellLam
-/client/screens/ @TrevorPowellLam
-/client/navigation/ @TrevorPowellLam
-/client/hooks/ @TrevorPowellLam
-/client/utils/ @TrevorPowellLam
+# Design system
+packages/design-system/ @TrevorPowellLam
 
-# Server/Backend
-/server/ @TrevorPowellLam
-/server/routes.ts @TrevorPowellLam
-/server/storage.ts @TrevorPowellLam
-/server/middleware/ @TrevorPowellLam
+# Features (general ownership - can be refined per feature)
+packages/features/ @TrevorPowellLam
 
-# Shared code
-/shared/ @TrevorPowellLam
+# Mobile app
+apps/mobile/ @TrevorPowellLam
 
-# ============================================================================
-# SECURITY-SENSITIVE FILES
-# ============================================================================
-# Security-critical code requires security review
+# Configuration files
+package.json @TrevorPowellLam
+tsconfig.json @TrevorPowellLam
+eslint.config.js @TrevorPowellLam
+babel.config.js @TrevorPowellLam
+jest.config.js @TrevorPowellLam
 
-**/auth* @TrevorPowellLam
-**/security* @TrevorPowellLam
-**/*auth*.ts @TrevorPowellLam
-**/*security*.ts @TrevorPowellLam
-/server/middleware/auth* @TrevorPowellLam
-
-# ============================================================================
-# DATABASE & MIGRATIONS
-# ============================================================================
-# Database schema changes require careful review
-
-/server/storage.ts @TrevorPowellLam
-**/migrations/ @TrevorPowellLam
-
-# ============================================================================
-# TESTING
-# ============================================================================
-# Test infrastructure changes require review
-
-*.test.ts @TrevorPowellLam
-*.test.tsx @TrevorPowellLam
-*.spec.ts @TrevorPowellLam
-/jest.config.js @TrevorPowellLam
-/jest.setup.js @TrevorPowellLam
-
-# ============================================================================
-# DEPENDENCIES
-# ============================================================================
-# Dependency changes require security review
-
-/package.json @TrevorPowellLam
-/package-lock.json @TrevorPowellLam
-
-# ============================================================================
-# NOTES FOR EXPANDING CODEOWNERS
-# ============================================================================
-# As the team grows, replace @TrevorPowellLam with specific teams/individuals:
-#
-# Example team structure:
-# * @org/maintainers
-# /docs/ @org/tech-writers @org/maintainers
-# /client/ @org/frontend-team @org/mobile-team
-# /server/ @org/backend-team
-# /docs/security/ @org/security-team @org/maintainers
-# /docs/governance/ @org/maintainers
-# /.github/workflows/ @org/devops-team @org/ci-maintainers
-# /server/middleware/auth* @org/security-team @org/backend-team
-#
-# For now, all reviews go to repository owner.
+# Build and deployment
+Makefile @TrevorPowellLam
+.github/workflows/release.yml @TrevorPowellLam

@@ -35,6 +35,7 @@
     "check:deps": "node scripts/deep-dependency-check.mjs",
     "check:startup": "node scripts/check-startup-blockers.mjs",
     "check:security:patterns": "node .repo/automation/scripts/check-security-patterns.js",
+    "check:security": "npm audit --audit-level=moderate && npm run check:security:patterns",
     "check:boundaries": "node .repo/automation/scripts/check-boundaries.js",
     "check:manifest": "node .repo/automation/scripts/validate-manifest.js",
     "check:governance": "node .repo/automation/scripts/governance-verify.js --hitl-file .repo/policy/HITL.md",
