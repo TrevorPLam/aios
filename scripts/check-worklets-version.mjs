@@ -68,7 +68,7 @@ function checkWorkletsVersion() {
         );
         console.log('💡 IMMEDIATE FIX:\n');
         console.log('  npm run expo:clean:native && npm run expo:rebuild:ios\n');
-        console.log('📖 For detailed fix guide, see: WORKLETS_FIX_GUIDE.md\n');
+        console.log('📖 For detailed fix guide, see: docs/archive/project-management/WORKLETS_FIX_GUIDE.md\n');
         return false;
       }
     } catch (error) {
@@ -103,7 +103,7 @@ if (!result) {
   console.log('  Option 2 (If Option 1 fails):');
   console.log('  npm run expo:clean:full && npm run expo:rebuild:ios\n');
   console.log('  Option 3 (Nuclear option):');
-  console.log('  See WORKLETS_FIX_GUIDE.md for complete manual cleanup\n');
+  console.log('  See docs/archive/project-management/WORKLETS_FIX_GUIDE.md for complete manual cleanup\n');
   console.log('='.repeat(50));
 }
 

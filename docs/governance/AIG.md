@@ -73,8 +73,8 @@ This index catalogs governance, actions/automation, and AI behavior/controls doc
 ## Documentation Governance & Quality
 
 - **DOCUMENTATION_GUIDE.md** — Navigation and maintenance guide for the documentation system.
-- **DOCUMENTATION_BEST_PRACTICES.md** — Standards and conventions for writing and maintaining docs.
-- **DOCUMENTATION_QUALITY_CONTROL.md** — Processes and checks for documentation quality assurance, including link validation and checklists.
+- **docs/processes/DOCUMENTATION_BEST_PRACTICES.md** — Standards and conventions for writing and maintaining docs.
+- **docs/processes/DOCUMENTATION_QUALITY_CONTROL.md** — Processes and checks for documentation quality assurance, including link validation and checklists.
 - **DOCUMENTATION_METRICS.md** — Metrics used to track documentation health and coverage.
 - **docs/README.md** — Documentation home and navigation hub, including governance linkouts.
 - **docs/INDEX.md** — Documentation index for structured discovery across doc sets.

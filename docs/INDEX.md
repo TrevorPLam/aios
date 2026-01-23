@@ -13,25 +13,34 @@ This index provides direct links to all active documentation in the repository.
 | Document | Purpose | Size |
 | ---------- | --------- | ------ |
 | [README.md](../README.md) | Project overview, setup, quick start | 560 lines |
+| [GOVERNANCE.md](../GOVERNANCE.md) | Governance model, review checklists, release process | - |
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines | - |
 | [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Community standards and enforcement | - |
-| [GOVERNANCE.md](../GOVERNANCE.md) | Governance model, review checklists, release process | - |
 | [SECURITY.md](../SECURITY.md) | Security policy & reporting | 70 lines |
-| [CHANGELOG.md](../CHANGELOG.md) | Release history | - |
-| [BESTPR.md](../BESTPR.md) | Token-optimized best practices for agents | - |
-| [AIG.md](../AIG.md) | Governance & AI documentation index | - |
+| [CHANGELOG.md](../CHANGELOG.md) | Release history and notable changes | - |
+| [LICENSE](../LICENSE) | Project license | - |
+| [BESTPR.md](../BESTPR.md) | Agent best practices and workflow guidance | - |
 | [F&F.md](../F&F.md) | Features & Functionality (main reference) | 669 lines |
 | [MODULE_DETAILS.md](../MODULE_DETAILS.md) | Technical implementation details | 469 lines |
 | [DOCUMENTATION_GUIDE.md](../DOCUMENTATION_GUIDE.md) | Navigation guide (start here!) | 200+ lines |
-| [DOCUMENTATION_BEST_PRACTICES.md](../DOCUMENTATION_BEST_PRACTICES.md) | Documentation standards | - |
-| [DOCUMENTATION_QUALITY_CONTROL.md](../DOCUMENTATION_QUALITY_CONTROL.md) | Documentation quality controls | - |
+| [DOCUMENTATION_BEST_PRACTICES.md](processes/DOCUMENTATION_BEST_PRACTICES.md) | Documentation standards | - |
+| [DOCUMENTATION_QUALITY_CONTROL.md](processes/DOCUMENTATION_QUALITY_CONTROL.md) | Documentation quality controls | - |
 | [DOCUMENTATION_METRICS.md](../DOCUMENTATION_METRICS.md) | Documentation health dashboard | - |
 | [QUICK_REFERENCE.md](../QUICK_REFERENCE.md) | Mobile configuration reference | 145 lines |
 | [P0TODO.md](../P0TODO.md) | P0 task backlog | - |
 | [P1TODO.md](../P1TODO.md) | P1 task backlog | - |
 | [P2TODO.md](../P2TODO.md) | P2 task backlog | - |
 | [P3TODO.md](../P3TODO.md) | P3 task backlog | - |
-| [TODO_ARCHIVE_2026-01-21.md](../TODO_ARCHIVE_2026-01-21.md) | Archived tasks | - |
+| [TODO_ARCHIVE_2026-01-21.md](archive/project-management/TODO_ARCHIVE_2026-01-21.md) | Archived tasks | - |
+
+---
+
+## ✅ Task Tracking (Source of Truth)
+
+- [P0TODO.md](../P0TODO.md) - P0 critical tasks
+- [P1TODO.md](../P1TODO.md) - P1 high-impact tasks
+- [P2TODO.md](../P2TODO.md) - P2 medium-priority tasks
+- [P3TODO.md](../P3TODO.md) - P3 backlog tasks
 
 ---
 
@@ -64,9 +73,14 @@ This index provides direct links to all active documentation in the repository.
 
 - [decisions/](decisions/) - Architecture decision records
 - [ARCHITECTURE_DECISIONS.md](decisions/ARCHITECTURE_DECISIONS.md) - ADR rollup summary
+- [governance/constitution.md](governance/constitution.md) - Constitution (highest authority)
+- [governance/state.md](governance/state.md) - Living state & enforcement toggles
+- [governance/AIG.md](governance/AIG.md) - Governance & AI index
 - [.templates/](.templates/) - Documentation templates
 - [processes/](processes/) - Documentation processes and workflows
   - [Feedback Loop](processes/feedback-loop.md) - User feedback collection and review process
+  - [DOCUMENTATION_BEST_PRACTICES.md](processes/DOCUMENTATION_BEST_PRACTICES.md) - Documentation standards
+  - [DOCUMENTATION_QUALITY_CONTROL.md](processes/DOCUMENTATION_QUALITY_CONTROL.md) - Documentation QA review
 
 ### Deployment
 
@@ -160,13 +174,14 @@ This index provides direct links to all active documentation in the repository.
   - PLANNER_MODULE_ENHANCEMENTS.md
   - TRANSLATOR_ENHANCEMENT_SUMMARY.md
 
-### Analysis Reports (18 files)
+### Analysis Reports (36+ files)
 
 - [analysis/](archive/analysis/)
   - High-level analyses (6 files)
   - Perfect codebase analyses (6 files)
   - Final analysis reports (3 files)
   - Other analysis documents (3 files)
+  - [forensic/](archive/analysis/forensic/) - Forensic analysis summaries
 
 ### Security Summaries (9 files)
 
@@ -174,12 +189,22 @@ This index provides direct links to all active documentation in the repository.
   - Module-specific security summaries
   - Historical security analyses
 
-### Project Management (5 files)
+### Project Management (11 files)
 
 - [project-management/](archive/project-management/)
   - Task completion summaries
   - Implementation summaries
   - Session summaries
+
+### Decisions (Archived)
+
+- [decisions/](archive/decisions/)
+  - ADR rollups superseded by `docs/decisions/`
+
+### Sessions
+
+- [sessions/](archive/sessions/)
+  - Session reports and completion summaries
 
 ---
 

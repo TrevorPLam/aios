@@ -18,7 +18,7 @@ User reports that after numerous attempts (seventh time requesting), the recomme
 
 1. ✅ Reviewed `client/screens/CommandCenterScreen.tsx` (lines 1-1050)
 2. ✅ Examined `UI_RENDER_ISSUES_INVESTIGATION.md`
-3. ✅ Analyzed `VISUAL_CHANGES_SUMMARY.md`
+3. ✅ Analyzed `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md`
 4. ✅ Reviewed spacing constants in `client/constants/theme.ts`
 5. ✅ Traced FlatList rendering structure
 6. ✅ Analyzed git history for past fix attempts
@@ -104,7 +104,7 @@ When a card's natural content height is less than 300px (e.g., 200px):
 
 ### Documented Fix Attempts
 
-From `VISUAL_CHANGES_SUMMARY.md` and `UI_RENDER_ISSUES_INVESTIGATION.md`:
+From `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` and `UI_RENDER_ISSUES_INVESTIGATION.md`:
 
 1. **Attempt 1-3**: Changed `CARD_SPACING` constant
    - Values tried: 4px → 2px → 0px
@@ -213,7 +213,7 @@ cardContainer: {
 
 ### Documentation Evidence
 
-**File**: `VISUAL_CHANGES_SUMMARY.md`, lines 13-16
+**File**: `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md`, lines 13-16
 
 ```markdown
 ### 1. Card Spacing Reduction
@@ -354,7 +354,7 @@ This is a one-line change that will resolve the issue immediately.
 - `client/screens/CommandCenterScreen.tsx` (main issue location)
 - `client/constants/theme.ts` (Spacing constants)
 - `UI_RENDER_ISSUES_INVESTIGATION.md` (past investigation)
-- `VISUAL_CHANGES_SUMMARY.md` (design specifications)
+- `docs/archive/project-management/VISUAL_CHANGES_SUMMARY.md` (design specifications)
 
 ---
 

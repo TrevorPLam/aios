@@ -276,6 +276,7 @@ For severe issues:
 ```bash
 npm run expo:clean:full
 ```
+```
 
 ### Seeing a web version instead of native iOS?
 
@@ -426,6 +427,7 @@ Using system fonts with the following scale:
 - **[docs/PHASE_3_COMPLETION_SUMMARY.md](./docs/PHASE_3_COMPLETION_SUMMARY.md)** — Phase 3 UX system completion summary
 
 ## Contributing
+
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)

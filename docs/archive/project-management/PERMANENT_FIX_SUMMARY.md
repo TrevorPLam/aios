@@ -203,4 +203,4 @@ If after rebuilding you still see the error:
 ### This was the FIFTH time you saw this error. It will NOT be the sixth
 ---
 
-**Questions?** Check the documentation links above or see [Common Incidents Runbook](docs/operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)
+**Questions?** Check the documentation links above or see [Common Incidents Runbook](../../operations/runbooks/common_incidents.md#react-native-worklets-version-mismatch)

@@ -72,9 +72,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs/security/SECURITY.md consolidating 11 security summaries
 - DOCUMENTATION_ANALYSIS.md with complete inventory and quality assessment
 - DOCUMENTATION_CONSOLIDATION_PLAN.md with 6-phase reorganization strategy
-- DOCUMENTATION_BEST_PRACTICES.md with industry research and standards
+- docs/processes/DOCUMENTATION_BEST_PRACTICES.md with industry research and standards
 - DOCUMENTATION_IMPLEMENTATION_PLAN.md with 90-day roadmap (archived to docs/archive/2026-01-pre-consolidation/)
-- DOCUMENTATION_QUALITY_CONTROL.md with session analysis
+- docs/processes/DOCUMENTATION_QUALITY_CONTROL.md with session analysis
 
 ### Changed (2)
 

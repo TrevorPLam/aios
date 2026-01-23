@@ -1083,3 +1083,118 @@ Uncertainty:
 - **Note**: Platform-agnostic permission error handling. AGENT can verify Android/Web permission flows in follow-up.
 
 ---
+
+### T-099
+
+- **Priority**: P3
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - MkDocs deployment is not configured and docs/README.md lacks a live URL
+  - PR template placeholders still include TODO verification commands
+  - Dependabot reviewers and documentation analytics are still TODO
+- **Acceptance Criteria**:
+  - [ ] Configure MkDocs deployment (GitHub Pages or equivalent) and document the workflow
+  - [ ] Add the documentation site URL to docs/README.md
+  - [ ] Replace TODO placeholders in .github/pull_request_template.md with actual verification commands
+  - [ ] Update .github/dependabot.yml reviewers to real handles/teams
+  - [ ] Document documentation analytics approach and update docs/README.md accordingly
+- **References**:
+  - docs/README.md
+  - mkdocs.yml
+  - .github/pull_request_template.md
+  - .github/dependabot.yml
+  - docs/implementation_report.md
+- **Dependencies**: None
+- **Effort**: M
+
+### T-100
+
+- **Priority**: P3
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - docs/coverage.md shows critical gaps for Messages and Integrations tutorials/how-tos
+  - Architecture coverage is 0% for production modules
+  - Governance state calls out missing module documentation in docs/modules/
+- **Acceptance Criteria**:
+  - [ ] Create tutorials for Messages and Integrations modules
+  - [ ] Add how-to guides for missing modules (Calendar, Messages, Lists, Alerts, Photos, Budget, Integrations)
+  - [ ] Add architecture docs for all 14 production modules
+  - [ ] Update docs/coverage.md with new percentages and last-updated dates
+  - [ ] Update docs/governance/state.md tracking issue link for module documentation
+- **References**:
+  - docs/coverage.md
+  - docs/modules/
+  - docs/governance/state.md
+- **Dependencies**: None
+- **Effort**: L
+
+### T-101
+
+- **Priority**: P3
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Governance state calls for expanded Vale vocabulary and custom rules
+  - Documentation quality enforcement relies on consistent terminology
+- **Acceptance Criteria**:
+  - [ ] Expand .vale/Vocab/AIOS accept/reject lists with project-specific terminology
+  - [ ] Add custom Vale rules for technical terms in .vale.ini
+  - [ ] Record updates in docs/governance/state.md metrics section
+- **References**:
+  - docs/governance/state.md
+  - .vale.ini
+  - .vale/Vocab/AIOS/accept.txt
+  - .vale/Vocab/AIOS/reject.txt
+- **Dependencies**: None
+- **Effort**: S
+
+### T-102
+
+- **Priority**: P3
+- **Type**: QUALITY
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - State doc calls for an automated check for overdue migrations
+  - Manual reviews can miss expired timelines
+- **Acceptance Criteria**:
+  - [ ] Implement a script to detect overdue completion targets in docs/governance/state.md
+  - [ ] Add a CI workflow or scheduled check to report overdue migrations
+  - [ ] Document the check in docs/governance/state.md and docs/verification.md
+- **References**:
+  - docs/governance/state.md
+  - scripts/tools/
+  - .github/workflows/
+  - docs/verification.md
+- **Dependencies**: None
+- **Effort**: M
+
+### T-103
+
+- **Priority**: P3
+- **Type**: DOCS
+- **Owner**: AGENT
+- **Platform**: Platform-Agnostic
+- **Status**: READY
+- **Context**:
+  - Governance and documentation docs contain inline TODO markers
+  - Inline TODOs should be tracked in backlog or resolved
+- **Acceptance Criteria**:
+  - [ ] Audit docs/governance/ and docs/processes/ for inline TODO markers
+  - [ ] Convert open items into P0–P3 tasks or remove if obsolete
+  - [ ] Update affected docs with references to the new task IDs
+- **References**:
+  - docs/governance/
+  - docs/processes/
+  - P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md
+- **Dependencies**: None
+- **Effort**: S

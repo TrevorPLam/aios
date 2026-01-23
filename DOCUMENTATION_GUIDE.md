@@ -117,6 +117,13 @@ This guide helps you find the right documentation in our newly organized structu
 
 ```text
 docs/
+├── governance/             # Governance constitution, state, AI index
+│   ├── constitution.md
+│   ├── state.md
+│   └── AIG.md
+├── processes/              # Documentation standards + QA
+│   ├── DOCUMENTATION_BEST_PRACTICES.md
+│   └── DOCUMENTATION_QUALITY_CONTROL.md
 ├── technical/              # Technical implementation guides
 │   ├── API_DOCUMENTATION.md
 │   ├── TESTING_INSTRUCTIONS.md
@@ -302,10 +309,14 @@ docs/
 
 ## 📚 Related Resources
 
+- **Documentation Standards:**
+  - [docs/processes/DOCUMENTATION_BEST_PRACTICES.md](./docs/processes/DOCUMENTATION_BEST_PRACTICES.md) - Writing standards
+  - [docs/processes/DOCUMENTATION_QUALITY_CONTROL.md](./docs/processes/DOCUMENTATION_QUALITY_CONTROL.md) - QA checks and review
+
 - **Analysis Documents:**
-  - [DOCUMENTATION_ANALYSIS.md](./DOCUMENTATION_ANALYSIS.md) - Full analysis that led to reorganization
-  - [DOCUMENTATION_CONSOLIDATION_PLAN.md](./DOCUMENTATION_CONSOLIDATION_PLAN.md) - Implementation plan
-  - [DOCUMENTATION_PART_ONE_SUMMARY.md](./DOCUMENTATION_PART_ONE_SUMMARY.md) - Summary of findings
+  - [DOCUMENTATION_ANALYSIS.md](./docs/archive/2026-01-pre-consolidation/DOCUMENTATION_ANALYSIS.md) - Full analysis that led to reorganization
+  - [DOCUMENTATION_CONSOLIDATION_PLAN.md](./docs/archive/2026-01-pre-consolidation/DOCUMENTATION_CONSOLIDATION_PLAN.md) - Implementation plan
+  - [DOCUMENTATION_PART_ONE_SUMMARY.md](./docs/archive/2026-01-pre-consolidation/DOCUMENTATION_PART_ONE_SUMMARY.md) - Summary of findings
 
 - **Archive:**
   - [docs/archive/](./docs/archive/) - Historical documents organized by category
