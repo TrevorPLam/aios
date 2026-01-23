@@ -1,8 +1,18 @@
 # AIOS Architecture Documentation
 
+## 🚨 Active Migration Notice
+
+**AIOS is undergoing a major architectural transformation** to a Diamond++ AI-native monorepo structure.
+
+👉 **[Start Here: Diamond++ Migration Index](./DIAMOND_MIGRATION_INDEX.md)**
+
+---
+
 ## Plain English Summary
 
 This directory contains comprehensive architecture documentation for AIOS using the arc42 template. Arc42 provides a standardized structure for documenting software architecture, making it easier to understand how the system works, why it's built the way it is, and how to maintain it. The documentation covers everything from high-level goals to detailed quality requirements, risks, and deployment strategies.
+
+**Note:** The arc42 documentation describes the current architecture. The Diamond++ migration documents describe the target architecture and migration path.
 
 ---
 
