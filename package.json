@@ -20,6 +20,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:property": "jest --testNamePattern='property'",
     "lint": "npx expo lint",
     "lint:fix": "npx expo lint --fix",
     "check:types": "tsc --noEmit",
@@ -43,6 +44,9 @@
     "check:todo-format": "node scripts/check-todo-format.mjs",
     "check:coverage-ratchet": "node scripts/check-coverage-ratchet.mjs",
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
+    "coverage:analyze": "node scripts/test-coverage-analyzer.mjs",
+    "coverage:analyze:json": "node scripts/test-coverage-analyzer.mjs --json",
+    "coverage:check": "node scripts/test-coverage-analyzer.mjs --target=80",
     "framework:metrics": "node .repo/automation/scripts/framework-metrics.js",
     "postinstall": "node scripts/post-install-check.mjs",
     "index:generate": "node scripts/generate-index-json.mjs",
@@ -204,13 +208,15 @@
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.1.7",
     "jest": "~29.7.0",
+    "lint-staged": "^15.2.0",
     "prettier": "3.8.0",
     "react-test-renderer": "19.1.0",
     "semantic-release": "^23.1.1",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "typescript": "~5.9.2",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "fast-check": "^3.24.0"
   },
   "private": true
 }

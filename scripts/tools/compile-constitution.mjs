@@ -95,7 +95,9 @@ function generateGlobalInstructions(constitution) {
 
   // Global Rule
   if (constitution.principles.global_rule) {
-    sections.push(`\n**Global Rule:** ${constitution.principles.global_rule}\n`);
+    sections.push(
+      `\n**Global Rule:** ${constitution.principles.global_rule}\n`,
+    );
   }
 
   // Best Practices - Repository Map
@@ -205,17 +207,13 @@ function generateClientInstructions(constitution) {
   // Best Practices - Coding Patterns (client)
   if (constitution.best_practices?.coding_patterns?.client) {
     sections.push("\n#### Coding Patterns\n");
-    sections.push(
-      `- ${constitution.best_practices.coding_patterns.client}\n`,
-    );
+    sections.push(`- ${constitution.best_practices.coding_patterns.client}\n`);
   }
 
   // Repository Map (mobile)
   if (constitution.best_practices?.repository_map?.apps) {
     sections.push("\n#### Repository Structure\n");
-    sections.push(
-      `- **\`apps/mobile\`**: React Native mobile application\n`,
-    );
+    sections.push(`- **\`apps/mobile\`**: React Native mobile application\n`);
   }
 
   // Boundaries
@@ -248,9 +246,7 @@ function generateServerInstructions(constitution) {
   // Best Practices - Coding Patterns (server)
   if (constitution.best_practices?.coding_patterns?.server) {
     sections.push("\n#### Coding Patterns\n");
-    sections.push(
-      `- ${constitution.best_practices.coding_patterns.server}\n`,
-    );
+    sections.push(`- ${constitution.best_practices.coding_patterns.server}\n`);
   }
 
   // Repository Map (api)
@@ -261,23 +257,19 @@ function generateServerInstructions(constitution) {
 
   // Security - Input Validation
   sections.push("\n#### Security Requirements\n");
-  sections.push(
-    "- ALL inputs must be validated with Zod schemas\n",
-  );
+  sections.push("- ALL inputs must be validated with Zod schemas\n");
   sections.push("- Never trust request bodies, params, or query strings\n");
   sections.push("- Return structured errors with validation details\n");
 
   // Security - Review Triggers
   if (constitution.security?.review_triggers) {
     sections.push("\n#### Security Review Triggers\n");
-    sections.push(
-      "The following changes require security review (HITL):\n",
+    sections.push("The following changes require security review (HITL):\n");
+    Object.entries(constitution.security.review_triggers.meanings).forEach(
+      ([id, meaning]) => {
+        sections.push(`- **${id}**: ${meaning}\n`);
+      },
     );
-    Object.entries(
-      constitution.security.review_triggers.meanings,
-    ).forEach(([id, meaning]) => {
-      sections.push(`- **${id}**: ${meaning}\n`);
-    });
   }
 
   return sections.join("");
@@ -285,12 +277,13 @@ function generateServerInstructions(constitution) {
 
 function generateAgentsHeader(targetName, pathType = "global") {
   const timestamp = new Date().toISOString().split("T")[0];
-  const agentsJsonPath = pathType === "global" 
-    ? "AGENTS.json" 
-    : pathType === "docs"
-    ? "../../AGENTS.json"
-    : "../../AGENTS.json";
-  
+  const agentsJsonPath =
+    pathType === "global"
+      ? "agents.json"
+      : pathType === "docs"
+        ? "../../agents.json"
+        : "../../agents.json";
+
   return `<!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: .repo/policy/constitution.json -->
 <!-- Generated: ${timestamp} -->
@@ -318,15 +311,23 @@ function generateGlobalAgents(constitution) {
   const sections = [];
 
   sections.push("## Agent Entry Point\n");
-  sections.push("See `AGENTS.json` for complete agent workflow, command routing, and decision trees.\n");
+  sections.push(
+    "See `agents.json` for complete agent workflow, command routing, and decision trees.\n",
+  );
 
   sections.push("\n## Key Workflow (from Constitution)\n");
   if (constitution.workflow?.three_pass) {
     sections.push("All changes follow the three-pass workflow:\n");
     sections.push("1. **Pass 0 (Context)**: Read folder context files\n");
-    sections.push("2. **Pass 1 (Plan)**: Determine change type, list actions, identify risks\n");
-    sections.push("3. **Pass 2 (Change)**: Apply edits following existing patterns\n");
-    sections.push("4. **Pass 3 (Verify)**: Run tests, provide evidence, update logs\n");
+    sections.push(
+      "2. **Pass 1 (Plan)**: Determine change type, list actions, identify risks\n",
+    );
+    sections.push(
+      "3. **Pass 2 (Change)**: Apply edits following existing patterns\n",
+    );
+    sections.push(
+      "4. **Pass 3 (Verify)**: Run tests, provide evidence, update logs\n",
+    );
   }
 
   sections.push("\n## Required Reading (from Constitution)\n");
@@ -342,7 +343,7 @@ function generateDocsAgents(constitution) {
   const sections = [];
 
   sections.push("## Documentation Agent Entry Point\n");
-  sections.push("See `../../AGENTS.json` for complete agent workflow.\n");
+  sections.push("See `../../agents.json` for complete agent workflow.\n");
 
   sections.push("\n## Documentation-Specific Context\n");
   const principle19 = constitution.principles.list.find((p) => p.id === 19);
@@ -357,14 +358,18 @@ function generateClientAgents(constitution) {
   const sections = [];
 
   sections.push("## Client/Frontend Agent Entry Point\n");
-  sections.push("See `../../AGENTS.json` for complete agent workflow.\n");
+  sections.push("See `../../agents.json` for complete agent workflow.\n");
 
   sections.push("\n## Client-Specific Context\n");
   if (constitution.best_practices?.tech_stack?.mobile) {
-    sections.push(`- **Tech Stack**: ${constitution.best_practices.tech_stack.mobile}\n`);
+    sections.push(
+      `- **Tech Stack**: ${constitution.best_practices.tech_stack.mobile}\n`,
+    );
   }
   if (constitution.boundaries?.import_direction) {
-    sections.push(`- **Import Direction**: ${constitution.boundaries.import_direction}\n`);
+    sections.push(
+      `- **Import Direction**: ${constitution.boundaries.import_direction}\n`,
+    );
   }
 
   return sections.join("");
@@ -374,11 +379,13 @@ function generateServerAgents(constitution) {
   const sections = [];
 
   sections.push("## Server/Backend Agent Entry Point\n");
-  sections.push("See `../../AGENTS.json` for complete agent workflow.\n");
+  sections.push("See `../../agents.json` for complete agent workflow.\n");
 
   sections.push("\n## Server-Specific Context\n");
   if (constitution.best_practices?.tech_stack?.backend) {
-    sections.push(`- **Tech Stack**: ${constitution.best_practices.tech_stack.backend}\n`);
+    sections.push(
+      `- **Tech Stack**: ${constitution.best_practices.tech_stack.backend}\n`,
+    );
   }
   if (constitution.security?.review_triggers) {
     sections.push("\n## Security Review Triggers\n");
@@ -498,7 +505,9 @@ function compileConstitution() {
   console.log(`Generated: ${serverAgentsPath}`);
 
   console.log("\nSummary:");
-  console.log("   Generated: 8 files (4 instruction files + 4 AGENTS.md files)");
+  console.log(
+    "   Generated: 8 files (4 instruction files + 4 AGENTS.md files)",
+  );
   console.log("\nConstitution compiled successfully!");
   console.log("\nNext steps:");
   console.log("   1. Review generated files");

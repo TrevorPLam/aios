@@ -94,7 +94,7 @@
       "size_bytes": 761
     },
     {
-      "path": "AGENTS.json",
+      "path": "agents.json",
       "type": "json",
       "key_classes": [],
       "line_count": 211,

@@ -1,95 +1,42 @@
-# Dependabot automates dependency updates and security patches.
 version: 2
-
 updates:
-  # NPM dependencies
+  # Enable version updates for npm
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "09:00"
-      timezone: "UTC"
     open-pull-requests-limit: 10
-    # TODO: Add reviewers when team structure is defined
-    # For now, CODEOWNERS will handle review assignments
-    # reviewers:
-    #   - "TrevorPowellLam"
-    # assignees:
-    #   - "TrevorPowellLam"
+    reviewers:
+      - "trevo"
     labels:
       - "dependencies"
-      - "npm"
       - "automated"
     commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
+      prefix: "chore"
       include: "scope"
-    # Group minor and patch updates together
+    # Group updates to reduce PR noise
     groups:
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
       development-dependencies:
         dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
-      production-dependencies:
-        dependency-type: "production"
-        update-types:
-          - "patch"
-    # Always update security vulnerabilities
-    versioning-strategy: increase
-    ignore:
-      # Ignore major version updates for stable dependencies
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-native"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "expo"
-        update-types: ["version-update:semver-major"]
 
-  # GitHub Actions
+  # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "tuesday"
+      day: "monday"
       time: "09:00"
-      timezone: "UTC"
     open-pull-requests-limit: 5
-    # TODO: Add reviewers when team structure is defined
-    # reviewers:
-    #   - "TrevorPowellLam"
     labels:
-      - "dependencies"
       - "github-actions"
       - "automated"
-    commit-message:
-      prefix: "ci"
-      include: "scope"
-    groups:
-      github-actions:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # Docker (if you add Dockerfile later)
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    # TODO: Add reviewers when team structure is defined
-    # reviewers:
-    #   - "TrevorPowellLam"
-    labels:
-      - "dependencies"
-      - "docker"
-      - "automated"
-    commit-message:
-      prefix: "chore(docker)"
-      include: "scope"

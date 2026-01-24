@@ -48,3 +48,7 @@ jest.mock("@expo/vector-icons", () => {
     Feather: ({ name, ...props }) => React.createElement(Text, props, name),
   };
 });
+
+// Make fast-check available globally for property-based testing
+const fc = require("fast-check");
+global.fc = fc;
