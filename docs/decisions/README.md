@@ -12,6 +12,7 @@ This directory captures architectural decisions for AIOS.
 - [ADR-005: Analytics system architecture](005-analytics-architecture.md)
 - [ADR-006: Documentation automation and quality enforcement](006-docs-automation.md)
 - [ADR-007: Governance enforcement via CI pipeline](007-governance-ci-enforcement.md)
+- [ADR-008: Standardize on Node.js/Express for the backend runtime](008-backend-runtime-decision.md)
 
 ## Format
 

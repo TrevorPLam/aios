@@ -1,0 +1,27 @@
+{
+  "intent": "Document backend runtime decision",
+  "plan": [
+    "Draft ADR capturing the backend runtime decision and rationale.",
+    "Update app and backend documentation to reflect the decision.",
+    "Update task tracking files to archive TASK-012 and promote next task."
+  ],
+  "actions": [
+    "Added ADR-008 documenting the Node.js/Express backend decision and decision rationale.",
+    "Updated apps/INDEX.md and created backend/README.md to mark Django backend as legacy.",
+    "Updated TODO, BACKLOG, and ARCHIVE task files for TASK-012 completion."
+  ],
+  "evidence": [
+    "make lint (failed: no lint rule in backend/frontend Makefile targets)."
+  ],
+  "decisions": [
+    "Standardize on Node.js/Express as the authoritative backend runtime, treat Django backend as legacy."
+  ],
+  "risks": [
+    "If any tooling still depends on the Django backend, it may need follow-up cleanup."
+  ],
+  "follow_ups": [
+    "Confirm no active dependencies remain on backend/ before removal in a future task."
+  ],
+  "reasoning_summary": "Documented the backend runtime decision to resolve architectural ambiguity, added rationale and alternatives, and aligned repo indexes to point contributors to the active backend.",
+  "notes": "No secrets. No private data. No raw chain-of-thought."
+}

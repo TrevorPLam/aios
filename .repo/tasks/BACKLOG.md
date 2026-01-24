@@ -47,26 +47,6 @@
 
 ## P0 — Critical
 
-### [TASK-013] Fix API Server Boundary Violations
-- **Priority:** P0
-- **Status:** Pending
-- **Created:** 2026-01-23
-- **Context:** `apps/api/` implements business logic instead of mounting from packages. Violates architecture rules.
-
-#### Acceptance Criteria
-- [ ] Refactor all 42+ routes in `apps/api/routes.ts` to use feature data layers
-- [ ] Remove business logic from `apps/api/storage.ts`
-- [ ] Import from `@features/*/data` instead of local storage
-- [ ] Verify no business logic remains in apps/api/
-- [ ] Update tests to reflect new architecture
-
-#### Notes
-- Source: PROJECT_ANALYSIS.md section 2.1
-- Start with one feature (e.g., notes) as proof of concept
-- Requires feature data layers to be implemented first (TASK-014)
-
----
-
 ### [TASK-014] Implement Feature Data Layers
 - **Priority:** P0
 - **Status:** Pending
