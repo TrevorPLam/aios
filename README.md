@@ -219,6 +219,16 @@ cd aios
 npm install
 ```
 
+### Environment setup
+
+Copy the example environment file and update values for your setup:
+
+```bash
+cp .env.example .env
+```
+
+See [docs/getting-started/onboarding.md](./docs/getting-started/onboarding.md) for details on required and optional variables.
+
 ### Optional Environment Variables (Replit)
 
 ```bash
@@ -447,4 +457,3 @@ Using system fonts with the following scale:
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Full contribution guidelines
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Constitution](/.repo/policy/CONSTITUTION.md) — Repository governance
-

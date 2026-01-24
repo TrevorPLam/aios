@@ -36,8 +36,8 @@
 ## Statistics
 | Metric | Count |
 |--------|-------|
-| Total Completed | 1 |
-| P0 Completed | 1 |
+| Total Completed | 2 |
+| P0 Completed | 2 |
 | P1 Completed | 0 |
 | P2 Completed | 0 |
 | P3 Completed | 0 |
@@ -47,6 +47,23 @@
 ---
 
 ## Completed Tasks
+
+### [TASK-002] Create .env.example File ✓
+- **Priority:** P0
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-23
+- **Context:** Code references `.env.example` but file doesn't exist. Blocks new environment setup.
+
+#### Acceptance Criteria
+- [x] Document all required environment variables from `env_validator.py`
+- [x] Include comments explaining each variable
+- [x] Add placeholder values (never real secrets)
+- [x] Reference in README.md and docs/getting-started/onboarding.md
+
+#### Outcome
+- Added `.env.example` with documented placeholders for required and optional variables.
+- Documented environment setup in `docs/getting-started/onboarding.md` and linked from `README.md`.
 
 ### [TASK-001] Refine AGENTS.md to Be Concise & Effective ✓
 - **Priority:** P0
