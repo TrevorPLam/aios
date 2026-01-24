@@ -10,7 +10,7 @@
     "startup": [
       ".repo/tasks/TODO.md",
       ".repo/repo.manifest.yaml",
-      ".repo/agents/QUICK_REFERENCE.md"
+      ".repo/policy/constitution.json"
     ],
     "conditional": {
       "security": [".repo/policy/SECURITY_BASELINE.md", ".repo/policy/HITL.md"],

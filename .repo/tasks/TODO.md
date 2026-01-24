@@ -1,12 +1,12 @@
-# 🤖 Current Active Task
+# 🤖 Current Active Tasks
 
-> **Rule: Only ONE task should be in this file at a time.**
+> **Rule: 3-5 tasks should be in this file at a time, grouped by similar task types.**
 
-When a task is completed, it should be moved to `ARCHIVE.md` and the next highest priority task from `BACKLOG.md` should be promoted here.
+Tasks should be grouped by similar types (same module/feature area, same change type, or related work). If there are fewer than 3 tasks of a similar type available, work with what's available. When a task is completed, it should be moved to `ARCHIVE.md` and the next highest priority task of a similar type from `BACKLOG.md` should be promoted here.
 
 ---
 
-## Current Task
+## Active Tasks
 
 ### [TASK-085] Phase 0: Integration Testing
 - **Priority:** P0
@@ -29,6 +29,10 @@ When a task is completed, it should be moved to `ARCHIVE.md` and the next highes
 - Effort: M (4-6 hours)
 - Note: Last step for Phase 0. Once complete, unblocks Phase 1 (T-071).
 
+#### Logs
+- Trace: `.repo/traces/TASK-085-trace-*.json`
+- Agent: `.repo/logs/TASK-085-log-*.json`
+
 ---
 
 ## Task Format Template
@@ -36,7 +40,8 @@ When a task is completed, it should be moved to `ARCHIVE.md` and the next highes
 ```markdown
 ### [TASK-XXX] Task Title
 - **Priority:** P0 | P1 | P2 | P3
-- **Status:** Pending | In Progress | Completed
+- **Status:** Pending | In Progress | Blocked | Completed
+- **Type:** [Module/Feature area] | [Change type] | [Related work]
 - **Created:** YYYY-MM-DD
 - **Completed:** YYYY-MM-DD (only when moved to ARCHIVE.md)
 - **Context:** Brief description of why this task matters
@@ -47,4 +52,10 @@ When a task is completed, it should be moved to `ARCHIVE.md` and the next highes
 
 #### Notes
 - Relevant context, links, or references
+
+#### Logs
+- Trace: `.repo/traces/TASK-XXX-trace-*.json`
+- Agent: `.repo/logs/TASK-XXX-log-*.json`
 ```
+
+**Note:** Tasks in TODO.md should be grouped by similar types. See `.repo/tasks/README.md` for grouping rules.

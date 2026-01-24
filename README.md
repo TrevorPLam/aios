@@ -442,6 +442,64 @@ Using system fonts with the following scale:
 **Contact:** [Email or GitHub Issues]  
 **Support:** Open an issue or see [CONTRIBUTING.md](CONTRIBUTING.md)
 
+## Governance
+
+AIOS uses an **AI-Native Repository Governance Framework** located in `.repo/` that enables safe, effective collaboration between AI agents and human developers.
+
+### What the Framework Provides
+
+1. **Clear Policies** - Constitutional rules, principles, and quality gates (see `.repo/policy/constitution.json`)
+2. **Safety Boundaries** - Security baselines and architectural boundaries
+3. **Human-in-the-Loop (HITL)** - Explicit escalation points for risky decisions
+4. **Command Manifest** - Single source of truth for build, test, and verification commands (`.repo/repo.manifest.yaml`)
+5. **Waiver Management** - Formal process for policy exceptions
+6. **Traceability** - Every change must be justified and verifiable
+
+### Quick Start by Role
+
+**For Developers:**
+1. Read `.repo/policy/constitution.json` - The 8 fundamental articles
+2. Read `.repo/policy/procedures.json` - How-to instructions
+3. Understand `.repo/repo.manifest.yaml` - How to run checks correctly
+
+**For AI Agents:**
+1. Always read `.repo/repo.manifest.yaml` first (command source of truth)
+2. Read `.repo/policy/constitution.json` - All behavioral rules
+3. Read `.repo/policy/procedures.json` - Procedural instructions
+4. Follow three-pass workflow: Plan → Change → Verify
+5. Escalate when in doubt - create HITL item (don't guess)
+6. Verify - every change must have evidence
+
+**For Approvers/Reviewers:**
+1. Check `.repo/policy/HITL.md` - Active human-in-the-loop items
+2. Review waivers - Active policy exceptions (if any)
+3. Verify - All changes have proper traceability
+
+### Critical Rules (Never Skip)
+
+1. **Article 3 (No Guessing)**: If you don't know, mark it `<UNKNOWN>` and escalate to HITL
+2. **Article 6 (Safety Before Speed)**: For risky changes → STOP → ASK (HITL) → VERIFY → PROCEED
+3. **Article 8 (HITL for External Systems)**: Credentials, billing, production = always HITL
+4. **Principle 8 (Read Repo First)**: Always check `.repo/` docs and manifest before deciding
+5. **Principle 10 (Risk Triggers a Stop)**: Non-trivial risk = HITL
+
+### Before Merging a PR
+
+- [ ] All tests pass (use commands from `.repo/repo.manifest.yaml`)
+- [ ] No active HITL blockers (check `.repo/policy/HITL.md`)
+- [ ] Required waivers are documented (if applicable)
+- [ ] Changes are traceable to task definition (`.repo/tasks/TODO.md`)
+- [ ] Evidence of verification is included
+
+### Getting Help
+
+- **"Can I change the constitution?"** → Only with explicit founder approval (Article 1)
+- **"What if I'm not sure about a command?"** → Mark `<UNKNOWN>`, create HITL
+- **"Do I need HITL for this?"** → Check triggers in `.repo/policy/constitution.json.security`
+- **"How do I request a waiver?"** → Follow process in `.repo/policy/procedures.json.waivers`
+
+**Full governance documentation:** See `.repo/policy/constitution.json` and `.repo/policy/procedures.json`
+
 ## Contributing
 
 
@@ -456,4 +514,4 @@ Using system fonts with the following scale:
 - [BESTPR.md](BESTPR.md) — Token-optimized best practices guide for AI agents
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Full contribution guidelines
 - [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Constitution](/.repo/policy/CONSTITUTION.md) — Repository governance
+- [`.repo/policy/constitution.json`](.repo/policy/constitution.json) — Repository governance rules

@@ -6,7 +6,7 @@
 
 **Agent Instructions:** This is your quick reference. Read in this order:
 
-1. `.repo/tasks/TODO.md` - Current task (MUST READ FIRST)
+1. `.repo/tasks/TODO.md` - Current tasks (3-5 tasks, MUST READ FIRST)
 2. `.repo/repo.manifest.yaml` - Commands (BEFORE ANY COMMAND)
 3. This file (`.repo/agents/QUICK_REFERENCE.md`) - Rules (START HERE)
 
@@ -133,7 +133,7 @@ Did a waiverable gate fail? (coverage, performance, warnings)
 
 ## 🔍 Before Starting Work
 
-- [ ] Read `.repo/tasks/TODO.md` (current task) - **MUST READ FIRST**
+- [ ] Read `.repo/tasks/TODO.md` (current tasks, 3-5 tasks) - **MUST READ FIRST**
 - [ ] Read `.repo/repo.manifest.yaml` (commands) - **BEFORE ANY COMMAND**
 - [ ] Check `.repo/policy/HITL.md` (blocking items?)
 - [ ] If crossing boundaries → Read `.repo/policy/BOUNDARIES.md`
@@ -258,7 +258,7 @@ Is it only documentation changes?
 
 ## 🎯 Task Workflow
 
-1. Read `.repo/tasks/TODO.md` → Work on task
+1. Read `.repo/tasks/TODO.md` → Work on tasks (3-5 tasks grouped by similar types)
    - **If TODO.md is empty:** Promote top task from `BACKLOG.md` to `TODO.md`
 2. Complete → Mark criteria `[x]`
 3. Move to `ARCHIVE.md` (prepend)

@@ -1,6 +1,6 @@
 # .repo/AGENT.md
 
-**All agent rules are in:** `.repo/agents/rules.json`
+**All agent rules are in:** `.repo/policy/constitution.json`
 
 **Read that file for complete rules, workflows, and policies.**
 
@@ -10,12 +10,12 @@
 
 **Canonical reading order (per AGENTS.json):**
 
-1. Read `.repo/tasks/TODO.md` - Current task (MUST READ FIRST)
+1. Read `.repo/tasks/TODO.md` - Current tasks (3-5 tasks, MUST READ FIRST)
 2. Read `.repo/repo.manifest.yaml` - Commands (BEFORE ANY COMMAND)
-3. Read `.repo/agents/QUICK_REFERENCE.md` - Rules (START HERE for human-readable)
+3. Read `.repo/policy/constitution.json` - Rules (START HERE)
 4. Follow three-pass workflow from `AGENTS.json`
 
-**Alternative:** If you prefer machine-readable format, use `.repo/agents/rules.json` instead of step 3.
+**Procedures:** See `.repo/policy/procedures.json` for how-to instructions.
 
 ---
 

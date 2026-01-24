@@ -12,3 +12,7 @@ if command -v gitleaks >/dev/null 2>&1; then
   echo "🔍 Running Gitleaks secret scan..."
   gitleaks detect --source . --no-banner --verbose || exit 1
 fi
+
+# Hard block: Check changelog and logs (required for feature/api_change/security/non_doc_change)
+echo "🔍 Checking CHANGELOG.md and logs..."
+node .repo/automation/scripts/check-changelog-and-logs.js || exit 1

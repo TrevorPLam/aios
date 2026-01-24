@@ -9,7 +9,7 @@
 const fs = require("fs");
 const path = require("path");
 
-// Required artifacts by change type (from rules.json)
+// Required artifacts by change type (from procedures.json.artifacts_by_change_type)
 const ARTIFACT_REQUIREMENTS = {
   feature: ["task_packet", "trace_log", "tests"],
   api_change: ["task_packet", "adr", "trace_log", "openapi_update"],

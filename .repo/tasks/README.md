@@ -10,7 +10,7 @@ This folder implements a simple, effective task management workflow designed for
 
 | File | Purpose | Rule |
 |------|---------|------|
-| `TODO.md` | Current active task | **Only ONE task at a time** |
+| `TODO.md` | Current active tasks | **3-5 tasks at a time, grouped by similar types** |
 | `BACKLOG.md` | Prioritized queue | Ordered P0 → P3 |
 | `ARCHIVE.md` | Completed tasks | Historical record |
 
@@ -31,11 +31,23 @@ This folder implements a simple, effective task management workflow designed for
 
 ### Step-by-Step Process
 
-1. **Start Work**: Pick up the task in `TODO.md`
-2. **Complete Work**: Mark all acceptance criteria as done
+1. **Start Work**: Pick up tasks from `TODO.md` (3-5 tasks grouped by similar types)
+2. **Complete Work**: Mark all acceptance criteria as done for a task
 3. **Archive**: Move completed task to top of `ARCHIVE.md`
-4. **Promote**: Move highest priority task from `BACKLOG.md` to `TODO.md`
+4. **Promote**: Move next highest priority task of similar type from `BACKLOG.md` to `TODO.md` (maintain 3-5 similar tasks)
 5. **Repeat**
+
+### Task Grouping Rules
+
+**Similar task types are determined by:**
+- **Module/Feature area**: Same module (Calendar, Planner, Lists, Email, Analytics, etc.)
+- **Change type**: Same change type (feature, api_change, security, cross_module, non_doc_change)
+- **Related work**: Related tasks (e.g., all Phase 0 analytics tasks, all Phase 1 analytics tasks)
+
+**Promotion logic:**
+- If `TODO.md` has 3-5 tasks of similar type: Only promote tasks of the same type
+- If `TODO.md` has 2 or fewer tasks: Can promote any task (type mixing allowed)
+- If no similar tasks available in backlog: Work with what's available (don't force grouping)
 
 ---
 
@@ -55,6 +67,10 @@ This folder implements a simple, effective task management workflow designed for
 
 #### Notes
 - Relevant context, links, or references
+
+#### Logs
+- Trace: `.repo/traces/TASK-XXX-trace-*.json`
+- Agent: `.repo/logs/TASK-XXX-log-*.json`
 ```
 
 ---
@@ -96,7 +112,7 @@ Good acceptance criteria are:
 
 ### For AI Coding Agents:
 
-1. **Before starting work**: Read `TODO.md` to understand the current task
+1. **Before starting work**: Read `TODO.md` to understand the current tasks (3-5 tasks)
 2. **During work**: Reference acceptance criteria as your checklist
 3. **After completing**:
    - Mark criteria as `[x]` complete

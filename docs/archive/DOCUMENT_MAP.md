@@ -22,8 +22,8 @@
 
 | Document | When to Read | Token Cost | Priority |
 |----------|--------------|-----------|----------|
-| `.repo/agents/AGENTS.md` | Deep dive on agent rules (if QUICK_REFERENCE insufficient) | Medium | Low |
-| `.repo/agents/QUICK_REFERENCE.md` | **START HERE** - Quick decision tree | Low | High |
+| `.repo/agents/AGENTS.md` | Deep dive on agent rules (if constitution.json insufficient) | Medium | Low |
+| `.repo/policy/constitution.json` | **START HERE** - All behavioral rules | Low | High |
 | `.repo/agents/capabilities.md` | When checking what agent role can do | Low | Low |
 | `.repo/agents/roles/primary.md` | When acting as primary agent | Low | Low |
 | `.repo/agents/roles/secondary.md` | When acting as secondary agent | Low | Low |
@@ -81,7 +81,7 @@
 **Required Documents (in order):**
 1. `.repo/tasks/TODO.md` - **MUST READ FIRST**
 2. `.repo/repo.manifest.yaml` - Check commands
-3. `.repo/agents/QUICK_REFERENCE.md` - Quick decision tree
+3. `.repo/policy/constitution.json` - All behavioral rules
 4. `.repo/policy/HITL.md` - Check for blockers
 
 **Conditional Documents:**
@@ -181,7 +181,7 @@
 ### ✅ DO
 
 1. **Read documents in order of priority** - Start with critical, add conditional as needed
-2. **Use QUICK_REFERENCE first** - It's designed to be sufficient for most cases
+2. **Use constitution.json first** - It's designed to be sufficient for most cases
 3. **Read only when needed** - Don't pre-load everything
 4. **Use examples** - When format is unclear, read template examples
 5. **Check HITL first** - Before starting work, check for blockers
@@ -189,7 +189,7 @@
 ### ❌ DON'T
 
 1. **Don't read assessment documents** - They're for humans only
-2. **Don't read GOVERNANCE.md** - Too verbose, use QUICK_REFERENCE instead
+2. **Don't read GOVERNANCE.md** - Too verbose, use constitution.json instead
 3. **Don't read all policies upfront** - Read conditionally based on context
 4. **Don't read PRINCIPLES.md fully** - It's 25 principles, read specific ones as needed
 5. **Don't read BESTPR.md unless working in repo-specific areas**
@@ -201,7 +201,7 @@
 **Pattern:** Conditional references based on workflow stage
 
 ```
-START → TODO.md + manifest.yaml + QUICK_REFERENCE
+START → TODO.md + manifest.yaml + constitution.json
   ↓
 IF security → SECURITY_BASELINE.md
 IF boundaries → BOUNDARIES.md
@@ -231,7 +231,7 @@ IF PR → PR_TEMPLATE + QUALITY_GATES + HITL.md
 
 | Document | Approx Tokens | Read Frequency |
 |----------|---------------|----------------|
-| QUICK_REFERENCE.md | ~200 | High (start here) |
+| constitution.json | ~200 | High (start here) |
 | .repo/tasks/TODO.md | ~100 | Critical (always first) |
 | repo.manifest.yaml | ~150 | Critical (before commands) |
 | CONSTITUTION.md | ~300 | Medium (when uncertain) |

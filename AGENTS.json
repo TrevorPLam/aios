@@ -17,7 +17,7 @@
     "order": [
       ".repo/tasks/TODO.md",
       ".repo/repo.manifest.yaml",
-      ".repo/agents/rules.json"
+      ".repo/policy/constitution.json"
     ],
     "alternatives": {
       "rules": ".repo/agents/QUICK_REFERENCE.md"
@@ -29,20 +29,24 @@
       "triggers": ["auth", "money", "external_systems", "payment_flows"],
       "action": [
         "read",
-        ".repo/policy/SECURITY_BASELINE.md",
+        ".repo/policy/constitution.json (security section)",
         "create_hitl",
         "stop_work"
       ]
     },
     "boundaries": {
       "triggers": ["cross_module_imports"],
-      "action": ["read", ".repo/policy/BOUNDARIES.md", "create_adr"]
+      "action": [
+        "read",
+        ".repo/policy/constitution.json (boundaries section)",
+        "create_adr"
+      ]
     },
     "backend_frontend": {
       "triggers": ["backend_code", "frontend_code"],
       "action": [
         "read",
-        ".repo/policy/BESTPR.md",
+        ".repo/policy/constitution.json (best_practices section)",
         "read_folder_guide",
         "read_agent_context_json"
       ]
@@ -56,7 +60,7 @@
       "action": [
         "mark_unknown",
         "read",
-        ".repo/policy/HITL.md",
+        ".repo/policy/procedures.json (hitl section)",
         "create_hitl",
         "stop_work"
       ]
@@ -134,8 +138,8 @@
     "required_reading": [
       ".repo/agents/checklists/pr-review.md",
       ".repo/templates/PR_TEMPLATE.md",
-      ".repo/policy/QUALITY_GATES.md",
-      ".repo/policy/HITL.md"
+      ".repo/policy/constitution.json (quality_gates section)",
+      ".repo/policy/procedures.json (hitl section)"
     ],
     "required_sections": [
       "what_changed",
@@ -184,17 +188,14 @@
   "troubleshooting": {
     "todo_empty": ["check_backlog", "promote_highest_priority_task"],
     "manifest_missing": ["mark_unknown", "create_hitl", "stop_work"],
-    "rules_json_missing": [
-      "use_quick_reference",
-      "or_read_constitution_principles"
-    ]
+    "constitution_json_missing": ["read_procedures_json", "or_check_archive"]
   },
 
   "next_steps": {
     "after_reading_this": [
       "read_agents_tasks_todo_md",
       "read_repo_manifest_yaml",
-      "read_agents_rules_json",
+      "read_policy_constitution_json",
       "follow_three_pass_workflow"
     ]
   }

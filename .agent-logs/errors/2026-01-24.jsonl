@@ -1,0 +1,11 @@
+{"timestamp":"2026-01-24T13:18:49.135Z","agent":"governance-verify","action":"verification_failure","error":"Required policy file missing: .repo/policy/CONSTITUTION.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.135Z","agent":"governance-verify","action":"verification_failure","error":"Required policy file missing: .repo/policy/PRINCIPLES.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.136Z","agent":"governance-verify","action":"verification_failure","error":"Required policy file missing: .repo/policy/QUALITY_GATES.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.136Z","agent":"governance-verify","action":"verification_failure","error":"Required policy file missing: .repo/policy/SECURITY_BASELINE.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.137Z","agent":"governance-verify","action":"verification_failure","error":"Required policy file missing: .repo/policy/HITL.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.137Z","agent":"governance-verify","action":"verification_failure","error":"Required policy file missing: .repo/policy/BOUNDARIES.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.138Z","agent":"governance-verify","action":"verification_failure","error":"Manifest contains <UNKNOWN> placeholders (must be resolved via HITL)","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.138Z","agent":"governance-verify","action":"verification_failure","error":"Boundary violations detected (hard gate failure)","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.138Z","agent":"governance-verify","action":"verification_failure","error":"Fix violations or create waiver per .repo/policy/BOUNDARIES.md","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.139Z","agent":"governance-verify","action":"verification_failure","error":"Run: lint-imports --config .importlinter for details","context":{"total_errors":10,"total_warnings":5}}
+{"timestamp":"2026-01-24T13:18:49.139Z","agent":"governance-verify","action":"verification_failure","error":"Module boundary violations","context":{"total_errors":10,"total_warnings":5}}

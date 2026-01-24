@@ -1,181 +1,162 @@
-# Changelog
+# Framework Changelog
 
-All notable changes to AIOS will be documented in this file.
+**File**: `CHANGELOG.md`
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This file tracks improvements and changes to the governance framework.
 
-## [Unreleased]
+## 2026-01-23 - World-Class Documentation Structure
 
 ### Added
 
-- Secondary navigation bars across all major modules (T-003A) - 2026-01-20
-  - NotebookScreen: AI Assist, Backup, Templates quick actions
-  - ListsScreen: Share List, Templates, Statistics quick actions
-  - PlannerScreen: AI Assist, Time Block, Dependencies quick actions
-  - CalendarScreen: Sync, Export, Quick Add quick actions
-  - Scroll-based hide/show animation for all secondary navigation bars
-  - Consistent oval, transparent design with haptic feedback
-  - 19 automated tests validating navigation consistency and behavior
-- Recommendation preferences in AI Preferences for Command Center visibility, auto-refresh, and card evidence (T-007)
-- Manual "Refresh Recommendations" button in Command Center with disabled state handling (T-007)
-- Recommendation tools in AI Preferences for refreshing suggestions and opening recommendation history
-- Web-friendly alert time input with validation for AlertDetailScreen (T-001B)
-- Web keyboard shortcut (Cmd/Ctrl+K) to open Omnisearch from anywhere
-- Focus indicators on Omnisearch interactive controls for keyboard navigation
-- Loading/error state messaging for Integrations and Integration Detail screens with retry actions
-- Reusable ScreenStateMessage component for consistent loading/error messaging
-- ListEditor validation utilities covering title, item length, duplicates, and list size warnings
-- ThemedText typography variant coverage tests for h4-h6 rendering
-- Screen-level error recovery actions (try again, go back, go home) for route error boundaries
-- Navigation performance hooks that connect prefetching and memory tracking to module transitions
-- Lazy-loaded Photos and Photo Editor screens with Suspense fallback messaging for faster startup
-- Lazy-loaded mini-mode components with Suspense fallback messaging to reduce initial bundle size
-- Attention Center header button with live badge count for quick access
-- Calendar event meeting links with validation, quick-add extraction, and join action (T-069)
-- Server-side meeting link validation for event create/update sync (T-070)
+- **Comprehensive documentation structure** in root `docs/` directory:
+  - `getting-started/` - Quick start guides and onboarding
+  - `guides/` - User, admin, and API guides
+  - `architecture/` - System architecture, modules, ADRs, data models
+  - `development/` - Development workflow, contributing, testing, standards
+  - `operations/` - Operations, monitoring, troubleshooting, runbooks, disaster recovery
+  - `reference/` - API reference, module reference, configuration, CLI
+  - `security/` - Security, compliance, data privacy
+  - `integrations/` - Integration documentation, webhooks, API integrations
+  - `archive/` - Historical documentation (analysis and redundant docs)
 
-### Changed
+### Reorganized
 
-- Updated module header documentation for Notebook, Lists, Planner, and Calendar screens
-- Enhanced UX consistency across modules with unified navigation pattern
-- Strengthened module navigation safety by validating routes before navigating in BottomNav and ModuleGrid
-- Hardened Attention Center priority colors with theme fallbacks and validation for missing tokens
-- Recommendation cards now surface reasoning and evidence previews for faster decision-making (T-007)
-- Standardized overlay colors and quick-capture action accents through theme tokens
-- Disabled sidebar edge-swipe gesture on web while preserving the button entry point (T-002B)
-- Added navigation coverage tests for module grid, history, and integration detail access
-- ListEditor save flow now blocks invalid list data and surfaces warning confirmations
+- **Moved `.repo/docs/` to root `docs/`** - Documentation now in standard location
+- **Organized existing docs** - Moved to appropriate sections:
+  - `ONBOARDING.md` → `getting-started/onboarding.md`
+  - `ARCHITECTURE.md` → `architecture/README.md`
+  - `DEVELOPMENT.md` → `development/README.md`
+  - `RUNBOOK.md` → `operations/README.md`
+  - `DOCS.md` → `guides/README.md`
+- **Created structure** - Anticipated future needs based on application (multi-tenant, many modules, integrations, etc.)
 
-### Technical
+### Updated
 
-- Implemented scroll-aware animations using React Native Reanimated shared values
-- Added constants for animation timing, thresholds, and scroll behavior
-- Used `translateY` transforms for smooth 60fps animations
-- Centralized route-to-module mapping for analytics and performance integrations
+- **All documentation references** - Updated throughout codebase
+- **INDEX.md** - Updated to reference new docs structure
+- **README.md** - Updated documentation links
+- **`.repo/INDEX.md`** - Removed docs section (now in root)
+- **`.repo/DOCUMENT_MAP.md`** - Updated architecture reference
 
-### Documentation
+---
 
-- Comprehensive documentation consolidation and reorganization
-- Added documentation best practices guide
-- Created implementation plan for world-class documentation standards
-- Documented theme token usage for overlay and semantic colors
-- Documented meeting link validation rules for calendar event API payloads
+## 2026-01-23 - Directory Reorganization & Entry Point Optimization
 
-## [2.0.0] - 2026-01-16
+### Reorganized
 
-### Added (2)
-
-- Organized /docs structure with technical/, security/, analysis/, planning/, analytics/ subdirectories
-- Comprehensive SECURITY.md with module-specific security status
-- docs/INDEX.md for comprehensive navigation
-- docs/security/SECURITY.md consolidating 11 security summaries
-- DOCUMENTATION_ANALYSIS.md with complete inventory and quality assessment
-- DOCUMENTATION_CONSOLIDATION_PLAN.md with 6-phase reorganization strategy
-- docs/processes/DOCUMENTATION_BEST_PRACTICES.md with industry research and standards
-- DOCUMENTATION_IMPLEMENTATION_PLAN.md with 90-day roadmap (archived to docs/archive/2026-01-pre-consolidation/)
-- docs/processes/DOCUMENTATION_QUALITY_CONTROL.md with session analysis
-
-### Changed (2)
-
-- Reorganized 72 root files → 10 root files (86% reduction)
-- Consolidated competitive analysis (2 files → 1)
-- Consolidated code quality analysis (2 files → 1)
-- Updated all internal links to new paths
-- Fixed broken links in F&F.md and MODULE_DETAILS.md
-- Established single source of truth for all documentation types
+- **Moved `agents/tasks/` to `.repo/tasks/`** - Task management now centralized in `.repo/`
+- **Updated all references** - All file paths updated throughout codebase:
+  - Entry points (`AGENTS.json`, `AGENTS.md`)
+  - Agent framework files (`.repo/agents/rules.json`, `QUICK_REFERENCE.md`)
+  - Scripts (`archive-task.py`, `promote-task.sh`, `generate-metrics.sh`, etc.)
+  - Documentation (`INDEX.md`, `DOCUMENT_MAP.md`, `README.md`)
 
 ### Archived
 
-- 55+ historical documents organized by category in docs/archive/
-- Module completion summaries (10 files)
-- Enhancement summaries (11 files)
-- Analysis reports (18 files)
-- Security summaries (9 files)
-- Project management documents (5 files)
-- Pre-consolidation backups (F&F-BACKUP.md, etc.)
+- **Moved 14 documents to `docs/archive/`** for historical reference:
+  - 12 analysis/assessment documents from design phase (all issues resolved)
+  - 2 redundant documentation files (superseded by new entry point system)
+  - See `docs/archive/README.md` for details
 
-### Documentation (2)
+### Added
 
-- Updated README.md with new documentation structure
-- Rewrote DOCUMENTATION_GUIDE.md to reflect reorganization
-- Added comprehensive cross-references across all documentation
+- **`AGENTS.json`** - Structured JSON entry point for better model parsing
+- **Optimized `AGENTS.md`** - Streamlined to imperative, action-oriented style
+- **`docs/archive/`** - Archive directory for historical documentation
 
-## [1.0.0] - 2025-12-01
+### Updated
 
-### Added (3)
+- **`AGENTS.md`** - Optimized text style for model interaction (imperative, direct commands)
+- **`PROMPT.md`** - Updated to reference JSON as primary format
+- **`DOCUMENT_MAP.md`** - Removed references to archived assessment documents
+- **`.repo/tasks/TODO.md`** - Updated to reference `AGENTS.json` first
+- **`.repo/agents/QUICK_REFERENCE.md`** - Updated to reference JSON entry point
 
-- Initial AIOS mobile application scaffold
-- 14 core modules (Command Center, Notebook, Planner, Calendar, Lists, Budget, Integrations, History, Email, Photos, Messaging, Translator, Alerts, Contacts)
-- AsyncStorage local persistence layer
-- JWT-based authentication system
-- Complete test suite with 100% coverage on critical paths
-- React Native mobile-first architecture
-- Expo development environment
-- Express.js backend API structure
-- TypeScript type safety across entire codebase
+### Improved
 
-### Features by Module
-
-- **Command Center:** AI recommendations engine with 6 rule-based suggestions
-- **Notebook:** 29 database methods, Jaccard similarity algorithm, 49 unit tests
-- **Planner:** Hierarchical task management, 18 database methods, 31 tests
-- **Calendar:** 18 database methods, conflict detection, 33 tests
-- **Lists:** 28 database methods, 7 categories, 46 tests
-- **Budget:** 15 database methods, templates, 38 tests
-- **Integrations:** 22 database methods, health monitoring, 39 tests
-- **History:** Activity logging across all modules, 40+ tests
-- **Email:** Thread-based UI, multi-account support (UI only)
-- **Photos:** Grid layout, cloud backup tracking
-- **Messaging:** P2P messaging UI, AI assist framework
-- **Translator:** 12+ languages, LibreTranslate integration
-- **Alerts:** Digital clock, recurrence support, snooze
-- **Contacts:** Device integration via expo-contacts
-
-### Technical (2)
-
-- React Native 0.73+ with Expo SDK
-- TypeScript for type safety
-- AsyncStorage for local data persistence
-- JWT authentication with bcrypt password hashing
-- Comprehensive test coverage (46-49 tests per major module)
-- Zero security vulnerabilities (CodeQL validated)
-
-### Documentation (3)
-
-- Initial README with setup instructions
-- API documentation structure
-- Design guidelines
-- Module-specific documentation
+- **Entry Point System** - Now uses JSON for structured parsing, markdown for human readability
+- **Text Style** - All entry point documents optimized for model interaction
+- **Documentation Structure** - Cleaner, more focused operational docs
 
 ---
 
-## Version History Notes
+## 2026-01-23 - Framework Enhancements (Part 2)
 
-## Updating this Changelog
+### Added
 
-Why: consistent release notes make audits and rollbacks safer and faster.
+- **CI Integration**
+  - Governance verification job added to `.github/workflows/ci.yml` (Job 7)
+  - HITL sync runs automatically on PRs via GitHub API
+  - Fixed duplicate CI workflow definitions
 
-1. Add entries under **[Unreleased]** grouped by **Added / Changed / Fixed / Removed / Security**.
-2. Reference the related TODO or PR in the bullet when available (e.g., `T-048`).
-3. When releasing, move the **[Unreleased]** items into a new version section with a date.
-4. Keep entries concise, user-facing, and scoped to the change's impact.
+- **Makefile Integration**
+  - Added `check-governance` target: `make check-governance`
+  - Runs governance verification locally
 
-### Semantic Versioning
+- **Pre-commit Hooks**
+  - Added governance verification hook (runs on `.repo/`, `agents/`, `scripts/` changes)
+  - Non-blocking (uses `|| true` to avoid blocking commits)
 
-This project uses [Semantic Versioning](https://semver.org/):
+- **GitHub API Integration**
+  - `sync-hitl-to-pr.py` now updates PRs directly via GitHub API
+  - Automatic token detection from environment
+  - Fallback to manual method if API unavailable
 
-- **MAJOR** version (X.0.0): Incompatible API changes
-- **MINOR** version (0.X.0): New functionality, backwards compatible
-- **PATCH** version (0.0.X): Backwards compatible bug fixes
+- **Dependencies**
+  - `scripts/requirements.txt` - Python dependencies for automation scripts
 
-### Documentation Versions
+### Updated
 
-- **v2.0.0**: Major documentation reorganization (2026-01-16)
-- **v1.0.0**: Initial release with basic documentation (2025-12-01)
+- `.github/workflows/ci.yml` - Added governance job, fixed duplicates
+- `Makefile` - Added `check-governance` target
+- `.pre-commit-config.yaml` - Added governance verification hook
+- `scripts/sync-hitl-to-pr.py` - Added GitHub API integration
+- Documentation updated to reflect new integrations
 
 ---
 
-**Maintained By:** Documentation Team
-**Last Updated:** January 20, 2026
-**Next Review:** February 20, 2026
+## 2026-01-23 - Framework Enhancements (Part 1)
+
+### Added
+
+- **Example Files** (`.repo/templates/examples/`)
+  - `example_trace_log.json` - Example trace log format
+  - `example_hitl_item.md` - Example HITL item
+  - `example_waiver.md` - Example waiver
+  - `example_task_packet.json` - Example task packet
+  - `README.md` - Examples documentation
+
+- **Quick Reference** (`.repo/agents/QUICK_REFERENCE.md`)
+  - One-page cheat sheet for agents
+  - Decision tree for HITL requirements
+  - Common commands and workflows
+  - Artifact requirements table
+
+- **Documentation**
+  - `docs/development/boundary_checker.md` - Boundary checker documentation
+  - `docs/development/ci_integration.md` - CI integration guide
+  - `docs/development/automation_scripts.md` - Automation scripts documentation
+
+- **Automation Scripts**
+  - `scripts/sync-hitl-to-pr.py` - Sync HITL status to PRs
+  - `scripts/archive-task.py` - Archive completed tasks
+
+### Enhanced
+
+- **Governance Verify Script** (`scripts/governance-verify.sh`)
+  - Added trace log validation (JSON schema check)
+  - Enhanced HITL item parsing (detailed status checking)
+  - Added artifact checking (ADR detection)
+  - Added boundary checker verification
+  - Better error reporting and categorization
+
+### Updated
+
+- `.repo/agents/AGENTS.md` - Added references to quick reference and examples
+- `.repo/GOVERNANCE.md` - Updated directory structure to reflect new files
+
+### Notes
+
+- Boundary checker confirmed working (import-linter, configured in `.importlinter`)
+- CI integration documented (see `docs/development/ci_integration.md`)
+- Automation scripts are functional but may need GitHub API integration for full automation

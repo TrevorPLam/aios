@@ -1,6 +1,6 @@
 # /.repo/templates/PR_TEMPLATE.md
 
-**Required:** All PRs must declare a change type. See `.repo/agents/QUICK_REFERENCE.md` for change type determination.
+**Required:** All PRs must declare a change type. See `.repo/policy/procedures.json.change_type_determination` for change type determination.
 
 ```json
 {
@@ -23,4 +23,4 @@
 - **feature**: New functionality/features
 - **non_doc_change**: Bug fixes, refactoring, config changes (not doc-only)
 
-**See:** `.repo/agents/QUICK_REFERENCE.md` section "🎯 Change Type Determination" for full decision tree.
+**See:** `.repo/policy/procedures.json.change_type_determination` for full decision tree.
