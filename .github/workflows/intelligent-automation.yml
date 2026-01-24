@@ -221,7 +221,7 @@ jobs:
       
       - name: Upload migration guide
         if: steps.breaking-changes.outputs.has_breaking == '1'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: migration-guide
           path: migration-guide.md
