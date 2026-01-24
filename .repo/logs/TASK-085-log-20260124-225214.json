@@ -1,0 +1,30 @@
+{
+  "intent": "Add analytics client and transport tests for offline queueing and retries",
+  "task_id": "TASK-085",
+  "timestamp": "2026-01-24T22:52:14Z",
+  "plan": [
+    "Add analytics client tests for offline queueing and retry handling in packages/platform/analytics/__tests__/client.test.ts.",
+    "Add transport retry coverage in packages/platform/analytics/__tests__/transport.test.ts.",
+    "Update task tracking in .repo/tasks/TODO.md with status and filepaths."
+  ],
+  "actions": [
+    "Added AnalyticsClient tests covering queued events and retry count increments in packages/platform/analytics/__tests__/client.test.ts.",
+    "Added Transport retry and no-retry assertions in packages/platform/analytics/__tests__/transport.test.ts.",
+    "Updated TASK-085 status and notes with filepaths in .repo/tasks/TODO.md."
+  ],
+  "evidence": [
+    "npm install failed due to react/react-dom peer dependency conflict (see command: npm install).",
+    "npm test failed because jest was unavailable before dependencies were installed (see command: npm test)."
+  ],
+  "decisions": [
+    "Captured offline queueing and retry behavior with unit tests in the analytics client and transport layers to meet Phase 0 criteria."
+  ],
+  "risks": [
+    "Tests were not executed due to dependency resolution failure; rerun npm install and npm test in a configured environment."
+  ],
+  "follow_ups": [
+    "Resolve npm install peer dependency conflict and rerun npm test to verify new analytics tests."
+  ],
+  "reasoning_summary": "Focused on adding explicit tests for offline queueing and retry behavior while updating task tracking, but verification is pending due to dependency installation issues.",
+  "notes": "No secrets. No private data. Filepaths referenced: packages/platform/analytics/__tests__/client.test.ts, packages/platform/analytics/__tests__/transport.test.ts, .repo/tasks/TODO.md."
+}

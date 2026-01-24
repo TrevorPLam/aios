@@ -1,0 +1,21 @@
+{
+  "intent": "Add analytics client/transport tests for offline queueing and retries",
+  "task_id": "TASK-085",
+  "timestamp": "2026-01-24T22:52:07Z",
+  "files": [
+    "packages/platform/analytics/__tests__/client.test.ts",
+    "packages/platform/analytics/__tests__/transport.test.ts",
+    ".repo/tasks/TODO.md",
+    ".repo/logs/TASK-085-log-20260124-225214.json"
+  ],
+  "commands": [
+    "npm test",
+    "npm install"
+  ],
+  "evidence": [
+    "npm test failed because jest was not available (dependency install not completed).",
+    "npm install failed with ERESOLVE due to react/react-dom peer dependency mismatch."
+  ],
+  "hitl": [],
+  "unknowns": []
+}
