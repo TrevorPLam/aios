@@ -50,5 +50,10 @@ jest.mock("@expo/vector-icons", () => {
 });
 
 // Make fast-check available globally for property-based testing
-const fc = require("fast-check");
-global.fc = fc;
+try {
+  const fc = require("fast-check");
+  global.fc = fc;
+} catch (e) {
+  // fast-check is optional - only needed for property-based tests
+  global.fc = null;
+}
