@@ -66,20 +66,20 @@
 
 ---
 
-### [TASK-012] Create ADR: Django vs Node.js Backend Decision
+### [TASK-013] Fix API Server Boundary Violations
 - **Priority:** P0
 - **Status:** In Progress
 - **Created:** 2026-01-23
-- **Context:** Two backend systems exist (`backend/` Django vs `apps/api/` Node.js/Express) with unclear relationship. This is the #1 architectural blocker.
+- **Context:** `apps/api/` implements business logic instead of mounting from packages. Violates architecture rules.
 
 #### Acceptance Criteria
-- [ ] Create ADR documenting decision: Django or Node.js?
-- [ ] If Django: Plan migration of `apps/api/` logic to Django
-- [ ] If Node.js: Remove `backend/` directory or clearly mark as legacy
-- [ ] Update documentation to clarify decision
-- [ ] Update `apps/INDEX.md` and `backend/README.md`
+- [ ] Refactor all 42+ routes in `apps/api/routes.ts` to use feature data layers
+- [ ] Remove business logic from `apps/api/storage.ts`
+- [ ] Import from `@features/*/data` instead of local storage
+- [ ] Verify no business logic remains in apps/api/
+- [ ] Update tests to reflect new architecture
 
 #### Notes
-- Source: PROJECT_ANALYSIS.md section 2.3
-- Blocks all backend development work
-- Need clear decision before proceeding
+- Source: PROJECT_ANALYSIS.md section 2.1
+- Start with one feature (e.g., notes) as proof of concept
+- Requires feature data layers to be implemented first (TASK-014)

@@ -1,0 +1,24 @@
+{
+  "intent": "Document backend runtime decision",
+  "task_id": "TASK-012",
+  "timestamp": "2026-01-24T00:55:21Z",
+  "files": [
+    "docs/decisions/008-backend-runtime-decision.md",
+    "docs/decisions/README.md",
+    "apps/INDEX.md",
+    "backend/README.md",
+    ".repo/tasks/TODO.md",
+    ".repo/tasks/ARCHIVE.md",
+    ".repo/tasks/BACKLOG.md",
+    ".repo/logs/TASK-012-log-20260124-005524.json",
+    ".repo/traces/TASK-012-trace-20260124-005521.json"
+  ],
+  "commands": [
+    "make lint"
+  ],
+  "evidence": [
+    "make lint failed: backend/frontend Makefile lint targets missing."
+  ],
+  "hitl": [],
+  "unknowns": []
+}

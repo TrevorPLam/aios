@@ -56,7 +56,7 @@ apps/
 
 ## API Server (`apps/api/`)
 
-**Purpose**: Node.js/Express backend API server.
+**Purpose**: Node.js/Express backend API server (authoritative backend runtime per ADR-008).
 
 **Key Files**:
 - [`index.ts`](api/index.ts) - Server entry point
@@ -74,6 +74,7 @@ apps/
 **See Also**:
 - [`packages/features/`](../packages/features/) - Feature modules used by API
 - [`packages/platform/`](../packages/platform/) - Platform adapters
+- [`docs/decisions/008-backend-runtime-decision.md`](../docs/decisions/008-backend-runtime-decision.md) - Backend runtime decision
 
 ## Web Application (`apps/web/`)
 
@@ -97,6 +98,10 @@ Applications in `apps/` are **shells** that:
 - Apps should NOT implement persistence (use platform)
 
 See [`../packages/README.md`](../packages/README.md) for boundary details.
+
+### Backend Runtime Clarification
+- `apps/api/` is the authoritative backend runtime.
+- The Django `backend/` tree is legacy and should not receive new development unless superseded by a new ADR.
 
 ## Quick Navigation
 
