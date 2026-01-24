@@ -60,6 +60,7 @@ Required fields:
 ### Active
 |ID|Category|Status|Summary|Filepath|
 |---|---|---|---|---|
+|HITL-0001|Clarification|Pending|Clarify feature data layer ownership for tasks/projects/events before refactoring apps/api routes|.repo/hitl/HITL-0001.md|
 
 ### Archived
 |ID|Category|Status|Summary|Filepath|
