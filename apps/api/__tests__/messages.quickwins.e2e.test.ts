@@ -5,7 +5,7 @@
  * and search filtering without touching UI layers.
  */
 import { MemStorage } from "../storage";
-import type { Conversation, Message } from "@shared/schema";
+import type { Conversation, Message } from "@contracts/schema";
 
 const baseConversation = (
   overrides: Partial<Omit<Conversation, "id" | "createdAt" | "updatedAt">> = {},

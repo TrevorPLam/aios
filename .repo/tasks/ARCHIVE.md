@@ -33,6 +33,84 @@
 
 ---
 
+### [TASK-073] Add Hot Reload for API Server Development
+- **Priority:** P1
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** Expo has hot reload, but API server may not.
+
+#### Acceptance Criteria
+- [x] Add hot reload to API server
+- [x] Configure watch mode
+- [x] Test hot reload
+- [x] Document hot reload setup
+- [x] Update development docs
+
+#### Outcome
+- Enabled hot reload for the API server by switching `tsx` to watch mode in `server:dev`.
+- Documented that `npm run server:dev` now auto-restarts on server file changes.
+
+#### Notes
+- Source: PROJECT_ANALYSIS.md section 11.10
+- Developer experience improvement
+
+---
+
+### [TASK-020] Fix Type Safety Issues
+- **Priority:** P1
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** `apps/api/routes.ts` uses `as any` in validation (multiple instances). Suggests type mismatch between Zod schemas and Express types.
+
+#### Acceptance Criteria
+- [x] Fix type definitions to eliminate `as any` assertions
+- [x] Update Zod schema types to match Express types
+- [x] Fix all instances in `routes.ts` (lines 51, 201, 215, 268, 282, etc.)
+- [x] Verify no type assertions needed
+- [x] Update tests
+
+#### Outcome
+- Made validation middleware accept `ZodTypeAny` and centralized Zod error handling.
+- Removed all `as any` schema casts from `apps/api/routes.ts`.
+- Added unit tests covering success and failure paths for the validation middleware.
+
+#### Notes
+- Source: PROJECT_ANALYSIS.md section 4.1
+- Multiple instances found
+- Should fix type definitions instead of using `as any`
+
+---
+
+### [TASK-017] Standardize Path Aliases
+- **Priority:** P0
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** Both `@shared` and `@contracts` point to same package. Causes confusion and inconsistent imports.
+
+#### Acceptance Criteria
+- [x] Remove `@shared` alias from `tsconfig.json` and `babel.config.js`
+- [x] Update all imports from `@shared/*` to `@contracts/*`
+- [x] Update files: `apps/api/storage.ts`, `apps/api/routes.ts`, `apps/api/__tests__/messages.quickwins.e2e.test.ts`
+- [x] Verify no `@shared` imports remain
+- [x] Update documentation
+
+#### Outcome
+- Removed the `@shared/*` alias from TypeScript, Babel, and Jest configuration.
+- Updated all server and feature imports to use `@contracts/*` consistently.
+- Refreshed architecture documentation to reference the canonical alias.
+
+#### Notes
+- Source: PROJECT_ANALYSIS.md section 3.2
+- Found 3 files using `@shared`
+- `@contracts` is more descriptive
+
+---
+
+## P1 — High
+
 ### [TASK-012] Create ADR: Django vs Node.js Backend Decision ✓
 - **Priority:** P0
 - **Status:** Completed
@@ -54,9 +132,9 @@
 ## Statistics
 | Metric | Count |
 |--------|-------|
-| Total Completed | 3 |
-| P0 Completed | 3 |
-| P1 Completed | 0 |
+| Total Completed | 6 |
+| P0 Completed | 4 |
+| P1 Completed | 2 |
 | P2 Completed | 0 |
 | P3 Completed | 0 |
 

@@ -597,8 +597,8 @@ grep "AsyncStorage" apps/mobile/lib/storage.ts
 grep "getItem\|setItem" apps/mobile/lib/storage.ts
 
 # 4. Shared Code imports
-grep "from '@shared" apps/mobile/screens/*.tsx | head -5
-grep "from '@shared" apps/api/routes.ts
+grep "from '@contracts" apps/mobile/screens/*.tsx | head -5
+grep "from '@contracts" apps/api/routes.ts
 ```text
 
 ### API Endpoints

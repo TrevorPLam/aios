@@ -6,7 +6,6 @@ module.exports = {
   ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/apps/mobile/$1",
-    "^@shared/(.*)$": "<rootDir>/packages/contracts/$1",
     "^@contracts/(.*)$": "<rootDir>/packages/contracts/$1",
     "^@features/(.*)$": "<rootDir>/packages/features/$1",
     "^@platform/(.*)$": "<rootDir>/packages/platform/$1",

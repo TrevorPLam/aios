@@ -11,7 +11,7 @@
     "expo:clean:native": "rm -rf node_modules/.cache .expo .metro-cache && watchman watch-del-all 2>/dev/null || true && npm install",
     "expo:rebuild:ios": "npx expo prebuild --clean && npx expo run:ios",
     "expo:rebuild:android": "npx expo prebuild --clean && npx expo run:android",
-    "server:dev": "NODE_ENV=development tsx apps/api/index.ts",
+    "server:dev": "NODE_ENV=development tsx watch apps/api/index.ts",
     "expo:start:static:build": "npx expo start --no-dev --minify --localhost",
     "expo:static:build": "node scripts/build.js",
     "server:build": "esbuild apps/api/index.ts --platform=node --packages=external --bundle --format=esm --outdir=server_dist",
