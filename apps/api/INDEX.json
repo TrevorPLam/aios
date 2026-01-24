@@ -2,7 +2,7 @@
   "file": "INDEX.json",
   "folder": "apps/api",
   "purpose": "API server files and directories",
-  "generated_at": "2026-01-24T16:30:54.532Z",
+  "generated_at": "2026-01-24T16:59:13.276Z",
   "files": [
     {
       "path": "index.ts",
