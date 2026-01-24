@@ -10,7 +10,8 @@
   "actions": [
     "Added AnalyticsClient tests covering queued events and retry count increments in packages/platform/analytics/__tests__/client.test.ts.",
     "Added Transport retry and no-retry assertions in packages/platform/analytics/__tests__/transport.test.ts.",
-    "Updated TASK-085 status and notes with filepaths in .repo/tasks/TODO.md."
+    "Updated TASK-085 status and notes with filepaths in .repo/tasks/TODO.md.",
+    "Simplified AnalyticsClient tests to rely on timer cleanup instead of accessing private client internals."
   ],
   "evidence": [
     "npm install failed due to react/react-dom peer dependency conflict (see command: npm install).",
@@ -25,6 +26,6 @@
   "follow_ups": [
     "Resolve npm install peer dependency conflict and rerun npm test to verify new analytics tests."
   ],
-  "reasoning_summary": "Focused on adding explicit tests for offline queueing and retry behavior while updating task tracking, but verification is pending due to dependency installation issues.",
+  "reasoning_summary": "Focused on adding explicit tests for offline queueing and retry behavior while updating task tracking, then adjusted client tests to avoid private method access by relying on timer cleanup.",
   "notes": "No secrets. No private data. Filepaths referenced: packages/platform/analytics/__tests__/client.test.ts, packages/platform/analytics/__tests__/transport.test.ts, .repo/tasks/TODO.md."
 }

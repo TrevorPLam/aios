@@ -25,15 +25,7 @@ describe("AnalyticsClient", () => {
       debugMode: false,
     });
     await client.initialize();
-    (client as any).stopFlushTimer();
     return { client, sendMock };
-  };
-
-  const cleanupClient = (client: AnalyticsClient) => {
-    const subscription = (client as any).appStateSubscription;
-    if (subscription?.remove) {
-      subscription.remove();
-    }
   };
 
   beforeEach(async () => {
@@ -42,6 +34,7 @@ describe("AnalyticsClient", () => {
   });
 
   afterEach(async () => {
+    jest.clearAllTimers();
     jest.useRealTimers();
     jest.restoreAllMocks();
     await AsyncStorage.clear();
@@ -68,7 +61,6 @@ describe("AnalyticsClient", () => {
     expect(stats.size).toBe(1);
     expect(stats.retryDistribution).toHaveProperty("1", 1);
 
-    cleanupClient(client);
   });
 
   it("removes queued events after a successful flush", async () => {
@@ -88,6 +80,5 @@ describe("AnalyticsClient", () => {
     expect(stats.size).toBe(0);
     expect(sendMock).toHaveBeenCalledTimes(1);
 
-    cleanupClient(client);
   });
 });

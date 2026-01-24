@@ -14,7 +14,8 @@
   ],
   "evidence": [
     "npm test failed because jest was not available (dependency install not completed).",
-    "npm install failed with ERESOLVE due to react/react-dom peer dependency mismatch."
+    "npm install failed with ERESOLVE due to react/react-dom peer dependency mismatch.",
+    "Adjusted analytics client test cleanup to avoid private method access (no additional commands run)."
   ],
   "hitl": [],
   "unknowns": []
