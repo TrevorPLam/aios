@@ -1,0 +1,26 @@
+{
+  "intent": "Add .env.example and onboarding docs",
+  "task_id": "TASK-002",
+  "timestamp": "2026-01-24T00:04:57Z",
+  "files": [
+    ".env.example",
+    "README.md",
+    "docs/getting-started/onboarding.md",
+    ".repo/policy/HITL.md",
+    ".repo/hitl/HITL-0001.md",
+    ".repo/tasks/TODO.md",
+    ".repo/tasks/BACKLOG.md",
+    ".repo/tasks/ARCHIVE.md",
+    "CODEX.md",
+    ".repo/logs/TASK-002-log-20260124-000435.json",
+    ".repo/traces/TASK-002-trace-20260124-000457.json"
+  ],
+  "commands": [
+    "make lint"
+  ],
+  "evidence": [
+    "make lint failed: backend/frontend Makefiles do not define lint targets"
+  ],
+  "hitl": [],
+  "unknowns": []
+}
