@@ -8,6 +8,7 @@
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
+
 1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -19,18 +20,23 @@
 ### Server/Backend Laws
 
 #### Technology Stack
+
 - **Backend**: Node.js + Express, TypeScript via tsx
 
 #### Coding Patterns
+
 - Route logic close to entry points. Use Zod for validation. TypeScript throughout.
 
 #### Security Requirements
+
 - ALL inputs must be validated with Zod schemas
 - Never trust request bodies, params, or query strings
 - Return structured errors with validation details
 
 #### Security Review Triggers
+
 The following changes require security review (HITL):
+
 - **1**: Auth/login behavior change
 - **2**: Money/payment flow change
 - **4**: External service integration change
@@ -40,9 +46,8 @@ The following changes require security review (HITL):
 - **9**: Cryptography/security control change
 - **10**: Dependency / supply-chain risk change
 
-
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T15:40:25.473Z
+**Last Generated:** 2026-01-24T16:31:04.216Z

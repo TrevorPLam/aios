@@ -1,12 +1,24 @@
 # Update INDEX.json files before commit
 echo "Updating INDEX.json files..."
 node scripts/generate-index-json.mjs || exit 1
+
+# Format the generated INDEX.json files
+echo "Formatting generated INDEX.json files..."
+npx prettier --write INDEX.json apps/INDEX.json apps/*/INDEX.json assets/INDEX.json attached_assets/INDEX.json docs/INDEX.json frontend/INDEX.json packages/INDEX.json scripts/INDEX.json 2>/dev/null || true
+
+# Stage the generated and formatted files
 git add INDEX.json apps/INDEX.json apps/*/INDEX.json assets/INDEX.json attached_assets/INDEX.json docs/INDEX.json frontend/INDEX.json packages/INDEX.json scripts/INDEX.json 2>/dev/null || true
 
 # Compile constitution to generate copilot instructions and AGENTS.md files
 if git diff --cached --name-only | grep -q "\.repo/policy/constitution.json"; then
   echo "Compiling constitution to update copilot instructions and AGENTS.md files..."
   npm run compile:constitution || exit 1
+  
+  # Format the generated markdown files
+  echo "Formatting generated markdown files..."
+  npx prettier --write .github/copilot-instructions.md .github/AGENTS.md .github/instructions/*.md 2>/dev/null || true
+  
+  # Stage the generated and formatted files
   git add .github/copilot-instructions.md .github/AGENTS.md .github/instructions/*.md 2>/dev/null || true
 fi
 
@@ -18,6 +30,40 @@ npm run lint
 
 # Run type check
 npm run check:types
+
+# Check for stale context files (warn only)
+echo "🔍 Checking for stale context files..."
+node scripts/check-stale-context.js --warn-only 2>/dev/null || true
+
+# Validate agent context files (when changed)
+if git diff --cached --name-only | grep -q "\.agent-context\.json"; then
+  echo "🔍 Validating agent context files..."
+  for file in $(git diff --cached --name-only | grep "\.agent-context\.json"); do
+    node scripts/validate-agent-context.js "$file" --check-files --check-links || exit 1
+  done
+fi
+
+# Validate evidence files (when changed)
+if git diff --cached --name-only | grep -qE "(evidence|EVIDENCE)\.(json|md)"; then
+  echo "🔍 Validating evidence files..."
+  for file in $(git diff --cached --name-only | grep -E "(evidence|EVIDENCE)\.(json|md)"); do
+    node scripts/validate-evidence.js "$file" || exit 1
+  done
+fi
+
+# Check startup blockers (warn only in pre-commit)
+echo "🚫 Checking for startup blockers (warn only)..."
+npm run check:startup >/dev/null 2>&1 || echo "⚠️  Startup blockers detected. Review with: npm run check:startup"
+
+# Verify pattern files (when changed)
+if git diff --cached --name-only | grep -q "PATTERNS\.md"; then
+  echo "🔍 Verifying pattern files..."
+  node scripts/pattern-verification.js --warn-only || echo "⚠️  Pattern verification issues detected"
+fi
+
+# Validate manifest commands
+echo "📋 Validating manifest commands..."
+npm run check:manifest || exit 1
 
 # Run secret scanning (if gitleaks is available)
 if command -v gitleaks >/dev/null 2>&1; then

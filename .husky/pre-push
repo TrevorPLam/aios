@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Pre-push validation checks
+echo "🚀 Running pre-push checks..."
+
+# Check for uncommitted generated files
+echo "📝 Checking for uncommitted generated files..."
+if [ -n "$(git status --porcelain INDEX.json apps/INDEX.json apps/*/INDEX.json .github/copilot-instructions.md .github/AGENTS.md .github/instructions/*.md 2>/dev/null)" ]; then
+  echo "⚠️  Warning: Uncommitted generated files detected. Consider committing them."
+  echo "   Run: git add INDEX.json apps/INDEX.json apps/*/INDEX.json .github/copilot-instructions.md .github/AGENTS.md .github/instructions/*.md"
+  echo "   Or push with --no-verify to skip this check"
+  # In non-interactive mode, just warn but don't block
+  if [ -t 0 ]; then
+    read -p "Continue anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      exit 1
+    fi
+  else
+    echo "   (Non-interactive mode: continuing with warning)"
+  fi
+fi
+
+# Run tests (quick check - full test suite should be in CI)
+echo "🧪 Running quick test check..."
+npm test -- --passWithNoTests --maxWorkers=2 || {
+  echo "❌ Tests failed. Fix tests before pushing."
+  exit 1
+}
+
+# Check for secrets in staged files (if gitleaks is available)
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "🔍 Running Gitleaks secret scan on staged files..."
+  gitleaks detect --source . --no-banner --verbose --staged || exit 1
+fi
+
+# Check governance (lightweight check - full check in CI)
+echo "📋 Running governance check..."
+npm run check:governance || {
+  echo "⚠️  Governance check failed. Review and fix issues before pushing."
+  exit 1
+}
+
+echo "✅ Pre-push checks passed!"

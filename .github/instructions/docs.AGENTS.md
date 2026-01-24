@@ -8,6 +8,7 @@
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
+
 1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -19,14 +20,15 @@
 <<SEE ../../AGENTS.json>>
 
 ## Documentation Agent Entry Point
+
 See `../../AGENTS.json` for complete agent workflow.
 
 ## Documentation-Specific Context
-- **Principle 19**: Docs Age With Code
 
+- **Principle 19**: Docs Age With Code
 
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T15:40:25.471Z
+**Last Generated:** 2026-01-24T16:31:04.213Z

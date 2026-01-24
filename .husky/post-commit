@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Post-commit automation
+echo "📊 Running post-commit tasks..."
+
+# Update framework metrics (if script exists)
+if [ -f "scripts/framework-metrics.js" ]; then
+  echo "📈 Updating framework metrics..."
+  node scripts/framework-metrics.js >/dev/null 2>&1 || true
+fi
+
+# Check for missing agent context files (optional - can be disabled)
+if [ "$SKIP_POST_COMMIT" != "true" ] && [ "$SKIP_CONTEXT_CHECK" != "true" ]; then
+  echo "🔍 Checking for missing agent context files..."
+  node scripts/generate-missing-agent-contexts.mjs --dry-run >/dev/null 2>&1 || true
+fi
+
+# Update context verified status (when context files changed)
+if [ "$SKIP_POST_COMMIT" != "true" ] && git diff HEAD~1 --name-only | grep -q "\.agent-context\.json"; then
+  echo "✅ Updating context verified status..."
+  node scripts/update-context-verified.js >/dev/null 2>&1 || true
+fi
+
+# Generate commit summary (optional - can be disabled)
+if [ "$SKIP_POST_COMMIT" != "true" ]; then
+  echo "📝 Commit completed successfully!"
+  echo "   Run 'npm run index:watch' to auto-update indexes during development"
+  echo "   Run 'npm run constitution:watch' to auto-compile constitution during development"
+  echo "   Run 'npm run context:generate' to generate missing .agent-context.json files"
+fi

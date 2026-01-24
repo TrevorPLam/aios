@@ -322,6 +322,71 @@ jobs:
             echo "No trace log found (optional)"
           fi
       
+      - name: Validate PR body
+        if: github.event_name == 'pull_request'
+        run: |
+          PR_BODY="${{ github.event.pull_request.body || '' }}"
+          if [ -n "$PR_BODY" ]; then
+            echo "$PR_BODY" > /tmp/pr-body.txt
+            bash scripts/validate-pr-body.sh /tmp/pr-body.txt || exit 1
+          else
+            echo "⚠️  PR body is empty - validation skipped"
+          fi
+        continue-on-error: false
+      
+      - name: Check artifacts by change type
+        if: github.event_name == 'pull_request'
+        run: |
+          PR_BODY="${{ github.event.pull_request.body || '' }}"
+          if [ -n "$PR_BODY" ]; then
+            echo "$PR_BODY" > /tmp/pr-body.txt
+            BASE_REF="${{ github.event.pull_request.base.ref || 'main' }}"
+            # Get changed files
+            git fetch origin $BASE_REF:$BASE_REF 2>/dev/null || true
+            CHANGED_FILES=$(git diff --name-only $BASE_REF...HEAD 2>/dev/null || echo "")
+            if [ -n "$CHANGED_FILES" ]; then
+              # Pass PR body file and changed files as arguments
+              node scripts/check-artifacts-by-change-type.js /tmp/pr-body.txt $CHANGED_FILES || exit 1
+            else
+              node scripts/check-artifacts-by-change-type.js /tmp/pr-body.txt || exit 1
+            fi
+          else
+            echo "⚠️  PR body is empty - artifact check skipped"
+          fi
+        continue-on-error: false
+      
+      - name: Check startup blockers
+        run: |
+          npm run check:startup || {
+            echo "⚠️  Startup blockers detected. Review output above."
+            exit 1
+          }
+        continue-on-error: false
+      
+      - name: Check exceptions
+        run: |
+          npm run check:exceptions || {
+            echo "⚠️  Exception check failed. Review output above."
+            exit 1
+          }
+        continue-on-error: true
+      
+      - name: Check traceability
+        run: |
+          npm run check:traceability || {
+            echo "⚠️  Traceability check failed. Review output above."
+            exit 1
+          }
+        continue-on-error: true
+      
+      - name: Check agent platform
+        run: |
+          npm run check:agent-platform || {
+            echo "⚠️  Agent platform check failed. Review output above."
+            exit 1
+          }
+        continue-on-error: true
+      
       - name: Run governance verification
         id: gov-verify
         run: |
@@ -384,12 +449,8 @@ jobs:
       
       - name: Check for expired waivers
         run: |
-          python3 .repo/automation/scripts/manage-waivers.py check-expired || EXIT_CODE=$?
-          if [ "${EXIT_CODE:-0}" = "1" ]; then
-            echo "⚠️  Expired waivers found. Review required."
-            # Don't fail the build, but warn
-          fi
-        continue-on-error: true
+          python3 .repo/automation/scripts/manage-waivers.py check-expired
+        continue-on-error: false
       
       - name: Check compliance result
         if: steps.compliance.outputs.exit_code == '1'

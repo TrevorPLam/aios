@@ -2,7 +2,7 @@
   "file": "INDEX.json",
   "folder": ".",
   "purpose": "Master index of all directories in the repository",
-  "generated_at": "2026-01-24T15:40:22.409Z",
+  "generated_at": "2026-01-24T16:30:54.518Z",
   "files": [
     {
       "path": ".cspell.json",
@@ -10,6 +10,14 @@
       "key_classes": [],
       "line_count": 95,
       "size_bytes": 1514
+    },
+    {
+      "path": ".cursorrules",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 184,
+      "size_bytes": 7558,
+      "description": "Cursor Agent Rules"
     },
     {
       "path": ".editorconfig",
@@ -30,8 +38,8 @@
       "path": ".gitignore",
       "type": "file",
       "key_classes": [],
-      "line_count": 74,
-      "size_bytes": 772,
+      "line_count": 75,
+      "size_bytes": 793,
       "description": "Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files"
     },
     {
@@ -207,8 +215,8 @@
       "path": "package.json",
       "type": "json",
       "key_classes": [],
-      "line_count": 146,
-      "size_bytes": 6431
+      "line_count": 217,
+      "size_bytes": 12407
     },
     {
       "path": "README.md",

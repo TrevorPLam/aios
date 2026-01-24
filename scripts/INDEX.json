@@ -2,7 +2,7 @@
   "file": "INDEX.json",
   "folder": "scripts",
   "purpose": "Automation and utility scripts",
-  "generated_at": "2026-01-24T15:40:22.475Z",
+  "generated_at": "2026-01-24T16:30:54.635Z",
   "files": [
     {
       "path": ".copilot-instructions.md",
@@ -300,6 +300,14 @@
       "description": "!/bin/bash"
     },
     {
+      "path": "generate-missing-agent-contexts.mjs",
+      "type": "mjs",
+      "key_classes": [],
+      "line_count": 183,
+      "size_bytes": 5012,
+      "description": "!/usr/bin/env node"
+    },
+    {
       "path": "generate-trace-log.sh",
       "type": "sh",
       "key_classes": [],
@@ -540,7 +548,19 @@
   ],
   "subfolders": [
     {
+      "path": "intelligent",
+      "purpose": "Directory"
+    },
+    {
       "path": "tools",
+      "purpose": "Directory"
+    },
+    {
+      "path": "ultra",
+      "purpose": "Directory"
+    },
+    {
+      "path": "vibranium",
       "purpose": "Directory"
     }
   ],

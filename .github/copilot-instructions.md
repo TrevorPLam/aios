@@ -8,6 +8,7 @@
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
+
 1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -17,28 +18,49 @@
 ---
 
 ### Core Laws
+
 #### 1. Final Authority
+
 - The solo founder is the final authority for any ambiguity, conflict, or decision.
+
 #### 2. Verifiable over Persuasive
+
 - Work is not 'done' without verification evidence. Proof beats persuasion.
+
 #### 3. No Guessing
+
 - If something is not explicitly known from repo docs, manifest, or code: mark as UNKNOWN, route to HITL, do not proceed on that uncertain portion.
-- *If needed:* Read procedures.json.unknown
+- _If needed:_ Read procedures.json.unknown
+
 #### 4. Incremental Delivery
+
 - Ship small, reviewable, testable increments. Large tasks must be decomposed. No mega-PRs without explicit approval.
+
 #### 5. Strict Traceability
+
 - Every meaningful change must be traceable to an explicit task definition and include verification proof. Completed tasks must be archived. TODO.md contains 3-5 tasks grouped by similar types.
-- *If needed:* Read procedures.json.task_archiving and procedures.json.task_promotion
+- _If needed:_ Read procedures.json.task_archiving and procedures.json.task_promotion
+
 #### 6. Safety Before Speed
+
 - If a change could break logins, money flows, user data, privacy, security, external services, or production behavior: SAFETY WINS. For risky/uncertain changes: STOP → ASK (HITL) → VERIFY → THEN PROCEED.
-- *If needed:* Read procedures.json.hitl
+- _If needed:_ Read procedures.json.hitl
+
 #### 7. Per-Repo Variation Allowed
+
 - Governance structure is consistent, but per-repo workflow/execution may vary via manifest, packs, and repo checks.
+
 #### 8. HITL for External Systems
+
 - Anything involving credentials, vendor dashboards, production systems, billing, legal/compliance, or irreversible changes is HITL-gated.
-- *If needed:* Read procedures.json.hitl
+- _If needed:_ Read procedures.json.hitl
+
+#### 9. User Context - Non-Technical Agentic Orchestration
+
+- The user is a non-coder with zero technical experience who codes exclusively through agentic orchestration. All explanations, documentation, and communication must be in plain English. Avoid technical jargon unless absolutely necessary, and when used, immediately explain in plain English. The user relies entirely on agents to understand and execute technical work.
 
 ### Principles
+
 - **3**: One Change Type Per PR
 - **4**: Make It Shippable
 - **5**: Don't Break Surprises
@@ -60,9 +82,9 @@
 - **21**: Naming Matters
 - **22**: Waivers Rare + Temporary
 - **23**: ADR Required When Triggered
-  - *If needed:* Read procedures.json.adr
+  - _If needed:_ Read procedures.json.adr
 - **24**: Logs Required for Non-Docs
-  - *If needed:* Read procedures.json.logs
+  - _If needed:_ Read procedures.json.logs
 - **25**: Token-Optimized TODO Discipline
 - **26**: Use `read_file` with `offset` and `limit` parameters for large files
 - **27**: Read multiple files in parallel when possible
@@ -74,7 +96,9 @@
 **Global Rule:** Filepaths are required everywhere: PRs, Task Packets, logs, ADRs, waivers, and inline commentary.
 
 ### Repository Structure
+
 Key directories and their purposes:
+
 - **`apps/mobile`**: React Native + Expo (screens, components, hooks, navigation)
 - **`apps/api`**: Express API (middleware, utilities, tests)
 - **`packages/contracts`**: Shared types between client and server
@@ -82,6 +106,7 @@ Key directories and their purposes:
 - **`scripts`**: Project automation
 
 ### Technology Stack
+
 - **mobile**: React Native (React 19) + Expo (v54)
 - **backend**: Node.js + Express, TypeScript via tsx
 - **data**: Drizzle ORM + Zod validation
@@ -89,26 +114,29 @@ Key directories and their purposes:
 - **testing**: Jest + Testing Library
 
 ### Coding Patterns
+
 - **client**: Prefer existing patterns in apps/mobile/components|screens|hooks. Use React Navigation, not React Router.
 - **server**: Route logic close to entry points. Use Zod for validation. TypeScript throughout.
 - **shared**: Favor packages/contracts/ for types. Prefer Zod schemas and Drizzle types.
 
 ### Security Requirements
+
 - Secrets/tokens/keys must never be committed or logged
 
 ### Quality Gates
+
 **Merge Policy:** soft_block_with_auto_waivers
 
 **Hard Gates (Merge Blocking):**
+
 - Required artifacts missing for declared change type
 - Trace log missing or invalid
 - Required HITL items not Completed
 - Waiver referenced is missing or expired
 - governance-verify fails
 
-
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T15:40:25.469Z
+**Last Generated:** 2026-01-24T16:31:04.209Z

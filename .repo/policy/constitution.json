@@ -5,7 +5,21 @@
     "description": "Behavioral governance rules - what to do, not how to do it",
     "immutable_sections": ["constitution"],
     "procedures_file": ".repo/policy/procedures.json",
+    "automation_commands_file": ".repo/policy/automation-commands.json",
     "last_updated": "2026-01-24"
+  },
+  "quick_reference": {
+    "description": "Quick lookup for most frequently referenced rules",
+    "critical_articles": [1, 2, 3, 6, 9],
+    "key_principles": [7, 10, 11, 12, 13],
+    "security_triggers": [1, 2, 4, 5, 6, 8, 9, 10],
+    "change_types": [
+      "feature",
+      "api_change",
+      "security",
+      "cross_module",
+      "non_doc_change"
+    ]
   },
   "constitution": {
     "immutable": true,
@@ -53,6 +67,18 @@
         "title": "HITL for External Systems",
         "rule": "Anything involving credentials, vendor dashboards, production systems, billing, legal/compliance, or irreversible changes is HITL-gated.",
         "if_needed": "Read procedures.json.hitl"
+      },
+      {
+        "id": 9,
+        "title": "User Context - Non-Technical Agentic Orchestration",
+        "rule": "The user is a non-coder with zero technical experience who codes exclusively through agentic orchestration. All explanations, documentation, and communication must be in plain English. Avoid technical jargon unless absolutely necessary, and when used, immediately explain in plain English. The user relies entirely on agents to understand and execute technical work.",
+        "implications": [
+          "Always explain what code does in plain English before showing it",
+          "Use analogies and simple language when describing technical concepts",
+          "Never assume the user understands technical terms without explanation",
+          "Break down complex operations into simple, understandable steps",
+          "Provide context and 'why' before 'how' in all communications"
+        ]
       }
     ]
   },
@@ -165,40 +191,48 @@
     },
     "forbidden_patterns": {
       "enforced_by": "check:security",
-      "patterns": {
-        "A": {
+      "patterns": [
+        {
+          "id": "hardcoded_api_key",
           "name": "Hardcoded API keys",
           "regex": "(api[_-]?key|apikey)\\s*[=:]\\s*['\"][a-zA-Z0-9]{20,}['\"]"
         },
-        "B": {
+        {
+          "id": "hardcoded_secret",
           "name": "Hardcoded secrets",
           "regex": "(secret|password|pwd|passwd)\\s*[=:]\\s*['\"][^'\"]{8,}['\"]"
         },
-        "C": {
+        {
+          "id": "aws_credentials",
           "name": "AWS credentials",
           "regex": "(aws[_-]?access[_-]?key[_-]?id|aws[_-]?secret[_-]?access[_-]?key)\\s*[=:]\\s*['\"][^'\"]+['\"]"
         },
-        "D": {
+        {
+          "id": "private_key",
           "name": "Private keys",
           "regex": "-----BEGIN\\s+(RSA\\s+)?PRIVATE\\s+KEY-----"
         },
-        "E": {
+        {
+          "id": "oauth_token",
           "name": "OAuth tokens",
           "regex": "(oauth[_-]?token|access[_-]?token)\\s*[=:]\\s*['\"][a-zA-Z0-9_-]{20,}['\"]"
         },
-        "F": {
+        {
+          "id": "database_connection",
           "name": "Database connection strings",
           "regex": "(postgres|mysql|mongodb)://[^:]+:[^@]+@"
         },
-        "G": {
+        {
+          "id": "jwt_secret",
           "name": "JWT secrets",
           "regex": "(jwt[_-]?secret|jwt[_-]?key)\\s*[=:]\\s*['\"][^'\"]{16,}['\"]"
         },
-        "H": {
+        {
+          "id": "stripe_key",
           "name": "Stripe keys",
           "regex": "(sk_live|pk_live|sk_test|pk_test)[a-zA-Z0-9]{24,}"
         }
-      }
+      ]
     },
     "mandatory_hitl_actions": [1, 2, 3, 4, 5, 6, 7, 8],
     "if_needed": "Read procedures.json.hitl"
@@ -265,5 +299,10 @@
     ],
     "determination": "Use decision tree in Pass 1 (Plan)",
     "if_needed": "Read procedures.json.change_type_determination"
+  },
+  "automation": {
+    "description": "Automation commands are defined in automation-commands.json",
+    "commands_file": ".repo/policy/automation-commands.json",
+    "note": "See automation-commands.json for complete command catalog including non-AI and AI-enhanced commands"
   }
 }

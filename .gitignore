@@ -60,6 +60,7 @@ coverage/
 
 # IDE
 .vscode/
+!.vscode/tasks.json
 .idea/
 *.swp
 *.swo

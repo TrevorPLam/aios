@@ -8,6 +8,7 @@
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
+
 1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -19,15 +20,16 @@
 <<SEE ../../AGENTS.json>>
 
 ## Client/Frontend Agent Entry Point
+
 See `../../AGENTS.json` for complete agent workflow.
 
 ## Client-Specific Context
+
 - **Tech Stack**: React Native (React 19) + Expo (v54)
 - **Import Direction**: ui → domain → data → shared_platform
-
 
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T15:40:25.472Z
+**Last Generated:** 2026-01-24T16:31:04.215Z
