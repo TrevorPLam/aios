@@ -1,3 +1,15 @@
+# Update INDEX.json files before commit
+echo "Updating INDEX.json files..."
+node scripts/generate-index-json.mjs || exit 1
+git add INDEX.json apps/INDEX.json apps/*/INDEX.json assets/INDEX.json attached_assets/INDEX.json docs/INDEX.json frontend/INDEX.json packages/INDEX.json scripts/INDEX.json 2>/dev/null || true
+
+# Compile constitution to generate copilot instructions and AGENTS.md files
+if git diff --cached --name-only | grep -q "\.repo/policy/constitution.json"; then
+  echo "Compiling constitution to update copilot instructions and AGENTS.md files..."
+  npm run compile:constitution || exit 1
+  git add .github/copilot-instructions.md .github/AGENTS.md .github/instructions/*.md 2>/dev/null || true
+fi
+
 # Run format check (fail if diff exists)
 npm run check:format
 

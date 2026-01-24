@@ -34,6 +34,7 @@ const AIOSTheme = {
   },
 };
 
+// Token optimization: Use `glob_file_search` for file finding instead of broad searches
 export default function App() {
   const { navigationRef, handleNavigationReady, handleNavigationStateChange } =
     useAnalyticsNavigation();

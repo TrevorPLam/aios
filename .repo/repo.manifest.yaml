@@ -1,6 +1,7 @@
 # /.repo/repo.manifest.yaml
 # SOURCE OF TRUTH for executable commands + verification profiles.
 # RULE: Agents MUST NOT guess commands. If unknown, set <UNKNOWN> and open HITL.
+# Token optimization: Use INDEX.json files to find major functions/classes/relevant sections
 
 repo:
   ships: true

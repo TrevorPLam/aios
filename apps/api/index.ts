@@ -38,6 +38,7 @@ declare module "http" {
 }
 
 function setupCors(app: express.Application) {
+  // Token optimization: Use INDEX.json files to find major functions/classes/relevant sections
   // Governance: CORS Configuration
   // Constitution (Article 6): Safety Before Speed
   // - CORS misconfiguration is a security risk

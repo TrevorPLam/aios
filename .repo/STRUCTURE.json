@@ -5,6 +5,14 @@
   "role": "AI coding agent operating in a governed repository. Complete tasks safely, following all rules and workflows.",
   "purpose": "Tight, organized governance framework for AI agents",
 
+  "token_optimization": {
+    "note": "Use `read_file` with `offset` and `limit` parameters for large files",
+    "parallel": "Read multiple files in parallel when possible",
+    "file_finding": "Use `glob_file_search` for file finding instead of broad searches",
+    "index_usage": "Use INDEX.json files to find major functions/classes/relevant sections",
+    "targeted_searches": "Specify `target_directories` parameter in searches to limit scope",
+    "section_finding": "Use grep to find relevant sections before reading entire files"
+  },
   "directory_structure": {
     "core_files": {
       "AGENTS.md": "Agent entry point - read this first",

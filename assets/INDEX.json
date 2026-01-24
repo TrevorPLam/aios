@@ -1,0 +1,17 @@
+{
+  "file": "INDEX.json",
+  "folder": "assets",
+  "purpose": "Asset files (images, icons, etc.)",
+  "generated_at": "2026-01-24T15:40:22.427Z",
+  "files": [],
+  "subfolders": [
+    {
+      "path": "images",
+      "purpose": "Directory"
+    }
+  ],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  }
+}

@@ -1,0 +1,126 @@
+name: Inject PR Template Data into Logs
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to process'
+        required: true
+        type: string
+
+jobs:
+  inject-pr-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Get PR body
+        id: pr-body
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request?.number || '${{ github.event.inputs.pr_number }}';
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            return pr.body || '';
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Find latest trace log
+        id: find-trace-log
+        run: |
+          if [ -d ".repo/traces" ] && [ "$(ls -A .repo/traces/*.json 2>/dev/null)" ]; then
+            LATEST_TRACE=$(ls -t .repo/traces/trace-*.json 2>/dev/null | head -1)
+            echo "trace_log_path=$LATEST_TRACE" >> $GITHUB_OUTPUT
+            echo "Found trace log: $LATEST_TRACE"
+          else
+            echo "No trace logs found"
+            echo "trace_log_path=" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Find latest agent log
+        id: find-agent-log
+        run: |
+          if [ -d ".repo/logs" ] && [ "$(ls -A .repo/logs/*.json 2>/dev/null)" ]; then
+            LATEST_LOG=$(ls -t .repo/logs/log-*.json 2>/dev/null | head -1)
+            echo "agent_log_path=$LATEST_LOG" >> $GITHUB_OUTPUT
+            echo "Found agent log: $LATEST_LOG"
+          else
+            echo "No agent logs found"
+            echo "agent_log_path=" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Extract and inject PR template data
+        run: |
+          PR_BODY="${{ steps.pr-body.outputs.result }}"
+          
+          if [ -z "$PR_BODY" ]; then
+            echo "Warning: PR body is empty"
+            exit 0
+          fi
+          
+          # Save PR body to temp file
+          echo "$PR_BODY" > /tmp/pr-body.txt
+          
+          # Build command
+          CMD="node scripts/inject-pr-data-to-logs.mjs --pr-file /tmp/pr-body.txt"
+          
+          if [ -n "${{ steps.find-trace-log.outputs.trace_log_path }}" ]; then
+            CMD="$CMD --trace-log ${{ steps.find-trace-log.outputs.trace_log_path }}"
+          fi
+          
+          if [ -n "${{ steps.find-agent-log.outputs.agent_log_path }}" ]; then
+            CMD="$CMD --agent-log ${{ steps.find-agent-log.outputs.agent_log_path }}"
+          fi
+          
+          CMD="$CMD --auto-find"
+          
+          echo "Running: $CMD"
+          $CMD
+      
+      - name: Commit injected data
+        if: success()
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if [ -n "${{ steps.find-trace-log.outputs.trace_log_path }}" ]; then
+            git add "${{ steps.find-trace-log.outputs.trace_log_path }}"
+          fi
+          
+          if [ -n "${{ steps.find-agent-log.outputs.agent_log_path }}" ]; then
+            git add "${{ steps.find-agent-log.outputs.agent_log_path }}"
+          fi
+          
+          if [ -d ".agent-logs/interactions" ]; then
+            git add .agent-logs/interactions/*.jsonl || true
+          fi
+          
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: inject PR template data into logs [skip ci]" || exit 0
+            git push || exit 0
+          else
+            echo "No changes to commit"
+          fi

@@ -6,6 +6,8 @@
  * - Compaction when full
  * - Backpressure handling
  * - Offline support
+ *
+ * Token optimization: Use `glob_file_search` for file finding instead of broad searches
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";

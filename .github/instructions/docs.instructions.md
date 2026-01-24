@@ -1,14 +1,14 @@
 <!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
-<!-- Source: docs/governance/constitution.md -->
-<!-- Generated: 2026-01-21 -->
-<!-- To update: edit constitution.md and run `npm run compile:constitution` -->
+<!-- Source: .repo/policy/constitution.json -->
+<!-- Generated: 2026-01-24 -->
+<!-- To update: edit constitution.json and run `npm run compile:constitution` -->
 
 # Documentation Path Instructions
 
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
-### To make changes
-1. Edit `docs/governance/constitution.md`
+**To make changes:**
+1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
 
@@ -16,49 +16,20 @@
 
 ---
 
-
 ### Documentation Laws
+#### 2. Verifiable over Persuasive
+- Work is not 'done' without verification evidence. Proof beats persuasion.
 
-#### 1. Diátaxis Framework (Mandatory)
-- Tutorials (learning): `docs/diataxis/tutorials/`
-- How-to guides (tasks): `docs/operations/runbooks/`, module-specific
-- Reference (facts): `docs/apis/`, `docs/modules/`
-- Explanation (understanding): `docs/architecture/`, `docs/decisions/`
+#### Documentation Principles
+- **19**: Docs Age With Code
+- **16**: Decisions Written Down (ADR only when triggered)
 
-### 2. Document Structure (Required Sections)
-Every document must include:
-- Plain English Summary (5-12 bullets, non-technical)
-- Technical Detail (structured content)
-- Assumptions (explicit prerequisites)
-- Failure Modes (what breaks, symptoms, solutions)
-- How to Verify (runnable commands)
-
-### 3. Voice & Style
-- Use active voice
-- Be specific with file paths and commands
-- Cite evidence, not assumptions
-- Include concrete, runnable examples
-- No marketing language ("revolutionary", "amazing", etc.)
-- Link to related docs rather than duplicating
-
-### 4. Link Discipline
-- ALWAYS use relative links: `[Doc](../path/doc.md)`
-- NEVER use absolute GitHub URLs
-- CI validates all links
-
-### 5. Templates (Mandatory)
-- ADRs: `docs/.templates/adr-template.md`
-- Runbooks: `docs/.templates/runbook-template.md`
-- Modules: `docs/.templates/module-template.md`
-
-### 6. No Doc Landfill
-- Outdated docs move to `docs/archive/` with deprecation notice
-- Never delete docs - history is valuable
-- Update all references when archiving
+### Documentation Structure
+- **`docs/`**: Documentation source tree
 
 
 ---
 
-**Source:** `docs/governance/constitution.md`
-**Compiler:** `scripts/tools/compile-constitution.mjs`
-**Last Generated:** 2026-01-21T00:44:46.238Z
+**Source:** `.repo/policy/constitution.json`  
+**Compiler:** `scripts/tools/compile-constitution.mjs`  
+**Last Generated:** 2026-01-24T15:40:25.470Z

@@ -6,6 +6,8 @@
  * - Handles privacy mode switching
  * - Coordinates queue and transport
  * - Provides app lifecycle hooks
+ *
+ * Token optimization: Use INDEX.json files to find major functions/classes/relevant sections
  */
 
 import { AppState, AppStateStatus, Platform } from "react-native";

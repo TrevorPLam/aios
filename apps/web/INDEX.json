@@ -1,0 +1,21 @@
+{
+  "file": "INDEX.json",
+  "folder": "apps/web",
+  "purpose": "Web application files and directories",
+  "generated_at": "2026-01-24T15:40:22.426Z",
+  "files": [
+    {
+      "path": "README.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 5,
+      "size_bytes": 144,
+      "description": "Web App Shell"
+    }
+  ],
+  "subfolders": [],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  }
+}

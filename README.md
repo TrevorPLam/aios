@@ -6,6 +6,14 @@ AIOS is an iOS-first super app with Android/Web compatibility. Built with React 
 
 **Development Model:** Unified AGENT Ownership — a single AGENT delivers features across iOS, Android, and Web.
 
+**Token Optimization Tips for Agents:**
+- Use `read_file` with `offset` and `limit` parameters for large files
+- Read multiple files in parallel when possible
+- Use `glob_file_search` for file finding instead of broad searches
+- Use INDEX.json files to find major functions/classes/relevant sections
+- Specify `target_directories` parameter in searches to limit scope
+- Use grep to find relevant sections before reading entire files
+
 ## Table of Contents
 
 - [What is AIOS?](#what-is-aios)

@@ -400,6 +400,189 @@ Tasks are ordered by priority (P0 → P1 → P2 → P3). When `TODO.md` is empty
 
 _Note: P2 and P3 tasks are extensive. See original P2TODO.md and P3TODO.md files for complete list. Key P2 tasks include:_
 
+#### [TASK-086] Test Organization: Separate Unit and Integration Tests
+- **Priority:** P2
+- **Status:** Pending
+- **Created:** 2026-01-24
+- **Context:** Current test files mix unit tests (storage layer) with integration tests (E2E API tests). Separating them improves maintainability, makes test purpose clear, and allows different test configurations (e.g., faster unit tests vs slower integration tests).
+
+#### Acceptance Criteria
+- [ ] Create `apps/api/__tests__/analytics.storage.test.ts` for storage unit tests
+- [ ] Create `apps/api/__tests__/analytics.integration.test.ts` for E2E integration tests
+- [ ] Move existing storage tests from `analytics.test.ts` to `analytics.storage.test.ts`
+- [ ] Move existing E2E tests from `analytics.test.ts` to `analytics.integration.test.ts`
+- [ ] Update test scripts to run both test files
+- [ ] Verify all tests still pass after separation
+- [ ] Document test organization pattern in `docs/testing/TEST_ORGANIZATION.md`
+
+#### Notes
+- References: apps/api/__tests__/analytics.test.ts, apps/api/__tests__/api.e2e.test.ts
+- Effort: S (2-3 hours)
+- Note: Follows pattern from api.e2e.test.ts separation
+
+---
+
+#### [TASK-087] Test Index and Location Mapping
+- **Priority:** P2
+- **Status:** Pending
+- **Created:** 2026-01-24
+- **Context:** As test files grow, it becomes hard to find which tests cover which functionality. A test index/map helps developers quickly locate relevant tests, understand test coverage, and identify gaps.
+
+#### Acceptance Criteria
+- [ ] Create `docs/testing/TEST_INDEX.md` documenting all test files
+- [ ] For each test file, document:
+  - What it tests (module/feature)
+  - Test type (unit/integration/E2E)
+  - Key test cases covered
+  - Dependencies/mocks required
+  - How to run it
+- [ ] Create test location map showing:
+  - Test file → Source file(s) being tested
+  - Source file → Test file(s) covering it
+- [ ] Add test index to main README or testing docs
+- [ ] Keep index updated as tests are added/modified
+
+#### Notes
+- References: apps/api/__tests__/, packages/platform/analytics/__tests__/
+- Effort: S (2-3 hours)
+- Note: Can be automated with script to scan test files
+
+---
+
+#### [TASK-088] Test Mocking Infrastructure
+- **Priority:** P2
+- **Status:** Pending
+- **Created:** 2026-01-24
+- **Context:** Tests currently fail due to missing dependencies (express-rate-limit, etc.). Creating a mocking infrastructure allows tests to run independently, faster, and without external dependencies. Also needed for testing offline queueing and retry logic.
+
+#### Acceptance Criteria
+- [ ] Create `apps/api/__tests__/mocks/` directory structure
+- [ ] Create mock for Express app setup (reusable across tests)
+- [ ] Create mock for JWT authentication (generate test tokens)
+- [ ] Create mock for storage layer (in-memory test storage)
+- [ ] Create mock for HTTP requests (for client-side retry testing)
+- [ ] Create mock for network conditions (offline/online simulation)
+- [ ] Document mock usage patterns in `docs/testing/MOCKING_GUIDE.md`
+- [ ] Update existing tests to use mocks where appropriate
+- [ ] Add example test using mocks
+
+#### Notes
+- References: apps/api/__tests__/api.e2e.test.ts, packages/platform/analytics/transport.ts
+- Effort: M (4-6 hours)
+- Note: Enables testing offline queueing and retry logic
+
+---
+
+#### [TASK-089] Test Helper Utilities
+- **Priority:** P2
+- **Status:** Pending
+- **Created:** 2026-01-24
+- **Context:** Common test setup code is duplicated across test files (JWT token generation, server setup, test data creation). Test helpers reduce duplication, improve consistency, and make tests easier to write.
+
+#### Acceptance Criteria
+- [ ] Create `apps/api/__tests__/helpers/` directory
+- [ ] Create `testServer.ts` helper for Express server setup/teardown
+- [ ] Create `testAuth.ts` helper for JWT token generation
+- [ ] Create `testData.ts` helper for creating test fixtures (users, events, etc.)
+- [ ] Create `testStorage.ts` helper for storage setup/cleanup
+- [ ] Create `testClient.ts` helper for making authenticated HTTP requests
+- [ ] Document helper usage in `docs/testing/TEST_HELPERS.md`
+- [ ] Refactor existing tests to use helpers
+- [ ] Add TypeScript types for all helpers
+
+#### Notes
+- References: apps/api/__tests__/api.e2e.test.ts, apps/api/__tests__/analytics.test.ts
+- Effort: M (4-6 hours)
+- Note: Reduces test setup code by ~50%
+
+---
+
+#### [TASK-090] Testing Documentation: Test Requirements and Patterns
+- **Priority:** P2
+- **Status:** Pending
+- **Created:** 2026-01-24
+- **Context:** TASK-085 requirements were unclear about what's testable at API level vs client level. Comprehensive testing documentation clarifies test boundaries, patterns, and requirements, reducing confusion and improving test quality.
+
+#### Acceptance Criteria
+- [ ] Create `docs/testing/TEST_REQUIREMENTS.md` documenting:
+  - What should be tested at API level (server-side)
+  - What should be tested at client level (React Native)
+  - What requires integration tests (client + server)
+  - Test coverage requirements by module type
+- [ ] Create `docs/testing/TEST_PATTERNS.md` documenting:
+  - Unit test patterns (storage, utilities)
+  - Integration test patterns (API endpoints)
+  - E2E test patterns (full flows)
+  - Mock usage patterns
+  - Test data management
+- [ ] Create `docs/testing/CLIENT_VS_SERVER_TESTING.md` explaining:
+  - Offline queueing testing (client-side)
+  - Retry logic testing (client-side)
+  - API endpoint testing (server-side)
+  - When to use each approach
+- [ ] Update TASK-085 acceptance criteria to clarify test boundaries
+- [ ] Add testing docs to main documentation index
+
+#### Notes
+- References: .repo/logs/TESTING_ISSUES_EXPLANATION.md, docs/analytics/PHASE_0_HANDOFF.md
+- Effort: M (4-6 hours)
+- Note: Prevents future confusion about test scope
+
+---
+
+#### [TASK-091] Test Architecture: Split into API, Client, and Integration Tests
+- **Priority:** P1
+- **Status:** Pending
+- **Created:** 2026-01-24
+- **Context:** Current testing approach mixes concerns - API tests try to test client-side features (offline queueing, retry logic) which are in React Native code. We need a clear three-tier test architecture: API tests (server-side), Client tests (React Native), and Integration tests (client + server together). This addresses the confusion in TASK-085 about what's testable where.
+
+#### Acceptance Criteria
+- [ ] **API Tests** (`apps/api/__tests__/`):
+  - Test server-side functionality only (endpoints, storage, validation)
+  - Use Node.js test environment
+  - Mock external dependencies (databases, services)
+  - Focus: Server behavior, request/response handling, data persistence
+- [ ] **Client Tests** (`apps/mobile/__tests__/` or `packages/platform/analytics/__tests__/`):
+  - Test React Native/mobile functionality (queue, transport, client logic)
+  - Use React Native test environment (Jest + React Native Testing Library)
+  - Mock network/HTTP layer
+  - Focus: Offline queueing, retry logic, client-side state management
+- [ ] **Integration Tests** (`apps/__tests__/integration/` or similar):
+  - Test full client → server flows
+  - Use both React Native and Node.js environments (or test harness)
+  - Mock network conditions (offline, slow, failures)
+  - Focus: End-to-end workflows, real-world scenarios
+- [ ] Create test directory structure:
+  ```
+  apps/api/__tests__/          # API tests only
+  apps/mobile/__tests__/        # Client tests only
+  apps/__tests__/integration/   # Integration tests
+  ```
+- [ ] Migrate existing tests to appropriate category:
+  - Move API endpoint tests to `apps/api/__tests__/`
+  - Create client tests for queue/transport in `apps/mobile/__tests__/` or `packages/platform/analytics/__tests__/`
+  - Create integration tests for full flows
+- [ ] Update test scripts in `package.json`:
+  - `test:api` - Run API tests only
+  - `test:client` - Run client tests only
+  - `test:integration` - Run integration tests only
+  - `test:all` - Run all tests
+- [ ] Document test architecture in `docs/testing/TEST_ARCHITECTURE.md`:
+  - When to write API tests vs Client tests vs Integration tests
+  - Test boundaries and responsibilities
+  - How to run each test type
+  - Examples of each test type
+- [ ] Update TASK-085 acceptance criteria to reflect three-tier architecture
+- [ ] Verify all tests pass in their new locations
+
+#### Notes
+- References: .repo/logs/TESTING_ISSUES_EXPLANATION.md, apps/api/__tests__/analytics.test.ts, packages/platform/analytics/queue.ts, packages/platform/analytics/transport.ts
+- Dependencies: TASK-088 (mocking infrastructure), TASK-089 (test helpers)
+- Effort: L (8-12 hours)
+- Note: This is the foundational task that enables proper testing of offline queueing and retry logic. Should be done before or alongside TASK-085 completion.
+
+---
+
 #### [TASK-060] Planner Recurring Tasks
 - **Priority:** P2
 - **Status:** Pending

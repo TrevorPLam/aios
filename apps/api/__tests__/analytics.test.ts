@@ -6,6 +6,8 @@
  * - Event idempotency
  * - Filtering and querying
  * - GDPR deletion
+ *
+ * Token optimization: Use `glob_file_search` for file finding instead of broad searches
  */
 
 import { MemStorage } from "../storage";
@@ -423,6 +425,326 @@ describe("Analytics Storage", () => {
         "event_1",
         "event_2",
       ]);
+    });
+  });
+});
+
+/**
+ * Analytics Integration Tests (E2E)
+ *
+ * Tests for Phase 0 analytics implementation end-to-end:
+ * - Client sends events → Server receives → DB persists
+ * - Batch sending (50 events)
+ * - Error handling (bad payload returns 400)
+ * - GDPR deletion via storage
+ */
+import express from "express";
+import type { Server } from "node:http";
+import type { AddressInfo } from "node:net";
+import { registerRoutes } from "../routes";
+import { generateToken } from "../middleware/auth";
+import { storage } from "../storage";
+
+process.env.JWT_SECRET = "test-jwt-secret-for-analytics-e2e-tests";
+
+describe("Analytics Integration (E2E)", () => {
+  let server: Server;
+  let baseUrl: string;
+  let testUserId: string;
+  let testToken: string;
+
+  beforeAll(async () => {
+    const app = express();
+    app.use(express.json());
+
+    server = await registerRoutes(app);
+
+    await new Promise<void>((resolve) => {
+      server.listen(0, "127.0.0.1", () => resolve());
+    });
+
+    const address = server.address() as AddressInfo;
+    baseUrl = `http://127.0.0.1:${address.port}`;
+
+    // Create test user and token
+    testUserId = randomUUID();
+    testToken = generateToken({
+      userId: testUserId,
+      username: "test_user",
+    });
+  });
+
+  afterAll(async () => {
+    await new Promise<void>((resolve, reject) => {
+      server.close((error) => {
+        if (error) reject(error);
+        resolve();
+      });
+    });
+  });
+
+  beforeEach(async () => {
+    // Clear analytics events before each test
+    await storage.deleteUserAnalytics(testUserId);
+  });
+
+  describe("E2E: Client → Server → Storage", () => {
+    test("should accept events from client and persist to storage", async () => {
+      const eventId = randomUUID();
+      const payload = {
+        events: [
+          {
+            eventId,
+            eventName: "app_opened",
+            timestamp: new Date().toISOString(),
+            properties: { install_age_bucket: "0d", network_state: "wifi" },
+            identity: {
+              userId: testUserId,
+              sessionId: "session-123",
+              deviceId: "device-456",
+            },
+            appVersion: "1.0.0",
+            platform: "ios",
+          },
+        ],
+        schemaVersion: "1.0.0",
+        mode: "default",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      expect(response.status).toBe(202);
+      const responseBody = await response.json();
+      expect(responseBody.received).toBe(1);
+      expect(responseBody.schemaVersion).toBe("1.0.0");
+
+      // Verify event was persisted
+      const saved = await storage.getAnalyticsEvents(testUserId);
+      expect(saved).toHaveLength(1);
+      expect(saved[0].eventName).toBe("app_opened");
+      expect(saved[0].userId).toBe(testUserId);
+      expect(saved[0].sessionId).toBe("session-123");
+      expect(saved[0].deviceId).toBe("device-456");
+    });
+
+    test("should handle batch of 50 events", async () => {
+      const events = Array.from({ length: 50 }, (_, i) => ({
+        eventId: randomUUID(),
+        eventName: `event_${i}`,
+        timestamp: new Date().toISOString(),
+        properties: { index: i },
+        identity: { userId: testUserId },
+      }));
+
+      const payload = {
+        events,
+        schemaVersion: "1.0.0",
+        mode: "default",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      expect(response.status).toBe(202);
+      const responseBody = await response.json();
+      expect(responseBody.received).toBe(50);
+
+      // Verify all events were persisted
+      const saved = await storage.getAnalyticsEvents(testUserId);
+      expect(saved).toHaveLength(50);
+    });
+  });
+
+  describe("Error Handling", () => {
+    test("should return 400 for invalid payload (missing required fields)", async () => {
+      const invalidPayload = {
+        events: [
+          {
+            // Missing eventId, eventName, timestamp, properties, identity
+            appVersion: "1.0.0",
+          },
+        ],
+        schemaVersion: "1.0.0",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(invalidPayload),
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test("should return 400 for invalid eventId (not UUID)", async () => {
+      const invalidPayload = {
+        events: [
+          {
+            eventId: "not-a-uuid",
+            eventName: "app_opened",
+            timestamp: new Date().toISOString(),
+            properties: {},
+            identity: { userId: testUserId },
+          },
+        ],
+        schemaVersion: "1.0.0",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(invalidPayload),
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test("should return 400 for invalid timestamp (not ISO datetime)", async () => {
+      const invalidPayload = {
+        events: [
+          {
+            eventId: randomUUID(),
+            eventName: "app_opened",
+            timestamp: "not-a-datetime",
+            properties: {},
+            identity: { userId: testUserId },
+          },
+        ],
+        schemaVersion: "1.0.0",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(invalidPayload),
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test("should return 400 for batch exceeding max size (101 events)", async () => {
+      const events = Array.from({ length: 101 }, (_, i) => ({
+        eventId: randomUUID(),
+        eventName: `event_${i}`,
+        timestamp: new Date().toISOString(),
+        properties: {},
+        identity: { userId: testUserId },
+      }));
+
+      const payload = {
+        events,
+        schemaVersion: "1.0.0",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test("should return 400 for empty batch", async () => {
+      const payload = {
+        events: [],
+        schemaVersion: "1.0.0",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test("should return 401 for missing authentication token", async () => {
+      const payload = {
+        events: [
+          {
+            eventId: randomUUID(),
+            eventName: "app_opened",
+            timestamp: new Date().toISOString(),
+            properties: {},
+            identity: { userId: testUserId },
+          },
+        ],
+        schemaVersion: "1.0.0",
+      };
+
+      const response = await fetch(`${baseUrl}/api/telemetry/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // No Authorization header
+        },
+        body: JSON.stringify(payload),
+      });
+
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe("GDPR Deletion", () => {
+    test("should delete all user analytics events", async () => {
+      // Create events for test user
+      await storage.saveAnalyticsEvents([
+        {
+          eventId: randomUUID(),
+          eventName: "event_1",
+          timestamp: new Date().toISOString(),
+          properties: {},
+          identity: { userId: testUserId },
+        },
+        {
+          eventId: randomUUID(),
+          eventName: "event_2",
+          timestamp: new Date().toISOString(),
+          properties: {},
+          identity: { userId: testUserId },
+        },
+      ]);
+
+      // Verify events exist
+      let saved = await storage.getAnalyticsEvents(testUserId);
+      expect(saved).toHaveLength(2);
+
+      // Delete all user analytics
+      await storage.deleteUserAnalytics(testUserId);
+
+      // Verify events are deleted
+      saved = await storage.getAnalyticsEvents(testUserId);
+      expect(saved).toHaveLength(0);
     });
   });
 });

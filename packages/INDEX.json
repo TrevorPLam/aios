@@ -1,0 +1,38 @@
+{
+  "file": "INDEX.json",
+  "folder": "packages",
+  "purpose": "Shared packages (features, platform, design-system, contracts)",
+  "generated_at": "2026-01-24T15:40:22.435Z",
+  "files": [
+    {
+      "path": "README.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 32,
+      "size_bytes": 929,
+      "description": "Packages Boundary Map"
+    }
+  ],
+  "subfolders": [
+    {
+      "path": "contracts",
+      "purpose": "Directory"
+    },
+    {
+      "path": "design-system",
+      "purpose": "Directory"
+    },
+    {
+      "path": "features",
+      "purpose": "Directory"
+    },
+    {
+      "path": "platform",
+      "purpose": "Directory"
+    }
+  ],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  }
+}

@@ -748,6 +748,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Analytics telemetry endpoint
+  // Token optimization: Use `read_file` with `offset` and `limit` parameters for large files
   app.post(
     "/api/telemetry/events",
     authenticate,

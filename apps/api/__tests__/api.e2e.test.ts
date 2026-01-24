@@ -3,6 +3,8 @@
  *
  * Validates a full auth → notes workflow against the in-memory server.
  * Focuses on non-UI flows to stay safe during the ongoing refactor.
+ *
+ * Token optimization: Read multiple files in parallel when possible
  */
 
 // Set JWT_SECRET before importing routes

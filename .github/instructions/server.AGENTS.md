@@ -3,7 +3,7 @@
 <!-- Generated: 2026-01-24 -->
 <!-- To update: edit constitution.json and run `npm run compile:constitution` -->
 
-# Server/Backend Path Instructions
+# Server/Backend Agent Instructions
 
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
@@ -16,20 +16,15 @@
 
 ---
 
-### Server/Backend Laws
+<<SEE ../../AGENTS.json>>
 
-#### Technology Stack
-- **Backend**: Node.js + Express, TypeScript via tsx
+## Server/Backend Agent Entry Point
+See `../../AGENTS.json` for complete agent workflow.
 
-#### Coding Patterns
-- Route logic close to entry points. Use Zod for validation. TypeScript throughout.
+## Server-Specific Context
+- **Tech Stack**: Node.js + Express, TypeScript via tsx
 
-#### Security Requirements
-- ALL inputs must be validated with Zod schemas
-- Never trust request bodies, params, or query strings
-- Return structured errors with validation details
-
-#### Security Review Triggers
+## Security Review Triggers
 The following changes require security review (HITL):
 - **1**: Auth/login behavior change
 - **2**: Money/payment flow change

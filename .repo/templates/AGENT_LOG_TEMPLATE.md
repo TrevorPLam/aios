@@ -10,3 +10,5 @@
   "reasoning_summary": "",
   "notes": "No secrets. No private data. No raw chain-of-thought."
 }
+
+**Token optimization**: Use `read_file` with `offset` and `limit` parameters for large files

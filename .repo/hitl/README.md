@@ -19,3 +19,5 @@ See `.repo/policy/HITL.md` for the index of active and archived HITL items.
 - Active items are tracked in `.repo/policy/HITL.md` Active table
 - Completed/Superseded items are moved to Archived table
 - Item files remain in this directory for historical reference
+
+**Token optimization**: Use grep to find relevant sections before reading entire files

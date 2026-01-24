@@ -92,7 +92,28 @@
         "rule": "Logs Required for Non-Docs",
         "if_needed": "Read procedures.json.logs"
       },
-      { "id": 25, "rule": "Token-Optimized TODO Discipline" }
+      { "id": 25, "rule": "Token-Optimized TODO Discipline" },
+      {
+        "id": 26,
+        "rule": "Use `read_file` with `offset` and `limit` parameters for large files"
+      },
+      { "id": 27, "rule": "Read multiple files in parallel when possible" },
+      {
+        "id": 28,
+        "rule": "Use `glob_file_search` for file finding instead of broad searches"
+      },
+      {
+        "id": 29,
+        "rule": "Use INDEX.json files to find major functions/classes/relevant sections"
+      },
+      {
+        "id": 30,
+        "rule": "Specify `target_directories` parameter in searches to limit scope"
+      },
+      {
+        "id": 31,
+        "rule": "Use grep to find relevant sections before reading entire files"
+      }
     ]
   },
   "quality_gates": {

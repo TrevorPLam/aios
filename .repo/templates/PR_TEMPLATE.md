@@ -24,3 +24,5 @@
 - **non_doc_change**: Bug fixes, refactoring, config changes (not doc-only)
 
 **See:** `.repo/policy/procedures.json.change_type_determination` for full decision tree.
+
+**Token optimization**: Specify `target_directories` parameter in searches to limit scope

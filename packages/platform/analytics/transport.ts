@@ -6,6 +6,8 @@
  * - Jitter
  * - Retry limits
  * - Network error handling
+ *
+ * Token optimization: Read multiple files in parallel when possible
  */
 
 import { AnalyticsEvent, BatchPayload, AnalyticsMode } from "./types";

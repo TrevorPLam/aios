@@ -3,7 +3,7 @@
 <!-- Generated: 2026-01-24 -->
 <!-- To update: edit constitution.json and run `npm run compile:constitution` -->
 
-# Client/Frontend Path Instructions
+# Client/Frontend Agent Instructions
 
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
@@ -16,21 +16,18 @@
 
 ---
 
-### Client/Frontend Laws
+<<SEE ../../AGENTS.json>>
 
-#### Technology Stack
-- **Mobile**: React Native (React 19) + Expo (v54)
+## Client/Frontend Agent Entry Point
+See `../../AGENTS.json` for complete agent workflow.
 
-#### Coding Patterns
-- Prefer existing patterns in apps/mobile/components|screens|hooks. Use React Navigation, not React Router.
-
-#### Boundary Rules
+## Client-Specific Context
+- **Tech Stack**: React Native (React 19) + Expo (v54)
 - **Import Direction**: ui → domain → data → shared_platform
-- **Cross-Feature Rule**: Cross-feature imports require an ADR
 
 
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T15:40:25.471Z
+**Last Generated:** 2026-01-24T15:40:25.472Z

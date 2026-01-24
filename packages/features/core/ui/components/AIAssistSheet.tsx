@@ -1,3 +1,4 @@
+// Token optimization: Use grep to find relevant sections before reading entire files
 import React, { useEffect } from "react";
 import { View, StyleSheet, Pressable, Modal, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

@@ -1,136 +1,212 @@
 # Pull Request
 
-<!-- PR template prevents undocumented changes from quietly landing. -->
+<!-- This template ensures all changes are properly documented and verified before merging. -->
 
-## 📝 Description
+## Description
 
-<!-- What does this PR do? Explain the changes and their purpose. -->
+<!-- Provide a clear and concise description of what this PR does and why it's needed. -->
 
-## 🎯 Type of Change
+## Type of Change
 
-<!-- Check all that apply -->
+<!-- Select all that apply -->
 
-- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
-- [ ] ✨ New feature (non-breaking change that adds functionality)
-- [ ] 💥 Breaking change (fix or feature that causes existing functionality to change)
-- [ ] 📚 Documentation update
-- [ ] 🎨 Code style/formatting
-- [ ] ♻️ Refactoring (no functional changes)
-- [ ] 🔧 Configuration change
-- [ ] ⚡ Performance improvement
-- [ ] ✅ Test update
+- [ ] Bug fix (non-breaking change that fixes an issue)
+- [ ] New feature (non-breaking change that adds functionality)
+- [ ] Breaking change (fix or feature that causes existing functionality to change)
+- [ ] Documentation update
+- [ ] Code style/formatting
+- [ ] Refactoring (no functional changes)
+- [ ] Configuration change
+- [ ] Performance improvement
+- [ ] Test update
+- [ ] Build system change
+- [ ] Dependency update
 
-## 🔗 Related Issues
+## Related Issues
 
 <!-- Link to related issues using #issue_number -->
 
 Closes #
 Relates to #
+Fixes #
 
-## 📋 Checklist
+## Changes Summary
 
-<!-- Review each item and check the box when complete -->
+<!-- Provide a high-level summary of the changes made -->
 
-### Code Changes
+### Files Modified
+<!-- List key files that were changed -->
 
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] My changes generate no new warnings or errors
-- [ ] I have checked for console.log() statements and removed them
+### Key Changes
+<!-- Describe the main changes in this PR -->
+
+## Verification
+
+### Testing Performed
+
+<!-- Describe how you verified this change works correctly -->
+
+**Test Commands Executed:**
+```bash
+# List the commands you ran to verify this change
+npm run check:types
+npm test
+npm run lint
+```
+
+**Test Results:**
+- [ ] All existing tests pass
+- [ ] New tests added (if applicable)
+- [ ] Test coverage maintained or improved
+- [ ] Manual testing completed on relevant platforms
+
+### Platform Testing
+
+- [ ] iOS (if applicable)
+- [ ] Android (if applicable)
+- [ ] Web (if applicable)
+
+### Verification Evidence
+
+<!-- Provide specific evidence that this change works as intended -->
+
+1. 
+2. 
+3. 
+
+## Checklist
+
+### Code Quality
+
+- [ ] Code follows the project's style guidelines
+- [ ] Self-review of code completed
+- [ ] Code is commented, particularly in complex areas
+- [ ] No new warnings or errors introduced
+- [ ] Debug statements (console.log, etc.) removed
+- [ ] TypeScript types are properly defined
+- [ ] No unused imports or variables
 
 ### Documentation
 
-- [ ] I have updated the documentation in `docs/` to reflect my changes
-- [ ] I have updated relevant code comments and JSDoc
-- [ ] I have updated the CHANGELOG.md (if applicable)
-- [ ] README.md is updated (if needed)
+- [ ] Documentation in `docs/` updated to reflect changes
+- [ ] Code comments and JSDoc updated where needed
+- [ ] CHANGELOG.md updated (if applicable)
+- [ ] README.md updated (if applicable)
+- [ ] Architecture Decision Record created (if applicable)
 
-### Testing & Verification
+### Testing
 
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] I have tested my changes on the following platforms:
-  - [ ] iOS
-  - [ ] Android
-  - [ ] Web
-- [ ] I have verified there are no TypeScript errors (`npm run check:types`)
-- [ ] I have run the linter and fixed all issues (`npm run lint`)
+- [ ] Tests added for new functionality
+- [ ] Tests updated for changed functionality
+- [ ] All unit tests pass locally
+- [ ] Integration tests pass (if applicable)
+- [ ] E2E tests pass (if applicable)
+- [ ] Type checking passes (`npm run check:types`)
+- [ ] Linting passes (`npm run lint`)
 
-### How I verified this works
-<!-- Describe your testing approach. See docs/verification.md for guidelines. -->
+### Security
 
-```text
-1.
-2.
-3.
-```text
-
-### Security & Dependencies
-
-- [ ] My changes do not introduce new security vulnerabilities
-- [ ] I have checked that no sensitive data (API keys, passwords) is exposed
-- [ ] New dependencies (if any) have been reviewed for security issues
-- [ ] I have updated dependency versions if fixing security issues
+- [ ] No new security vulnerabilities introduced
+- [ ] No sensitive data (API keys, passwords) exposed
+- [ ] New dependencies reviewed for security issues
+- [ ] Security best practices followed
+- [ ] Input validation implemented where needed
 
 ### Database & Migrations
 
 - [ ] Database schema changes are backward compatible
-- [ ] I have created necessary migrations (if applicable)
-- [ ] Migration rollback has been tested
+- [ ] Migrations created (if applicable)
+- [ ] Migration rollback tested
+- [ ] Data migration scripts tested (if applicable)
 
-## 📸 Screenshots / Videos
+### Governance Compliance
 
-<!-- If applicable, add screenshots or videos demonstrating the changes -->
+- [ ] Trace log created (for non-documentation changes)
+- [ ] Compliance check passed (`npm run check:compliance`)
+- [ ] Governance verification passed (`npm run check:governance`)
+- [ ] HITL items addressed (if applicable)
+- [ ] Waivers documented (if applicable)
+
+## Screenshots / Visual Evidence
+
+<!-- If applicable, provide screenshots or videos demonstrating the changes -->
 
 ### Before
-
-<!-- Screenshot/video of the behavior before your changes -->
+<!-- Screenshot/video of behavior before changes -->
 
 ### After
+<!-- Screenshot/video of behavior after changes -->
 
-<!-- Screenshot/video of the behavior after your changes -->
-
-## ⚠️ Risks & Considerations
+## Risks & Considerations
 
 <!-- What could potentially break? What should reviewers pay special attention to? -->
 
--
--
--
+### Potential Impact Areas
 
-## 🚀 Deployment Notes
+- 
+- 
+- 
 
-<!-- Any special deployment considerations? Database migrations? Environment variables? -->
+### Breaking Changes
 
--
--
+<!-- Document any breaking changes and migration path -->
 
-## 📚 Additional Context
+### Performance Implications
 
-<!-- Any other context, background, or related work -->
+<!-- Note any performance considerations -->
 
----
+## Deployment Notes
+
+<!-- Any special deployment considerations -->
+
+### Environment Variables
+
+<!-- List any new or changed environment variables -->
+
+### Database Changes
+
+<!-- Note any database schema changes or migrations required -->
+
+### Configuration Changes
+
+<!-- Note any configuration file changes -->
+
+### Rollback Plan
+
+<!-- Describe how to rollback this change if needed -->
+
+## Additional Context
+
+<!-- Any other context, background, or related work that reviewers should know -->
 
 ## For Reviewers
 
-<!-- Automatically added notes for reviewers -->
+### Review Focus Areas
 
-### Review Checklist
+<!-- Highlight specific areas that need careful review -->
 
-- [ ] Code quality and style
-- [ ] Tests are comprehensive and passing
-- [ ] Documentation is complete and accurate
-- [ ] No security vulnerabilities introduced
-- [ ] Breaking changes are clearly documented
-- [ ] Performance implications considered
+- [ ] Code quality and adherence to standards
+- [ ] Test coverage and quality
+- [ ] Documentation completeness
+- [ ] Security implications
+- [ ] Breaking changes clearly documented
+- [ ] Performance considerations
+- [ ] Governance compliance
 
 ### Documentation Resources
 
-- [Verification Guidelines](docs/verification.md)
 - [Contributing Guide](CONTRIBUTING.md)
-- [Architecture Decisions](ARCHITECTURE_DECISIONS.md)
+- [Evidence Requirements](docs/ai/evidence_requirements.md)
+- [Testing Strategy](docs/testing/strategy.md)
+- [Architecture Decisions](docs/decisions/)
+- [Governance Framework](.repo/policy/constitution.json)
 
 ---
 
-**By submitting this pull request, I confirm that my contribution is made under the terms of the project's license.**
+**By submitting this pull request, I confirm that:**
+
+1. My contribution is made under the terms of the project's license
+2. I have read and followed the contributing guidelines
+3. I have verified this change works as described
+4. I have provided adequate evidence of verification
+5. All required checks have passed

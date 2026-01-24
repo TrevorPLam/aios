@@ -44,7 +44,12 @@
     "check:coverage-ratchet": "node scripts/check-coverage-ratchet.mjs",
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
     "framework:metrics": "node .repo/automation/scripts/framework-metrics.js",
-    "postinstall": "node scripts/post-install-check.mjs"
+    "postinstall": "node scripts/post-install-check.mjs",
+    "index:generate": "node scripts/generate-index-json.mjs",
+    "index:watch": "node scripts/watch-indexes.mjs",
+    "pr:extract": "node scripts/extract-pr-template-data.mjs",
+    "pr:inject": "node scripts/inject-pr-data-to-logs.mjs",
+    "constitution:watch": "node scripts/watch-constitution.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

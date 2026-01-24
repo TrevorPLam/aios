@@ -8,6 +8,7 @@ import { errorReporting } from "@platform/lib/errorReporting";
 
 /**
  * Simple hash function for error messages
+ * Token optimization: Use `read_file` with `offset` and `limit` parameters for large files
  */
 function hashError(error: Error): string {
   const str = `${error.name}:${error.message}`;

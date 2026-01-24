@@ -1,54 +1,299 @@
 {
   "file": "INDEX.json",
-  "description": "Master index of all directories in the repository",
-  "directories": [
+  "folder": ".",
+  "purpose": "Master index of all directories in the repository",
+  "generated_at": "2026-01-24T15:40:22.409Z",
+  "files": [
     {
-      "name": ".repo/",
-      "purpose": "Governance framework, policies, agent rules",
-      "indexFile": ".repo/INDEX.md"
+      "path": ".cspell.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 95,
+      "size_bytes": 1514
     },
     {
-      "name": "apps/",
-      "purpose": "Applications (mobile, API, web)",
-      "indexFile": "apps/INDEX.md"
+      "path": ".editorconfig",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 34,
+      "size_bytes": 540,
+      "description": "EditorConfig is awesome: https://EditorConfig.org"
     },
     {
-      "name": "packages/",
-      "purpose": "Shared packages (features, platform, design-system, contracts)",
-      "indexFile": "packages/INDEX.md"
+      "path": ".gitattributes",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 4,
+      "size_bytes": 92
     },
     {
-      "name": "docs/",
-      "purpose": "Documentation (architecture, onboarding, runbooks)",
-      "indexFile": "docs/INDEX.md"
+      "path": ".gitignore",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 74,
+      "size_bytes": 772,
+      "description": "Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files"
     },
     {
-      "name": "scripts/",
-      "purpose": "Automation and utility scripts",
-      "indexFile": "scripts/INDEX.md"
+      "path": ".markdownlint.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 13,
+      "size_bytes": 248
     },
     {
-      "name": "agents/tasks/",
-      "purpose": "Task management (TODO, BACKLOG, ARCHIVE)",
-      "indexFile": "See agents/tasks/ directory"
+      "path": ".nvmrc",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 2,
+      "size_bytes": 4
+    },
+    {
+      "path": ".pre-commit-config.yaml",
+      "type": "yaml",
+      "key_classes": [],
+      "line_count": 95,
+      "size_bytes": 2840,
+      "description": "Pre-commit hooks for TIER 0 enforcement"
+    },
+    {
+      "path": ".releaserc.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 76,
+      "size_bytes": 1292
+    },
+    {
+      "path": ".replit",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 74,
+      "size_bytes": 1267
+    },
+    {
+      "path": ".spectral.yml",
+      "type": "yml",
+      "key_classes": [],
+      "line_count": 50,
+      "size_bytes": 1099,
+      "description": "Spectral configuration for OpenAPI/AsyncAPI linting"
+    },
+    {
+      "path": ".stryker.conf.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 34,
+      "size_bytes": 761
+    },
+    {
+      "path": "AGENTS.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 211,
+      "size_bytes": 6037
+    },
+    {
+      "path": "AGENTS.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 2,
+      "size_bytes": 20
+    },
+    {
+      "path": "app.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 54,
+      "size_bytes": 1300
+    },
+    {
+      "path": "babel.config.js",
+      "type": "js",
+      "key_classes": [],
+      "line_count": 25,
+      "size_bytes": 639
+    },
+    {
+      "path": "CHANGELOG.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 163,
+      "size_bytes": 6400,
+      "description": "Framework Changelog"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 126,
+      "size_bytes": 5267,
+      "description": "Contributor Covenant Code of Conduct"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 484,
+      "size_bytes": 11089,
+      "description": "Contributing to AIOS"
+    },
+    {
+      "path": "drizzle.config.ts",
+      "type": "ts",
+      "key_classes": [],
+      "line_count": 15,
+      "size_bytes": 325
+    },
+    {
+      "path": "eslint.config.js",
+      "type": "js",
+      "key_classes": [],
+      "line_count": 52,
+      "size_bytes": 1312,
+      "description": "https://docs.expo.dev/guides/using-eslint/"
+    },
+    {
+      "path": "jest.config.js",
+      "type": "js",
+      "key_classes": [],
+      "line_count": 35,
+      "size_bytes": 1241
+    },
+    {
+      "path": "jest.setup.js",
+      "type": "js",
+      "key_classes": [],
+      "line_count": 51,
+      "size_bytes": 1146
+    },
+    {
+      "path": "LICENSE",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 22,
+      "size_bytes": 1095
+    },
+    {
+      "path": "Makefile",
+      "type": "file",
+      "key_classes": [],
+      "line_count": 212,
+      "size_bytes": 8708,
+      "description": "Meta-commentary:"
+    },
+    {
+      "path": "metro.config.js",
+      "type": "js",
+      "key_classes": [],
+      "line_count": 10,
+      "size_bytes": 285
+    },
+    {
+      "path": "mkdocs.yml",
+      "type": "yml",
+      "key_classes": [],
+      "line_count": 246,
+      "size_bytes": 8195,
+      "description": "MkDocs Configuration for AIOS Documentation"
+    },
+    {
+      "path": "package-lock.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 27381,
+      "size_bytes": 971137
+    },
+    {
+      "path": "package.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 146,
+      "size_bytes": 6431
+    },
+    {
+      "path": "README.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 526,
+      "size_bytes": 22496,
+      "description": "AIOS — Life Operating System"
+    },
+    {
+      "path": "SECURITY.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 126,
+      "size_bytes": 4205,
+      "description": "Security Policy"
+    },
+    {
+      "path": "tsconfig.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 19,
+      "size_bytes": 526
     }
   ],
+  "subfolders": [
+    {
+      "path": "apps",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "apps/INDEX.json"
+    },
+    {
+      "path": "assets",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "assets/INDEX.json"
+    },
+    {
+      "path": "attached_assets",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "attached_assets/INDEX.json"
+    },
+    {
+      "path": "docs",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "docs/INDEX.json"
+    },
+    {
+      "path": "frontend",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "frontend/INDEX.json"
+    },
+    {
+      "path": "packages",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "packages/INDEX.json"
+    },
+    {
+      "path": "scripts",
+      "purpose": "See INDEX.json for details",
+      "indexFile": "scripts/INDEX.json"
+    }
+  ],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  },
   "quickNavigation": {
     "applications": [
       {
         "name": "Mobile App",
         "path": "apps/mobile/",
-        "description": "React Native/Expo mobile application"
+        "description": "React Native/Expo mobile application",
+        "indexFile": "apps/mobile/INDEX.json"
       },
       {
         "name": "API Server",
         "path": "apps/api/",
-        "description": "Node.js/Express backend API"
+        "description": "Node.js/Express backend API",
+        "indexFile": "apps/api/INDEX.json"
       },
       {
         "name": "Web App",
         "path": "apps/web/",
-        "description": "Web application (if applicable)"
+        "description": "Web application",
+        "indexFile": "apps/web/INDEX.json"
       }
     ],
     "packages": [
@@ -76,84 +321,22 @@
     "supportingDirectories": [
       {
         "name": "Documentation",
-        "path": "docs/INDEX.md",
-        "description": "Comprehensive documentation index"
+        "path": "docs/",
+        "description": "Comprehensive documentation",
+        "indexFile": "docs/INDEX.json"
       },
       {
         "name": "Scripts",
-        "path": "scripts/INDEX.md",
-        "description": "Automation scripts"
+        "path": "scripts/",
+        "description": "Automation scripts",
+        "indexFile": "scripts/INDEX.json"
       },
       {
-        "name": "Governance",
-        "path": ".repo/INDEX.md",
-        "description": "Policies, agent framework, HITL"
+        "name": "Assets",
+        "path": "assets/",
+        "description": "Asset files",
+        "indexFile": "assets/INDEX.json"
       }
     ]
-  },
-  "keyEntryPoints": {
-    "developers": [
-      {
-        "name": "Getting Started",
-        "path": "README.md",
-        "description": "Project overview and quick start"
-      },
-      {
-        "name": "Contributing",
-        "path": "CONTRIBUTING.md",
-        "description": "Contribution guidelines"
-      },
-      {
-        "name": "AI Agents",
-        "path": "AGENTS.md",
-        "description": "AI contribution guide"
-      }
-    ],
-    "governance": [
-      {
-        "name": "Governance Framework",
-        "path": ".repo/GOVERNANCE.md",
-        "description": "Entry point"
-      },
-      {
-        "name": "Constitution",
-        "path": ".repo/policy/CONSTITUTION.md",
-        "description": "Fundamental rules"
-      },
-      {
-        "name": "Agent Framework",
-        "path": ".repo/agents/AGENTS.md",
-        "description": "Agent rules"
-      }
-    ],
-    "documentation": [
-      {
-        "name": "Documentation Index",
-        "path": "docs/INDEX.md",
-        "description": "Complete documentation catalog"
-      },
-      {
-        "name": "Architecture",
-        "path": "docs/architecture/",
-        "description": "System architecture"
-      },
-      {
-        "name": "API Docs",
-        "path": "docs/apis/",
-        "description": "API documentation"
-      }
-    ]
-  },
-  "taskManagement": {
-    "archive": {
-      "path": "agents/tasks/ARCHIVE.md",
-      "description": "Archived tasks"
-    }
-  },
-  "seeAlso": [
-    ".repo/GOVERNANCE.md",
-    "README.md",
-    "AGENTS.md",
-    "packages/README.md"
-  ]
+  }
 }

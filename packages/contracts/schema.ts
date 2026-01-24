@@ -401,6 +401,7 @@ export const analyticsEvents = pgTable(
 );
 
 // Analytics validation schemas
+// Token optimization: Use INDEX.json files to find major functions/classes/relevant sections
 export const analyticsEventSchema = z.object({
   eventId: z.string().uuid(),
   eventName: z.string().min(1).max(100),

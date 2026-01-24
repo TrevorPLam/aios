@@ -5,6 +5,8 @@
 **Next Agent:** Can pick up at T-085 (testing) or move to Phase 1
 **Commit:** a757125
 
+**Token optimization tip**: Use `read_file` with `offset` and `limit` parameters for large files. This document is 818 lines - read only needed sections.
+
 ---
 
 ## Executive Summary

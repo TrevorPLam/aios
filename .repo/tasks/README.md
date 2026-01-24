@@ -29,6 +29,8 @@ This folder implements a simple, effective task management workflow designed for
               (New tasks added to backlog)
 ```
 
+**Token optimization**: Use INDEX.json files to find major functions/classes/relevant sections
+
 ### Step-by-Step Process
 
 1. **Start Work**: Pick up tasks from `TODO.md` (3-5 tasks grouped by similar types)

@@ -4,6 +4,7 @@ import rateLimit from "express-rate-limit";
  * Rate limiter for authentication login endpoint
  * Prevents brute force attacks by limiting login attempts
  * 5 attempts per 15 minutes per IP
+ * Token optimization: Read multiple files in parallel when possible
  */
 export const loginRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

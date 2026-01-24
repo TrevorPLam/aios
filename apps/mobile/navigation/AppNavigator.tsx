@@ -1,3 +1,4 @@
+// Token optimization: Specify `target_directories` parameter in searches to limit scope
 import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useScreenOptions } from "@platform/lib/useScreenOptions";
@@ -212,6 +213,7 @@ export default function AppNavigator() {
     return null;
   }
 
+  // Token optimization: Use INDEX.json files to find major functions/classes/relevant sections
   return (
     <Stack.Navigator
       screenOptions={screenOptions}

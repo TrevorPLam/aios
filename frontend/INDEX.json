@@ -1,0 +1,25 @@
+{
+  "file": "INDEX.json",
+  "folder": "frontend",
+  "purpose": "Frontend code and components",
+  "generated_at": "2026-01-24T15:40:22.433Z",
+  "files": [
+    {
+      "path": ".agent-context.json",
+      "type": "json",
+      "key_classes": [],
+      "line_count": 92,
+      "size_bytes": 3235
+    }
+  ],
+  "subfolders": [
+    {
+      "path": "src",
+      "purpose": "Directory"
+    }
+  ],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  }
+}

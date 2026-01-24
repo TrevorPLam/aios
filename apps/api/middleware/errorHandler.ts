@@ -59,6 +59,8 @@ import { logger } from "../utils/logger";
  * Custom error class for operational/expected errors.
  * These are errors that we anticipate and handle gracefully.
  *
+ * Token optimization tip: Use grep to find relevant sections before reading entire files
+ *
  * @example
  * throw new AppError(404, 'User not found');
  * throw new AppError(400, 'Invalid email format');

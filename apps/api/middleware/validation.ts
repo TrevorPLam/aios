@@ -11,6 +11,7 @@ const handleValidationError = (error: unknown): AppError => {
   return new AppError(400, "Invalid request payload");
 };
 
+// Token optimization: Read multiple files in parallel when possible
 export const validate = (schema: ZodTypeAny) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {

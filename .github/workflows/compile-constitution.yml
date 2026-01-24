@@ -1,0 +1,89 @@
+name: Compile Constitution
+
+on:
+  push:
+    paths:
+      - '.repo/policy/constitution.json'
+    branches: [main, develop]
+  pull_request:
+    paths:
+      - '.repo/policy/constitution.json'
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: Compile Constitution
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Compile constitution
+        run: npm run compile:constitution
+      
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if [ -n "$(git status --porcelain .github/)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'push'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .github/copilot-instructions.md .github/AGENTS.md .github/instructions/
+          git commit -m "chore: auto-update copilot instructions and AGENTS.md from constitution [skip ci]" || exit 0
+          git push || exit 0
+      
+      - name: Create PR comment
+        if: steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { execSync } = require('child_process');
+            
+            // Get changed files
+            const changedFiles = execSync('git diff --name-only HEAD', { encoding: 'utf-8' })
+              .split('\n')
+              .filter(f => f.startsWith('.github/'))
+              .map(f => `- \`${f}\``)
+              .join('\n');
+            
+            const comment = `## ⚠️ Constitution Changes Detected
+            
+            The constitution (\`.repo/policy/constitution.json\`) was modified, which requires regenerating copilot instructions and AGENTS.md files.
+            
+            **Changed files:**
+            ${changedFiles}
+            
+            **Action required:**
+            Please run \`npm run compile:constitution\` locally and commit the updated files to this PR.`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

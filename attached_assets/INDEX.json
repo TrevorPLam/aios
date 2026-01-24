@@ -1,0 +1,17 @@
+{
+  "file": "INDEX.json",
+  "folder": "attached_assets",
+  "purpose": "Attached assets and generated content",
+  "generated_at": "2026-01-24T15:40:22.429Z",
+  "files": [],
+  "subfolders": [
+    {
+      "path": "generated_images",
+      "purpose": "Directory"
+    }
+  ],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "file": "INDEX.json",
+  "folder": "apps/mobile",
+  "purpose": "Mobile application files and directories",
+  "generated_at": "2026-01-24T15:40:22.425Z",
+  "files": [
+    {
+      "path": ".copilot-instructions.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 139,
+      "size_bytes": 3892,
+      "description": "Client Directory Instructions"
+    },
+    {
+      "path": "App.tsx",
+      "type": "tsx",
+      "key_classes": [],
+      "line_count": 147,
+      "size_bytes": 4984
+    },
+    {
+      "path": "index.js",
+      "type": "js",
+      "key_classes": [],
+      "line_count": 29,
+      "size_bytes": 946
+    },
+    {
+      "path": "README.md",
+      "type": "md",
+      "key_classes": [],
+      "line_count": 10,
+      "size_bytes": 293,
+      "description": "Legacy Client Shell"
+    }
+  ],
+  "subfolders": [
+    {
+      "path": "navigation",
+      "purpose": "Directory"
+    },
+    {
+      "path": "__tests__",
+      "purpose": "Directory"
+    }
+  ],
+  "dependencies": {
+    "imports": [],
+    "imported_by": []
+  }
+}

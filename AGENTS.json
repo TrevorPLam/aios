@@ -198,5 +198,13 @@
       "read_policy_constitution_json",
       "follow_three_pass_workflow"
     ]
+  },
+  "token_optimization": {
+    "note": "Use `read_file` with `offset` and `limit` parameters for large files",
+    "parallel_reads": "Read multiple files in parallel when possible",
+    "file_finding": "Use `glob_file_search` for file finding instead of broad searches",
+    "index_usage": "Use INDEX.json files to find major functions/classes/relevant sections",
+    "targeted_searches": "Specify `target_directories` parameter in searches to limit scope",
+    "section_finding": "Use grep to find relevant sections before reading entire files"
   }
 }

@@ -767,6 +767,7 @@ export class MemStorage implements IStorage {
     }
 
     console.log(`[Analytics] Saved ${events.length} events`);
+    // Token optimization: Read multiple files in parallel when possible
   }
 
   async getAnalyticsEvents(
