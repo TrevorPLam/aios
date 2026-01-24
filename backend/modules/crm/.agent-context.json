@@ -61,12 +61,16 @@
         "6. Add viewset",
         "7. Add tests"
       ],
-      "files": ["backend/modules/crm/models/*.py", "backend/modules/crm/serializers.py", "backend/modules/crm/views.py"]
+      "files": [
+        "backend/modules/crm/models/*.py",
+        "backend/modules/crm/serializers.py",
+        "backend/modules/crm/views.py"
+      ]
     }
   ],
   "metrics": {
     "files_count": 42,
     "last_modified": "2026-01-23",
-    "test_coverage": 0.80
+    "test_coverage": 0.8
   }
 }

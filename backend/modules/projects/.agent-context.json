@@ -55,7 +55,10 @@
         "3. Update serializer",
         "4. Update tests"
       ],
-      "files": ["backend/modules/projects/models.py", "backend/modules/projects/serializers.py"]
+      "files": [
+        "backend/modules/projects/models.py",
+        "backend/modules/projects/serializers.py"
+      ]
     }
   ],
   "metrics": {

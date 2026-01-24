@@ -3,18 +3,18 @@
 // Agent interaction logging SDK
 // Usage: const logger = require('./agent-logger.js');
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Get repo root (assumes script is in .repo/automation/scripts/)
-const REPO_ROOT = path.resolve(__dirname, '../../..');
-const LOGS_DIR = path.join(REPO_ROOT, '.agent-logs');
-const INTERACTIONS_DIR = path.join(LOGS_DIR, 'interactions');
-const ERRORS_DIR = path.join(LOGS_DIR, 'errors');
-const METRICS_DIR = path.join(LOGS_DIR, 'metrics');
+const REPO_ROOT = path.resolve(__dirname, "../../..");
+const LOGS_DIR = path.join(REPO_ROOT, ".agent-logs");
+const INTERACTIONS_DIR = path.join(LOGS_DIR, "interactions");
+const ERRORS_DIR = path.join(LOGS_DIR, "errors");
+const METRICS_DIR = path.join(LOGS_DIR, "metrics");
 
 // Ensure directories exist
-[INTERACTIONS_DIR, ERRORS_DIR, METRICS_DIR].forEach(dir => {
+[INTERACTIONS_DIR, ERRORS_DIR, METRICS_DIR].forEach((dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -35,21 +35,21 @@ function logInteraction(entry) {
   const timestamp = new Date().toISOString();
   const logEntry = {
     timestamp,
-    agent: entry.agent || 'Auto',
+    agent: entry.agent || "Auto",
     action: entry.action,
     file: entry.file || null,
     duration_ms: entry.duration_ms || null,
     success: entry.success !== undefined ? entry.success : true,
     context: entry.context || {},
-    ...(entry.error && { error: entry.error })
+    ...(entry.error && { error: entry.error }),
   };
 
   // Write to interactions log (JSONL format)
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   const logFile = path.join(INTERACTIONS_DIR, `${today}.jsonl`);
 
   try {
-    fs.appendFileSync(logFile, JSON.stringify(logEntry) + '\n', 'utf8');
+    fs.appendFileSync(logFile, JSON.stringify(logEntry) + "\n", "utf8");
   } catch (err) {
     // Graceful degradation: log to stderr but don't throw
     // This ensures workflow continues even if logging fails
@@ -57,10 +57,10 @@ function logInteraction(entry) {
     // Try to log error (but don't fail if this also fails)
     try {
       logError({
-        agent: entry.agent || 'Auto',
-        action: 'log_interaction',
+        agent: entry.agent || "Auto",
+        action: "log_interaction",
         error: `Failed to write interaction log: ${err.message}`,
-        context: { original_entry: logEntry }
+        context: { original_entry: logEntry },
       });
     } catch {
       // If error logging also fails, just continue
@@ -80,18 +80,18 @@ function logError(entry) {
   const timestamp = new Date().toISOString();
   const errorEntry = {
     timestamp,
-    agent: entry.agent || 'Auto',
-    action: entry.action || 'unknown',
+    agent: entry.agent || "Auto",
+    action: entry.action || "unknown",
     error: entry.error,
-    context: entry.context || {}
+    context: entry.context || {},
   };
 
   // Write to errors log
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   const errorFile = path.join(ERRORS_DIR, `${today}.jsonl`);
 
   try {
-    fs.appendFileSync(errorFile, JSON.stringify(errorEntry) + '\n', 'utf8');
+    fs.appendFileSync(errorFile, JSON.stringify(errorEntry) + "\n", "utf8");
   } catch (err) {
     // Last resort: write to stderr
     console.error(`CRITICAL: Failed to write error log: ${err.message}`);
@@ -105,7 +105,7 @@ function logError(entry) {
  * @returns {Object} Metrics object
  */
 function generateMetrics(date) {
-  const targetDate = date || new Date().toISOString().split('T')[0];
+  const targetDate = date || new Date().toISOString().split("T")[0];
   const logFile = path.join(INTERACTIONS_DIR, `${targetDate}.jsonl`);
 
   if (!fs.existsSync(logFile)) {
@@ -117,21 +117,24 @@ function generateMetrics(date) {
       success_rate: 0,
       avg_duration_ms: 0,
       actions: {},
-      errors: []
+      errors: [],
     };
   }
 
-  const lines = fs.readFileSync(logFile, 'utf8')
-    .split('\n')
-    .filter(line => line.trim());
+  const lines = fs
+    .readFileSync(logFile, "utf8")
+    .split("\n")
+    .filter((line) => line.trim());
 
-  const entries = lines.map(line => {
-    try {
-      return JSON.parse(line);
-    } catch {
-      return null;
-    }
-  }).filter(entry => entry !== null);
+  const entries = lines
+    .map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    })
+    .filter((entry) => entry !== null);
 
   const metrics = {
     date: targetDate,
@@ -142,10 +145,10 @@ function generateMetrics(date) {
     total_duration_ms: 0,
     avg_duration_ms: 0,
     actions: {},
-    errors: []
+    errors: [],
   };
 
-  entries.forEach(entry => {
+  entries.forEach((entry) => {
     if (entry.success) {
       metrics.successful++;
     } else {
@@ -154,7 +157,7 @@ function generateMetrics(date) {
         metrics.errors.push({
           action: entry.action,
           error: entry.error,
-          file: entry.file
+          file: entry.file,
         });
       }
     }
@@ -168,7 +171,7 @@ function generateMetrics(date) {
         count: 0,
         successful: 0,
         failed: 0,
-        total_duration_ms: 0
+        total_duration_ms: 0,
       };
     }
     metrics.actions[entry.action].count++;
@@ -184,14 +187,16 @@ function generateMetrics(date) {
 
   if (metrics.total_interactions > 0) {
     metrics.success_rate = metrics.successful / metrics.total_interactions;
-    metrics.avg_duration_ms = metrics.total_duration_ms / metrics.total_interactions;
+    metrics.avg_duration_ms =
+      metrics.total_duration_ms / metrics.total_interactions;
   }
 
   // Calculate averages for each action
-  Object.keys(metrics.actions).forEach(action => {
+  Object.keys(metrics.actions).forEach((action) => {
     const actionData = metrics.actions[action];
     if (actionData.count > 0) {
-      actionData.avg_duration_ms = actionData.total_duration_ms / actionData.count;
+      actionData.avg_duration_ms =
+        actionData.total_duration_ms / actionData.count;
       actionData.success_rate = actionData.successful / actionData.count;
     }
   });
@@ -204,12 +209,12 @@ function generateMetrics(date) {
  * @param {string} [date] - Date in YYYY-MM-DD format (defaults to today)
  */
 function writeMetrics(date) {
-  const targetDate = date || new Date().toISOString().split('T')[0];
+  const targetDate = date || new Date().toISOString().split("T")[0];
   const metrics = generateMetrics(targetDate);
   const metricsFile = path.join(METRICS_DIR, `${targetDate}.json`);
 
   try {
-    fs.writeFileSync(metricsFile, JSON.stringify(metrics, null, 2), 'utf8');
+    fs.writeFileSync(metricsFile, JSON.stringify(metrics, null, 2), "utf8");
     return metrics;
   } catch (err) {
     console.error(`Failed to write metrics: ${err.message}`);
@@ -225,18 +230,20 @@ function cleanupOldLogs(daysToKeep = 30) {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
-  [INTERACTIONS_DIR, ERRORS_DIR, METRICS_DIR].forEach(dir => {
+  [INTERACTIONS_DIR, ERRORS_DIR, METRICS_DIR].forEach((dir) => {
     if (!fs.existsSync(dir)) return;
 
     const files = fs.readdirSync(dir);
-    files.forEach(file => {
+    files.forEach((file) => {
       const filePath = path.join(dir, file);
       const stats = fs.statSync(filePath);
       if (stats.mtime < cutoffDate) {
         try {
           fs.unlinkSync(filePath);
         } catch (err) {
-          console.error(`Failed to delete old log file ${filePath}: ${err.message}`);
+          console.error(
+            `Failed to delete old log file ${filePath}: ${err.message}`,
+          );
         }
       }
     });
@@ -247,20 +254,24 @@ function cleanupOldLogs(daysToKeep = 30) {
 if (require.main === module) {
   const command = process.argv[2];
 
-  if (command === 'metrics') {
+  if (command === "metrics") {
     const date = process.argv[3];
     const metrics = writeMetrics(date);
     if (metrics) {
       console.log(JSON.stringify(metrics, null, 2));
     }
-  } else if (command === 'cleanup') {
+  } else if (command === "cleanup") {
     const days = parseInt(process.argv[3]) || 30;
     cleanupOldLogs(days);
     console.log(`Cleaned up logs older than ${days} days`);
   } else {
-    console.log('Usage:');
-    console.log('  node agent-logger.js metrics [date]  - Generate and write metrics');
-    console.log('  node agent-logger.js cleanup [days] - Clean up old logs (default: 30 days)');
+    console.log("Usage:");
+    console.log(
+      "  node agent-logger.js metrics [date]  - Generate and write metrics",
+    );
+    console.log(
+      "  node agent-logger.js cleanup [days] - Clean up old logs (default: 30 days)",
+    );
   }
 }
 
@@ -270,5 +281,5 @@ module.exports = {
   logError,
   generateMetrics,
   writeMetrics,
-  cleanupOldLogs
+  cleanupOldLogs,
 };

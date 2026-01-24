@@ -3,22 +3,26 @@
 // Update last_verified date in context files
 // Usage: node update-context-verified.js [context-file...] or --all
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Get repo root
-const REPO_ROOT = path.resolve(__dirname, '../../..');
+const REPO_ROOT = path.resolve(__dirname, "../../..");
 
 function findContextFiles(dir, fileList = []) {
   const files = fs.readdirSync(dir);
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
 
-    if (stat.isDirectory() && !file.startsWith('.') && file !== 'node_modules') {
+    if (
+      stat.isDirectory() &&
+      !file.startsWith(".") &&
+      file !== "node_modules"
+    ) {
       findContextFiles(filePath, fileList);
-    } else if (file === '.agent-context.json') {
+    } else if (file === ".agent-context.json") {
       fileList.push(filePath);
     }
   });
@@ -28,8 +32,8 @@ function findContextFiles(dir, fileList = []) {
 
 function updateContextFile(filePath) {
   try {
-    const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    const today = new Date().toISOString().split('T')[0];
+    const content = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const today = new Date().toISOString().split("T")[0];
 
     // Ensure metrics object exists
     if (!content.metrics) {
@@ -40,7 +44,7 @@ function updateContextFile(filePath) {
     content.metrics.last_verified = today;
 
     // Write back
-    fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + '\n', 'utf8');
+    fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n", "utf8");
 
     const relativePath = path.relative(REPO_ROOT, filePath);
     console.log(`✅ Updated ${relativePath}`);
@@ -54,33 +58,39 @@ function updateContextFile(filePath) {
 // CLI usage
 if (require.main === module) {
   const args = process.argv.slice(2);
-  const updateAll = args.includes('--all');
+  const updateAll = args.includes("--all");
 
   let filesToUpdate = [];
 
   if (updateAll) {
     filesToUpdate = findContextFiles(REPO_ROOT);
   } else if (args.length > 0) {
-    filesToUpdate = args.map(file => {
-      if (path.isAbsolute(file)) {
-        return file;
-      }
-      return path.join(REPO_ROOT, file);
-    }).filter(file => fs.existsSync(file));
+    filesToUpdate = args
+      .map((file) => {
+        if (path.isAbsolute(file)) {
+          return file;
+        }
+        return path.join(REPO_ROOT, file);
+      })
+      .filter((file) => fs.existsSync(file));
   } else {
-    console.error('Usage: node update-context-verified.js [context-file...] or --all');
+    console.error(
+      "Usage: node update-context-verified.js [context-file...] or --all",
+    );
     process.exit(1);
   }
 
   if (filesToUpdate.length === 0) {
-    console.error('No context files found to update');
+    console.error("No context files found to update");
     process.exit(1);
   }
 
-  console.log(`Updating last_verified date for ${filesToUpdate.length} file(s)...\n`);
+  console.log(
+    `Updating last_verified date for ${filesToUpdate.length} file(s)...\n`,
+  );
 
   let successCount = 0;
-  filesToUpdate.forEach(file => {
+  filesToUpdate.forEach((file) => {
     if (updateContextFile(file)) {
       successCount++;
     }

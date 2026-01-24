@@ -40,6 +40,14 @@ const messageSearchQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(200).optional(),
 });
 
+/**
+ * Helper to ensure param is a string (not string[])
+ * Express params can be string | string[], but we always expect single values
+ */
+function ensureString(param: string | string[]): string {
+  return Array.isArray(param) ? param[0] : param;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for Replit
   app.get("/status", (req, res) => {
@@ -163,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const recommendation = await storage.getRecommendation(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!recommendation) {
@@ -188,7 +196,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const note = await notesData.getNote(req.params.id, req.user!.userId);
+      const note = await notesData.getNote(
+        ensureString(req.params.id),
+        req.user!.userId,
+      );
       if (!note) {
         throw new AppError(404, "Note not found");
       }
@@ -216,7 +227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validate(updateNoteSchema),
     asyncHandler(async (req, res) => {
       const note = await notesData.updateNote(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
         req.body,
       );
@@ -233,7 +244,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const deleted = await notesData.deleteNote(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!deleted) {
@@ -258,7 +269,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const task = await storage.getTask(req.params.id, req.user!.userId);
+      const task = await storage.getTask(
+        ensureString(req.params.id),
+        req.user!.userId,
+      );
       if (!task) {
         throw new AppError(404, "Task not found");
       }
@@ -286,7 +300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validate(updateTaskSchema),
     asyncHandler(async (req, res) => {
       const task = await storage.updateTask(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
         req.body,
       );
@@ -302,7 +316,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const deleted = await storage.deleteTask(req.params.id, req.user!.userId);
+      const deleted = await storage.deleteTask(
+        ensureString(req.params.id),
+        req.user!.userId,
+      );
       if (!deleted) {
         throw new AppError(404, "Task not found");
       }
@@ -325,7 +342,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const project = await storage.getProject(req.params.id, req.user!.userId);
+      const project = await storage.getProject(
+        ensureString(req.params.id),
+        req.user!.userId,
+      );
       if (!project) {
         throw new AppError(404, "Project not found");
       }
@@ -353,7 +373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validate(updateProjectSchema),
     asyncHandler(async (req, res) => {
       const project = await storage.updateProject(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
         req.body,
       );
@@ -370,7 +390,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const deleted = await storage.deleteProject(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!deleted) {
@@ -395,7 +415,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const event = await storage.getEvent(req.params.id, req.user!.userId);
+      const event = await storage.getEvent(
+        ensureString(req.params.id),
+        req.user!.userId,
+      );
       if (!event) {
         throw new AppError(404, "Event not found");
       }
@@ -423,7 +446,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validate(updateEventSchema),
     asyncHandler(async (req, res) => {
       const event = await storage.updateEvent(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
         req.body,
       );
@@ -440,7 +463,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const deleted = await storage.deleteEvent(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!deleted) {
@@ -492,7 +515,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const conversation = await storage.getConversation(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!conversation) {
@@ -522,7 +545,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validate(updateConversationSchema),
     asyncHandler(async (req, res) => {
       const conversation = await storage.updateConversation(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
         req.body,
       );
@@ -539,7 +562,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const deleted = await storage.deleteConversation(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!deleted) {
@@ -576,7 +599,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const messages = await storage.getMessages(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       res.json(messages);
@@ -588,7 +611,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const message = await storage.getMessage(req.params.id, req.user!.userId);
+      const message = await storage.getMessage(
+        ensureString(req.params.id),
+        req.user!.userId,
+      );
       if (!message) {
         throw new AppError(404, "Message not found");
       }
@@ -604,7 +630,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     asyncHandler(async (req, res) => {
       const message = await storage.createMessage({
         ...req.body,
-        conversationId: req.params.id,
+        conversationId: ensureString(req.params.id),
       });
       res.status(201).json(message);
     }),
@@ -617,7 +643,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validate(updateMessageSchema),
     asyncHandler(async (req, res) => {
       const message = await storage.updateMessage(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
         req.body,
       );
@@ -634,7 +660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
       const deleted = await storage.deleteMessage(
-        req.params.id,
+        ensureString(req.params.id),
         req.user!.userId,
       );
       if (!deleted) {

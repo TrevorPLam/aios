@@ -183,7 +183,7 @@ function compileConstitution() {
   console.log("\n✨ Constitution compiled successfully!");
   console.log("\n📝 Next steps:");
   console.log("   1. Review generated files");
-    console.log("   2. Commit changes: git add .github/ .repo/policy/");
+  console.log("   2. Commit changes: git add .github/ .repo/policy/");
   console.log("   3. Push to repository");
 }
 

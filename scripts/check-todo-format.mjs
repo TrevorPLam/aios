@@ -4,15 +4,23 @@
  * Format: // TODO(TICKET-123): description
  */
 
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, extname } from 'path';
+import { readFileSync, readdirSync, statSync } from "fs";
+import { join, extname } from "path";
 
 // Pattern to match TODO/FIXME comments (not in strings or variable names)
-const TODO_COMMENT_PATTERN = /\/\/\s*(TODO|FIXME)|#\s*(TODO|FIXME)|\/\*\s*(TODO|FIXME)|\*\s*(TODO|FIXME)/gi;
+const TODO_COMMENT_PATTERN =
+  /\/\/\s*(TODO|FIXME)|#\s*(TODO|FIXME)|\/\*\s*(TODO|FIXME)|\*\s*(TODO|FIXME)/gi;
 const VALID_TICKET_PATTERN = /(TODO|FIXME)\([A-Z]+-\d+\)/i;
 
-const CODE_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'];
-const EXCLUDE_DIRS = ['node_modules', '.git', 'dist', 'build', 'coverage', '.expo'];
+const CODE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"];
+const EXCLUDE_DIRS = [
+  "node_modules",
+  ".git",
+  "dist",
+  "build",
+  "coverage",
+  ".expo",
+];
 
 let violations = [];
 let totalTodos = 0;
@@ -23,33 +31,46 @@ function shouldProcessFile(filePath) {
 }
 
 function shouldProcessDir(dirName) {
-  return !EXCLUDE_DIRS.includes(dirName) && !dirName.startsWith('.');
+  return !EXCLUDE_DIRS.includes(dirName) && !dirName.startsWith(".");
 }
 
 function scanFile(filePath) {
   try {
-    const content = readFileSync(filePath, 'utf-8');
-    const lines = content.split('\n');
-    
+    const content = readFileSync(filePath, "utf-8");
+    const lines = content.split("\n");
+
     lines.forEach((line, index) => {
       // Only check lines that contain TODO/FIXME comments (not variable names, etc.)
       const trimmedLine = line.trim();
-      
+
       // Skip if it's a string literal, variable name, or regex pattern
-      if (trimmedLine.includes('"TODO') || trimmedLine.includes("'TODO") || 
-          trimmedLine.includes('`TODO') || trimmedLine.includes('const TODO') ||
-          trimmedLine.includes('let TODO') || trimmedLine.includes('var TODO') ||
-          trimmedLine.includes('TODO =') || trimmedLine.includes('TODO:') ||
-          trimmedLine.includes('TODO count') || trimmedLine.includes('TODO_PATH') ||
-          trimmedLine.includes('getTodoCount') || trimmedLine.includes('todoContent') ||
-          trimmedLine.includes('todoMatch') || trimmedLine.includes('totalTodos') ||
-          trimmedLine.includes('todoCount') || trimmedLine.includes('P0TODO') ||
-          trimmedLine.includes('P1TODO') || trimmedLine.includes('P2TODO') ||
-          trimmedLine.includes('P3TODO') || trimmedLine.includes('pattern:') ||
-          trimmedLine.includes('/.*TODO') || trimmedLine.match(/\/.*TODO.*\//)) {
+      if (
+        trimmedLine.includes('"TODO') ||
+        trimmedLine.includes("'TODO") ||
+        trimmedLine.includes("`TODO") ||
+        trimmedLine.includes("const TODO") ||
+        trimmedLine.includes("let TODO") ||
+        trimmedLine.includes("var TODO") ||
+        trimmedLine.includes("TODO =") ||
+        trimmedLine.includes("TODO:") ||
+        trimmedLine.includes("TODO count") ||
+        trimmedLine.includes("TODO_PATH") ||
+        trimmedLine.includes("getTodoCount") ||
+        trimmedLine.includes("todoContent") ||
+        trimmedLine.includes("todoMatch") ||
+        trimmedLine.includes("totalTodos") ||
+        trimmedLine.includes("todoCount") ||
+        trimmedLine.includes("P0TODO") ||
+        trimmedLine.includes("P1TODO") ||
+        trimmedLine.includes("P2TODO") ||
+        trimmedLine.includes("P3TODO") ||
+        trimmedLine.includes("pattern:") ||
+        trimmedLine.includes("/.*TODO") ||
+        trimmedLine.match(/\/.*TODO.*\//)
+      ) {
         return; // Skip this line
       }
-      
+
       // Check for actual TODO/FIXME comments
       const commentMatch = line.match(TODO_COMMENT_PATTERN);
       if (commentMatch) {
@@ -58,7 +79,7 @@ function scanFile(filePath) {
           violations.push({
             file: filePath,
             line: index + 1,
-            content: line.trim()
+            content: line.trim(),
           });
         }
       }
@@ -71,11 +92,11 @@ function scanFile(filePath) {
 function scanDirectory(dirPath) {
   try {
     const entries = readdirSync(dirPath);
-    
+
     for (const entry of entries) {
       const fullPath = join(dirPath, entry);
       const stat = statSync(fullPath);
-      
+
       if (stat.isDirectory() && shouldProcessDir(entry)) {
         scanDirectory(fullPath);
       } else if (stat.isFile() && shouldProcessFile(fullPath)) {
@@ -93,7 +114,9 @@ scanDirectory(startDir);
 
 // Report results
 if (violations.length > 0) {
-  console.error(`\n❌ Found ${violations.length} TODO/FIXME comments without ticket IDs:\n`);
+  console.error(
+    `\n❌ Found ${violations.length} TODO/FIXME comments without ticket IDs:\n`,
+  );
   violations.forEach(({ file, line, content }) => {
     console.error(`  ${file}:${line}`);
     console.error(`    ${content}`);

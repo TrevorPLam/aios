@@ -13,7 +13,7 @@ const createNext = (): NextCollector => {
   return collector;
 };
 
-const createRequest = (body: unknown): Request => ({ body } as Request);
+const createRequest = (body: unknown): Request => ({ body }) as Request;
 
 const response = {} as Response;
 

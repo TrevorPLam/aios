@@ -61,7 +61,11 @@
         "3. Update ClientSerializer in serializers.py",
         "4. Update tests in tests/clients/"
       ],
-      "files": ["backend/modules/clients/models/clients.py", "backend/modules/clients/serializers.py", "backend/modules/clients/migrations/"]
+      "files": [
+        "backend/modules/clients/models/clients.py",
+        "backend/modules/clients/serializers.py",
+        "backend/modules/clients/migrations/"
+      ]
     },
     {
       "task": "Add new contact model",
@@ -74,7 +78,11 @@
         "6. Add viewset",
         "7. Add tests"
       ],
-      "files": ["backend/modules/clients/models/contacts.py", "backend/modules/clients/serializers.py", "backend/modules/clients/views.py"]
+      "files": [
+        "backend/modules/clients/models/contacts.py",
+        "backend/modules/clients/serializers.py",
+        "backend/modules/clients/views.py"
+      ]
     }
   ],
   "metrics": {

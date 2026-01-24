@@ -54,12 +54,15 @@
         "4. Use functional component pattern",
         "5. Add tests in frontend/tests/"
       ],
-      "files": ["frontend/src/components/Component.tsx", "frontend/src/components/Component.css"]
+      "files": [
+        "frontend/src/components/Component.tsx",
+        "frontend/src/components/Component.css"
+      ]
     }
   ],
   "metrics": {
     "files_count": 8,
     "last_modified": "2026-01-23",
-    "test_coverage": 0.80
+    "test_coverage": 0.8
   }
 }
