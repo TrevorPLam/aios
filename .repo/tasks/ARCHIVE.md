@@ -33,6 +33,96 @@
 
 ---
 
+### [TASK-026] Add Request Size Limits to Express ✓
+- **Priority:** P0
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** Express doesn't have explicit body size limits configured. Could allow memory exhaustion attacks.
+
+#### Acceptance Criteria
+- [x] Add `express.json({ limit: '10mb' })` to body parsing middleware
+- [x] Add `express.urlencoded({ limit: '10mb' })` for form data
+- [x] Configure appropriate limits for file uploads
+- [x] Return clear error messages for oversized requests
+- [x] Test with large payloads
+
+#### Outcome
+- Added 10mb size limits to `express.json()` and `express.urlencoded()` in `apps/api/index.ts`
+- Prevents memory exhaustion DoS attacks
+- Clear error messages returned automatically by Express when limit exceeded
+
+---
+
+### [TASK-025] Add Max Length Validation to All String Fields ✓
+- **Priority:** P0
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** Zod schemas validate format but may not limit length. Could allow DoS via large payloads.
+
+#### Acceptance Criteria
+- [x] Audit all Zod schemas in `packages/contracts/schema.ts`
+- [x] Add `.max()` validation to all string fields
+- [x] Set reasonable limits (e.g., title: 200, description: 5000)
+- [x] Update API error messages
+- [x] Test with oversized payloads
+
+#### Outcome
+- Added max length validation to all string fields in Zod schemas
+- Limits: Username: 50, Password: 100, Titles: 200, Descriptions: 5000, Notes: 50000, Messages: 10000
+- Created comprehensive test suite with 18 test cases covering all schemas
+- Also fixed type error in analytics schema (`z.record()` now properly typed)
+
+---
+
+### [TASK-022] Add Rate Limiting to Authentication Endpoints ✓
+- **Priority:** P0
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** `/api/auth/login` and `/api/auth/register` have no rate limiting. Vulnerable to brute force attacks.
+
+#### Acceptance Criteria
+- [x] Install rate limiting middleware (express-rate-limit)
+- [x] Add rate limiting to `/api/auth/login` (e.g., 5 attempts per 15 minutes)
+- [x] Add rate limiting to `/api/auth/register` (e.g., 3 attempts per hour)
+- [x] Return appropriate error messages
+- [x] Test rate limiting behavior
+
+#### Outcome
+- Installed `express-rate-limit` package
+- Created `apps/api/middleware/rateLimiter.ts` with two limiters:
+  - Login: 5 attempts per 15 minutes (only counts failed attempts)
+  - Register: 3 attempts per hour
+- Integrated rate limiters into authentication routes
+- Added 5 comprehensive test cases
+- Includes standard rate limit headers (RateLimit-*)
+
+---
+
+### [TASK-021] Remove Default JWT_SECRET, Require Environment Variable ✓
+- **Priority:** P0
+- **Status:** Completed
+- **Created:** 2026-01-23
+- **Completed:** 2026-01-24
+- **Context:** JWT_SECRET has a default value in code, which is a security risk if deployed without environment variable.
+
+#### Acceptance Criteria
+- [x] Remove default JWT_SECRET from `apps/api/middleware/auth.ts`
+- [x] Fail fast if JWT_SECRET not set in production
+- [x] Add validation on server startup
+- [x] Update documentation to require JWT_SECRET
+
+#### Outcome
+- Removed default fallback value for JWT_SECRET
+- Server now fails immediately on startup if JWT_SECRET is not set
+- Updated `.env.example` with clear documentation and generation command
+- Added 3 comprehensive test cases to verify behavior
+- Prevents accidental production deployment with weak/default secret
+
+---
+
 ### [TASK-073] Add Hot Reload for API Server Development
 - **Priority:** P1
 - **Status:** Completed
