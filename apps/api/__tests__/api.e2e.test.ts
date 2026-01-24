@@ -4,6 +4,10 @@
  * Validates a full auth → notes workflow against the in-memory server.
  * Focuses on non-UI flows to stay safe during the ongoing refactor.
  */
+
+// Set JWT_SECRET before importing routes
+process.env.JWT_SECRET = "test-jwt-secret-for-e2e-tests";
+
 import express from "express";
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";

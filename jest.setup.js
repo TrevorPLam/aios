@@ -1,5 +1,8 @@
 /* eslint-env jest */
 
+// Set JWT_SECRET for all tests
+process.env.JWT_SECRET = "test-jwt-secret-for-all-tests";
+
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
