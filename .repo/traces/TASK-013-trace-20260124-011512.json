@@ -1,0 +1,27 @@
+{
+  "intent": "Refactor notes routes to use feature data layer",
+  "task_id": "TASK-013",
+  "timestamp": "2026-01-24T01:15:12Z",
+  "files": [
+    "apps/api/routes.ts",
+    "apps/api/storage.ts",
+    "packages/features/notes/data/index.ts",
+    "docs/adr/ADR-0001.md",
+    ".repo/tasks/packets/TASK-013-packet.json",
+    ".repo/logs/TASK-013-log-20260124-011517.json",
+    ".repo/traces/TASK-013-trace-20260124-011512.json"
+  ],
+  "commands": [
+    "node .repo/automation/scripts/check-boundaries.js",
+    "npm run lint",
+    "bash scripts/generate-trace-log.sh TASK-013 \"Refactor notes routes to use feature data layer\"",
+    "bash scripts/generate-agent-log.sh TASK-013 \"Refactor notes routes to feature data layer\"",
+    "bash scripts/create-adr-from-trigger.sh"
+  ],
+  "evidence": [
+    "Boundary check failed: lint-imports not found (install import-linter).",
+    "npm run lint failed: 403 Forbidden from registry.npmjs.org (expo)."
+  ],
+  "hitl": [],
+  "unknowns": []
+}

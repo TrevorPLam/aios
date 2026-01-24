@@ -1,0 +1,33 @@
+{
+  "intent": "Refactor notes routes to feature data layer",
+  "plan": [
+    "Implement notes data layer with in-memory storage in packages/features/notes/data/index.ts.",
+    "Update apps/api routes and storage to use the notes data layer.",
+    "Document cross-module dependency with ADR and task packet.",
+    "Run boundary check and lint, then record evidence."
+  ],
+  "actions": [
+    "Added notesData data-layer helper with CRUD methods backed by an in-memory Map.",
+    "Switched notes routes to use notesData and delegated storage note methods to notesData.",
+    "Created ADR-0001 documenting the apps/api to feature data layer dependency.",
+    "Created a TASK-013 task packet documenting scope and verification.",
+    "Ran boundary check and lint commands; captured results in trace log."
+  ],
+  "evidence": [
+    "node .repo/automation/scripts/check-boundaries.js (failed: lint-imports not found)",
+    "npm run lint (failed: 403 Forbidden from registry.npmjs.org)"
+  ],
+  "decisions": [
+    "Implemented a notes-specific in-memory data layer to preserve current behavior while moving note logic out of apps/api.",
+    "Documented the cross-module dependency via ADR-0001."
+  ],
+  "risks": [
+    "Notes data layer still uses in-memory storage; persistence remains unchanged until TASK-014/TASK-015 migrate to database.",
+    "Cross-module imports require ongoing governance checks to prevent unwanted coupling."
+  ],
+  "follow_ups": [
+    "Expand feature data layers and refactor remaining API routes per TASK-013/TASK-014."
+  ],
+  "reasoning_summary": "Moved notes CRUD logic into a feature data layer to start the TASK-013 refactor while keeping behavior consistent with existing in-memory storage, and documented the new dependency via ADR and task packet.",
+  "notes": "No secrets. No private data. No raw chain-of-thought."
+}

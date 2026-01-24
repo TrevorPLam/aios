@@ -20,6 +20,7 @@ import type {
   AnalyticsEvent,
   InsertAnalyticsEvent,
 } from "@shared/schema";
+import { notesData } from "@features/notes/data";
 import { randomUUID } from "crypto";
 
 const MESSAGE_PREVIEW_LIMIT = 80;
@@ -200,7 +201,6 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private recommendations: Map<string, Recommendation>;
-  private notes: Map<string, Note>;
   private tasks: Map<string, Task>;
   private projects: Map<string, Project>;
   private events: Map<string, Event>;
@@ -212,7 +212,6 @@ export class MemStorage implements IStorage {
   constructor() {
     this.users = new Map();
     this.recommendations = new Map();
-    this.notes = new Map();
     this.tasks = new Map();
     this.projects = new Map();
     this.events = new Map();
@@ -322,29 +321,17 @@ export class MemStorage implements IStorage {
 
   // Note methods
   async getNotes(userId: string): Promise<Note[]> {
-    return Array.from(this.notes.values()).filter(
-      (note) => note.userId === userId,
-    );
+    return notesData.getNotes(userId);
   }
 
   async getNote(id: string, userId: string): Promise<Note | undefined> {
-    const note = this.notes.get(id);
-    return note?.userId === userId ? note : undefined;
+    return notesData.getNote(id, userId);
   }
 
   async createNote(
     note: Omit<Note, "id" | "createdAt" | "updatedAt">,
   ): Promise<Note> {
-    const id = randomUUID();
-    const now = new Date();
-    const newNote: Note = {
-      ...note,
-      id,
-      createdAt: now,
-      updatedAt: now,
-    };
-    this.notes.set(id, newNote);
-    return newNote;
+    return notesData.createNote(note);
   }
 
   async updateNote(
@@ -352,18 +339,11 @@ export class MemStorage implements IStorage {
     userId: string,
     updates: Partial<Note>,
   ): Promise<Note | undefined> {
-    const note = this.notes.get(id);
-    if (!note || note.userId !== userId) return undefined;
-
-    const updated = { ...note, ...updates, updatedAt: new Date() };
-    this.notes.set(id, updated);
-    return updated;
+    return notesData.updateNote(id, userId, updates);
   }
 
   async deleteNote(id: string, userId: string): Promise<boolean> {
-    const note = this.notes.get(id);
-    if (!note || note.userId !== userId) return false;
-    return this.notes.delete(id);
+    return notesData.deleteNote(id, userId);
   }
 
   // Task methods
