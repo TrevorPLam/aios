@@ -132,5 +132,6 @@ Update the statistics table in `ARCHIVE.md` when completing tasks:
 ## 🔗 Related Files
 
 - `/AGENTS.md` — Main agent instructions for the repository
-- `docs/development/README.md` — Development workflow documentation
-- `docs/` — Documentation directory
+- `/CONTRIBUTING.md` — Contribution guidelines
+- `/.repo/policy/CONSTITUTION.md` — Repository governance rules
+- `/.repo/policy/PRINCIPLES.md` — Operating principles

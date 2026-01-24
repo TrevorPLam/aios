@@ -26,7 +26,7 @@ describe("Schema Validation Security", () => {
         username: longUsername,
         password: "validpassword",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("50 characters");
@@ -39,7 +39,7 @@ describe("Schema Validation Security", () => {
         username: "validuser",
         password: longPassword,
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("100 characters");
@@ -51,7 +51,7 @@ describe("Schema Validation Security", () => {
         username: "validuser",
         password: "validpassword123",
       });
-      
+
       expect(result.success).toBe(true);
     });
   });
@@ -65,7 +65,7 @@ describe("Schema Validation Security", () => {
         tags: [],
         links: [],
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("200 characters");
@@ -80,7 +80,7 @@ describe("Schema Validation Security", () => {
         tags: [],
         links: [],
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("50000 characters");
@@ -94,7 +94,7 @@ describe("Schema Validation Security", () => {
         tags: ["tag1"],
         links: ["http://example.com"],
       });
-      
+
       expect(result.success).toBe(true);
     });
   });
@@ -108,7 +108,7 @@ describe("Schema Validation Security", () => {
         priority: "high",
         status: "pending",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("200 characters");
@@ -123,7 +123,7 @@ describe("Schema Validation Security", () => {
         priority: "high",
         status: "pending",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("5000 characters");
@@ -138,7 +138,7 @@ describe("Schema Validation Security", () => {
         name: longName,
         description: "Valid description",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("200 characters");
@@ -151,7 +151,7 @@ describe("Schema Validation Security", () => {
         name: "Valid Project",
         description: longDesc,
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("5000 characters");
@@ -170,7 +170,7 @@ describe("Schema Validation Security", () => {
         endAt: new Date().toISOString(),
         timezone: "UTC",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("200 characters");
@@ -187,7 +187,7 @@ describe("Schema Validation Security", () => {
         endAt: new Date().toISOString(),
         timezone: "UTC",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("500 characters");
@@ -205,7 +205,7 @@ describe("Schema Validation Security", () => {
         content: longContent,
         type: "text",
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("10000 characters");
@@ -220,7 +220,7 @@ describe("Schema Validation Security", () => {
         content: "This is a valid message",
         type: "text",
       });
-      
+
       expect(result.success).toBe(true);
     });
   });
@@ -231,7 +231,7 @@ describe("Schema Validation Security", () => {
       const result = insertSettingsSchema.safeParse({
         aiName: longName,
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("50 characters");
@@ -244,11 +244,11 @@ describe("Schema Validation Security", () => {
         aiName: "AIOS",
         aiCustomPrompt: longPrompt,
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
-        const promptError = result.error.issues.find(issue => 
-          issue.path.includes('aiCustomPrompt')
+        const promptError = result.error.issues.find((issue) =>
+          issue.path.includes("aiCustomPrompt"),
         );
         expect(promptError?.message).toContain("10000 characters");
       }
@@ -262,7 +262,7 @@ describe("Schema Validation Security", () => {
         type: "direct",
         name: longName,
       });
-      
+
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toContain("200 characters");
@@ -281,7 +281,7 @@ describe("Schema Validation Security", () => {
         isMuted: false,
         isArchived: false,
       });
-      
+
       expect(result.success).toBe(true);
     });
   });

@@ -212,60 +212,84 @@ export const messages = pgTable("messages", {
 
 // Zod schemas for validation with max length limits for security
 export const insertUserSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters").max(50, "Username must not exceed 50 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters").max(100, "Password must not exceed 100 characters"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(50, "Username must not exceed 50 characters"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password must not exceed 100 characters"),
 });
 
 export const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters").max(50, "Username must not exceed 50 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters").max(100, "Password must not exceed 100 characters"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(50, "Username must not exceed 50 characters"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password must not exceed 100 characters"),
 });
 
-export const insertRecommendationSchema = createInsertSchema(
-  recommendations,
-).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-}).extend({
-  title: z.string().max(200, "Title must not exceed 200 characters"),
-  summary: z.string().max(1000, "Summary must not exceed 1000 characters"),
-  why: z.string().max(2000, "Why field must not exceed 2000 characters"),
-});
+export const insertRecommendationSchema = createInsertSchema(recommendations)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+  })
+  .extend({
+    title: z.string().max(200, "Title must not exceed 200 characters"),
+    summary: z.string().max(1000, "Summary must not exceed 1000 characters"),
+    why: z.string().max(2000, "Why field must not exceed 2000 characters"),
+  });
 
-export const insertNoteSchema = createInsertSchema(notes).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  title: z.string().max(200, "Title must not exceed 200 characters"),
-  bodyMarkdown: z.string().max(50000, "Note content must not exceed 50000 characters"),
-});
+export const insertNoteSchema = createInsertSchema(notes)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    title: z.string().max(200, "Title must not exceed 200 characters"),
+    bodyMarkdown: z
+      .string()
+      .max(50000, "Note content must not exceed 50000 characters"),
+  });
 
 export const updateNoteSchema = insertNoteSchema.partial();
 
-export const insertTaskSchema = createInsertSchema(tasks).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  title: z.string().max(200, "Title must not exceed 200 characters"),
-  userNotes: z.string().max(5000, "User notes must not exceed 5000 characters"),
-});
+export const insertTaskSchema = createInsertSchema(tasks)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    title: z.string().max(200, "Title must not exceed 200 characters"),
+    userNotes: z
+      .string()
+      .max(5000, "User notes must not exceed 5000 characters"),
+  });
 
 export const updateTaskSchema = insertTaskSchema.partial();
 
-export const insertProjectSchema = createInsertSchema(projects).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  name: z.string().max(200, "Name must not exceed 200 characters"),
-  description: z.string().max(5000, "Description must not exceed 5000 characters"),
-});
+export const insertProjectSchema = createInsertSchema(projects)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    name: z.string().max(200, "Name must not exceed 200 characters"),
+    description: z
+      .string()
+      .max(5000, "Description must not exceed 5000 characters"),
+  });
 
 export const updateProjectSchema = insertProjectSchema.partial();
 
@@ -278,7 +302,9 @@ export const insertEventSchema = createInsertSchema(events)
   })
   .extend({
     title: z.string().max(200, "Title must not exceed 200 characters"),
-    description: z.string().max(5000, "Description must not exceed 5000 characters"),
+    description: z
+      .string()
+      .max(5000, "Description must not exceed 5000 characters"),
     location: z.string().max(500, "Location must not exceed 500 characters"),
     // Centralized meeting link validation keeps API sync aligned with client UI.
     meetingLink: meetingLinkSchema,
@@ -286,38 +312,54 @@ export const insertEventSchema = createInsertSchema(events)
 
 export const updateEventSchema = insertEventSchema.partial();
 
-export const insertSettingsSchema = createInsertSchema(settings).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  aiName: z.string().max(50, "AI name must not exceed 50 characters"),
-  aiCustomPrompt: z.string().max(10000, "Custom prompt must not exceed 10000 characters"),
-});
+export const insertSettingsSchema = createInsertSchema(settings)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    aiName: z.string().max(50, "AI name must not exceed 50 characters"),
+    aiCustomPrompt: z
+      .string()
+      .max(10000, "Custom prompt must not exceed 10000 characters"),
+  });
 
 export const updateSettingsSchema = insertSettingsSchema.partial();
 
-export const insertConversationSchema = createInsertSchema(conversations).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  name: z.string().max(200, "Conversation name must not exceed 200 characters"),
-  lastMessagePreview: z.string().max(500, "Message preview must not exceed 500 characters"),
-});
+export const insertConversationSchema = createInsertSchema(conversations)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    name: z
+      .string()
+      .max(200, "Conversation name must not exceed 200 characters"),
+    lastMessagePreview: z
+      .string()
+      .max(500, "Message preview must not exceed 500 characters"),
+  });
 
 export const updateConversationSchema = insertConversationSchema.partial();
 
-export const insertMessageSchema = createInsertSchema(messages).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  senderName: z.string().max(100, "Sender name must not exceed 100 characters"),
-  content: z.string().max(10000, "Message content must not exceed 10000 characters"),
-});
+export const insertMessageSchema = createInsertSchema(messages)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    senderName: z
+      .string()
+      .max(100, "Sender name must not exceed 100 characters"),
+    content: z
+      .string()
+      .max(10000, "Message content must not exceed 10000 characters"),
+  });
 
 export const updateMessageSchema = insertMessageSchema.partial();
 

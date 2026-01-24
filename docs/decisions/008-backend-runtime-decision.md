@@ -23,7 +23,7 @@ The Django `backend/` tree is designated **legacy** and should not receive new d
 ## How This Decision Was Made
 
 1. Reviewed repository structure and existing backend entrypoints (`backend/` vs `apps/api/`).
-2. Confirmed the architectural blocker called out in TASK-012 (derived from PROJECT_ANALYSIS.md section 2.3).
+2. Confirmed the architectural blocker called out in TASK-012 (derived from [PROJECT_ANALYSIS.md](../../docs/archive/analysis/PROJECT_ANALYSIS.md) section 2.3).
 3. Selected the runtime currently aligned with application shells and existing backend docs in `apps/`.
 
 ## Alternatives Considered

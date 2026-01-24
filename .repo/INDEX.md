@@ -14,14 +14,7 @@ This file catalogs the contents of the `.repo/` governance directory. See [root 
 - `CHANGELOG.md` - Framework change history
 - `INDEX.md` - This file
 
-### Current Analysis & Progress
-- `CRITICAL_ANALYSIS_FAILURES.md` - Current critical analysis of system gaps
-- `PROJECTED_ANALYSIS_AFTER_FIXES.md` - Projected analysis after fixes
-- `IMPLEMENTATION_PROGRESS.md` - Current implementation progress tracking
-
-### Entry Points (Root Level)
-- `AGENTS.json` - **Primary entry point** (structured JSON for model parsing)
-- `AGENTS.md` - Entry point (human-readable fallback)
+**Note:** All documentation and analysis files have been moved to root `docs/` directory. See [`docs/INDEX.md`](../docs/INDEX.md) for documentation structure.
 
 ### `policy/` - Authoritative Governance Rules
 - `CONSTITUTION.md` - 8 fundamental articles (immutable)
@@ -71,10 +64,8 @@ This file catalogs the contents of the `.repo/` governance directory. See [root 
 - `TODO.md` - Current active task (ONE only)
 - `BACKLOG.md` - Prioritized task queue (P0→P3)
 - `ARCHIVE.md` - Completed tasks
-- `REMAINING_TASKS.md` - Remaining implementation tasks from critical analysis
 - `README.md` - Task management workflow
-
-**Note:** Documentation has been moved to root `docs/` directory. See [`docs/README.md`](../docs/README.md) for documentation structure.
+- `packets/` - Task packet files
 
 ### `automation/` - Automation Infrastructure
 - `ci/` - CI automation
@@ -96,9 +87,7 @@ This file catalogs the contents of the `.repo/` governance directory. See [root 
 ### `waivers/` - Policy Waivers
 - Active policy waivers stored here
 
-### `archive/` - Historical Documents
-- `assessments/` - Archived assessment and analysis documents (historical reference only)
-  - See `archive/assessments/README.md` for details
+**Note:** Historical documents and analysis files have been moved to root `docs/archive/` directory.
 
 ## Navigation
 

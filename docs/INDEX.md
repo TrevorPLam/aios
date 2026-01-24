@@ -30,7 +30,7 @@ This index provides direct links to all active documentation in the repository.
 | [DOCUMENTATION_BEST_PRACTICES.md](processes/DOCUMENTATION_BEST_PRACTICES.md) | Documentation standards | - |
 | [DOCUMENTATION_QUALITY_CONTROL.md](processes/DOCUMENTATION_QUALITY_CONTROL.md) | Documentation quality controls | - |
 | [DOCUMENTATION_METRICS.md](../DOCUMENTATION_METRICS.md) | Documentation health dashboard | - |
-| [QUICK_REFERENCE.md](../QUICK_REFERENCE.md) | Mobile configuration reference | 145 lines |
+| [QUICK_REFERENCE.md](archive/project-management/QUICK_REFERENCE.md) | Mobile configuration reference (archived) | 145 lines |
 | [P0TODO.md](../P0TODO.md) | P0 task backlog | - |
 | [P1TODO.md](../P1TODO.md) | P1 task backlog | - |
 | [P2TODO.md](../P2TODO.md) | P2 task backlog | - |

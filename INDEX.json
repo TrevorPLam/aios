@@ -1,0 +1,159 @@
+{
+  "file": "INDEX.json",
+  "description": "Master index of all directories in the repository",
+  "directories": [
+    {
+      "name": ".repo/",
+      "purpose": "Governance framework, policies, agent rules",
+      "indexFile": ".repo/INDEX.md"
+    },
+    {
+      "name": "apps/",
+      "purpose": "Applications (mobile, API, web)",
+      "indexFile": "apps/INDEX.md"
+    },
+    {
+      "name": "packages/",
+      "purpose": "Shared packages (features, platform, design-system, contracts)",
+      "indexFile": "packages/INDEX.md"
+    },
+    {
+      "name": "docs/",
+      "purpose": "Documentation (architecture, onboarding, runbooks)",
+      "indexFile": "docs/INDEX.md"
+    },
+    {
+      "name": "scripts/",
+      "purpose": "Automation and utility scripts",
+      "indexFile": "scripts/INDEX.md"
+    },
+    {
+      "name": "agents/tasks/",
+      "purpose": "Task management (TODO, BACKLOG, ARCHIVE)",
+      "indexFile": "See agents/tasks/ directory"
+    }
+  ],
+  "quickNavigation": {
+    "applications": [
+      {
+        "name": "Mobile App",
+        "path": "apps/mobile/",
+        "description": "React Native/Expo mobile application"
+      },
+      {
+        "name": "API Server",
+        "path": "apps/api/",
+        "description": "Node.js/Express backend API"
+      },
+      {
+        "name": "Web App",
+        "path": "apps/web/",
+        "description": "Web application (if applicable)"
+      }
+    ],
+    "packages": [
+      {
+        "name": "Features",
+        "path": "packages/features/",
+        "description": "Feature modules (vertical slices)"
+      },
+      {
+        "name": "Platform",
+        "path": "packages/platform/",
+        "description": "Platform adapters and primitives"
+      },
+      {
+        "name": "Design System",
+        "path": "packages/design-system/",
+        "description": "Shared UI components"
+      },
+      {
+        "name": "Contracts",
+        "path": "packages/contracts/",
+        "description": "Shared types and schemas"
+      }
+    ],
+    "supportingDirectories": [
+      {
+        "name": "Documentation",
+        "path": "docs/INDEX.md",
+        "description": "Comprehensive documentation index"
+      },
+      {
+        "name": "Scripts",
+        "path": "scripts/INDEX.md",
+        "description": "Automation scripts"
+      },
+      {
+        "name": "Governance",
+        "path": ".repo/INDEX.md",
+        "description": "Policies, agent framework, HITL"
+      }
+    ]
+  },
+  "keyEntryPoints": {
+    "developers": [
+      {
+        "name": "Getting Started",
+        "path": "README.md",
+        "description": "Project overview and quick start"
+      },
+      {
+        "name": "Contributing",
+        "path": "CONTRIBUTING.md",
+        "description": "Contribution guidelines"
+      },
+      {
+        "name": "AI Agents",
+        "path": "AGENTS.md",
+        "description": "AI contribution guide"
+      }
+    ],
+    "governance": [
+      {
+        "name": "Governance Framework",
+        "path": ".repo/GOVERNANCE.md",
+        "description": "Entry point"
+      },
+      {
+        "name": "Constitution",
+        "path": ".repo/policy/CONSTITUTION.md",
+        "description": "Fundamental rules"
+      },
+      {
+        "name": "Agent Framework",
+        "path": ".repo/agents/AGENTS.md",
+        "description": "Agent rules"
+      }
+    ],
+    "documentation": [
+      {
+        "name": "Documentation Index",
+        "path": "docs/INDEX.md",
+        "description": "Complete documentation catalog"
+      },
+      {
+        "name": "Architecture",
+        "path": "docs/architecture/",
+        "description": "System architecture"
+      },
+      {
+        "name": "API Docs",
+        "path": "docs/apis/",
+        "description": "API documentation"
+      }
+    ]
+  },
+  "taskManagement": {
+    "archive": {
+      "path": "agents/tasks/ARCHIVE.md",
+      "description": "Archived tasks"
+    }
+  },
+  "seeAlso": [
+    ".repo/GOVERNANCE.md",
+    "README.md",
+    "AGENTS.md",
+    "packages/README.md"
+  ]
+}

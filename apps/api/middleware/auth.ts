@@ -6,7 +6,7 @@ import { AppError } from "./errorHandler";
 if (!process.env.JWT_SECRET) {
   throw new Error(
     "FATAL: JWT_SECRET environment variable is required. " +
-    "Set JWT_SECRET in your environment before starting the server."
+      "Set JWT_SECRET in your environment before starting the server.",
   );
 }
 

@@ -74,6 +74,19 @@ function runCommand(cmd, silent = false) {
   }
 }
 
+function commandExists(cmd) {
+  try {
+    if (process.platform === "win32") {
+      execSync(`where ${cmd}`, { stdio: "ignore" });
+    } else {
+      execSync(`which ${cmd}`, { stdio: "ignore" });
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Check 1: Required policy files
 function checkPolicyFiles() {
   logInfo("Checking required policy files...");

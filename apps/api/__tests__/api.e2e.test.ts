@@ -6,12 +6,12 @@
  */
 
 // Set JWT_SECRET before importing routes
-process.env.JWT_SECRET = "test-jwt-secret-for-e2e-tests";
-
 import express from "express";
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { registerRoutes } from "../routes";
+
+process.env.JWT_SECRET = "test-jwt-secret-for-e2e-tests";
 
 describe("API E2E", () => {
   let server: Server;

@@ -8,7 +8,10 @@
  */
 import request from "supertest";
 import express, { type Express } from "express";
-import { loginRateLimiter, registerRateLimiter } from "../middleware/rateLimiter";
+import {
+  loginRateLimiter,
+  registerRateLimiter,
+} from "../middleware/rateLimiter";
 
 describe("Rate Limiting Security", () => {
   let app: Express;
@@ -66,7 +69,7 @@ describe("Rate Limiting Security", () => {
       });
 
       const response = await request(app).post("/test-endpoint").send({});
-      
+
       // Check for standard rate limit headers
       expect(response.headers["ratelimit-limit"]).toBeDefined();
       expect(response.headers["ratelimit-remaining"]).toBeDefined();

@@ -99,5 +99,5 @@ git commit -m "test: valid format"
 ## Need Help?
 
 - See `SETUP_INSTRUCTIONS.md` for detailed guide
-- See `EXECUTION_COMPLETE.md` for what's been done
+- See `EXECUTION_COMPLETE.md` (in this archive directory) for what's been done
 - Check GitHub Actions logs after your next PR

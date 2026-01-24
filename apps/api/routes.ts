@@ -9,7 +9,10 @@ import {
   validateParams,
   validateQuery,
 } from "./middleware/validation";
-import { loginRateLimiter, registerRateLimiter } from "./middleware/rateLimiter";
+import {
+  loginRateLimiter,
+  registerRateLimiter,
+} from "./middleware/rateLimiter";
 import { notesData } from "@features/notes/data";
 import {
   insertUserSchema,
