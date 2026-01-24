@@ -62,7 +62,11 @@
         "7. Create initial migration: python manage.py makemigrations {module_name}",
         "8. Add tests in tests/{module_name}/"
       ],
-      "files": ["backend/modules/{module_name}/*", "backend/config/settings.py", "tests/{module_name}/*"]
+      "files": [
+        "backend/modules/{module_name}/*",
+        "backend/config/settings.py",
+        "tests/{module_name}/*"
+      ]
     },
     {
       "task": "Add field to existing model",
@@ -72,7 +76,11 @@
         "3. Update serializer if needed",
         "4. Update tests"
       ],
-      "files": ["backend/modules/{module_name}/models.py", "backend/modules/{module_name}/serializers.py", "backend/modules/{module_name}/migrations/"]
+      "files": [
+        "backend/modules/{module_name}/models.py",
+        "backend/modules/{module_name}/serializers.py",
+        "backend/modules/{module_name}/migrations/"
+      ]
     }
   ],
   "metrics": {

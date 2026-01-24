@@ -68,7 +68,11 @@
         "5. Add viewset with FirmScopedMixin",
         "6. Add tests"
       ],
-      "files": ["backend/modules/firm/models.py", "backend/modules/firm/serializers.py", "backend/modules/firm/views.py"]
+      "files": [
+        "backend/modules/firm/models.py",
+        "backend/modules/firm/serializers.py",
+        "backend/modules/firm/views.py"
+      ]
     },
     {
       "task": "Update firm context middleware",
@@ -78,7 +82,10 @@
         "3. Update tests",
         "4. Document changes"
       ],
-      "files": ["backend/modules/firm/middleware.py", "tests/firm/test_middleware.py"]
+      "files": [
+        "backend/modules/firm/middleware.py",
+        "tests/firm/test_middleware.py"
+      ]
     }
   ],
   "metrics": {

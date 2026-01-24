@@ -27,7 +27,12 @@
   "context_determination": {
     "security": {
       "triggers": ["auth", "money", "external_systems", "payment_flows"],
-      "action": ["read", ".repo/policy/SECURITY_BASELINE.md", "create_hitl", "stop_work"]
+      "action": [
+        "read",
+        ".repo/policy/SECURITY_BASELINE.md",
+        "create_hitl",
+        "stop_work"
+      ]
     },
     "boundaries": {
       "triggers": ["cross_module_imports"],
@@ -35,7 +40,12 @@
     },
     "backend_frontend": {
       "triggers": ["backend_code", "frontend_code"],
-      "action": ["read", ".repo/policy/BESTPR.md", "read_folder_guide", "read_agent_context_json"]
+      "action": [
+        "read",
+        ".repo/policy/BESTPR.md",
+        "read_folder_guide",
+        "read_agent_context_json"
+      ]
     },
     "folder_entry": {
       "triggers": ["entering_folder"],
@@ -43,7 +53,13 @@
     },
     "unknown": {
       "triggers": ["not_in_docs", "not_in_manifest", "not_in_code"],
-      "action": ["mark_unknown", "read", ".repo/policy/HITL.md", "create_hitl", "stop_work"]
+      "action": [
+        "mark_unknown",
+        "read",
+        ".repo/policy/HITL.md",
+        "create_hitl",
+        "stop_work"
+      ]
     }
   },
 
@@ -168,7 +184,10 @@
   "troubleshooting": {
     "todo_empty": ["check_backlog", "promote_highest_priority_task"],
     "manifest_missing": ["mark_unknown", "create_hitl", "stop_work"],
-    "rules_json_missing": ["use_quick_reference", "or_read_constitution_principles"]
+    "rules_json_missing": [
+      "use_quick_reference",
+      "or_read_constitution_principles"
+    ]
   },
 
   "next_steps": {

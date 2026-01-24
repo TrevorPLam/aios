@@ -45,24 +45,34 @@ function checkAgentPlatform() {
   const violations = [];
 
   // Check 1: P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md uses unified ownership schema
-  console.log("📋 Check 1: P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md Ownership Schema");
+  console.log(
+    "📋 Check 1: P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md Ownership Schema",
+  );
   console.log("-------------------------------------");
 
   if (!existsSync(TODO_PATH)) {
-    console.error(`❌ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md not found at: ${TODO_PATH}`);
-    violations.push("P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md file not found");
+    console.error(
+      `❌ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md not found at: ${TODO_PATH}`,
+    );
+    violations.push(
+      "P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md file not found",
+    );
   } else {
     try {
       const todoContent = readFileSync(TODO_PATH, "utf-8");
 
       // Check for unified ownership schema presence
       if (!todoContent.includes("**Owner**: `AGENT`")) {
-        violations.push("P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md missing unified AGENT ownership schema");
+        violations.push(
+          "P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md missing unified AGENT ownership schema",
+        );
         console.error(
           "❌ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md does not contain unified AGENT ownership schema",
         );
       } else {
-        console.log("✅ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md contains unified AGENT ownership schema");
+        console.log(
+          "✅ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md contains unified AGENT ownership schema",
+        );
       }
 
       // Check for legacy ownership references
@@ -71,20 +81,34 @@ function checkAgentPlatform() {
         todoContent.includes("Codex Agent (Secondary)") ||
         todoContent.includes("Owner: Trevor")
       ) {
-        violations.push("P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md contains legacy ownership references");
-        console.error("❌ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md still contains legacy ownership references");
+        violations.push(
+          "P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md contains legacy ownership references",
+        );
+        console.error(
+          "❌ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md still contains legacy ownership references",
+        );
       }
 
       // Check for Platform field in schema
       if (!todoContent.includes("**Platform**:")) {
-        violations.push("P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md schema missing Platform field");
-        console.warn("⚠️  P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md schema should include Platform field");
+        violations.push(
+          "P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md schema missing Platform field",
+        );
+        console.warn(
+          "⚠️  P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md schema should include Platform field",
+        );
       } else {
-        console.log("✅ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md includes Platform field in schema");
+        console.log(
+          "✅ P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md includes Platform field in schema",
+        );
       }
     } catch (error) {
-      console.error(`❌ Error reading P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md: ${error.message}`);
-      violations.push(`Error reading P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md: ${error.message}`);
+      console.error(
+        `❌ Error reading P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md: ${error.message}`,
+      );
+      violations.push(
+        `Error reading P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md: ${error.message}`,
+      );
     }
   }
 
@@ -182,7 +206,9 @@ function checkAgentPlatform() {
           "❌ AI contribution policy missing Unified AGENT Ownership section",
         );
       } else {
-        console.log("✅ AI contribution policy includes Unified AGENT Ownership");
+        console.log(
+          "✅ AI contribution policy includes Unified AGENT Ownership",
+        );
       }
     } catch (error) {
       console.error(
@@ -210,7 +236,9 @@ function checkAgentPlatform() {
       console.error("\n❌ FAILED: AGENT ownership violations detected!");
       console.error("\n📝 Action required:");
       console.error("   1. Review violations listed above");
-      console.error("   2. Update P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md to use AGENT-only ownership");
+      console.error(
+        "   2. Update P0TODO.md, P1TODO.md, P2TODO.md, P3TODO.md to use AGENT-only ownership",
+      );
       console.error(
         "   3. Ensure constitution includes Agent Responsibility Model",
       );

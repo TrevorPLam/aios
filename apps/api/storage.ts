@@ -171,7 +171,7 @@ export interface IStorage {
 
   // Analytics methods
   saveAnalyticsEvents(
-    events: Array<{
+    events: {
       eventId: string;
       eventName: string;
       timestamp: string;
@@ -183,7 +183,7 @@ export interface IStorage {
       };
       appVersion?: string;
       platform?: string;
-    }>,
+    }[],
   ): Promise<void>;
   getAnalyticsEvents(
     userId: string,
@@ -727,7 +727,7 @@ export class MemStorage implements IStorage {
 
   // Analytics methods
   async saveAnalyticsEvents(
-    events: Array<{
+    events: {
       eventId: string;
       eventName: string;
       timestamp: string;
@@ -739,7 +739,7 @@ export class MemStorage implements IStorage {
       };
       appVersion?: string;
       platform?: string;
-    }>,
+    }[],
   ): Promise<void> {
     const now = new Date();
 

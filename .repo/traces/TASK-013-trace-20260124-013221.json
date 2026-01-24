@@ -13,12 +13,8 @@
     "bash scripts/generate-trace-log.sh \"TASK-013\" \"Create HITL to clarify feature data layer ownership for API refactor\"",
     "bash scripts/generate-agent-log.sh \"TASK-013\" \"Document HITL creation for feature data layer ownership\""
   ],
-  "evidence": [
-    "HITL item created and indexed for TASK-013"
-  ],
-  "hitl": [
-    "HITL-0001"
-  ],
+  "evidence": ["HITL item created and indexed for TASK-013"],
+  "hitl": ["HITL-0001"],
   "unknowns": [
     "Ownership mapping for Task, Project, and Event data layers across packages/features"
   ]

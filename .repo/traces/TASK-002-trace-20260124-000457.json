@@ -15,9 +15,7 @@
     ".repo/logs/TASK-002-log-20260124-000435.json",
     ".repo/traces/TASK-002-trace-20260124-000457.json"
   ],
-  "commands": [
-    "make lint"
-  ],
+  "commands": ["make lint"],
   "evidence": [
     "make lint failed: backend/frontend Makefiles do not define lint targets"
   ],

@@ -2,14 +2,14 @@
 // /.repo/automation/scripts/validate-agent-trace.js
 // Validate trace logs against AGENT_TRACE_SCHEMA.json using JSON schema validation
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Colors for output
-const RED = '\x1b[31m';
-const GREEN = '\x1b[32m';
-const YELLOW = '\x1b[33m';
-const RESET = '\x1b[0m';
+const RED = "\x1b[31m";
+const GREEN = "\x1b[32m";
+const YELLOW = "\x1b[33m";
+const RESET = "\x1b[0m";
 
 function logError(msg) {
   console.error(`${RED}✗ ${msg}${RESET}`);
@@ -28,7 +28,7 @@ function validateTraceLog(traceFile, schemaFile) {
   let traceData, schemaData;
 
   try {
-    traceData = JSON.parse(fs.readFileSync(traceFile, 'utf8'));
+    traceData = JSON.parse(fs.readFileSync(traceFile, "utf8"));
   } catch (e) {
     logError(`Invalid JSON in trace log: ${traceFile}`);
     console.error(e.message);
@@ -36,7 +36,7 @@ function validateTraceLog(traceFile, schemaFile) {
   }
 
   try {
-    schemaData = JSON.parse(fs.readFileSync(schemaFile, 'utf8'));
+    schemaData = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
   } catch (e) {
     logError(`Invalid JSON in schema: ${schemaFile}`);
     console.error(e.message);
@@ -45,10 +45,10 @@ function validateTraceLog(traceFile, schemaFile) {
 
   // Check required fields from schema
   const required = schemaData.required || [];
-  const missing = required.filter(field => !(field in traceData));
+  const missing = required.filter((field) => !(field in traceData));
 
   if (missing.length > 0) {
-    logError(`Missing required fields: ${missing.join(', ')}`);
+    logError(`Missing required fields: ${missing.join(", ")}`);
     return false;
   }
 
@@ -62,13 +62,16 @@ function validateTraceLog(traceFile, schemaFile) {
     const value = traceData[field];
     const expectedType = spec.type;
 
-    if (expectedType === 'array' && !Array.isArray(value)) {
+    if (expectedType === "array" && !Array.isArray(value)) {
       logError(`Field '${field}' must be an array`);
       valid = false;
-    } else if (expectedType === 'string' && typeof value !== 'string') {
+    } else if (expectedType === "string" && typeof value !== "string") {
       logError(`Field '${field}' must be a string`);
       valid = false;
-    } else if (expectedType === 'object' && (typeof value !== 'object' || Array.isArray(value))) {
+    } else if (
+      expectedType === "object" &&
+      (typeof value !== "object" || Array.isArray(value))
+    ) {
       logError(`Field '${field}' must be an object`);
       valid = false;
     }
@@ -87,12 +90,16 @@ if (require.main === module) {
   const args = process.argv.slice(2);
 
   if (args.length < 1) {
-    console.error('Usage: validate-agent-trace.js <trace-log-file> [schema-file]');
+    console.error(
+      "Usage: validate-agent-trace.js <trace-log-file> [schema-file]",
+    );
     process.exit(1);
   }
 
   const traceFile = path.resolve(args[0]);
-  const schemaFile = args[1] || path.resolve(__dirname, '../../templates/AGENT_TRACE_SCHEMA.json');
+  const schemaFile =
+    args[1] ||
+    path.resolve(__dirname, "../../templates/AGENT_TRACE_SCHEMA.json");
 
   if (!fs.existsSync(traceFile)) {
     logError(`Trace log file not found: ${traceFile}`);

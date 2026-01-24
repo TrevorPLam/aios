@@ -56,12 +56,16 @@
         "4. Add tests",
         "5. Document in API docs"
       ],
-      "files": ["backend/api/clients/views.py", "backend/api/clients/urls.py", "docs/03-reference/api/openapi.yaml"]
+      "files": [
+        "backend/api/clients/views.py",
+        "backend/api/clients/urls.py",
+        "docs/03-reference/api/openapi.yaml"
+      ]
     }
   ],
   "metrics": {
     "files_count": 3,
     "last_modified": "2026-01-23",
-    "test_coverage": 0.90
+    "test_coverage": 0.9
   }
 }

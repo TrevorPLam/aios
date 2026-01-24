@@ -59,7 +59,10 @@
         "4. Add tests",
         "5. Get HITL approval before merging"
       ],
-      "files": ["backend/modules/finance/models.py", "backend/modules/finance/services.py"]
+      "files": [
+        "backend/modules/finance/models.py",
+        "backend/modules/finance/services.py"
+      ]
     }
   ],
   "metrics": {

@@ -62,7 +62,12 @@
         "4. Create API client function in frontend/src/api/ if needed",
         "5. Add tests in frontend/tests/"
       ],
-      "files": ["frontend/src/pages/{PageName}.tsx", "frontend/src/pages/{PageName}.css", "frontend/src/App.tsx", "frontend/src/api/*.ts"]
+      "files": [
+        "frontend/src/pages/{PageName}.tsx",
+        "frontend/src/pages/{PageName}.css",
+        "frontend/src/App.tsx",
+        "frontend/src/api/*.ts"
+      ]
     },
     {
       "task": "Add new API client function",
@@ -72,7 +77,10 @@
         "3. Export from frontend/src/api/index.ts if needed",
         "4. Add tests in frontend/src/api/__tests__/"
       ],
-      "files": ["frontend/src/api/{domain}.ts", "frontend/src/api/__tests__/{domain}.test.ts"]
+      "files": [
+        "frontend/src/api/{domain}.ts",
+        "frontend/src/api/__tests__/{domain}.test.ts"
+      ]
     }
   ],
   "metrics": {

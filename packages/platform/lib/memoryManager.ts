@@ -48,8 +48,7 @@
 
 import { Platform } from "react-native";
 import { ModuleType } from "@contracts/models/types";
-import { eventBus } from "./eventBus";
-import { EVENT_TYPES } from "./eventBus";
+import { eventBus, EVENT_TYPES } from "./eventBus";
 import { logger } from "@platform/lib/logger";
 
 /**

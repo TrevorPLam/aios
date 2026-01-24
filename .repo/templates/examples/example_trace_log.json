@@ -6,11 +6,7 @@
     "backend/api/auth/urls.py",
     "tests/api/auth/test_auth.py"
   ],
-  "commands": [
-    "make lint",
-    "make test",
-    "make -C backend openapi"
-  ],
+  "commands": ["make lint", "make test", "make -C backend openapi"],
   "evidence": [
     "All tests pass: tests/api/auth/test_auth.py (12 tests, 0 failures)",
     "Linting passes: ruff check backend/api/auth/",
