@@ -2,15 +2,15 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "./errorHandler";
 
-const JWT_SECRET =
-  process.env.JWT_SECRET || "your-secret-key-change-in-production";
-
-// Warn in production if using default secret
-if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
-  console.error(
-    "WARNING: Using default JWT_SECRET in production! Set JWT_SECRET environment variable.",
+// Fail fast if JWT_SECRET is not set
+if (!process.env.JWT_SECRET) {
+  throw new Error(
+    "FATAL: JWT_SECRET environment variable is required. " +
+    "Set JWT_SECRET in your environment before starting the server."
   );
 }
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const JWT_EXPIRES_IN = "7d";
 

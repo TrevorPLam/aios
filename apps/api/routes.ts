@@ -9,6 +9,7 @@ import {
   validateParams,
   validateQuery,
 } from "./middleware/validation";
+import { loginRateLimiter, registerRateLimiter } from "./middleware/rateLimiter";
 import { notesData } from "@features/notes/data";
 import {
   insertUserSchema,
@@ -57,6 +58,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post(
     "/api/auth/register",
+    registerRateLimiter,
     validate(insertUserSchema),
     asyncHandler(async (req, res) => {
       const { username, password } = req.body;
@@ -103,6 +105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post(
     "/api/auth/login",
+    loginRateLimiter,
     validate(loginSchema),
     asyncHandler(async (req, res) => {
       const { username, password } = req.body;
