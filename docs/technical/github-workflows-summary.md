@@ -80,9 +80,10 @@ This repository includes 11 GitHub Actions workflows for CI, documentation quali
     - Caption: "PR template prevents undocumented changes from quietly landing."
     - Ensures documentation, testing, security review
 
-2. **CODEOWNERS.example** - Code ownership
+2. **CODEOWNERS** - Code ownership
     - Caption: "CODEOWNERS ensures qualified reviewers see critical changes."
     - Protects: docs/, .github/, security code, database
+    - Note: See `docs/technical/CODEOWNERS.example.md` for an example template
 
 ### Linting Configs
 
@@ -123,7 +124,7 @@ npm run lint
 
 # Tests
 npm test
-```text
+```
 
 ## 🚀 Next Steps
 
@@ -134,8 +135,9 @@ npm test
    - Add actual reviewer usernames
 
 2. **Configure CODEOWNERS:**
-   - Rename `CODEOWNERS.example` to `CODEOWNERS`
-   - Replace team placeholders with real usernames/teams
+   - Review `.github/CODEOWNERS` file (already active)
+   - Update team assignments as needed
+   - See `docs/technical/CODEOWNERS.example.md` for example patterns
    - Enable branch protection requiring CODEOWNERS
 
 3. **Update Scorecard workflow:**
@@ -149,7 +151,7 @@ npm test
    mkdir -p .github/styles
    cd .github/styles
    vale sync  # Downloads configured style packages
-   ```text
+   ```
 
 2. **Test workflows:**
    - Create a test PR with doc changes

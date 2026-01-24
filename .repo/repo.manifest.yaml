@@ -19,8 +19,8 @@ commands:
   check:quick: "npm run lint && npm run check:types"
   check:ci: "npm test && npm run lint && npm run check:types && npm run check:governance"
   check:release: "npm test && npm run lint && npm run check:types && npm run check:security && npm run check:governance"
-  check:governance: "node .repo/automation/scripts/governance-verify.js --hitl-file .repo/policy/HITL.md"
-  check:boundaries: "node .repo/automation/scripts/check-boundaries.js"
+  check:governance: "node scripts/governance-verify.js --hitl-file .repo/policy/HITL.md"
+  check:boundaries: "node scripts/check-boundaries.js"
   check:security: "npm audit --audit-level=moderate && npm run check:security:patterns"
 
 verify_profiles:

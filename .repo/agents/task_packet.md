@@ -1,4 +1,4 @@
-# /.repo/agents/prompts/task_packet.md
+# /.repo/agents/task_packet.md
 {
   "goal": "",
   "non_goals": [],

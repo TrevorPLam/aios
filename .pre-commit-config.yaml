@@ -88,7 +88,7 @@ repos:
         files: '\.(md|yaml|yml|json)$|^\.repo/|^agents/|^scripts/'
       - id: check-changelog-and-logs
         name: Check CHANGELOG and Logs
-        entry: node .repo/automation/scripts/check-changelog-and-logs.js
+        entry: node scripts/check-changelog-and-logs.js
         language: system
         pass_filenames: false
         always_run: true

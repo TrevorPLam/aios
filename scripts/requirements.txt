@@ -1,4 +1,4 @@
-# Python dependencies for automation scripts
-# Install with: pip install -r scripts/requirements.txt
+# Python dependencies for governance automation scripts
 
-requests>=2.31.0  # For GitHub API integration in sync-hitl-to-pr.py
+# HTTP library for GitHub API integration
+requests>=2.31.0

@@ -38,8 +38,28 @@ export default function App() {
   const { navigationRef, handleNavigationReady, handleNavigationStateChange } =
     useAnalyticsNavigation();
 
+  // ============================================================================
+  // Governance: Application Initialization
+  // ============================================================================
+  // Constitution (Article 4): Incremental Delivery
+  // - App initialization should be testable and reversible
+  // - Each initialization step should be independently verifiable
+  //
+  // Principles:
+  // - Make It Shippable (P4): App should work even if analytics fails
+  // - Don't Break Surprises (P5): Preserve existing initialization behavior
+  // - Assumptions Must Be Declared (P9): Document platform/environment assumptions
+  //
+  // Best Practices:
+  // - Initialize critical services first (error boundaries, navigation)
+  // - Handle initialization failures gracefully
+  // - Use error boundaries to catch initialization errors
+  // ============================================================================
+
   useEffect(() => {
     // Initialize analytics on app start
+    // Governance: Analytics is non-critical - failures shouldn't break app
+    // Principle P4: Make It Shippable - app works even if analytics fails
     const initAnalytics = async () => {
       await analytics.initialize();
       await analytics.trackAppOpened(0, "unknown");

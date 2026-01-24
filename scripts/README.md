@@ -19,7 +19,7 @@ node .repo/automation/scripts/governance-verify.js \
 
 **Options:**
 - `--trace-log <path>` - Path to trace log JSON file (optional)
-- `--hitl-file <path>` - Path to HITL index file (default: `.repo/policy/HITL.md`)
+- `--hitl-file <path>` - Path to HITL index file (default: `.repo/policy/HITL.md` - note: HITL process now in procedures.json)
 - `--pr-body <path>` - Path to PR body file for validation (optional)
 - `--base-ref <ref>` - Git base reference for changed files detection (default: `HEAD`)
 
@@ -370,7 +370,7 @@ python3 .repo/automation/scripts/archive-task.py \
 
 ## CI Integration
 
-These scripts are integrated into the CI/CD pipeline. See `.repo/docs/ci-integration.md` for details.
+These scripts are integrated into the CI/CD pipeline. See `.github/workflows/ci.yml` for details.
 
 **Current Integration:**
 - ✅ GitHub Actions workflow (`.github/workflows/ci.yml`) - Job 7: Governance Verification
@@ -402,7 +402,7 @@ python3 .repo/automation/scripts/archive-task.py --task-id T-001 --status comple
 
 ## Related Documentation
 
-- `.repo/docs/ci-integration.md` - CI integration guide
-- `.repo/policy/HITL.md` - HITL process
-- `.repo/policy/QUALITY_GATES.md` - Quality gate definitions
+- `.github/workflows/ci.yml` - CI integration
+- `.repo/policy/procedures.json` - HITL process and procedures
+- `.repo/policy/constitution.json` - Quality gate definitions
 - `.repo/templates/AGENT_TRACE_SCHEMA.json` - Trace log schema

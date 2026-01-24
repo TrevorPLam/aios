@@ -1,4 +1,4 @@
-# /.repo/agents/checklists/pr-review.md
+# /.repo/agents/pr-review.md
 - One change type?
 - Task packet complete?
 - Evidence present?

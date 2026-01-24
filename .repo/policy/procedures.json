@@ -97,7 +97,7 @@
     "when_to_read": "If you need to create a task packet (feature, api_change, cross_module change types)",
     "required_for": ["feature", "api_change", "cross_module"],
     "create": {
-      "template": ".repo/agents/prompts/task_packet.md",
+      "template": ".repo/agents/task_packet.md",
       "location": ".repo/tasks/packets/TASK-XXX-packet.json",
       "required_fields": [
         "goal",
@@ -167,7 +167,7 @@
       "Move task to top of .repo/tasks/ARCHIVE.md",
       "Promote next task from .repo/tasks/BACKLOG.md to .repo/tasks/TODO.md (see task_promotion rules)"
     ],
-    "script": "python3 .repo/automation/scripts/archive-task.py --task-id <TASK-ID> --status completed"
+    "script": "python3 scripts/archive-task.py --task-id <TASK-ID> --status completed"
   },
   "task_promotion": {
     "when_to_read": "If you need to promote tasks from backlog to TODO",
@@ -233,7 +233,7 @@
     "when_to_read": "If you need to check or enforce module boundaries",
     "check": {
       "command": "lint-imports --config .importlinter",
-      "script": "node .repo/automation/scripts/check-boundaries.js"
+      "script": "node scripts/check-boundaries.js"
     },
     "if_violations": [
       "Fix: Refactor to respect boundaries",
@@ -271,7 +271,7 @@
       "when": "Before making any changes",
       "steps": [
         "Determine change type (feature/api_change/security/cross_module/non_doc_change)",
-        "Check boundaries: Run lint-imports --config .importlinter or node .repo/automation/scripts/check-boundaries.js",
+        "Check boundaries: Run lint-imports --config .importlinter or node scripts/check-boundaries.js",
         "If feature/api_change/cross_module: Create task packet (see procedures.json.task_packets)",
         "List all actions to take",
         "Identify risks",

@@ -3,54 +3,54 @@
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
 # Repository owner/maintainer (update with actual username)
-* @TrevorPowellLam
+* @TrevorPLam
 
 # Documentation
-/docs/ @TrevorPowellLam
-*.md @TrevorPowellLam
-DOCUMENTATION_GUIDE.md @TrevorPowellLam
-README.md @TrevorPowellLam
-CONTRIBUTING.md @TrevorPowellLam
+/docs/ @TrevorPLam
+*.md @TrevorPLam
+DOCUMENTATION_GUIDE.md @TrevorPLam
+README.md @TrevorPLam
+CONTRIBUTING.md @TrevorPLam
 
 # Repository governance and policy
-/.repo/ @TrevorPowellLam
-.repo/policy/ @TrevorPowellLam
-.repo/automation/ @TrevorPowellLam
+/.repo/ @TrevorPLam
+.repo/policy/ @TrevorPLam
+.repo/automation/ @TrevorPLam
 
 # GitHub workflows and configuration
-/.github/ @TrevorPowellLam
-.github/workflows/ @TrevorPowellLam
-.github/dependabot.yml @TrevorPowellLam
+/.github/ @TrevorPLam
+.github/workflows/ @TrevorPLam
+.github/dependabot.yml @TrevorPLam
 
 # Security-related files
-SECURITY.md @TrevorPowellLam
-.repo/policy/SECURITY_BASELINE.md @TrevorPowellLam
-.gitleaks.toml @TrevorPowellLam
+SECURITY.md @TrevorPLam
+.repo/policy/SECURITY_BASELINE.md @TrevorPLam
+.gitleaks.toml @TrevorPLam
 
 # Database and schema
-packages/contracts/ @TrevorPowellLam
-drizzle.config.ts @TrevorPowellLam
+packages/contracts/ @TrevorPLam
+drizzle.config.ts @TrevorPLam
 
 # Platform and infrastructure
-packages/platform/ @TrevorPowellLam
-apps/api/ @TrevorPowellLam
+packages/platform/ @TrevorPLam
+apps/api/ @TrevorPLam
 
 # Design system
-packages/design-system/ @TrevorPowellLam
+packages/design-system/ @TrevorPLam
 
 # Features (general ownership - can be refined per feature)
-packages/features/ @TrevorPowellLam
+packages/features/ @TrevorPLam
 
 # Mobile app
-apps/mobile/ @TrevorPowellLam
+apps/mobile/ @TrevorPLam
 
 # Configuration files
-package.json @TrevorPowellLam
-tsconfig.json @TrevorPowellLam
-eslint.config.js @TrevorPowellLam
-babel.config.js @TrevorPowellLam
-jest.config.js @TrevorPowellLam
+package.json @TrevorPLam
+tsconfig.json @TrevorPLam
+eslint.config.js @TrevorPLam
+babel.config.js @TrevorPLam
+jest.config.js @TrevorPLam
 
 # Build and deployment
-Makefile @TrevorPowellLam
-.github/workflows/release.yml @TrevorPowellLam
+Makefile @TrevorPLam
+.github/workflows/release.yml @TrevorPLam

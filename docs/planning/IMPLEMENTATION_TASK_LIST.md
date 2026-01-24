@@ -136,12 +136,11 @@
 ### Task P0-5: Activate CODEOWNERS
 **Status:** ⚠️ Partial  
 **Current State:**
-- `CODEOWNERS.example` exists
-- Not activated
+- `CODEOWNERS` file exists and is active
+- Example template available at `docs/technical/CODEOWNERS.example.md`
 
 **Actions:**
-- [ ] Review `CODEOWNERS.example` (if exists)
-- [ ] Create `.github/CODEOWNERS` file
+- [ ] Review current `.github/CODEOWNERS` file
 - [ ] Configure team assignments for:
   - `docs/` - Documentation team
   - `.github/` - DevOps/CI team
@@ -151,11 +150,9 @@
 - [ ] Test CODEOWNERS syntax
 - [ ] Enable branch protection requiring CODEOWNERS approval
 - [ ] Document in CONTRIBUTING.md
-- [ ] Update `.github/WORKFLOWS_SUMMARY.md` if needed
 
 **Files to Create/Modify:**
-- `.github/CODEOWNERS` (create from example or new)
-- `.github/WORKFLOWS_SUMMARY.md` (update status)
+- `.github/CODEOWNERS` (already exists, may need updates)
 - `CONTRIBUTING.md` (document CODEOWNERS)
 
 **Acceptance Criteria:**

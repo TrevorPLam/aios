@@ -41,7 +41,7 @@ Required fields:
 
 Use the trace log generator:
 ```bash
-node .repo/automation/scripts/create-trace-log.js \
+node scripts/create-trace-log.js \
   --intent "Add contact management feature" \
   --files "packages/features/contacts/domain/contactService.ts,packages/features/contacts/ui/ContactList.tsx" \
   --commands "npm run check:types,npm test,npm run lint" \
@@ -95,12 +95,12 @@ Trace logs are **required** for all non-documentation changes per Article 2 (Ver
 Trace logs are automatically validated by `governance-verify.js` in CI. You can validate locally:
 
 ```bash
-node .repo/automation/scripts/validate-agent-trace.js .repo/traces/trace-*.json
+node scripts/validate-agent-trace.js .repo/traces/trace-*.json
 ```
 
 ## Examples
 
-See `.repo/examples/example_trace_log.json` for a complete example.
+See `.repo/templates/examples/example_trace_log.json` for a complete example.
 
 ## Related Documentation
 

@@ -58,6 +58,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
+  // ============================================================================
+  // Governance: Security-Critical Routes
+  // ============================================================================
+  // Constitution (Article 6): Safety Before Speed
+  // - Authentication routes handle sensitive user data and credentials
+  // - All auth routes MUST use rate limiting and input validation
+  // - Security changes require HITL approval (Article 8)
+  //
+  // Principles:
+  // - Risk Triggers a Stop (P10): Security issues block merge
+  // - Prefer Guardrails Over Heroics (P11): Use middleware for protection
+  // - Rollback Thinking (P12): Consider how to disable compromised routes
+  //
+  // Best Practices:
+  // - Always validate inputs with Zod schemas
+  // - Use rate limiting on auth endpoints
+  // - Never log passwords or tokens
+  // - Return generic error messages to prevent user enumeration
+  // ============================================================================
+
   // Authentication routes
   app.post(
     "/api/auth/register",
@@ -113,6 +133,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     asyncHandler(async (req, res) => {
       const { username, password } = req.body;
 
+      // Governance: Security-critical authentication logic
+      // - Constitution (Article 6): Safety Before Speed - auth failures are security events
+      // - Principle P10: Risk Triggers a Stop - any auth changes require review
+      // - Best Practice: Generic error messages prevent user enumeration attacks
+
       // Find user
       const user = await storage.getUserByUsername(username);
       if (!user) {
@@ -120,6 +145,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Verify password
+      // Governance: Use constant-time comparison (bcrypt handles this)
+      // Never log password attempts or user existence
       const isValid = await bcrypt.compare(password, user.password);
       if (!isValid) {
         throw new AppError(401, "Invalid credentials");

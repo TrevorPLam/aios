@@ -57,9 +57,9 @@ Recommended settings:
 ### Implementation Steps
 
 1. **Administrator Action Required:**
-   ```text
+   ```
    Repository Settings → Branches → Add rule
-   ```text
+   ```
 
 2. **Configure for `main` branch:**
    - Branch name pattern: `main`
@@ -80,7 +80,7 @@ Recommended settings:
 
 Copy these exact names when configuring required status checks:
 
-```text
+```
 type-check
 lint
 format-check
@@ -89,15 +89,15 @@ test
 audit
 build-client
 build-server
-```text
+```
 
 For documentation-specific workflows, also require:
 
-```text
+```
 Markdown Linting / markdownlint
 Check Documentation Links / link-checker
 Documentation Quality / spell-check
-```text
+```
 
 ### Troubleshooting
 

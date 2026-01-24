@@ -164,3 +164,26 @@ See [`README.md`](README.md) for complete boundary map.
 - [`README.md`](README.md) - Package boundary map
 - [`.repo/policy/BOUNDARIES.md`](../.repo/policy/BOUNDARIES.md) - Boundary rules
 - [`platform/AGENT.md`](platform/AGENT.md) - Platform agent guide
+
+---
+
+## Governance & Best Practices
+
+**Constitution (Article 8): HITL for External Systems**
+- Changes to external integrations, credentials, or production systems require human approval
+
+**Principles:**
+- **Read Repo First (P8)**: Check existing docs and code before making assumptions
+- **Evidence Over Vibes (P6)**: Cite specific filepaths and show verification
+- **Respect Boundaries by Default (P13)**: Follow architectural boundaries defined in `.repo/policy/BOUNDARIES.md`
+
+**Best Practices:**
+- Follow existing patterns in similar modules
+- Update this index when adding new files
+- Keep navigation clear and logical
+- Link to related documentation
+
+**See Also:**
+- [`.repo/policy/constitution.json`](../../.repo/policy/constitution.json) - Full governance rules
+- [`.repo/policy/BOUNDARIES.md`](../../.repo/policy/BOUNDARIES.md) - Architectural boundaries
+- [`docs/decisions/`](../../docs/decisions/) - Architecture Decision Records

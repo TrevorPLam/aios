@@ -1,290 +1,242 @@
 #!/usr/bin/env python3
 """
-Archive completed task from TODO.md to ARCHIVE.md.
+Archive Completed Tasks
 
-This script:
-1. Reads the current task from .repo/tasks/TODO.md
-2. Checks if all acceptance criteria are marked complete
-3. Moves task to .repo/tasks/ARCHIVE.md (prepends)
-4. Promotes next task from BACKLOG.md to TODO.md
+Archives completed tasks from priority TODO files and promotes tasks from backlog.
+Moves completed tasks to archive and updates priority files.
 
 Usage:
-    python scripts/archive-task.py [--force]
+    python3 .repo/automation/scripts/archive-task.py \
+        --task-id <TASK-ID> \
+        --status completed \
+        [--promote-from P3] \
+        [--dry-run]
 
-    --force: Archive even if not all criteria are complete
+Exit codes:
+    0 - Success
+    1 - Error
 """
 
+import argparse
 import re
 import sys
-from pathlib import Path
-from typing import Dict, List, Optional
 from datetime import datetime
-
-REPO_ROOT = Path(__file__).parent.parent
-TODO_FILE = REPO_ROOT / ".repo" / "tasks" / "TODO.md"
-BACKLOG_FILE = REPO_ROOT / ".repo" / "tasks" / "BACKLOG.md"
-ARCHIVE_FILE = REPO_ROOT / ".repo" / "tasks" / "ARCHIVE.md"
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 
-def parse_task(content: str) -> Optional[Dict]:
-    """Parse task from markdown content."""
-    lines = content.split('\n')
-    task = {
-        'header': '',
-        'metadata': {},
-        'acceptance_criteria': [],
-        'notes': [],
-        'raw': content
-    }
-
-    in_criteria = False
-    in_notes = False
-    criteria_start = None
-
-    for i, line in enumerate(lines):
-        # Task header
-        if line.startswith('### [TASK-'):
-            task['header'] = line
-            continue
-
-        # Metadata
-        if line.startswith('- **'):
-            match = re.match(r'- \*\*([^:]+):\*\*\s*(.+)', line)
-            if match:
-                key = match.group(1).lower().replace(' ', '_')
-                task['metadata'][key] = match.group(2).strip()
-            continue
-
-        # Acceptance criteria section
-        if '#### Acceptance Criteria' in line:
-            in_criteria = True
-            criteria_start = i
-            continue
-
-        if '#### Notes' in line:
-            in_criteria = False
-            in_notes = True
-            continue
-
-        if in_criteria and line.strip().startswith('- ['):
-            task['acceptance_criteria'].append(line)
-
-        if in_notes and line.strip():
-            task['notes'].append(line)
-
-    return task if task['header'] else None
+def find_task_in_file(file_path: Path, task_id: str) -> Optional[Tuple[int, str]]:
+    """Find task in file and return line number and content."""
+    try:
+        content = file_path.read_text(encoding="utf-8")
+        lines = content.split("\n")
+        
+        for i, line in enumerate(lines):
+            if task_id in line and ("- [" in line or "##" in line):
+                return (i, line)
+        
+        return None
+    except Exception as e:
+        print(f"Error reading {file_path}: {e}")
+        return None
 
 
-def is_task_complete(task: Dict) -> bool:
-    """Check if all acceptance criteria are complete."""
-    if not task['acceptance_criteria']:
+def mark_task_completed(file_path: Path, task_id: str, dry_run: bool = False) -> bool:
+    """Mark task as completed in TODO file."""
+    try:
+        content = file_path.read_text(encoding="utf-8")
+        lines = content.split("\n")
+        
+        # Find and update task
+        updated = False
+        for i, line in enumerate(lines):
+            if task_id in line and "- [" in line:
+                # Mark as completed: - [ ] -> - [x]
+                if "- [ ]" in line:
+                    lines[i] = line.replace("- [ ]", "- [x]")
+                    updated = True
+                elif "- [x]" in line:
+                    # Already completed
+                    updated = True
+                    break
+        
+        if updated and not dry_run:
+            file_path.write_text("\n".join(lines), encoding="utf-8")
+            print(f"✅ Marked {task_id} as completed in {file_path}")
+        elif updated:
+            print(f"DRY RUN: Would mark {task_id} as completed in {file_path}")
+        
+        return updated
+        
+    except Exception as e:
+        print(f"Error updating {file_path}: {e}")
         return False
 
-    for criterion in task['acceptance_criteria']:
-        if not criterion.strip().startswith('- [x]'):
+
+def archive_task(task_id: str, task_content: str, archive_dir: Path, dry_run: bool = False) -> bool:
+    """Archive task to archive directory."""
+    try:
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create archive file with date
+        today = datetime.now().strftime("%Y-%m-%d")
+        archive_file = archive_dir / f"TODO_ARCHIVE_{today}.md"
+        
+        # Append to archive file
+        archive_content = f"\n## {task_id} - Archived {today}\n\n{task_content}\n\n---\n\n"
+        
+        if not dry_run:
+            if archive_file.exists():
+                archive_content = archive_file.read_text(encoding="utf-8") + archive_content
+            archive_file.write_text(archive_content, encoding="utf-8")
+            print(f"✅ Archived {task_id} to {archive_file}")
+        else:
+            print(f"DRY RUN: Would archive {task_id} to {archive_file}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error archiving task: {e}")
+        return False
+
+
+def promote_task(from_priority: str, to_priority: str, task_id: str, dry_run: bool = False) -> bool:
+    """Promote task from lower priority to higher priority."""
+    repo_root = Path(__file__).parent.parent.parent.parent
+    
+    from_file = repo_root / f"P{from_priority[-1]}TODO.md" if from_priority.startswith("P") else repo_root / f"{from_priority}TODO.md"
+    to_file = repo_root / f"P{to_priority[-1]}TODO.md" if to_priority.startswith("P") else repo_root / f"{to_priority}TODO.md"
+    
+    if not from_file.exists():
+        print(f"Error: Source file not found: {from_file}")
+        return False
+    
+    if not to_file.exists():
+        print(f"Error: Target file not found: {to_file}")
+        return False
+    
+    try:
+        # Read source file
+        from_content = from_file.read_text(encoding="utf-8")
+        lines = from_content.split("\n")
+        
+        # Find task and extract content
+        task_lines = []
+        task_start = None
+        for i, line in enumerate(lines):
+            if task_id in line and ("- [" in line or "##" in line):
+                task_start = i
+                task_lines.append(line)
+                # Collect task content until next task or section
+                j = i + 1
+                while j < len(lines) and not (lines[j].startswith("- [") or lines[j].startswith("##")):
+                    task_lines.append(lines[j])
+                    j += 1
+                break
+        
+        if not task_lines:
+            print(f"Error: Task {task_id} not found in {from_file}")
             return False
-
-    return True
-
-
-def extract_task_from_file(filepath: Path) -> Optional[Dict]:
-    """Extract task from TODO.md or BACKLOG.md."""
-    if not filepath.exists():
-        return None
-
-    content = filepath.read_text(encoding='utf-8')
-
-    # Find task block (between "## Active Task" or "### [TASK-" and next "### [TASK-" or end)
-    match = re.search(r'### \[TASK-\d+\].*?(?=\n### \[TASK-|\Z)', content, re.DOTALL)
-    if match:
-        return parse_task(match.group(0))
-
-    return None
-
-
-def get_next_task_from_backlog() -> Optional[Dict]:
-    """Get highest priority task from backlog."""
-    if not BACKLOG_FILE.exists():
-        return None
-
-    content = BACKLOG_FILE.read_text(encoding='utf-8')
-
-    # Find first task (highest priority)
-    match = re.search(r'### \[TASK-\d+\].*?(?=\n### \[TASK-|\Z)', content, re.DOTALL)
-    if match:
-        return parse_task(match.group(0))
-
-    return None
-
-
-def archive_task(task: Dict) -> None:
-    """Add task to archive file."""
-    # Add completion date if not present
-    if 'completed' not in task['metadata']:
-        task['metadata']['completed'] = datetime.now().strftime('%Y-%m-%d')
-
-    # Format archived task
-    archived = f"\n{task['header']}\n"
-    for key, value in task['metadata'].items():
-        formatted_key = key.replace('_', ' ').title()
-        archived += f"- **{formatted_key}:** {value}\n"
-
-    archived += "\n#### Acceptance Criteria\n"
-    for criterion in task['acceptance_criteria']:
-        archived += f"{criterion}\n"
-
-    if task['notes']:
-        archived += "\n#### Notes\n"
-        archived += '\n'.join(task['notes']) + '\n'
-
-    archived += "\n---\n"
-
-    # Prepend to archive
-    if ARCHIVE_FILE.exists():
-        existing = ARCHIVE_FILE.read_text(encoding='utf-8')
-        ARCHIVE_FILE.write_text(archived + existing, encoding='utf-8')
-    else:
-        ARCHIVE_FILE.write_text(f"# Archived Tasks\n\n{archived}", encoding='utf-8')
-
-
-def update_todo_file(new_task: Optional[Dict]) -> None:
-    """Update TODO.md with new task or clear it."""
-    if new_task:
-        # Format new task
-        content = "# 🎯 Current Task\n\n"
-        content += "> **Single Active Task** — Only ONE task should be in this file at any time.\n\n"
-        content += "---\n\n"
-        content += f"{new_task['header']}\n"
-        for key, value in new_task['metadata'].items():
-            formatted_key = key.replace('_', ' ').title()
-            content += f"- **{formatted_key}:** {value}\n"
-        content += "\n#### Acceptance Criteria\n"
-        for criterion in new_task['acceptance_criteria']:
-            content += f"{criterion}\n"
-        if new_task['notes']:
-            content += "\n#### Notes\n"
-            content += '\n'.join(new_task['notes']) + '\n'
-
-        TODO_FILE.write_text(content, encoding='utf-8')
-    else:
-        # Clear TODO file
-        TODO_FILE.write_text(
-            "# 🎯 Current Task\n\n"
-            "> **No active task** — Promote a task from BACKLOG.md\n\n",
-            encoding='utf-8'
-        )
-
-
-def remove_task_from_backlog(task_id: str) -> None:
-    """Remove task from backlog file."""
-    if not BACKLOG_FILE.exists():
-        return
-
-    content = BACKLOG_FILE.read_text(encoding='utf-8')
-
-    # Remove task block
-    pattern = rf'### \[{re.escape(task_id)}\].*?(?=\n### \[TASK-|\Z)'
-    content = re.sub(pattern, '', content, flags=re.DOTALL)
-
-    BACKLOG_FILE.write_text(content, encoding='utf-8')
-
-
-def update_archive_statistics():
-    """Update statistics in ARCHIVE.md."""
-    if not ARCHIVE_FILE.exists():
-        return
-
-    content = ARCHIVE_FILE.read_text(encoding='utf-8')
-
-    # Count tasks by priority
-    p0_count = len(re.findall(r'\*\*Priority:\*\*\s*P0', content))
-    p1_count = len(re.findall(r'\*\*Priority:\*\*\s*P1', content))
-    p2_count = len(re.findall(r'\*\*Priority:\*\*\s*P2', content))
-    p3_count = len(re.findall(r'\*\*Priority:\*\*\s*P3', content))
-    total = p0_count + p1_count + p2_count + p3_count
-
-    # Update statistics section
-    stats_section = f"""## Statistics
-| Metric | Count |
-|--------|-------|
-| Total Completed | {total} |
-| P0 Completed | {p0_count} |
-| P1 Completed | {p1_count} |
-| P2 Completed | {p2_count} |
-| P3 Completed | {p3_count} |
-
-*Statistics auto-updated on {datetime.now().strftime('%Y-%m-%d')}*
-"""
-
-    # Replace or add statistics section
-    if re.search(r'^## Statistics', content, re.MULTILINE):
-        content = re.sub(
-            r'^## Statistics.*?(?=^## |\Z)',
-            stats_section,
-            content,
-            flags=re.MULTILINE | re.DOTALL
-        )
-    else:
-        # Add statistics after header
-        content = re.sub(
-            r'^(# .*?\n)',
-            r'\1\n' + stats_section + '\n',
-            content,
-            flags=re.MULTILINE
-        )
-
-    ARCHIVE_FILE.write_text(content, encoding='utf-8')
+        
+        task_content = "\n".join(task_lines)
+        
+        # Remove from source file
+        if not dry_run:
+            new_lines = lines[:task_start] + lines[task_start + len(task_lines):]
+            from_file.write_text("\n".join(new_lines), encoding="utf-8")
+            print(f"✅ Removed {task_id} from {from_file}")
+        
+        # Add to target file
+        if not dry_run:
+            to_content = to_file.read_text(encoding="utf-8")
+            # Append to end of file
+            to_content += f"\n{task_content}\n"
+            to_file.write_text(to_content, encoding="utf-8")
+            print(f"✅ Added {task_id} to {to_file}")
+        else:
+            print(f"DRY RUN: Would move {task_id} from {from_file} to {to_file}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error promoting task: {e}")
+        return False
 
 
 def main():
-    """Main entry point."""
-    force = '--force' in sys.argv
-
-    # Read current task
-    current_task = extract_task_from_file(TODO_FILE)
-    if not current_task:
-        print("No task found in TODO.md")
-        return 1
-
-    # Check if complete
-    if not is_task_complete(current_task) and not force:
-        print("Task is not complete. All acceptance criteria must be marked [x].")
-        print("Use --force to archive anyway.")
-        return 1
-
-    # Extract task ID
-    task_id_match = re.search(r'\[TASK-(\d+)\]', current_task['header'])
-    if not task_id_match:
-        print("Could not extract task ID")
-        return 1
-
-    task_id = f"TASK-{task_id_match.group(1)}"
-
+    parser = argparse.ArgumentParser(description="Archive completed tasks and promote from backlog")
+    parser.add_argument("--task-id", type=str, required=True, help="Task ID (e.g., T-001)")
+    parser.add_argument("--status", type=str, choices=["completed", "archived"], default="completed", help="Task status")
+    parser.add_argument("--promote-from", type=str, help="Promote task from priority (e.g., P3)")
+    parser.add_argument("--promote-to", type=str, default="P0", help="Promote task to priority (default: P0)")
+    parser.add_argument("--archive-dir", type=str, default=".repo/archive/tasks", help="Archive directory")
+    parser.add_argument("--dry-run", action="store_true", help="Dry run mode (no file changes)")
+    
+    args = parser.parse_args()
+    
+    repo_root = Path(__file__).parent.parent.parent.parent
+    
+    # Find task in TODO files
+    todo_files = [
+        repo_root / "P0TODO.md",
+        repo_root / "P1TODO.md",
+        repo_root / "P2TODO.md",
+        repo_root / "P3TODO.md",
+        repo_root / "TODO.md"
+    ]
+    
+    task_found = False
+    task_file = None
+    task_content = None
+    
+    for todo_file in todo_files:
+        if not todo_file.exists():
+            continue
+        
+        result = find_task_in_file(todo_file, args.task_id)
+        if result:
+            task_found = True
+            task_file = todo_file
+            # Read full task content
+            content = todo_file.read_text(encoding="utf-8")
+            lines = content.split("\n")
+            task_start = result[0]
+            task_lines = [lines[task_start]]
+            # Collect until next task
+            for i in range(task_start + 1, len(lines)):
+                if lines[i].startswith("- [") or (lines[i].startswith("##") and i > task_start + 1):
+                    break
+                task_lines.append(lines[i])
+            task_content = "\n".join(task_lines)
+            break
+    
+    if not task_found:
+        print(f"Error: Task {args.task_id} not found in TODO files")
+        sys.exit(1)
+    
+    # Handle promotion
+    if args.promote_from:
+        success = promote_task(args.promote_from, args.promote_to, args.task_id, args.dry_run)
+        if not success:
+            sys.exit(1)
+        sys.exit(0)
+    
+    # Handle archiving
+    if args.status == "completed":
+        # Mark as completed
+        success = mark_task_completed(task_file, args.task_id, args.dry_run)
+        if not success:
+            print(f"Warning: Could not mark {args.task_id} as completed")
+    
     # Archive task
-    print(f"Archiving {task_id}...")
-    archive_task(current_task)
-
-    # Update statistics
-    print("Updating archive statistics...")
-    update_archive_statistics()
-
-    # Get next task from backlog
-    next_task = get_next_task_from_backlog()
-    if next_task:
-        next_id_match = re.search(r'\[TASK-(\d+)\]', next_task['header'])
-        if next_id_match:
-            next_id = f"TASK-{next_id_match.group(1)}"
-            print(f"Promoting {next_id} to TODO.md...")
-            next_task['metadata']['status'] = 'In Progress'
-            update_todo_file(next_task)
-            remove_task_from_backlog(next_id)
-    else:
-        print("No tasks in backlog. Clearing TODO.md...")
-        update_todo_file(None)
-
-    print("Done!")
-    return 0
+    archive_dir = repo_root / args.archive_dir
+    success = archive_task(args.task_id, task_content, archive_dir, args.dry_run)
+    
+    if not success:
+        sys.exit(1)
+    
+    sys.exit(0)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

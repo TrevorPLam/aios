@@ -15,4 +15,4 @@ fi
 
 # Hard block: Check changelog and logs (required for feature/api_change/security/non_doc_change)
 echo "🔍 Checking CHANGELOG.md and logs..."
-node .repo/automation/scripts/check-changelog-and-logs.js || exit 1
+node scripts/check-changelog-and-logs.js || exit 1

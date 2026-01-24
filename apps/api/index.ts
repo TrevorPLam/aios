@@ -1,3 +1,26 @@
+/**
+ * Governance & Best Practices
+ *
+ * This index file exports public APIs following repository boundaries.
+ *
+ * Constitution (Article 4): Incremental Delivery
+ * - Export only what's needed, keep APIs small and focused
+ * - Each export should be independently testable
+ *
+ * Principles:
+ * - Respect Boundaries by Default (P13): Follow import direction rules
+ * - Consistency Beats Novelty (P15): Match existing index patterns
+ * - Naming Matters (P21): Use clear, descriptive export names
+ *
+ * Best Practices:
+ * - Export types, functions, and components that are part of public API
+ * - Re-export from subdirectories to provide clean import paths
+ * - Group related exports logically
+ * - Document complex exports with JSDoc
+ *
+ * See: .repo/policy/BOUNDARIES.md for import rules
+ * See: .repo/policy/constitution.json for governance
+ */
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
@@ -15,6 +38,21 @@ declare module "http" {
 }
 
 function setupCors(app: express.Application) {
+  // Governance: CORS Configuration
+  // Constitution (Article 6): Safety Before Speed
+  // - CORS misconfiguration is a security risk
+  // - Changes to CORS require security review (Article 8: HITL for External Systems)
+  //
+  // Principles:
+  // - Prefer Guardrails Over Heroics (P11): Use explicit allowlists, not wildcards
+  // - Risk Triggers a Stop (P10): CORS changes block merge until reviewed
+  //
+  // Best Practices:
+  // - Only allow specific origins (never "*")
+  // - Use environment variables for allowed domains
+  // - Allow localhost only in development
+  // - Document CORS policy in security docs
+
   app.use((req, res, next) => {
     const origins = new Set<string>();
 
@@ -31,6 +69,8 @@ function setupCors(app: express.Application) {
     const origin = req.header("origin");
 
     // Allow localhost origins for Expo web development (any port)
+    // Governance: Localhost allowed for development only
+    // Principle P9: Assumptions Must Be Declared - assumes dev environment
     const isLocalhost =
       origin?.startsWith("http://localhost:") ||
       origin?.startsWith("http://127.0.0.1:");

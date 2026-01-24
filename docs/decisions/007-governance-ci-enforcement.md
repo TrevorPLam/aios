@@ -47,7 +47,7 @@ Require all CI checks to pass before merge:
 - docs-validation (spell + markdown)
 - Documentation workflows (links, quality)
 
-**Configuration guide:** `.github/BRANCH_PROTECTION_SETUP.md`
+**Configuration guide:** `docs/technical/branch-protection-setup.md`
 
 ### 3. Phased Rollout Approach
 
@@ -144,7 +144,7 @@ Require all CI checks to pass before merge:
 
 - Parallel job execution minimizes total CI time
 - Clear error messages with fix suggestions
-- Comprehensive documentation: `BRANCH_PROTECTION_SETUP.md`
+- Comprehensive documentation: `docs/technical/branch-protection-setup.md`
 - Phased rollout reduces initial friction
 - Regular review and tuning of rules
 
@@ -207,7 +207,7 @@ After branch protection configuration:
 ## References
 
 - Main CI workflow: `.github/workflows/ci.yml`
-- Branch protection guide: `.github/BRANCH_PROTECTION_SETUP.md`
+- Branch protection guide: `docs/technical/branch-protection-setup.md`
 - Governance: `/.repo/policy/QUALITY_GATES.md`
 - Analysis: `GOVERNANCE_COMPLIANCE_ANALYSIS.md`
 

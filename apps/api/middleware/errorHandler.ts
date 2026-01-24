@@ -26,6 +26,32 @@
  * @module errorHandler
  */
 
+/**
+ * Governance & Best Practices
+ *
+ * Constitution (Article 2): Verifiable over Persuasive
+ * - All changes must include verification evidence
+ * - Proof beats persuasion - show test results, not assumptions
+ *
+ * Constitution (Article 6): Safety Before Speed
+ * - Security, data integrity, and user safety take priority
+ * - For risky changes: STOP → ASK (HITL) → VERIFY → THEN PROCEED
+ *
+ * Principles:
+ * - Evidence Over Vibes (P6): Cite filepaths, show output, reference docs
+ * - Assumptions Must Be Declared (P9): Document all assumptions explicitly
+ * - Rollback Thinking (P12): Consider how to undo changes
+ * - Respect Boundaries by Default (P13): Follow architectural boundaries
+ *
+ * Best Practices:
+ * - Use existing patterns from similar files
+ * - TypeScript strict mode (no `any` without justification)
+ * - Validate inputs with Zod schemas (server) or TypeScript (client)
+ * - Test user flows, not implementation details
+ *
+ * See: .repo/policy/constitution.json for full governance rules
+ */
+
 import type { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger";
 
