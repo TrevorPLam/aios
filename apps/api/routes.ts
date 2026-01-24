@@ -9,6 +9,7 @@ import {
   validateParams,
   validateQuery,
 } from "./middleware/validation";
+import { notesData } from "@features/notes/data";
 import {
   insertUserSchema,
   loginSchema,
@@ -177,7 +178,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     "/api/notes",
     authenticate,
     asyncHandler(async (req, res) => {
-      const notes = await storage.getNotes(req.user!.userId);
+      const notes = await notesData.getNotes(req.user!.userId);
       res.json(notes);
     }),
   );
@@ -187,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const note = await storage.getNote(req.params.id, req.user!.userId);
+      const note = await notesData.getNote(req.params.id, req.user!.userId);
       if (!note) {
         throw new AppError(404, "Note not found");
       }
@@ -200,7 +201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validate(insertNoteSchema as any),
     asyncHandler(async (req, res) => {
-      const note = await storage.createNote({
+      const note = await notesData.createNote({
         ...req.body,
         userId: req.user!.userId,
       });
@@ -214,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     validateParams(idParamSchema),
     validate(updateNoteSchema as any),
     asyncHandler(async (req, res) => {
-      const note = await storage.updateNote(
+      const note = await notesData.updateNote(
         req.params.id,
         req.user!.userId,
         req.body,
@@ -231,7 +232,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticate,
     validateParams(idParamSchema),
     asyncHandler(async (req, res) => {
-      const deleted = await storage.deleteNote(req.params.id, req.user!.userId);
+      const deleted = await notesData.deleteNote(
+        req.params.id,
+        req.user!.userId,
+      );
       if (!deleted) {
         throw new AppError(404, "Note not found");
       }
