@@ -47,26 +47,6 @@
 
 ## P0 — Critical
 
-### [TASK-012] Create ADR: Django vs Node.js Backend Decision
-- **Priority:** P0
-- **Status:** Pending
-- **Created:** 2026-01-23
-- **Context:** Two backend systems exist (`backend/` Django vs `apps/api/` Node.js/Express) with unclear relationship. This is the #1 architectural blocker.
-
-#### Acceptance Criteria
-- [ ] Create ADR documenting decision: Django or Node.js?
-- [ ] If Django: Plan migration of `apps/api/` logic to Django
-- [ ] If Node.js: Remove `backend/` directory or clearly mark as legacy
-- [ ] Update documentation to clarify decision
-- [ ] Update `apps/INDEX.md` and `backend/README.md`
-
-#### Notes
-- Source: PROJECT_ANALYSIS.md section 2.3
-- Blocks all backend development work
-- Need clear decision before proceeding
-
----
-
 ### [TASK-013] Fix API Server Boundary Violations
 - **Priority:** P0
 - **Status:** Pending

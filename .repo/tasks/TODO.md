@@ -66,17 +66,20 @@
 
 ---
 
-### [TASK-003] Fix Duplicate Content in CI Workflow
+### [TASK-012] Create ADR: Django vs Node.js Backend Decision
 - **Priority:** P0
 - **Status:** In Progress
 - **Created:** 2026-01-23
-- **Context:** `.github/workflows/ci.yml` has two conflicting workflow definitions causing confusion.
+- **Context:** Two backend systems exist (`backend/` Django vs `apps/api/` Node.js/Express) with unclear relationship. This is the #1 architectural blocker.
 
 #### Acceptance Criteria
-- [ ] Remove duplicate workflow definition
-- [ ] Ensure single coherent CI pipeline
-- [ ] Verify all jobs run correctly
-- [ ] Test on a branch before merging
+- [ ] Create ADR documenting decision: Django or Node.js?
+- [ ] If Django: Plan migration of `apps/api/` logic to Django
+- [ ] If Node.js: Remove `backend/` directory or clearly mark as legacy
+- [ ] Update documentation to clarify decision
+- [ ] Update `apps/INDEX.md` and `backend/README.md`
 
 #### Notes
-- File currently has 403 lines with overlapping `name: CI` and `name: CI/CD Pipeline`
+- Source: PROJECT_ANALYSIS.md section 2.3
+- Blocks all backend development work
+- Need clear decision before proceeding
