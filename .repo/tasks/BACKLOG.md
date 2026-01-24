@@ -47,26 +47,6 @@
 
 ## P0 — Critical
 
-### [TASK-014] Implement Feature Data Layers
-- **Priority:** P0
-- **Status:** Pending
-- **Created:** 2026-01-23
-- **Context:** Many feature `data/` layers are stubs. Blocks API refactoring.
-
-#### Acceptance Criteria
-- [ ] Implement `packages/features/*/data/index.ts` for core features (notes, tasks, events, projects)
-- [ ] Use `@platform/storage` for database access
-- [ ] Export clean API for each feature (create, read, update, delete, list)
-- [ ] Expand to remaining features
-- [ ] Add tests for each data layer
-
-#### Notes
-- Source: PROJECT_ANALYSIS.md section 6
-- Prerequisite for TASK-013 (API refactoring)
-- Start with core features, then expand
-
----
-
 ### [TASK-015] Migrate API Storage to Database
 - **Priority:** P0
 - **Status:** Pending
@@ -107,23 +87,25 @@
 
 ---
 
-### [TASK-017] Standardize Path Aliases
+### [TASK-013] Fix API Server Boundary Violations
 - **Priority:** P0
-- **Status:** Pending
+- **Status:** Blocked
 - **Created:** 2026-01-23
-- **Context:** Both `@shared` and `@contracts` point to same package. Causes confusion and inconsistent imports.
+- **Context:** `apps/api/` implements business logic instead of mounting from packages. Violates architecture rules.
 
 #### Acceptance Criteria
-- [ ] Remove `@shared` alias from `tsconfig.json` and `babel.config.js`
-- [ ] Update all imports from `@shared/*` to `@contracts/*`
-- [ ] Update files: `apps/api/storage.ts`, `apps/api/routes.ts`, `apps/api/__tests__/messages.quickwins.e2e.test.ts`
-- [ ] Verify no `@shared` imports remain
-- [ ] Update documentation
+- [ ] Refactor all 42+ routes in `apps/api/routes.ts` to use feature data layers
+- [ ] Remove business logic from `apps/api/storage.ts`
+- [ ] Import from `@features/*/data` instead of local storage
+- [ ] Verify no business logic remains in apps/api/
+- [ ] Update tests to reflect new architecture
 
 #### Notes
-- Source: PROJECT_ANALYSIS.md section 3.2
-- Found 3 files using `@shared`
-- `@contracts` is more descriptive
+- Depends on TASK-014 (feature data layers).
+- Blocked until feature data layers exist; resume after TASK-014 completes.
+- Source: PROJECT_ANALYSIS.md section 2.1
+- Start with one feature (e.g., notes) as proof of concept
+- Requires feature data layers to be implemented first (TASK-014)
 
 ---
 
@@ -166,26 +148,6 @@
 - Source: PROJECT_ANALYSIS.md section 1.2
 - Can use ESLint custom rule or import-linter
 - Critical for maintaining architecture integrity
-
----
-
-### [TASK-020] Fix Type Safety Issues
-- **Priority:** P1
-- **Status:** Pending
-- **Created:** 2026-01-23
-- **Context:** `apps/api/routes.ts` uses `as any` in validation (multiple instances). Suggests type mismatch between Zod schemas and Express types.
-
-#### Acceptance Criteria
-- [ ] Fix type definitions to eliminate `as any` assertions
-- [ ] Update Zod schema types to match Express types
-- [ ] Fix all instances in `routes.ts` (lines 51, 201, 215, 268, 282, etc.)
-- [ ] Verify no type assertions needed
-- [ ] Update tests
-
-#### Notes
-- Source: PROJECT_ANALYSIS.md section 4.1
-- Multiple instances found
-- Should fix type definitions instead of using `as any`
 
 ---
 
@@ -1342,25 +1304,6 @@
 - [ ] Add formatting hook
 - [ ] Test hooks
 - [ ] Document hook configuration
-
-#### Notes
-- Source: PROJECT_ANALYSIS.md section 11.10
-- Developer experience improvement
-
----
-
-### [TASK-073] Add Hot Reload for API Server Development
-- **Priority:** P1
-- **Status:** Pending
-- **Created:** 2026-01-23
-- **Context:** Expo has hot reload, but API server may not.
-
-#### Acceptance Criteria
-- [ ] Add hot reload to API server
-- [ ] Configure watch mode
-- [ ] Test hot reload
-- [ ] Document hot reload setup
-- [ ] Update development docs
 
 #### Notes
 - Source: PROJECT_ANALYSIS.md section 11.10

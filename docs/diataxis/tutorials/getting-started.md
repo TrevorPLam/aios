@@ -55,6 +55,8 @@ Open a second terminal window and run:
 npm run server:dev
 ```
 
+This command now runs the API server in watch mode, so it automatically restarts when you edit server files.
+
 ### 6) Verification (happy / edge / error)
 
 <!-- WHY: Explicit checks keep the tutorial deterministic and reduce guesswork. -->

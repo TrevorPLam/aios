@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { Note } from "@shared/schema";
+import type { Note } from "@contracts/schema";
 
 const notes = new Map<string, Note>();
 

@@ -19,7 +19,7 @@ import type {
   Message,
   AnalyticsEvent,
   InsertAnalyticsEvent,
-} from "@shared/schema";
+} from "@contracts/schema";
 import { notesData } from "@features/notes/data";
 import { randomUUID } from "crypto";
 

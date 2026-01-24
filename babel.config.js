@@ -9,7 +9,6 @@ module.exports = function (api) {
           root: ["./"],
           alias: {
             "@": "./apps/mobile",
-            "@shared": "./packages/contracts",
             "@contracts": "./packages/contracts",
             "@features": "./packages/features",
             "@platform": "./packages/platform",

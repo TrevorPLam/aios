@@ -1,0 +1,36 @@
+{
+  "intent": "Enable hot reload for API server development by using tsx watch mode",
+  "task_id": "TASK-073",
+  "timestamp": "2026-01-24T05:58:13Z",
+  "plan": [
+    "Identify quick-win stabilization tasks from BACKLOG.",
+    "Apply minimal, targeted changes that align with acceptance criteria.",
+    "Run manifest checks and record evidence even when environment blocks execution."
+  ],
+  "actions": [
+    "package.json",
+    "docs/diataxis/tutorials/getting-started.md",
+    ".repo/tasks/TODO.md",
+    ".repo/tasks/BACKLOG.md",
+    ".repo/tasks/ARCHIVE.md"
+  ],
+  "evidence": [
+    "server:dev now runs `tsx watch apps/api/index.ts` to auto-restart on changes.",
+    "Documentation now states that server:dev runs in watch mode.",
+    "Runtime validation of server:dev could not run because tsx is not installed in this environment."
+  ],
+  "decisions": [
+    "Prioritized smaller stabilization tasks to deliver verifiable improvements quickly.",
+    "Kept changes within existing module boundaries to avoid ADR triggers."
+  ],
+  "risks": [
+    "npm install and follow-on checks are blocked by registry access restrictions.",
+    "Boundary check requires lint-imports which cannot be installed in this environment."
+  ],
+  "follow_ups": [
+    "Resolve npm registry access to run lint/typecheck/tests locally or in CI.",
+    "Install lint-imports/import-linter to run boundary checks without waivers."
+  ],
+  "reasoning_summary": "Delivered three small, related tasks that reduce alias confusion, remove unsafe casts, and improve API dev ergonomics while documenting verification limits.",
+  "notes": "No secrets. No private data. No raw chain-of-thought."
+}

@@ -1,40 +1,45 @@
 import type { Request, Response, NextFunction } from "express";
-import type { ZodSchema } from "zod";
+import { ZodError, type ZodTypeAny } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { AppError } from "./errorHandler";
 
-export const validate = (schema: ZodSchema) => {
+const handleValidationError = (error: unknown): AppError => {
+  if (error instanceof ZodError) {
+    const validationError = fromZodError(error);
+    return new AppError(400, validationError.message);
+  }
+  return new AppError(400, "Invalid request payload");
+};
+
+export const validate = (schema: ZodTypeAny) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
       schema.parse(req.body);
       next();
-    } catch (error: any) {
-      const validationError = fromZodError(error);
-      next(new AppError(400, validationError.message));
+    } catch (error: unknown) {
+      next(handleValidationError(error));
     }
   };
 };
 
-export const validateQuery = (schema: ZodSchema) => {
+export const validateQuery = (schema: ZodTypeAny) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
       schema.parse(req.query);
       next();
-    } catch (error: any) {
-      const validationError = fromZodError(error);
-      next(new AppError(400, validationError.message));
+    } catch (error: unknown) {
+      next(handleValidationError(error));
     }
   };
 };
 
-export const validateParams = (schema: ZodSchema) => {
+export const validateParams = (schema: ZodTypeAny) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
       schema.parse(req.params);
       next();
-    } catch (error: any) {
-      const validationError = fromZodError(error);
-      next(new AppError(400, validationError.message));
+    } catch (error: unknown) {
+      next(handleValidationError(error));
     }
   };
 };

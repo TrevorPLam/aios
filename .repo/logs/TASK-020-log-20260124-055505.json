@@ -1,0 +1,37 @@
+{
+  "intent": "Remove `as any` casts by making validation middleware accept ZodTypeAny",
+  "task_id": "TASK-020",
+  "timestamp": "2026-01-24T05:58:13Z",
+  "plan": [
+    "Identify quick-win stabilization tasks from BACKLOG.",
+    "Apply minimal, targeted changes that align with acceptance criteria.",
+    "Run manifest checks and record evidence even when environment blocks execution."
+  ],
+  "actions": [
+    "apps/api/middleware/validation.ts",
+    "apps/api/routes.ts",
+    "apps/api/__tests__/validation.middleware.test.ts",
+    ".repo/tasks/TODO.md",
+    ".repo/tasks/BACKLOG.md",
+    ".repo/tasks/ARCHIVE.md"
+  ],
+  "evidence": [
+    "All `as any` casts in routes were removed and validation middleware now types schemas as ZodTypeAny.",
+    "Added validation middleware tests for valid and invalid payloads.",
+    "Type-checking/tests could not run due to missing dependencies in the environment."
+  ],
+  "decisions": [
+    "Prioritized smaller stabilization tasks to deliver verifiable improvements quickly.",
+    "Kept changes within existing module boundaries to avoid ADR triggers."
+  ],
+  "risks": [
+    "npm install and follow-on checks are blocked by registry access restrictions.",
+    "Boundary check requires lint-imports which cannot be installed in this environment."
+  ],
+  "follow_ups": [
+    "Resolve npm registry access to run lint/typecheck/tests locally or in CI.",
+    "Install lint-imports/import-linter to run boundary checks without waivers."
+  ],
+  "reasoning_summary": "Delivered three small, related tasks that reduce alias confusion, remove unsafe casts, and improve API dev ergonomics while documenting verification limits.",
+  "notes": "No secrets. No private data. No raw chain-of-thought."
+}
