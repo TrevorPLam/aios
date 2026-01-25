@@ -1,3 +1,8 @@
+type: agent_entry_point
+id: TODO.toon
+filepath: .repo/tasks/TODO.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 2.1.0.
 purpose: "Active task list for autonomous coding agents. Governed by AGENTS.toon."
 rule: "3-5 tasks should be active at a time, grouped by similar type. Work with what's available."
 
