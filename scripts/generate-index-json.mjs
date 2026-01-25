@@ -61,8 +61,90 @@ function shouldIncludeFile(fileName) {
   return ext === "" || INCLUDE_EXTENSIONS.has(ext);
 }
 
+// Important dot-directories that should be included in indexes
+const ALLOWED_DOT_DIRS = new Set([".repo", ".github", ".husky", ".vscode"]);
+
 function shouldIncludeDir(dirName) {
-  return !dirName.startsWith(".") && !IGNORE_DIRS.has(dirName);
+  // Allow specific important dot-directories
+  if (dirName.startsWith(".")) {
+    return ALLOWED_DOT_DIRS.has(dirName);
+  }
+  // Exclude ignored directories
+  return !IGNORE_DIRS.has(dirName);
+}
+
+function extractFunctions(content, filePath) {
+  const functions = [];
+  const lines = content.split("\n");
+  
+  if (filePath.endsWith(".ts") || filePath.endsWith(".tsx") || filePath.endsWith(".js") || filePath.endsWith(".jsx")) {
+    // Match exported functions and classes
+    const patterns = [
+      /^export\s+(?:async\s+)?function\s+(\w+)\s*\(/gm,
+      /^export\s+class\s+(\w+)/gm,
+      /^export\s+const\s+(\w+)\s*=\s*(?:async\s+)?\(/gm,
+      /^export\s+const\s+(\w+)\s*=\s*(?:async\s+)?function/gm,
+    ];
+    
+    patterns.forEach((pattern) => {
+      let match;
+      while ((match = pattern.exec(content)) !== null) {
+        const name = match[1];
+        const lineNum = content.substring(0, match.index).split("\n").length;
+        const line = lines[lineNum - 1] || "";
+        
+        // Extract JSDoc comment if present
+        let description = "";
+        let snippet = "";
+        if (lineNum > 1) {
+          const beforeLine = lines.slice(Math.max(0, lineNum - 5), lineNum - 1).join("\n");
+          const jsdocMatch = beforeLine.match(/(\/\*\*[\s\S]*?\*\/)\s*$/);
+          if (jsdocMatch) {
+            description = jsdocMatch[1]
+              .replace(/\/\*\*|\*\//g, "")
+              .replace(/\*\s*/g, "")
+              .trim()
+              .slice(0, 200);
+          }
+        }
+        
+        // Extract function snippet (next 5-10 lines)
+        const startIdx = match.index;
+        const endIdx = Math.min(content.length, startIdx + 500);
+        snippet = content.substring(startIdx, endIdx).split("\n").slice(0, 8).join("\n").trim();
+        
+        functions.push({
+          name,
+          line: lineNum,
+          description: description || undefined,
+          snippet: snippet.length > 0 ? snippet : undefined,
+        });
+      }
+    });
+  } else if (filePath.endsWith(".py")) {
+    // Python classes and functions
+    const classPattern = /^class\s+(\w+)/gm;
+    const funcPattern = /^def\s+(\w+)\s*\(/gm;
+    
+    [classPattern, funcPattern].forEach((pattern) => {
+      let match;
+      while ((match = pattern.exec(content)) !== null) {
+        const name = match[1];
+        const lineNum = content.substring(0, match.index).split("\n").length;
+        const startIdx = match.index;
+        const endIdx = Math.min(content.length, startIdx + 300);
+        const snippet = content.substring(startIdx, endIdx).split("\n").slice(0, 6).join("\n").trim();
+        
+        functions.push({
+          name,
+          line: lineNum,
+          snippet: snippet.length > 0 ? snippet : undefined,
+        });
+      }
+    });
+  }
+  
+  return functions.slice(0, 15); // Limit to 15 most important functions
 }
 
 function getFileInfo(filePath, basePath) {
@@ -79,6 +161,8 @@ function getFileInfo(filePath, basePath) {
   let keyClasses = [];
   let lineCount = 0;
   let description = "";
+  let functions = [];
+  let isCritical = false;
 
   try {
     const content = fs.readFileSync(filePath, "utf8");
@@ -106,6 +190,24 @@ function getFileInfo(filePath, basePath) {
       }
     }
 
+    // Extract functions with details
+    functions = extractFunctions(content, filePath);
+    
+    // Determine if file is critical (entry points, main files, configs)
+    const criticalPatterns = [
+      /^index\.(ts|tsx|js|jsx)$/i,
+      /^main\.(ts|tsx|js|jsx)$/i,
+      /^app\.(ts|tsx|js|jsx)$/i,
+      /^server\.(ts|tsx|js|jsx)$/i,
+      /^routes?\.(ts|tsx|js|jsx)$/i,
+      /^config\.(ts|tsx|js|jsx|json)$/i,
+      /^package\.json$/i,
+      /^tsconfig\.json$/i,
+      /AGENTS\.(toon|json|md)$/i,
+      /README\.md$/i,
+    ];
+    isCritical = criticalPatterns.some((pattern) => pattern.test(name));
+
     // Try to extract description from comments or first line
     if (content.length > 0) {
       const firstLine = content.split("\n")[0];
@@ -116,19 +218,32 @@ function getFileInfo(filePath, basePath) {
           .trim()
           .slice(0, 100);
       }
+      // Also try JSDoc at top of file
+      const topJsdoc = content.match(/^\/\*\*[\s\S]*?\*\/\s*/);
+      if (topJsdoc && !description) {
+        description = topJsdoc[0]
+          .replace(/\/\*\*|\*\//g, "")
+          .replace(/\*\s*/g, "")
+          .trim()
+          .slice(0, 150);
+      }
     }
   } catch (e) {
     // Ignore read errors
   }
 
-  return {
+  const fileInfo = {
     path: relativePath,
     type,
-    key_classes: keyClasses,
+    key_classes: keyClasses.length > 0 ? keyClasses : undefined,
     line_count: lineCount,
     size_bytes: stats.size,
     description: description || undefined,
+    critical: isCritical || undefined,
   };
+  
+  // Don't include functions in file info - they'll be in important_functions section
+  return fileInfo;
 }
 
 function getSubfolders(dirPath) {
@@ -182,23 +297,72 @@ function jsonToToon(obj, indent = 0) {
       if (value.length === 0) {
         result += `${indentStr}${key}: []\n`;
       } else if (typeof value[0] === "object" && value[0] !== null) {
-        // Array of objects
-        const fields = Object.keys(value[0]);
-        result += `${indentStr}${key}[${value.length}]{${fields.join(",")}}:\n`;
-        value.forEach((item) => {
-          const values = fields.map((f) => {
-            const v = item[f];
-            if (v === undefined || v === null) return "";
-            if (typeof v === "string" && (v.includes(",") || v.includes(":") || v.includes("\n"))) {
-              return `"${v.replace(/"/g, '\\"')}"`;
-            }
-            if (Array.isArray(v)) {
-              return `[${v.join(",")}]`;
-            }
-            return String(v);
-          });
-          result += `${indentStr}  ${values.join(",")}\n`;
+        // Array of objects - check if any have multiline snippets
+        const hasMultilineSnippets = value.some((item) => {
+          return item.snippet && typeof item.snippet === "string" && item.snippet.includes("\n");
         });
+        
+        if (hasMultilineSnippets && key === "important_functions") {
+          // Format functions with multiline snippets for readability
+          result += `${indentStr}${key}[${value.length}]:\n`;
+          value.forEach((item) => {
+            result += `${indentStr}  - name: ${item.name || ""}\n`;
+            if (item.file) result += `${indentStr}    file: ${item.file}\n`;
+            if (item.line) result += `${indentStr}    line: ${item.line}\n`;
+            if (item.description) {
+              const desc = item.description.replace(/\n/g, " ").slice(0, 200);
+              result += `${indentStr}    description: "${desc.replace(/"/g, '\\"')}"\n`;
+            }
+            if (item.snippet) {
+              const snippetLines = item.snippet.split("\n").slice(0, 10);
+              result += `${indentStr}    snippet: |\n`;
+              snippetLines.forEach((line) => {
+                result += `${indentStr}      ${line}\n`;
+              });
+              if (item.snippet.split("\n").length > 10) {
+                result += `${indentStr}      ...\n`;
+              }
+            }
+          });
+        } else {
+          // Standard format for arrays without multiline content
+          const fields = Object.keys(value[0]);
+          result += `${indentStr}${key}[${value.length}]{${fields.join(",")}}:\n`;
+          value.forEach((item) => {
+            const values = fields.map((f) => {
+              const v = item[f];
+              if (v === undefined || v === null) return "";
+              if (typeof v === "string") {
+                if (v.includes("\n")) {
+                  // Multiline string - use block scalar notation
+                  const lines = v.split("\n").slice(0, 5);
+                  return `"${lines.join("\\n")}${v.split("\n").length > 5 ? "\\n..." : ""}"`;
+                }
+                if (v.includes(",") || v.includes(":") || v.length > 80) {
+                  return `"${v.replace(/"/g, '\\"')}"`;
+                }
+                return v;
+              }
+              if (Array.isArray(v)) {
+                if (v.length === 0) return "[]";
+                return `[${v.join(",")}]`;
+              }
+              if (typeof v === "object") {
+                const entries = Object.entries(v).filter(([_, val]) => val !== undefined && val !== null);
+                if (entries.length === 0) return "{}";
+                const objStr = entries
+                  .map(([k, val]) => {
+                    const valStr = typeof val === "string" ? `"${val.replace(/"/g, '\\"')}"` : String(val);
+                    return `${k}:${valStr}`;
+                  })
+                  .join(",");
+                return `{${objStr}}`;
+              }
+              return String(v);
+            });
+            result += `${indentStr}  ${values.join(",")}\n`;
+          });
+        }
       } else {
         // Array of primitives
         result += `${indentStr}${key}[${value.length}]: ${value.map((v) => {
@@ -256,6 +420,8 @@ function generateIndexJson(folderPath) {
     purpose = "Automation and utility scripts";
   } else if (relativePath === ".") {
     purpose = "Master index of all directories in the repository";
+  } else if (folderName === ".repo" || relativePath === ".repo") {
+    purpose = "Governance framework directory (policies, tasks, templates, logs, traces)";
   }
 
   const index = {
@@ -267,6 +433,48 @@ function generateIndexJson(folderPath) {
     subfolders: subfolders,
     dependencies: getDependencies(folderPath),
   };
+
+  // Add critical files section
+  const criticalFiles = files.filter((f) => f.critical).map((f) => ({
+    path: f.path,
+    type: f.type,
+    description: f.description,
+    key_classes: f.key_classes,
+  }));
+  if (criticalFiles.length > 0) {
+    index.critical_files = criticalFiles;
+  }
+
+  // Add important functions section (from all files)
+  const importantFunctions = [];
+  files.forEach((file) => {
+    try {
+      const filePath = path.join(folderPath, file.path);
+      if (fs.existsSync(filePath) && (filePath.endsWith(".ts") || filePath.endsWith(".tsx") || filePath.endsWith(".js") || filePath.endsWith(".jsx") || filePath.endsWith(".py"))) {
+        const content = fs.readFileSync(filePath, "utf8");
+        const funcs = extractFunctions(content, filePath);
+        funcs.forEach((func) => {
+          importantFunctions.push({
+            name: func.name,
+            file: file.path,
+            line: func.line,
+            description: func.description || undefined,
+            snippet: func.snippet || undefined,
+          });
+        });
+      }
+    } catch (e) {
+      // Ignore errors
+    }
+  });
+  if (importantFunctions.length > 0) {
+    // Sort by file path, then by line number
+    importantFunctions.sort((a, b) => {
+      if (a.file !== b.file) return a.file.localeCompare(b.file);
+      return a.line - b.line;
+    });
+    index.important_functions = importantFunctions.slice(0, 30); // Limit to 30 most important
+  }
 
   // Add quick navigation for root
   if (relativePath === ".") {
@@ -363,6 +571,8 @@ ${jsonToToon({
   files: index.files,
   subfolders: index.subfolders,
   dependencies: index.dependencies,
+  ...(index.critical_files ? { critical_files: index.critical_files } : {}),
+  ...(index.important_functions ? { important_functions: index.important_functions } : {}),
   ...(index.quickNavigation ? { quickNavigation: index.quickNavigation } : {}),
 })}`;
 
@@ -388,6 +598,7 @@ const INDEX_DIRECTORIES = [
   "frontend",
   "packages",
   "scripts",
+  ".repo", // Governance directory - important for agent navigation
 ];
 
 function generateAllIndexes() {

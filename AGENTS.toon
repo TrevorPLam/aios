@@ -50,7 +50,7 @@ op_context:
   capabilities[2]:
     Run shell commands, tests, linters in your session.
     Manage edits, commits, and PRs.
-  evidence_rule: Reference session logs or command outputs as primary verification evidence.
+  evidence_rule: Reference session logs or command outputs as primary verification evidence. Use batched commands (npm run check:quick) instead of running checks separately. See .repo/logs/COMMAND_OPTIMIZATION_GUIDE.toon.
 
 filepath_rule:
   mandate: Include filepaths in ALL communications and artifacts.
@@ -59,15 +59,15 @@ filepath_rule:
 
 workflow:
   strategy: Group 3-5 same-type tasks from TODO.md. Work on group to completion.
-  group_exit_requirement: Before declaring the group complete, include executed verification evidence (commands + output summary) or mark <UNKNOWN> + create HITL if verification cannot be executed.
+  group_exit_requirement: Before declaring the group complete, include executed verification evidence (commands + brief output summary) or mark <UNKNOWN> + create HITL if verification cannot be executed. Use batched commands to reduce execution time.
   steps[7]:
     Group tasks by type (feature, bug, docs).
     For first task, create a plan with:
     - Files to change.
     - Quality Gate (if needed): Reference docs/quality-attributes.md.
     - Security Gate (if needed): Check docs/security-review-triggers.md. If triggered, create HITL.
-    - Verification Plan: Commands to run (e.g., 'npm test').
-    Make changes task-by-task. Run verification commands.
+    - Verification Plan: Commands to run (use batched: 'npm run check:quick' instead of separate lint/type/format checks).
+    Make changes task-by-task. Run minimal verification commands (batch related checks).
     If blocked: Mark 'Blocked', create HITL, continue with group.
     Group complete: Update TODO.md, archive tasks, provide batch report.
 
@@ -89,6 +89,22 @@ pr_reqs:
 security:
   hard_stops[4]: Secrets in code., Auth changes without HITL., Money flow changes., External API without review.
   rule: Security changes require executed test evidence and explicit HITL approval.
+
+command_optimization:
+  guide: .repo/logs/COMMAND_OPTIMIZATION_GUIDE.toon
+  principles[6]:
+    Think before executing: Check if command/target exists before running.
+    Batch related commands: Use 'npm run check:quick' instead of individual checks.
+    Conditional execution: If prerequisite fails, skip dependent commands (don't chain failures).
+    Dependency order: Install → Test → Lint (install first, then test, then lint).
+    Reference CI when possible: Use CI results instead of re-running locally.
+    Honest verification: Never claim code works without executing it. Use verification_status (verified/assumed/unknown).
+  examples:
+    good: "npm run check:quick" (instead of "npm run lint && npm run check:types && npm run check:format")
+    bad: "npm run lint", "npm run check:types", "npm run check:format" (separate commands)
+    doc_only_change: [] (empty commands array is valid)
+    smart_skip: "make lint fails (no target) → skip and document, use npm run lint instead"
+    conditional: "npm install fails → skip npm test (don't run dependent commands)"
 
 next:
   start[3]: Read TODO.toon., Group 3-5 same-type tasks., Begin execution for first group.

@@ -18,9 +18,11 @@ const RESET = "\x1b[0m";
 
 function commandExists(cmd) {
   try {
-    execSync(`which ${cmd} 2>/dev/null || where ${cmd} 2>/dev/null`, {
-      stdio: "ignore",
-    });
+    if (process.platform === "win32") {
+      execSync(`where ${cmd}`, { stdio: "ignore" });
+    } else {
+      execSync(`which ${cmd}`, { stdio: "ignore" });
+    }
     return true;
   } catch {
     return false;
@@ -32,9 +34,14 @@ function checkBoundaries(failOnViolations = false) {
 
   // Check if import-linter is installed
   if (!commandExists("lint-imports")) {
-    console.error(`${RED}❌ ERROR: lint-imports not found${RESET}`);
-    console.error("Install with: pip install import-linter==2.0");
-    process.exit(1);
+    console.warn(`${YELLOW}⚠️  WARNING: lint-imports not found${RESET}`);
+    console.warn("Boundary checking requires: pip install import-linter==2.0");
+    console.warn("Skipping boundary check. Install the tool to enable this check.");
+    if (failOnViolations) {
+      console.error(`${RED}Hard gate failure: Boundary checker required but not available${RESET}`);
+      process.exit(1);
+    }
+    return { success: true, violations: [], skipped: true };
   }
 
   // Check if config file exists

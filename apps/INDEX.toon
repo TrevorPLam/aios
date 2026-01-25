@@ -4,14 +4,14 @@ filepath: apps/INDEX.toon
 $schema: http://json-schema.org/draft-07/schema#
 version: 1.0.0
 purpose: Application shells (mobile, API, web)
-generated_at: 2026-01-25T19:24:27.522Z
+generated_at: 2026-01-25T20:15:30.825Z
 
 folder: apps
 files: []
 subfolders[3]{path,purpose,indexFile}:
-  api,Directory,
-  mobile,Directory,
-  web,Directory,
+  api,See INDEX.toon for details,api/INDEX.toon
+  mobile,See INDEX.toon for details,mobile/INDEX.toon
+  web,See INDEX.toon for details,web/INDEX.toon
 dependencies:
   imports: []
   imported_by: []

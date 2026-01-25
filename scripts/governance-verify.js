@@ -286,7 +286,9 @@ function checkBoundaries() {
     }
   } else if (
     runCommand(
-      "which lint-imports 2>/dev/null || where lint-imports 2>/dev/null",
+      process.platform === "win32"
+        ? "where lint-imports 2>nul"
+        : "which lint-imports 2>/dev/null",
       true,
     ).success
   ) {

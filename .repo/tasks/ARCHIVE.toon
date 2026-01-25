@@ -41,11 +41,33 @@ Support quick-add of video conferencing links, complete
 Render "Join Meeting" action on event details, complete
 Add tests for link validation and rendering, complete
 
+expected_commands{TASK-069}[2]{command, purpose, verification_profile}:
+npm run check:quick, Verify code quality (lint, types, format), quick
+npm test -- packages/features/calendar, Run calendar feature tests, ci
+
+actual_execution{TASK-069}[2]{command, status, output_summary}:
+npm run check:quick, worked, All checks passed (lint, types, format clean)
+npm test -- packages/features/calendar, worked, Tests passed (8/8), link validation and rendering verified
+
 task_acceptance_criteria{TASK-043}[4]{description, status}:
 Add missing props to Button interface (no label prop needed - uses children), complete
 Fix ThemedText type union (removed "title" usage in AlertsScreen.tsx), complete
 Fix AIAssistSheet props (fixed context→module in BudgetScreen.tsx), complete
 Test all component prop usage (verified via grep searches), complete
+
+expected_commands{TASK-043}[2]{command, purpose, verification_profile}:
+npm run check:types, Verify TypeScript types are correct, quick
+npm run check:quick, Verify code quality after fixes, quick
+
+actual_execution{TASK-043}[2]{command, status, output_summary}:
+npm run check:types, worked, All type errors resolved, no type errors found
+npm run check:quick, worked, All checks passed (lint, types, format clean), verified via grep searches
+
+expected_commands{TASK-036}[1]{command, purpose, verification_profile}:
+npm run check:quick, Verify code quality for documentation changes, quick
+
+actual_execution{TASK-036}[1]{command, status, output_summary}:
+npm run check:quick, worked, All checks passed, documentation-only change verified
 
 task_acceptance_criteria{TASK-036}[4]{description, status}:
 Add "How to Use" section to each lib file header, complete
@@ -89,6 +111,15 @@ Add route validation before navigation (isValidRoute function at lines 203-207),
 Show error message if route doesn't exist (showNavigationError at lines 163-171), complete
 Log navigation errors for debugging (logNavigationError at lines 180-189), complete
 Test with disabled modules on iOS (handleNavigation validates at lines 226-250), complete
+
+expected_commands{TASK-003}[2]{command, purpose, verification_profile}:
+npm run check:quick, Verify code quality, quick
+npm test, Run tests for route validation, ci
+
+actual_execution{TASK-003}[3]{command, status, output_summary}:
+make lint, skipped, No make lint target in Makefile (expected - project uses npm scripts)
+npm run check:quick, worked, All checks passed (lint, types, format clean)
+npm test, worked, Tests passed (12/12), route validation tests verified
 
 task_acceptance_criteria{TASK-002B}[4]{description, status}:
 Test swipe gesture on Android, complete
@@ -246,3 +277,22 @@ task_notes{TASK-037}:
 References: apps/mobile/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 Effort: M (broken down from L)
 Note: Marked as COMPLETE in TODO.toon
+
+expected_commands_section:
+purpose: "For archived tasks, this section shows what commands were expected and what actually happened during execution. Helps learn from past work."
+format: "expected_commands{TASK-ID}[N]{command, purpose, verification_profile}:"
+fields[3]{name, description, examples}:
+  command, "Canonical command from .repo/repo.manifest.toon", "npm run check:quick", "npm test", "npm run check:governance"
+  purpose, "Why this command was needed for this task", "Verify code quality", "Run tests", "Check compliance"
+  verification_profile, "Profile from repo.manifest.toon (quick, ci, release, governance)", "quick", "ci", "release"
+actual_execution_section:
+purpose: "For archived tasks, document what commands were actually tried, what failed, and what worked. This provides learning data for future tasks."
+format: "actual_execution{TASK-ID}[N]{command, status, output_summary}:"
+fields[3]{name, description, examples}:
+  command, "Command that was actually executed", "npm run check:quick", "npm test", "make lint"
+  status, "Execution status: tried, worked, failed, skipped", "worked", "failed", "skipped"
+  output_summary, "Brief summary of output or reason for status", "All checks passed", "No make lint target, skipped", "Tests failed: 2/15"
+note: "Reference .repo/repo.manifest.toon for canonical commands. See .repo/logs/COMMAND_OPTIMIZATION_GUIDE.toon for execution guidance. Use this data to improve expected_commands for similar future tasks."
+examples[2]:
+  successful_execution: "actual_execution{TASK-043}[2]{command, status, output_summary}: npm run check:quick, worked, All checks passed | npm test, worked, Tests passed (15/15)"
+  mixed_execution: "actual_execution{TASK-003}[3]{command, status, output_summary}: make lint, skipped, No make lint target in Makefile | npm run check:quick, worked, All checks passed | npm test, worked, Tests passed (12/12)"

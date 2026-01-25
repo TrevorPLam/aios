@@ -4,11 +4,11 @@ filepath: packages/INDEX.toon
 $schema: http://json-schema.org/draft-07/schema#
 version: 1.0.0
 purpose: Shared packages (features, platform, design-system, contracts)
-generated_at: 2026-01-25T19:24:27.549Z
+generated_at: 2026-01-25T20:15:30.886Z
 
 folder: packages
-files[1]{path,type,key_classes,line_count,size_bytes,description}:
-  README.md,md,[],32,929,Packages Boundary Map
+files[1]{path,type,key_classes,line_count,size_bytes,description,critical}:
+  README.md,md,,32,929,Packages Boundary Map,true
 subfolders[4]{path,purpose,indexFile}:
   contracts,Directory,
   design-system,Directory,
@@ -17,3 +17,5 @@ subfolders[4]{path,purpose,indexFile}:
 dependencies:
   imports: []
   imported_by: []
+critical_files[1]{path,type,description,key_classes}:
+  README.md,md,Packages Boundary Map,

@@ -1,0 +1,21 @@
+type: directory_index
+file: INDEX.toon
+filepath: .repo/INDEX.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Governance framework directory (policies, tasks, templates, logs, traces)
+generated_at: 2026-01-25T20:15:30.976Z
+
+folder: .repo
+files: []
+subfolders[7]{path,purpose,indexFile}:
+  agents,Directory,
+  hitl,Directory,
+  logs,Directory,
+  policy,Directory,
+  tasks,Directory,
+  templates,Directory,
+  traces,Directory,
+dependencies:
+  imports: []
+  imported_by: []

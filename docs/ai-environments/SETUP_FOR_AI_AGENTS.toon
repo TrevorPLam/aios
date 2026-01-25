@@ -1,0 +1,95 @@
+type: setup_guide
+id: SETUP_FOR_AI_AGENTS.toon
+filepath: docs/ai-environments/SETUP_FOR_AI_AGENTS.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Setup instructions for AI agent environments (Codex, Claude, GitHub Copilot)
+
+target_environments[3]:
+  GitHub Copilot Workspaces
+  Claude Code (Cursor/Anthropic)
+  Codex/OpenAI environments
+
+quick_setup[3]:
+  step_1: npm install (installs dependencies and runs prepare script automatically)
+  step_2: Verify hooks: git commit -m "test: verify setup" (should work)
+  step_3: If hooks fail: Use --no-verify flag or run npm install
+
+critical_understanding:
+  husky_hooks[2]:
+    how_they_work: Hooks in .husky/ are shell scripts that run before/after git operations
+    when_installed: Automatically installed when "npm install" runs (triggers "prepare" script)
+    if_missing: Hooks exist but may not be executable if husky hasn't run
+  dependencies[3]:
+    required: node_modules must exist for npm run commands to work
+    npx_behavior: npx can download packages if node_modules missing (slower but works)
+    best_practice: Always run npm install first in fresh environments
+
+environment_scenarios:
+  scenario_1_fresh_clone[4]:
+    state: Just cloned repository, no npm install run
+    hooks: Exist in .husky/ but may not be set up
+    dependencies: node_modules doesn't exist
+    solution: Run npm install (installs deps + sets up hooks)
+  scenario_2_partial_setup[3]:
+    state: npm install started but failed or incomplete
+    hooks: May be partially set up
+    dependencies: node_modules may be incomplete
+    solution: Delete node_modules and package-lock.json, run npm install again
+  scenario_3_no_node[2]:
+    state: Node.js not installed or not in PATH
+    hooks: Cannot run (require Node.js)
+    solution: Install Node.js 18+ first, then npm install
+
+hook_behavior:
+  pre_commit[4]:
+    checks: node_modules exists (new - added for AI environments)
+    runs: npx lint-staged (can download tools if missing)
+    runs: npm run check:governance (requires node_modules)
+    if_missing: Skips gracefully, allows commit
+  pre_push[4]:
+    checks: node_modules exists (new - added for AI environments)
+    checks: Uncommitted generated files
+    runs: npm test (requires jest in node_modules)
+    runs: npm run check:governance (requires node_modules)
+    if_missing: Skips gracefully, allows push
+  post_commit[3]:
+    checks: node_modules exists (new - added for AI environments)
+    runs: Various node scripts (require node_modules)
+    if_missing: Skips gracefully, doesn't block
+
+workarounds:
+  skip_hooks[2]:
+    commit: git commit --no-verify -m "message"
+    push: git push --no-verify
+    note: Use only when hooks fail due to missing dependencies, not to bypass checks
+  manual_setup[3]:
+    install: npm install
+    setup_hooks: npm run prepare (or npx husky install)
+    verify: Make a test commit to verify hooks work
+
+best_practices_for_agents[5]:
+  Always run npm install first in fresh environments
+  Check if node_modules exists before running npm run commands
+  Use npx for tools (works even without node_modules, downloads on demand)
+  Use --no-verify only when hooks fail due to missing deps, not to bypass checks
+  Document any environment-specific issues in commit messages
+
+common_issues:
+  hooks_not_running[3]:
+    symptom: Git operations complete without hook execution
+    cause: Husky not initialized (npm run prepare not run)
+    fix: Run npm install (runs prepare automatically) or npm run prepare manually
+  tools_not_found[3]:
+    symptom: prettier/eslint/jest not found errors
+    cause: node_modules doesn't exist or incomplete
+    fix: Run npm install to install all dependencies
+  slow_first_run[2]:
+    symptom: npx downloads packages on first use (slow)
+    cause: node_modules missing, npx downloading packages
+    fix: Run npm install first to install all dependencies locally
+
+related_documentation[3]:
+  agent_environment_guide: docs/ai-environments/AGENT_ENVIRONMENT_GUIDE.toon
+  setup_instructions: docs/archive/project-management/SETUP_INSTRUCTIONS.md
+  ci_workflow: .github/workflows/ci.yml (shows expected environment setup)

@@ -4,57 +4,67 @@ filepath: INDEX.toon
 $schema: http://json-schema.org/draft-07/schema#
 version: 1.0.0
 purpose: Master index of all directories in the repository
-generated_at: 2026-01-25T19:24:27.513Z
+generated_at: 2026-01-25T20:15:30.801Z
 
 folder: .
-files[36]{path,type,key_classes,line_count,size_bytes,description}:
-  .cspell.json,json,[],95,1514,
-  .cursorrules,file,[],184,7558,Cursor Agent Rules
-  .editorconfig,file,[],34,540,"EditorConfig is awesome: https://EditorConfig.org"
-  .gitattributes,file,[],4,92,
-  .gitignore,file,[],76,817,"Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files"
-  .lintstagedrc.json,json,[],7,233,
-  .markdownlint.json,json,[],13,248,
-  .nvmrc,file,[],2,4,
-  .pre-commit-config.yaml,yaml,[],95,2840,Pre-commit hooks for TIER 0 enforcement
-  .releaserc.json,json,[],76,1292,
-  .replit,file,[],74,1267,
-  .spectral.yml,yml,[],50,1099,Spectral configuration for OpenAPI/AsyncAPI linting
-  .stryker.conf.json,json,[],34,761,
-  AGENTS.json,json,[],108,4566,
-  AGENTS.md,md,[],2,65,
-  AIOS_MAPPING.md,md,[],858,22776,Patterns Mappable to aios
-  app.json,json,[],54,1300,
-  babel.config.js,js,[],25,639,
-  CHANGELOG.md,md,[],169,6431,Framework Changelog
-  CLAUDE.md,md,[],2,65,
-  CODE_OF_CONDUCT.md,md,[],126,5267,Contributor Covenant Code of Conduct
-  COMPLETE_CHECKLIST.md,md,[],1800,48238,Complete Enhancement Checklist for aios
-  CONTRIBUTING.md,md,[],484,11089,Contributing to AIOS
-  drizzle.config.ts,ts,[],15,325,
-  eslint.config.js,js,[],52,1312,"https://docs.expo.dev/guides/using-eslint/"
-  jest.config.js,js,[],35,1241,
-  jest.setup.js,js,[],60,1375,
-  LICENSE,file,[],22,1095,
-  Makefile,file,[],212,8708,"Meta-commentary:"
-  metro.config.js,js,[],10,285,
-  mkdocs.yml,yml,[],246,8195,MkDocs Configuration for AIOS Documentation
-  package.json,json,[],223,12661,
-  README.md,md,[],526,22496,AIOS — Life Operating System
-  SECURITY.md,md,[],126,4205,Security Policy
-  THE_GOAL.md,md,[],47,1766,"THE GOAL: Becoming a Legendary Developer (0.01%)"
-  tsconfig.json,json,[],29,903,
-subfolders[7]{path,purpose,indexFile}:
-  apps,Directory,
-  assets,Directory,
-  attached_assets,Directory,
-  docs,Directory,
-  frontend,Directory,
-  packages,Directory,
-  scripts,Directory,
+files[36]{path,type,key_classes,line_count,size_bytes,description,critical}:
+  .cspell.json,json,,95,1514,,
+  .cursorrules,file,,184,7558,Cursor Agent Rules,
+  .editorconfig,file,,34,540,"EditorConfig is awesome: https://EditorConfig.org",
+  .gitattributes,file,,4,92,,
+  .gitignore,file,,76,742,"Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files",
+  .lintstagedrc.json,json,,7,235,,
+  .markdownlint.json,json,,13,248,,
+  .nvmrc,file,,2,4,,
+  .pre-commit-config.yaml,yaml,,95,2840,Pre-commit hooks for TIER 0 enforcement,
+  .releaserc.json,json,,76,1292,,
+  .replit,file,,74,1267,,
+  .spectral.yml,yml,,50,1099,Spectral configuration for OpenAPI/AsyncAPI linting,
+  .stryker.conf.json,json,,34,761,,
+  AGENTS.json,json,,108,4584,,true
+  AGENTS.md,md,,2,65,,true
+  AIOS_MAPPING.md,md,,858,22776,Patterns Mappable to aios,
+  app.json,json,,54,1300,,
+  babel.config.js,js,,25,639,,
+  CHANGELOG.md,md,,169,6431,Framework Changelog,
+  CLAUDE.md,md,,2,65,,
+  CODE_OF_CONDUCT.md,md,,126,5267,Contributor Covenant Code of Conduct,
+  COMPLETE_CHECKLIST.md,md,,1800,48238,Complete Enhancement Checklist for aios,
+  CONTRIBUTING.md,md,,484,11089,Contributing to AIOS,
+  drizzle.config.ts,ts,,15,325,,
+  eslint.config.js,js,,52,1312,"https://docs.expo.dev/guides/using-eslint/",
+  jest.config.js,js,,35,1241,,
+  jest.setup.js,js,,60,1375,,
+  LICENSE,file,,22,1095,,
+  Makefile,file,,212,8708,"Meta-commentary:",
+  metro.config.js,js,,10,285,,
+  mkdocs.yml,yml,,246,8195,MkDocs Configuration for AIOS Documentation,
+  package.json,json,,223,13048,,true
+  README.md,md,,526,22496,AIOS — Life Operating System,true
+  SECURITY.md,md,,126,4205,Security Policy,
+  THE_GOAL.md,md,,47,1766,"THE GOAL: Becoming a Legendary Developer (0.01%)",
+  tsconfig.json,json,,29,903,,true
+subfolders[11]{path,purpose,indexFile}:
+  .github,Directory,
+  .husky,Directory,
+  .repo,See INDEX.toon for details,.repo/INDEX.toon
+  .vscode,Directory,
+  apps,See INDEX.toon for details,apps/INDEX.toon
+  assets,See INDEX.toon for details,assets/INDEX.toon
+  attached_assets,See INDEX.toon for details,attached_assets/INDEX.toon
+  docs,See INDEX.toon for details,docs/INDEX.toon
+  frontend,See INDEX.toon for details,frontend/INDEX.toon
+  packages,See INDEX.toon for details,packages/INDEX.toon
+  scripts,See INDEX.toon for details,scripts/INDEX.toon
 dependencies:
   imports: []
   imported_by: []
+critical_files[5]{path,type,description,key_classes}:
+  AGENTS.json,json,,
+  AGENTS.md,md,,
+  package.json,json,,
+  README.md,md,AIOS — Life Operating System,
+  tsconfig.json,json,,
 quickNavigation:
   applications[3]{name,path,description,indexFile}:
     Mobile App,apps/mobile/,React Native/Expo mobile application,apps/mobile/INDEX.toon

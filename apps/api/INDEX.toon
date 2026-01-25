@@ -4,14 +4,14 @@ filepath: apps/api/INDEX.toon
 $schema: http://json-schema.org/draft-07/schema#
 version: 1.0.0
 purpose: API server files and directories
-generated_at: 2026-01-25T19:24:27.530Z
+generated_at: 2026-01-25T20:15:30.833Z
 
 folder: apps/api
-files[4]{path,type,key_classes,line_count,size_bytes,description}:
-  index.ts,ts,[],285,7978,
-  README.md,md,[],7,228,Legacy Server Shell
-  routes.ts,ts,[],786,20174,
-  storage.ts,ts,[IStorage,MemStorage,storage],835,23960,
+files[4]{path,type,key_classes,line_count,size_bytes,description,critical}:
+  index.ts,ts,,285,7978,"Governance & Best Practices\n This index file exports public APIs following repository boundaries.\n Constitution (Article 4): Incremental Delivery\n - E",true
+  README.md,md,,7,228,Legacy Server Shell,true
+  routes.ts,ts,,786,20174,,true
+  storage.ts,ts,[IStorage,MemStorage,storage],835,23960,"Server-side storage layer.\n Provides in-memory persistence with messaging quick wins:\n - Search helpers for API usage\n - Edited metadata updates\n - Co",
 subfolders[4]{path,purpose,indexFile}:
   middleware,Directory,
   templates,Directory,
@@ -20,3 +20,32 @@ subfolders[4]{path,purpose,indexFile}:
 dependencies:
   imports: []
   imported_by: []
+critical_files[3]{path,type,description,key_classes}:
+  index.ts,ts,"Governance & Best Practices\n This index file exports public APIs following repository boundaries.\n Constitution (Article 4): Incremental Delivery\n - E",
+  README.md,md,Legacy Server Shell,
+  routes.ts,ts,,
+important_functions[2]:
+  - name: registerRoutes
+    file: routes.ts
+    line: 55
+    snippet: |
+      export async function registerRoutes(app: Express): Promise<Server> {
+        // Health check endpoint for Replit
+        app.get("/status", (req, res) => {
+          res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+        });
+      
+        // ============================================================================
+        // Governance: Security-Critical Routes
+  - name: MemStorage
+    file: storage.ts
+    line: 201
+    snippet: |
+      export class MemStorage implements IStorage {
+        private users: Map<string, User>;
+        private recommendations: Map<string, Recommendation>;
+        private tasks: Map<string, Task>;
+        private projects: Map<string, Project>;
+        private events: Map<string, Event>;
+        private settings: Map<string, Settings>;
+        private conversations: Map<string, Conversation>;

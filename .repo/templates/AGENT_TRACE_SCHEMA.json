@@ -5,8 +5,26 @@
   "properties": {
     "intent": { "type": "string" },
     "files": { "type": "array", "items": { "type": "string" } },
-    "commands": { "type": "array", "items": { "type": "string" } },
-    "evidence": { "type": "array", "items": { "type": "string" } },
+    "commands": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "description": "Commands that were actually executed. Can be empty for doc-only changes. Use batched commands (npm run check:quick) instead of running checks separately.",
+      "examples": [
+        ["npm run check:quick"],
+        ["npm run check:quick", "npm test -- packages/features/contacts"],
+        []
+      ]
+    },
+    "evidence": { 
+      "type": "array", 
+      "items": { "type": "string" },
+      "description": "Brief proof summaries (not full command outputs). Examples: 'All checks passed', 'Tests passed (15/15)', 'CI passed - see PR checks'."
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": ["verified", "assumed", "unknown"],
+      "description": "Optional: Verification status. 'verified' = executed and observed, 'assumed' = logical analysis, 'unknown' = cannot verify. If omitted, defaults to 'verified' for backward compatibility."
+    },
     "hitl": { "type": "array", "items": { "type": "string" } },
     "unknowns": { "type": "array", "items": { "type": "string" } }
   }

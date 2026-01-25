@@ -1,0 +1,105 @@
+type: guide
+id: AGENT_ENVIRONMENT_GUIDE.toon
+filepath: docs/ai-environments/AGENT_ENVIRONMENT_GUIDE.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Guide for AI agent environments (Codex, Claude, GitHub Copilot) - how dependencies and hooks behave
+
+target_audience[3]:
+  AI coding assistants (Codex, Claude, GitHub Copilot)
+  Ephemeral development environments
+  CI/CD systems
+
+environment_assumptions:
+  ephemeral: Environments may be fresh each time
+  no_node_modules: node_modules may not exist
+  no_hooks_installed: Git hooks may not be set up
+  different_platforms: Linux, macOS, or Windows
+  minimal_dependencies: Only Node.js and npm may be available
+
+critical_issues:
+  husky_hooks[2]:
+    problem: Hooks run via .husky/ scripts, but if node_modules doesn't exist, npx won't work
+    solution: Hooks should check if node_modules exists before running, or use npm run scripts
+  prepare_script[2]:
+    problem: "prepare": "husky" runs after npm install, but if npm install hasn't run, hooks won't be set up
+    solution: Hooks should gracefully skip if dependencies aren't available
+  npx_availability[2]:
+    problem: npx requires node_modules/.bin to exist, or will download packages on-the-fly
+    solution: Use npm run scripts instead, which always work if package.json scripts exist
+  lint_staged[2]:
+    problem: lint-staged requires prettier/eslint in node_modules, will fail if missing
+    solution: Already fixed - uses npx and has error handling
+
+current_behavior:
+  pre_commit[3]:
+    runs: npx lint-staged (will download tools if node_modules missing)
+    then: npm run check:governance (will fail if node_modules missing)
+    note: Uses npx which can download packages, but npm run requires node_modules
+  pre_push[3]:
+    checks: Generated files (INDEX.toon, etc.)
+    runs: npm test (requires jest in node_modules)
+    runs: npm run check:governance (requires node_modules)
+  post_commit[3]:
+    runs: node scripts/*.js (requires node_modules for any dependencies)
+    note: Uses node directly, which works if scripts have no dependencies
+
+recommendations:
+  for_ai_agents[5]:
+    Always run npm install first before any git operations
+    Run npm run prepare to set up hooks (or hooks may not work)
+    Use npm run scripts instead of direct tool calls
+    Check if node_modules exists before running hooks
+    Use --no-verify flag if hooks fail due to missing dependencies
+  for_hooks[4]:
+    Check if node_modules exists before running npm run commands
+    Use npx for tools (can download if missing, but slower)
+    Gracefully skip if dependencies unavailable
+    Provide clear error messages about what's missing
+  for_scripts[3]:
+    Use npx for external tools (prettier, eslint, jest)
+    Use npm run for project scripts
+    Check for dependencies before using them
+
+best_practices:
+  setup_sequence[4]:
+    npm install (installs dependencies and runs prepare script)
+    npm run prepare (sets up husky hooks if not already done)
+    Verify: Test a commit to ensure hooks work
+    If hooks fail: Check if node_modules exists, run npm install
+  error_handling[3]:
+    Hooks should check for node_modules before running
+    Scripts should use npx (works even without node_modules, downloads on demand)
+    Provide helpful error messages pointing to npm install
+
+known_limitations:
+  npx_downloads[2]:
+    behavior: npx will download packages if not in node_modules (slower but works)
+    performance: First run may be slow, subsequent runs use cached packages
+  npm_run_requires_modules[2]:
+    behavior: npm run requires node_modules to exist
+    workaround: Use npx directly or ensure npm install runs first
+  husky_setup[2]:
+    behavior: Husky hooks only work if npm run prepare has been executed
+    workaround: Hooks exist in .husky/ but may not be executable without husky setup
+
+testing_in_ai_environments:
+  scenario_1_fresh_clone[4]:
+    git clone repo
+    hooks: Will exist but may not be executable
+    dependencies: node_modules won't exist
+    solution: Run npm install && npm run prepare
+  scenario_2_no_install[3]:
+    Just cloned, haven't run npm install
+    hooks: May try to run but fail on npm run commands
+    solution: Hooks should skip gracefully or use npx
+  scenario_3_partial_install[3]:
+    npm install started but failed partway
+    hooks: May have some tools but not others
+    solution: Hooks should check for specific tools before using them
+
+related_files[4]:
+  package_json: package.json (prepare script, dependencies)
+  husky_hooks: .husky/pre-commit, .husky/pre-push, .husky/post-commit
+  lint_staged: .lintstagedrc.json
+  ci_workflow: .github/workflows/ci.yml (shows expected setup)

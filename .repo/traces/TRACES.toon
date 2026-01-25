@@ -60,7 +60,8 @@ workflow_integration:
   pass_3_verify: Add commands run, evidence collected, HITL items, unknowns.
 
 creation:
-  automated: node ../../scripts/create-trace-log.js --intent "<intent>" --files "<file1>,<file2>" --commands "<cmd1>,<cmd2>" --evidence "<evidence1>,<evidence2>"
+  automated: node ../../scripts/create-trace-log.js --intent "<intent>" --files "<file1>,<file2>" --commands "npm run check:quick" --evidence "All checks passed"
+  optimization_note: Use batched commands (check:quick) instead of individual checks. Commands array can be empty for doc-only changes.
   manual: Create JSON file following AGENT_TRACE_SCHEMA.json structure.
 
 validation:
@@ -69,12 +70,41 @@ validation:
   schema: Must conform to AGENT_TRACE_SCHEMA.json.
 
 evidence_requirements:
-  rule: Must include proof of verification (command outputs, test results).
-  format: Array of strings describing verification evidence.
-  examples[3]:
-    "Type checking passed"
-    "All tests passed (15/15)"
-    "Linting clean"
+  rule: Must include brief proof summaries (not full command outputs). Be honest about verification status.
+  format: Array of strings with brief verification summaries.
+  verification_status:
+    optional_field: verification_status (values: verified, assumed, unknown)
+    verified: "Successfully executed and observed working"
+    assumed: "Logical analysis suggests correct but not executed"
+    unknown: "Cannot verify due to environment/limitations"
+  examples[6]:
+    verified: "All checks passed" (verification_status: "verified")
+    verified: "Tests passed (15/15)" (verification_status: "verified")
+    assumed: "Code review suggests correct (tsx not installed, cannot run)" (verification_status: "assumed")
+    unknown: "Cannot verify (npm registry down)" (verification_status: "unknown")
+    ci_reference: "CI passed - see PR checks" (verification_status: "verified")
+    doc_only: "Documentation-only change, no verification needed" (verification_status: "verified")
+  optimization: Use brief summaries, not full command outputs. Reference CI results when available. Be honest about what's actually verified.
+
+command_optimization:
+  guide: ../../.repo/logs/COMMAND_OPTIMIZATION_GUIDE.toon
+  principle: Think before executing. Check prerequisites, batch commands, skip gracefully on failure.
+  pre_execution[3]:
+    check_exists: "Check if command/target exists before running (e.g., make lint requires Makefile with lint target)"
+    check_dependencies: "Check if prerequisites installed (e.g., npm commands require node_modules)"
+    check_relevance: "Check if command needed for verification (doc-only changes need no commands)"
+  conditional_execution[2]:
+    if_prerequisite_fails: "If prerequisite fails, skip dependent commands (don't chain failures)"
+    dependency_order: "Install → Test → Lint (install first, then test, then lint)"
+  batched_commands[2]:
+    use: "npm run check:quick" instead of running lint, check:types, check:format separately
+    use: "npm run check:ci" for full CI suite instead of running each check individually
+  empty_allowed: Commands array can be empty for doc-only changes
+  examples[4]:
+    good: ["npm run check:quick"] with evidence: ["All checks passed"] verification_status: "verified"
+    good: [] with evidence: ["CI passed - see PR checks"] verification_status: "verified"
+    smart_skip: ["npm run lint"] with evidence: ["Linting passed (skipped make lint - no target)"] verification_status: "verified"
+    avoid: ["npm run lint", "npm run check:types", "npm run check:format", "npm test", "npm run check:governance"] (too many separate commands)
 
 related_files:
   schema: ../templates/AGENT_TRACE_SCHEMA.json

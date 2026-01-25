@@ -11,10 +11,16 @@ directory_purpose:
 trace_log_content[6]:
   intent: What the agent was trying to accomplish
   files: Which files were modified
-  commands: What verification commands were run
-  evidence: Proof that the work was verified
+  commands: What verification commands were actually run (can be empty for doc-only changes)
+  evidence: Brief proof summaries (not full command outputs)
   hitl: Human-in-the-loop items created
   unknowns: Things marked as UNKNOWN
+
+command_optimization[4]:
+  principle: Only record commands that were actually executed, not commands that should be run
+  batching: Use batched commands (npm run check:quick) instead of running checks separately
+  ci_reference: If CI passed, reference CI results instead of re-running commands locally
+  empty_allowed: Commands array can be empty if no verification commands were needed
 
 naming_convention:
   format: "{TASK-ID}-trace-{timestamp}.json"
@@ -39,10 +45,12 @@ creation:
       node scripts/create-trace-log.js \
         --intent "Add contact management feature" \
         --files "packages/features/contacts/domain/contactService.ts,packages/features/contacts/ui/ContactList.tsx" \
-        --commands "npm run check:types,npm test,npm run lint" \
-        --evidence "Type checking passed,All tests passed (15/15),Linting clean"
+        --commands "npm run check:quick" \
+        --evidence "All checks passed"
+    optimization_note: Use batched commands (check:quick) instead of individual checks
   manual:
     note: Create JSON file following schema structure
+  optimization_guide: See .repo/logs/COMMAND_OPTIMIZATION_GUIDE.toon for reducing unnecessary command execution
 
 when_required:
   required_for[6]: Feature additions, Bug fixes, Refactoring, Security changes, API changes, Schema changes
