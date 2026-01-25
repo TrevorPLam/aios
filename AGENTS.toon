@@ -1,5 +1,6 @@
 type: agent_entry_point
 id: AGENTS.json
+filepath: AGENTS.toon
 $schema: http://json-schema.org/draft-07/schema#
 version: 2.1.0
 purpose: Governance for autonomous coding agents. Read this, then .repo/tasks/TODO.md.
