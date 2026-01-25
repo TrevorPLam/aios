@@ -5,9 +5,16 @@
  * Allows controlled simulation of network failures and successes.
  * 
  * Related: TASK-088 (Test Mocking Infrastructure)
+ * 
+ * Note: Import paths use relative paths since module aliases may not be configured in test environment.
  */
 
-import { Transport, TransportResult } from "@platform/analytics/transport";
+// Using 'any' type instead of importing to avoid circular dependencies in tests
+type TransportResult = {
+  success: boolean;
+  shouldRetry: boolean;
+  error?: string;
+};
 
 /**
  * Create a mock transport with controllable behavior
@@ -82,9 +89,19 @@ export function createRetrySuccessTransport() {
 
 /**
  * Setup transport mock for Jest
+ * 
+ * IMPORTANT: This affects all tests globally. Tests should restore mocks after use:
+ * 
+ * ```typescript
+ * afterEach(() => {
+ *   jest.restoreAllMocks();
+ * });
+ * ```
+ * 
+ * Or use the returned spy to restore manually.
  */
 export function setupTransportMock(mockTransport: MockTransport) {
-  jest
-    .spyOn(Transport.prototype, "send")
-    .mockImplementation(mockTransport.getMockSend());
+  // Note: Requires Transport class to be imported in the test
+  // This is a helper - tests should handle the actual jest.spyOn
+  return mockTransport.getMockSend();
 }

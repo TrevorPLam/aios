@@ -5,15 +5,46 @@
  * Reduces duplication of data creation across test files.
  * 
  * Related: TASK-089 (Test Helper Utilities)
+ * 
+ * Note: Interfaces are defined inline to avoid circular dependencies.
+ * For production code, import types from contracts/models.
  */
 
 import { randomUUID } from "crypto";
 
 /**
- * Create test analytics event
+ * Analytics event interface for tests
+ * Based on the analytics event structure in packages/platform/analytics/
+ * 
+ * IMPORTANT: Keep this in sync with the actual AnalyticsEvent type.
+ * If the analytics event structure changes, update this interface.
  */
-export function createTestAnalyticsEvent(overrides?: Partial<AnalyticsEvent>) {
-  const defaults = {
+interface AnalyticsEventForTests {
+  eventId: string;
+  eventName: string;
+  timestamp: string;
+  properties: Record<string, unknown>;
+  identity: {
+    userId: string;
+    sessionId: string;
+    deviceId: string;
+  };
+  appVersion: string;
+  platform: "ios" | "android";
+}
+
+/**
+ * Create test analytics event
+ * 
+ * Usage:
+ * ```typescript
+ * const event = createTestAnalyticsEvent({ eventName: "custom_event" });
+ * ```
+ */
+export function createTestAnalyticsEvent(
+  overrides?: Partial<AnalyticsEventForTests>
+): AnalyticsEventForTests {
+  const defaults: AnalyticsEventForTests = {
     eventId: randomUUID(),
     eventName: "test_event",
     timestamp: new Date().toISOString(),
@@ -30,27 +61,13 @@ export function createTestAnalyticsEvent(overrides?: Partial<AnalyticsEvent>) {
   return { ...defaults, ...overrides };
 }
 
-interface AnalyticsEvent {
-  eventId: string;
-  eventName: string;
-  timestamp: string;
-  properties: Record<string, unknown>;
-  identity: {
-    userId: string;
-    sessionId: string;
-    deviceId: string;
-  };
-  appVersion: string;
-  platform: "ios" | "android";
-}
-
 /**
  * Create batch of test analytics events
  */
 export function createTestAnalyticsEventBatch(
   count: number,
   userId?: string,
-): AnalyticsEvent[] {
+): AnalyticsEventForTests[] {
   const batchUserId = userId || randomUUID();
   return Array.from({ length: count }, (_, i) =>
     createTestAnalyticsEvent({

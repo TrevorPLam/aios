@@ -271,8 +271,8 @@ Tests organized by type in subdirectories.
 
 ### Priority Order
 1. **P1:** Create helpers and mocks (TASK-089, TASK-088) ✅
-2. **P2:** Move E2E tests to `e2e/`
-3. **P2:** Move security tests to `security/`
+2. **P2:** Move E2E tests to `e2e/` (TODO)
+3. **P2:** Move security tests to `security/` (TODO)
 4. **P3:** Split large mixed files
 5. **P3:** Move pure unit tests to `unit/`
 
