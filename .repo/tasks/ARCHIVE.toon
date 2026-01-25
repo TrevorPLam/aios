@@ -7,13 +7,17 @@ purpose: "Historical record of completed tasks for autonomous coding agents. Gov
 rule: "Completed tasks are moved here from TODO.toon in reverse chronological order (most recent first)."
 
 archive_statistics[5]{metric, count}:
-Total Completed, 18
+Total Completed, 22
 P0 Completed, 4
-P1 Completed, 3
-P2 Completed, 5
+P1 Completed, 4
+P2 Completed, 9
 P3 Completed, 6
 
-completed_tasks[18]{id, title, priority, status, created, completed, context}:
+completed_tasks[22]{id, title, priority, status, created, completed, context}:
+TASK-091, Test Architecture: Split into API, Client, and Integration Tests, P1, completed, 2026-01-24, 2026-01-25, Created comprehensive test architecture documentation defining three-tier testing: API tests (server-side), Client tests (React Native), and Integration tests (client + server). Documentation includes clear boundaries, examples, anti-patterns, and implementation checklist. File: docs/testing/test_architecture.md
+TASK-089, Test Helper Utilities, P2, completed, 2026-01-24, 2026-01-25, Created reusable test helper utilities to reduce duplication across tests. Helpers include: auth.helper.ts (JWT token generation, user creation), server.helper.ts (test server setup/teardown), data.helper.ts (test data creation for events, notes, tasks). Files: apps/api/__tests__/helpers/
+TASK-088, Test Mocking Infrastructure, P2, completed, 2026-01-24, 2026-01-25, Created mocking infrastructure for test dependencies. Mocks include: rateLimiter.mock.ts (express-rate-limit), transport.mock.ts (analytics transport with controllable behavior), asyncStorage.mock.ts (React Native AsyncStorage). Files: apps/api/__tests__/mocks/
+TASK-087, Test Index and Location Mapping, P2, completed, 2026-01-24, 2026-01-25, Created comprehensive test index mapping functionality to test files. Helps developers quickly locate relevant tests, understand coverage, and identify gaps. Includes "where do I find" guide and coverage statistics by module. File: docs/testing/test_index.md
 TASK-069, Calendar Video Conference Links, P3, completed, 2026-01-21, 2026-01-21, Video conference links are standard in competitor calendars. Meetings often need Zoom/Meet/Teams launch links. Integration improves event usefulness.
 TASK-043, Component Prop Interface Cleanup, P2, completed, 2026-01-19, 2026-01-19, Component prop interfaces cleaned up. Type errors resolved. Better type safety across codebase.
 TASK-036, Library Usage Documentation, P2, completed, 2026-01-19, 2026-01-19, Each lib file needs usage examples. Developers don't know how to use lib modules. Poor integration documentation.
@@ -277,6 +281,79 @@ task_notes{TASK-037}:
 References: apps/mobile/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 Effort: M (broken down from L)
 Note: Marked as COMPLETE in TODO.toon
+
+task_acceptance_criteria{TASK-091}[5]{description, status}:
+Create test architecture documentation defining three tiers, complete
+Document API tests (server-side) boundaries and what to test, complete
+Document Client tests (React Native) boundaries and what to test, complete
+Document Integration tests (client + server) boundaries, complete
+Provide examples and anti-patterns for each tier, complete
+
+task_notes{TASK-091}:
+References: docs/testing/test_architecture.md, .repo/tasks/TODO.toon, TASK-085
+Completion Notes: Created comprehensive three-tier test architecture documentation. Defines clear boundaries between API (server), Client (React Native), and Integration (E2E) tests. Addresses confusion from TASK-085 about what to test where.
+Effort: M (documentation task)
+
+task_acceptance_criteria{TASK-089}[5]{description, status}:
+Create test helpers directory structure, complete
+Create auth helpers (JWT tokens, user creation, auth headers), complete
+Create server helpers (test server setup/teardown), complete
+Create data helpers (test data creation for common entities), complete
+Create central export index for easy imports, complete
+
+task_notes{TASK-089}:
+References: apps/api/__tests__/helpers/, apps/api/__tests__/api.e2e.test.ts
+Completion Notes: Created reusable test utilities to reduce duplication. Includes auth.helper.ts (JWT generation), server.helper.ts (server lifecycle), data.helper.ts (test data factories). All helpers exported via index.ts for easy imports.
+Effort: S (helper utilities)
+
+task_acceptance_criteria{TASK-088}[5]{description, status}:
+Create test mocks directory structure, complete
+Create rate limiter mock (express-rate-limit), complete
+Create transport mock with controllable behavior, complete
+Create AsyncStorage mock for React Native, complete
+Create central export index for easy imports, complete
+
+task_notes{TASK-088}:
+References: apps/api/__tests__/mocks/, packages/platform/analytics/__tests__/client.test.ts
+Completion Notes: Created mocking infrastructure for test dependencies. Mocks allow tests to run independently without external dependencies. Includes controllable transport mock for testing offline queueing and retry logic.
+Effort: S (mock utilities)
+
+task_acceptance_criteria{TASK-087}[6]{description, status}:
+Create test index documentation, complete
+Map all API tests to their coverage areas, complete
+Map all client tests to their coverage areas, complete
+Create "where do I find" guide for common scenarios, complete
+Document test coverage statistics by module, complete
+Identify test coverage gaps, complete
+
+task_notes{TASK-087}:
+References: docs/testing/test_index.md, apps/api/__tests__/, packages/platform/
+Completion Notes: Created comprehensive test index mapping all test files to functionality. Includes coverage statistics, "where do I find" guide, and identified gaps. Makes it easy to locate relevant tests.
+Effort: M (documentation task)
+
+expected_commands{TASK-091}[0]:
+(empty - documentation-only task)
+
+actual_execution{TASK-091}[0]:
+(empty - documentation-only task)
+
+expected_commands{TASK-089}[1]{command, purpose, verification_profile}:
+npm run check:types, Verify helper utilities compile, quick
+
+actual_execution{TASK-089}[1]{command, status, output_summary}:
+npm run check:types, tried, TypeScript compilation check attempted (pre-existing type errors unrelated to new helpers)
+
+expected_commands{TASK-088}[1]{command, purpose, verification_profile}:
+npm run check:types, Verify mock utilities compile, quick
+
+actual_execution{TASK-088}[1]{command, status, output_summary}:
+npm run check:types, tried, TypeScript compilation check attempted (pre-existing type errors unrelated to new mocks)
+
+expected_commands{TASK-087}[0]:
+(empty - documentation-only task)
+
+actual_execution{TASK-087}[0]:
+(empty - documentation-only task)
 
 expected_commands_section:
 purpose: "For archived tasks, this section shows what commands were expected and what actually happened during execution. Helps learn from past work."
