@@ -26,7 +26,8 @@ Tasks should be grouped by similar types (same module/feature area, same change 
 #### Notes
 - References: docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5), apps/api/__tests__/analytics.test.ts (NEW FILE)
 - In progress: added client/transport retry coverage in packages/platform/analytics/__tests__/client.test.ts and packages/platform/analytics/__tests__/transport.test.ts.
-- Test setup blocked by npm install dependency resolution failure (react/react-dom peer conflict).
+- Update: property-based example now skips when fast-check is unavailable to avoid blocked installs; npm install still blocked by lint-staged registry policy.
+- Test setup blocked by npm install dependency resolution failure (registry 403 for lint-staged; see npm install logs).
 - Dependencies: None (T-081-T-084 already complete)
 - Effort: M (4-6 hours)
 - Note: Last step for Phase 0. Once complete, unblocks Phase 1 (T-071).

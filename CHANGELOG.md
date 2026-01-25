@@ -4,6 +4,12 @@
 
 This file tracks improvements and changes to the governance framework.
 
+## 2026-01-25 - Test Install Resilience
+
+### Updated
+
+- **Property-based test example** now skips when `fast-check` is unavailable, keeping test installs unblocked in restricted environments.
+
 ## 2026-01-23 - World-Class Documentation Structure
 
 ### Added

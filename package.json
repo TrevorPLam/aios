@@ -215,8 +215,7 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "typescript": "~5.9.2",
-    "yaml": "^2.8.2",
-    "fast-check": "^3.24.0"
+    "yaml": "^2.8.2"
   },
   "private": true
 }
