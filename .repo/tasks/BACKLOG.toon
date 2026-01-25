@@ -1,5 +1,10 @@
-purpose: "Prioritized task backlog for autonomous coding agents. Governed by .repo/AGENTS.toon."
-rule: "Tasks ordered by priority (P0 → P1 → P2 → P3). When TODO.toon is empty, promote the highest priority task of a similar type."
+type: todo
+id: BACKLOG.toon
+filepath: .repo/tasks/BACKLOG.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 2.1.0.
+purpose: "Prioritized task backlog for autonomous coding agents. Governed by AGENTS.toon."
+rule: "Tasks ordered by priority (P0 → P1 → P2 → P3). When TODO.toon is empty, promote the highest priority tasks of a similar type."
 
 priority_guide[4]{level, name, meaning, turnaround}:
 P0, Critical, Blocking issues, security, broken CI, Immediate
