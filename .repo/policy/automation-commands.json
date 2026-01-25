@@ -1,4 +1,4 @@
-## .repo/policy/automation-commands.json
+// .repo/policy/automation-commands.json
 
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
