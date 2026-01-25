@@ -1,4 +1,4 @@
-type: agent_entry_point
+type: todo
 id: TODO.toon
 filepath: .repo/tasks/TODO.toon
 $schema: http://json-schema.org/draft-07/schema#
