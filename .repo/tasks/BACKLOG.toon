@@ -63,7 +63,7 @@ Dependencies: T-085 (Phase 0 complete and tested)
 Effort: L (80-120 hours total for Phase 1)
 Note: Phase 1 is production-critical. Target: 53/100 → 70/100 score.
 
-note: "Additional Open Tasks from TODO.md: The root TODO.md file contains 88 additional open tasks that need to be migrated. These include P0 Tasks (4), P1 Tasks (17), P2 Tasks (43), P3 Tasks (24). Action Required: Review TODO.md and migrate remaining open tasks to this backlog as they become priorities."
+note: "Additional Open Tasks from TODO.toon: The root TODO.toon file contains 88 additional open tasks that need to be migrated. These include P0 Tasks (4), P1 Tasks (17), P2 Tasks (43), P3 Tasks (24). Action Required: Review TODO.toon and migrate remaining open tasks to this backlog as they become priorities."
 
 task_format:
 fields[4]{name, description}:
