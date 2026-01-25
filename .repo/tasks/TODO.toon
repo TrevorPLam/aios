@@ -1,4 +1,4 @@
-purpose: "Active task list for autonomous coding agents. Governed by .repo/AGENTS.toon."
+purpose: "Active task list for autonomous coding agents. Governed by AGENTS.toon."
 rule: "3-5 tasks should be active at a time, grouped by similar type. Work with what's available."
 
 active_tasks[1]{id, title, priority, status, type, created, context}:
