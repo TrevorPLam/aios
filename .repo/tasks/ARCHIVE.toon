@@ -1,4 +1,9 @@
-purpose: "Historical record of completed tasks for autonomous coding agents. Governed by .repo/AGENTS.toon."
+type: todo
+id: ARCHIVE.toon
+filepath: .repo/tasks/ARCHIVE.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 2.1.0.
+purpose: "Historical record of completed tasks for autonomous coding agents. Governed by AGENTS.toon."
 rule: "Completed tasks are moved here from TODO.toon in reverse chronological order (most recent first)."
 
 archive_statistics[5]{metric, count}:
@@ -230,7 +235,7 @@ References: packages/contracts/schema.ts:304-354, docs/analytics/PHASE_0_HANDOFF
 task_notes{TASK-058}:
 References: apps/mobile/components/AIAssistSheet.tsx, docs/planning/MISSING_FEATURES.md
 Effort: M
-Note: Marked as COMPLETE in TODO.md
+Note: Marked as COMPLETE in TODO.toon
 
 task_notes{TASK-048}:
 References: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
@@ -240,4 +245,4 @@ Effort: S
 task_notes{TASK-037}:
 References: apps/mobile/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
 Effort: M (broken down from L)
-Note: Marked as COMPLETE in TODO.md
+Note: Marked as COMPLETE in TODO.toon
