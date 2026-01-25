@@ -1,5 +1,3 @@
-// .repo/policy/automation-commands.json
-
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "version": "1.0.0",
