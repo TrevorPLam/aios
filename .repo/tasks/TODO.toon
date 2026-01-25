@@ -1,0 +1,38 @@
+purpose: "Active task list for autonomous coding agents. Governed by .repo/AGENTS.toon."
+rule: "3-5 tasks should be active at a time, grouped by similar type. Work with what's available."
+
+active_tasks[1]{id, title, priority, status, type, created, context}:
+TASK-085, Phase 0: Integration Testing, P0, blocked, testing, 2026-01-21, Phase 0: Integration Testing. End-to-end test from client to database. Verify offline queueing, retry, GDPR deletion. Critical to ensure Phase 0 works before Phase 1. T-081 through T-084 already COMPLETED - need tests.
+
+task_acceptance_criteria{TASK-085}[7]{description, status}:
+E2E test: Client sends events → Server receives → DB persists, complete
+Test offline queueing (events queue when server down), complete
+Test retry logic (events retry on failure), complete
+Test batch sending (50 events sent as batch), complete
+Test GDPR deletion (deleteUserAnalytics removes all events), complete
+Test error handling (bad payload returns 400), complete
+Test coverage >80%, blocked
+
+task_notes{TASK-085}:
+References: docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5), apps/api/__tests__/analytics.test.ts (NEW FILE)
+In progress: added client/transport retry coverage in packages/platform/analytics/__tests__/client.test.ts and packages/platform/analytics/__tests__/transport.test.ts.
+Update: property-based example now skips when fast-check is unavailable to avoid blocked installs; npm install still blocked by lint-staged registry policy.
+Test setup blocked by npm install dependency resolution failure (registry 403 for lint-staged; see npm install logs).
+Dependencies: None (T-081-T-084 already complete)
+Blocked By: npm install dependency resolution error (registry 403).
+HITL Required: true
+HITL Reference: .repo/hitl/HITL-0001.md
+
+task_logs{TASK-085}[2]{log_type, path_pattern}:
+trace, .repo/traces/TASK-085-trace-*.json
+agent, .repo/logs/TASK-085-log-*.json
+
+task_template:
+fields[5]{name, description}:
+Priority, P0 | P1 | P2 | P3
+Status, pending | in_progress | blocked | completed
+Type, [Module/Feature area] | [Change type] | [Related work]
+Created, YYYY-MM-DD
+Completed, YYYY-MM-DD (only when moved to ARCHIVE.md)
+
+note: "Tasks in TODO.md should be grouped by similar types. See .repo/tasks/README.md for grouping rules. When a task is completed, it should be moved to ARCHIVE.md and the next highest priority task of a similar type from BACKLOG.md should be promoted here."
