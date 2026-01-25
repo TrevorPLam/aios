@@ -7,13 +7,14 @@ purpose: "Historical record of completed tasks for autonomous coding agents. Gov
 rule: "Completed tasks are moved here from TODO.toon in reverse chronological order (most recent first)."
 
 archive_statistics[5]{metric, count}:
-Total Completed, 22
+Total Completed, 23
 P0 Completed, 4
 P1 Completed, 4
-P2 Completed, 9
+P2 Completed, 10
 P3 Completed, 6
 
-completed_tasks[22]{id, title, priority, status, created, completed, context}:
+completed_tasks[23]{id, title, priority, status, created, completed, context}:
+TASK-086, Test Organization: Separate Unit and Integration Tests, P2, completed, 2026-01-24, 2026-01-25, Organized test files into clear directory structure: e2e/ (2 files), security/ (4 files), integration/ (3 files). Moved 9 test files and updated all import paths. Makes test purpose clear from directory structure. Files: apps/api/__tests__/{e2e,security,integration}/
 TASK-091, Test Architecture: Split into API, Client, and Integration Tests, P1, completed, 2026-01-24, 2026-01-25, Created comprehensive test architecture documentation defining three-tier testing: API tests (server-side), Client tests (React Native), and Integration tests (client + server). Documentation includes clear boundaries, examples, anti-patterns, and implementation checklist. File: docs/testing/test_architecture.md
 TASK-089, Test Helper Utilities, P2, completed, 2026-01-24, 2026-01-25, Created reusable test helper utilities to reduce duplication across tests. Helpers include: auth.helper.ts (JWT token generation, user creation), server.helper.ts (test server setup/teardown), data.helper.ts (test data creation for events, notes, tasks). Files: apps/api/__tests__/helpers/
 TASK-088, Test Mocking Infrastructure, P2, completed, 2026-01-24, 2026-01-25, Created mocking infrastructure for test dependencies. Mocks include: rateLimiter.mock.ts (express-rate-limit), transport.mock.ts (analytics transport with controllable behavior), asyncStorage.mock.ts (React Native AsyncStorage). Files: apps/api/__tests__/mocks/
@@ -331,6 +332,18 @@ References: docs/testing/test_index.md, apps/api/__tests__/, packages/platform/
 Completion Notes: Created comprehensive test index mapping all test files to functionality. Includes coverage statistics, "where do I find" guide, and identified gaps. Makes it easy to locate relevant tests.
 Effort: M (documentation task)
 
+task_acceptance_criteria{TASK-086}[5]{description, status}:
+Create organized directory structure (e2e/, security/, integration/), complete
+Move E2E tests to e2e/ subdirectory, complete
+Move security tests to security/ subdirectory, complete
+Move integration tests to integration/ subdirectory, complete
+Update all import paths to reflect new structure, complete
+
+task_notes{TASK-086}:
+References: apps/api/__tests__/{e2e,security,integration}/, docs/testing/test_organization.md
+Completion Notes: Organized 9 test files into clear directory structure. E2E tests (2 files), security tests (4 files), integration tests (3 files). Updated all import paths from ../ to ../../ to reflect new depth. Test purpose now clear from directory structure.
+Effort: S (file organization + import updates)
+
 expected_commands{TASK-091}[0]:
 (empty - documentation-only task)
 
@@ -354,6 +367,12 @@ expected_commands{TASK-087}[0]:
 
 actual_execution{TASK-087}[0]:
 (empty - documentation-only task)
+
+expected_commands{TASK-086}[1]{command, purpose, verification_profile}:
+git status, Verify files moved correctly, quick
+
+actual_execution{TASK-086}[1]{command, status, output_summary}:
+git status, worked, 9 files moved to new directories (e2e/, security/, integration/), import paths updated successfully
 
 expected_commands_section:
 purpose: "For archived tasks, this section shows what commands were expected and what actually happened during execution. Helps learn from past work."
