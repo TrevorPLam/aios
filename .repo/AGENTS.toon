@@ -1,0 +1,32 @@
+type: agent_directory_guide
+id: AGENTS.toon
+filepath: .repo/AGENTS.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Directory structure and agent entry point guide for .repo/ directory.
+
+parent_governance:
+  entry_point: ../AGENTS.toon
+  note: Read root AGENTS.toon first for core governance rules.
+
+required_reading:
+  order[1]:
+    ../AGENTS.toon
+
+directory_structure:
+  note: See .repo/ directory structure via INDEX.toon files and directory listings.
+
+quick_start:
+  instruction: Read ../AGENTS.toon for core governance, then explore .repo/ subdirectories as needed.
+
+token_optimization:
+  tips[6]:
+    Use read_file with offset and limit parameters for large files
+    Read multiple files in parallel when possible
+    Use glob_file_search for file finding instead of broad searches
+    Use INDEX.toon files to find major functions/classes/relevant sections
+    Specify target_directories parameter in searches to limit scope
+    Use grep to find relevant sections before reading entire files
+
+next:
+  start[1]: Read ../AGENTS.toon for core governance.

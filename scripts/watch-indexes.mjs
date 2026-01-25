@@ -30,7 +30,7 @@ let updateTimer = null;
 const DEBOUNCE_MS = 1000; // Wait 1 second after last change before updating
 
 function updateIndexes() {
-  console.log(`\n🔄 Updating INDEX.json files...`);
+  console.log(`\n🔄 Updating INDEX.toon files...`);
   try {
     execSync(
       `node ${path.join(__dirname, "generate-index-json.mjs")}`,
@@ -63,7 +63,7 @@ function scheduleUpdate(changedPath) {
   }
 
   if (targetDir) {
-    console.log(`📝 Change detected in ${relativePath} (will update ${targetDir}/INDEX.json)`);
+    console.log(`📝 Change detected in ${relativePath} (will update ${targetDir}/INDEX.toon)`);
   }
 
   // Schedule update after debounce period
@@ -83,8 +83,8 @@ function watchDirectory(dirPath, depth = 0) {
       (eventType, filename) => {
         if (!filename) return;
         
-        // Ignore INDEX.json changes to avoid infinite loops
-        if (filename === "INDEX.json" || filename === "INDEX.md") {
+        // Ignore INDEX.toon changes to avoid infinite loops
+        if (filename === "INDEX.toon" || filename === "INDEX.json" || filename === "INDEX.md") {
           return;
         }
 
@@ -121,7 +121,7 @@ function watchDirectory(dirPath, depth = 0) {
   }
 }
 
-console.log("👀 Starting INDEX.json watchdog...");
+console.log("👀 Starting INDEX.toon watchdog...");
 console.log("   Watching for file changes in:");
 INDEX_DIRECTORIES.forEach((dir) => {
   console.log(`   - ${dir}/`);

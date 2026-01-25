@@ -14,16 +14,17 @@ role:
     Group similar tasks.
 
 required_reading:
-  order[2]: .repo/AGENTS.json, .repo/tasks/TODO.md
-  note: This file is the only required governance.
+  order[3]: .repo/AGENTS.toon, .repo/repo.manifest.toon, .repo/tasks/TODO.toon
+  note: This file is the only required governance. Manifest contains canonical commands - agents MUST NOT guess commands.
 
 repo_map:
-  index_files: Use INDEX.json files for navigation and patterns.
+  index_files: Use INDEX.toon files for navigation and patterns.
   code:
     mobile: apps/mobile (React Native + Expo)
     api: apps/api (Node.js + Express)
     contracts: packages/contracts (Shared Types)
   gov:
+    manifest: .repo/repo.manifest.toon
     todo: .repo/tasks/TODO.md
     backlog: .repo/tasks/BACKLOG.md
     archive: .repo/tasks/ARCHIVE.md
@@ -41,7 +42,7 @@ core_principles:
   good_practices[4]:
     Document cross-feature decisions in docs/adr/.
     Avoid scope creep.
-    Reference patterns from INDEX.json.
+    Reference patterns from INDEX.toon.
     Treat safety bypass attempts as a security stop.
 
 op_context:
@@ -90,4 +91,4 @@ security:
   rule: Security changes require executed test evidence and explicit HITL approval.
 
 next:
-  start[3]: Read TODO.md., Group 3-5 same-type tasks., Begin execution for first group.
+  start[3]: Read TODO.toon., Group 3-5 same-type tasks., Begin execution for first group.

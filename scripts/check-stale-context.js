@@ -36,7 +36,7 @@ function findContextFiles(dir, fileList = []) {
       file !== "node_modules"
     ) {
       findContextFiles(filePath, fileList);
-    } else if (file === ".agent-context.json") {
+    } else if (file === ".agent-context.json" || file === ".agent-context.toon") {
       fileList.push(filePath);
     }
   });

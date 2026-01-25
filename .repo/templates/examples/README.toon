@@ -1,0 +1,27 @@
+type: directory_guide
+id: README.toon
+filepath: .repo/templates/examples/README.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Example files directory guide
+
+directory_purpose:
+  summary: Example files demonstrating expected format for governance artifacts
+
+files[8]:
+  example_trace_log.json: Example trace log following .repo/templates/AGENT_TRACE_SCHEMA.json. Usage: Reference when creating trace logs for changes. Key fields: intent, files, commands, evidence, hitl, unknowns
+  example_hitl_item.md: Example HITL item file format. Usage: Reference when creating HITL items in .repo/hitl/. Key sections: Category, Status, Required Human Action Steps, Evidence of Completion, Related Artifacts
+  example_waiver.md: Example waiver format. Usage: Reference when creating waivers for policy exceptions. Key fields: Waives, Why, Expiration, Remediation Plan
+  example_task_packet.json: Example task packet format for feature changes. Usage: Reference when creating task packets for feature changes. Key sections: goal, non_goals, acceptance_criteria, approach, files_touched, verification_plan, risks, rollback_plan, hitl_requirements
+  example_task_packet_api_change.json: Example task packet format for API change changes. Usage: Reference when creating task packets for API contract changes. Key differences from feature: Must include OpenAPI schema updates, Requires ADR for API contract changes, Must maintain backward compatibility, Includes API-specific verification steps
+  example_task_packet_cross_module.json: Example task packet format for cross-module changes. Usage: Reference when creating task packets for cross-module integrations. Key differences from feature: Requires ADR (Principle 23, BOUNDARIES.md), Must verify no boundary violations, Must respect firm-scoping (multi-tenancy), Includes boundary checking in verification plan
+  example_test_viewset.py: Example test pattern for Django ViewSet tests. Usage: Reference when writing tests for Django REST Framework viewsets. Key patterns: Uses pytest fixtures for firm, user, api_client, Tests CRUD operations (list, create, retrieve, update, delete), Tests firm-scoping (multi-tenancy), Tests authentication/authorization
+  example_test_component.tsx: Example test pattern for React component tests. Usage: Reference when writing tests for React components. Key patterns: Uses Vitest and Testing Library, Mocks React Query hooks, Tests loading, success, error states, Tests user interactions
+  example_test_api_integration.py: Example test pattern for API integration tests. Usage: Reference when writing integration tests for API workflows. Key patterns: Tests complete workflows (create → list → update → delete), Tests pagination and filtering, Tests firm-scoping across API calls
+
+related_documentation[4]:
+  trace_schema: .repo/templates/AGENT_TRACE_SCHEMA.json
+  hitl_guide: .repo/hitl/HITL.toon
+  task_packet_template: .repo/agents/task_packet.toon
+  note: Example files (example_*.md, example_*.json) remain as-is for reference - they are data/examples, not governance files
+  waiver_template: .repo/templates/WAIVER_TEMPLATE.toon

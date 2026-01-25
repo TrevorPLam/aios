@@ -1,0 +1,24 @@
+type: template
+id: task_packet.toon
+filepath: .repo/agents/task_packet.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Task packet template for agent work
+
+template:
+  goal: ""
+  non_goals: []
+  acceptance_criteria: []
+  approach: ""
+  files_touched: []
+  verification_plan: []
+  risks: []
+  rollback_plan: ""
+  hitl_requirements: []
+  notes: "Filepaths required. No guessing. UNKNOWN → HITL."
+
+token_optimization:
+  tips[3]:
+    Use read_file with offset and limit parameters for large files
+    Specify target_directories parameter in searches to limit scope
+    Use grep to find relevant sections before reading entire files

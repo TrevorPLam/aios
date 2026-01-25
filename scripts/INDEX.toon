@@ -1,0 +1,87 @@
+type: directory_index
+file: INDEX.toon
+filepath: scripts/INDEX.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Automation and utility scripts
+generated_at: 2026-01-25T19:24:27.615Z
+
+folder: scripts
+files[69]{path,type,key_classes,line_count,size_bytes,description}:
+  .copilot-instructions.md,md,[],231,6209,Scripts Directory Instructions
+  add-governance-comments.mjs,mjs,[],308,8982,!/usr/bin/env node
+  agent-logger.js,js,[],286,8133,!/usr/bin/env node
+  AGENT.md,md,[],84,3062,AGENT.md (Folder-Level Guide)
+  archive-hitl-items.sh,sh,[],161,5160,!/bin/bash
+  archive-task.py,py,[],243,8730,!/usr/bin/env python3
+  build.js,js,[],562,14889,
+  check-artifacts-by-change-type.js,js,[],344,10893,!/usr/bin/env node
+  check-boundaries.js,js,[],107,3107,!/usr/bin/env node
+  check-bundle-budget.mjs,mjs,[],107,2769,!/usr/bin/env node
+  check-changelog-and-logs.js,js,[],347,8697,!/usr/bin/env node
+  check-coverage-ratchet.mjs,mjs,[],131,3357,!/usr/bin/env node
+  check-expired-waivers.sh,sh,[],84,2614,!/bin/bash
+  check-expo-config.mjs,mjs,[],81,2558,!/usr/bin/env node
+  check-framework-compliance.js,js,[],369,10216,!/usr/bin/env node
+  check-security-patterns.js,js,[],200,5019,!/usr/bin/env node
+  check-stale-context.js,js,[],135,3820,!/usr/bin/env node
+  check-startup-blockers.mjs,mjs,[],377,10252,!/usr/bin/env node
+  check-todo-format.mjs,mjs,[],130,3817,!/usr/bin/env node
+  check-worklets-version.mjs,mjs,[],125,4425,!/usr/bin/env node
+  create-adr-from-trigger.sh,sh,[],161,3658,!/bin/bash
+  create-agent-log.py,py,[],225,7410,!/usr/bin/env python3
+  create-hitl-item.py,py,[],228,7213,!/usr/bin/env python3
+  create-hitl-item.sh,sh,[],142,3813,!/bin/bash
+  create-trace-log.js,js,[],152,4366,!/usr/bin/env node
+  create-waiver.sh,sh,[],175,4220,!/bin/bash
+  deep-dependency-check.mjs,mjs,[],467,13326,!/usr/bin/env node
+  detect-adr-triggers.sh,sh,[],111,3637,!/bin/bash
+  extract-pr-template-data.mjs,mjs,[],334,10718,!/usr/bin/env node
+  framework-metrics.js,js,[],299,7622,!/usr/bin/env node
+  generate-agent-context.js,js,[],59,1480,!/usr/bin/env node
+  generate-agent-log.sh,sh,[],82,2187,!/bin/bash
+  generate-dashboard.sh,sh,[],339,11813,!/bin/bash
+  generate-index-json.js,js,[],141,3771,!/usr/bin/env node
+  generate-index-json.mjs,mjs,[],423,12422,!/usr/bin/env node
+  generate-index-md.mjs,mjs,[],362,11493,!/usr/bin/env node
+  generate-metrics.sh,sh,[],186,4846,!/bin/bash
+  generate-missing-agent-contexts.mjs,mjs,[],183,5012,!/usr/bin/env node
+  generate-trace-log.sh,sh,[],72,2022,!/bin/bash
+  get-next-task-number.sh,sh,[],31,821,!/bin/bash
+  governance-verify.js,js,[],583,15875,!/usr/bin/env node
+  governance-verify.sh,sh,[],309,11738,!/bin/bash
+  inject-pr-data-to-logs.mjs,mjs,[],291,8496,!/usr/bin/env node
+  manage-waivers.py,py,[],247,8058,!/usr/bin/env python3
+  migrate.sh,sh,[],100,2750,!/bin/bash
+  package.json,json,[],20,546,
+  pattern-verification.js,js,[],123,3291,!/usr/bin/env node
+  post-install-check.mjs,mjs,[],135,4393,!/usr/bin/env node
+  promote-task.py,py,[],187,6687,!/usr/bin/env python3
+  promote-task.sh,sh,[],125,3799,!/bin/bash
+  README.md,md,[],409,11008,Automation Scripts
+  SCRIPTS.md,md,[],35,1196,SCRIPTS.md (Folder-Level Guide)
+  setup-agent-logs.sh,sh,[],64,1477,!/bin/bash
+  setup-migrations.sh,sh,[],76,2296,!/bin/bash
+  suggest-waiver.sh,sh,[],97,2851,!/bin/bash
+  sync-hitl-to-pr.py,py,[],251,8618,!/usr/bin/env python3
+  test-coverage-analyzer.mjs,mjs,[],252,7248,!/usr/bin/env node
+  update-context-verified.js,js,[],104,2570,!/usr/bin/env node
+  update-documentation-metrics.mjs,mjs,[],243,6918,
+  validate-agent-context.js,js,[],171,5223,!/usr/bin/env node
+  validate-agent-trace.js,js,[],119,2961,!/usr/bin/env node
+  validate-evidence.js,js,[],93,2403,!/usr/bin/env node
+  validate-manifest-commands.sh,sh,[],148,4603,!/bin/bash
+  validate-manifest.js,js,[],212,5572,!/usr/bin/env node
+  validate-pr-body.sh,sh,[],97,3047,!/bin/bash
+  validate-task-format.sh,sh,[],115,3839,!/bin/bash
+  validate-trace-log.sh,sh,[],119,3864,!/bin/bash
+  watch-constitution.mjs,mjs,[],86,2369,!/usr/bin/env node
+  watch-indexes.mjs,mjs,[],151,4077,!/usr/bin/env node
+subfolders[4]{path,purpose,indexFile}:
+  intelligent,Directory,
+  tools,Directory,
+  ultra,Directory,
+  vibranium,Directory,
+dependencies:
+  imports: []
+  imported_by: []

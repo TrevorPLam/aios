@@ -1,0 +1,17 @@
+type: directory_index
+file: INDEX.toon
+filepath: apps/INDEX.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Application shells (mobile, API, web)
+generated_at: 2026-01-25T19:24:27.522Z
+
+folder: apps
+files: []
+subfolders[3]{path,purpose,indexFile}:
+  api,Directory,
+  mobile,Directory,
+  web,Directory,
+dependencies:
+  imports: []
+  imported_by: []

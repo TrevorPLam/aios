@@ -1,0 +1,137 @@
+type: agent_directory_guide
+id: HITL.toon
+filepath: .repo/hitl/HITL.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Human-In-The-Loop (HITL) items directory guide. Links to AGENTS.toon and provides HITL creation instructions.
+
+parent_governance:
+  entry_point: ../../AGENTS.toon
+  note: Read AGENTS.toon first for core governance rules, especially hitl section.
+
+required_reading:
+  order[4]:
+    ../../AGENTS.toon
+    ../policy/procedures.toon (hitl section)
+    README.toon
+    ../repo.manifest.toon
+
+directory_purpose:
+  summary: Human-In-The-Loop items - blocking questions requiring human input.
+  governance_rule: Required when encountering UNKNOWN, security triggers, external systems, or risky changes.
+  merge_blocking: PRs with non-Completed HITL items are blocked from merging.
+
+naming_convention:
+  pattern: HITL-XXXX.md
+  format: Sequential numbering with leading zeros (HITL-0001.md, HITL-0002.md, etc.)
+  examples[2]:
+    HITL-0001.md
+    HITL-0042.md
+  uniqueness: Sequential numbering ensures uniqueness and proper sorting.
+
+when_to_create:
+  triggers[4]:
+    UNKNOWN: Something not in docs, manifest, or code (Article 3: No Guessing)
+    Security: Auth/login/money/data/external changes (Article 6: Safety Before Speed)
+    External Systems: Credentials, billing, production, vendor dashboards (Article 8)
+    Risky Changes: Logins, money flows, user data, privacy, security
+
+categories:
+  valid[5]:
+    External Integration
+    Clarification
+    Risk
+    Feedback
+    Vendor
+
+statuses:
+  valid[5]:
+    Pending
+    In Progress
+    Blocked
+    Completed
+    Superseded
+
+workflow:
+  creation[2]:
+    Mark task 'Blocked' in TODO.md
+    Create HITL-XXX.md in .repo/hitl/ with Status: Pending
+  continuation: Move to next task in group, continue working.
+  completion[2]:
+    Human marks Status as 'Completed' in HITL item file
+    Update task Status in BACKLOG.md (remove Blocked, ready to promote)
+
+item_format:
+  required_fields[8]:
+    ID (HITL-XXXX)
+    Category
+    Required For (change types)
+    Owner (human name)
+    Reviewer (human name)
+    Status (Pending initially)
+    Date Required
+    Summary (plain English explanation)
+  optional_fields[4]:
+    Date Completed
+    Related PR
+    Related ADR
+    Related Waiver
+    Related Task ID
+
+minimal_required:
+  explanation[2]:
+    what_is_wrong: Plain English description of the issue
+    what_is_needed: Plain English description of what human needs to provide
+
+creation:
+  automated_script: ../../scripts/create-hitl-item.sh [category] [summary]
+  python_script: python3 ../../scripts/create-hitl-item.py --category <category> --summary <summary> --required-for <types> --owner <name>
+  manual: Create HITL-XXXX.md file following format in README.toon or example HITL-0001.md
+
+status_tracking:
+  method: Status tracked directly in each HITL-XXXX.md file
+  active_statuses[3]: Pending, In Progress, Blocked
+  completed_statuses[2]: Completed, Superseded
+  check_active: grep -r "Status: Pending\|Status: In Progress\|Status: Blocked" .repo/hitl/
+  check_completed: grep -r "Status: Completed\|Status: Superseded" .repo/hitl/
+
+human_response:
+  format: Simple text response - no evidence required
+  options[3]:
+    CLEAR: Human provides answer/instruction, task can proceed when promoted
+    INSTRUCT: Human gives specific direction, task updated with instructions
+    IGNORE: Human says to proceed anyway, task unblocked
+  after_response[2]:
+    Update HITL item Status to 'Completed' in the HITL-XXXX.md file
+    Update task Status in BACKLOG.md (remove Blocked, ready to be promoted)
+
+merge_blocking:
+  rule: PRs with any required HITL item not in Completed status are blocked
+  exception: Validly waived HITL items (see .repo/policy/QUALITY_GATES.md)
+  enforcement: governance-verify.js checks HITL status in CI
+
+security_triggers:
+  reference: ../policy/constitution.toon (security.review_triggers section)
+  common_triggers[4]:
+    Auth/login behavior changes
+    Money/payment flows
+    External service integrations
+    Sensitive data handling
+  rule: Security changes require executed test evidence and explicit HITL approval
+
+related_files:
+  procedures: ../policy/procedures.toon (hitl section)
+  constitution: ../policy/constitution.toon (Article 3, 6, 8)
+  security: ../policy/constitution.toon (security.review_triggers section)
+  quality_gates: ../policy/QUALITY_GATES.md
+  script_sh: ../../scripts/create-hitl-item.sh
+  script_py: ../../scripts/create-hitl-item.py
+  governance: ../../AGENTS.toon
+  manifest: ../repo.manifest.toon
+
+token_optimization:
+  tip: Use grep to find relevant sections before reading entire HITL files.
+  search: Specify target_directories parameter in searches to limit scope.
+
+next:
+  start[3]: Read AGENTS.toon for workflow context., Check procedures.toon for HITL workflow., Create HITL item when blocked or encountering UNKNOWN.

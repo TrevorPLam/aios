@@ -1,0 +1,63 @@
+type: directory_guide
+id: README.toon
+filepath: .repo/traces/README.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Trace logs directory guide
+
+directory_purpose:
+  summary: Trace logs for agent work following three-pass workflow (Plan → Change → Verify)
+
+trace_log_content[6]:
+  intent: What the agent was trying to accomplish
+  files: Which files were modified
+  commands: What verification commands were run
+  evidence: Proof that the work was verified
+  hitl: Human-in-the-loop items created
+  unknowns: Things marked as UNKNOWN
+
+naming_convention:
+  format: "{TASK-ID}-trace-{timestamp}.json"
+  examples[3]:
+    TASK-002-trace-20260124-000457.json
+    TASK-085-trace-20260125-020639.json
+    GOVERNANCE-REORG-trace-20260124-commit.json (for non-task work)
+
+schema:
+  reference: .repo/templates/AGENT_TRACE_SCHEMA.json
+  required_fields[6]:
+    intent (string): What the agent was trying to accomplish
+    files (array): List of file paths modified
+    commands (array): Verification commands run
+    evidence (array): Evidence of verification (command outputs, test results)
+    hitl (array): HITL item IDs created
+    unknowns (array): Things marked as UNKNOWN
+
+creation:
+  automated:
+    command: |
+      node scripts/create-trace-log.js \
+        --intent "Add contact management feature" \
+        --files "packages/features/contacts/domain/contactService.ts,packages/features/contacts/ui/ContactList.tsx" \
+        --commands "npm run check:types,npm test,npm run lint" \
+        --evidence "Type checking passed,All tests passed (15/15),Linting clean"
+  manual:
+    note: Create JSON file following schema structure
+
+when_required:
+  required_for[6]: Feature additions, Bug fixes, Refactoring, Security changes, API changes, Schema changes
+  not_required_for[3]: Documentation-only changes, Comment-only changes, Whitespace-only changes
+  governance_rule: Required for all non-documentation changes per Article 2 (Verifiable over Persuasive) and Principle 24 (Logs Required)
+
+validation:
+  automated: governance-verify.js validates in CI
+  local: node scripts/validate-agent-trace.js .repo/traces/trace-*.json
+
+examples:
+  reference: .repo/templates/examples/example_trace_log.json
+
+related_documentation[4]:
+  agents_guide: .repo/AGENTS.toon
+  constitution: .repo/policy/constitution.toon (Article 2: Verification)
+  principles: .repo/policy/procedures.toon (Principle 24: Logs Required)
+  schema: .repo/templates/AGENT_TRACE_SCHEMA.json

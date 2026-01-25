@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: .repo/policy/constitution.json -->
-<!-- Generated: 2026-01-24 -->
+<!-- Generated: 2026-01-25 -->
 <!-- To update: edit constitution.json and run `npm run compile:constitution` -->
 
 # Client/Frontend Path Instructions
@@ -8,7 +8,6 @@
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
-
 1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -20,20 +19,18 @@
 ### Client/Frontend Laws
 
 #### Technology Stack
-
 - **Mobile**: React Native (React 19) + Expo (v54)
 
 #### Coding Patterns
-
 - Prefer existing patterns in apps/mobile/components|screens|hooks. Use React Navigation, not React Router.
 
 #### Boundary Rules
-
 - **Import Direction**: ui → domain → data → shared_platform
 - **Cross-Feature Rule**: Cross-feature imports require an ADR
+
 
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T16:31:04.214Z
+**Last Generated:** 2026-01-25T19:27:23.066Z

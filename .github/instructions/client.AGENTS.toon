@@ -1,0 +1,24 @@
+type: agent_directory_guide
+id: Client/Frontend-Agent-Instructions.toon
+filepath: .github/instructions/client.AGENTS.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Client/Frontend Agent Instructions - Auto-generated from constitution.json
+
+parent_governance:
+  entry_point: ../../AGENTS.toon
+  note: Read root AGENTS.toon first for core governance rules.
+
+auto_generated:
+  source: .repo/policy/constitution.json
+  compiler: scripts/tools/compile-constitution.mjs
+  generated_at: 2026-01-25T19:27:23.067Z
+  note: DO NOT EDIT DIRECTLY - edit constitution.json and run npm run compile:constitution
+
+agent_entry_point:
+  reference: ../../AGENTS.toon
+  note: See AGENTS.toon for complete agent workflow.
+
+client_context:
+  tech_stack: React Native (React 19) + Expo (v54)
+  import_direction: ui → domain → data → shared_platform

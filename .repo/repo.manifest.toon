@@ -1,0 +1,65 @@
+type: manifest
+id: repo.manifest.toon
+filepath: .repo/repo.manifest.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: SOURCE OF TRUTH for executable commands + verification profiles
+
+rule: Agents MUST NOT guess commands. If unknown, set <UNKNOWN> and open HITL.
+
+token_optimization:
+  tip: Use INDEX.toon files to find major functions/classes/relevant sections
+
+repo:
+  ships: true
+  ship_kind: user_facing_app
+  release_protects[3]: app_stability, login_security, money_flows
+
+prerequisites:
+  package_manager: npm
+  runtime_pinned: true
+  platform_tools_required_for_release: true
+
+commands:
+  note: Canonical commands (names are fixed). Commands resolved from: Makefile, CI workflow (.github/workflows/ci.yml), package.json scripts. CI is authoritative - these commands match what CI actually runs.
+  install: "npm ci"
+  check:quick: "npm run lint && npm run check:types && npm run check:format"
+  check:ci: "npm run lint && npm run check:types && npm run check:format && npm test && npm run check:governance && npm run check:compliance"
+  check:release: "npm run lint && npm run check:types && npm run check:format && npm test && npm run check:security && npm run check:governance && npm run check:compliance && npm run server:build && npm run check:bundle-budget"
+  check:governance: "node scripts/governance-verify.js --hitl-file .repo/policy/HITL.md"
+  check:governance_note: "HITL.md is optional - status can be checked directly in .repo/hitl/HITL-XXXX.md files"
+  check:boundaries: "node scripts/check-boundaries.js"
+  check:boundaries_note: "Requires Python 'lint-imports' tool (pip install import-linter==2.0). If not available, this command will fail. Consider making it optional or adding to prerequisites."
+  check:security: "npm audit --audit-level=moderate && npm run check:security:patterns"
+  check:format: "npm run check:format"
+  check:compliance: "node scripts/check-framework-compliance.js --base-ref main"
+  check:bundle-budget: "npm run check:bundle-budget"
+
+verify_profiles[4]:
+  quick: [check:quick]
+  ci: [check:ci]
+  release: [check:release]
+  governance: [check:governance]
+
+tests:
+  required_level: unit+integration
+
+budgets:
+  mode: both
+  note: bundle + runtime
+  enforcement: hard_fail_with_waiver
+  fallback_to_default: true
+  defaults_source: .repo/policy/constitution.toon (quality_gates section, if repo-specific budgets missing)
+
+security:
+  every_pr: true
+  release_includes_security: true
+  dependency_vulns_always_hitl: true
+  secrets_absolute_prohibition: true
+  forbidden_patterns_source: .repo/policy/constitution.toon (security.forbidden_patterns section)
+
+boundaries:
+  enforcement: hybrid_checker_plus_manifest_edges
+  edges_model: layered_allow_list
+  note: Explicit edges represent allowed exceptions beyond the default import direction. Format: from -> to, with reason + required ADR if cross-feature.
+  edges: []

@@ -73,18 +73,29 @@ function checkPatternFiles() {
         }
       }
 
-      // Check if corresponding .agent-context.json references it
-      const contextPath = path.join(dir, ".agent-context.json");
-      if (fs.existsSync(contextPath)) {
-        const contextContent = JSON.parse(fs.readFileSync(contextPath, "utf8"));
+      // Check if corresponding .agent-context.toon or .agent-context.json references it
+      const contextPathToon = path.join(dir, ".agent-context.toon");
+      const contextPathJson = path.join(dir, ".agent-context.json");
+      let contextContent = null;
+
+      if (fs.existsSync(contextPathToon)) {
+        // Parse .toon file (simplified - just check for patterns field)
+        const toonContent = fs.readFileSync(contextPathToon, "utf8");
+        if (!toonContent.includes("patterns:") || toonContent.match(/patterns:\s*$/)) {
+          issues.push({
+            file: relativePath,
+            issue: "Pattern file exists but .agent-context.toon has no patterns field",
+          });
+        }
+      } else if (fs.existsSync(contextPathJson)) {
+        contextContent = JSON.parse(fs.readFileSync(contextPathJson, "utf8"));
         if (
           !contextContent.patterns ||
           Object.keys(contextContent.patterns).length === 0
         ) {
           issues.push({
             file: relativePath,
-            issue:
-              "Pattern file exists but .agent-context.json has no patterns field",
+            issue: "Pattern file exists but .agent-context.json has no patterns field",
           });
         }
       }

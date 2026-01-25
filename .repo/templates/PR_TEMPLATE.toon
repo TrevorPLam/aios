@@ -1,0 +1,31 @@
+type: template
+id: PR_TEMPLATE.toon
+filepath: .repo/templates/PR_TEMPLATE.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Pull request template for agent work
+
+required: All PRs must declare a change type. See .repo/policy/procedures.toon (change_type_determination section) for change type determination.
+
+template:
+  title: ""
+  change_type: "feature | api_change | security | cross_module | non_doc_change"
+  task_packet: ""
+  changes: []
+  evidence: []
+  verification_commands_run: []
+  hitl: []
+  waivers: []
+  notes: "Strict structure. No secrets."
+
+change_type_decision_tree[5]:
+  security: Security/auth/money/external systems changes
+  api_change: API contract/endpoint changes (requires ADR + OpenAPI update)
+  cross_module: Crosses module/feature boundaries (requires ADR)
+  feature: New functionality/features
+  non_doc_change: Bug fixes, refactoring, config changes (not doc-only)
+
+reference: .repo/policy/procedures.toon (change_type_determination section) for full decision tree
+
+token_optimization:
+  tip: Specify target_directories parameter in searches to limit scope

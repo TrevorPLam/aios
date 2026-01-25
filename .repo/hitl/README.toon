@@ -1,0 +1,28 @@
+type: directory_guide
+id: README.toon
+filepath: .repo/hitl/README.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: HITL items directory guide
+
+directory_purpose:
+  summary: Individual HITL (Human-In-The-Loop) item files
+
+format:
+  pattern: Each HITL item is stored as HITL-XXXX.md where XXXX is a sequential number
+
+file_naming:
+  format: HITL-0001.md, HITL-0002.md, etc.
+  sequential_numbering: Ensures uniqueness
+  leading_zeros: For sorting
+
+status_tracking:
+  method: Status tracked directly in each HITL-XXXX.md file
+  active_statuses[3]: Pending, In Progress, Blocked
+  completed_statuses[2]: Completed, Superseded
+  check_active: grep -r "Status: Pending\|Status: In Progress\|Status: Blocked" .repo/hitl/
+  check_completed: grep -r "Status: Completed\|Status: Superseded" .repo/hitl/
+  note: Item files remain in this directory for historical reference
+
+token_optimization:
+  tip: Use grep to find relevant sections before reading entire files

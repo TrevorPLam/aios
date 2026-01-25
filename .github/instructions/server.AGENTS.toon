@@ -1,0 +1,35 @@
+type: agent_directory_guide
+id: Server/Backend-Agent-Instructions.toon
+filepath: .github/instructions/server.AGENTS.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Server/Backend Agent Instructions - Auto-generated from constitution.json
+
+parent_governance:
+  entry_point: ../../AGENTS.toon
+  note: Read root AGENTS.toon first for core governance rules.
+
+auto_generated:
+  source: .repo/policy/constitution.json
+  compiler: scripts/tools/compile-constitution.mjs
+  generated_at: 2026-01-25T19:27:23.069Z
+  note: DO NOT EDIT DIRECTLY - edit constitution.json and run npm run compile:constitution
+
+agent_entry_point:
+  reference: ../../AGENTS.toon
+  note: See AGENTS.toon for complete agent workflow.
+
+server_context:
+  tech_stack: Node.js + Express, TypeScript via tsx
+
+security_review_triggers:
+  note: The following changes require security review (HITL)
+  triggers[8]:
+    1: Auth/login behavior change
+    2: Money/payment flow change
+    4: External service integration change
+    5: Sensitive data handling change
+    6: Permission/privacy change
+    8: Production config/keys change
+    9: Cryptography/security control change
+    10: Dependency / supply-chain risk change

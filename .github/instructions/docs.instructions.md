@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY -->
 <!-- Source: .repo/policy/constitution.json -->
-<!-- Generated: 2026-01-24 -->
+<!-- Generated: 2026-01-25 -->
 <!-- To update: edit constitution.json and run `npm run compile:constitution` -->
 
 # Documentation Path Instructions
@@ -8,7 +8,6 @@
 **⚠️ This file is AUTO-GENERATED from the constitution.**
 
 **To make changes:**
-
 1. Edit `.repo/policy/constitution.json`
 2. Run `npm run compile:constitution`
 3. Commit both files together
@@ -18,22 +17,19 @@
 ---
 
 ### Documentation Laws
-
 #### 2. Verifiable over Persuasive
-
 - Work is not 'done' without verification evidence. Proof beats persuasion.
 
 #### Documentation Principles
-
 - **19**: Docs Age With Code
 - **16**: Decisions Written Down (ADR only when triggered)
 
 ### Documentation Structure
-
 - **`docs/`**: Documentation source tree
+
 
 ---
 
 **Source:** `.repo/policy/constitution.json`  
 **Compiler:** `scripts/tools/compile-constitution.mjs`  
-**Last Generated:** 2026-01-24T16:31:04.212Z
+**Last Generated:** 2026-01-25T19:27:23.064Z

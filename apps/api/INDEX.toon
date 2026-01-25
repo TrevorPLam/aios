@@ -1,0 +1,22 @@
+type: directory_index
+file: INDEX.toon
+filepath: apps/api/INDEX.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: API server files and directories
+generated_at: 2026-01-25T19:24:27.530Z
+
+folder: apps/api
+files[4]{path,type,key_classes,line_count,size_bytes,description}:
+  index.ts,ts,[],285,7978,
+  README.md,md,[],7,228,Legacy Server Shell
+  routes.ts,ts,[],786,20174,
+  storage.ts,ts,[IStorage,MemStorage,storage],835,23960,
+subfolders[4]{path,purpose,indexFile}:
+  middleware,Directory,
+  templates,Directory,
+  utils,Directory,
+  __tests__,Directory,
+dependencies:
+  imports: []
+  imported_by: []

@@ -1,9 +1,66 @@
 #!/usr/bin/env node
-// Validate .agent-context.json file against schema
+// Validate .agent-context.toon or .agent-context.json file against schema
 // Usage: node validate-agent-context.js <context-file> [--check-files] [--check-boundaries] [--check-links]
 
 const fs = require("fs");
 const path = require("path");
+
+// Simple .toon parser (basic implementation)
+function parseToonFile(filePath) {
+  const content = fs.readFileSync(filePath, "utf-8");
+  const lines = content.split("\n");
+  const result = {};
+  let currentPath = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("type:") || trimmed.startsWith("id:") || trimmed.startsWith("filepath:") || trimmed.startsWith("$schema:") || trimmed.startsWith("version:") || trimmed.startsWith("purpose:")) continue;
+
+    const keyMatch = trimmed.match(/^(\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\[(\d+)\](?:\{([^}]+)\})?)?:\s*(.*)$/);
+    if (keyMatch) {
+      const [, indent, key, , arrayLen, fields, value] = keyMatch;
+      const indentLevel = indent.length / 2;
+
+      currentPath = currentPath.slice(0, indentLevel);
+      currentPath.push(key);
+
+      let target = result;
+      for (let i = 0; i < currentPath.length - 1; i++) {
+        if (!target[currentPath[i]]) {
+          target[currentPath[i]] = {};
+        }
+        target = target[currentPath[i]];
+      }
+
+      const finalKey = currentPath[currentPath.length - 1];
+
+      if (arrayLen) {
+        if (fields) {
+          target[finalKey] = [];
+        } else {
+          const values = value.split(",").map(v => parseValue(v.trim()));
+          target[finalKey] = values;
+        }
+      } else {
+        target[finalKey] = parseValue(value);
+      }
+    }
+  }
+
+  return result;
+}
+
+function parseValue(value) {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  if (value === "null" || value === "") return null;
+  if (value.match(/^-?\d+$/)) return parseInt(value, 10);
+  if (value.match(/^-?\d+\.\d+$/)) return parseFloat(value);
+  if (value.startsWith('"') && value.endsWith('"')) {
+    return value.slice(1, -1).replace(/\\"/g, '"');
+  }
+  return value;
+}
 
 // Try to load ajv, fall back to basic validation if not available
 let Ajv;
@@ -54,7 +111,14 @@ function addWarning(msg) {
 }
 
 try {
-  const content = JSON.parse(fs.readFileSync(contextFile, "utf8"));
+  let content;
+  if (contextFile.endsWith(".toon")) {
+    // Parse .toon file
+    content = parseToonFile(contextFile);
+  } else {
+    // Parse .json file
+    content = JSON.parse(fs.readFileSync(contextFile, "utf8"));
+  }
 
   // Load and validate against JSON schema if ajv is available
   if (ajv && fs.existsSync(SCHEMA_FILE)) {
@@ -152,6 +216,7 @@ try {
     console.error(
       "\nSee: .repo/templates/AGENT_CONTEXT_SCHEMA.json for schema",
     );
+    console.error("Note: .toon files are converted to JSON for validation");
     console.error("See: .repo/docs/TROUBLESHOOTING.md for help");
     process.exit(1);
   }

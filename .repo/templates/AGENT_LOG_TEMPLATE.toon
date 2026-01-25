@@ -1,0 +1,21 @@
+type: template
+id: AGENT_LOG_TEMPLATE.toon
+filepath: .repo/templates/AGENT_LOG_TEMPLATE.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Agent log template
+
+template:
+  task_id: ""
+  intent: ""
+  plan: []
+  actions: []
+  evidence: []
+  decisions: []
+  risks: []
+  follow_ups: []
+  reasoning_summary: ""
+  notes: "No secrets. No private data. No raw chain-of-thought."
+
+token_optimization:
+  tip: Use read_file with offset and limit parameters for large files

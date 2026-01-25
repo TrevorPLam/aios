@@ -1,66 +1,71 @@
+type: directory_index
 file: INDEX.toon
-folder: .
+filepath: INDEX.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
 purpose: Master index of all directories in the repository
-generated_at: 2026-01-24T16:59:13.266Z
+generated_at: 2026-01-25T19:24:27.513Z
 
-files[33]{path, type, key_classes, line_count, size_bytes, description?}:
-.cspell.json, json, [], 95, 1514,
-.cursorrules, file, [], 184, 7558, Cursor Agent Rules
-.editorconfig, file, [], 34, 540, EditorConfig is awesome: https://EditorConfig.org
-.gitattributes, file, [], 4, 92,
-.gitignore, file, [], 75, 793, Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-.markdownlint.json, json, [], 13, 248,
-.nvmrc, file, [], 2, 4,
-.pre-commit-config.yaml, yaml, [], 95, 2840, Pre-commit hooks for TIER 0 enforcement
-.releaserc.json, json, [], 76, 1292,
-.replit, file, [], 74, 1267,
-.spectral.yml, yml, [], 50, 1099, Spectral configuration for OpenAPI/AsyncAPI linting
-.stryker.conf.json, json, [], 34, 761,
-agents.json, json, [], 211, 6037,
-AGENTS.md, md, [], 2, 20,
-app.json, json, [], 54, 1300,
-babel.config.js, js, [], 25, 639,
-CHANGELOG.md, md, [], 163, 6400, Framework Changelog
-CODE_OF_CONDUCT.md, md, [], 126, 5267, Contributor Covenant Code of Conduct
-CONTRIBUTING.md, md, [], 484, 11089, Contributing to AIOS
-drizzle.config.ts, ts, [], 15, 325,
-eslint.config.js, js, [], 52, 1312, https://docs.expo.dev/guides/using-eslint/
-jest.config.js, js, [], 35, 1241,
-jest.setup.js, js, [], 51, 1146,
-LICENSE, file, [], 22, 1095,
-Makefile, file, [], 212, 8708, Meta-commentary:
-metro.config.js, js, [], 10, 285,
-mkdocs.yml, yml, [], 246, 8195, MkDocs Configuration for AIOS Documentation
-package-lock.json, json, [], 27381, 971137,
-package.json, json, [], 217, 12407,
-README.md, md, [], 526, 22496, AIOS — Life Operating System
-SECURITY.md, md, [], 126, 4205, Security Policy
-tsconfig.json, json, [], 19, 526
-
-subfolders[7]{path, purpose, indexFile}:
-apps, See INDEX.json for details, apps/INDEX.json
-assets, See INDEX.json for details, assets/INDEX.json
-attached_assets, See INDEX.json for details, attached_assets/INDEX.json
-docs, See INDEX.json for details, docs/INDEX.json
-frontend, See INDEX.json for details, frontend/INDEX.json
-packages, See INDEX.json for details, packages/INDEX.json
-scripts, See INDEX.json for details, scripts/INDEX.json
-
+folder: .
+files[36]{path,type,key_classes,line_count,size_bytes,description}:
+  .cspell.json,json,[],95,1514,
+  .cursorrules,file,[],184,7558,Cursor Agent Rules
+  .editorconfig,file,[],34,540,"EditorConfig is awesome: https://EditorConfig.org"
+  .gitattributes,file,[],4,92,
+  .gitignore,file,[],76,817,"Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files"
+  .lintstagedrc.json,json,[],7,233,
+  .markdownlint.json,json,[],13,248,
+  .nvmrc,file,[],2,4,
+  .pre-commit-config.yaml,yaml,[],95,2840,Pre-commit hooks for TIER 0 enforcement
+  .releaserc.json,json,[],76,1292,
+  .replit,file,[],74,1267,
+  .spectral.yml,yml,[],50,1099,Spectral configuration for OpenAPI/AsyncAPI linting
+  .stryker.conf.json,json,[],34,761,
+  AGENTS.json,json,[],108,4566,
+  AGENTS.md,md,[],2,65,
+  AIOS_MAPPING.md,md,[],858,22776,Patterns Mappable to aios
+  app.json,json,[],54,1300,
+  babel.config.js,js,[],25,639,
+  CHANGELOG.md,md,[],169,6431,Framework Changelog
+  CLAUDE.md,md,[],2,65,
+  CODE_OF_CONDUCT.md,md,[],126,5267,Contributor Covenant Code of Conduct
+  COMPLETE_CHECKLIST.md,md,[],1800,48238,Complete Enhancement Checklist for aios
+  CONTRIBUTING.md,md,[],484,11089,Contributing to AIOS
+  drizzle.config.ts,ts,[],15,325,
+  eslint.config.js,js,[],52,1312,"https://docs.expo.dev/guides/using-eslint/"
+  jest.config.js,js,[],35,1241,
+  jest.setup.js,js,[],60,1375,
+  LICENSE,file,[],22,1095,
+  Makefile,file,[],212,8708,"Meta-commentary:"
+  metro.config.js,js,[],10,285,
+  mkdocs.yml,yml,[],246,8195,MkDocs Configuration for AIOS Documentation
+  package.json,json,[],223,12661,
+  README.md,md,[],526,22496,AIOS — Life Operating System
+  SECURITY.md,md,[],126,4205,Security Policy
+  THE_GOAL.md,md,[],47,1766,"THE GOAL: Becoming a Legendary Developer (0.01%)"
+  tsconfig.json,json,[],29,903,
+subfolders[7]{path,purpose,indexFile}:
+  apps,Directory,
+  assets,Directory,
+  attached_assets,Directory,
+  docs,Directory,
+  frontend,Directory,
+  packages,Directory,
+  scripts,Directory,
 dependencies:
   imports: []
   imported_by: []
-
 quickNavigation:
-  applications[3]{name, path, description, indexFile}:
-    Mobile App, apps/mobile/, React Native/Expo mobile application, apps/mobile/INDEX.json
-    API Server, apps/api/, Node.js/Express backend API, apps/api/INDEX.json
-    Web App, apps/web/, Web application, apps/web/INDEX.json
-  packages[4]{name, path, description}:
-    Features, packages/features/, Feature modules (vertical slices)
-    Platform, packages/platform/, Platform adapters and primitives
-    Design System, packages/design-system/, Shared UI components
-    Contracts, packages/contracts/, Shared types and schemas
-  supportingDirectories[3]{name, path, description, indexFile}:
-    Documentation, docs/, Comprehensive documentation, docs/INDEX.json
-    Scripts, scripts/, Automation scripts, scripts/INDEX.json
-    Assets, assets/, Asset files, assets/INDEX.json
+  applications[3]{name,path,description,indexFile}:
+    Mobile App,apps/mobile/,React Native/Expo mobile application,apps/mobile/INDEX.toon
+    API Server,apps/api/,Node.js/Express backend API,apps/api/INDEX.toon
+    Web App,apps/web/,Web application,apps/web/INDEX.toon
+  packages[4]{name,path,description}:
+    Features,packages/features/,Feature modules (vertical slices)
+    Platform,packages/platform/,Platform adapters and primitives
+    Design System,packages/design-system/,Shared UI components
+    Contracts,packages/contracts/,Shared types and schemas
+  supportingDirectories[3]{name,path,description,indexFile}:
+    Documentation,docs/,Comprehensive documentation,docs/INDEX.toon
+    Scripts,scripts/,Automation scripts,scripts/INDEX.toon
+    Assets,assets/,Asset files,assets/INDEX.toon

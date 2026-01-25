@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generate INDEX.json file for a folder
+// Generate INDEX.toon file for a folder
 // Usage: node scripts/generate-index-json.mjs [folder_path]
 
 import fs from "fs";
@@ -30,6 +30,7 @@ const IGNORE_DIRS = new Set([
 // Files to ignore
 const IGNORE_FILES = new Set([
   "INDEX.json",
+  "INDEX.toon",
   "INDEX.md",
   ".DS_Store",
   "Thumbs.db",
@@ -137,12 +138,12 @@ function getSubfolders(dirPath) {
       .filter((entry) => entry.isDirectory())
       .filter((entry) => shouldIncludeDir(entry.name))
       .map((entry) => {
-        const indexPath = path.join(dirPath, entry.name, "INDEX.json");
+        const indexPath = path.join(dirPath, entry.name, "INDEX.toon");
         const hasIndex = fs.existsSync(indexPath);
         return {
           path: entry.name,
-          purpose: hasIndex ? "See INDEX.json for details" : "Directory",
-          indexFile: hasIndex ? `${entry.name}/INDEX.json` : undefined,
+          purpose: hasIndex ? "See INDEX.toon for details" : "Directory",
+          indexFile: hasIndex ? `${entry.name}/INDEX.toon` : undefined,
         };
       });
   } catch (e) {
@@ -168,6 +169,60 @@ function getDependencies(folderPath) {
     imports: [],
     imported_by: [],
   };
+}
+
+function jsonToToon(obj, indent = 0) {
+  const indentStr = "  ".repeat(indent);
+  let result = "";
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined || value === null) continue;
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        result += `${indentStr}${key}: []\n`;
+      } else if (typeof value[0] === "object" && value[0] !== null) {
+        // Array of objects
+        const fields = Object.keys(value[0]);
+        result += `${indentStr}${key}[${value.length}]{${fields.join(",")}}:\n`;
+        value.forEach((item) => {
+          const values = fields.map((f) => {
+            const v = item[f];
+            if (v === undefined || v === null) return "";
+            if (typeof v === "string" && (v.includes(",") || v.includes(":") || v.includes("\n"))) {
+              return `"${v.replace(/"/g, '\\"')}"`;
+            }
+            if (Array.isArray(v)) {
+              return `[${v.join(",")}]`;
+            }
+            return String(v);
+          });
+          result += `${indentStr}  ${values.join(",")}\n`;
+        });
+      } else {
+        // Array of primitives
+        result += `${indentStr}${key}[${value.length}]: ${value.map((v) => {
+          if (typeof v === "string" && (v.includes(",") || v.includes(":") || v.includes("\n"))) {
+            return `"${v.replace(/"/g, '\\"')}"`;
+          }
+          return String(v);
+        }).join(", ")}\n`;
+      }
+    } else if (typeof value === "object") {
+      // Nested object
+      result += `${indentStr}${key}:\n`;
+      result += jsonToToon(value, indent + 1);
+    } else {
+      // Primitive value
+      if (typeof value === "string" && (value.includes(",") || value.includes(":") || value.includes("\n"))) {
+        result += `${indentStr}${key}: "${value.replace(/"/g, '\\"')}"\n`;
+      } else {
+        result += `${indentStr}${key}: ${String(value)}\n`;
+      }
+    }
+  }
+
+  return result;
 }
 
 function generateIndexJson(folderPath) {
@@ -204,7 +259,7 @@ function generateIndexJson(folderPath) {
   }
 
   const index = {
-    file: "INDEX.json",
+    file: "INDEX.toon",
     folder: relativePath,
     purpose,
     generated_at: new Date().toISOString(),
@@ -221,19 +276,19 @@ function generateIndexJson(folderPath) {
           name: "Mobile App",
           path: "apps/mobile/",
           description: "React Native/Expo mobile application",
-          indexFile: "apps/mobile/INDEX.json",
+          indexFile: "apps/mobile/INDEX.toon",
         },
         {
           name: "API Server",
           path: "apps/api/",
           description: "Node.js/Express backend API",
-          indexFile: "apps/api/INDEX.json",
+          indexFile: "apps/api/INDEX.toon",
         },
         {
           name: "Web App",
           path: "apps/web/",
           description: "Web application",
-          indexFile: "apps/web/INDEX.json",
+          indexFile: "apps/web/INDEX.toon",
         },
       ],
       packages: [
@@ -263,19 +318,19 @@ function generateIndexJson(folderPath) {
           name: "Documentation",
           path: "docs/",
           description: "Comprehensive documentation",
-          indexFile: "docs/INDEX.json",
+          indexFile: "docs/INDEX.toon",
         },
         {
           name: "Scripts",
           path: "scripts/",
           description: "Automation scripts",
-          indexFile: "scripts/INDEX.json",
+          indexFile: "scripts/INDEX.toon",
         },
         {
           name: "Assets",
           path: "assets/",
           description: "Asset files",
-          indexFile: "assets/INDEX.json",
+          indexFile: "assets/INDEX.toon",
         },
       ],
     };
@@ -291,18 +346,36 @@ function generateIndex(folderPath) {
       return false;
     }
 
-    const indexPath = path.join(folderPath, "INDEX.json");
+    const indexPath = path.join(folderPath, "INDEX.toon");
     const index = generateIndexJson(folderPath);
-    fs.writeFileSync(indexPath, JSON.stringify(index, null, 2), "utf8");
-    console.log(`✅ Generated INDEX.json for ${folderPath}`);
+    
+    // Convert to .toon format
+    const toonContent = `type: directory_index
+file: INDEX.toon
+filepath: ${index.folder === "." ? "INDEX.toon" : path.join(index.folder, "INDEX.toon").replace(/\\/g, "/")}
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: ${index.purpose}
+generated_at: ${index.generated_at}
+
+${jsonToToon({
+  folder: index.folder,
+  files: index.files,
+  subfolders: index.subfolders,
+  dependencies: index.dependencies,
+  ...(index.quickNavigation ? { quickNavigation: index.quickNavigation } : {}),
+})}`;
+
+    fs.writeFileSync(indexPath, toonContent, "utf8");
+    console.log(`✅ Generated INDEX.toon for ${folderPath}`);
     return true;
   } catch (error) {
-    console.error(`❌ Error generating INDEX.json for ${folderPath}:`, error.message);
+    console.error(`❌ Error generating INDEX.toon for ${folderPath}:`, error.message);
     return false;
   }
 }
 
-// List of directories that should have INDEX.json files
+// List of directories that should have INDEX.toon files
 const INDEX_DIRECTORIES = [
   ".",
   "apps",

@@ -114,11 +114,11 @@
       "properties": {
         "guide": {
           "type": "string",
-          "description": "Path to .AGENT.md file"
+          "description": "Path to .AGENT.toon file (or .AGENT.md for legacy)"
         },
         "index": {
           "type": "string",
-          "description": "Path to INDEX.md file"
+          "description": "Path to INDEX.toon file (or INDEX.md for legacy)"
         },
         "policy": {
           "type": "string",

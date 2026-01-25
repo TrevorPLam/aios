@@ -1,0 +1,21 @@
+type: template
+id: ADR_TEMPLATE.toon
+filepath: .repo/templates/ADR_TEMPLATE.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Architecture Decision Record template
+
+template:
+  context: ""
+  decision_drivers: []
+  options: []
+  decision: ""
+  consequences: []
+  modules: []
+  commands: []
+  migration: []
+  boundary_impact: ""
+  hitl: []
+
+token_optimization:
+  tip: Use glob_file_search for file finding instead of broad searches

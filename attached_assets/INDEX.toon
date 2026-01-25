@@ -1,0 +1,15 @@
+type: directory_index
+file: INDEX.toon
+filepath: attached_assets/INDEX.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Attached assets and generated content
+generated_at: 2026-01-25T19:24:27.540Z
+
+folder: attached_assets
+files: []
+subfolders[1]{path,purpose,indexFile}:
+  generated_images,Directory,
+dependencies:
+  imports: []
+  imported_by: []

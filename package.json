@@ -35,12 +35,12 @@
     "check:postinstall": "node scripts/post-install-check.mjs",
     "check:deps": "node scripts/deep-dependency-check.mjs",
     "check:startup": "node scripts/check-startup-blockers.mjs",
-    "check:security:patterns": "node .repo/automation/scripts/check-security-patterns.js",
+    "check:security:patterns": "node scripts/check-security-patterns.js",
     "check:security": "npm audit --audit-level=moderate && npm run check:security:patterns",
-    "check:boundaries": "node .repo/automation/scripts/check-boundaries.js",
-    "check:manifest": "node .repo/automation/scripts/validate-manifest.js",
-    "check:governance": "node .repo/automation/scripts/governance-verify.js --hitl-file .repo/policy/HITL.md",
-    "check:compliance": "node .repo/automation/scripts/check-framework-compliance.js --base-ref main",
+    "check:boundaries": "node scripts/check-boundaries.js",
+    "check:manifest": "node scripts/validate-manifest.js",
+    "check:governance": "node scripts/governance-verify.js --hitl-file .repo/policy/HITL.md",
+    "check:compliance": "node scripts/check-framework-compliance.js --base-ref main",
     "check:todo-format": "node scripts/check-todo-format.mjs",
     "check:coverage-ratchet": "node scripts/check-coverage-ratchet.mjs",
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
@@ -215,7 +215,8 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "typescript": "~5.9.2",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "fast-check": "^4.5.3"
   },
   "private": true
 }

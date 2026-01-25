@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generate .agent-context.json files for folders that don't have them
+// Generate .agent-context.toon files for folders that don't have them
 // Usage: node scripts/generate-missing-agent-contexts.mjs [--dry-run] [--folder <path>]
 
 import fs from "fs";
@@ -56,9 +56,10 @@ function shouldGenerateContext(dirPath) {
     return false;
   }
 
-  // Skip if already has context file
-  const contextPath = path.join(dirPath, ".agent-context.json");
-  if (fs.existsSync(contextPath)) {
+  // Skip if already has context file (.toon or .json)
+  const contextPathToon = path.join(dirPath, ".agent-context.toon");
+  const contextPathJson = path.join(dirPath, ".agent-context.json");
+  if (fs.existsSync(contextPathToon) || fs.existsSync(contextPathJson)) {
     return false;
   }
 
@@ -85,16 +86,66 @@ function shouldGenerateContext(dirPath) {
   return isTargetDir || hasSourceFiles;
 }
 
+// Helper function to convert object to .toon format
+function jsonToToon(obj, indent = 0) {
+  const indentStr = "  ".repeat(indent);
+  let result = "";
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined || value === null) continue;
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        result += `${indentStr}${key}: []\n`;
+      } else if (typeof value[0] === "object" && value[0] !== null) {
+        const fields = Object.keys(value[0]);
+        result += `${indentStr}${key}[${value.length}]{${fields.join(",")}}:\n`;
+        value.forEach((item) => {
+          const values = fields.map((f) => {
+            const v = item[f];
+            if (v === undefined || v === null) return "";
+            if (typeof v === "string" && (v.includes(",") || v.includes(":") || v.includes("\n"))) {
+              return `"${v.replace(/"/g, '\\"')}"`;
+            }
+            if (Array.isArray(v)) {
+              return `[${v.join(",")}]`;
+            }
+            return String(v);
+          });
+          result += `${indentStr}  ${values.join(",")}\n`;
+        });
+      } else {
+        result += `${indentStr}${key}[${value.length}]: ${value.map((v) => {
+          if (typeof v === "string" && (v.includes(",") || v.includes(":") || v.includes("\n"))) {
+            return `"${v.replace(/"/g, '\\"')}"`;
+          }
+          return String(v);
+        }).join(", ")}\n`;
+      }
+    } else if (typeof value === "object") {
+      result += `${indentStr}${key}:\n`;
+      result += jsonToToon(value, indent + 1);
+    } else {
+      if (typeof value === "string" && (value.includes(",") || value.includes(":") || value.includes("\n"))) {
+        result += `${indentStr}${key}: "${value.replace(/"/g, '\\"')}"\n`;
+      } else {
+        result += `${indentStr}${key}: ${String(value)}\n`;
+      }
+    }
+  }
+
+  return result;
+}
+
 function generateContextFile(dirPath) {
-  const relativePath = path.relative(process.cwd(), dirPath).replace(/\\/g, "/");
-  const contextPath = path.join(dirPath, ".agent-context.json");
+  const relativePath = path.relative(process.cwd(), dirPath).replace(/\\/g, "/") || ".";
+  const contextPath = path.join(dirPath, ".agent-context.toon");
 
   const template = {
-    $schema: "../../.repo/templates/AGENT_CONTEXT_SCHEMA.json",
     version: "1.0.0",
     type: "folder_context",
     folder: {
-      path: relativePath || ".",
+      path: relativePath,
       purpose: "TODO: Describe folder purpose",
       layer: "domain",
       depends_on: [],
@@ -112,10 +163,10 @@ function generateContextFile(dirPath) {
       cross_module_requires_adr: true,
     },
     quick_links: {
-      guide: `${relativePath || "."}/.AGENT.md`,
-      index: `${relativePath || "."}/INDEX.json`,
-      policy: ".repo/policy/BOUNDARIES.md",
-      best_practices: ".repo/policy/BESTPR.md",
+      guide: `${relativePath}/.AGENT.toon`,
+      index: `${relativePath}/INDEX.toon`,
+      policy: ".repo/policy/constitution.toon",
+      best_practices: ".repo/policy/procedures.toon",
     },
     common_tasks: [],
     metrics: {
@@ -125,10 +176,20 @@ function generateContextFile(dirPath) {
     },
   };
 
+  const header = `type: folder_context
+id: .agent-context.toon
+filepath: ${relativePath}/.agent-context.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Folder-level agent context for AI agents
+
+`;
+
   if (DRY_RUN) {
     console.log(`[DRY RUN] Would create: ${contextPath}`);
   } else {
-    fs.writeFileSync(contextPath, JSON.stringify(template, null, 2) + "\n");
+    const toonContent = header + jsonToToon(template);
+    fs.writeFileSync(contextPath, toonContent, "utf-8");
     console.log(`✅ Created: ${contextPath}`);
   }
 }
@@ -157,7 +218,7 @@ function scanDirectory(dirPath, depth = 0) {
 }
 
 // Main execution
-console.log("🔍 Scanning for folders missing .agent-context.json files...\n");
+console.log("🔍 Scanning for folders missing .agent-context.toon files...\n");
 
 if (SPECIFIC_FOLDER) {
   const fullPath = path.resolve(process.cwd(), SPECIFIC_FOLDER);
@@ -165,7 +226,7 @@ if (SPECIFIC_FOLDER) {
     if (shouldGenerateContext(fullPath)) {
       generateContextFile(fullPath);
     } else {
-      console.log(`ℹ️  ${SPECIFIC_FOLDER} already has .agent-context.json or doesn't need one`);
+      console.log(`ℹ️  ${SPECIFIC_FOLDER} already has .agent-context.toon or doesn't need one`);
     }
   } else {
     console.error(`❌ Directory not found: ${SPECIFIC_FOLDER}`);

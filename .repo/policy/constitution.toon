@@ -1,0 +1,151 @@
+type: governance
+id: constitution.toon
+filepath: .repo/policy/constitution.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Behavioral governance rules - what to do, not how to do it
+
+$schema: "http://json-schema.org/draft-07/schema#"
+version: 1.0.0
+metadata:
+  description: "Behavioral governance rules - what to do, not how to do it"
+  immutable_sections[1]: constitution
+  procedures_file: .repo/policy/procedures.toon
+  automation_commands_file: .repo/policy/automation-commands.toon
+  last_updated: 2026-01-24
+quick_reference:
+  description: Quick lookup for most frequently referenced rules
+  critical_articles[5]: 1, 2, 3, 6, 9
+  key_principles[5]: 7, 10, 11, 12, 13
+  security_triggers[8]: 1, 2, 4, 5, 6, 8, 9, 10
+  change_types[5]: feature, api_change, security, cross_module, non_doc_change
+constitution:
+  immutable: true
+  articles[9]{id,title,rule}:
+    1,Final Authority,"The solo founder is the final authority for any ambiguity, conflict, or decision."
+    2,Verifiable over Persuasive,Work is not 'done' without verification evidence. Proof beats persuasion.
+    3,No Guessing,"If something is not explicitly known from repo docs, manifest, or code: mark as UNKNOWN, route to HITL, do not proceed on that uncertain portion."
+    4,Incremental Delivery,"Ship small, reviewable, testable increments. Large tasks must be decomposed. No mega-PRs without explicit approval."
+    5,Strict Traceability,Every meaningful change must be traceable to an explicit task definition and include verification proof. Completed tasks must be archived. TODO.md contains 3-5 tasks grouped by similar types.
+    6,Safety Before Speed,"If a change could break logins, money flows, user data, privacy, security, external services, or production behavior: SAFETY WINS. For risky/uncertain changes: STOP → ASK (HITL) → VERIFY → THEN PROCEED."
+    7,Per-Repo Variation Allowed,"Governance structure is consistent, but per-repo workflow/execution may vary via manifest, packs, and repo checks."
+    8,HITL for External Systems,"Anything involving credentials, vendor dashboards, production systems, billing, legal/compliance, or irreversible changes is HITL-gated."
+    9,User Context - Non-Technical Agentic Orchestration,"The user is a non-coder with zero technical experience who codes exclusively through agentic orchestration. All explanations, documentation, and communication must be in plain English. Avoid technical jargon unless absolutely necessary, and when used, immediately explain in plain English. The user relies entirely on agents to understand and execute technical work."
+principles:
+  global_rule: "Filepaths are required everywhere: PRs, Task Packets, logs, ADRs, waivers, and inline commentary."
+  list[29]{id,rule}:
+    3,One Change Type Per PR
+    4,Make It Shippable
+    5,Don't Break Surprises
+    6,Evidence Over Vibes
+    7,UNKNOWN Is a First-Class State
+    8,Read Repo First
+    9,Assumptions Must Be Declared
+    10,Risk Triggers a Stop
+    11,Prefer Guardrails Over Heroics
+    12,Rollback Thinking
+    13,Respect Boundaries by Default
+    14,Localize Complexity
+    15,Consistency Beats Novelty
+    16,Decisions Written Down (ADR only when triggered)
+    17,"PR Narration: what, why, filepaths, how verified, risks, rollback"
+    18,No Silent Scope Creep
+    19,Docs Age With Code
+    20,Examples Are Contracts
+    21,Naming Matters
+    22,Waivers Rare + Temporary
+    23,ADR Required When Triggered
+    24,Logs Required for Non-Docs
+    25,Token-Optimized TODO Discipline
+    26,Use `read_file` with `offset` and `limit` parameters for large files
+    27,Read multiple files in parallel when possible
+    28,Use `glob_file_search` for file finding instead of broad searches
+    29,Use INDEX.toon files to find major functions/classes/relevant sections
+    30,Specify `target_directories` parameter in searches to limit scope
+    31,Use grep to find relevant sections before reading entire files
+quality_gates:
+  merge_policy: soft_block_with_auto_waivers
+  hard_gates[5]: Required artifacts missing for declared change type, Trace log missing or invalid, Required HITL items not Completed, Waiver referenced is missing or expired, governance-verify fails
+  waiverable_gates[4]: Coverage targets (gradual ratchet), Performance/bundle budgets, Warning budgets (zero warnings), Test coverage regression
+  test_requirements:
+    coverage:
+      backend_new: 80%
+      frontend_new: 70%
+      existing: gradual_ratchet
+    integration: Required for API changes and cross-module work
+  if_needed: Read procedures.toon (quality_gates section)
+security:
+  absolute_prohibitions[1]: Secrets/tokens/keys must never be committed or logged
+  dependency_vulnerabilities:
+    action: ALWAYS create HITL
+    merge_blocking: true
+  check_frequency: every_pr
+  review_triggers:
+    ids[8]: 1, 2, 4, 5, 6, 8, 9, 10
+    meanings:
+      1: Auth/login behavior change
+      2: Money/payment flow change
+      4: External service integration change
+      5: Sensitive data handling change
+      6: Permission/privacy change
+      8: Production config/keys change
+      9: Cryptography/security control change
+      10: Dependency / supply-chain risk change
+  forbidden_patterns:
+    enforced_by: "check:security"
+    patterns[8]{id,name,regex}:
+      hardcoded_api_key,Hardcoded API keys,"(api[_-]?key|apikey)\s*[=:]\s*['\"][a-zA-Z0-9]{20,}['\"]"
+      hardcoded_secret,Hardcoded secrets,"(secret|password|pwd|passwd)\s*[=:]\s*['\"][^'\"]{8,}['\"]"
+      aws_credentials,AWS credentials,"(aws[_-]?access[_-]?key[_-]?id|aws[_-]?secret[_-]?access[_-]?key)\s*[=:]\s*['\"][^'\"]+['\"]"
+      private_key,Private keys,-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----
+      oauth_token,OAuth tokens,"(oauth[_-]?token|access[_-]?token)\s*[=:]\s*['\"][a-zA-Z0-9_-]{20,}['\"]"
+      database_connection,Database connection strings,"(postgres|mysql|mongodb)://[^:]+:[^@]+@"
+      jwt_secret,JWT secrets,"(jwt[_-]?secret|jwt[_-]?key)\s*[=:]\s*['\"][^'\"]{16,}['\"]"
+      stripe_key,Stripe keys,"(sk_live|pk_live|sk_test|pk_test)[a-zA-Z0-9]{24,}"
+  mandatory_hitl_actions[8]: 1, 2, 3, 4, 5, 6, 7, 8
+  if_needed: Read procedures.toon (hitl section)
+boundaries:
+  model: hybrid_domain_feature_layer
+  import_direction: ui → domain → data → shared_platform
+  cross_feature_rule: Cross-feature imports require an ADR
+  enforcement: hybrid_static_checker_plus_manifest
+  exceptions:
+    small: Only with explicit Task Packet justification + filepaths
+    large: Requires ADR
+  violation_severity: waiver_plus_auto_task
+  if_needed: Read procedures.toon (boundaries section)
+hitl:
+  when_required[5]: Security triggers (see security.review_triggers), UNKNOWN items (Article 3), External systems (Article 8), Dependency vulnerabilities, Risky changes (Article 6)
+  workflow: Block task → Move to backlog → Create HITL item → Continue with next task
+  human_response: "Simple text: CLEAR, INSTRUCT, or IGNORE (no evidence required)"
+  if_needed: Read procedures.toon (hitl section)
+best_practices:
+  repository_map:
+    apps/mobile: "React Native + Expo (screens, components, hooks, navigation)"
+    apps/api: "Express API (middleware, utilities, tests)"
+    packages/contracts: Shared types between client and server
+    docs: Documentation source tree
+    scripts: Project automation
+  tech_stack:
+    mobile: React Native (React 19) + Expo (v54)
+    backend: "Node.js + Express, TypeScript via tsx"
+    data: Drizzle ORM + Zod validation
+    state: TanStack React Query
+    testing: Jest + Testing Library
+  coding_patterns:
+    client: "Prefer existing patterns in apps/mobile/components|screens|hooks. Use React Navigation, not React Router."
+    server: Route logic close to entry points. Use Zod for validation. TypeScript throughout.
+    shared: Favor packages/contracts/ for types. Prefer Zod schemas and Drizzle types.
+  if_needed: Read procedures.toon (best_practices section)
+workflow:
+  three_pass:
+    description: Core agent workflow for all changes
+    if_needed: Read procedures.toon (three_pass_workflow section)
+change_types:
+  types[5]: feature, api_change, security, cross_module, non_doc_change
+  determination: Use decision tree in Pass 1 (Plan)
+  if_needed: Read procedures.toon (change_type_determination section)
+automation:
+  description: Automation commands are defined in automation-commands.toon
+  commands_file: .repo/policy/automation-commands.toon
+  note: See automation-commands.toon for complete command catalog including non-AI and AI-enhanced commands

@@ -124,6 +124,6 @@ Example test pattern for API integration tests.
 ## Related Documentation
 
 - `.repo/templates/AGENT_TRACE_SCHEMA.json` - Trace log schema
-- `.repo/policy/HITL.md` - HITL process
+- `.repo/hitl/HITL.toon` - HITL process guide
 - `.repo/agents/task_packet.md` - Task packet template
-- `.repo/templates/WAIVER_TEMPLATE.md` - Waiver template
+- `.repo/templates/WAIVER_TEMPLATE.toon` - Waiver template
