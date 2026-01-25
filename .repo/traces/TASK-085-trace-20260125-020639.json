@@ -1,0 +1,23 @@
+{
+  "intent": "Adjust property-based test dependency to unblock test installs",
+  "task_id": "TASK-085",
+  "timestamp": "2026-01-25T02:06:39Z",
+  "files": [
+    "apps/api/__tests__/property-based.example.test.ts",
+    "package.json",
+    "CHANGELOG.md",
+    ".repo/tasks/TODO.md",
+    ".repo/traces/TASK-085-trace-20260125-020639.json",
+    ".repo/logs/TASK-085-log-20260125-020641.json"
+  ],
+  "commands": [
+    "npm install",
+    "npm test"
+  ],
+  "evidence": [
+    "npm install failed with 403 Forbidden (lint-staged)",
+    "npm test failed because jest was not installed"
+  ],
+  "hitl": [],
+  "unknowns": []
+}
