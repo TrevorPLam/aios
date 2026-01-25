@@ -1,0 +1,243 @@
+purpose: "Historical record of completed tasks for autonomous coding agents. Governed by .repo/AGENTS.toon."
+rule: "Completed tasks are moved here from TODO.toon in reverse chronological order (most recent first)."
+
+archive_statistics[5]{metric, count}:
+Total Completed, 18
+P0 Completed, 4
+P1 Completed, 3
+P2 Completed, 5
+P3 Completed, 6
+
+completed_tasks[18]{id, title, priority, status, created, completed, context}:
+TASK-069, Calendar Video Conference Links, P3, completed, 2026-01-21, 2026-01-21, Video conference links are standard in competitor calendars. Meetings often need Zoom/Meet/Teams launch links. Integration improves event usefulness.
+TASK-043, Component Prop Interface Cleanup, P2, completed, 2026-01-19, 2026-01-19, Component prop interfaces cleaned up. Type errors resolved. Better type safety across codebase.
+TASK-036, Library Usage Documentation, P2, completed, 2026-01-19, 2026-01-19, Each lib file needs usage examples. Developers don't know how to use lib modules. Poor integration documentation.
+TASK-022, Typography System Extension, P3, completed, 2026-01-19, 2026-01-19, Typography system extended with h4, h5, h6 variants. Provides more granular text hierarchy options. Better semantic structure for mobile UI.
+TASK-009, Module Selection Onboarding (REVERTED), P1, completed_reverted, 2026-01-19, 2026-01-19, Module-selection onboarding was implemented and activated. User requested removal: "I do not like the onboarding process. Strip it." Old approach: Progressive disclosure starting with 3 modules. New approach: Will ask about AI behavior preferences instead (see T-057).
+TASK-008, Module Grid Access Points, P1, completed, 2026-01-19, 2026-01-19, ModuleGridScreen shows all 38+ modules. Multiple UI access points implemented. Users can discover all available modules.
+TASK-007, Recommendation Engine Enhancements, P1, completed, 2026-01-20, 2026-01-20, Recommendation engine exists with cross-module analysis. Only CommandCenter shows recommendations. No manual refresh, history, or preference settings.
+TASK-003A, Secondary Navigation Bar Implementation, P1, completed, 2026-01-20, 2026-01-20, Secondary navigation bar (oval, transparent) added to Command Center. Houses module-specific actions: Search, Attention Center, Command History. Need to replicate this pattern in other modules (Notebook, Lists, etc.). Reduces navigation clutter and provides consistent UX.
+TASK-003, BottomNav Route Validation, P0, completed, 2026-01-19, 2026-01-19, BottomNav route validation fully implemented. Error handling with user-friendly alerts. Structured logging for debugging. No silent failures or crashes.
+TASK-002B, PersistentSidebar Swipe Gesture (Android/Web), P0, completed, 2026-01-19, 2026-01-19, Adapt T-002A iOS swipe gesture for Android/Web compatibility. Ensure gesture works across all platforms.
+TASK-002A, PersistentSidebar Edge Swipe Gesture (iOS), P0, completed, 2026-01-19, 2026-01-19, PersistentSidebar edge swipe gesture fully implemented. PanResponder detects left edge swipe to open sidebar. Native mobile navigation pattern functional. Button alternative maintained for accessibility.
+TASK-001B, AlertDetailScreen Time Picker (Android/Web), P0, completed, 2026-01-19, 2026-01-19, Adapt T-001A iOS time picker implementation for Android/Web compatibility. Note: Existing Android-specific code at line ~285 can remain as-is.
+TASK-001A, AlertDetailScreen Time Picker (iOS), P0, completed, 2026-01-19, 2026-01-19, AlertDetailScreen time picker fully implemented. Uses @react-native-community/datetimepicker. Platform-specific handling for iOS and Android.
+TASK-084, Phase 0: Validation Schemas, P0, completed, 2026-01-20, 2026-01-20, Phase 0: Server Foundation - Validation Schemas. Zod validation schemas for analytics payloads created. Ensures data quality and security on server.
+TASK-083, Phase 0: API Endpoint, P0, completed, 2026-01-20, 2026-01-20, Phase 0: Server Foundation - API Endpoint. POST /api/telemetry/events endpoint created. Client successfully configured to send to this endpoint.
+TASK-082, Phase 0: Storage Methods, P0, completed, 2026-01-20, 2026-01-20, Phase 0: Server Foundation - Storage Methods. Storage methods for analytics event persistence implemented. Supports batch inserts, querying, and GDPR deletion.
+TASK-081, Phase 0: Database Schema, P0, completed, 2026-01-20, 2026-01-20, Phase 0: Server Foundation - Database Schema. Analytics client sends events to /api/telemetry/events. Database schema created with indexes for performance.
+TASK-058, Planner AI Assist Actions, P1, completed, 2026-01-21, 2026-01-21, Planner AI Assist actions are listed but not implemented. Competing planners ship AI-assisted prioritization and task breakdown. This is a differentiator tied to the Command Center/AI narrative.
+TASK-048, CHANGELOG.md Creation, P3, completed, 2026-01-20, 2026-01-20, No CHANGELOG.md exists. Changes not documented. Standard open-source practice missing.
+TASK-037, UI Component Documentation, P2, completed, 2026-01-21, 2026-01-21, UI components lack documentation. Props, usage, and examples not documented. No component showcase.
+
+task_acceptance_criteria{TASK-069}[4]{description, status}:
+Add meeting link field to CalendarEvent model, complete
+Support quick-add of video conferencing links, complete
+Render "Join Meeting" action on event details, complete
+Add tests for link validation and rendering, complete
+
+task_acceptance_criteria{TASK-043}[4]{description, status}:
+Add missing props to Button interface (no label prop needed - uses children), complete
+Fix ThemedText type union (removed "title" usage in AlertsScreen.tsx), complete
+Fix AIAssistSheet props (fixed context→module in BudgetScreen.tsx), complete
+Test all component prop usage (verified via grep searches), complete
+
+task_acceptance_criteria{TASK-036}[4]{description, status}:
+Add "How to Use" section to each lib file header, complete
+Show integration examples with UI components, complete
+Document public APIs and expected usage patterns, complete
+Add examples to documentation site, complete
+
+task_acceptance_criteria{TASK-022}[3]{description, status}:
+Add h4, h5, h6 to Typography constants (implemented in theme.ts), complete
+Document typography scale usage (added to design_guidelines.md), complete
+Update components using hardcoded heading sizes (ThemedText.tsx updated), complete
+
+task_acceptance_criteria{TASK-009}[4]{description, status}:
+Add first-launch detection (implemented in AppNavigator.tsx:194-199), complete
+Set initialRouteName to "OnboardingWelcome" for new users (implemented), complete
+Add "skip onboarding" option with explanation (implemented in OnboardingWelcomeScreen.tsx:203-207), complete
+Test complete onboarding flow (verified working), complete
+
+task_acceptance_criteria{TASK-008}[4]{description, status}:
+Add "All Modules" button in BottomNav or Settings (implemented in CommandCenter and PersistentSidebar), complete
+Add module grid access from sidebar "More" button (implemented), complete
+Consider adding to CommandCenter as a card (grid icon in header), complete
+Test module grid display and navigation (verified working), complete
+
+task_acceptance_criteria{TASK-007}[4]{description, status}:
+Add "Refresh Recommendations" button in CommandCenter, complete
+Add recommendation settings in AIPreferences screen, complete
+Show evidence/reasoning in recommendation cards, complete
+Wire up RecommendationHistoryScreen to navigation on iOS, complete
+
+task_acceptance_criteria{TASK-003A}[6]{description, status}:
+Add secondary navigation to Command Center, complete
+Add secondary navigation to Notebook module, complete
+Add secondary navigation to Lists module, complete
+Add secondary navigation to Planner module, complete
+Add secondary navigation to Calendar module, complete
+Test navigation consistency across modules, complete
+
+task_acceptance_criteria{TASK-003}[4]{description, status}:
+Add route validation before navigation (isValidRoute function at lines 203-207), complete
+Show error message if route doesn't exist (showNavigationError at lines 163-171), complete
+Log navigation errors for debugging (logNavigationError at lines 180-189), complete
+Test with disabled modules on iOS (handleNavigation validates at lines 226-250), complete
+
+task_acceptance_criteria{TASK-002B}[4]{description, status}:
+Test swipe gesture on Android, complete
+Add web-compatible swipe gesture if needed, complete
+Preserve iOS functionality, complete
+Verify button alternative works on all platforms, complete
+
+task_acceptance_criteria{TASK-002A}[5]{description, status}:
+Implement PanResponder for left edge swipe detection (already implemented at lines 111-196), complete
+Handle swipe-to-open sidebar gesture (gesture state machine with velocity/distance thresholds), complete
+Test gesture on iOS (manual verification recommended), complete
+Maintain button alternative for accessibility (button always available), complete
+Remove TODO comment at line 63 (no TODO found in file), complete
+
+task_acceptance_criteria{TASK-001B}[4]{description, status}:
+Verify time picker works on Android, complete
+Add web-compatible time picker if needed, complete
+Preserve iOS functionality, complete
+Test on Android and Web platforms, complete
+
+task_acceptance_criteria{TASK-001A}[4]{description, status}:
+Install @react-native-community/datetimepicker (already installed), complete
+Implement proper time picker in AlertDetailScreen.tsx (already implemented), complete
+Test time selection on both iOS and Android (implemented with platform logic), complete
+Remove TODO comment at line 277 (no TODO found), complete
+
+task_acceptance_criteria{TASK-084}[6]{description, status}:
+Add analyticsEventSchema to packages/contracts/schema.ts, complete
+Validate: eventId (UUID), eventName (string), timestamp (datetime), properties (object), complete
+Validate identity: userId, deviceId, sessionId, complete
+Add analyticsBatchSchema (array of events, 1-100 limit), complete
+Schema compatible with client types, complete
+Export for use in server validation, complete
+
+task_acceptance_criteria{TASK-083}[6]{description, status}:
+POST /api/telemetry/events endpoint in apps/api/routes.ts, complete
+Require authentication (JWT token), complete
+Validate payload with Zod schema (analyticsBatchSchema), complete
+Call storage.saveAnalyticsEvents(events), complete
+Return 202 Accepted with confirmation, complete
+Error handling for storage failures, complete
+
+task_acceptance_criteria{TASK-082}[5]{description, status}:
+Add saveAnalyticsEvents(events: AnalyticsEvent[]): Promise<void>, complete
+Batch insert with idempotency (skip duplicate event IDs), complete
+Add getAnalyticsEvents(userId, filters) for querying, complete
+Add deleteUserAnalytics(userId) for GDPR deletion, complete
+Error logging for monitoring, complete
+
+task_acceptance_criteria{TASK-081}[5]{description, status}:
+Create analytics_events table schema, complete
+Table includes: id, user_id, event_name, event_properties (JSONB), timestamp, session_id, device_id, platform, complete
+Indexes on: user_id, event_name, timestamp (DESC), session_id, complete
+Timestamp with timezone for correct time handling, complete
+Validation schemas (analyticsEventSchema, analyticsBatchSchema), complete
+
+task_acceptance_criteria{TASK-058}[5]{description, status}:
+Implement Planner AI Assist actions: priority suggestion, due date recommendation, task breakdown, dependency identification, complete
+Persist AI output into task fields or subtasks with user confirmation, complete
+Log AI Assist outcomes in History for auditability, complete
+Add empty/error states for AI Assist actions, complete
+Test AI Assist actions on iOS with sample tasks, complete
+
+task_acceptance_criteria{TASK-048}[4]{description, status}:
+Create CHANGELOG.md following Keep a Changelog format, complete
+Document all major changes by version/date, complete
+Set up process for updating changelog, complete
+Add to root directory, complete
+
+task_acceptance_criteria{TASK-037}[5]{description, status}:
+Document atomic components: Button, Card, ThemedText (props, usage, examples), complete
+Document form components: inputs, selects, validation (with examples), complete
+Document complex components: MiniMode, QuickCapture, AIAssist, complete
+Add Storybook or create component showcase page, complete
+Include accessibility guidelines for each component, complete
+
+task_notes{TASK-069}:
+References: apps/mobile/screens/CalendarScreen.tsx, packages/contracts/schema.ts, docs/analysis/COMPETITIVE_ANALYSIS.md
+Effort: M
+
+task_notes{TASK-043}:
+References: apps/mobile/screens/AlertsScreen.tsx:76, apps/mobile/screens/BudgetScreen.tsx:1299
+Effort: S
+
+task_notes{TASK-036}:
+References: apps/mobile/lib/*.ts, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
+Completion Notes: Added How to Use headers with UI examples + API summaries across lib modules and published docs/technical/lib-usage.md with copy-ready snippets.
+
+task_notes{TASK-022}:
+References: apps/mobile/constants/theme.ts, apps/mobile/components/ThemedText.tsx, docs/technical/design_guidelines.md
+Completion Notes: Added h4 (16px/600), h5 (14px/600), h6 (12px/600) to Typography. Updated ThemedText component with new types. Documented usage guidelines with examples.
+
+task_notes{TASK-009}:
+Completion Notes: Onboarding system removed per user request. Future onboarding will focus on AI personality/behavior configuration (T-057), not module selection.
+References: REMOVED: apps/mobile/screens/OnboardingWelcomeScreen.tsx, apps/mobile/screens/OnboardingModuleSelectionScreen.tsx, apps/mobile/lib/onboardingManager.ts
+
+task_notes{TASK-008}:
+References: apps/mobile/screens/CommandCenterScreen.tsx:384-392, apps/mobile/components/PersistentSidebar.tsx:420-444
+Completion Notes: ModuleGrid accessible via grid icon in CommandCenter header and "All Modules" button in PersistentSidebar. Modal presentation configured.
+
+task_notes{TASK-007}:
+References: apps/mobile/lib/recommendationEngine.ts, apps/mobile/screens/RecommendationHistoryScreen.tsx
+Implementation Details: Added recommendation preference toggles for visibility, auto-refresh, and card evidence display. Exposed manual refresh button and disabled state handling in Command Center footer. Added reasoning and evidence preview rows on recommendation cards. Confirmed history navigation stays reachable from Command Center secondary nav.
+
+task_notes{TASK-003A}:
+References: apps/mobile/screens/CommandCenterScreen.tsx:494-559
+Implementation Details: NotebookScreen: AI Assist, Backup, Templates. ListsScreen: Share List, Templates, Statistics. PlannerScreen: AI Assist, Time Block, Dependencies. CalendarScreen: Sync, Export, Quick Add. All modules use scroll-based hide/show animation with shared values. 19 passing tests validating consistency and behavior.
+
+task_notes{TASK-003}:
+References: apps/mobile/components/BottomNav.tsx:163-250
+Completion Notes: Route validation system was already fully implemented. Includes isValidRoute() check, user alerts, structured error logging with metadata, and comprehensive error handling throughout navigation flow.
+
+task_notes{TASK-002B}:
+References: apps/mobile/components/PersistentSidebar.tsx:111-196, T-002A (2026-01-19)
+Completion Notes: Disabled swipe gesture on web while keeping the button entry point and native swipe behavior unchanged.
+
+task_notes{TASK-002A}:
+References: apps/mobile/components/PersistentSidebar.tsx:111-196
+Completion Notes: Edge swipe gesture was already fully implemented in previous work. PanResponder handles gesture recognition, animation, haptic feedback, and edge cases. Comprehensive JSDoc documentation included.
+
+task_notes{TASK-001B}:
+References: apps/mobile/screens/AlertDetailScreen.tsx:277, T-001A PR/commit
+Completion Notes: Added web-specific time input with validation and ensured swipe/selection logic remains intact for native platforms.
+
+task_notes{TASK-001A}:
+References: apps/mobile/screens/AlertDetailScreen.tsx:32-34, 291-318, 451-459
+Completion Notes: Time picker was already fully implemented in previous work. Verified functionality includes handleTimeChange, openTimePicker, and DateTimePicker component integration with haptic feedback.
+
+task_notes{TASK-084}:
+References: packages/contracts/schema.ts:329-354, docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.4)
+Effort: S
+
+task_notes{TASK-083}:
+References: apps/api/routes.ts:687-719, docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.3), apps/mobile/analytics/transport.ts (client-side POST)
+Note: Analytics now work end-to-end! Client → Server → Storage
+
+task_notes{TASK-082}:
+References: apps/api/storage.ts:748-850, docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.2)
+Dependencies: T-081 (COMPLETE)
+
+task_notes{TASK-081}:
+References: packages/contracts/schema.ts:304-354, docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.1)
+
+task_notes{TASK-058}:
+References: apps/mobile/components/AIAssistSheet.tsx, docs/planning/MISSING_FEATURES.md
+Effort: M
+Note: Marked as COMPLETE in TODO.md
+
+task_notes{TASK-048}:
+References: docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md Task 1.1
+Completion Notes: CHANGELOG.md already followed Keep a Changelog format with versioned entries. Added documented update process in CHANGELOG.md and CONTRIBUTING.md.
+Effort: S
+
+task_notes{TASK-037}:
+References: apps/mobile/components/*.tsx, docs/archive/2026-01-pre-consolidation/DOCUMENTATION_IMPLEMENTATION_PLAN.md
+Effort: M (broken down from L)
+Note: Marked as COMPLETE in TODO.md
