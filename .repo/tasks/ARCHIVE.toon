@@ -7,13 +7,14 @@ purpose: "Historical record of completed tasks for autonomous coding agents. Gov
 rule: "Completed tasks are moved here from TODO.toon in reverse chronological order (most recent first)."
 
 archive_statistics[5]{metric, count}:
-Total Completed, 23
+Total Completed, 24
 P0 Completed, 4
-P1 Completed, 4
+P1 Completed, 5
 P2 Completed, 10
 P3 Completed, 6
 
-completed_tasks[23]{id, title, priority, status, created, completed, context}:
+completed_tasks[24]{id, title, priority, status, created, completed, context}:
+TASK-016, Screen-Level Error Boundaries, P1, completed, 2026-01-21, 2026-01-25, Screen-level error boundaries already implemented. ScreenErrorBoundary component wraps 42 screens in AppNavigator. Provides error isolation, recovery options (Try Again, Go Back, Go Home), and error reporting. Component: packages/features/core/ui/components/ScreenErrorBoundary.tsx
 TASK-086, Test Organization: Separate Unit and Integration Tests, P2, completed, 2026-01-24, 2026-01-25, Organized test files into clear directory structure: e2e/ (2 files), security/ (4 files), integration/ (3 files). Moved 9 test files and updated all import paths. Makes test purpose clear from directory structure. Files: apps/api/__tests__/{e2e,security,integration}/
 TASK-091, Test Architecture: Split into API, Client, and Integration Tests, P1, completed, 2026-01-24, 2026-01-25, Created comprehensive test architecture documentation defining three-tier testing: API tests (server-side), Client tests (React Native), and Integration tests (client + server). Documentation includes clear boundaries, examples, anti-patterns, and implementation checklist. File: docs/testing/test_architecture.md
 TASK-089, Test Helper Utilities, P2, completed, 2026-01-24, 2026-01-25, Created reusable test helper utilities to reduce duplication across tests. Helpers include: auth.helper.ts (JWT token generation, user creation), server.helper.ts (test server setup/teardown), data.helper.ts (test data creation for events, notes, tasks). Files: apps/api/__tests__/helpers/
@@ -295,6 +296,18 @@ References: docs/testing/test_architecture.md, .repo/tasks/TODO.toon, TASK-085
 Completion Notes: Created comprehensive three-tier test architecture documentation. Defines clear boundaries between API (server), Client (React Native), and Integration (E2E) tests. Addresses confusion from TASK-085 about what to test where.
 Effort: M (documentation task)
 
+task_acceptance_criteria{TASK-016}[5]{description, status}:
+Screen-level error boundaries implemented, complete (already existed)
+Error boundaries wrap all major screens, complete (42 screens wrapped)
+Error UI provides recovery options (Try Again, Go Back, Go Home), complete
+Error reporting tracks screen-specific errors, complete
+Errors isolated to screen level, not entire app, complete
+
+task_notes{TASK-016}:
+References: packages/features/core/ui/components/ScreenErrorBoundary.tsx, apps/mobile/navigation/AppNavigator.tsx
+Completion Notes: Task was already complete when checked. ScreenErrorBoundary component fully implemented with error isolation, fallback UI, recovery actions, and error tracking. 42 screens wrapped in AppNavigator.
+Effort: N/A (already implemented)
+
 task_acceptance_criteria{TASK-089}[5]{description, status}:
 Create test helpers directory structure, complete
 Create auth helpers (JWT tokens, user creation, auth headers), complete
@@ -343,6 +356,12 @@ task_notes{TASK-086}:
 References: apps/api/__tests__/{e2e,security,integration}/, docs/testing/test_organization.md
 Completion Notes: Organized 9 test files into clear directory structure. E2E tests (2 files), security tests (4 files), integration tests (3 files). Updated all import paths from ../ to ../../ to reflect new depth. Test purpose now clear from directory structure.
 Effort: S (file organization + import updates)
+
+expected_commands{TASK-016}[1]{command, purpose, verification_profile}:
+grep -r "ScreenErrorBoundary" apps/mobile/navigation/AppNavigator.tsx, Verify error boundaries are in use, quick
+
+actual_execution{TASK-016}[1]{command, status, output_summary}:
+grep -c "ScreenErrorBoundary screenName=" apps/mobile/navigation/AppNavigator.tsx, worked, Found 42 screens wrapped with ScreenErrorBoundary - task already complete
 
 expected_commands{TASK-091}[0]:
 (empty - documentation-only task)
