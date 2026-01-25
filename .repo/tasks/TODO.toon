@@ -38,6 +38,6 @@ Priority, P0 | P1 | P2 | P3
 Status, pending | in_progress | blocked | completed
 Type, [Module/Feature area] | [Change type] | [Related work]
 Created, YYYY-MM-DD
-Completed, YYYY-MM-DD (only when moved to ARCHIVE.md)
+Completed, YYYY-MM-DD (only when moved to ARCHIVE.toon)
 
-note: "Tasks in TODO.md should be grouped by similar types. See .repo/tasks/README.md for grouping rules. When a task is completed, it should be moved to ARCHIVE.md and the next highest priority task of a similar type from BACKLOG.md should be promoted here."
+note: "Tasks in TODO.toon should be grouped by similar types. See .repo/tasks/README.md for grouping rules. When a task is completed, it should be moved to ARCHIVE.toon and the next highest priority task of a similar type from BACKLOG.toon should be promoted here."
