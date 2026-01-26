@@ -12,6 +12,13 @@
  * - Hides when back online
  * - Provides visual feedback with icon and message
  *
+ * Architecture Note:
+ * This component imports useNetworkStatus from @platform/lib, creating a
+ * dependency from design-system → platform. This is intentional for convenience,
+ * as the banner is a commonly used UI component that benefits from automatic
+ * network detection. Alternative: pass network state as props, but this would
+ * require more boilerplate in every usage.
+ *
  * Usage:
  * ```tsx
  * <View>

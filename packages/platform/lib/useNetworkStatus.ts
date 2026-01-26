@@ -184,11 +184,15 @@ export function useNetworkStatus(): UseNetworkStatusResult {
   }, []);
 
   // Determine if online: connected AND internet reachable
+  // Note: We treat null isInternetReachable as "assume online" because:
+  // - This occurs during initial fetch before determination is complete
+  // - It's better to optimistically assume online than block user actions
+  // - The value will be updated once NetInfo determines actual reachability
   const isOnline =
     networkState !== null &&
     networkState.isConnected === true &&
     (networkState.isInternetReachable === true ||
-      networkState.isInternetReachable === null); // Assume reachable if unknown
+      networkState.isInternetReachable === null); // Optimistically assume reachable if unknown
 
   const isOffline = networkState !== null && !isOnline;
 

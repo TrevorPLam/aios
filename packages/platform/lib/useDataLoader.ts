@@ -118,6 +118,10 @@ export function useDataLoader<T>(
   
   /**
    * Load data and update state
+   * 
+   * Note: The loader function should ideally be memoized with useCallback
+   * for optimal performance, as it will be re-created on every render if
+   * passed as an inline arrow function.
    */
   const load = useCallback(async () => {
     if (!isMountedRef.current) return;
@@ -158,6 +162,10 @@ export function useDataLoader<T>(
   
   /**
    * Load data on mount or when deps change
+   * 
+   * Note: The deps array is intentionally spread here to support dynamic dependencies.
+   * This is safe because deps is provided by the caller and should be stable.
+   * If loader changes frequently, consider memoizing it with useCallback.
    */
   useEffect(() => {
     if (immediate) {
@@ -168,7 +176,7 @@ export function useDataLoader<T>(
     return () => {
       isMountedRef.current = false;
     };
-  }, [immediate, ...deps]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [immediate, load, ...deps]); // Include load dependency for completeness
   
   return {
     data,
