@@ -4,9 +4,15 @@
 
 This document maps functionality to test files, making it easy to find which tests cover which features. When you need to test or verify something, use this map to locate the relevant tests.
 
-**Related Tasks:** TASK-087 (Test Index and Location Mapping)
+**Related Tasks:** TASK-087 (Test Index and Location Mapping), TASK-090 (Testing Documentation)
 
-**Last Updated:** 2026-01-25
+**Last Updated:** 2026-01-26
+
+## Related Documentation
+
+- **[Test Requirements and Patterns](./test_requirements_and_patterns.md)** - Clarifies what's testable at each layer, common patterns, and anti-patterns
+- **[Test Architecture](./test_architecture.md)** - Three-tier testing strategy (API, Client, Integration)
+- **[Test Organization](./test_organization.md)** - How tests are organized in the codebase
 
 ## API Tests (Server-Side)
 
