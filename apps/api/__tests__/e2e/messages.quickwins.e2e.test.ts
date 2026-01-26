@@ -4,7 +4,7 @@
  * Validates server-side metadata updates, preview synchronization,
  * and search filtering without touching UI layers.
  */
-import { MemStorage } from "../storage";
+import { MemStorage } from "../../storage";
 import type { Conversation, Message } from "@contracts/schema";
 
 const baseConversation = (

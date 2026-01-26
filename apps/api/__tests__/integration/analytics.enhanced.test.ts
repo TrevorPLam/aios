@@ -4,7 +4,7 @@
  * Enhanced tests that verify actual behavior, not just side effects.
  * Fixes weak idempotency test identified in trust audit.
  */
-import { MemStorage } from "../storage";
+import { MemStorage } from "../../storage";
 import { randomUUID } from "crypto";
 
 describe("Analytics Storage - Enhanced Trustworthiness", () => {

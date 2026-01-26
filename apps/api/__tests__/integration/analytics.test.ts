@@ -10,7 +10,7 @@
  * Token optimization: Use `glob_file_search` for file finding instead of broad searches
  */
 
-import { MemStorage } from "../storage";
+import { MemStorage } from "../../storage";
 import { randomUUID } from "crypto";
 
 describe("Analytics Storage", () => {
@@ -441,9 +441,9 @@ describe("Analytics Storage", () => {
 import express from "express";
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";
-import { registerRoutes } from "../routes";
-import { generateToken } from "../middleware/auth";
-import { storage } from "../storage";
+import { registerRoutes } from "../../routes";
+import { generateToken } from "../../middleware/auth";
+import { storage } from "../../storage";
 
 process.env.JWT_SECRET = "test-jwt-secret-for-analytics-e2e-tests";
 

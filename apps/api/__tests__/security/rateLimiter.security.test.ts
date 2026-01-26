@@ -11,7 +11,7 @@ import express, { type Express } from "express";
 import {
   loginRateLimiter,
   registerRateLimiter,
-} from "../middleware/rateLimiter";
+} from "../../middleware/rateLimiter";
 
 describe("Rate Limiting Security", () => {
   let app: Express;

@@ -1,7 +1,7 @@
 # filepath: .repo/tasks/TODO.toon
 # purpose: Active task list for autonomous coding agents.
 # last updated: 2026-01-25
-# related tasks: TASK-091, TASK-086, TASK-087, TASK-088, TASK-089
+# related tasks: TASK-090, TASK-016, TASK-017, TASK-018
 
 type: todo
 id: TODO.toon
@@ -11,12 +11,10 @@ version: 2.1.0.
 purpose: "Active task list for autonomous coding agents. Governed by AGENTS.toon."
 rule: "3-5 tasks should be active at a time, grouped by similar type. Work with what's available."
 
-active_tasks[5]{id, title, priority, status, type, created, context}:
-TASK-091, Test Architecture: Split into API, Client, and Integration Tests, P1, pending, testing, 2026-01-24, Current testing approach mixes concerns - API tests try to test client-side features (offline queueing, retry logic) which are in React Native code. We need a clear three-tier test architecture: API tests (server-side), Client tests (React Native), and Integration tests (client + server together). This addresses the confusion in TASK-085 about what's testable where.
-TASK-086, Test Organization: Separate Unit and Integration Tests, P2, pending, testing, 2026-01-24, Current test files mix unit tests (storage layer) with integration tests (E2E API tests). Separating them improves maintainability, makes test purpose clear, and allows different test configurations (e.g., faster unit tests vs slower integration tests).
-TASK-087, Test Index and Location Mapping, P2, pending, testing, 2026-01-24, As test files grow, it becomes hard to find which tests cover which functionality. A test index/map helps developers quickly locate relevant tests, understand test coverage, and identify gaps.
-TASK-088, Test Mocking Infrastructure, P2, pending, testing, 2026-01-24, Tests currently fail due to missing dependencies (express-rate-limit, etc.). Creating a mocking infrastructure allows tests to run independently, faster, and without external dependencies. Also needed for testing offline queueing and retry logic.
-TASK-089, Test Helper Utilities, P2, pending, testing, 2026-01-24, Common test setup code is duplicated across test files (JWT token generation, server setup, test data creation). Test helpers reduce duplication, improve consistency, and make tests easier to write.
+active_tasks[3]{id, title, priority, status, type, created, context}:
+TASK-017, Loading States for Screens, P1, pending, aios_core, 2026-01-21, Screens don't show loading indicators during data load. Users see blank screens or stale data. Poor perceived performance.
+TASK-018, Network Status and Offline Handling, P1, pending, aios_core, 2026-01-21, App doesn't show offline status or handle network errors. Silent failures when network unavailable. Users don't know why actions fail.
+TASK-090, Testing Documentation: Test Requirements and Patterns, P2, pending, testing, 2026-01-24, TASK-085 requirements were unclear about what's testable at API level vs client level. Comprehensive testing documentation clarifies test boundaries, patterns, and requirements, reducing confusion and improving test quality.
 
 task_template:
 fields[5]{name, description}:
