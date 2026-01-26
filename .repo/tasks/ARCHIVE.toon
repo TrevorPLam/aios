@@ -7,13 +7,16 @@ purpose: "Historical record of completed tasks for autonomous coding agents. Gov
 rule: "Completed tasks are moved here from TODO.toon in reverse chronological order (most recent first)."
 
 archive_statistics[5]{metric, count}:
-Total Completed, 24
+Total Completed, 27
 P0 Completed, 4
-P1 Completed, 5
-P2 Completed, 10
+P1 Completed, 7
+P2 Completed, 12
 P3 Completed, 6
 
-completed_tasks[24]{id, title, priority, status, created, completed, context}:
+completed_tasks[27]{id, title, priority, status, created, completed, context}:
+TASK-090, Testing Documentation: Test Requirements and Patterns, P2, completed, 2026-01-24, 2026-01-26, Created comprehensive testing documentation clarifying test boundaries and patterns. Document includes: what's testable at API vs client level, common patterns with examples, anti-patterns to avoid, test coverage requirements, best practices, migration guide. Files: docs/testing/test_requirements_and_patterns.md (12KB), docs/testing/test_index.md (updated with links).
+TASK-018, Network Status and Offline Handling, P1, completed, 2026-01-21, 2026-01-26, Implemented network status detection and offline handling infrastructure. Created useNetworkStatus hook for detecting online/offline status with network type and quality indicators. Created NetworkStatusBanner component that shows/hides automatically. Includes graceful fallback when NetInfo not installed. Comprehensive documentation with patterns, examples, testing guide. Files: packages/platform/lib/useNetworkStatus.ts (6KB), packages/design-system/components/NetworkStatusBanner.tsx (3KB), docs/technical/network-status-offline-handling.md (13KB).
+TASK-017, Loading States for Screens, P1, completed, 2026-01-21, 2026-01-26, Created loading states infrastructure for consistent data loading patterns. Implemented useDataLoader hook with loading/error/retry states, automatic cleanup, dependency-based reloading. Integrated with existing ScreenStateMessage component. Comprehensive documentation with usage patterns, best practices, common mistakes, migration guide. Files: packages/platform/lib/useDataLoader.ts (5KB), packages/platform/lib/__tests__/useDataLoader.test.ts (3KB), docs/technical/loading-states-pattern.md (12KB).
 TASK-016, Screen-Level Error Boundaries, P1, completed, 2026-01-21, 2026-01-25, Screen-level error boundaries already implemented. ScreenErrorBoundary component wraps 42 screens in AppNavigator. Provides error isolation, recovery options (Try Again, Go Back, Go Home), and error reporting. Component: packages/features/core/ui/components/ScreenErrorBoundary.tsx
 TASK-086, Test Organization: Separate Unit and Integration Tests, P2, completed, 2026-01-24, 2026-01-25, Organized test files into clear directory structure: e2e/ (2 files), security/ (4 files), integration/ (3 files). Moved 9 test files and updated all import paths. Makes test purpose clear from directory structure. Files: apps/api/__tests__/{e2e,security,integration}/
 TASK-091, Test Architecture: Split into API, Client, and Integration Tests, P1, completed, 2026-01-24, 2026-01-25, Created comprehensive test architecture documentation defining three-tier testing: API tests (server-side), Client tests (React Native), and Integration tests (client + server). Documentation includes clear boundaries, examples, anti-patterns, and implementation checklist. File: docs/testing/test_architecture.md

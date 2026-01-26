@@ -1,7 +1,7 @@
 # filepath: .repo/tasks/TODO.toon
 # purpose: Active task list for autonomous coding agents.
-# last updated: 2026-01-25
-# related tasks: TASK-090, TASK-016, TASK-017, TASK-018
+# last updated: 2026-01-26
+# related tasks: None (all previous tasks completed)
 
 type: todo
 id: TODO.toon
@@ -11,10 +11,8 @@ version: 2.1.0.
 purpose: "Active task list for autonomous coding agents. Governed by AGENTS.toon."
 rule: "3-5 tasks should be active at a time, grouped by similar type. Work with what's available."
 
-active_tasks[3]{id, title, priority, status, type, created, context}:
-TASK-017, Loading States for Screens, P1, pending, aios_core, 2026-01-21, Screens don't show loading indicators during data load. Users see blank screens or stale data. Poor perceived performance.
-TASK-018, Network Status and Offline Handling, P1, pending, aios_core, 2026-01-21, App doesn't show offline status or handle network errors. Silent failures when network unavailable. Users don't know why actions fail.
-TASK-090, Testing Documentation: Test Requirements and Patterns, P2, pending, testing, 2026-01-24, TASK-085 requirements were unclear about what's testable at API level vs client level. Comprehensive testing documentation clarifies test boundaries, patterns, and requirements, reducing confusion and improving test quality.
+active_tasks[0]{id, title, priority, status, type, created, context}:
+(empty - all tasks completed, promote from BACKLOG.toon as needed)
 
 task_template:
 fields[5]{name, description}:
