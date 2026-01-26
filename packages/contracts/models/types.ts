@@ -1,4 +1,4 @@
-import { DEFAULT_AI_CUSTOM_PROMPT } from "@design-system/constants/aiDefaults";
+import { DEFAULT_AI_CUSTOM_PROMPT } from "../constants";
 
 export type ModuleType =
   | "command"
