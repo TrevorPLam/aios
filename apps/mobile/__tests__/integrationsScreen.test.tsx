@@ -98,9 +98,10 @@ describe("IntegrationsScreen", () => {
       totalErrors: 0,
     });
 
-    const { getByTestId, findByText } = render(<IntegrationsScreen />);
+    const { getByTestId, findByTestId } = render(<IntegrationsScreen />);
 
-    await findByText("Google Calendar");
+    // Wait for the integration card to appear (data has loaded)
+    await findByTestId("integration-card-google-calendar");
 
     fireEvent.press(getByTestId("integration-card-google-calendar"));
 
