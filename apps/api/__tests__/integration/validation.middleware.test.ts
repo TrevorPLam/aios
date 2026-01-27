@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { AppError } from "../middleware/errorHandler";
-import { validate } from "../middleware/validation";
+import { AppError } from "../../middleware/errorHandler";
+import { validate } from "../../middleware/validation";
 
 type NextCollector = NextFunction & { calls: unknown[] };
 

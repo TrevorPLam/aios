@@ -1,3 +1,8 @@
+# filepath: .repo/tasks/TODO.toon
+# purpose: Active task list for autonomous coding agents.
+# last updated: 2026-01-26
+# related tasks: None (all previous tasks completed)
+
 type: todo
 id: TODO.toon
 filepath: .repo/tasks/TODO.toon
@@ -6,37 +11,8 @@ version: 2.1.0.
 purpose: "Active task list for autonomous coding agents. Governed by AGENTS.toon."
 rule: "3-5 tasks should be active at a time, grouped by similar type. Work with what's available."
 
-active_tasks[1]{id, title, priority, status, type, created, context}:
-TASK-085, Phase 0: Integration Testing, P0, blocked, testing, 2026-01-21, Phase 0: Integration Testing. End-to-end test from client to database. Verify offline queueing, retry, GDPR deletion. Critical to ensure Phase 0 works before Phase 1. T-081 through T-084 already COMPLETED - need tests.
-
-task_acceptance_criteria{TASK-085}[7]{description, status}:
-E2E test: Client sends events → Server receives → DB persists, complete
-Test offline queueing (events queue when server down), complete
-Test retry logic (events retry on failure), complete
-Test batch sending (50 events sent as batch), complete
-Test GDPR deletion (deleteUserAnalytics removes all events), complete
-Test error handling (bad payload returns 400), complete
-Test coverage >80%, blocked
-
-task_notes{TASK-085}:
-References: docs/analytics/PHASE_0_HANDOFF.md, docs/analytics/DEEP_ASSESSMENT_AND_GAMEPLAN.md (Task 0.5), apps/api/__tests__/analytics.test.ts (NEW FILE)
-In progress: added client/transport retry coverage in packages/platform/analytics/__tests__/client.test.ts and packages/platform/analytics/__tests__/transport.test.ts.
-Update: property-based example now skips when fast-check is unavailable to avoid blocked installs; npm install still blocked by lint-staged registry policy.
-Test setup blocked by npm install dependency resolution failure (registry 403 for lint-staged; see npm install logs).
-Dependencies: None (T-081-T-084 already complete)
-Blocked By: npm install dependency resolution error (registry 403).
-HITL Required: true
-HITL Reference: .repo/hitl/HITL-0001.md
-
-task_logs{TASK-085}[2]{log_type, path_pattern}:
-  trace, .repo/traces/TASK-085-trace-*.json
-  agent, .repo/logs/TASK-085-log-*.json
-
-expected_commands{TASK-085}[3]{command, purpose, verification_profile}:
-  npm run check:quick, Verify code quality (lint, types, format), quick
-  npm test -- apps/api/__tests__/analytics.test.ts, Run integration tests for analytics, ci
-  npm run test:coverage -- apps/api/__tests__/analytics.test.ts, Verify test coverage >80%, ci
-expected_commands_note{TASK-085}: "Testing task - requires test execution. Use batched check:quick for code quality. Run specific test file for integration tests. Check coverage separately. Reference: .repo/repo.manifest.toon for canonical commands, .repo/logs/COMMAND_OPTIMIZATION_GUIDE.toon for execution guidance."
+active_tasks[0]{id, title, priority, status, type, created, context}:
+(empty - all tasks completed, promote from BACKLOG.toon as needed)
 
 task_template:
 fields[5]{name, description}:

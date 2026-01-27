@@ -7,7 +7,7 @@
  * - Auth bypass protection
  */
 import bcrypt from "bcryptjs";
-import { storage } from "../storage";
+import { storage } from "../../storage";
 
 describe("Authentication Security", () => {
   describe("Password Hashing", () => {

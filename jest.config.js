@@ -30,5 +30,12 @@ module.exports = {
     },
   },
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/__tests__/helpers/",
+    "/__tests__/mocks/",
+    "\\.helper\\.[jt]s$",
+    "\\.mock\\.[jt]s$",
+  ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 };
