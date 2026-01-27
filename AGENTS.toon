@@ -3,7 +3,7 @@ id: AGENTS.json
 filepath: AGENTS.toon
 $schema: http://json-schema.org/draft-07/schema#
 version: 2.1.0
-purpose: Governance for autonomous coding agents. Read this, then .repo/tasks/TODO.md.
+purpose: Governance for autonomous coding agents. Read this, then .repo/tasks/TODO.toon.
 
 role:
   title: Autonomous Agent for Solo Founder
@@ -25,9 +25,9 @@ repo_map:
     contracts: packages/contracts (Shared Types)
   gov:
     manifest: .repo/repo.manifest.toon
-    todo: .repo/tasks/TODO.md
-    backlog: .repo/tasks/BACKLOG.md
-    archive: .repo/tasks/ARCHIVE.md
+    todo: .repo/tasks/TODO.toon
+    backlog: .repo/tasks/BACKLOG.toon
+    archive: .repo/tasks/ARCHIVE.toon
     logs: .repo/logs/
     traces: .repo/traces/
     hitl: .repo/hitl/
@@ -38,7 +38,7 @@ core_principles:
     safety_first,Stop for login/money/data/external changes.
     no_secrets,Never commit secrets, tokens, keys.
     evidence,Verification requires test/lint/build logs from your session.
-    traceability,Link all work to TODO.md tasks.
+    traceability,Link all work to TODO.toon tasks.
   good_practices[4]:
     Document cross-feature decisions in docs/adr/.
     Avoid scope creep.
@@ -58,7 +58,7 @@ filepath_rule:
   headers: Each file must have a header with: filepath, purpose, last updated, related tasks.
 
 workflow:
-  strategy: Group 3-5 same-type tasks from TODO.md. Work on group to completion.
+  strategy: Group 3-5 same-type tasks from TODO.toon. Work on group to completion.
   group_exit_requirement: Before declaring the group complete, include executed verification evidence (commands + brief output summary) or mark <UNKNOWN> + create HITL if verification cannot be executed. Use batched commands to reduce execution time.
   steps[7]:
     Group tasks by type (feature, bug, docs).
@@ -69,13 +69,13 @@ workflow:
     - Verification Plan: Commands to run (use batched: 'npm run check:quick' instead of separate lint/type/format checks).
     Make changes task-by-task. Run minimal verification commands (batch related checks).
     If blocked: Mark 'Blocked', create HITL, continue with group.
-    Group complete: Update TODO.md, archive tasks, provide batch report.
+    Group complete: Update TODO.toon, archive tasks, provide batch report.
 
 hitl:
   def: Human-In-The-Loop: blocking question for founder.
   naming: Use sequential IDs like HITL-0001.md (details: .repo/hitl/README.md).
   triggers[4]: Security/login/money/data changes., External integrations., <UNKNOWN> items., Dependency vulns.
-  process: 1. Mark task 'Blocked' in TODO.md. 2. Create HITL-XXX.md in .repo/hitl/. 3. Move to next task in group.
+  process: 1. Mark task 'Blocked' in TODO.toon. 2. Create HITL-XXX.md in .repo/hitl/. 3. Move to next task in group.
 
 pr_reqs:
   sections[6]:

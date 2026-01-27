@@ -1,0 +1,150 @@
+type: product_entry_point
+id: PRODUCT.json
+filepath: PRODUCT.toon
+$schema: http://json-schema.org/draft-07/schema#
+version: 1.0.0
+purpose: Product overview and entry point for AIOS product definition
+
+overview:
+  name: AIOS (AI Operating System)
+  tagline: "The American WeChat" - Global, Innovative, Revolutionary
+  description: Privacy-first super app that aims to replace 38+ specialized applications with a single, intelligent, seamlessly integrated platform
+  current_state: 14 production-ready modules with 72% average completion rate
+  vision: 38+ modules spanning productivity, commerce, health, entertainment, and innovation
+  philosophy: Intelligence over complexity, privacy over profit, integration over isolation
+
+core_purpose:
+  primary_goal: Consolidate 38+ specialized apps into one intelligent operating system for life
+  user_value: Single platform for all life management needs
+  differentiation: Privacy-first, local-first, AI-powered, integrated workflows
+  target_users: Individuals seeking unified life management platform
+
+current_capabilities:
+  version: v1.0
+  modules[14]:
+    - Command Center: AI recommendation engine with swipeable cards and confidence meters
+    - Notebook: Markdown editor with tag/link parsing, similarity detection, bulk operations
+    - Planner: Task and project management with hierarchies, priorities, filtering
+    - Calendar: Event scheduling with 4 view modes, conflict detection, meeting links, statistics
+    - Email: Professional thread management with advanced search, filters, bulk ops
+    - Messages: P2P messaging with group chat, media sharing, AI assistance
+    - Lists: Checklist management with 7 categories, templates, priorities
+    - Alerts: Smart reminders with recurrence and effectiveness tracking
+    - Contacts: Native device integration with sharing preferences
+    - Translator: Real-time language translation with TTS/STT (12+ languages)
+    - Photos: Gallery with organization and backup tracking
+    - History: Activity tracking with advanced filtering and analytics
+    - Budget: Personal finance management with templates and statistics
+    - Integrations: Third-party service connections with health monitoring
+
+product_scope:
+  tier_1_super_app_essentials:
+    description: Next phase modules for super app functionality
+    modules[6]:
+      - Wallet & Payments: Digital wallet, P2P transfers, bill splitting
+      - Marketplace & Commerce: User marketplace + business directory
+      - Maps & Navigation: Context-aware location intelligence
+      - Events & Ticketing: Discover, book, coordinate events
+      - Food & Delivery: Unified restaurant ordering
+      - Ride & Transportation: Multi-modal transport hub
+  tier_2_life_management:
+    description: Comprehensive life management modules
+    modules[6]:
+      - Health & Wellness: Holistic health tracking beyond fitness
+      - Learning & Education: Personalized learning system
+      - Professional Services: On-demand expert help (lawyers, accountants, therapists)
+      - Home Management: Smart home operations hub
+      - Entertainment Hub: Unified streaming discovery
+      - Library & Reading: Complete reading ecosystem
+  tier_3_innovative_edge:
+    description: Breakthrough features no competitor has
+    modules[8]:
+      - Memory Bank: AI-powered searchable life history
+      - Relationship Manager: CRM for personal relationships
+      - Life Goals & Vision: Long-term goal achievement system
+      - Context Zones: Automatic interface adaptation (work/personal modes)
+      - Future Predictor: Probabilistic life forecasting
+      - Persona Manager: Multiple digital identities
+      - Opportunity Scanner: AI finds missed opportunities
+      - Global ID & Verification: Privacy-preserving identity
+
+key_features:
+  design:
+    - Dark-first design with electric blue (#00D9FF) accent
+    - Smooth animations using React Native Reanimated
+    - Haptic feedback for enhanced mobile experience
+    - Theme-driven overlays for consistent light/dark translucency
+  functionality:
+    - Local-first storage using AsyncStorage (privacy-first)
+    - AI-powered recommendations with cross-module intelligence
+    - AI Preferences tools for refreshing recommendations and reviewing history
+    - Attention Center badge in headers for quick access to notifications
+    - Real-time updates ready (WebSocket configured)
+    - Meeting link validation on event sync for supported video providers
+    - Web keyboard shortcut (Cmd/Ctrl+K) to open Omnisearch on web
+    - Lazy-loaded heavy screens (Photos, Photo Editor) for faster startup
+
+design_principles:
+  local_first: Data lives with user before cloud
+  integrated_workflows: Tasks, notes, messages linkable everywhere
+  signal_over_noise: Transparent, measurable recommendations
+  delightful_ergonomics: Haptics, motion, dark-first visuals
+  progressive_complexity: Start with core modules, grow over time
+
+platform_support:
+  ios: Primary target, polished UX and haptics
+  android: Compatibility via adaptation layer, parity improving
+  web: Available for key flows, secondary focus with selective UI differences
+
+user_roles:
+  primary: Individual users seeking unified life management
+  future: Business users, developers (via API), third-party integrators
+
+user_workflows:
+  core_flows[5]:
+    - Quick Capture: Fast note/task/event creation from anywhere
+    - Cross-Module Linking: Link notes to tasks, events to contacts, etc.
+    - AI Recommendations: Context-aware suggestions across modules
+    - Offline-First Operations: Full functionality without internet
+    - Progressive Onboarding: Start with 3 modules, expand gradually
+
+business_goals:
+  super_app_platform: Create unified platform replacing 38+ specialized apps
+  privacy_first: Maintain user privacy with local-first storage
+  mobile_first_excellence: Deliver best-in-class mobile UX
+  cross_module_intelligence: AI recommendations understanding entire user context
+  developer_ecosystem: Enable third-party integrations and plugins
+
+success_metrics:
+  user_retention: Users adopt 5+ modules within first month
+  recommendation_acceptance: 60%+ recommendation acceptance rate
+  app_store_rating: 4.5+ app store rating
+  integrations: 100+ integrations within 2 years
+  privacy: Zero user data sold to third parties
+
+module_maturity:
+  production_ready: 14 modules
+  average_completion: 72%
+  full_featured_modules[9]: Command Center, Notebook, Planner, Calendar, Email, Messages, Lists, Alerts, Photos, History, Budget, Integrations
+  partial_modules[2]: Contacts (native sync dependent), Translator (external API dependent)
+
+detailed_documentation:
+  location: docs/product/
+  vision: docs/vision/
+  roadmap: docs/roadmaps/
+  entry_points:
+    product_readme: docs/product/README.md
+    vision_summary: docs/vision/VISION_SUMMARY.md
+    module_expansion: docs/vision/SUPER_APP_MODULE_EXPANSION.md
+    roadmap: docs/roadmaps/roadmap.md
+  main_readme: README.md (contains product overview)
+
+next_steps:
+  read[3]:
+    README.md - Product overview and current capabilities
+    docs/product/README.md - Product documentation structure
+    docs/vision/VISION_SUMMARY.md - Strategic vision and roadmap
+  explore:
+    docs/vision/ - Vision and strategic planning
+    docs/roadmaps/ - Product roadmaps
+    apps/mobile/screens/ - Current module implementations
