@@ -210,7 +210,7 @@
     "lint-staged": "^15.2.0",
     "prettier": "3.8.0",
     "react-test-renderer": "19.2.3",
-    "semantic-release": "^23.1.1",
+    "semantic-release": "^25.0.2",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "typescript": "~5.9.2",
