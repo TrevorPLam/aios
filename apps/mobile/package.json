@@ -1,0 +1,17 @@
+{
+  "name": "mobile",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "expo start",
+    "build": "expo build",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aios/design-system": "workspace:*",
+    "@aios/features": "workspace:*",
+    "@aios/platform": "workspace:*",
+    "@aios/contracts": "workspace:*"
+  }
+}

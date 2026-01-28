@@ -1,0 +1,16 @@
+{
+  "name": "@aios/features",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aios/design-system": "workspace:*",
+    "@aios/platform": "workspace:*",
+    "@aios/contracts": "workspace:*"
+  }
+}
