@@ -1,2 +1,0 @@
-{"timestamp":"2026-01-24T13:14:36.285Z","agent":"governance-verify","action":"verification_start","file":null,"duration_ms":null,"success":true,"context":{"script":"governance-verify.js","timestamp":"2026-01-24T13:14:36.283Z"}}
-{"timestamp":"2026-01-24T13:18:49.127Z","agent":"governance-verify","action":"verification_complete","file":null,"duration_ms":252844,"success":false,"context":{"errors":10,"warnings":5,"hard_failures":11}}
