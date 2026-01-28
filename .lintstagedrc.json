@@ -1,6 +1,0 @@
-{
-  "*.{ts,tsx}": ["npx eslint --fix", "npx prettier --write"],
-  "*.{js,jsx,mjs}": ["npx eslint --fix", "npx prettier --write"],
-  "*.{json,md,yml,yaml,css}": ["npx prettier --write"],
-  "*.{ts,tsx,js,jsx}": ["npm run check:types"]
-}
