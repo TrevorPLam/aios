@@ -1,7 +1,7 @@
 import {
   isOmnisearchShortcut,
   shouldIgnoreShortcutTarget,
-} from "@platform/lib/keyboardShortcuts";
+} from "@aios/platform/lib/keyboardShortcuts";
 
 describe("keyboardShortcuts", () => {
   describe("isOmnisearchShortcut", () => {

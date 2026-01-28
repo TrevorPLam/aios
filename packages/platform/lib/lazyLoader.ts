@@ -47,8 +47,8 @@
  */
 
 import React, { ComponentType, LazyExoticComponent } from "react";
-import { ModuleType } from "@contracts/models/types";
-import { logger } from "@platform/lib/logger";
+import { ModuleType } from "@aios/contracts/models/types";
+import { logger } from "@aios/platform/lib/logger";
 
 /**
  * Module Loader Configuration
@@ -278,29 +278,29 @@ class LazyLoader {
     // This is a webpack limitation - can't use fully dynamic import paths
     switch (path) {
       case "CommandCenterScreen":
-        return import("@features/core/ui/CommandCenterScreen");
+        return import("@aios/features/core/ui/CommandCenterScreen");
       case "NotebookScreen":
-        return import("@features/notes/ui/NotebookScreen");
+        return import("@aios/features/notes/ui/NotebookScreen");
       case "PlannerScreen":
-        return import("@features/planner/ui/PlannerScreen");
+        return import("@aios/features/planner/ui/PlannerScreen");
       case "CalendarScreen":
-        return import("@features/calendar/ui/CalendarScreen");
+        return import("@aios/features/calendar/ui/CalendarScreen");
       case "EmailScreen":
-        return import("@features/email/ui/EmailScreen");
+        return import("@aios/features/email/ui/EmailScreen");
       case "MessagesScreen":
-        return import("@features/messaging/ui/MessagesScreen");
+        return import("@aios/features/messaging/ui/MessagesScreen");
       case "ListsScreen":
-        return import("@features/lists/ui/ListsScreen");
+        return import("@aios/features/lists/ui/ListsScreen");
       case "AlertsScreen":
-        return import("@features/alerts/ui/AlertsScreen");
+        return import("@aios/features/alerts/ui/AlertsScreen");
       case "ContactsScreen":
-        return import("@features/contacts/ui/ContactsScreen");
+        return import("@aios/features/contacts/ui/ContactsScreen");
       case "TranslatorScreen":
-        return import("@features/translator/ui/TranslatorScreen");
+        return import("@aios/features/translator/ui/TranslatorScreen");
       case "PhotosScreen":
-        return import("@features/photos/ui/PhotosScreen");
+        return import("@aios/features/photos/ui/PhotosScreen");
       case "BudgetScreen":
-        return import("@features/budget/ui/BudgetScreen");
+        return import("@aios/features/budget/ui/BudgetScreen");
       default:
         throw new Error(`Unknown module path: ${path}`);
     }

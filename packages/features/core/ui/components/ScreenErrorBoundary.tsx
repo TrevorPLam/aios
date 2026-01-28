@@ -12,8 +12,8 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "./ThemedText";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { errorReporting } from "@platform/lib/errorReporting";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { errorReporting } from "@aios/platform/lib/errorReporting";
 import { AppStackParamList } from "@apps/mobile/navigation/AppNavigator";
 
 interface Props {

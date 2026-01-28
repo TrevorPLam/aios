@@ -37,8 +37,8 @@ import {
   TaskPriority,
   HistoryExportSchedule,
   HistoryExportFrequency,
-} from "@contracts/models/types";
-import { generateId } from "@platform/lib/helpers";
+} from "@aios/contracts/models/types";
+import { generateId } from "@aios/platform/lib/helpers";
 import {
   isBirthdayInRange,
   sortByUpcomingBirthday,
@@ -47,7 +47,7 @@ import {
   validateNote,
   arePotentialDuplicates,
   matchesSearchQuery,
-} from "@features/contacts/domain/contactHelpers";
+} from "@aios/features/contacts/domain/contactHelpers";
 
 const KEYS = {
   RECOMMENDATIONS: "@aios/recommendations",

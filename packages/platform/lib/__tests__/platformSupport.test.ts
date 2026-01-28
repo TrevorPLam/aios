@@ -1,4 +1,4 @@
-import { isSidebarSwipeSupported } from "@platform/lib/platformSupport";
+import { isSidebarSwipeSupported } from "@aios/platform/lib/platformSupport";
 
 describe("isSidebarSwipeSupported", () => {
   it("returns true for native platforms", () => {

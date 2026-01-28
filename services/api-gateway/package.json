@@ -1,0 +1,17 @@
+{
+  "name": "@aios/api-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/src/index.js",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aios/platform": "workspace:*",
+    "@aios/contracts": "workspace:*"
+  }
+}

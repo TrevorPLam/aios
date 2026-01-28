@@ -13,7 +13,7 @@ import {
   Budget,
   BudgetCategory,
   BudgetLineItem,
-} from "@contracts/models/types";
+} from "@aios/contracts/models/types";
 
 describe("Database Budget Storage", () => {
   // Clear storage before and after each test to ensure isolation

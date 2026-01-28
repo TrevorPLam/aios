@@ -47,8 +47,8 @@
  * - Search must be fast (<500ms) or show progress
  */
 
-import { db } from "@platform/storage/database";
-import { ModuleType } from "@contracts/models/types";
+import { db } from "@aios/platform/storage/database";
+import { ModuleType } from "@aios/contracts/models/types";
 
 /**
  * Search Result Item

@@ -13,11 +13,11 @@
  */
 
 import { RecommendationEngine } from "../recommendationEngine";
-import { db } from "@platform/storage/database";
-import { Note, Task, CalendarEvent } from "@contracts/models/types";
+import { db } from "@aios/platform/storage/database";
+import { Note, Task, CalendarEvent } from "@aios/contracts/models/types";
 
 // Mock the database
-jest.mock("@platform/storage/database", () => ({
+jest.mock("@aios/platform/storage/database", () => ({
   db: {
     notes: {
       getAll: jest.fn(),

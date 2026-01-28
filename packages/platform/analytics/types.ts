@@ -5,7 +5,7 @@
  * Provides strong TypeScript typing for event instrumentation.
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 
 // ============================================================================
 // Module Registry Types

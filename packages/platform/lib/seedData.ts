@@ -22,8 +22,8 @@ import {
   IntegrationCategory,
   IntegrationStatus,
   SyncFrequency,
-} from "@contracts/models/types";
-import { generateId } from "@platform/lib/helpers";
+} from "@aios/contracts/models/types";
+import { generateId } from "@aios/platform/lib/helpers";
 
 function hoursFromNow(hours: number): string {
   const date = new Date();

@@ -1,1 +1,1 @@
-export { default } from "@features/messaging/ui/MessagesScreen";
+export { default } from "@aios/features/messaging/ui/MessagesScreen";

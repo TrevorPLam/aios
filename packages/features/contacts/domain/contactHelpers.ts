@@ -5,7 +5,7 @@
  * and improve maintainability.
  */
 
-import { Contact } from "@contracts/models/types";
+import { Contact } from "@aios/contracts/models/types";
 
 /**
  * Check if a contact's birthday falls within the specified date range

@@ -12,7 +12,7 @@
  * @module utils/analyticsLogger
  */
 
-import analytics from "@platform/analytics";
+import analytics from "@aios/platform/analytics";
 
 /**
  * Log button press event with structured data.

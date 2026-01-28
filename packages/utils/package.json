@@ -1,0 +1,21 @@
+{
+  "name": "@aios/utils",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./logging": "./logging/index.ts",
+    "./error-handling": "./error-handling/index.ts",
+    "./validation": "./validation/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@aios/api-sdk",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "generate": "openapi-generator-cli generate -i ../../docs/api/openapi.yaml -g typescript-axios -o ./src/generated",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

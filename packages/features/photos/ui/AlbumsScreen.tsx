@@ -1,1 +1,1 @@
-export { default } from "@features/photos/ui/AlbumsScreen";
+export { default } from "@aios/features/photos/ui/AlbumsScreen";

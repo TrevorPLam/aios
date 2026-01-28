@@ -46,10 +46,10 @@
  * - Prefetch must be cancellable
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import { lazyLoader } from "./lazyLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { logger } from "@platform/lib/logger";
+import { logger } from "@aios/platform/lib/logger";
 import { Platform } from "react-native";
 import { memoryManager } from "./memoryManager";
 

@@ -4,11 +4,11 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 
-import { ThemedText } from "@design-system/components/ThemedText";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Spacing, BorderRadius } from "@design-system/constants/theme";
-import { Integration } from "@contracts/models/types";
-import { db } from "@platform/storage/database";
+import { ThemedText } from "@aios/ui/components/ThemedText";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Spacing, BorderRadius } from "@aios/ui/constants/theme";
+import { Integration } from "@aios/contracts/models/types";
+import { db } from "@aios/platform/storage/database";
 
 type IntegrationDetailRouteParams = {
   IntegrationDetail: {

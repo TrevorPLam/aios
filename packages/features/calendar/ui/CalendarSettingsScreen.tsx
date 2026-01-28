@@ -1,1 +1,1 @@
-export { default } from "@features/calendar/ui/CalendarSettingsScreen";
+export { default } from "@aios/features/calendar/ui/CalendarSettingsScreen";

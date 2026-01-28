@@ -43,8 +43,8 @@
  * - Default to showing more rather than hiding critical info
  */
 
-import { ModuleType } from "@contracts/models/types";
-import { db } from "@platform/storage/database";
+import { ModuleType } from "@aios/contracts/models/types";
+import { db } from "@aios/platform/storage/database";
 import { eventBus, EVENT_TYPES } from "./eventBus";
 import { moduleRegistry } from "./moduleRegistry";
 

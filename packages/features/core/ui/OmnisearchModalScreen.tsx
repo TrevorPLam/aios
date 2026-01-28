@@ -1,1 +1,1 @@
-export { default } from "@features/core/ui/OmnisearchModalScreen";
+export { default } from "@aios/features/core/ui/OmnisearchModalScreen";

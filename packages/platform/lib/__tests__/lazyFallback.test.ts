@@ -1,4 +1,4 @@
-import { getLazyFallbackCopy } from "@platform/lib/lazyFallback";
+import { getLazyFallbackCopy } from "@aios/platform/lib/lazyFallback";
 
 describe("getLazyFallbackCopy", () => {
   it("returns tailored copy for a valid screen name", () => {

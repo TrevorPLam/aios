@@ -42,18 +42,18 @@ import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
-import { ThemedText } from "@design-system/components/ThemedText";
-import { ThemedView } from "@design-system/components/ThemedView";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Colors, Spacing, BorderRadius } from "@design-system/constants/theme";
+import { ThemedText } from "@aios/ui/components/ThemedText";
+import { ThemedView } from "@aios/ui/components/ThemedView";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Colors, Spacing, BorderRadius } from "@aios/ui/constants/theme";
 import {
   omnisearch,
   GroupedSearchResults,
   SearchResultGroup,
   SearchResultItem,
-} from "@features/core/domain/omnisearch";
-import { moduleRegistry } from "@features/core/domain/moduleRegistry";
-import { eventBus, EVENT_TYPES } from "@platform/lib/eventBus";
+} from "@aios/features/core/domain/omnisearch";
+import { moduleRegistry } from "@aios/features/core/domain/moduleRegistry";
+import { eventBus, EVENT_TYPES } from "@aios/platform/lib/eventBus";
 
 export interface OmnisearchScreenProps {
   onResultPress: (moduleId: string, routeName: string, itemId: string) => void;

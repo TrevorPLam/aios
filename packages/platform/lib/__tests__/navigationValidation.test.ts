@@ -1,7 +1,7 @@
 import {
   getNavigationErrorMessage,
   validateRouteRegistration,
-} from "@platform/lib/navigationValidation";
+} from "@aios/platform/lib/navigationValidation";
 
 describe("navigationValidation utilities", () => {
   describe("validateRouteRegistration", () => {

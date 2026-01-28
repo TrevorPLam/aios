@@ -1,1 +1,1 @@
-export { default } from "@features/lists/ui/ListEditorScreen";
+export { default } from "@aios/features/lists/ui/ListEditorScreen";

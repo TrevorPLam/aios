@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./packages/configs/typescript-config/base.json",
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@aios/ui": ["./packages/ui"],
+      "@aios/features": ["./packages/features"],
+      "@aios/platform": ["./packages/platform"],
+      "@aios/contracts": ["./packages/contracts"],
+      "@aios/utils": ["./packages/utils"],
+      "@aios/api-sdk": ["./packages/api-sdk"],
+      "@aios/mobile-shared": ["./apps/mobile-shared"]
+    }
+  },
+  "references": [
+    { "path": "./packages/ui" },
+    { "path": "./packages/features" },
+    { "path": "./packages/platform" },
+    { "path": "./packages/contracts" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/api-sdk" },
+    { "path": "./apps/web-app" },
+    { "path": "./apps/mobile-shared" },
+    { "path": "./apps/mobile-ios" },
+    { "path": "./apps/mobile-android" },
+    { "path": "./services/api-gateway" }
+  ],
+  "files": [],
+  "include": [],
+  "exclude": ["node_modules", "dist", "build", "**/*.test.ts", "**/*.test.tsx"]
+}

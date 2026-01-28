@@ -1,1 +1,1 @@
-export { default } from "@features/core/ui/CommandCenterScreen";
+export { default } from "@aios/features/core/ui/CommandCenterScreen";

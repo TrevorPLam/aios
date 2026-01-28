@@ -1,1 +1,1 @@
-export { default } from "@features/core/ui/ModuleGridScreen";
+export { default } from "@aios/features/core/ui/ModuleGridScreen";

@@ -20,7 +20,7 @@ jest.mock("expo-haptics", () => ({
   NotificationFeedbackType: { Success: "Success" },
 }));
 
-jest.mock("@design-system/hooks/useTheme", () => ({
+jest.mock("@aios/ui/hooks/useTheme", () => ({
   useTheme: () => ({
     theme: {
       text: "#FFFFFF",
@@ -38,7 +38,7 @@ jest.mock("@design-system/hooks/useTheme", () => ({
   }),
 }));
 
-jest.mock("@platform/storage/database", () => ({
+jest.mock("@aios/platform/storage/database", () => ({
   db: {
     events: {
       get: jest.fn(async () => ({
@@ -64,7 +64,7 @@ jest.mock("@platform/storage/database", () => ({
   },
 }));
 
-jest.mock("@platform/lib/helpers", () => ({
+jest.mock("@aios/platform/lib/helpers", () => ({
   generateId: () => "generated-id",
 }));
 

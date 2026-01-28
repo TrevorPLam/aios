@@ -5,7 +5,7 @@
  */
 
 import { memoryManager } from "../memoryManager";
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import { eventBus } from "../eventBus";
 
 describe("MemoryManager", () => {

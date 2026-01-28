@@ -1,1 +1,1 @@
-export { default } from "@features/recommendations/ui/RecommendationDetailScreen";
+export { default } from "@aios/features/recommendations/ui/RecommendationDetailScreen";

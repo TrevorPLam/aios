@@ -1,1 +1,1 @@
-export { default } from "@features/budget/ui/BudgetScreen";
+export { default } from "@aios/features/budget/ui/BudgetScreen";

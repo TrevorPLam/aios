@@ -5,7 +5,7 @@
  * Integrates with analytics to provide visibility into production issues.
  */
 
-import analytics from "@platform/analytics";
+import analytics from "@aios/platform/analytics";
 
 // Type declarations for React Native's ErrorUtils
 declare const ErrorUtils:

@@ -9,10 +9,10 @@ import {
   Modal,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ThemedView } from "@design-system/components/ThemedView";
-import { ThemedText } from "@design-system/components/ThemedText";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Spacing, BorderRadius, Fonts } from "@design-system/constants/theme";
+import { ThemedView } from "@aios/ui/components/ThemedView";
+import { ThemedText } from "@aios/ui/components/ThemedText";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Spacing, BorderRadius, Fonts } from "@aios/ui/constants/theme";
 
 export type ErrorFallbackProps = {
   error: Error;

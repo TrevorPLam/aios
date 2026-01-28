@@ -3,16 +3,16 @@ import { View, Pressable, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useTheme } from "@design-system/hooks/useTheme";
+import { useTheme } from "@aios/ui/hooks/useTheme";
 import { AppStackParamList } from "@apps/mobile/navigation/AppNavigator";
-import { Spacing, BorderRadius } from "@design-system/constants/theme";
-import { ThemedText } from "@design-system/components/ThemedText";
+import { Spacing, BorderRadius } from "@aios/ui/constants/theme";
+import { ThemedText } from "@aios/ui/components/ThemedText";
 import {
   formatAttentionBadgeLabel,
   getAttentionBadgeCount,
-} from "@features/core/domain/attentionBadge";
-import { attentionManager } from "@features/core/domain/attentionManager";
-import { logger } from "@platform/lib/logger";
+} from "@aios/features/core/domain/attentionBadge";
+import { attentionManager } from "@aios/features/core/domain/attentionManager";
+import { logger } from "@aios/platform/lib/logger";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList>;
 

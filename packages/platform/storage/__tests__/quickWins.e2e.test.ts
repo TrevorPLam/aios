@@ -10,7 +10,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Alert, CalendarEvent, Translation } from "@contracts/models/types";
+import { Alert, CalendarEvent, Translation } from "@aios/contracts/models/types";
 
 describe("Quick Win Data-Layer E2E", () => {
   beforeEach(async () => {

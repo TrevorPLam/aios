@@ -1,0 +1,16 @@
+{
+  "extends": "@aios/typescript-config/node.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@aios/platform": ["../../platform"],
+      "@aios/contracts": ["../../contracts"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

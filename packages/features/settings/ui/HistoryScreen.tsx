@@ -1,1 +1,1 @@
-export { default } from "@features/settings/ui/HistoryScreen";
+export { default } from "@aios/features/settings/ui/HistoryScreen";

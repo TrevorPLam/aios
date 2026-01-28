@@ -1,1 +1,1 @@
-export { default } from "@features/notes/ui/NotebookScreen";
+export { default } from "@aios/features/notes/ui/NotebookScreen";

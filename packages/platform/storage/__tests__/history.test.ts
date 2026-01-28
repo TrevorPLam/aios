@@ -12,7 +12,7 @@
  */
 
 import { db } from "../database";
-import { HistoryLogEntry } from "@contracts/models/types";
+import { HistoryLogEntry } from "@aios/contracts/models/types";
 
 describe("History Module", () => {
   beforeEach(async () => {

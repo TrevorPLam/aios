@@ -51,17 +51,17 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Spacing, BorderRadius, Shadows } from "@design-system/constants/theme";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Spacing, BorderRadius, Shadows } from "@aios/ui/constants/theme";
 import { AppStackParamList } from "@apps/mobile/navigation/AppNavigator";
 import { ThemedText } from "./ThemedText";
-import { db } from "@platform/storage/database";
-import { ModuleType } from "@contracts/models/types";
-import { useNavigationContext } from "@features/core/ui/context/NavigationContext";
+import { db } from "@aios/platform/storage/database";
+import { ModuleType } from "@aios/contracts/models/types";
+import { useNavigationContext } from "@aios/features/core/ui/context/NavigationContext";
 import {
   getNavigationErrorMessage,
   validateRouteRegistration,
-} from "@platform/lib/navigationValidation";
+} from "@aios/platform/lib/navigationValidation";
 
 export type ModuleItem = {
   id: ModuleType;

@@ -5,7 +5,7 @@
  * Centralizes module IDs, display names, routes, and categories.
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import { ModuleMetadata, ModuleCategory } from "./types";
 
 /**

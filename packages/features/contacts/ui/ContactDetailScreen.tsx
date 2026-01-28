@@ -1,1 +1,1 @@
-export { default } from "@features/contacts/ui/ContactDetailScreen";
+export { default } from "@aios/features/contacts/ui/ContactDetailScreen";

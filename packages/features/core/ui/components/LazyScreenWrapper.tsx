@@ -7,7 +7,7 @@
  */
 
 import React, { Suspense } from "react";
-import { LazyScreenFallback } from "@features/core/ui/components/LazyScreenFallback";
+import { LazyScreenFallback } from "@aios/features/core/ui/components/LazyScreenFallback";
 
 interface LazyScreenWrapperProps {
   screenName: string;

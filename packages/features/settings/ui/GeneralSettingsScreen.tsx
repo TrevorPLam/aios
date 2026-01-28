@@ -1,1 +1,1 @@
-export { default } from "@features/settings/ui/GeneralSettingsScreen";
+export { default } from "@aios/features/settings/ui/GeneralSettingsScreen";

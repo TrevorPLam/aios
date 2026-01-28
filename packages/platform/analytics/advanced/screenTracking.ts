@@ -15,7 +15,7 @@
  * Missing Features: See MISSING_FEATURES.md (Analytics section)
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 
 export interface ScreenView {
   screenName: string;

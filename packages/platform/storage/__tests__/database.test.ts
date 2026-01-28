@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Recommendation, Note, Task } from "@contracts/models/types";
+import { Recommendation, Note, Task } from "@aios/contracts/models/types";
 
 describe("Database Storage Layer", () => {
   beforeEach(async () => {

@@ -6,14 +6,14 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { useNavigationContainerRef } from "@react-navigation/native";
-import analytics from "@platform/analytics";
-import { ModuleType } from "@contracts/models/types";
-import { memoryManager } from "@platform/lib/memoryManager";
-import { prefetchEngine } from "@platform/lib/prefetchEngine";
+import analytics from "@aios/platform/analytics";
+import { ModuleType } from "@aios/contracts/models/types";
+import { memoryManager } from "@aios/platform/lib/memoryManager";
+import { prefetchEngine } from "@aios/platform/lib/prefetchEngine";
 import {
   resolveModuleFromRoute,
   runPerformanceHooks,
-} from "@platform/lib/navigationPerformance";
+} from "@aios/platform/lib/navigationPerformance";
 
 /**
  * Hook to track navigation events

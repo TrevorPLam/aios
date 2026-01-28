@@ -1,1 +1,1 @@
-export { default } from "@features/settings/ui/AIPreferencesScreen";
+export { default } from "@aios/features/settings/ui/AIPreferencesScreen";

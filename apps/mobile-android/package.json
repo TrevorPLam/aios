@@ -1,0 +1,24 @@
+{
+  "name": "@aios/mobile-android",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.js",
+  "scripts": {
+    "dev": "expo start --android",
+    "build": "expo build:android",
+    "build:dev": "eas build --platform android --profile development",
+    "build:prod": "eas build --platform android --profile production",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aios/mobile-shared": "workspace:*",
+    "@aios/ui": "workspace:*",
+    "@aios/features": "workspace:*",
+    "@aios/platform": "workspace:*",
+    "@aios/contracts": "workspace:*",
+    "expo": "~50.0.0",
+    "react": "18.2.0",
+    "react-native": "0.73.0"
+  }
+}

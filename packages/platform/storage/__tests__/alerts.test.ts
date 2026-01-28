@@ -9,7 +9,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Alert } from "@contracts/models/types";
+import { Alert } from "@aios/contracts/models/types";
 
 describe("Database Alerts Storage", () => {
   // Clear storage before and after each test to ensure isolation

@@ -1,1 +1,1 @@
-export { default } from "@features/alerts/ui/AlertsScreen";
+export { default } from "@aios/features/alerts/ui/AlertsScreen";

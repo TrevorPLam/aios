@@ -7,8 +7,8 @@
  */
 
 import React from "react";
-import { ScreenStateMessage } from "@design-system/components/ScreenStateMessage";
-import { getLazyFallbackCopy } from "@platform/lib/lazyFallback";
+import { ScreenStateMessage } from "@aios/ui/components/ScreenStateMessage";
+import { getLazyFallbackCopy } from "@aios/platform/lib/lazyFallback";
 
 interface LazyScreenFallbackProps {
   screenName: string;

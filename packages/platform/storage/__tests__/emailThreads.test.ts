@@ -8,8 +8,8 @@
  */
 
 import { db } from "../database";
-import { EmailThread, EmailMessage } from "@contracts/models/types";
-import { generateId } from "@platform/lib/helpers";
+import { EmailThread, EmailMessage } from "@aios/contracts/models/types";
+import { generateId } from "@aios/platform/lib/helpers";
 
 // Helper function to create mock email thread
 function createMockThread(overrides?: Partial<EmailThread>): EmailThread {

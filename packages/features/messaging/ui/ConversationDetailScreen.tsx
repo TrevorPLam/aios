@@ -1,1 +1,1 @@
-export { default } from "@features/messaging/ui/ConversationDetailScreen";
+export { default } from "@aios/features/messaging/ui/ConversationDetailScreen";

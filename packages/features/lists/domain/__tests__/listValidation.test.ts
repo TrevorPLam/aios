@@ -1,7 +1,7 @@
 import {
   LIST_VALIDATION_LIMITS,
   validateListDraft,
-} from "@features/lists/domain/listValidation";
+} from "@aios/features/lists/domain/listValidation";
 
 const createItem = (text: string) => ({
   id: "item-1",

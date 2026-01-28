@@ -13,8 +13,8 @@
  *
  * WHY: Ensures priority colors stay consistent across light/dark themes.
  */
-import { Colors } from "@design-system/constants/theme";
-import type { AttentionPriority } from "@features/core/domain/attentionManager";
+import { Colors } from "@aios/ui/constants/theme";
+import type { AttentionPriority } from "@aios/features/core/domain/attentionManager";
 
 type ThemeColors = {
   error?: string;

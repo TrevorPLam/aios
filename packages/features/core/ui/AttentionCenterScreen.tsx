@@ -1,1 +1,1 @@
-export { default } from "@features/core/ui/AttentionCenterScreen";
+export { default } from "@aios/features/core/ui/AttentionCenterScreen";

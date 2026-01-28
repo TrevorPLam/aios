@@ -8,7 +8,7 @@
  */
 
 import { db } from "../database";
-import { CalendarEvent } from "@contracts/models/types";
+import { CalendarEvent } from "@aios/contracts/models/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Mock AsyncStorage

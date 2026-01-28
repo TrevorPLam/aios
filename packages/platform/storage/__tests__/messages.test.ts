@@ -4,7 +4,7 @@ import {
   Message,
   Conversation,
   ConversationParticipant,
-} from "@contracts/models/types";
+} from "@aios/contracts/models/types";
 
 describe("Database Messages Storage", () => {
   beforeEach(async () => {

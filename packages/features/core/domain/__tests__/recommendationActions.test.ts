@@ -1,7 +1,7 @@
 import {
   formatRecommendationRefreshMessage,
   refreshRecommendationsWithFeedback,
-} from "@features/core/domain/recommendationActions";
+} from "@aios/features/core/domain/recommendationActions";
 
 describe("formatRecommendationRefreshMessage", () => {
   it("returns empty-state messaging when no recommendations are added", () => {

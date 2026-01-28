@@ -14,7 +14,7 @@
  *
  * WHY: Centralizes badge math so every header stays consistent and resilient to bad data.
  */
-import { logger } from "@platform/lib/logger";
+import { logger } from "@aios/platform/lib/logger";
 import { AttentionPriority } from "./attentionManager";
 
 export const MAX_ATTENTION_BADGE_COUNT = 99;

@@ -27,12 +27,12 @@ import { Feather } from "@expo/vector-icons";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
-import { ThemedText } from "@design-system/components/ThemedText";
-import { ThemedView } from "@design-system/components/ThemedView";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Spacing, BorderRadius, Shadows } from "@design-system/constants/theme";
-import { db } from "@platform/storage/database";
-import { AlertStatistics, AlertHistoryEntry } from "@contracts/models/types";
+import { ThemedText } from "@aios/ui/components/ThemedText";
+import { ThemedView } from "@aios/ui/components/ThemedView";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Spacing, BorderRadius, Shadows } from "@aios/ui/constants/theme";
+import { db } from "@aios/platform/storage/database";
+import { AlertStatistics, AlertHistoryEntry } from "@aios/contracts/models/types";
 
 /** Number of recent history entries to analyze for pattern detection */
 const RECENT_HISTORY_COUNT = 3;

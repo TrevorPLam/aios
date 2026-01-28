@@ -1,5 +1,5 @@
-import { ModuleType } from "@contracts/models/types";
-import { logger } from "@platform/lib/logger";
+import { ModuleType } from "@aios/contracts/models/types";
+import { logger } from "@aios/platform/lib/logger";
 
 // Central route-to-module mapping keeps analytics + performance tooling in sync.
 export const ROUTE_TO_MODULE: Record<string, ModuleType> = {

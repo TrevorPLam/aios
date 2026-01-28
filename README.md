@@ -4,16 +4,39 @@ Monorepo containing web, mobile, and API applications with shared packages.
 
 ## Structure
 
-- `apps/web/` - Web application
-- `apps/mobile/` - React Native mobile app
-- `apps/api/` - API server
-- `packages/design-system/` - Shared UI components and theme
+### Core Layer (`packages/`)
+- `packages/ui/` - Design system components (React/Vue/Svelte)
+- `packages/utils/` - Shared utilities (logging, error-handling, validation)
+- `packages/api-sdk/` - Generated API clients and manual extensions
+- `packages/configs/` - Shared configurations (ESLint, TypeScript, Jest)
 - `packages/features/` - Feature modules (DDD structure)
 - `packages/platform/` - Platform utilities (analytics, storage, logging)
 - `packages/contracts/` - Shared types and schemas
-- `infrastructure/` - Infrastructure as code
-- `tools/` - Development tools
-- `docs/` - Documentation
+
+### Applications (`apps/`)
+- `apps/web-app/` - Main web application (Next.js)
+- `apps/mobile-shared/` - Shared mobile code (React Native/Expo)
+- `apps/mobile-ios/` - iOS-specific mobile application
+- `apps/mobile-android/` - Android-specific mobile application
+
+### Services (`services/`)
+- `services/api-gateway/` - API gateway with routing and middleware
+
+### Infrastructure (`infrastructure/`)
+- `infrastructure/k8s/` - Kubernetes manifests with Kustomize
+- `infrastructure/terraform/` - Cloud infrastructure modules
+- `infrastructure/docker/` - Docker configurations
+- `infrastructure/scripts/` - Deployment scripts
+
+### Tools (`tools/`)
+- `tools/codegen/` - Code generation scripts
+- `tools/migration-assistant/` - DB migration helpers
+
+### Documentation (`docs/`)
+- `docs/architecture/` - Architecture documentation
+- `docs/api/` - OpenAPI specs
+- `docs/decisions/` - Architecture Decision Records (ADRs)
+- `docs/onboarding/` - Getting started guides
 
 ## Getting Started
 
@@ -27,3 +50,4 @@ pnpm dev
 # Build all packages
 pnpm build
 ```
+

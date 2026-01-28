@@ -1,0 +1,23 @@
+{
+  "extends": "@aios/typescript-config/react.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "jsx": "react-native",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@aios/ui": ["../../packages/ui"],
+      "@aios/features": ["../../packages/features"],
+      "@aios/platform": ["../../packages/platform"],
+      "@aios/contracts": ["../../packages/contracts"],
+      "@aios/utils": ["../../packages/utils"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+}

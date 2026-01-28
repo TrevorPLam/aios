@@ -45,12 +45,12 @@
  * @version 1.0.0
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import { eventBus, EVENT_TYPES } from "./eventBus";
 import { contextEngine } from "./contextEngine";
 import { saveToStorage, loadFromStorage } from "./storage";
-import { db } from "@platform/storage/database";
-import { logger } from "@platform/lib/logger";
+import { db } from "@aios/platform/storage/database";
+import { logger } from "@aios/platform/lib/logger";
 
 /**
  * Attention priority levels

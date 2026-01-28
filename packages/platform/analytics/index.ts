@@ -5,7 +5,7 @@
  * This is the main entry point for instrumentation throughout the app.
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import { AnalyticsClient } from "./client";
 import {
   EventName,

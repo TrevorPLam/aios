@@ -14,7 +14,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Task, TaskStatus, TaskPriority } from "@contracts/models/types";
+import { Task, TaskStatus, TaskPriority } from "@aios/contracts/models/types";
 
 describe("Task Database Operations", () => {
   // Sample task data for testing

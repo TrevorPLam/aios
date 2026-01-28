@@ -15,7 +15,7 @@
  *
  * Usage Examples:
  * ```typescript
- * import { logger } from '@platform/lib/logger';
+ * import { logger } from '@aios/platform/lib/logger';
  *
  * // Basic logging
  * logger.info('MemoryManager', 'Initialized with strategy', { strategy: 'balanced' });

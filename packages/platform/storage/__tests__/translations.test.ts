@@ -9,7 +9,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Translation, SavedPhrase } from "@contracts/models/types";
+import { Translation, SavedPhrase } from "@aios/contracts/models/types";
 
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage");

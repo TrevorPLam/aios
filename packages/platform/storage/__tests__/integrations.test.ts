@@ -3,7 +3,7 @@ import {
   Integration,
   IntegrationCategory,
   IntegrationStatus,
-} from "@contracts/models/types";
+} from "@aios/contracts/models/types";
 
 describe("Integrations Storage", () => {
   beforeEach(async () => {

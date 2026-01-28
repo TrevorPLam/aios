@@ -46,9 +46,9 @@ import {
   ConfidenceLevel,
   TaskPriority,
   ModuleType,
-} from "@contracts/models/types";
-import { generateId } from "@platform/lib/helpers";
-import { db } from "@platform/storage/database";
+} from "@aios/contracts/models/types";
+import { generateId } from "@aios/platform/lib/helpers";
+import { db } from "@aios/platform/storage/database";
 
 /**
  * Recommendation rule interface

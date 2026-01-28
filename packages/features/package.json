@@ -9,7 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@aios/design-system": "workspace:*",
+    "@aios/ui": "workspace:*",
     "@aios/platform": "workspace:*",
     "@aios/contracts": "workspace:*"
   }

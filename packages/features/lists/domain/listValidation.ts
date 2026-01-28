@@ -1,4 +1,4 @@
-import { ListItem } from "@contracts/models/types";
+import { ListItem } from "@aios/contracts/models/types";
 
 export type ListDraft = {
   title: string;

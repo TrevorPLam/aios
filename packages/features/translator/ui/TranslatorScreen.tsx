@@ -1,1 +1,1 @@
-export { default } from "@features/translator/ui/TranslatorScreen";
+export { default } from "@aios/features/translator/ui/TranslatorScreen";

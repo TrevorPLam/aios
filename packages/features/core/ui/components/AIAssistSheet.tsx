@@ -6,12 +6,12 @@ import { Feather } from "@expo/vector-icons";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
-import { ThemedText } from "@design-system/components/ThemedText";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Spacing, BorderRadius } from "@design-system/constants/theme";
-import { ModuleType } from "@contracts/models/types";
-import analytics from "@platform/analytics";
-import { getOverlayColor } from "@design-system/utils/themeColors";
+import { ThemedText } from "@aios/ui/components/ThemedText";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Spacing, BorderRadius } from "@aios/ui/constants/theme";
+import { ModuleType } from "@aios/contracts/models/types";
+import analytics from "@aios/platform/analytics";
+import { getOverlayColor } from "@aios/ui/utils/themeColors";
 
 interface AIAction {
   id: string;

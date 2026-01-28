@@ -1,10 +1,10 @@
 import {
   resolveModuleFromRoute,
   runPerformanceHooks,
-} from "@platform/lib/navigationPerformance";
-import { logger } from "@platform/lib/logger";
+} from "@aios/platform/lib/navigationPerformance";
+import { logger } from "@aios/platform/lib/logger";
 
-jest.mock("@platform/lib/logger", () => ({
+jest.mock("@aios/platform/lib/logger", () => ({
   logger: {
     debug: jest.fn(),
     warn: jest.fn(),

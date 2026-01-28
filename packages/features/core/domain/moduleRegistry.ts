@@ -44,7 +44,7 @@
  * - Icon names must match Feather icon set
  */
 
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import type { AppStackParamList } from "@apps/mobile/navigation/AppNavigator";
 
 /**

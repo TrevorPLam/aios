@@ -47,9 +47,9 @@
  */
 
 import { Platform } from "react-native";
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import { eventBus, EVENT_TYPES } from "./eventBus";
-import { logger } from "@platform/lib/logger";
+import { logger } from "@aios/platform/lib/logger";
 
 /**
  * Memory Usage Info

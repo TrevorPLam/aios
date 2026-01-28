@@ -1,1 +1,1 @@
-export { default } from "@features/email/ui/EmailScreen";
+export { default } from "@aios/features/email/ui/EmailScreen";

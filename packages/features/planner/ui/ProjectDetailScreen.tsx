@@ -1,1 +1,1 @@
-export { default } from "@features/planner/ui/ProjectDetailScreen";
+export { default } from "@aios/features/planner/ui/ProjectDetailScreen";

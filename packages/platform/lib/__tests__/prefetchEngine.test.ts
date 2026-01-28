@@ -5,7 +5,7 @@
  */
 
 import { prefetchEngine } from "../prefetchEngine";
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { memoryManager } from "../memoryManager";
 

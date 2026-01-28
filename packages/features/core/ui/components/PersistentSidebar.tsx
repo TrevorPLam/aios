@@ -50,25 +50,25 @@ import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 import { ThemedText } from "./ThemedText";
-import { useTheme } from "@design-system/hooks/useTheme";
-import { Spacing, BorderRadius } from "@design-system/constants/theme";
+import { useTheme } from "@aios/ui/hooks/useTheme";
+import { Spacing, BorderRadius } from "@aios/ui/constants/theme";
 import {
   Animation,
   Opacity,
   ComponentSize,
   Sidebar,
   ZIndex,
-} from "@design-system/constants/uiConstants";
+} from "@aios/ui/constants/uiConstants";
 import {
   moduleRegistry,
   ModuleDefinition,
-} from "@features/core/domain/moduleRegistry";
+} from "@aios/features/core/domain/moduleRegistry";
 import {
   contextEngine,
   ContextZone,
-} from "@features/core/domain/contextEngine";
-import { eventBus, EVENT_TYPES } from "@platform/lib/eventBus";
-import { isSidebarSwipeSupported } from "@platform/lib/platformSupport";
+} from "@aios/features/core/domain/contextEngine";
+import { eventBus, EVENT_TYPES } from "@aios/platform/lib/eventBus";
+import { isSidebarSwipeSupported } from "@aios/platform/lib/platformSupport";
 
 const SIDEBAR_WIDTH = Sidebar.width;
 const COLLAPSED_WIDTH = Sidebar.collapsedWidth;

@@ -57,7 +57,7 @@
  */
 
 // Import types from models
-import type { Note, Task, CalendarEvent } from "@contracts/models/types";
+import type { Note, Task, CalendarEvent } from "@aios/contracts/models/types";
 
 export enum EVENT_TYPES {
   // Calendar Events

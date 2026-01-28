@@ -5,7 +5,7 @@
  */
 
 import { lazyLoader } from "../lazyLoader";
-import { ModuleType } from "@contracts/models/types";
+import { ModuleType } from "@aios/contracts/models/types";
 
 // Mock React.lazy
 jest.mock("react", () => ({

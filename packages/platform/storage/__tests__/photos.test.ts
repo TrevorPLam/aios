@@ -14,7 +14,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Photo, PhotoAlbum } from "@contracts/models/types";
+import { Photo, PhotoAlbum } from "@aios/contracts/models/types";
 
 describe("Database Photos Storage", () => {
   beforeEach(async () => {

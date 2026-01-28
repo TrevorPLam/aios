@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../database";
-import { Note } from "@contracts/models/types";
+import { Note } from "@aios/contracts/models/types";
 
 describe("Database Notes Storage", () => {
   beforeEach(async () => {
