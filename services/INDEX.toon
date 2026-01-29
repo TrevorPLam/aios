@@ -1,0 +1,22 @@
+# INDEX.toon
+
+meta{root, generated_at}:
+services, 2026-01-29T08:08:01Z
+
+entries[16]{path, type}:
+api-gateway, dir
+api-gateway/.eslintrc.js, file
+api-gateway/package.json, file
+api-gateway/src, dir
+api-gateway/src/index.ts, file
+api-gateway/src/middleware, dir
+api-gateway/src/middleware/auth.ts, file
+api-gateway/src/middleware/errorHandler.ts, file
+api-gateway/src/middleware/rateLimiter.ts, file
+api-gateway/src/middleware/validation.ts, file
+api-gateway/src/routes, dir
+api-gateway/src/routes/index.ts, file
+api-gateway/src/storage.ts, file
+api-gateway/src/utils, dir
+api-gateway/src/utils/logger.ts, file
+api-gateway/tsconfig.json, file
