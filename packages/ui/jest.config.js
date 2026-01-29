@@ -3,7 +3,7 @@
  * Uses React preset for React component tests
  */
 const path = require("path");
-const baseConfig = require(path.join(__dirname, "../configs/jest-config/react"));
+const baseConfig = require(path.join(__dirname, "../config/jest-config/react"));
 
 module.exports = {
   ...baseConfig,

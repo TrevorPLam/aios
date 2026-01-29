@@ -4,7 +4,7 @@
  */
 const path = require("path");
 const baseConfig = require(
-  path.join(__dirname, "../configs/jest-config/react-native"),
+  path.join(__dirname, "../config/jest-config/react-native"),
 );
 
 module.exports = {

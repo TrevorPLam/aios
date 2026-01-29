@@ -3,7 +3,7 @@
  * Uses React Native preset for feature tests
  */
 const path = require("path");
-const baseConfig = require(path.join(__dirname, "../configs/jest-config/react-native"));
+const baseConfig = require(path.join(__dirname, "../config/jest-config/react-native"));
 
 module.exports = {
   ...baseConfig,
