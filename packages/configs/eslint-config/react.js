@@ -1,6 +1,6 @@
 module.exports = {
   extends: ["./index.js"],
-  plugins: ["react", "react-hooks", "react-native"],
+  plugins: ["react", "react-hooks", "react-native", "prettier"],
   settings: {
     react: {
       version: "detect",
@@ -15,5 +15,6 @@ module.exports = {
     "react-native/split-platform-components": "warn",
     "react-native/no-inline-styles": "off",
     "react-native/no-color-literals": "off",
+    "prettier/prettier": "warn",
   },
 };

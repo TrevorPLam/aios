@@ -159,7 +159,7 @@ export function useNetworkStatus(): UseNetworkStatusResult {
         console.warn(
           "[useNetworkStatus] @react-native-community/netinfo not found. " +
             "Network status will assume online. " +
-            "Install the package to enable network detection."
+            "Install the package to enable network detection.",
         );
 
         // Fallback: assume online
@@ -220,7 +220,7 @@ export function useNetworkStatus(): UseNetworkStatusResult {
  * ```
  */
 export function isGoodConnectionForDownload(
-  networkState: NetworkState | null
+  networkState: NetworkState | null,
 ): boolean {
   if (!networkState || !networkState.isConnected) {
     return false;

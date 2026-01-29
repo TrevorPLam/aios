@@ -5,13 +5,14 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
-  plugins: ["@typescript-eslint", "import"],
+  plugins: ["@typescript-eslint", "import", "prettier"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "prettier", // Must be last to override other configs
   ],
   rules: {
     "@typescript-eslint/no-unused-vars": [
@@ -43,6 +44,7 @@ module.exports = {
       },
     ],
     "import/no-unresolved": "off", // TypeScript handles this
+    "prettier/prettier": "warn", // Show Prettier issues as warnings
   },
   settings: {
     "import/resolver": {

@@ -1,0 +1,17 @@
+{
+  "name": "@aios/jest-config",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared Jest configuration for AIOS monorepo",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./base": "./base.js",
+    "./react": "./react.js",
+    "./react-native": "./react-native.js",
+    "./node": "./node.js"
+  },
+  "peerDependencies": {
+    "jest": "^29.0.0"
+  }
+}

@@ -34,7 +34,7 @@ export interface UseDataLoaderOptions {
    * @default true
    */
   immediate?: boolean;
-  
+
   /**
    * Dependencies array that triggers a reload when changed
    */
@@ -46,22 +46,22 @@ export interface UseDataLoaderResult<T> {
    * The loaded data (null if loading or error)
    */
   data: T | null;
-  
+
   /**
    * Whether data is currently being loaded
    */
   loading: boolean;
-  
+
   /**
    * Error that occurred during loading (null if no error)
    */
   error: Error | null;
-  
+
   /**
    * Function to retry loading after an error
    */
   retry: () => Promise<void>;
-  
+
   /**
    * Function to manually trigger a reload
    */
@@ -105,33 +105,33 @@ export interface UseDataLoaderResult<T> {
  */
 export function useDataLoader<T>(
   loader: () => Promise<T>,
-  options: UseDataLoaderOptions = {}
+  options: UseDataLoaderOptions = {},
 ): UseDataLoaderResult<T> {
   const { immediate = true, deps = [] } = options;
-  
+
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(immediate);
   const [error, setError] = useState<Error | null>(null);
-  
+
   // Track if component is mounted to avoid state updates after unmount
   const isMountedRef = useRef<boolean>(true);
-  
+
   /**
    * Load data and update state
-   * 
+   *
    * Note: The loader function should ideally be memoized with useCallback
    * for optimal performance, as it will be re-created on every render if
    * passed as an inline arrow function.
    */
   const load = useCallback(async () => {
     if (!isMountedRef.current) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const result = await loader();
-      
+
       if (isMountedRef.current) {
         setData(result);
       }
@@ -145,24 +145,24 @@ export function useDataLoader<T>(
       }
     }
   }, [loader]);
-  
+
   /**
    * Retry after error
    */
   const retry = useCallback(async () => {
     await load();
   }, [load]);
-  
+
   /**
    * Manually reload data
    */
   const reload = useCallback(async () => {
     await load();
   }, [load]);
-  
+
   /**
    * Load data on mount or when deps change
-   * 
+   *
    * Note: The deps array is intentionally spread here to support dynamic dependencies.
    * This is safe because deps is provided by the caller and should be stable.
    * If loader changes frequently, consider memoizing it with useCallback.
@@ -171,13 +171,13 @@ export function useDataLoader<T>(
     if (immediate) {
       load();
     }
-    
+
     // Cleanup on unmount
     return () => {
       isMountedRef.current = false;
     };
   }, [immediate, load, ...deps]); // Include load dependency for completeness
-  
+
   return {
     data,
     loading,
@@ -214,7 +214,7 @@ export function useDataLoader<T>(
  */
 export function useDataLoaderWithDeps<T>(
   loader: () => Promise<T>,
-  deps: React.DependencyList
+  deps: React.DependencyList,
 ): UseDataLoaderResult<T> {
   return useDataLoader(loader, { deps });
 }

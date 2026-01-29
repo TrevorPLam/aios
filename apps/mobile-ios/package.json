@@ -9,7 +9,9 @@
     "build:dev": "eas build --platform ios --profile development",
     "build:prod": "eas build --platform ios --profile production",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "dependencies": {
     "@aios/mobile-shared": "workspace:*",

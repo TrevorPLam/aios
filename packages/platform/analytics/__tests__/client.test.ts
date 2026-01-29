@@ -60,7 +60,6 @@ describe("AnalyticsClient", () => {
     stats = await client.getQueueStats();
     expect(stats.size).toBe(1);
     expect(stats.retryDistribution).toHaveProperty("1", 1);
-
   });
 
   it("removes queued events after a successful flush", async () => {
@@ -79,6 +78,5 @@ describe("AnalyticsClient", () => {
     const stats = await client.getQueueStats();
     expect(stats.size).toBe(0);
     expect(sendMock).toHaveBeenCalledTimes(1);
-
   });
 });

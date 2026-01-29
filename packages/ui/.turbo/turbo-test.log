@@ -1,0 +1,29 @@
+
+> @aios/ui@1.0.0 test C:\dev\aios\packages\ui
+> jest
+
+Error: Cannot find module '../../configs/jest-config/react'
+Require stack:
+- C:\dev\aios\packages\ui\jest.config.js
+- C:\dev\aios\node_modules\.pnpm\jest-util@29.7.0\node_modules\jest-util\build\requireOrImportModule.js
+- C:\dev\aios\node_modules\.pnpm\jest-util@29.7.0\node_modules\jest-util\build\index.js
+- C:\dev\aios\node_modules\.pnpm\@jest+core@29.7.0\node_modules\@jest\core\build\FailedTestsInteractiveMode.js
+- C:\dev\aios\node_modules\.pnpm\@jest+core@29.7.0\node_modules\@jest\core\build\plugins\FailedTestsInteractive.js
+- C:\dev\aios\node_modules\.pnpm\@jest+core@29.7.0\node_modules\@jest\core\build\watch.js
+- C:\dev\aios\node_modules\.pnpm\@jest+core@29.7.0\node_modules\@jest\core\build\cli\index.js
+- C:\dev\aios\node_modules\.pnpm\@jest+core@29.7.0\node_modules\@jest\core\build\index.js
+- C:\dev\aios\node_modules\.pnpm\jest-cli@29.7.0_@types+node@25.1.0\node_modules\jest-cli\build\run.js
+- C:\dev\aios\node_modules\.pnpm\jest-cli@29.7.0_@types+node@25.1.0\node_modules\jest-cli\build\index.js
+- C:\dev\aios\node_modules\.pnpm\jest-cli@29.7.0_@types+node@25.1.0\node_modules\jest-cli\bin\jest.js
+- C:\dev\aios\node_modules\.pnpm\jest@29.7.0_@types+node@25.1.0\node_modules\jest\bin\jest.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1421:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1059:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1064:22)
+    at Module._load (node:internal/modules/cjs/loader:1227:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1504:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (C:\dev\aios\packages\ui\jest.config.js:5:20)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+ ELIFECYCLE  Test failed. See above for more details.
