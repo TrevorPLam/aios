@@ -7,6 +7,7 @@
  * - validation: Data validation utilities
  */
 
-export * from './logging';
-export * from './error-handling';
-export * from './validation';
+export * from "./logging";
+
+// Backward-compatible re-export from platform.
+export { errorReporting } from "@aios/platform/lib/errorReporting";

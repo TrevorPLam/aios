@@ -1,0 +1,8 @@
+# Ignore known example tokens committed in historical documentation.
+# These are placeholders (not real secrets) but can trip default gitleaks rules.
+
+8e943a5c3de4da262967c189fcc5680858aed637:docs/archive/project-management/TASK_1.2_COMPLETION_SUMMARY.md:curl-auth-header:144
+8e943a5c3de4da262967c189fcc5680858aed637:docs/archive/project-management/TASK_1.2_COMPLETION_SUMMARY.md:curl-auth-header:152
+8e943a5c3de4da262967c189fcc5680858aed637:docs/archive/project-management/TASK_1.2_COMPLETION_SUMMARY.md:generic-api-key:134
+8e943a5c3de4da262967c189fcc5680858aed637:docs/security/secrets_handling.md:generic-api-key:41
+8e943a5c3de4da262967c189fcc5680858aed637:docs/security/agent-threat-model.md:generic-api-key:134

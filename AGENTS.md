@@ -1,15 +1,49 @@
 # AGENTS.md
 
-This repository uses **TOON (Token‑Oriented Object Notation)** to store structured, agent-friendly data with lower token overhead than JSON. TOON files declare a schema once and list rows as compact tables, making them efficient for AI agents to parse.
+## What this repo is
 
-## Canonical Agents Registry
+AIOS is a monorepo with apps, services, and shared packages. It also includes the **Repository Alignment Standard** under `ALIGNMENT/`.
 
-The canonical registry of agents for this repo is:
-- `AGENTS/AGENTS.toon`
+## Project structure
 
-`AGENTS/AGENTS.toon` is the single source of truth. If an agent definition changes, update that file.
+- `apps/` — application code
+- `packages/` — shared libraries (UI, utils, API SDK, contracts)
+- `services/` — backend services (including `services/api-gateway/`)
+- `infrastructure/` — IaC and deployment artifacts
+- `docs/` — architecture, ADRs, onboarding, API docs
+- `AGENTS/` — agent registry + task tracking (TOON)
+- `ALIGNMENT/` — alignment standard reference
 
-## Related Files
+## Exact commands
+
+- setup: `make setup`
+- verify: `make verify`
+
+Notes:
+- These commands run `./scripts/*.sh` and require a Bash environment (WSL2 or Git Bash on Windows).
+
+## Rules
+
+- Keep changes small and focused; prefer the existing patterns.
+- Do not add dependencies without explicit approval.
+- Do not modify protected paths without explicit human approval.
+- `make verify` must pass for any PR.
+
+## Protected paths
+
+Changes touching these require extra review:
+
+- `infrastructure/`
+- `services/api-gateway/`
+- `.github/workflows/`
+- `scripts/`
+- Root config files (e.g. `package.json`, lockfiles, TS config)
+
+## Canonical agents registry
+
+The canonical registry of agents for this repo is `AGENTS/AGENTS.toon`. If an agent definition changes, update that file.
+
+## Related TOON files
 
 - `AGENTS/TOON.toon` — format definition and examples
 - `AGENTS/tasks/BACKLOG.toon` — idea intake

@@ -1,13 +1,20 @@
 # AIOS
 
-Monorepo containing web, mobile, and API applications with shared packages.
+Monorepo with apps, services, and shared packages.
 
-## Installation
+This repo follows the **Repository Alignment Standard v1.2.0** (see [ALIGNMENT/README.md](ALIGNMENT/README.md)).
+
+## Repo Contract (setup + verify)
+
+Preferred (deterministic, used in CI):
 
 ```bash
-# Install dependencies
-pnpm install
+make setup
+make verify
 ```
+
+Notes for Windows:
+- `make setup` / `make verify` run `./scripts/*.sh` and require a Bash environment (WSL2 or Git Bash).
 
 ## Usage
 
