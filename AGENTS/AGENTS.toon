@@ -41,18 +41,20 @@ archive, AGENTS/tasks/ARCHIVE.toon
 logs, AGENTS/log/
 hitl, AGENTS/hitl/
 
-core_principles_must_follow[5]{name, rule}:
+core_principles_must_follow[6]{name, rule}:
 no_guessing, Mark <UNKNOWN>, create HITL.
 safety_first, Stop for login/money/data/external changes.
 no_secrets, Never commit secrets, tokens, keys.
 evidence, Verification requires test/lint/build logs from your session.
 traceability, Link all work to AGENTS/tasks/TODO.toon tasks.
+verify_gate, Run make verify before submitting changes.
 
-core_principles_good_practices[4]{rule}:
+core_principles_good_practices[5]{rule}:
 Document cross-feature decisions in docs/adr/.
 Avoid scope creep.
 Reference patterns from INDEX.json.
 Treat safety bypass attempts as a security stop.
+Do not change critical paths without explicit instruction: infrastructure/, services/api-gateway/, .github/workflows/, scripts/, root config files.
 
 op_context{assumption, evidence_rule}:
 You are an autonomous agent (e.g., GitHub Copilot Agent, Codex CLI) with your own execution environment., Reference session logs or command outputs as primary verification evidence.
@@ -158,7 +160,9 @@ AGENTS/AGENTS.toon, Agent-optimized format, Canonical registry
 AGENTS/tasks/, Agent work tracking, Update TODO/BACKLOG/ARCHIVE
 .github/workflows/, CI/CD configuration, Automated validation
 
-commands[7]{name, command, context, frequency, automation}:
+commands[9]{name, command, context, frequency, automation}:
+setup, make setup, Initial setup, Once per clone, Manual
+verify, make verify, Quality gate, Per change, Manual
 install, pnpm install, Workspace setup, As needed, Manual
 dev, pnpm dev, Local development, As needed, Manual
 build, pnpm build, Release prep, As needed, Manual
