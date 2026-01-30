@@ -35,6 +35,10 @@ pnpm lint
 pnpm type-check
 ```
 
+## Environment
+
+Copy `.env.example` to `.env` and fill required values before running services. The API gateway requires `JWT_SECRET` for signing JWTs.
+
 ## Project Structure
 
 ### Core Layer (`packages/`)
@@ -78,4 +82,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to th
 ## License
 
 Proprietary - See [LICENSE](LICENSE) for details.
-
