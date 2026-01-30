@@ -1,13 +1,23 @@
 # AI Work Backlog (TOON Template)
 
 meta{status, owner, last_updated}:
-[Draft|Active], [Team or Individual], [YYYY-MM-DD]
+Active, Team, 2026-01-30
 
 intake_rules[3]{rule}:
 Only uncommitted ideas and future work
 Must have clear problem statement
 Must include expected outcome
 
-backlog[1]{id, title, priority, owner, requested_by, target_window, problem_statement, proposed_outcome, dependencies, notes}:
-[BACKLOG-001], [Title], [P0|P1|P2], [Name/Team], [Name], [Date or Quarter], [What problem are we solving?], [What does success look like?], [Links or IDs], [Optional]
+backlog[11]{id, title, priority, owner, requested_by, target_window, problem_statement, proposed_outcome, dependencies, notes}:
+BACKLOG-05, Add API gateway tests, P0, AGENT, REPOSITORY_STATE_REPORT, SHORT-TERM 1 month, Gateway has no tests; auth and routes untested., Jest in api-gateway; unit tests for auth errorHandler validation; integration tests for auth and one CRUD., TASK-05 in REPORT_TASKS.toon, See .agents/tasks/REPORT_TASKS.toon task TASK-05 and subtasks; assignee AGENT/USER per subtask.
+BACKLOG-06, Run test:coverage in CI and enforce gate, P1, AGENT, REPOSITORY_STATE_REPORT, SHORT-TERM 1 month, Coverage not visible or enforced in CI., CI runs test:coverage; publish or fail below threshold., TASK-06 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-07, Extract message helpers to remove duplication, P1, AGENT, REPOSITORY_STATE_REPORT, SHORT-TERM 1 month, buildMessagePreview and buildMessageSearchIndex duplicated in database.ts and api-gateway storage.ts., Single shared module; both callers refactored., TASK-07 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-08, Split routes into domain files, P1, AGENT, REPOSITORY_STATE_REPORT, SHORT-TERM 1 month, routes/index.ts is ~786 lines; single file for all routes increases coupling and merge risk., Domain route files (auth notes tasks etc.); routes/index.ts composes them., TASK-08 in REPORT_TASKS.toon, Protected path; USER approval for api-gateway changes.
+BACKLOG-09, Break up database.ts, P0, AGENT, REPOSITORY_STATE_REPORT, MEDIUM-TERM 1-3 months, database.ts is ~5748 lines; refactor and merge risk., Per-domain storage modules; thin database.ts re-exports db; tests for new modules., TASK-09 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks; USER review for large refactor.
+BACKLOG-10, Harden security in CI, P1, AGENT, REPOSITORY_STATE_REPORT, MEDIUM-TERM 1-3 months, pnpm audit continues on error; no security headers in gateway., Audit fail on critical/high; security headers middleware; SECURITY.md updated., TASK-10 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-11, Align README with repo, P2, AGENT, REPOSITORY_STATE_REPORT, MEDIUM-TERM 1-3 months, README references missing infrastructure/ docs/ tools/., README matches repo; no broken references., TASK-11 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-12, Introduce pagination/caps in client storage, P2, AGENT, REPOSITORY_STATE_REPORT, LONG-TERM 3-6 months, database.ts does getAll then filter; no pagination for large datasets., Optional limit/offset or cursor; document max sizes; lazy loading considered., TASK-12 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-13, Track hotspots and tech debt, P2, AGENT, REPOSITORY_STATE_REPORT, LONG-TERM 3-6 months, No automated churn or hotspot metrics., Script identifies high-churn high-complexity files; prioritization; USER allocates refactor work., TASK-13 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-14, E2E or API contract tests for gateway, P1, AGENT, REPOSITORY_STATE_REPORT, LONG-TERM 3-6 months, No e2e or API contract tests for critical flows., Small e2e or contract suite (e.g. login create note fetch note); wired into CI., TASK-14 in REPORT_TASKS.toon, See REPORT_TASKS.toon for subtasks.
+BACKLOG-001, Title placeholder, P1, Name/Team, Name, Date or Quarter, What problem are we solving?, What does success look like?, Links or IDs, Optional
 

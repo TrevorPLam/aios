@@ -1,0 +1,80 @@
+# Report-derived tasks (REPOSITORY_STATE_REPORT.md)
+
+meta{source, scope, last_updated}:
+REPOSITORY_STATE_REPORT.md, .agents/tasks/, 2026-01-30
+
+assignee_legend[2]{assignee, meaning}:
+AGENT, Autonomous agent performs the work (code change, script, config, tests).
+USER, Human reviews, approves, merges, or defines policy; required for protected paths and security decisions.
+
+tasks[14]{id, title, priority, timeframe, assignee, description, acceptance_criteria}:
+TASK-01, Declare and install api-gateway dependencies, P0, IMMEDIATE, AGENT, Add express bcryptjs jsonwebtoken zod to api-gateway package.json; run pnpm install; confirm build and type-check pass., services/api-gateway/package.json updated; pnpm install succeeds; pnpm build and pnpm type-check pass for api-gateway.
+TASK-02, Declare and install contracts dependencies, P0, IMMEDIATE, AGENT, Add zod drizzle-orm drizzle-zod to contracts package.json; run pnpm install; confirm contracts and dependents type-check and build., packages/contracts/package.json updated; pnpm install succeeds; type-check and build pass for contracts and dependents.
+TASK-03, Add missing landing template or make it optional, P0, IMMEDIATE, AGENT, Create services/api-gateway/templates/landing-page.html or make startup conditional on file existence so server does not crash on boot., Template exists and server starts without crash when hitting / or landing is skipped when file missing.
+TASK-04, Document JWT_SECRET in .env.example, P0, IMMEDIATE, AGENT, Add commented JWT_SECRET line and note that it is required for API gateway; reference in README or service docs., .env.example contains # JWT_SECRET=... and one-line note; no secret value committed.
+TASK-05, Add API gateway tests, P0, SHORT-TERM, AGENT, Introduce Jest in api-gateway: config and scripts; unit tests for auth errorHandler validation; at least one integration test per resource (auth register/login; one CRUD)., jest.config.js and test scripts in api-gateway; unit tests for auth.ts errorHandler.ts validation.ts; integration tests for auth and one CRUD; make verify passes.
+TASK-06, Run test:coverage in CI and optionally enforce gate, P1, SHORT-TERM, AGENT, Add CI step that runs pnpm test:coverage; publish coverage or fail if below threshold for changed packages., CI workflow runs test:coverage; coverage visible or threshold enforced; policy documented.
+TASK-07, Extract message helpers to remove duplication, P1, SHORT-TERM, AGENT, Move buildMessagePreview and buildMessageSearchIndex to shared module; use from platform/storage/database.ts and api-gateway/src/storage.ts., Single shared implementation; both callers refactored; tests pass.
+TASK-08, Split routes into domain files, P1, SHORT-TERM, AGENT, Create routes/auth.ts routes/notes.ts routes/tasks.ts etc.; import and register in routes/index.ts to reduce routes/index.ts size and merge conflict risk., Domain route files exist; routes/index.ts composes them; build and tests pass; protected-path approval if required.
+TASK-09, Break up database.ts, P0, MEDIUM-TERM, AGENT, Split packages/platform/storage/database.ts into per-domain modules; thin database.ts composes and re-exports db; migrate callers incrementally; add tests for new modules., Per-domain storage modules; single database.ts re-export; tests for new modules; no behavior regression.
+TASK-10, Harden security in CI, P1, MEDIUM-TERM, AGENT, Make pnpm audit fail for critical/high or document exceptions; add security headers middleware to gateway; document in SECURITY.md., security.yml fails on critical/high audit; gateway sets X-Content-Type-Options X-Frame-Options; SECURITY.md updated.
+TASK-11, Align README with repo, P2, MEDIUM-TERM, AGENT, Remove or qualify references to missing infrastructure/ docs/ tools/; add placeholders or point to .alignment where appropriate., README matches repo layout; no broken references to missing dirs.
+TASK-12, Introduce pagination/caps in client storage, P2, LONG-TERM, AGENT, Add optional limit/offset or cursor to list methods in database.ts; document max sizes; consider lazy loading for very large lists., List methods support pagination or caps; documented; behavior approved.
+TASK-13, Track hotspots and tech debt, P2, LONG-TERM, AGENT, Use git history and complexity metric to identify high-churn high-complexity files; prioritize refactors and tests., Script or process identifies hotspots; prioritization documented; USER reviews and allocates work.
+TASK-14, E2E or API contract tests for gateway, P1, LONG-TERM, AGENT, Add small suite of e2e or contract tests (e.g. login then create note then fetch note) to protect critical user flows., E2E or contract tests exist; wired into CI; policy defined.
+
+subtasks[48]{id, task_id, title, assignee, description, order}:
+TASK-01-1, TASK-01, Add express bcryptjs jsonwebtoken zod to api-gateway package.json, AGENT, Edit services/api-gateway/package.json dependencies; add @types as needed., 1
+TASK-01-2, TASK-01, Run pnpm install from repo root, AGENT, Execute pnpm install; lockfile updates., 2
+TASK-01-3, TASK-01, Confirm build and type-check pass, AGENT, Run pnpm build and pnpm type-check; fix any failures., 3
+TASK-01-4, TASK-01, Review and merge dependency and lockfile changes, USER, Approve package.json and pnpm-lock.yaml changes; merge., 4
+TASK-02-1, TASK-02, Add zod drizzle-orm drizzle-zod to contracts package.json, AGENT, Edit packages/contracts/package.json; add peer/typings if needed., 1
+TASK-02-2, TASK-02, Run pnpm install, AGENT, Execute pnpm install from repo root., 2
+TASK-02-3, TASK-02, Confirm contracts and dependents type-check and build, AGENT, Run type-check and build for contracts and dependents., 3
+TASK-02-4, TASK-02, Review and merge dependency and lockfile changes, USER, Approve package.json and lockfile changes., 4
+TASK-03-1, TASK-03, Create services/api-gateway/templates/ directory, AGENT, Create directory if missing., 1
+TASK-03-2, TASK-03, Add landing-page.html or implement conditional load, AGENT, Add minimal HTML template or guard with fs.existsSync in index.ts., 2
+TASK-03-3, TASK-03, Verify server starts without crash on /, AGENT, Start server; request /; confirm no ENOENT crash., 3
+TASK-03-4, TASK-03, Approve template content or deploy path, USER, Review template or conditional behavior; approve., 4
+TASK-04-1, TASK-04, Add # JWT_SECRET=... and one-line note to .env.example, AGENT, Edit .env.example; add commented JWT_SECRET and note., 1
+TASK-04-2, TASK-04, Reference in README or service docs if present, AGENT, Add pointer to .env.example or required env in README/service docs., 2
+TASK-04-3, TASK-04, Confirm no secret value committed, USER, Review diff; ensure no literal secret., 3
+TASK-05-1, TASK-05, Add jest.config.js to services/api-gateway, AGENT, Create jest config; extend packages/config/jest-config if applicable., 1
+TASK-05-2, TASK-05, Add test and test:coverage scripts to api-gateway package.json, AGENT, Add scripts to services/api-gateway/package.json., 2
+TASK-05-3, TASK-05, Write unit tests for auth.ts, AGENT, Tests for generateToken verifyToken authenticate middleware., 3
+TASK-05-4, TASK-05, Write unit tests for errorHandler.ts, AGENT, Tests for AppError errorHandler asyncHandler., 4
+TASK-05-5, TASK-05, Write unit tests for validation.ts, AGENT, Tests for validate validateParams validateQuery., 5
+TASK-05-6, TASK-05, Add integration tests for auth and one CRUD resource, AGENT, POST /api/auth/register login; one CRUD resource integration test., 6
+TASK-05-7, TASK-05, Run tests and ensure make verify passes, USER, Execute make verify; approve gateway test addition., 7
+TASK-06-1, TASK-06, Add CI step that runs pnpm test:coverage, AGENT, Update .github/workflows (e.g. ci.yml) to run test:coverage., 1
+TASK-06-2, TASK-06, Publish coverage or add threshold check, AGENT, Integrate Codecov or add threshold; fail if below., 2
+TASK-06-3, TASK-06, Define and document coverage policy, USER, Decide threshold (e.g. 80% for new code); document., 3
+TASK-06-4, TASK-06, Approve CI workflow changes, USER, Review workflow; approve (protected path)., 4
+TASK-07-1, TASK-07, Add shared module for buildMessagePreview and buildMessageSearchIndex, AGENT, Create module under packages/contracts or packages/platform., 1
+TASK-07-2, TASK-07, Refactor database.ts to use shared helpers, AGENT, Update packages/platform/storage/database.ts to import and use shared helpers., 2
+TASK-07-3, TASK-07, Refactor api-gateway storage.ts to use shared helpers, AGENT, Update services/api-gateway/src/storage.ts to use shared helpers., 3
+TASK-07-4, TASK-07, Run tests and verify no behavior change, AGENT, Run pnpm test; confirm storage and gateway behavior unchanged., 4
+TASK-08-1, TASK-08, Create routes/auth.ts and move auth routes, AGENT, Extract auth routes from routes/index.ts into routes/auth.ts., 1
+TASK-08-2, TASK-08, Create domain route files (notes tasks etc.), AGENT, Create routes/notes.ts routes/tasks.ts etc.; move corresponding routes., 2
+TASK-08-3, TASK-08, Update routes/index.ts to import and register domain modules, AGENT, Compose route modules in routes/index.ts., 3
+TASK-08-4, TASK-08, Run build and tests; approve protected-path change, USER, make verify; approve changes to services/api-gateway., 4
+TASK-09-1, TASK-09, Create per-domain storage modules, AGENT, Extract e.g. recommendations.ts notes.ts tasks.ts from database.ts., 1
+TASK-09-2, TASK-09, Add thin database.ts that composes and re-exports db, AGENT, Single database.ts imports and re-exports composed db., 2
+TASK-09-3, TASK-09, Migrate callers incrementally; add tests for new modules, AGENT, Update imports; add tests for extracted modules., 3
+TASK-09-4, TASK-09, Review and approve large refactor, USER, Review diff; approve database.ts split., 4
+TASK-10-1, TASK-10, Make pnpm audit fail on critical/high in security.yml, AGENT, Update .github/workflows/security.yml; remove continue-on-error or document exceptions., 1
+TASK-10-2, TASK-10, Add security headers middleware to gateway, AGENT, Add X-Content-Type-Options nosniff and X-Frame-Options DENY (or Helmet)., 2
+TASK-10-3, TASK-10, Document in SECURITY.md, AGENT, Update SECURITY.md with audit policy and headers., 3
+TASK-10-4, TASK-10, Approve audit policy and workflow change, USER, Review security workflow and headers; approve., 4
+TASK-11-1, TASK-11, Remove or qualify references to missing infrastructure/ docs/ tools/, AGENT, Edit README.md; fix or qualify broken references., 1
+TASK-11-2, TASK-11, Add placeholders or point to .alignment, AGENT, Add minimal dirs or links to .alignment where appropriate., 2
+TASK-11-3, TASK-11, Review README accuracy, USER, Confirm README matches repo., 3
+TASK-12-1, TASK-12, Add limit/offset or cursor to list methods in database.ts, AGENT, Extend list APIs with optional pagination params., 1
+TASK-12-2, TASK-12, Document max sizes; consider lazy loading, AGENT, Document limits; implement lazy loading if needed., 2
+TASK-12-3, TASK-12, Approve storage API/behavior change, USER, Review pagination/caps; approve., 3
+TASK-13-1, TASK-13, Implement or adopt script for churn and complexity, AGENT, Script or tool to identify high-churn high-complexity files., 1
+TASK-13-2, TASK-13, Identify and prioritize hotspots, AGENT, Run script; produce prioritization list., 2
+TASK-13-3, TASK-13, Review prioritization and allocate refactor work, USER, Review hotspot list; assign refactor and test work., 3
+TASK-14-1, TASK-14, Add e2e or contract tests for gateway (login create note fetch note), AGENT, Implement small e2e or contract test suite., 1
+TASK-14-2, TASK-14, Wire e2e/contract tests into CI, AGENT, Add job or step in .github/workflows., 2
+TASK-14-3, TASK-14, Define e2e/contract test policy, USER, Document when to add e2e/contract tests., 3
