@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-AIOS is a monorepo with apps, services, and shared packages. It also includes the **Repository Alignment Standard** under `ALIGNMENT/`.
+AIOS is a monorepo with apps, services, and shared packages. It also includes the **Repository Alignment Standard** under `.alignment/`.
 
 ## Project structure
 
@@ -11,8 +11,8 @@ AIOS is a monorepo with apps, services, and shared packages. It also includes th
 - `services/` — backend services (including `services/api-gateway/`)
 - `infrastructure/` — IaC and deployment artifacts
 - `docs/` — architecture, ADRs, onboarding, API docs
-- `AGENTS/` — agent registry + task tracking (TOON)
-- `ALIGNMENT/` — alignment standard reference
+- `.agents/` — agent registry + task tracking (TOON)
+- `.alignment/` — alignment standard reference
 
 ## Exact commands
 
@@ -41,11 +41,11 @@ Changes touching these require extra review:
 
 ## Canonical agents registry
 
-The canonical registry of agents for this repo is `AGENTS/AGENTS.toon`. If an agent definition changes, update that file.
+The canonical registry of agents for this repo is `.agents/AGENTS.toon`. If an agent definition changes, update that file.
 
 ## Related TOON files
 
-- `AGENTS/TOON.toon` — format definition and examples
-- `AGENTS/tasks/BACKLOG.toon` — idea intake
-- `AGENTS/tasks/TODO.toon` — active work
-- `AGENTS/tasks/ARCHIVE.toon` — completed work
+- `.agents/TOON.toon` — format definition and examples
+- `.agents/tasks/BACKLOG.toon` — idea intake
+- `.agents/tasks/TODO.toon` — active work
+- `.agents/tasks/ARCHIVE.toon` — completed work

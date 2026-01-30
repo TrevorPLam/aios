@@ -2,7 +2,7 @@
 
 Monorepo with apps, services, and shared packages.
 
-This repo follows the **Repository Alignment Standard v1.2.0** (see [ALIGNMENT/README.md](ALIGNMENT/README.md)).
+This repo follows the **Repository Alignment Standard v1.2.0** (see [.alignment/README.md](.alignment/README.md)).
 
 ## Repo Contract (setup + verify)
 
