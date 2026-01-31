@@ -7,13 +7,6 @@
 ## Changed files
 - [ ] List all modified files
 
-## Agent used
-- [ ] Human only
-- [ ] Cursor/Windsurf
-- [ ] Claude/GPT
-- [ ] GitHub Copilot
-- [ ] Other: ___
-
 ## Verification output
 ```
 [Paste output from `make verify` command]
