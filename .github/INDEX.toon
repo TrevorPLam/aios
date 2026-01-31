@@ -1,11 +1,22 @@
 # INDEX.toon
 
 meta{root, generated_at}:
-.github, 2026-01-29T08:08:01Z
+.github, 2026-01-31T04:41:49Z
 
-entries[5]{path, type}:
+entries[16]{path, type}:
 AGENTS.md, file
 CODEOWNERS, file
+SECURITY.md, file
+TEMPTODO.md, file
+copilot-instructions.md, file
+dependabot.yml, file
+pull_request_template.md, file
 workflows, dir
-workflows/ci.yml, file
-workflows/validation.yml, file
+workflows\blast-radius.yml, file
+workflows\ci.yml, file
+workflows\codeql-analysis.yml, file
+workflows\governance-drift.yml, file
+workflows\reusable-turbo-setup.yml, file
+workflows\security.yml, file
+workflows\validation-optimized.yml, file
+workflows\validation.yml, file

@@ -1,51 +1,50 @@
 # AGENTS.md
 
-## What this repo is
+**⚠️ This is a human-readable pointer. The canonical agent instructions are in `agents/AGENTS.toon`.**
 
-AIOS is a monorepo with apps, services, and shared packages. It also includes the **Repository Alignment Standard** under `.alignment/`.
+## What this repo is
+AIOS monorepo with TypeScript-first architecture using pnpm + Turbo.
 
 ## Project structure
-
-- `apps/` — application code
-- `packages/` — shared libraries (UI, utils, API SDK, contracts)
-- `services/` — backend services (including `services/api-gateway/`)
-- `infrastructure/` — IaC and deployment artifacts
-- `docs/` — architecture, ADRs, onboarding, API docs
-- `agents/` — agent registry + task tracking (TOON)
-- `.alignment/` — alignment standard reference
+- `apps/` - React + Vite frontend applications + React Native mobile apps
+- `packages/` - Shared UI components, utilities, contracts, API SDK
+- `services/` - Backend services (including `services/api-gateway/`)
+- `scripts/` - Setup and verification scripts
+- `agents/` - Agent governance and task management
 
 ## Exact commands
-
-- setup: `make setup`
-- verify: `make verify`
-
-Notes:
-- These commands run `./scripts/*.sh` and require a Bash environment (WSL2 or Git Bash on Windows).
+- **setup**: `make setup`
+- **verify**: `make verify`
 
 ## Rules
-
 - Keep changes small and focused; prefer the existing patterns.
-- Do not add dependencies without explicit approval.
+- Do not add dependencies without approval.
 - Do not modify protected paths without explicit human approval.
 - `make verify` must pass for any PR.
 
 ## Protected paths
-
 Changes touching these require extra review:
-
 - `infrastructure/`
 - `services/api-gateway/`
 - `.github/workflows/`
 - `scripts/`
 - Root config files (e.g. `package.json`, lockfiles, TS config)
 
-## Canonical agents registry
+## How to test locally
+```bash
+make setup
+make verify
+```
 
-The canonical registry of agents for this repo is `agents/AGENTS.toon`. If an agent definition changes, update that file.
+## Agent-optimized instructions
+**Read `agents/AGENTS.toon` for complete agent guidance.**
 
-## Related TOON files
+This repository uses **TOON (Token‑Oriented Object Notation)** for agent-optimized data storage with lower token overhead than JSON.
 
-- `agents/TOON.toon` — format definition and examples
-- `agents/tasks/BACKLOG.toon` — idea intake
-- `agents/tasks/TODO.toon` — active work
-- `agents/tasks/ARCHIVE.toon` — completed work
+### Key files
+- `agents/AGENTS.toon` - **Canonical agent registry** (source of truth)
+- `agents/TOON.toon` - Format definition and examples
+- `agents/tasks/TODO.toon` - Active work
+- `agents/tasks/BACKLOG.toon` - Idea intake
+- `agents/tasks/ARCHIVE.toon` - Completed work
+- `agents/hitl/` - Human-In-The-Loop items (HITL-XXX.md)

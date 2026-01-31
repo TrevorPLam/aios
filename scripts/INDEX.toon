@@ -1,8 +1,13 @@
 # INDEX.toon
 
 meta{root, generated_at}:
-scripts, 2026-01-29T08:08:01Z
+scripts, 2026-01-31T04:41:49Z
 
-entries[2]{path, type}:
+entries[7]{path, type}:
 generate-index-toon.py, file
 refresh-indexes.sh, file
+security, dir
+security\check-blast-radius.sh, file
+setup.sh, file
+verify-minimal.sh, file
+verify.sh, file
