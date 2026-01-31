@@ -6,6 +6,7 @@
 # OPERATOR: Add or adjust patterns as your critical paths are defined.
 # Each line is a regex matched against changed file paths.
 ^\.github/
+^services/api-gateway/
 ^scripts/
 ^agents/
 ^AGENTS\.md$

@@ -1,23 +1,26 @@
-# GitHub Copilot Instructions
+<!--
+filepath: .github/copilot-instructions.md
+purpose: Guidance for Copilot PR agents.
+last updated: 2026-01-30
+related tasks: FIRST.md Phase 2 (Copilot instructions)
+-->
 
-## Branch Naming
-- feature/description
-- fix/description  
-- chore/description
+# Copilot PR Agent Instructions
 
-## PR Requirements
-- `make verify` must pass
-- Add tests for new logic
-- Keep PRs focused and small
+## Branch naming
+- Use `agent/<short-task>` or `chore/<short-task>`.
 
-## Protected Paths
-Changes to these require extra review:
-- infrastructure/
-- services/api-gateway/
-- .github/workflows/
-- scripts/
-- Root config files
+## PR requirements
+- `make verify` must pass.
+- Include test output or note why tests are skipped.
 
-## Review Process
-- PRs must have at least 1 human review
-- Large PRs (>200 lines) should be split
+## Protected paths
+- Changes touching protected paths require explicit human approval.
+- See `scripts/security/protected-paths.txt`.
+
+## Tests
+- Add or update tests when behavior changes.
+
+## Review process
+- PRs must have at least 1 human review.
+- Large PRs (>200 lines) should be split.

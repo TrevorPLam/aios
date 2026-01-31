@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/TrevorPLam/aios/blob/main/README.md
+    about: Check the README and docs for setup and usage
+  - name: Discussions
+    url: https://github.com/TrevorPLam/aios/discussions
+    about: Ask questions and share ideas

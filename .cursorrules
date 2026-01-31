@@ -1,25 +1,21 @@
 # Cursor Rules for AIOS
 
-## Verify Command
-Always run `make verify` before submitting changes.
+Project: AIOS monorepo (pnpm + Turbo)
 
-## Coding Style
-- Use TypeScript for all new code
-- Follow existing naming conventions (camelCase for variables, PascalCase for components)
-- Prefer functional components and hooks in React
-- Use absolute imports from package roots
+Commands:
+- setup: make setup
+- verify: make verify
 
-## Planning
-Plan first for changes over 10 lines or 3+ files.
+Rules:
+- Do not change protected paths without approval (see scripts/security/protected-paths.txt).
+- Do not add dependencies without approval.
+- Keep changes small and focused.
+- Prefer existing patterns over new abstractions.
+- Plan first for changes over ~200 lines or more than 3 files.
 
-## Protected Paths
-Never touch these without explicit approval:
-- infrastructure/
-- services/api-gateway/
-- .github/workflows/
-- scripts/
-- package.json, pnpm-workspace.yaml, tsconfig.base.json
-
-## Patterns
-Prefer editing existing patterns over inventing new ones.
-Follow the monorepo structure - shared code goes in packages/, app-specific code in apps/.
+Style:
+- Use TypeScript for all new code.
+- Follow existing naming conventions (camelCase for variables, PascalCase for components).
+- Prefer functional components and hooks in React.
+- Use absolute imports from package roots.
+- Keep scripts in scripts/ and docs in docs/ or governance/.
