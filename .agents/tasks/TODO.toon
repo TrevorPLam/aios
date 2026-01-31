@@ -3,7 +3,6 @@
 meta{status, owner, last_updated}:
 Active, Team, 2026-01-31
 
-active_work[2]{id, title, status, priority, owner, due, description, acceptance_criteria, dependencies, notes}:
-TASK-05, Add API gateway tests, In Progress, P0, AGENT, 2026-02-28, Introduce Jest in api-gateway: config and scripts; unit tests for auth errorHandler validation; at least one integration test per resource (auth register/login; one CRUD)., jest.config.js and test scripts in api-gateway; unit tests for auth.ts errorHandler.ts validation.ts; integration tests for auth and one CRUD; make verify passes., REPORT_TASKS.toon subtasks TASK-05-1..7, See .agents/tasks/REPORT_TASKS.toon for subtasks and AGENT/USER.
+active_work[1]{id, title, status, priority, owner, due, description, acceptance_criteria, dependencies, notes}:
 TASK-001, Title placeholder, Not Started, P1, Name/Team, YYYY-MM-DD, What needs to be done, Criterion 1; Criterion 2, Links or IDs, Optional
 
