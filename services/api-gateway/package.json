@@ -10,21 +10,32 @@
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@aios/contracts": "workspace:*",
     "@aios/platform": "workspace:*",
     "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.1",
     "jsonwebtoken": "^9.0.2",
+    "winston": "^3.17.0",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.2.0"
   },
   "devDependencies": {
+    "@aios/jest-config": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
-    "@types/node": "^25.1.0"
+    "@types/node": "^25.1.0",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2"
   }
 }
