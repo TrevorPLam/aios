@@ -6,8 +6,9 @@
 // Set JWT_SECRET before any imports
 process.env.JWT_SECRET = "test-secret";
 
-import request from "supertest";
 import express, { Express } from "express";
+import request from "supertest";
+
 import { registerRoutes } from "../../routes";
 
 // Mock logger
@@ -32,8 +33,9 @@ jest.mock("../../storage", () => ({
 
 // Mock rate limiters to prevent rate limiting during tests
 jest.mock("../../middleware/rateLimiter", () => ({
-  loginRateLimiter: (req: any, res: any, next: any) => next(),
-  registerRateLimiter: (req: any, res: any, next: any) => next(),
+  loginRateLimiter: (_req: unknown, _res: unknown, next: () => void) => next(),
+  registerRateLimiter: (_req: unknown, _res: unknown, next: () => void) =>
+    next(),
 }));
 
 // Mock notesData
@@ -47,8 +49,9 @@ jest.mock("@aios/features/notes/data", () => ({
   },
 }));
 
-import { storage } from "../../storage";
 import bcrypt from "bcryptjs";
+
+import { storage } from "../../storage";
 
 describe("Auth Integration Tests", () => {
   let app: Express;
@@ -75,12 +78,10 @@ describe("Auth Integration Tests", () => {
       (storage.createUser as jest.Mock).mockResolvedValue(mockUser);
       (storage.createSettings as jest.Mock).mockResolvedValue({});
 
-      const response = await request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "newuser",
-          password: "password123",
-        });
+      const response = await request(app).post("/api/auth/register").send({
+        username: "newuser",
+        password: "password123",
+      });
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("token");
@@ -102,36 +103,30 @@ describe("Auth Integration Tests", () => {
 
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(existingUser);
 
-      const response = await request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "existinguser",
-          password: "password123",
-        });
+      const response = await request(app).post("/api/auth/register").send({
+        username: "existinguser",
+        password: "password123",
+      });
 
       expect(response.status).toBe(409);
       // Error responses may not have consistent body structure
     });
 
     it("should validate request body", async () => {
-      const response = await request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "ab", // too short
-          password: "123", // too short
-        });
+      const response = await request(app).post("/api/auth/register").send({
+        username: "ab", // too short
+        password: "123", // too short
+      });
 
       expect(response.status).toBe(400);
       // Error responses may not have consistent body structure
     });
 
     it("should require username and password", async () => {
-      const response = await request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "testuser",
-          // password missing
-        });
+      const response = await request(app).post("/api/auth/register").send({
+        username: "testuser",
+        // password missing
+      });
 
       expect(response.status).toBe(400);
     });
@@ -147,12 +142,10 @@ describe("Auth Integration Tests", () => {
       (storage.createUser as jest.Mock).mockResolvedValue(mockUser);
       (storage.createSettings as jest.Mock).mockResolvedValue({});
 
-      await request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "secureuser",
-          password: "plainpassword",
-        });
+      await request(app).post("/api/auth/register").send({
+        username: "secureuser",
+        password: "plainpassword",
+      });
 
       expect(storage.createUser).toHaveBeenCalled();
       const createUserCall = (storage.createUser as jest.Mock).mock.calls[0][0];
@@ -170,19 +163,17 @@ describe("Auth Integration Tests", () => {
       (storage.createUser as jest.Mock).mockResolvedValue(mockUser);
       (storage.createSettings as jest.Mock).mockResolvedValue({});
 
-      await request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "newuser",
-          password: "password123",
-        });
+      await request(app).post("/api/auth/register").send({
+        username: "newuser",
+        password: "password123",
+      });
 
       expect(storage.createSettings).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: "user-789",
           aiName: "AIOS",
           darkMode: true,
-        })
+        }),
       );
     });
   });
@@ -198,12 +189,10 @@ describe("Auth Integration Tests", () => {
 
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(mockUser);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "testuser",
-          password: "correctpassword",
-        });
+      const response = await request(app).post("/api/auth/login").send({
+        username: "testuser",
+        password: "correctpassword",
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("token");
@@ -214,12 +203,10 @@ describe("Auth Integration Tests", () => {
     it("should reject login with invalid username", async () => {
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(null);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "nonexistent",
-          password: "password123",
-        });
+      const response = await request(app).post("/api/auth/login").send({
+        username: "nonexistent",
+        password: "password123",
+      });
 
       expect(response.status).toBe(401);
       // Error responses may not have consistent body structure
@@ -235,24 +222,20 @@ describe("Auth Integration Tests", () => {
 
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(mockUser);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "testuser",
-          password: "wrongpassword",
-        });
+      const response = await request(app).post("/api/auth/login").send({
+        username: "testuser",
+        password: "wrongpassword",
+      });
 
       expect(response.status).toBe(401);
       // Error responses may not have consistent body structure
     });
 
     it("should validate request body", async () => {
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "ab", // too short
-          password: "123", // too short
-        });
+      const response = await request(app).post("/api/auth/login").send({
+        username: "ab", // too short
+        password: "123", // too short
+      });
 
       expect(response.status).toBe(400);
     });
@@ -267,12 +250,10 @@ describe("Auth Integration Tests", () => {
 
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(mockUser);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "jwtuser",
-          password: "testpass",
-        });
+      const response = await request(app).post("/api/auth/login").send({
+        username: "jwtuser",
+        password: "testpass",
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.token).toBeTruthy();
@@ -290,12 +271,10 @@ describe("Auth Integration Tests", () => {
 
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(mockUser);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "secureuser",
-          password: "testpass",
-        });
+      const response = await request(app).post("/api/auth/login").send({
+        username: "secureuser",
+        password: "testpass",
+      });
 
       expect(response.body.user).not.toHaveProperty("password");
     });
@@ -314,12 +293,10 @@ describe("Auth Integration Tests", () => {
       (storage.getUser as jest.Mock).mockResolvedValue(mockUser);
 
       // Login first to get token
-      const loginResponse = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "testuser",
-          password: "testpass",
-        });
+      const loginResponse = await request(app).post("/api/auth/login").send({
+        username: "testuser",
+        password: "testpass",
+      });
 
       const token = loginResponse.body.token;
 
@@ -360,12 +337,10 @@ describe("Auth Integration Tests", () => {
 
       (storage.getUserByUsername as jest.Mock).mockResolvedValue(mockUser);
 
-      const loginResponse = await request(app)
-        .post("/api/auth/login")
-        .send({
-          username: "testuser",
-          password: "testpass",
-        });
+      const loginResponse = await request(app).post("/api/auth/login").send({
+        username: "testuser",
+        password: "testpass",
+      });
 
       const token = loginResponse.body.token;
 

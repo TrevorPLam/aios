@@ -8,7 +8,13 @@ process.env.JWT_SECRET = "test-secret";
 
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { generateToken, verifyToken, authenticate, JWTPayload } from "../../middleware/auth";
+
+import {
+  generateToken,
+  verifyToken,
+  authenticate,
+  JWTPayload,
+} from "../../middleware/auth";
 import { AppError } from "../../middleware/errorHandler";
 
 describe("Auth Middleware", () => {
@@ -72,7 +78,9 @@ describe("Auth Middleware", () => {
       const invalidToken = "invalid.token.string";
 
       expect(() => verifyToken(invalidToken)).toThrow(AppError);
-      expect(() => verifyToken(invalidToken)).toThrow("Invalid or expired token");
+      expect(() => verifyToken(invalidToken)).toThrow(
+        "Invalid or expired token",
+      );
     });
 
     it("should throw AppError for expired token", () => {
@@ -82,20 +90,27 @@ describe("Auth Middleware", () => {
       };
 
       // Create token that expires immediately
-      const expiredToken = jwt.sign(payload, "test-secret", { expiresIn: "0s" });
+      const expiredToken = jwt.sign(payload, "test-secret", {
+        expiresIn: "0s",
+      });
 
       // Wait a moment to ensure expiration
       return new Promise<void>((resolve) => {
         setTimeout(() => {
           expect(() => verifyToken(expiredToken)).toThrow(AppError);
-          expect(() => verifyToken(expiredToken)).toThrow("Invalid or expired token");
+          expect(() => verifyToken(expiredToken)).toThrow(
+            "Invalid or expired token",
+          );
           resolve();
         }, 100);
       });
     });
 
     it("should throw AppError for token with wrong secret", () => {
-      const token = jwt.sign({ userId: "user-123", username: "test" }, "wrong-secret");
+      const token = jwt.sign(
+        { userId: "user-123", username: "test" },
+        "wrong-secret",
+      );
 
       expect(() => verifyToken(token)).toThrow(AppError);
     });

@@ -6,10 +6,13 @@
 // Set JWT_SECRET before any imports
 process.env.JWT_SECRET = "test-secret";
 
-import request from "supertest";
 import express, { Express } from "express";
-import { registerRoutes } from "../../routes";
+import request from "supertest";
+
+import { notesData } from "@aios/features/notes/data";
+
 import { generateToken } from "../../middleware/auth";
+import { registerRoutes } from "../../routes";
 
 // Mock logger
 jest.mock("../../utils/logger", () => ({
@@ -33,8 +36,9 @@ jest.mock("../../storage", () => ({
 
 // Mock rate limiters
 jest.mock("../../middleware/rateLimiter", () => ({
-  loginRateLimiter: (req: any, res: any, next: any) => next(),
-  registerRateLimiter: (req: any, res: any, next: any) => next(),
+  loginRateLimiter: (_req: unknown, _res: unknown, next: () => void) => next(),
+  registerRateLimiter: (_req: unknown, _res: unknown, next: () => void) =>
+    next(),
 }));
 
 // Mock notesData
@@ -56,7 +60,6 @@ describe("Notes CRUD Integration Tests", () => {
   const testUserId = "550e8400-e29b-41d4-a716-446655440000";
   const validNoteId = "650e8400-e29b-41d4-a716-446655440001";
   const validNoteId2 = "650e8400-e29b-41d4-a716-446655440002";
-  const validNoteId3 = "650e8400-e29b-41d4-a716-446655440003";
 
   beforeAll(async () => {
     app = express();
@@ -215,7 +218,7 @@ describe("Notes CRUD Integration Tests", () => {
           userId: testUserId,
           title: "New Note",
           bodyMarkdown: "New Content",
-        })
+        }),
       );
     });
 
@@ -225,7 +228,9 @@ describe("Notes CRUD Integration Tests", () => {
         .set("Authorization", `Bearer ${authToken}`)
         .send({
           // title missing
-          bodyMarkdown: "Some content", tags: [], links: [],
+          bodyMarkdown: "Some content",
+          tags: [],
+          links: [],
         });
 
       expect(response.status).toBe(400);
@@ -237,19 +242,21 @@ describe("Notes CRUD Integration Tests", () => {
         .set("Authorization", `Bearer ${authToken}`)
         .send({
           title: "a".repeat(201), // exceeds 200 char limit
-          bodyMarkdown: "Some content", tags: [], links: [],
+          bodyMarkdown: "Some content",
+          tags: [],
+          links: [],
         });
 
       expect(response.status).toBe(400);
     });
 
     it("should require authentication", async () => {
-      const response = await request(app)
-        .post("/api/notes")
-        .send({
-          title: "Test Note",
-          bodyMarkdown: "Test Content", tags: [], links: [],
-        });
+      const response = await request(app).post("/api/notes").send({
+        title: "Test Note",
+        bodyMarkdown: "Test Content",
+        tags: [],
+        links: [],
+      });
 
       expect(response.status).toBe(401);
     });
@@ -278,7 +285,7 @@ describe("Notes CRUD Integration Tests", () => {
         .send(newNote);
 
       expect(notesData.createNote).toHaveBeenCalledWith(
-        expect.objectContaining({ userId: testUserId })
+        expect.objectContaining({ userId: testUserId }),
       );
     });
   });
@@ -310,7 +317,7 @@ describe("Notes CRUD Integration Tests", () => {
       expect(notesData.updateNote).toHaveBeenCalledWith(
         "750e8400-e29b-41d4-a716-446655440006",
         testUserId,
-        updateData
+        updateData,
       );
     });
 
@@ -367,12 +374,10 @@ describe("Notes CRUD Integration Tests", () => {
     });
 
     it("should require authentication", async () => {
-      const response = await request(app)
-        .put("/api/notes/note-123")
-        .send({
-          title: "Updated",
-          content: "Updated",
-        });
+      const response = await request(app).put("/api/notes/note-123").send({
+        title: "Updated",
+        content: "Updated",
+      });
 
       expect(response.status).toBe(401);
     });
@@ -387,7 +392,10 @@ describe("Notes CRUD Integration Tests", () => {
         .set("Authorization", `Bearer ${authToken}`);
 
       expect(response.status).toBe(204);
-      expect(notesData.deleteNote).toHaveBeenCalledWith("750e8400-e29b-41d4-a716-446655440008", testUserId);
+      expect(notesData.deleteNote).toHaveBeenCalledWith(
+        "750e8400-e29b-41d4-a716-446655440008",
+        testUserId,
+      );
     });
 
     it("should return 404 for non-existent note", async () => {
@@ -425,7 +433,10 @@ describe("Notes CRUD Integration Tests", () => {
         .set("Authorization", `Bearer ${authToken}`);
 
       expect(response.status).toBe(404);
-      expect(notesData.deleteNote).toHaveBeenCalledWith("750e8400-e29b-41d4-a716-446655440009", testUserId);
+      expect(notesData.deleteNote).toHaveBeenCalledWith(
+        "750e8400-e29b-41d4-a716-446655440009",
+        testUserId,
+      );
     });
   });
 });

@@ -5,8 +5,13 @@
 
 import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
-import { validate, validateParams, validateQuery } from "../../middleware/validation";
+
 import { AppError } from "../../middleware/errorHandler";
+import {
+  validate,
+  validateParams,
+  validateQuery,
+} from "../../middleware/validation";
 
 describe("Validation Middleware", () => {
   let mockRequest: Partial<Request>;
@@ -319,12 +324,24 @@ describe("Validation Middleware", () => {
   describe("error handling consistency", () => {
     it("should return AppError with status 400 for all validation failures", () => {
       const schemas = [
-        { middleware: validate, data: "body", schema: z.object({ name: z.string() }) },
-        { middleware: validateParams, data: "params", schema: z.object({ id: z.string() }) },
-        { middleware: validateQuery, data: "query", schema: z.object({ q: z.string() }) },
+        {
+          middleware: validate,
+          data: "body",
+          schema: z.object({ name: z.string() }),
+        },
+        {
+          middleware: validateParams,
+          data: "params",
+          schema: z.object({ id: z.string() }),
+        },
+        {
+          middleware: validateQuery,
+          data: "query",
+          schema: z.object({ q: z.string() }),
+        },
       ];
 
-      schemas.forEach(({ middleware: mw, data, schema }) => {
+      schemas.forEach(({ middleware: mw, schema }) => {
         const mockReq = { body: {}, params: {}, query: {} } as Request;
         const mockNext = jest.fn();
 
