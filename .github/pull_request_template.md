@@ -20,5 +20,5 @@
 - [ ] Dependencies
 
 ## Task references
-- Closes: [link to task in .agents/tasks/]
+- Closes: [link to task in agents/tasks/]
 - Related: [any related tasks]

@@ -1,0 +1,90 @@
+name: Reusable Turbo Setup
+
+on:
+  workflow_call:
+    inputs:
+      cache-key-suffix:
+        description: 'Suffix for cache keys'
+        required: false
+        type: string
+        default: ''
+      enable-turbo-cache:
+        description: 'Enable Turbo caching'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  setup:
+    name: Turbo Environment Setup
+    runs-on: ubuntu-latest-4-core
+    outputs:
+      turbo-hash: ${{ steps.turbo-hash.outputs.hash }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate cache keys
+        id: cache-keys
+        run: |
+          echo "pnpm-key=pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ inputs.cache-key-suffix }}" >> $GITHUB_OUTPUT
+          echo "turbo-key=turbo-${{ hashFiles('**/turbo.json', '**/package.json', '**/pnpm-lock.yaml') }}-${{ inputs.cache-key-suffix }}" >> $GITHUB_OUTPUT
+          echo "node-key=node-${{ hashFiles('**/package.json', '**/pnpm-lock.yaml') }}-${{ inputs.cache-key-suffix }}" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ steps.cache-keys.outputs.pnpm-key }}
+          restore-keys: |
+            pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            pnpm-
+
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        if: inputs.enable-turbo-cache
+        with:
+          path: |
+            .turbo
+            node_modules/.cache
+          key: ${{ steps.cache-keys.outputs.turbo-key }}
+          restore-keys: |
+            turbo-${{ hashFiles('**/turbo.json', '**/package.json') }}-
+            turbo-
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            */node_modules
+            */*/node_modules
+          key: ${{ steps.cache-keys.outputs.node-key }}
+          restore-keys: |
+            node-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Get Turbo hash
+        id: turbo-hash
+        if: inputs.enable-turbo-cache
+        run: |
+          TURBO_HASH=$(pnpm turbo hash --json | jq -r '.hash')
+          echo "hash=$TURBO_HASH" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
+        run: pnpm turbo build --filter=!@aios/mobile-android --filter=!@aios/mobile-ios

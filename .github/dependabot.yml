@@ -1,0 +1,191 @@
+# Dependabot configuration for AIOS Turbo monorepo
+# Optimized for pnpm workspace with multiple apps and packages
+
+version: 2
+updates:
+
+  # Root package.json (workspace configuration)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "TrevorPLam"
+    assignees:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "workspace"
+    groups:
+      all-dependencies:
+        dependency-type: "all"
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
+
+  # Web application
+  - package-ecosystem: "npm"
+    directory: "/apps/web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:30"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "app"
+
+  # Mobile applications
+  - package-ecosystem: "npm"
+    directory: "/apps/mobile-android"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "mobile"
+
+  - package-ecosystem: "npm"
+    directory: "/apps/mobile-ios"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:30"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "mobile"
+
+  - package-ecosystem: "npm"
+    directory: "/apps/mobile-shared"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "11:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "mobile"
+
+  # Shared packages
+  - package-ecosystem: "npm"
+    directory: "/packages/api-sdk"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "package"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/contracts"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:30"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "package"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/features"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "10:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "package"
+
+  # API Gateway service
+  - package-ecosystem: "npm"
+    directory: "/services/api-gateway"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "10:30"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "service"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TrevorPLam"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      github-actions:
+        dependency-type: "direct"

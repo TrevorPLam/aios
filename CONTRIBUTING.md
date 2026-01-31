@@ -1,11 +1,36 @@
-# Contributing to ALIGNMENT
+# Contributing to AIOS
 
-Thank you for your interest in contributing to the ALIGNMENT Repository Standard! This document provides guidelines for contributing to this project.
+Thank you for your interest in contributing to the AIOS monorepo! This document provides guidelines for contributing to this project.
 
 ## Quick Links
 
-- [Detailed Contribution Guidelines](.alignment/CONTRIBUTING.md) - Comprehensive guide for ALIGNMENT contributions
+- [ALIGNMENT Contribution Guidelines](.alignment/CONTRIBUTING.md) - Comprehensive guide for ALIGNMENT contributions
 - [Principles Workflow](.alignment/principles/PRINCIPLES-WORKFLOW.md) - Process for proposing new principles
+- [Security Policy](SECURITY.md) - Security requirements and reporting
+
+## Development Setup
+
+### Prerequisites
+- Git
+- Node.js (for Turbo monorepo)
+- pnpm (package manager)
+
+### Quick Start
+```bash
+# Clone and setup
+git clone <your-fork>
+cd aios
+make setup
+
+# Verify everything works
+make verify
+```
+
+### Project Structure
+- `apps/` - Frontend applications (web, mobile-android, mobile-ios, mobile-shared)
+- `packages/` - Shared libraries (api-sdk, config, contracts, features)
+- `services/` - Backend services (api-gateway)
+- Turbo monorepo with pnpm workspace configuration
 
 ## How to Contribute
 
@@ -13,12 +38,13 @@ Thank you for your interest in contributing to the ALIGNMENT Repository Standard
 
 We welcome contributions in several areas:
 
+- **Web application features** - New features for apps/web (React/Vite)
+- **Mobile applications** - Updates to mobile-android, mobile-ios, mobile-shared
+- **Package libraries** - Shared TypeScript utilities and contracts
+- **API services** - Improvements to services/api-gateway
+- **Turbo configuration** - Build system optimizations and caching
 - **Standards improvements** - Enhancements to existing standards in `.alignment/standards/`
-- **New principles** - Proposals for new principle documents (see [PRINCIPLES-CANDIDATES.md](.alignment/principles/PRINCIPLES-CANDIDATES.md))
 - **Documentation fixes** - Typos, clarifications, or improvements
-- **Tooling enhancements** - Improvements to validation scripts or new tools
-- **Research additions** - New research findings or updates to `.alignment/research/`
-- **Reference materials** - Language/platform quick starts, templates, examples
 
 ### 2. Contribution Process
 

@@ -1,0 +1,170 @@
+name: ALIGNMENT Validation (Optimized)
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  setup:
+    name: Setup Environment
+    uses: ./.github/workflows/reusable-turbo-setup.yml
+    with:
+      cache-key-suffix: validation
+      enable-turbo-cache: true
+
+  validate-structure:
+    name: Validate Repository Structure
+    runs-on: ubuntu-latest-4-core
+    needs: setup
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Validate structure
+        run: |
+          echo "::group::Validating repository structure"
+          
+          # Check required files
+          REQUIRED_FILES=("README.md" "LICENSE" "CONTRIBUTING.md" ".gitignore" ".editorconfig")
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing: $file"
+              exit 1
+            fi
+            echo "✅ Found: $file"
+          done
+          
+          # Check required directories
+          REQUIRED_DIRS=(".alignment" ".alignment/standards" ".alignment/principles" ".alignment/getting-started" ".alignment/reference" ".alignment/supporting" ".alignment/tools" ".alignment/meta")
+          for dir in "${REQUIRED_DIRS[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "❌ Missing: $dir"
+              exit 1
+            fi
+            echo "✅ Found: $dir"
+          done
+          
+          # Check standards (0-13)
+          for i in $(seq -f "%02g" 0 13); do
+            if ! ls .alignment/standards/${i}-*.md 1> /dev/null 2>&1; then
+              echo "❌ Missing: Standard $i"
+              exit 1
+            fi
+            echo "✅ Found: Standard $i"
+          done
+          
+          echo "::endgroup::"
+
+  validate-content:
+    name: Validate Content Quality
+    runs-on: ubuntu-latest-4-core
+    needs: setup
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Validate markdown links
+        run: |
+          echo "::group::Checking markdown links"
+          pnpm markdown-link-check .alignment/**/*.md || true
+          echo "::endgroup::"
+      
+      - name: Check markdown formatting
+        run: |
+          echo "::group::Checking markdown formatting"
+          pnpm prettier --check .alignment/**/*.md || true
+          echo "::endgroup::"
+
+  validate-turbo:
+    name: Validate Turbo Configuration
+    runs-on: ubuntu-latest-4-core
+    needs: setup
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Validate turbo.json
+        run: |
+          echo "::group::Validating turbo configuration"
+          
+          # Check if turbo.json exists and is valid
+          if [ ! -f "turbo.json" ]; then
+            echo "❌ Missing: turbo.json"
+            exit 1
+          fi
+          
+          # Validate JSON syntax
+          if ! jq empty turbo.json; then
+            echo "❌ Invalid JSON in turbo.json"
+            exit 1
+          fi
+          
+          echo "✅ turbo.json is valid"
+          
+          # Check workspace configuration
+          if [ ! -f "pnpm-workspace.yaml" ]; then
+            echo "❌ Missing: pnpm-workspace.yaml"
+            exit 1
+          fi
+          
+          echo "✅ Workspace configuration found"
+          echo "::endgroup::"
+
+  validate-packages:
+    name: Validate Package Structure
+    runs-on: ubuntu-latest-4-core
+    needs: setup
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Validate package structure
+        run: |
+          echo "::group::Validating package structure"
+          
+          # Check apps
+          if [ -d "apps" ]; then
+            for app in apps/*/; do
+              if [ -d "$app" ] && [ -f "$app/package.json" ]; then
+                echo "✅ App: $(basename "$app")"
+              else
+                echo "❌ Invalid app structure: $app"
+                exit 1
+              fi
+            done
+          fi
+          
+          # Check packages
+          if [ -d "packages" ]; then
+            for pkg in packages/*/; do
+              if [ -d "$pkg" ] && [ -f "$pkg/package.json" ]; then
+                echo "✅ Package: $(basename "$pkg")"
+              else
+                echo "❌ Invalid package structure: $pkg"
+                exit 1
+              fi
+            done
+          fi
+          
+          echo "::endgroup::"
