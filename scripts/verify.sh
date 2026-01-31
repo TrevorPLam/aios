@@ -1,28 +1,36 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+# filepath: scripts/verify.sh
+# purpose: Run the repository quality gate in a single command.
+# last updated: 2026-01-30
+# related tasks: FIRST.md Phase 1/5 (verify)
 
-echo "🔍 Running verify checks..."
+set -euo pipefail
 
-echo "1/6 Blast radius..."
-./scripts/security/check-blast-radius.sh
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "pnpm is required. Install pnpm@8 before running verify."
+  exit 1
+fi
 
-echo "2/6 Secret scan..."
+echo "==> verify: blast radius"
+scripts/security/check-blast-radius.sh
+
+echo "==> verify: secret scan"
 if command -v gitleaks &> /dev/null; then
     gitleaks detect --source . --verbose
 else
-    echo "⚠️  gitleaks not found, skipping secret scan"
+    echo "gitleaks not found, skipping secret scan"
 fi
 
-echo "3/6 Lint..."
+echo "==> verify: lint"
 pnpm lint
 
-echo "4/6 Type check..."
+echo "==> verify: typecheck"
 pnpm type-check
 
-echo "5/6 Tests..."
+echo "==> verify: tests"
 pnpm test
 
-echo "6/6 Build..."
+echo "==> verify: build"
 pnpm build
 
-echo "✅ Verify passed"
+echo "verify passed"
