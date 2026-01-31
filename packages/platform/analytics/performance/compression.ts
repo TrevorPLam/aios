@@ -7,8 +7,9 @@
  * World-class standard: Segment achieves ~70% size reduction
  */
 
-import { BatchPayload } from "../types";
 import pako from "pako";
+
+import { BatchPayload } from "../types";
 
 export interface CompressionResult {
   compressed: Uint8Array;

@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Recommendation,
   RecommendationDecision,
@@ -28,7 +27,7 @@ import {
   AlertTrigger,
   ContactGroup,
   EmailThread,
-  EmailMessage,
+  EmailMessage as _EmailMessage,
   Translation,
   SavedPhrase,
   TranslationStatistics,
@@ -38,7 +37,6 @@ import {
   HistoryExportSchedule,
   HistoryExportFrequency,
 } from "@aios/contracts/models/types";
-import { generateId } from "@aios/platform/lib/helpers";
 import {
   isBirthdayInRange,
   sortByUpcomingBirthday,
@@ -48,6 +46,8 @@ import {
   arePotentialDuplicates,
   matchesSearchQuery,
 } from "@aios/features/contacts/domain/contactHelpers";
+import { generateId } from "@aios/platform/lib/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const KEYS = {
   RECOMMENDATIONS: "@aios/recommendations",

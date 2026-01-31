@@ -47,10 +47,11 @@
  */
 
 import { ModuleType } from "@aios/contracts/models/types";
-import { lazyLoader } from "./lazyLoader";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logger } from "@aios/platform/lib/logger";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
+
+import { lazyLoader } from "./lazyLoader";
 import { memoryManager } from "./memoryManager";
 
 /**

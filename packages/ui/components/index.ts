@@ -1,6 +1,6 @@
 export * from "./Button";
 export * from "./Card";
-export * from "./Spacer";
+export { default as Spacer } from "./Spacer";
 export * from "./ThemedText";
 export * from "./ThemedView";
 export * from "./HeaderTitle";

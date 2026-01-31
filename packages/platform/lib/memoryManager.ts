@@ -46,10 +46,11 @@
  * - Aggressive cleanup can impact user experience
  */
 
-import { Platform } from "react-native";
 import { ModuleType } from "@aios/contracts/models/types";
-import { eventBus, EVENT_TYPES } from "./eventBus";
 import { logger } from "@aios/platform/lib/logger";
+import { Platform } from "react-native";
+
+import { eventBus, EVENT_TYPES } from "./eventBus";
 
 /**
  * Memory Usage Info

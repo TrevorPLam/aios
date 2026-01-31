@@ -28,15 +28,16 @@
  * ```
  */
 
+import { useNetworkStatus } from "@aios/platform/lib/useNetworkStatus";
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeOutUp } from "react-native-reanimated";
 
-import { ThemedText } from "./ThemedText";
-import { useTheme } from "../hooks/useTheme";
 import { Spacing } from "../constants/theme";
-import { useNetworkStatus } from "@aios/platform/lib/useNetworkStatus";
+import { useTheme } from "../hooks/useTheme";
+
+import { ThemedText } from "./ThemedText";
 
 export interface NetworkStatusBannerProps {
   /**

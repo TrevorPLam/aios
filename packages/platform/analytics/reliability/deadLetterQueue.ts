@@ -8,6 +8,7 @@
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { AnalyticsEvent } from "../types";
 
 const DLQ_STORAGE_KEY = "@analytics:dlq";

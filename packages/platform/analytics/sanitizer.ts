@@ -9,6 +9,7 @@
  * - Detect and drop forbidden fields
  */
 
+import { getAllowedProps } from "./taxonomy";
 import {
   AnalyticsEvent,
   EventName,
@@ -22,7 +23,6 @@ import {
   ResultsCountBucket,
   InstallAgeBucket,
 } from "./types";
-import { getAllowedProps } from "./taxonomy";
 
 // ============================================================================
 // Forbidden Field Detection

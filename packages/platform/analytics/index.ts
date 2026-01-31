@@ -6,7 +6,17 @@
  */
 
 import { ModuleType } from "@aios/contracts/models/types";
+
 import { AnalyticsClient } from "./client";
+import {
+  getDurationBucket,
+  getLatencyBucket,
+  getAmountBucket,
+  getTextLengthBucket,
+  getQueryLengthBucket,
+  getResultsCountBucket,
+  getInstallAgeBucket,
+} from "./sanitizer";
 import {
   EventName,
   EventPropsMap,
@@ -18,15 +28,6 @@ import {
   NetworkState,
   InstallAgeBucket,
 } from "./types";
-import {
-  getDurationBucket,
-  getLatencyBucket,
-  getAmountBucket,
-  getTextLengthBucket,
-  getQueryLengthBucket,
-  getResultsCountBucket,
-  getInstallAgeBucket,
-} from "./sanitizer";
 
 // ============================================================================
 // Singleton Instance

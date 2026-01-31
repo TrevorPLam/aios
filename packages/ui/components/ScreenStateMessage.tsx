@@ -1,10 +1,11 @@
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
+
+import { BorderRadius, Spacing } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
 
 import { ThemedText } from "./ThemedText";
-import { useTheme } from "../hooks/useTheme";
-import { BorderRadius, Spacing } from "../constants/theme";
 
 interface ScreenStateMessageProps {
   title: string;

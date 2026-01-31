@@ -1,6 +1,7 @@
 import { Colors, ColorThemes } from "../constants/theme";
-import { useColorScheme } from "./useColorScheme";
 import { useThemeContext } from "../context/ThemeContext";
+
+import { useColorScheme } from "./useColorScheme";
 
 export function useTheme() {
   const colorScheme = useColorScheme();

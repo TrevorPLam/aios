@@ -6,6 +6,7 @@
  */
 
 import { ModuleType } from "@aios/contracts/models/types";
+
 import { ModuleMetadata, ModuleCategory } from "./types";
 
 /**

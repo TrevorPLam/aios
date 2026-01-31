@@ -1,3 +1,5 @@
+import type { ColorTheme } from "@aios/contracts/models/types";
+import { db } from "@aios/platform/storage/database";
 import React, {
   createContext,
   useContext,
@@ -5,8 +7,6 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { db } from "@aios/platform/storage/database";
-import type { ColorTheme } from "@aios/contracts/models/types";
 
 interface ThemeContextType {
   colorTheme: ColorTheme;

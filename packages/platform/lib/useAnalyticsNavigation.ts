@@ -4,16 +4,16 @@
  * Tracks navigation events automatically using React Navigation
  */
 
-import { useCallback, useEffect, useRef } from "react";
-import { useNavigationContainerRef } from "@react-navigation/native";
-import analytics from "@aios/platform/analytics";
 import { ModuleType } from "@aios/contracts/models/types";
+import analytics from "@aios/platform/analytics";
 import { memoryManager } from "@aios/platform/lib/memoryManager";
-import { prefetchEngine } from "@aios/platform/lib/prefetchEngine";
 import {
   resolveModuleFromRoute,
   runPerformanceHooks,
 } from "@aios/platform/lib/navigationPerformance";
+import { prefetchEngine } from "@aios/platform/lib/prefetchEngine";
+import { useNavigationContainerRef } from "@react-navigation/native";
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * Hook to track navigation events

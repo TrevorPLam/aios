@@ -7,9 +7,10 @@ import Animated, {
   WithSpringConfig,
 } from "react-native-reanimated";
 
-import { ThemedText } from "./ThemedText";
-import { useTheme } from "../hooks/useTheme";
 import { Spacing, BorderRadius } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
+
+import { ThemedText } from "./ThemedText";
 
 interface CardProps {
   elevation?: number;

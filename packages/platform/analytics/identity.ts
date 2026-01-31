@@ -7,6 +7,7 @@
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { IdentityInfo } from "./types";
 
 const STORAGE_KEYS = {

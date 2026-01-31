@@ -10,9 +10,18 @@
  * Token optimization: Use INDEX.json files to find major functions/classes/relevant sections
  */
 
-import { AppState, AppStateStatus, Platform } from "react-native";
-import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
+import { AppState, AppStateStatus, Platform } from "react-native";
+
+import {
+  IdentityProvider,
+  DefaultIdentityProvider,
+  PrivacyIdentityProvider,
+} from "./identity";
+import { EventQueue } from "./queue";
+import { sanitizeEvent } from "./sanitizer";
+import { Transport } from "./transport";
 import {
   AnalyticsEvent,
   EventName,
@@ -20,14 +29,6 @@ import {
   AnalyticsConfig,
   AnalyticsMode,
 } from "./types";
-import {
-  IdentityProvider,
-  DefaultIdentityProvider,
-  PrivacyIdentityProvider,
-} from "./identity";
-import { sanitizeEvent } from "./sanitizer";
-import { EventQueue } from "./queue";
-import { Transport } from "./transport";
 
 const DEFAULT_CONFIG: AnalyticsConfig = {
   mode: "default",

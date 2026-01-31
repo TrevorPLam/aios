@@ -11,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
 import { DEFAULT_AI_CUSTOM_PROMPT } from "./constants";
 import { meetingLinkSchema } from "./meetingLinks";
 

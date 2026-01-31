@@ -46,9 +46,9 @@
  * - Memory leaks possible if modules aren't properly unmounted
  */
 
-import React, { ComponentType, LazyExoticComponent } from "react";
 import { ModuleType } from "@aios/contracts/models/types";
 import { logger } from "@aios/platform/lib/logger";
+import React, { ComponentType, LazyExoticComponent } from "react";
 
 /**
  * Module Loader Configuration

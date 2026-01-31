@@ -11,6 +11,7 @@
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { AnalyticsEvent, QueuedEvent } from "./types";
 
 const QUEUE_STORAGE_KEY = "@analytics:event_queue";
