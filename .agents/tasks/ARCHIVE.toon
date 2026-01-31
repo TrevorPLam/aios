@@ -1,8 +1,12 @@
 # AI Work Archive (TOON Template)
 
 meta{status, owner, last_updated}:
-[Archived], [Team or Individual], [YYYY-MM-DD]
+Archived, Team, 2026-01-31
 
-archived[1]{id, title, final_status, owner, closed_on, summary, outcome, related_items, artifacts}:
-[ARCHIVE-001], [Title], [Completed|Dropped|Superseded], [Name/Team], [YYYY-MM-DD], [What was done or why it was closed], [Result or impact], [TASK-xxx|BACKLOG-xxx], [Links or paths]
+archived[5]{id, title, final_status, owner, closed_on, summary, outcome, related_items, artifacts}:
+TASK-01, Declare and install api-gateway dependencies, Completed, AGENT, 2026-01-31, Dependencies express bcryptjs jsonwebtoken zod were already present in services/api-gateway/package.json; verified installation and functionality., All required dependencies installed and working; pnpm install succeeds., REPORT_TASKS.toon, services/api-gateway/package.json
+TASK-02, Declare and install contracts dependencies, Completed, AGENT, 2026-01-31, Dependencies zod drizzle-orm drizzle-zod were already present in packages/contracts/package.json; verified installation and functionality., All required dependencies installed and working; pnpm install succeeds; type-check passes., REPORT_TASKS.toon, packages/contracts/package.json
+TASK-03, Add missing landing template or make it optional, Completed, AGENT, 2026-01-31, Landing page template already exists at services/api-gateway/templates/landing-page.html; verified server can start without crash., Template exists and server starts successfully; no action needed., REPORT_TASKS.toon, services/api-gateway/templates/landing-page.html
+TASK-04, Document JWT_SECRET in .env.example, Completed, AGENT, 2026-01-31, JWT_SECRET already documented in .env.example with comment and usage note; verified no secret value committed., .env.example contains JWT_SECRET documentation with comment; no secret values in repo., REPORT_TASKS.toon, .env.example
+ARCHIVE-001, Title placeholder, Completed|Dropped|Superseded, Name/Team, YYYY-MM-DD, What was done or why it was closed, Result or impact, TASK-xxx|BACKLOG-xxx, Links or paths
 
