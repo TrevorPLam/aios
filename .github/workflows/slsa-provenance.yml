@@ -98,7 +98,7 @@ jobs:
 
     steps:
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: build-artifacts-${{ github.sha }}
           path: dist/
@@ -138,7 +138,7 @@ jobs:
           sudo mv slsa-verifier-linux-amd64 /usr/local/bin/slsa-verifier
 
       - name: Download artifacts and provenance
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: build-artifacts-${{ github.sha }}
           path: dist/
